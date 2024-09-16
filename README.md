@@ -16,7 +16,7 @@ Date of project start: September 16th 2024
    - Analyses code to identify energy-intensive patterns and recommends or applies energy-saving transformations.  
    - Ensures refactored code remains maintainable and efficient across different platforms.
 
-2. **Python-Specific Refactoring Optimisation**  
+2. **Python-Specific Refactoring Optimization**  
    - Tailors energy-efficient refactoring strategies based on the specific characteristics of Python.  
    - Provides guidelines and transformations to minimise energy consumption while maintaining code compatibility.  
    - Adapts to the unique performance and energy model of Python.
