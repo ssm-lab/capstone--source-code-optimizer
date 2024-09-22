@@ -103,19 +103,22 @@ The average workflow for the project will proceed as follows:
   \item Commit changes with descriptive name
   \item Create \textbf{unit tests} for said changes
   \item Create pull request to merge changes from sub/working branch into working/epic branch
-  \item Wait for all tests run with GitHub Actions to pass
+  \item Wait for all tests run with \textbf{GitHub Actions} to pass
   \item Wait for 2 approvals from teammates other than the one who created the Pull request
   \item Merge changes into target branch (working or epic)
 \end{enumerate}
 
 \noindent
-GitHub Issues will be used to track and manage bugs, feature requests, and development tasks. Team members can report issues, propose enhancements, and assign tasks to specific individuals. Each issue will be labelled (e.g., bug, enhancement, team-meeting) for easy categorisation, linked to relevant milestones, and tracked through GitHub Project boards. Comments and code references will be exploited to allow for collaboration and discussion on potential solutions. Issues will also be integrated with pull requests, so they’ll automatically close once fixes are merged. \\
+\textbf{GitHub Issues} will be used to track and manage bugs, feature requests, and development tasks. Team members can report issues, propose enhancements, and assign tasks to specific individuals. Each issue will be labelled (e.g., bug, enhancement, team-meeting) for easy categorisation, linked to relevant \textbf{milestones}, and tracked through \textbf{GitHub Project} boards. Comments and code references will be exploited to allow for collaboration and discussion on potential solutions. Issues will also be integrated with pull requests, so they’ll automatically close once fixes are merged. \\
 
 \noindent
 For situations where a certain type of issue is projected to be created at a steady frequency, templates will be created to facilitate their creation. \\
 
 \noindent
-The CI/CD pipeline will be implemented via GitHub to improve automated testing as well as facilitate the feedback loop for the machine learning models used by the library. More detailed information will be added later. \\
+\textbf{Milestones} will be used to organize commits and pull requests for major deliverables. Once all working branches associated to the milestone have been merged into the appropriate epic branch, the team will go through the relevant prepared checklist to make sure that all requirements have been met. Once this is done, the epic branch will be merged into main as one pull request along with the checklist. \\
+
+\noindent
+The \textbf{CI/CD} pipeline will be implemented via GitHub to improve automated testing as well as facilitate the feedback loop for the machine learning models used by the library. More detailed information will be added later. \\
 
 \section{Project Decomposition and Scheduling}
 
