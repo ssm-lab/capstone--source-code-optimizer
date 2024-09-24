@@ -13,11 +13,11 @@ assignees: ''
 
 **Attendance**
 
-- [ ] team member1
-- [ ] team member2
-- [ ] team member3
-- [ ] team member4
-- [ ] team member5
+- [ ] Sevhena Walker
+- [ ] Mya Hussain
+- [ ] Nivetha Kuruparan
+- [ ] Ayushi Amin
+- [ ] Tanveer Brar
 
 **Questions to Ask**
 
