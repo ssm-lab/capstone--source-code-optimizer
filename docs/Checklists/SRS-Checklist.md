@@ -3,8 +3,8 @@
 **Created by**: Spencer Smith
 
 ---
-### Follows writing checklist 
-  - [ ] \LaTeX{} points
+### Follows [writing checklist](https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Checklists/Writing-Checklist.pdf)
+  - [ ] LaTeX points
   - [ ] Structure
   - [ ] Spelling, grammar, attention to detail
   - [ ] Avoid low information content phrases
@@ -139,3 +139,10 @@
 
 ### Traceability Matrices
   - [ ] Traceability matrix is complete
+
+Other checklists to consider can be found in the resources for the University of
+Toronto course [CSC340F](https://www.cs.toronto.edu/~sme/CSC340F/2005/assignments/inspections/)
+- [Checklist for Requirements Specification Reviews](https://www.cs.toronto.edu/~sme/CSC340F/2005/assignments/inspections/reqts_checklist.pdf)
+- [Software Requirements Checklist (JPL)](https://www.cs.toronto.edu/~sme/CSC340F/2005/assignments/inspections/JPL_reqts_clist.pdf)
+
+**Note**: *Document converted to markdown from original [latex](https://github.com/smiths/capTemplate/blob/main/docs/Checklists/Writing-Checklist.tex) document*

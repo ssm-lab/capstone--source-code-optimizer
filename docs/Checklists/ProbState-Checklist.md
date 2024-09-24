@@ -8,7 +8,7 @@
   [Markdown](https://en.wikipedia.org/wiki/Markdown),
   [Emacs Org Mode](https://en.wikipedia.org/wiki/Org-mode), etc.
 
-- Follows [writing checklist](https://github.com/smiths/capTemplate/blob/main/docs/Checklists/Writing-Checklist.pdf)
+- Follows [writing checklist](https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Checklists/Writing-Checklist.pdf)
 
 - Overall qualities of documentation
   - [ ] Scope is clear
