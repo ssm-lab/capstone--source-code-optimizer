@@ -78,7 +78,37 @@ Use abstraction so that you can avoid details.}
 
 \section{Goals}
 
+Our goal is to reduce the energy consumption of Python codebases during execution. We plan to achieve this by developing two core components:
+
+\begin{enumerate}
+    \item \textbf{Refactoring Library:} \\
+    The library refactors inefficient code patterns to achieve a net reduction in energy consumption while preserving the functional integrity of the given codebase. When there are multiple ways to refactor a block of code, it will choose the one with the greatest net reduction in energy consumption.
+
+    \item \textbf{PyCharm Plugin:} \\
+    The plugin will utilize the refactoring library so that developers can get access to a refactored and energy-efficient version of their Python codebase within the PyCharm IDE. The plugin has two aspects:
+
+    \begin{itemize}
+        \item \textbf{Developer Feedback:} Developers will be able to review the refactoring suggestions and decide whether to apply the changes based on their preferences.
+        \item \textbf{Codebase Compatibility:} By integrating with existing local tests, the plugin will ensure the refactoring suggestions do not alter the behaviour of the codebase. This ensures seamless integration with development workflows.
+    \end{itemize}
+\end{enumerate}
+
 \section{Stretch Goals}
+
+\begin{enumerate}
+    \item \textbf{GitHub Integration for DevOps Pipelines:}
+    \begin{itemize}
+        \item \textbf{Automated Refactoring:} We aim to build a feature that can be integrated into GitHub’s DevOps pipelines, which would automatically refactor Python code present in the pipeline to a more energy-efficient version.
+        \item \textbf{Test Compatibility:} This feature will work in tandem with the user's test suites to ensure that the refactored code maintains its original behaviour. This is done to ensure smooth adoption within CI/CD workflows.
+    \end{itemize}
+
+    \item \textbf{Reinforcement Learning Model:} \\
+    The goal is to build a model that evolves its refactoring recommendations over time to maximize energy efficiency while aligning with developer preferences. It achieves this by:
+    \begin{itemize}
+        \item Incrementally identifying energy optimization techniques from past refactorings that result in larger net reductions in energy consumption.
+        \item Prioritizing energy-efficient refactorings that align with the developer's personal preferences, such as a preference for fewer lines of code or specific coding styles. The model will account for the acceptance or rejection of refactorings, tailoring future suggestions to suit individual developer styles.
+    \end{itemize}
+\end{enumerate}
 
 \section{Challenge Level and Extras}
 
