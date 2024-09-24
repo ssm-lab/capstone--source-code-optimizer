@@ -17,23 +17,23 @@
 \maketitle
 
 \begin{table}[hp]
-\caption{Revision History} \label{TblRevisionHistory}
-\begin{tabularx}{\textwidth}{llX}
-\toprule
-\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
-\midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
-\bottomrule
-\end{tabularx}
+  \caption{Revision History} \label{TblRevisionHistory}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
+    \midrule
+    Date1 & Name(s) & Description of changes\\
+    Date2 & Name(s) & Description of changes\\
+    ... & ... & ...\\
+    \bottomrule
+  \end{tabularx}
 \end{table}
 
 \section{Problem Statement}
 
 \wss{You should check your problem statement with the
-\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.} 
+  \href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
+{problem statement checklist}.}
 
 \wss{You can change the section headings, as long as you include the required
 information.}
@@ -42,13 +42,27 @@ information.}
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
+\wss{Characterize the problem in terms of ``high level'' inputs and outputs.
 Use abstraction so that you can avoid details.}
 
 \textbf{Inputs:} Source code that requires refactoring for energy efficiency.
 \textbf{Outputs:} Refactored code with reduced energy consumption, along with performance and energy consumption reports.
 
 \subsection{Stakeholders}
+\subsubsection*{\color{blue}{Direct Stakeholders}}
+\textbf{[Software Developers]}: They will be the primary users of the refactoring library as they will be the ones to integrate the library into their code for better refactoring.\\
+
+\noindent
+\textbf{[Business Sustainability Teams]}: These teams are responsible for considering how a companies practices affect the environment. They will especially be interested in viewing the metrics provided by the library on how it improves the energy efficiency of software over time, therefore decreasing the burden on hardware and minimizing the company's environmental footprint.
+
+\subsubsection*{\color{blue}{Indirect Stakeholders}}
+\textbf{[Business Leaders]}: They focus on reducing operational costs associated with energy consumption, especially in large-scale or cloud-hosted applications. Use of the library in their products allows them to better achieve those goals. \\
+
+\noindent
+\textbf{[End Users]}: While not directly affected by this refactoring library, end users of technology that use the library will benefit from more responsive and efficient software that consumes less power, especially in mobile, embedded, or battery-dependent applications. \\
+
+\noindent
+\textbf{[Regulatory Bodies]}: They enforce energy consumption and sustainability standards, and ensure that software adheres to environmental regulations and may certify tools that meet efficiency requirements. Their oversight promotes the adoption of energy-efficient software practices.
 
 \subsection{Environment}
 \textbf{Programming Language:} Python will be the main language for developing refactoring tools and performing energy optimization.
@@ -68,21 +82,23 @@ Use abstraction so that you can avoid details.}
 
 \section{Challenge Level and Extras}
 
-\wss{State your expected challenge level (advanced, general or basic).  The
-challenge can come through the required domain knowledge, the implementation or
-something else.  Usually the greater the novelty of a project the greater its
-challenge level.  You should include your rationale for the selected level.
-Approval of the level will be part of the discussion with the instructor for
-approving the project.  The challenge level, with the approval (or request) of
-the instructor, can be modified over the course of the term.}
+The expected challenge level of our project as general. This is due to the 
+relatively straightforward technical knowledge required for its completion. 
+The project primarily involves applying known software optimization and 
+refactoring techniques, which are well-documented and accessible. 
+Additionally, the required programming knowledge is in Python which known 
+by all of the team members and was, taught in our undergraduate courses. 
+Although the project does involve substantial development and research components, 
+we anticipate the overall scope and depth of work to be manageable within the 
+given timeframe.
 
-\wss{Teams may wish to include extras as either potential bonus grades, or to
-make up for a less advanced challenge level.  Potential extras include usability
-testing, code walkthroughs, user documentation, formal proof, GenderMag
-personas, Design Thinking, etc.  Normally the maximum number of extras will be
-two.  Approval of the extras will be part of the discussion with the instructor
-for approving the project.  The extras, with the approval (or request) of the
-instructor, can be modified over the course of the term.}
+To further enhance the project and address any potential gaps in the challenge level, 
+we propose two additional activities: User Documentation and Usability Testing. 
+These extras will allow us to provide support for future users of the tool and 
+ensure that the tool meets user expectations and accessibility standards. 
+
+Approval of the challenge level and extras will be discussed with the instructor, 
+and adjustments may be made as needed throughout the term.
 
 \newpage{}
 
@@ -92,25 +108,43 @@ instructor, can be modified over the course of the term.}
 
 \input{../Reflection.tex}
 
+\subsubsection*{Ayushi Amin Reflection}
+
 \begin{enumerate}
-    \item What went well while writing this deliverable? 
-    Ayushi - Writing the deliverable went quite well overall. The project itself was well defined and we were able to meet with the 
+    \item \textit{What went well while writing this deliverable?}
+    
+    Writing the deliverable went quite well overall. The project itself was well defined and we were able to meet with the 
     industry supervisor which helped clarify most of the details. Our team worked well together which helped each memeber to clarify
     any concerns particularly about the database we decided to use. Our team had some good discussions regarding making decisions on 
     what languages and tools to use in the project such as our decision to use MySQL for our database.
 
-    \item What pain points did you experience during this deliverable, and how did you resolve them?
-    Ayushi - Not all the information was clarified or given by the supervisor at an early stage so writing this document took some 
+    \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+    
+    Not all the information was clarified or given by the supervisor at an early stage so writing this document took some 
     time which caused us to delay working on this for a couple days. The team and I decided to consistently check in with the supervisor
     to encourage him to provide the required documents and information we needed as soon as possible. We used email as well as discord to 
     directly reach out to the supervisor in which we finally ended up getting the information 2 days before the deadline and then crammed to 
     finish the milstone documents.
-
-    \item How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly ambitious but also of
-    appropriate complexity for a senior design project)?
-    Ayushi - We carefully adjusted our project scope by focusing on the most important goals and prioritizing features that mattered most, while also 
-    setting clear milestones to keep us on track. The feedback we got from our supervisor helped us refine our goals, making sure we were ambitious but
-    also realistic about what we could achieve.
+    
 \end{enumerate}  
 
+\subsubsection*{Full Name Reflection}
+\begin{enumerate}
+  \item \textit{What went well while writing this deliverable?}
+  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+  \item \textit{How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly 
+  ambitious but also of appropriate complexity for a senior design project)?}
+\end{enumerate}
+
+\subsubsection*{Group Answers Reflection}
+\begin{enumerate}
+  \item \textit{How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly 
+  ambitious but also of appropriate complexity for a senior design project)?}
+  
+  We carefully adjusted our project scope by focusing on the most important goals and prioritizing features that mattered most, while also 
+  setting clear milestones to keep us on track. The feedback we got from our supervisor helped us refine our goals, making sure we were ambitious but
+  also realistic about what we could achieve.
+    
+\end{enumerate}
+    
 \end{document}
