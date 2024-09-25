@@ -2,10 +2,13 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{blindtext}
 
 \title{Problem Statement and Goals\\\progname}
 
 \author{\authname}
+
 
 \date{}
 
@@ -22,62 +25,57 @@
     \toprule
     \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
     \midrule
-    Date1 & Name(s) & Description of changes\\
-    Date2 & Name(s) & Description of changes\\
+    September 18th, 2024 & All & Created first draft of document\\
+    September 23rd, 2024 & All & Finalized document\\
     ... & ... & ...\\
     \bottomrule
   \end{tabularx}
 \end{table}
 
+\newpage
+
 \section{Problem Statement}
 
-\wss{You should check your problem statement with the
-  \href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.}
+The Information and Communications Technology (ICT) sector is currently responsible for approximately 2-4\% of global CO2 emissions, a figure projected to rise to 14\% by 2040 without intervention []. To align with broader economic sustainability goals, the ICT industry must reduce its CO2 emissions by 72\% by 2040 []. Optimizing energy consumption in software systems is a complex task that cannot rely solely on software engineers, who often face strict deadlines and busy schedules. This creates a pressing need for supporting technologies that help automate this process. This project aims to develop a tool that applies automated refactoring techniques to optimize Python code for energy efficiency while preserving its original functionality. 
 
-\wss{You can change the section headings, as long as you include the required
-information.}
 
 \subsection{Problem}
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.
-Use abstraction so that you can avoid details.}
-
-\textbf{Inputs:} Source code that requires refactoring for energy efficiency.
+\textbf{Inputs:} Source code that requires refactoring for energy efficiency. \\
 \textbf{Outputs:} Refactored code with reduced energy consumption, along with performance and energy consumption reports.
 
 \subsection{Stakeholders}
 \subsubsection*{\color{blue}{Direct Stakeholders}}
-\textbf{[Software Developers]}: They will be the primary users of the refactoring library as they will be the ones to integrate the library into their code for better refactoring.\\
+\begin{enumerate}
 
-\noindent
-\textbf{[Dr. Istvan David (Supervisor)]}: Dr. David has a vested interest in the development of the system. He will play a crucial role in guiding and mentoring our team throughout the project. As the project supervisor, he will be the key advisor, offering feedback on technical aspects, project management, and research methodologies. \\
+    \item \textbf{Software Developers}: They will be the primary users of the refactoring library as they will be the ones to integrate the library into their code for better refactoring.
+    \item \textbf{Dr. Istvan David (Supervisor)}: Dr. David has a vested interest in the development of the system. He will play a crucial role in guiding and mentoring our team throughout the project. As the project supervisor, he will be the key advisor, offering feedback on technical aspects, project management, and research methodologies. 
+    \item \textbf{Business Sustainability Teams}: These teams are responsible for considering how a companies practices affect the environment. They will especially be interested in viewing the metrics provided by the library on how it improves the energy efficiency of software over time, therefore decreasing the burden on hardware and minimizing the company's environmental footprint.
 
-\noindent
-\textbf{[Business Sustainability Teams]}: These teams are responsible for considering how a companies practices affect the environment. They will especially be interested in viewing the metrics provided by the library on how it improves the energy efficiency of software over time, therefore decreasing the burden on hardware and minimizing the company's environmental footprint.
+\end{enumerate}
 
 \subsubsection*{\color{blue}{Indirect Stakeholders}}
-\textbf{[Business Leaders]}: They focus on reducing operational costs associated with energy consumption, especially in large-scale or cloud-hosted applications. Use of the library in their products allows them to better achieve those goals. \\
+\begin{enumerate}
 
-\noindent
-\textbf{[End Users]}: While not directly affected by this refactoring library, end users of technology that use the library will benefit from more responsive and efficient software that consumes less power, especially in mobile, embedded, or battery-dependent applications. \\
+    \item \textbf{Business Leaders}: They focus on reducing operational costs associated with energy consumption, especially in large-scale or cloud-hosted applications. Use of the library in their products allows them to better achieve those goals. 
+    \item \textbf{End Users}: While not directly affected by this refactoring library, end users of technology that use the library will benefit from more responsive and efficient software that consumes less power, especially in mobile, embedded, or battery-dependent applications. 
+    \item \textbf{Regulatory Bodies}: They enforce energy consumption and sustainability standards, and ensure that software adheres to environmental regulations and may certify tools that meet efficiency requirements. Their oversight promotes the adoption of energy-efficient software practices.
 
-\noindent
-\textbf{[Regulatory Bodies]}: They enforce energy consumption and sustainability standards, and ensure that software adheres to environmental regulations and may certify tools that meet efficiency requirements. Their oversight promotes the adoption of energy-efficient software practices.
+\end{enumerate}
 
 \subsection{Environment}
-\textbf{Programming Language:} Python will be the main language for developing refactoring tools and performing energy optimization.
-\textbf{Reinforcement Learning Library: } Stable Baselines will be the library to implement reinforcement learning techniques.
-\textbf{Developement Frameworks and Tools: } 
+\textbf{Programming Language:} \textit{Python} will be the main language for developing refactoring tools and performing energy optimization.\\
+\textbf{Reinforcement Learning Library:} \textit{Stable Baselines} will be the library to implement reinforcement learning techniques.\\
+\textbf{Development Frameworks and Tools:} 
 \begin{enumerate}
-    \item Github will be used for version control and for CI/CD integration to automate refactoring processes.
-    \item Visual Studio Code will be the IDE used.
-\end{enumerate} 
-\textbf{Database: } MySQL will be the database used to store and retrieve data about refactoring and energy consumption metrics.
 
-\wss{Hardware and software environment}
+    \item \textit{GitHub} will be used for version control and for CI/CD integration to automate refactoring processes.
+    \item \textit{Visual Studio Code} will be the IDE used.
+    
+\end{enumerate} 
+\textbf{Database:} \textit{MySQL} will be the database used to store and retrieve data about refactoring and energy consumption metrics.
 
 \section{Goals}
 
@@ -113,6 +111,7 @@ Our goal is to reduce the energy consumption of Python codebases during executio
     \end{itemize}
 \end{enumerate}
 
+
 \section{Challenge Level and Extras}
 
 The expected challenge level of our project as general. This is due to the
@@ -135,11 +134,33 @@ and adjustments may be made as needed throughout the term.
 
 \newpage{}
 
+\input{../Reflection.tex}
+
 \section*{Appendix --- Reflection}
 
 \wss{Not required for CAS 741}
 
 \input{../Reflection.tex}
+
+\subsubsection*{Mya Hussain Reflection}
+
+\begin{enumerate}
+    \item \textit{What went well while writing this deliverable?}
+    
+    Our team was able to create a clear and concise plan as to what we were trying to achieve and investigate the details as to how we could potentially achieve it. We were able to brainstorm multiple possible routes to take depending on how successful we are while developing. We were also able to reach out to our supervising professor and receive many research papers that helped bring us up to speed as to what this project would require, so that we could set out realistic goals for the project.
+    \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+    
+    It took some time for the research papers we requested from our supervisor to actually hit our inboxes. In the meantime, we were on our own to brainstorm solutions for the problem. This was both a positive and a negative as on the positive side we got to do some self-study and think of some new ideas from scratch. While on the downside, we didn’t know if our brainstormed ideas were methodologies our supervisor would want us to use. Learning with mentorship is great because we were able to gain confidence that what we were doing was correct due to our supervisor’s experience. Being able to explore the project on our own was cool because we got to investigate a lot of different technologies surrounding the space regardless of how efficient the solution may be. So, in the end, our pain points were just learning experiences, before we were thrown a life vest.
+    
+
+    \item \textit{How did you and your team adjust the scope of your goals to ensure they
+    are suitable for a Capstone project (not overly ambitious but also of ap-
+    propriate complexity for a senior design project)?}
+
+    My team and I started the project off by getting very familiar with each other’s strengths and weaknesses. We shared resumes, transcripts and highlighted all the former experiences we had before selecting a project that most aligned with our combined skillsets. Once we had a project, setting goals was the easy part as in our goals we ensured that we would have fallbacks if the project was overly ambitious allowing us to jump with a safety net. For example, we initially discussed the potential for developing a neural network that chooses the best refactoring for a given code input. Recognizing that we have low ML experience between us we opted to implement an algorithmic approach for our POC and attempt an ML implementation in semester 2 if the first one works properly. We also ensured that there would be middlemen libraries we could pull from if we were unsuccessful in writing all the code ourselves. The clearest example of this is there being smell detection code readily available in many online free to use libraries. Planning out these fallbacks between ourselves made sure everyone was comfortable with the project and that we could tweak the difficulty as time went by being that we are trying something new.
+
+
+\end{enumerate}  
 
 \subsubsection*{Ayushi Amin Reflection}
 
@@ -166,6 +187,7 @@ and adjustments may be made as needed throughout the term.
     Of course, not everything is just sunshine and roses. Having to deconstruct a project with concepts that you are only vaguely familiar with can be an overwhelming task. While we were able to seek guidance from our supervisor, the onus was still on us to slowly unravel this new mass of information and piece it together in a coherent and structured manner. Our supervisor has been out of country and in a different time zone which has led to a gap in discourse. There were times when our team was left scratching our heads trying to figure out what the best way or, at the very least, what would be a \textit{suitable} way to plan out our project.
 
 \end{enumerate}
+
 
 \subsubsection*{Nivetha Kuruparan Reflection}
 \begin{enumerate}
@@ -206,15 +228,6 @@ and adjustments may be made as needed throughout the term.
 
 \end{enumerate}
 
-
-\subsubsection*{Full Name Reflection}
-\begin{enumerate}
-  \item \textit{What went well while writing this deliverable?}
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-  \item \textit{How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly 
-  ambitious but also of appropriate complexity for a senior design project)?}
-\end{enumerate}
-
 \subsubsection*{Group Answers Reflection}
 \begin{enumerate}
   \item \textit{How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly 
@@ -225,5 +238,5 @@ and adjustments may be made as needed throughout the term.
   also realistic about what we could achieve.
     
 \end{enumerate}
-    
+
 \end{document}
