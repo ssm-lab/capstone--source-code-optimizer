@@ -1,7 +1,10 @@
 \documentclass{article}
 
 \usepackage{booktabs}
+\usepackage{hyperref}
 \usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{blindtext}
 
 \title{Development Plan\\ \progname}
 
@@ -35,41 +38,48 @@ This document outlines the development plan for improving the energy efficiency 
 engineered software through refactoring. It includes details on intellectual property,
 team roles, workflow structure, and project scheduling. Additionally, the plan covers
 expected technologies, coding standards, and proof of concept demonstrations, providing
-a clear roadmap for the project's progression.
+a clear road map for the project's progression.
 
 \section{Confidential Information?}
 
 No confidential information to protect.
 \section{IP to Protect}
 
-\hspace{\parindent}The software and associated documentation files for this project are protected by copyright, outlined in the document \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/documentation/LICENSE}{ here}(referred to as "License"). The License does not grant any party the rights to modify, merge, publish, distribute, sublicense, or sell the software without explicit permission .
+\hspace{\parindent}The software and associated documentation files for this project are protected by copyright, can be accessed at this \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/LICENSE}{ link}(referred to as "License"). The License does not grant any party the rights to modify, merge, publish, distribute, sub license, or sell the software without explicit permission .
+
 Unauthorized use, modification, or distribution of the software is prohibited and may result in legal action.
 \\
-Permission is granted on a case-by-case basis, non-transferable and non-exclusive. No rights to exploit the software commercially or otherwise are granted without prior written consent from the copyright holders.
+
+\hspace{\parindent} Permission is granted on a case-by-case basis, non-transferable and non-exclusive. No rights to exploit the software commercially or otherwise are granted without prior written consent from the copyright holders.
 
 \section{Copyright License}
 
-See LICENSE file in root of repository.
-\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/LICENSE}{Click to Open}
+See LICENSE file in root of repository, can be accessed at this \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/LICENSE}{link}.
 
 \section{Team Meeting Plan}
 
-The team will meet multiple times a week, once during Monday tutorial time and throughout the week as issues or concerns arise. The meetings will be conducted either online through a Teams meeting or in-person on campus. The team
-will hold an official meeting with the industry advisor once a week yet the time has not been decided. The meeting with the advisor will be online on Teams for the first 3 weeks, followed by in-person meetings later on. Meetings itself will be strutured as follows:
+\hspace{\parindent} The team will meet multiple times a week, once during Monday tutorial time and throughout the week as issues or concerns arise. The meetings will be conducted either online through a Teams meeting or in-person on campus. The team
+will hold an official meeting with the industry advisor once a week yet the time has not been decided. The meeting with the advisor will be online on Teams for the first 3 weeks, followed by in-person meetings later on. Meetings itself will be structured as follows:
 \begin{enumerate}
   \item Each member will take turns giving a short recap of work they have accomplished throughout the week.
   \item Members will voice any concerns or issues they may be facing.
   \item Team will form a discussion and make decisions for the project.
   \item Any/all questions will be documented for the next meeting with the advisor.
 \end{enumerate}
-The team will go ahead and use Issues on Github to add anything they may want to talk about in the next meeting as the week progresses in order to have some form of agenda for the next meeting.
+The team will go ahead and use Issues on GitHub to add anything they may want to talk about in the next meeting as the week progresses in order to have some form of agenda for the next meeting.
 
 \section{Team Communication Plan}
 
-\textbf{Issues}: GitHub \\
-\textbf{Meetings}: Microsoft Teams \\
-\textbf{Meetings (with advisor)}: Discord \\
-\textbf{Informal Project Discussion}: WhatsApp
+\begin{itemize}
+
+    \item \textbf{Issues}: GitHub 
+    \item \textbf{Meetings}: Microsoft Teams 
+    \item \textbf{Meetings (with advisor)}: Discord Group Chat
+    \item \textbf{Informal Project Discussion}: WhatsApp, Discord Server
+    \item \textbf{Formal Project Discussion}: Discord Server
+    
+\end{itemize}
+
 
 \section{Team Member Roles}
 
@@ -88,7 +98,7 @@ Instead, we aim to work collaboratively to resolve any challenges that arise.
 
 \section{Workflow Plan}
 
-The repository will contain two main persistent branches (branching off main) throughout the project:
+\hspace{\parindent}The repository will contain two main persistent branches (branching off main) throughout the project:
 \textbf{dev} and \textbf{documentation}. These branches, that we will henceforth call "epic" branches, will be used for technical
 software development and documentation changes respectively. \\
 
@@ -106,21 +116,21 @@ The average workflow for the project will proceed as follows:
 \end{enumerate}
 
 \noindent
-\textbf{GitHub Issues} will be used to track and manage bugs, feature requests, and development tasks. Team members can report issues, propose enhancements, and assign tasks to specific individuals. Each issue will be labelled (e.g., bug, enhancement, team-meeting) for easy categorisation, linked to relevant \textbf{milestones}, and tracked through \textbf{GitHub Project} boards. Comments and code references will be exploited to allow for collaboration and discussion on potential solutions. Issues will also be integrated with pull requests, so they’ll automatically close once fixes are merged. \\
+\hspace{\parindent}\textbf{GitHub Issues} will be used to track and manage bugs, feature requests, and development tasks. Team members can report issues, propose enhancements, and assign tasks to specific individuals. Each issue will be labelled (e.g., bug, enhancement, team-meeting) for easy categorisation, linked to relevant \textbf{milestones}, and tracked through \textbf{GitHub Project} boards. Comments and code references will be exploited to allow for collaboration and discussion on potential solutions. Issues will also be integrated with pull requests, so they’ll automatically close once fixes are merged. \\
 
 \noindent
-For situations where a certain type of issue is projected to be created at a steady frequency, templates will be created to facilitate their creation. \\
+\hspace{\parindent}For situations where a certain type of issue is projected to be created at a steady frequency, templates will be created to facilitate their creation. \\
 
 \noindent
-\textbf{Milestones} will be used to organize commits and pull requests for major deliverables. Once all working branches associated to the milestone have been merged into the appropriate epic branch, the team will go through the relevant prepared checklist to make sure that all requirements have been met. Once this is done, the epic branch will be merged into main as one pull request along with the checklist. \\
+\hspace{\parindent}\textbf{Milestones} will be used to organize commits and pull requests for major deliverables. Once all working branches associated to the milestone have been merged into the appropriate epic branch, the team will go through the relevant prepared checklist to make sure that all requirements have been met. Once this is done, the epic branch will be merged into main as one pull request along with the checklist. \\
 
 \noindent
-The \textbf{CI/CD} pipeline will be implemented via GitHub to improve automated testing as well as facilitate the feedback loop for the machine learning models used by the library. More detailed information will be added later.
+\hspace{\parindent}The \textbf{CI/CD} pipeline will be implemented via GitHub to improve automated testing as well as facilitate the feedback loop for the machine learning models used by the library. More detailed information will be added later.
 
 \section{Project Decomposition and Scheduling}
 
 \noindent
-The project is hosted on GitHub under the organization of Sustainable Systems and Methods (SSM) Lab and can be accessed at this \href{https://github.com/ssm-lab/capstone--source-code-optimizer}{link}.\\
+\hspace{\parindent}The project is hosted on GitHub under the organization of Sustainable Systems and Methods (SSM) Lab and can be accessed at this \href{https://github.com/ssm-lab/capstone--source-code-optimizer}{link}.\\
 
 The team currently has one GitHub Project setup to serve as a visual tool not only to track deadlines for all tasks but also for accountability  for assigned tasks. The project can include cards for:
 \begin{itemize}
@@ -206,6 +216,8 @@ Other smaller risks for our tool include:
 
 \section{Expected Technology}
 
+This section contains a compilation of technologies that we expect to use for our project following an initial analysis. The choice of technology might change for one or more of the components if needed along the course of the project.
+
 \subsection{Languages}
 A diverse set of languages is being used to build different components of the project. Here is a detailed breakdown:
 
@@ -216,7 +228,6 @@ A diverse set of languages is being used to build different components of the pr
         \item It has well-established libraries like `Rope` for refactoring and `PyJoules` for energy analysis, which can be leveraged for the MVP.
         \item It is widely used in both research and industry, making the library adoptable by a broader community of developers.
     \end{itemize}
-
     \item \textbf{VS Plugin: TypeScript}\\
     Given the VS Code architecture (based on web technologies), the plugin needs to be built using JavaScript or TypeScript. The team has decided to pursue development in TypeScript given our experience in the language.
 \end{enumerate}
@@ -226,7 +237,7 @@ To build an MVP, the team is relying on multiple external libraries to handle th
 
 \begin{enumerate}
     \item \textbf{Code Energy Calculation: PyJoules}\\
-    PyJoules is a well-documented library that calculates the energy consumed on executing a given Python codebase. Since the library calculates energy consumption at the hardware level, the calculations are very precise. This makes it an ideal choice for analyzing the energy impact of code refactorings.
+    PyJoules is a well-documented library that calculates the energy consumed on executing a given Python code base. Since the library calculates energy consumption at the hardware level, the calculations are very precise. This makes it an ideal choice for analyzing the energy impact of code refactorings.
 
     \item \textbf{Inefficient Code Pattern Detection: PySmells}\\
     After reviewing PySmells documentation, it can be deduced that a majority of code smells can be detected and resolved using the library.
@@ -268,7 +279,7 @@ To identify code smells during development, the team will include PySmells in th
 To ensure systematic testing of our growing codebase, the project will include unit tests written in \texttt{pytest}. We have chosen this framework as it helps to write scalable test cases, supports parameterized tests, and has easy integration with \texttt{coverage.py}, which is our code coverage measuring tool.
 
 \subsection{Code Coverage}
-\texttt{Coverage.py} has been chosen to measure the code coverage. This will be a useful tool to identify areas of the codebase that need additional test coverage.
+\texttt{Coverage.py} has been chosen to measure the code coverage. This will be a useful tool to identify areas of the code base that need additional test coverage.
 
 \subsection{Performance Measurement}
 Performance measuring tools have been chosen to target common Python-specific code problems. Here is a list of tools the team plans to integrate into the project:
@@ -279,13 +290,11 @@ Performance measuring tools have been chosen to target common Python-specific co
 
 \section{Coding Standard}
 
-The team will include PEP 8 as the coding standard in the project. It is widely accepted across the Python community, therefore there is tons of resources available on initially setting it up. It will serve as a useful tool to automate style enforcement and ensure consistency across the codebase.
+The team will include PEP 8 as the coding standard in the project. It is widely accepted across the Python community, therefore there is tons of resources available on initially setting it up. It will serve as a useful tool to automate style enforcement and ensure consistency across the code base.
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741}
 
 \input{../Reflection.tex}
 
@@ -319,7 +328,7 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
   \item \textit{Why is it important to create a development plan prior to starting the
     project?}
 
-    A developement plan is important because it serves as a clear roadmap for the project and ensures that all
+    A development plan is important because it serves as a clear road map for the project and ensures that all 
     team members understand the the project scope, objectives and timeline. A clear plan helps to identify potential risks
     and areas of concern/challenges that can be caught at an early stage so a solution can be crafted early on. It also helps
     in resource allocation by ensuring that the necessary tools and budget are available when needed.
@@ -347,6 +356,7 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
     next and the next and so on. It would be like trying to build a house while only ever looking at the next couple meters in front of you.
 
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
+  
   I honestly cannot say that we had any disagreements as yet. Our team tried our best to discuss what our goals for the project were and
   everything was well communicated so that everyone was on the same page. We are at the beginning stages of a project that will implement
   technology is mostly new to us. We are excited, but also somewhat ignorant to some details which makes it hard to "disagree".
@@ -368,7 +378,7 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
 
 \end{enumerate}
 
-\subsubsection*{Nivetha Kuruparan}
+\subsubsection*{Nivetha Kuruparan Reflection}
 
 \begin{enumerate}
   \item \textit{Why is it important to create a development plan prior to starting the project?}
@@ -395,30 +405,14 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
 
 \subsubsection*{Group Answers}
 
-\textit{In your opinion, what are the advantages and disadvantages of using CI/CD?}
-  
-    CI/CD or Continuous Integration/Continuous Deployment is a two-step process where continuous integration means automatically 
-    integrating code changes from multiple contributors into a shared repository for every commit, and continuous deployment involves 
-    keeping your code base deployable at any time.
-    Key practices in CI/CD include automated testing and frequent commits. This leads to better code quality as bugs and conflicts between 
-    users are caught early on and easily rolled back or fixed near their date of creation. Another advantage is a faster time to market as 
-    code is integrated and deployed on development allowing teams to deliver features/fixes to users quicker. It also allows for improved 
-    collaboration through feedback as features pushed to shared repositories can be easily reviewed by the team.
-    Disadvantages include the initial setup complexity of the CI/CD pipeline as this can be time consuming and a learning curve to those 
-    new to the process. It also requires a lot of maintenance and overhead to continuously commit, push, pull, test and merge code diverging
-    from time that could be spent developing/improving a feature.
+\begin{itemize}
+    \item \textit{In your opinion, what are the advantages and disadvantages of using CI/CD?}
 
-    In CI/CD, there is a constant cycle of commiting code to a code base, and running automated tests on that piece of code before 
-    integrating it into the system. This constant and frequent cycle helps detect problems early leading toa more robust system. 
-    Furthermore, stress is taken away from the programmer when it comes to building and deploying software as it is all automated.\\
-    The flip side to this is, of course, that the developer must initially set up the CI/CD environment. All the automated tests must 
-    first be written, and they must be written \textit{well}. The same goes for the build and deployment workflows. This setup can be 
-    complex and lengthy and most of all, it requires the developer to know how to do it. Furthermore, it must be \textit{maintained}. 
-    Other risks include a serious over-reliance in automation which could potentially introduce security flaws that weren't thought of 
-    before.
-  
-    In other terms:
-    Advantages:
+    CI/CD, or Continuous Integration/Continuous Deployment, is a process where continuous integration involves automatically integrating code changes from multiple contributors into a shared repository for every commit, and continuous deployment ensures the code base is deployable at any time. Key practices include automated testing and frequent commits, leading to better code quality as bugs and conflicts are caught early and fixed near their date of creation. Another advantage is faster time to market, as code is integrated and deployed more quickly, allowing teams to deliver features and fixes to users faster. It also improves collaboration through feedback, as features pushed to shared repositories can be reviewed by the team.
+
+    Disadvantages include the initial setup complexity of the CI/CD pipeline, which can be time-consuming and challenging for those new to the process. It requires ongoing maintenance and overhead to continuously commit, test, and merge code, diverting time from feature development. Additionally, the setup of automated tests and deployment workflows can be complex and requires knowledge of the process. Risks include over-reliance on automation, which could introduce security flaws.
+    In other terms:\\
+    \textbf{Advantages:}
     \begin{enumerate}
       \item Faster development since changes would be pushed constantly as testing for new/fixed features would be successful
       \item Shorter delivery times
@@ -426,13 +420,14 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
       \item Easier change monitoring and rollback since there are 5 members and multiple branches and changes based on the member
       \item Increased efficiency and productivity
     \end{enumerate}
-     
-    Disadvantages
+    \textbf{Disadvantages}
     \begin{enumerate}
       \item Requires strong discipline and commitment from the entire team and may be a learning curve for the team
       \item May be challenging to implement for small teams since there is only 5 members
       \item Initial setup and configuration can be complex and time-consuming since the team will be setting this up from scratch
     \end{enumerate}
+
+\end{itemize}
 
 \newpage{}
 
@@ -440,34 +435,34 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
 
 \subsection*{External Goals}
 
-Our team's primary goal is to learn something new and valuable that can be applied in the workforce, 
-ensuring that this project enhances our practical skills. Additionally, we aim to create a project 
-that we can confidently discuss in interviews, demonstrating our ability to work on real-world 
-problems. While we focus on personal and professional growth, we also aim for an A+ as a 
+Our team's primary goal is to learn something new and valuable that can be applied in the workforce,
+ensuring that this project enhances our practical skills. Additionally, we aim to create a project
+that we can confidently discuss in interviews, demonstrating our ability to work on real-world
+problems. While we focus on personal and professional growth, we also aim for an A+ as a
 nice-to-have achievement.
 
 \subsection*{Attendance}
 
-\subsubsection*{Expectations}
+\subsubsection*{\color{blue}{Expectations}}
 
-Our team expects full commitment to scheduled meetings, with everyone arriving on time and staying 
-for the entire duration. If a team member cannot attend, they are expected to notify the group in 
-advance and provide a valid reason, as well as organize an alternative meeting time, if all team 
-members need to be present. Missing meetings without prior notice or frequently arriving late 
+Our team expects full commitment to scheduled meetings, with everyone arriving on time and staying
+for the entire duration. If a team member cannot attend, they are expected to notify the group in
+advance and provide a valid reason, as well as organize an alternative meeting time, if all team
+members need to be present. Missing meetings without prior notice or frequently arriving late
 will be addressed by the team to prevent disruptions.
 
-\subsubsection*{Acceptable Excuse}
+\subsubsection*{\color{blue}Acceptable Excuse}
 
-An acceptable excuse for missing a meeting or a deadline includes unforeseen emergencies, personal 
-illness, family matters, or other significant personal obligations, as long as the team is 
-informed in advance. Unacceptable excuses include vague or last-minute reasons such as simply 
+An acceptable excuse for missing a meeting or a deadline includes unforeseen emergencies, personal
+illness, family matters, or other significant personal obligations, as long as the team is
+informed in advance. Unacceptable excuses include vague or last-minute reasons such as simply
 forgetting or having conflicting non-essential plans, as these could impact the team's progress.
 
-\subsubsection*{In Case of Emergency}
+\subsubsection*{\color{blue}In Case of Emergency}
 
 In the event of an emergency that prevents a team member from attending a meeting or completing 
 their assigned work for a deliverable, the team member must inform the team as soon as possible 
-through the team's designated communication channel (either on Whatsapp or Discord). This will 
+through the team's designated communication channel (either on WhatsApp or Discord). This will 
 allow for adjustments to be made, such as redistributing tasks or rescheduling the meeting if 
 necessary. For deliverables, if the emergency impacts a deadline, the team member should notify 
 both the team and the professor promptly to ensure that any necessary arrangements are made 
@@ -475,7 +470,7 @@ without affecting the team's progress/grades.
 
 \subsection*{Accountability and Teamwork}
 
-\subsubsection*{Quality}
+\subsubsection*{\color{blue}Quality}
 
 Our team has the following expectations regarding the quality of preparation for meetings and the deliverables brought to the team:
 
@@ -493,18 +488,18 @@ Our team has the following expectations regarding the quality of preparation for
         \item Each deliverable should be carefully reviewed by each member before submission to avoid any errors or incomplete work.
         \item Deliverables must align with the project's requirements and deadlines, ensuring they are both functional and meet the expected quality criteria.
     \end{itemize}
-    
+
     \item \textbf{Accountability and Feedback}:
     \begin{itemize}
         \item Team members are responsible for completing their work to a high standard, communicating any issues early if they need assistance or more time.
         \item Feedback on deliverables should be welcomed by all members, and revisions should be made promptly to improve the overall quality of the team’s output.
     \end{itemize}
-    
+
 \end{itemize}
 
 By maintaining these expectations, our team will ensure that meetings are efficient and that all deliverables reflect a professional and high-quality standard.
 
-\subsubsection*{Attitude}
+\subsubsection*{\color{blue}Attitude}
 
 Our team has established the following \textbf{expectations} for team members' contributions, interactions, and cooperation to ensure a productive and respectful working environment:
 
@@ -536,13 +531,13 @@ To manage conflicts or disagreements that may arise during the project, we have 
 
 By adhering to these expectations, the code of conduct, and our conflict resolution plan, we aim to maintain a positive, collaborative, and respectful team environment.
 
-\subsubsection*{Stay on Track}
+\subsubsection*{\color{blue}Stay on Track}
 
 To keep our team on track, we will implement the following methods:
 
 \begin{enumerate}
-    \item \textbf{Regular Check-ins and Progress Updates}: We will hold \textit{weekly meetings} where each member will 
-    provide an update on their tasks and progress and any concerns or troubles they faced. These updates will help us identify issues 
+    \item \textbf{Regular Check-ins and Progress Updates}: We will hold \textit{weekly meetings} where each member will
+    provide an update on their tasks and progress and any concerns or troubles they faced. These updates will help us identify issues
     early and adjust accordingly to stay on schedule.
     \item \textbf{Performance Metrics}: We will track the following key metrics:
     \begin{itemize}
@@ -550,7 +545,7 @@ To keep our team on track, we will implement the following methods:
         \item \textit{Commits to the repository}, ensuring steady contributions.
         \item \textit{Task completion rates}, ensuring deadlines are met.
     \end{itemize}
-    \item \textbf{Rewards for High Performers}: To encourage good performance, we will recognize and celebrate team members who meet or 
+    \item \textbf{Rewards for High Performers}: To encourage good performance, we will recognize and celebrate team members who meet or
     exceed expectations. Informal rewards may include public recognition during meetings or assigning leadership roles in future tasks.
     \item \textbf{Managing Under performance}: If a team member's performance is below expectations:
     \begin{itemize}
@@ -563,18 +558,18 @@ To keep our team on track, we will implement the following methods:
         \item They may be assigned additional \textit{tasks} to balance the workload.
         \item In serious cases, the issue will be brought up to the TA or instructor.
     \end{itemize}
-    \item \textbf{Incentives for Meeting Targets Early}: Members who consistently meet or exceed their targets will be rewarded with more 
+    \item \textbf{Incentives for Meeting Targets Early}: Members who consistently meet or exceed their targets will be rewarded with more
     desirable tasks as per their wants, such as leadership roles in key project components, helping to build their leadership experience. They
     will get first pick on tasks for the next team milestone.
 
 \end{enumerate}
 
-\subsubsection*{Team Building}
+\subsubsection*{\color{blue}Team Building}
 
-For team building events, the team has decided to have bi-weekly hangouts to bond and build relationships. The hangouts can 
+For team building events, the team has decided to have bi-weekly hangouts to bond and build relationships. The hangouts can
 attending on-campus events together, getting food or bubble tea on/off campus and more.
 
-\subsubsection*{Decision Making}
+\subsubsection*{\color{blue}Decision Making}
 
 In our group, our primary way of making decisions will be through consensus. We believe that it is important
 to include everyone in the decision-making process so it can lead to better outcomes and strong group work.

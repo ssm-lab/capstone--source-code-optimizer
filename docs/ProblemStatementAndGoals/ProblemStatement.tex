@@ -2,6 +2,8 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{blindtext}
 
 
 \title{Problem Statement and Goals\\\progname}
@@ -24,14 +26,16 @@
     \toprule
     \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
     \midrule
-    Date1 & Name(s) & Description of changes\\
-    Date2 & Name(s) & Description of changes\\
+    September 18th, 2024 & All & Created first draft of document\\
+    September 23rd, 2024 & All & Finalized document\\
     ... & ... & ...\\
     \bottomrule
   \end{tabularx}
 \end{table}
 \href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
 {problem statement checklist}
+
+\newpage
 
 \section{Problem Statement}
 
@@ -42,42 +46,39 @@ The Information and Communications Technology (ICT) sector is currently responsi
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.
-Use abstraction so that you can avoid details.}
-
-\textbf{Inputs:} Source code that requires refactoring for energy efficiency.
+\textbf{Inputs:} Source code that requires refactoring for energy efficiency. \\
 \textbf{Outputs:} Refactored code with reduced energy consumption, along with performance and energy consumption reports.
 
 \subsection{Stakeholders}
 \subsubsection*{\color{blue}{Direct Stakeholders}}
-\textbf{[Software Developers]}: They will be the primary users of the refactoring library as they will be the ones to integrate the library into their code for better refactoring.\\
+\begin{enumerate}
 
-\noindent
-\textbf{[Dr. Istvan David (Supervisor)]}: Dr. David has a vested interest in the development of the system. He will play a crucial role in guiding and mentoring our team throughout the project. As the project supervisor, he will be the key advisor, offering feedback on technical aspects, project management, and research methodologies. \\
+    \item \textbf{Software Developers}: They will be the primary users of the refactoring library as they will be the ones to integrate the library into their code for better refactoring.
+    \item \textbf{Dr. Istvan David (Supervisor)}: Dr. David has a vested interest in the development of the system. He will play a crucial role in guiding and mentoring our team throughout the project. As the project supervisor, he will be the key advisor, offering feedback on technical aspects, project management, and research methodologies. 
+    \item \textbf{Business Sustainability Teams}: These teams are responsible for considering how a companies practices affect the environment. They will especially be interested in viewing the metrics provided by the library on how it improves the energy efficiency of software over time, therefore decreasing the burden on hardware and minimizing the company's environmental footprint.
 
-\noindent
-\textbf{[Business Sustainability Teams]}: These teams are responsible for considering how a companies practices affect the environment. They will especially be interested in viewing the metrics provided by the library on how it improves the energy efficiency of software over time, therefore decreasing the burden on hardware and minimizing the company's environmental footprint.
+\end{enumerate}
 
 \subsubsection*{\color{blue}{Indirect Stakeholders}}
-\textbf{[Business Leaders]}: They focus on reducing operational costs associated with energy consumption, especially in large-scale or cloud-hosted applications. Use of the library in their products allows them to better achieve those goals. \\
+\begin{enumerate}
 
-\noindent
-\textbf{[End Users]}: While not directly affected by this refactoring library, end users of technology that use the library will benefit from more responsive and efficient software that consumes less power, especially in mobile, embedded, or battery-dependent applications. \\
+    \item \textbf{Business Leaders}: They focus on reducing operational costs associated with energy consumption, especially in large-scale or cloud-hosted applications. Use of the library in their products allows them to better achieve those goals. 
+    \item \textbf{End Users}: While not directly affected by this refactoring library, end users of technology that use the library will benefit from more responsive and efficient software that consumes less power, especially in mobile, embedded, or battery-dependent applications. 
+    \item \textbf{Regulatory Bodies}: They enforce energy consumption and sustainability standards, and ensure that software adheres to environmental regulations and may certify tools that meet efficiency requirements. Their oversight promotes the adoption of energy-efficient software practices.
 
-\noindent
-\textbf{[Regulatory Bodies]}: They enforce energy consumption and sustainability standards, and ensure that software adheres to environmental regulations and may certify tools that meet efficiency requirements. Their oversight promotes the adoption of energy-efficient software practices.
+\end{enumerate}
 
 \subsection{Environment}
-\textbf{Programming Language:} Python will be the main language for developing refactoring tools and performing energy optimization.
-\textbf{Reinforcement Learning Library: } Stable Baselines will be the library to implement reinforcement learning techniques.
-\textbf{Developement Frameworks and Tools: } 
+\textbf{Programming Language:} \textit{Python} will be the main language for developing refactoring tools and performing energy optimization.\\
+\textbf{Reinforcement Learning Library:} \textit{Stable Baselines} will be the library to implement reinforcement learning techniques.\\
+\textbf{Development Frameworks and Tools:} 
 \begin{enumerate}
-    \item Github will be used for version control and for CI/CD integration to automate refactoring processes.
-    \item Visual Studio Code will be the IDE used.
-\end{enumerate} 
-\textbf{Database: } MySQL will be the database used to store and retrieve data about refactoring and energy consumption metrics.
 
-\wss{Hardware and software environment}
+    \item \textit{GitHub} will be used for version control and for CI/CD integration to automate refactoring processes.
+    \item \textit{Visual Studio Code} will be the IDE used.
+    
+\end{enumerate} 
+\textbf{Database:} \textit{MySQL} will be the database used to store and retrieve data about refactoring and energy consumption metrics.
 
 \section{Goals}
 
@@ -112,6 +113,7 @@ Our goal is to reduce the energy consumption of Python codebases during executio
         \item Prioritizing energy-efficient refactorings that align with the developer's personal preferences, such as a preference for fewer lines of code or specific coding styles. The model will account for the acceptance or rejection of refactorings, tailoring future suggestions to suit individual developer styles.
     \end{itemize}
 \end{enumerate}
+
 
 \section{Challenge Level and Extras}
 
@@ -187,6 +189,7 @@ and adjustments may be made as needed throughout the term.
 
 \end{enumerate}
 
+
 \subsubsection*{Nivetha Kuruparan Reflection}
 \begin{enumerate}
   \item \textit{What went well while writing this deliverable?}
@@ -226,15 +229,6 @@ and adjustments may be made as needed throughout the term.
 
 \end{enumerate}
 
-
-\subsubsection*{Full Name Reflection}
-\begin{enumerate}
-  \item \textit{What went well while writing this deliverable?}
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-  \item \textit{How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly 
-  ambitious but also of appropriate complexity for a senior design project)?}
-\end{enumerate}
-
 \subsubsection*{Group Answers Reflection}
 \begin{enumerate}
   \item \textit{How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly 
@@ -245,7 +239,5 @@ and adjustments may be made as needed throughout the term.
   also realistic about what we could achieve.
     
 \end{enumerate}
-
-
 
 \end{document}
