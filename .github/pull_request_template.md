@@ -1,9 +1,3 @@
----
-name: Default PR
-about: Default PR format.
-
----
-
 ## Description
 <!--- Describe your changes in detail -->
 
