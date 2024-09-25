@@ -157,41 +157,80 @@ you will be able to overcome this risk?
 
 \section{Expected Technology}
 
-\wss{What programming language or languages do you expect to use?  What external
-  libraries?  What frameworks?  What technologies.  Are there major components of
-  the implementation that you expect you will implement, despite the existence of
-  libraries that provide the required functionality.  For projects with machine
-learning, will you use pre-trained models, or be training your own model?  }
+\subsection{Languages}
+A diverse set of languages is being used to build different components of the project. Here is a detailed breakdown:
 
-\wss{The implementation decisions can, and likely will, change over the course
-  of the project.  The initial documentation should be written in an abstract way;
-  it should be agnostic of the implementation choices, unless the implementation
-  choices are project constraints.  However, recording our initial thoughts on
-  implementation helps understand the challenge level and feasibility of a
-  project.  It may also help with early identification of areas where project
-members will need to augment their training.}
+\begin{enumerate}
+    \item \textbf{Refactoring Library: Python}\\
+    The library is being built in Python for the following reasons:
+    \begin{itemize}
+        \item It has well-established libraries like `Rope` for refactoring and `PyJoules` for energy analysis, which can be leveraged for the MVP.
+        \item It is widely used in both research and industry, making the library adoptable by a broader community of developers.
+    \end{itemize}
 
-Topics to discuss include the following:
+    \item \textbf{VS Plugin: TypeScript}\\
+    Given the VS Code architecture (based on web technologies), the plugin needs to be built using JavaScript or TypeScript. The team has decided to pursue development in TypeScript given our experience in the language.
+\end{enumerate}
 
-\begin{itemize}
-  \item Specific programming language
-  \item Specific libraries
-  \item Pre-trained models
-  \item Specific linter tool (if appropriate)
-  \item Specific unit testing framework
-  \item Investigation of code coverage measuring tools
-  \item Specific plans for Continuous Integration (CI), or an explanation that CI
-    is not being done
-  \item Specific performance measuring tools (like Valgrind), if
-    appropriate
-  \item Tools you will likely be using?
-\end{itemize}
+\subsection{External Libraries/Customization}
+To build an MVP, the team is relying on multiple external libraries to handle the technical detail intensive work. Below is a list of external libraries that we are using along with their purpose. Note that their usage will be replaced with custom implementation once an MVP has been created and tested.
 
-\wss{git, GitHub and GitHub projects should be part of your technology.}
+\begin{enumerate}
+    \item \textbf{Code Energy Calculation: PyJoules}\\
+    PyJoules is a well-documented library that calculates the energy consumed on executing a given Python codebase. Since the library calculates energy consumption at the hardware level, the calculations are very precise. This makes it an ideal choice for analyzing the energy impact of code refactorings.
+
+    \item \textbf{Inefficient Code Pattern Detection: PySmells}\\
+    After reviewing PySmells documentation, it can be deduced that a majority of code smells can be detected and resolved using the library.
+
+    \item \textbf{Refactoring: Rope}\\
+    Rope includes a wide range of refactorings, such as renaming, function extraction, and code restructuring. Some of these will be useful when refactoring for inefficient code patterns. Rope is an ideal choice as it simplifies the process of identifying and replacing these code patterns with more optimized versions.
+\end{enumerate}
+
+\subsection{DevOps Integration Framework}
+Since the goal is to integrate with GitHub, GitHub Actions is the natural choice for the CI/CD part of the project. By using GitHub Actions, the library can be configured to be automatically triggered whenever new code is pushed into a branch. This action can be integrated with test suites provided by the user to validate that functional behavior is retained past refactoring.
+
+\subsection{Machine Learning Model}
+The reinforcement learning model needs to be trained on specific refactoring techniques and developer feedback. Since the problem space is unique to this project, the model will be trained by the feedback received through the application of the library.
+
+\subsection{Machine Learning Framework}
+For the learning model, the team has decided to utilize the PyTorch framework for the following two reasons:
+\begin{enumerate}
+    \item It is written in Python, so it's easier to integrate with the Python-based library.
+    \item It has a less steep learning curve compared to TensorFlow since it’s syntactically similar to PyTorch.
+\end{enumerate}
+
+\subsection{Continuous Integration Plan}
+For automated testing and integration within the GitHub DevOps pipeline, the team has decided to utilize GitHub Actions since they have a wide variety of support articles for initial setup.
+
+\subsection{Additional Tools (for Development Support)}
+To ensure that the plugin, library, and reinforcement learning model run consistently across different environments, Docker containers will be used. Since these can package the entire application with its dependencies, there will be consistency in development, testing, and deployment environments.
+
+\subsection{Linter Tools}
+To ensure best practices, all team members will be using the following combination of linter tools for Python code:
+\begin{enumerate}
+    \item \textbf{Mypy:} This tool enforces type annotations, which helps to detect type-related errors before runtime. Since Python is dynamically typed, Mypy enhances code reliability by making types explicit.
+    \item \textbf{Flake8:} This tool checks code for style guide enforcement (PEP 8) and can catch potential errors early in development, improving code quality and maintainability.
+\end{enumerate}
+
+\subsection{Code Smell Tools}
+To identify code smells during development, the team will include PySmells in the project. In addition to the fact that the tool covers a majority of Python code smells, the team was enthusiastic about the fact that the library itself will be used during implementation of the MVP.
+
+\subsection{Unit Testing}
+To ensure systematic testing of our growing codebase, the project will include unit tests written in \texttt{pytest}. We have chosen this framework as it helps to write scalable test cases, supports parameterized tests, and has easy integration with \texttt{coverage.py}, which is our code coverage measuring tool.
+
+\subsection{Code Coverage}
+\texttt{Coverage.py} has been chosen to measure the code coverage. This will be a useful tool to identify areas of the codebase that need additional test coverage.
+
+\subsection{Performance Measurement}
+Performance measuring tools have been chosen to target common Python-specific code problems. Here is a list of tools the team plans to integrate into the project:
+\begin{enumerate}
+    \item \textbf{PyTrace:} This tool will be used to trace execution and will be particularly useful in instances that might be prone to race conditions.
+    \item \textbf{cProfile:} This tool will be used to retrieve information on the time spent on each function during execution. It will be particularly useful to identify any performance bottlenecks.
+\end{enumerate}
 
 \section{Coding Standard}
 
-\wss{What coding standard will you adopt?}
+The team will include PEP 8 as the coding standard in the project. It is widely accepted across the Python community, therefore there is tons of resources available on initially setting it up. It will serve as a useful tool to automate style enforcement and ensure consistency across the codebase.
 
 \newpage{}
 
@@ -206,23 +245,23 @@ Topics to discuss include the following:
 \begin{enumerate}
   \item \textit{Why is it important to create a development plan prior to starting the project?}
 
-    Development plans act as good starting points by establishing clear objectives, recourse requirements, timelines and by 
-    assigning accountability within a project. It improves overall communication and understanding between members by solidifying 
-    the intent and requirements of a project. From my experience in industry, developers who don’t have a good grasp of what they’re 
-    developing and why they’re developing it typically deliver products that either fail to meet the primary goal or prove useless to 
-    the user. In real life, you develop products for people with various backgrounds. People of different disciplines speak in different 
-    technical tongues. Development plans are critical in syncing many people from various disciplines towards a common goal. They can also 
-    further can divide the roles and responsibilities between the developers and later aid in making development decisions that push 
+    Development plans act as good starting points by establishing clear objectives, recourse requirements, timelines and by
+    assigning accountability within a project. It improves overall communication and understanding between members by solidifying
+    the intent and requirements of a project. From my experience in industry, developers who don’t have a good grasp of what they’re
+    developing and why they’re developing it typically deliver products that either fail to meet the primary goal or prove useless to
+    the user. In real life, you develop products for people with various backgrounds. People of different disciplines speak in different
+    technical tongues. Development plans are critical in syncing many people from various disciplines towards a common goal. They can also
+    further can divide the roles and responsibilities between the developers and later aid in making development decisions that push
     progress towards the primary goals defined in the document.
-    
+
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
 
-    I would be lying if I were to say that my team had disagreements during the first week of working on the project. The easy answer to 
-    this question is to make up a disagreement of low significance and say we worked through it using open democratic discussion and 
-    compromise. The truth is that it is too early in the project for us to be disagreeing with each other. We’re in our “honeymoon stage” 
-    where all members are excited to work on the project and are optimistic about the possible results we could achieve. Let us be in love 
+    I would be lying if I were to say that my team had disagreements during the first week of working on the project. The easy answer to
+    this question is to make up a disagreement of low significance and say we worked through it using open democratic discussion and
+    compromise. The truth is that it is too early in the project for us to be disagreeing with each other. We’re in our “honeymoon stage”
+    where all members are excited to work on the project and are optimistic about the possible results we could achieve. Let us be in love
     during week one. We have many more weeks left to disagree.
-    
+
 \end{enumerate}
 
 \subsubsection*{Ayushi Amin Reflection}
@@ -230,16 +269,16 @@ Topics to discuss include the following:
 \begin{enumerate}
   \item \textit{Why is it important to create a development plan prior to starting the
     project?}
-    
-    A developement plan is important because it serves as a clear roadmap for the project and ensures that all 
+
+    A developement plan is important because it serves as a clear roadmap for the project and ensures that all
     team members understand the the project scope, objectives and timeline. A clear plan helps to identify potential risks
-    and areas of concern/challenges that can be caught at an early stage so a solution can be crafted early on. It also helps 
+    and areas of concern/challenges that can be caught at an early stage so a solution can be crafted early on. It also helps
     in resource allocation by ensuring that the necessary tools and budget are available when needed.
-    
+
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
-  
+
     To be quite frank, our team did not have any disagreements during the first couple weeks of working together.
-    
+
 \end{enumerate}
 
 \subsubsection*{Sevhena Walker Reflection}
@@ -248,24 +287,24 @@ Topics to discuss include the following:
 
   \item \textit{Why is it important to create a development plan prior to starting the project?}
 
-    When starting a project with a large scope, it is easy to get lost in all the features you want to implement in the project. 
-    By establish an action plan from the start, you allow yourself and your team to develop concrete goals and needs for your system. 
-    It is necessary to take a step back and analyze how exactly the components of your system are expected to interact with each other 
+    When starting a project with a large scope, it is easy to get lost in all the features you want to implement in the project.
+    By establish an action plan from the start, you allow yourself and your team to develop concrete goals and needs for your system.
+    It is necessary to take a step back and analyze how exactly the components of your system are expected to interact with each other
     and what the end result is suppose to be.\\
 
-    Without this planning stage, you are essentially going in blind with only a vague understanding and what you need to do. There is 
-    no way to organize task between team members efficiently either since specific components are sparsely detailed or non-existent. The 
-    project will be in a constant state of "debugging" you could say, constantly trying to figure out how this feature will work with the 
+    Without this planning stage, you are essentially going in blind with only a vague understanding and what you need to do. There is
+    no way to organize task between team members efficiently either since specific components are sparsely detailed or non-existent. The
+    project will be in a constant state of "debugging" you could say, constantly trying to figure out how this feature will work with the
     next and the next and so on. It would be like trying to build a house while only ever looking at the next couple meters in front of you.
 
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
-  I honestly cannot say that we had any disagreements as yet. Our team tried our best to discuss what our goals for the project were and 
-  everything was well communicated so that everyone was on the same page. We are at the beginning stages of a project that will implement 
+  I honestly cannot say that we had any disagreements as yet. Our team tried our best to discuss what our goals for the project were and
+  everything was well communicated so that everyone was on the same page. We are at the beginning stages of a project that will implement
   technology is mostly new to us. We are excited, but also somewhat ignorant to some details which makes it hard to "disagree".
 
 \end{enumerate}
 
-\subsubsection*{Tanveer Brar}
+\subsubsection*{Tanveer Brar Reflection}
 
 \begin{enumerate}
   \item \textit{Why is it important to create a development plan prior to starting the project?}
