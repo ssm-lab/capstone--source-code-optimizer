@@ -35,7 +35,7 @@
 
 \noindent
 This document outlines the development plan for improving the energy efficiency of
-engineered software through refactoring. It includes details on intellectual property,
+engineered software through refactoring. Included are the details on intellectual property,
 team roles, workflow structure, and project scheduling. Additionally, the plan covers
 expected technologies, coding standards, and proof of concept demonstrations, providing
 a clear road map for the project's progression.
@@ -59,7 +59,7 @@ See LICENSE file in root of repository, can be accessed at this \href{https://gi
 \section{Team Meeting Plan}
 
 \hspace{\parindent} The team will meet multiple times a week, once during Monday tutorial time and throughout the week as issues or concerns arise. The meetings will be conducted either online through a Teams meeting or in-person on campus. The team
-will hold an official meeting with the industry advisor once a week yet the time has not been decided. The meeting with the advisor will be online on Teams for the first 3 weeks, followed by in-person meetings later on. Meetings itself will be structured as follows:
+will hold an official meeting with the industry advisor once a week yet the time has not been decided. The meeting with the advisor will be online on Teams for the first three weeks, followed by in-person meetings later on. Meetings itself will be structured as follows:
 \begin{enumerate}
   \item Each member will take turns giving a short recap of work they have accomplished throughout the week.
   \item Members will voice any concerns or issues they may be facing.
@@ -111,7 +111,7 @@ The average workflow for the project will proceed as follows:
   \item Create \textbf{unit tests} for said changes
   \item Create pull request to merge changes from sub/working branch into working/epic branch
   \item Wait for all tests run with \textbf{GitHub Actions} to pass
-  \item Wait for 2 approvals from teammates other than the one who created the Pull request
+  \item Wait for two approvals from teammates other than the one who created the Pull request
   \item Merge changes into target branch (working or epic)
 \end{enumerate}
 
@@ -143,21 +143,24 @@ The team currently has one GitHub Project setup to serve as a visual tool not on
 While the development of our system will be broken down into smaller features, the overall project will follow the following major deadlines.
 
 \begin{center}
-  \begin{tabularx}{\textwidth}{X|c}
+  \begin{tabularx}{\textwidth}{Xc}
+    \toprule
     \textbf{Milestone} & \textbf{Due Date} \\
-    \hline
-    Problem Statement, Proof of Concept and Development Plan & September 24th, 2024 \\
+    \midrule
+    Problem Statement, Proof of Concept, and Development Plan & September 24th, 2024 \\
     Requirements Document (Revision 0) & October 9th, 2024 \\
     Hazard Analysis (Revision 0) & October 23rd, 2024 \\
     Verification \& Validation Plan (Revision 0) & November 1st, 2024 \\
-    Proof of Concept & November 11th-22nd \\
+    Proof of Concept & November 11th-22nd, 2024 \\
     Design Document (Revision 0) & January 15th, 2025 \\
     Project Demo (Revision 0) & February 3rd-14th, 2025 \\
     Final Demonstration & March 17th-30th, 2025 \\
-    Final Documentation & April 2nd, 2025\\
+    Final Documentation & April 2nd, 2025 \\
     Capstone EXPO & TBD \\
+    \bottomrule
   \end{tabularx}
 \end{center}
+
 
 \section{Proof of Concept Demonstration Plan}
 
@@ -182,7 +185,7 @@ For context, our POC will consist of roughly the following steps:
   \end{itemize} 
 \end{enumerate}
 
-
+\noindent
 The following is a list of primary risks and how potential results from the POC could mitigate them.
 \begin{enumerate}
 
@@ -225,8 +228,8 @@ A diverse set of languages is being used to build different components of the pr
     \item \textbf{Refactoring Library: Python}\\
     The library is being built in Python for the following reasons:
     \begin{itemize}
-        \item It has well-established libraries like `Rope` for refactoring and `PyJoules` for energy analysis, which can be leveraged for the MVP.
-        \item It is widely used in both research and industry, making the library adoptable by a broader community of developers.
+        \item The language has well-established libraries like `Rope` for refactoring and `PyJoules` for energy analysis, which can be leveraged for the MVP.
+        \item The language is widely used in both research and industry, making the library adoptable by a broader community of developers.
     \end{itemize}
     \item \textbf{VS Plugin: TypeScript}\\
     Given the VS Code architecture (based on web technologies), the plugin needs to be built using JavaScript or TypeScript. The team has decided to pursue development in TypeScript given our experience in the language.
@@ -255,8 +258,8 @@ The reinforcement learning model needs to be trained on specific refactoring tec
 \subsection{Machine Learning Framework}
 For the learning model, the team has decided to utilize the PyTorch framework for the following two reasons:
 \begin{enumerate}
-    \item It is written in Python, so it's easier to integrate with the Python-based library.
-    \item It has a less steep learning curve compared to TensorFlow since it’s syntactically similar to PyTorch.
+    \item The framework is written in Python, so it's easier to integrate with the Python-based library.
+    \item The framework has a less steep learning curve compared to TensorFlow since it’s syntactically similar to PyTorch.
 \end{enumerate}
 
 \subsection{Continuous Integration Plan}
@@ -285,18 +288,16 @@ To ensure systematic testing of our growing codebase, the project will include u
 Performance measuring tools have been chosen to target common Python-specific code problems. Here is a list of tools the team plans to integrate into the project:
 \begin{enumerate}
     \item \textbf{PyTrace:} This tool will be used to trace execution and will be particularly useful in instances that might be prone to race conditions.
-    \item \textbf{cProfile:} This tool will be used to retrieve information on the time spent on each function during execution. It will be particularly useful to identify any performance bottlenecks.
+    \item \textbf{cProfile:} This tool will be used to retrieve information on the time spent on each function during execution. This will be particularly useful to identify any performance bottlenecks.
 \end{enumerate}
 
 \section{Coding Standard}
 
-The team will include PEP 8 as the coding standard in the project. It is widely accepted across the Python community, therefore there is tons of resources available on initially setting it up. It will serve as a useful tool to automate style enforcement and ensure consistency across the code base.
+The team will include PEP 8 as the coding standard in the project. This standard is widely accepted across the Python community, therefore there is tons of resources available on initially setting it up. The team will have a useful tool to automate style enforcement and ensure consistency across the code base.
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
-
-\input{../Reflection.tex}
 
 \subsubsection*{Mya Hussain Reflection}
 
@@ -304,7 +305,7 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
   \item \textit{Why is it important to create a development plan prior to starting the project?}
 
     Development plans act as good starting points by establishing clear objectives, recourse requirements, timelines and by
-    assigning accountability within a project. It improves overall communication and understanding between members by solidifying
+    assigning accountability within a project. This improves overall communication and understanding between members by solidifying
     the intent and requirements of a project. From my experience in industry, developers who don’t have a good grasp of what they’re
     developing and why they’re developing it typically deliver products that either fail to meet the primary goal or prove useless to
     the user. In real life, you develop products for people with various backgrounds. People of different disciplines speak in different
@@ -330,7 +331,7 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
 
     A development plan is important because it serves as a clear road map for the project and ensures that all 
     team members understand the the project scope, objectives and timeline. A clear plan helps to identify potential risks
-    and areas of concern/challenges that can be caught at an early stage so a solution can be crafted early on. It also helps
+    and areas of concern/challenges that can be caught at an early stage so a solution can be crafted early on. This also helps
     in resource allocation by ensuring that the necessary tools and budget are available when needed.
 
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
@@ -346,14 +347,12 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
   \item \textit{Why is it important to create a development plan prior to starting the project?}
 
     When starting a project with a large scope, it is easy to get lost in all the features you want to implement in the project.
-    By establish an action plan from the start, you allow yourself and your team to develop concrete goals and needs for your system.
-    It is necessary to take a step back and analyze how exactly the components of your system are expected to interact with each other
-    and what the end result is suppose to be.\\
+    By establishing an action plan from the start, you allow yourself and your team to develop concrete goals and needs for your system. Taking a step back to analyze how the components of your system are expected to interact with each other and defining the intended end result is necessary.\\
 
     Without this planning stage, you are essentially going in blind with only a vague understanding and what you need to do. There is
     no way to organize task between team members efficiently either since specific components are sparsely detailed or non-existent. The
     project will be in a constant state of "debugging" you could say, constantly trying to figure out how this feature will work with the
-    next and the next and so on. It would be like trying to build a house while only ever looking at the next couple meters in front of you.
+    next and the next and so on. This would be like trying to build a house while only ever looking at the next couple meters in front of you.
 
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
   
@@ -368,13 +367,13 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
 \begin{enumerate}
   \item \textit{Why is it important to create a development plan prior to starting the project?}
 
-   After having created one, I believe a development plan is important as it can be useful for the project in multiple ways. For one, it is a written record of the team's expected practices related to roles, communication, etc.(which ensures that everyone is on the same page with these practices). It can also be used by instructors as the source of truth if there are any conflicts in the project team.\\
+   After having created one, I believe a development plan is important as it can be useful for the project in multiple ways. For one, it is a written record of the team's expected practices related to roles, communication, etc.(which ensures that everyone is on the same page with these practices).This can also be used by instructors as the source of truth if there are any conflicts in the project team.\\
 
    Secondly, with the pre-written format/prompts we were compelled to think about some logistics that we would otherwise have ignored(such as communication plan and coding standards). In short, it set a great starting note for the project so we were aware of our assumptions and were also compelled to think about less obvious aspects of project planning.
 
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
 
-  We haven’t had any disagreements in our group for this deliverable. There were multiple instances where each of us had different ideas on how to approach a particular issue. After weighing in the pros and cons of each idea together, we ended up picking one of them unanimously. It was possible since we value each other’s thought process and take a non partial approach when deliberating.
+  We haven’t had any disagreements in our group for this deliverable. There were multiple instances where each of us had different ideas on how to approach a particular issue. After weighing in the pros and cons of each idea together, we ended up picking one of them unanimously. This was possible since we value each other’s thought process and take a non partial approach when deliberating.
 
 \end{enumerate}
 
@@ -384,7 +383,7 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
   \item \textit{Why is it important to create a development plan prior to starting the project?}
 
   A development plan is essential as it sets a structured foundation for the project, helping to 
-  clarify the team's objectives, roles, and processes before work begins. It ensures that everyone 
+  clarify the team's objectives, roles, and processes before work begins. This ensures that everyone 
   shares a common understanding of the project's scope and expectations, reducing the likelihood 
   of miscommunication or misaligned efforts later on. 
 
@@ -408,22 +407,22 @@ The team will include PEP 8 as the coding standard in the project. It is widely 
 \begin{itemize}
     \item \textit{In your opinion, what are the advantages and disadvantages of using CI/CD?}
 
-    CI/CD, or Continuous Integration/Continuous Deployment, is a process where continuous integration involves automatically integrating code changes from multiple contributors into a shared repository for every commit, and continuous deployment ensures the code base is deployable at any time. Key practices include automated testing and frequent commits, leading to better code quality as bugs and conflicts are caught early and fixed near their date of creation. Another advantage is faster time to market, as code is integrated and deployed more quickly, allowing teams to deliver features and fixes to users faster. It also improves collaboration through feedback, as features pushed to shared repositories can be reviewed by the team.
+    CI/CD, or Continuous Integration/Continuous Deployment, is a process where continuous integration involves automatically integrating code changes from multiple contributors into a shared repository for every commit, and continuous deployment ensures the code base is deployable at any time. Key practices include automated testing and frequent commits, leading to better code quality as bugs and conflicts are caught early and fixed near their date of creation. Another advantage is faster time to market, as code is integrated and deployed more quickly, allowing teams to deliver features and fixes to users faster. This also improves collaboration through feedback, as features pushed to shared repositories can be reviewed by the team.
 
-    Disadvantages include the initial setup complexity of the CI/CD pipeline, which can be time-consuming and challenging for those new to the process. It requires ongoing maintenance and overhead to continuously commit, test, and merge code, diverting time from feature development. Additionally, the setup of automated tests and deployment workflows can be complex and requires knowledge of the process. Risks include over-reliance on automation, which could introduce security flaws.
+    Disadvantages include the initial setup complexity of the CI/CD pipeline, which can be time-consuming and challenging for those new to the process. This requires ongoing maintenance and overhead to continuously commit, test, and merge code, diverting time from feature development. Additionally, the setup of automated tests and deployment workflows can be complex and requires knowledge of the process. Risks include over-reliance on automation, which could introduce security flaws.
     In other terms:\\
     \textbf{Advantages:}
     \begin{enumerate}
       \item Faster development since changes would be pushed constantly as testing for new/fixed features would be successful
       \item Shorter delivery times
       \item Improved code quality (automated testing)
-      \item Easier change monitoring and rollback since there are 5 members and multiple branches and changes based on the member
+      \item Easier change monitoring and rollback since there are five members and multiple branches and changes based on the member
       \item Increased efficiency and productivity
     \end{enumerate}
     \textbf{Disadvantages}
     \begin{enumerate}
       \item Requires strong discipline and commitment from the entire team and may be a learning curve for the team
-      \item May be challenging to implement for small teams since there is only 5 members
+      \item May be challenging to implement for small teams since there is only five members
       \item Initial setup and configuration can be complex and time-consuming since the team will be setting this up from scratch
     \end{enumerate}
 
@@ -497,6 +496,7 @@ Our team has the following expectations regarding the quality of preparation for
 
 \end{itemize}
 
+\noindent
 By maintaining these expectations, our team will ensure that meetings are efficient and that all deliverables reflect a professional and high-quality standard.
 
 \subsubsection*{\color{blue}Attitude}
@@ -511,6 +511,7 @@ Our team has established the following \textbf{expectations} for team members' c
     \item \textbf{Commitment to Quality}: Every team member is expected to contribute to the project with their best effort, ensuring that the final product reflects high standards of quality.
 \end{itemize}
 
+\noindent
 We adopt the following \textbf{code of conduct} to guide behavior and interaction among team members:
 
 \begin{itemize}
@@ -520,6 +521,7 @@ We adopt the following \textbf{code of conduct} to guide behavior and interactio
     \item \textbf{No Tolerance for Harassment}: Harassment of any kind will not be tolerated. Any issues will be reported immediately and addressed in a structured manner.
 \end{itemize}
 
+\noindent
 To manage conflicts or disagreements that may arise during the project, we have a \textbf{conflict resolution plan} in place:
 
 \begin{enumerate}

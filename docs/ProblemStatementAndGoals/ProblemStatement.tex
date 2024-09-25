@@ -38,10 +38,9 @@
 
 \section{Problem Statement}
 
-The Information and Communications Technology (ICT) sector is currently responsible for approximately 2-4\% of global CO2 emissions, a figure projected to rise to 14\% by 2040 without intervention ~\citep{BelkhirAndElmeligi2018}. To align with broader economic sustainability goals, the ICT industry must reduce its CO2 emissions by 72\% by 2040 ~\citep{FreitagAndBernersLee2021}. Optimizing energy consumption in software systems is a complex task that cannot rely solely on software engineers, who often face strict deadlines and busy schedules. This creates a pressing need for supporting technologies that help automate this process. This project aims to develop a tool that applies automated refactoring techniques to optimize Python code for energy efficiency while preserving its original functionality. 
-
-
 \subsection{Problem}
+
+The Information and Communications Technology (ICT) sector is currently responsible for approximately 2-4\% of global CO2 emissions, a figure projected to rise to 14\% by 2040 without intervention ~\citep{BelkhirAndElmeligi2018}. To align with broader economic sustainability goals, the ICT industry must reduce its CO2 emissions by 72\% by 2040 ~\citep{FreitagAndBernersLee2021}. Optimizing energy consumption in software systems is a complex task that cannot rely solely on software engineers, who often face strict deadlines and busy schedules. This creates a pressing need for supporting technologies that help automate this process. This project aims to develop a tool that applies automated refactoring techniques to optimize Python code for energy efficiency while preserving its original functionality. 
 
 \subsection{Inputs and Outputs}
 
@@ -68,7 +67,6 @@ The Information and Communications Technology (ICT) sector is currently responsi
 \end{enumerate}
 
 \subsection{Environment}
-\textbf{Programming Language:} \textit{Python} will be the main language for developing refactoring tools and performing energy optimization.\\
 \textbf{Reinforcement Learning Library:} \textit{Stable Baselines} will be the library to implement reinforcement learning techniques.\\
 \textbf{Development Frameworks and Tools:} 
 \begin{enumerate}
@@ -77,7 +75,7 @@ The Information and Communications Technology (ICT) sector is currently responsi
     \item \textit{Visual Studio Code} will be the IDE used.
     
 \end{enumerate} 
-\textbf{Database:} \textit{MySQL} will be the database used to store and retrieve data about refactoring and energy consumption metrics.
+\textbf{Database:} A database will be used to store and retrieve data about refactoring and energy consumption metrics.
 
 \section{Goals}
 
@@ -87,8 +85,8 @@ Our goal is to reduce the energy consumption of Python codebases during executio
     \item \textbf{Refactoring Library:} \\
     The library refactors inefficient code patterns to achieve a net reduction in energy consumption while preserving the functional integrity of the given codebase. When there are multiple ways to refactor a block of code, it will choose the one with the greatest net reduction in energy consumption.
 
-    \item \textbf{VS Code Plugin:} \\
-    The plugin will utilize the refactoring library so that developers can get access to a refactored and energy-efficient version of their Python codebase within the VS Code IDE. The plugin has two aspects:
+    \item \textbf{Plugin:} \\
+    The plugin will utilize the refactoring library so that developers can get access to a refactored and energy-efficient version of their Python codebase within an IDE. The plugin has two aspects:
 
     \begin{itemize}
         \item \textbf{Developer Feedback:} Developers will be able to review the refactoring suggestions and decide whether to apply the changes based on their preferences.
@@ -106,7 +104,7 @@ Our goal is to reduce the energy consumption of Python codebases during executio
     \end{itemize}
 
     \item \textbf{Reinforcement Learning Model:} \\
-    The goal is to build a model that evolves its refactoring recommendations over time to maximize energy efficiency while aligning with developer preferences. It achieves this by:
+    The goal is to build a model that evolves its refactoring recommendations over time to maximize energy efficiency while aligning with developer preferences. The model achieves this by:
     \begin{itemize}
         \item Incrementally identifying energy optimization techniques from past refactorings that result in larger net reductions in energy consumption.
         \item Prioritizing energy-efficient refactorings that align with the developer's personal preferences, such as a preference for fewer lines of code or specific coding styles. The model will account for the acceptance or rejection of refactorings, tailoring future suggestions to suit individual developer styles.
@@ -120,27 +118,25 @@ The expected challenge level of our project as general. This is due to the
 relatively straightforward technical knowledge required for its completion.
 The project primarily involves applying known software optimization and
 refactoring techniques, which are well-documented and accessible.
-Additionally, the required programming knowledge is in Python which known
+Additionally, the required programming knowledge is in Python which is known
 by all of the team members and was, taught in our undergraduate courses.
 Although the project does involve substantial development and research components,
 we anticipate the overall scope and depth of work to be manageable within the
-given timeframe.
+given timeframe. \\
 
+\noindent
 To further enhance the project and address any potential gaps in the challenge level,
 we propose two additional activities: User Documentation and Usability Testing.
 These extras will allow us to provide support for future users of the tool and
-ensure that the tool meets user expectations and accessibility standards.
+ensure that the tool meets user expectations and accessibility standards.\\
 
+\noindent
 Approval of the challenge level and extras will be discussed with the instructor,
 and adjustments may be made as needed throughout the term.
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741}
-
-\input{../Reflection.tex}
 
 \subsubsection*{Mya Hussain Reflection}
 
@@ -150,14 +146,14 @@ and adjustments may be made as needed throughout the term.
     Our team was able to create a clear and concise plan as to what we were trying to achieve and investigate the details as to how we could potentially achieve it. We were able to brainstorm multiple possible routes to take depending on how successful we are while developing. We were also able to reach out to our supervising professor and receive many research papers that helped bring us up to speed as to what this project would require, so that we could set out realistic goals for the project.
     \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
     
-    It took some time for the research papers we requested from our supervisor to actually hit our inboxes. In the meantime, we were on our own to brainstorm solutions for the problem. This was both a positive and a negative as on the positive side we got to do some self-study and think of some new ideas from scratch. While on the downside, we didn’t know if our brainstormed ideas were methodologies our supervisor would want us to use. Learning with mentorship is great because we were able to gain confidence that what we were doing was correct due to our supervisor’s experience. Being able to explore the project on our own was cool because we got to investigate a lot of different technologies surrounding the space regardless of how efficient the solution may be. So, in the end, our pain points were just learning experiences, before we were thrown a life vest.
+    A lot of time was taken for the research papers we requested from our supervisor to actually hit our inboxes. In the meantime, we were on our own to brainstorm solutions for the problem. This was both a positive and a negative as on the positive side we got to do some self-study and think of some new ideas from scratch. While on the downside, we didn’t know if our brainstormed ideas were methodologies our supervisor would want us to use. Learning with mentorship is great because we were able to gain confidence that what we were doing was correct due to our supervisor’s experience. Being able to explore the project on our own was cool because we got to investigate a lot of different technologies surrounding the space regardless of how efficient the solution may be. So, in the end, our pain points were just learning experiences, before we were thrown a life vest.
     
 
     \item \textit{How did you and your team adjust the scope of your goals to ensure they
     are suitable for a Capstone project (not overly ambitious but also of ap-
     propriate complexity for a senior design project)?}
 
-    My team and I started the project off by getting very familiar with each other’s strengths and weaknesses. We shared resumes, transcripts and highlighted all the former experiences we had before selecting a project that most aligned with our combined skillsets. Once we had a project, setting goals was the easy part as in our goals we ensured that we would have fallbacks if the project was overly ambitious allowing us to jump with a safety net. For example, we initially discussed the potential for developing a neural network that chooses the best refactoring for a given code input. Recognizing that we have low ML experience between us we opted to implement an algorithmic approach for our POC and attempt an ML implementation in semester 2 if the first one works properly. We also ensured that there would be middlemen libraries we could pull from if we were unsuccessful in writing all the code ourselves. The clearest example of this is there being smell detection code readily available in many online free to use libraries. Planning out these fallbacks between ourselves made sure everyone was comfortable with the project and that we could tweak the difficulty as time went by being that we are trying something new.
+    My team and I started the project off by getting very familiar with each other’s strengths and weaknesses. We shared resumes, transcripts and highlighted all the former experiences we had before selecting a project that most aligned with our combined skillsets. Once we had a project, setting goals was the easy part as in our goals we ensured that we would have fallbacks if the project was overly ambitious allowing us to jump with a safety net. For example, we initially discussed the potential for developing a neural network that chooses the best refactoring for a given code input. Recognizing that we have low ML experience between us we opted to implement an algorithmic approach for our POC and attempt an ML implementation in the seconf semester if the first one works properly. We also ensured that there would be middlemen libraries we could pull from if we were unsuccessful in writing all the code ourselves. The clearest example of this is there being smell detection code readily available in many online free to use libraries. Planning out these fallbacks between ourselves made sure everyone was comfortable with the project and that we could tweak the difficulty as time went by being that we are trying something new.
 
 
 \end{enumerate}  
@@ -171,7 +167,7 @@ and adjustments may be made as needed throughout the term.
 
     \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
 
-    Not all the information was clarified or given by the supervisor at an early stage so writing this document took some time which caused us to delay working on this for a couple days. The team and I decided to consistently check in with the supervisor to encourage him to provide the required documents and information we needed as soon as possible. We used email as well as discord to directly reach out to the supervisor in which we finally ended up getting the information 2 days before the deadline and then crammed to finish the milestone documents.
+    Not all the information was clarified or given by the supervisor at an early stage so writing this document took some time which caused us to delay working on this for a couple days. The team and I decided to consistently check in with the supervisor to encourage him to provide the required documents and information we needed as soon as possible. We used email as well as discord to directly reach out to the supervisor in which we finally ended up getting the information two days before the deadline and then crammed to finish the milestone documents.
 
 \end{enumerate}
 
