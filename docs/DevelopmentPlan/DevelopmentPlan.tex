@@ -49,7 +49,7 @@ Permission is granted on a case-by-case basis, non-transferable and non-exclusiv
 
 \section{Copyright License}
 
-LICENSE file in root of repository.
+See LICENSE file in root of repository.
 \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/LICENSE}{Click to Open}
 
 \section{Team Meeting Plan}
@@ -151,9 +151,58 @@ While the development of our system will be broken down into smaller features, t
 
 \section{Proof of Concept Demonstration Plan}
 
-What is the main risk, or risks, for the success of your project?  What will you
-demonstrate during your proof of concept demonstration to convince yourself that
-you will be able to overcome this risk?
+For context, our POC will consist of roughly the following steps:
+\begin{enumerate}
+  \item Determine the code smells we want to address for energy saving.
+  \begin{itemize}
+    \item These are items like but not limited to: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), and Long Ternary Conditional Expression (LTCE).     
+  \end{itemize} 
+  \item Determine the detectability of a specific code smell 
+  \begin{itemize}
+    \item Many of these code smells are detectable using linters like Pylint, Flake8 and bandit. Hence the detection technology already exists if we choose to use it, and or the tools have been made before if we intend to remake them, proving they are possible to construct.
+  \end{itemize} 
+  \item Determine the appropriate refactorings for a particular detected smell that results in decreased energy consumption.
+  \begin{itemize}
+    \item There are many tools such as Pyjoule that we can use to measure the energy consumed by a piece of code. This step will involve various phases of trial and error as it is not a 1-1 trivial solution. There could be various refactorings possible for a given situation that all result in different energy consumption levels. We want our tool to choose the most optimal refactoring possible. For our POC this can exist as an algorithm. For our final project we can attempt to implement a neural network to choose between refactorings. There are also prebuilt free to use libraries we can implement to perform simple refactorings.
+  \end{itemize} 
+  \item Once we determine preset algorithms mapping detected smells to their appropriate refactorings, we want to then make those changes in the code, measure the energy consumption and test it against the original code ensuring it is less.
+  \item The code must then ensure that the original code functionallity is preserved. If it is not a different refactoring is required. 
+  \begin{itemize}
+    \item This can be done by testing the original test suite for the code against the new one. This original test suite can be a required argument for the user.
+  \end{itemize} 
+\end{enumerate}
+
+
+The following is a list of primary risks and how potential results from the POC could mitigate them.
+\begin{enumerate}
+
+  \item The refactorings we propose may not reduce the code's energy consumption.
+  \begin{itemize}
+    \item If this occurs the team will have to re-analyze the results, revisit refactoring strategies and conduct additional testing to ensure that the proper refactorings are occuring. Code exists in two forms, fully optimized, and not fully optimized. If it is the later, using a new strategy should work provided our team has the expertise to find the correct refactoring. If it is the former the correct use case of our tool is simply the result that no new optimal refactorings could be found. This is a valid result for some use cases.
+  \end{itemize} 
+
+  \item Energy is decreased but functionality of the code is modified. 
+  \begin{itemize}
+    \item If this occurs then the refactoring we applied was incorrect for the given code. A new refactoring should occur. Finding valid refactorings can be implemented iteratively, it is okay for the code to get a couple wrong so long as the final answer is correct. Requiring the user to submit a test suite for the original code can ensure that the code is not modified beyond its purpose. We can also add error handling that lets the user be in charge of the refactorings by making them suggestions instead of absolutes, that allows for the software engineer to have more control over what their final code looks like.
+  \end{itemize} 
+
+\end{enumerate}
+
+Other smaller risks for our tool include:
+\begin{itemize}
+  \item Integration challenges: Challenges adding our tool to people's CI/CD pipelines. What should that look like? How can we make it as accessible as possible? 
+  \begin{itemize}
+    \item Potential answer: If we make a plugin we should try and make it compatible with a widely used IDE.
+  \end{itemize} 
+  \item Software developers not wanting to adopt energy saving into their code bases. How can we make it as user friendly as possible?
+  \begin{itemize}
+    \item Potential answer: Ease of use and the success of the tool will be the primary factors in it's use. For corectness we can ensure we have thorough testing to ensure the tool works as promised. For user experiences we can conduct small trials or focus groups seeing what people prefer.  
+  \end{itemize} 
+  \item Code performance issues: A lot of code choices are tradeoffs. Are there situations in which we would be decreasing runtime or performance to achieve a better energy output? If so what consequences does this have?
+  \begin{itemize}
+    \item Potential answer: Allowing the tool to act as a suggestion rather than a hard refactor and giving the developer the choice to undo changes could help the engineer have more control over the specifications that matter to them the most. 
+  \end{itemize} 
+\end{itemize} 
 
 \section{Expected Technology}
 
