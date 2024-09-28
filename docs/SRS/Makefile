@@ -3,7 +3,7 @@
 
 PROJECT=SRS #SRS or CA
 TEX=latexmk
-BUILDTEX=$(TEX) $(PROJECT).tex
+BUILDTEX=$(TEX) -pdf $(PROJECT).tex
 
 all:
 	$(BUILDTEX)
