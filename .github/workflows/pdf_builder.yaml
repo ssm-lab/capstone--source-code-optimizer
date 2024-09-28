@@ -16,8 +16,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Cache TeX Live installation
+      - name: Cache TeX Live
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/texlive # Adjust to where TeX Live is installed
+            /usr/share/texlive
+            ~/.texlive
+          key: texlive-2024-${{ runner.os }}-latexmk
+          restore-keys: |
+            texlive-
+
       # Install TeX Live and latexmk if cache is not available
       - name: Install TeX Live and latexmk
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install texlive-latex-extra texlive-science latexmk
