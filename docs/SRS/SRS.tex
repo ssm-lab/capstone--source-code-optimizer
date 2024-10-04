@@ -234,49 +234,84 @@ Inhibit the New Product}
 \subsection{Follow-Up Problems}
 \lips
 
-\wss{The team will meet multiple times a week, once during Monday tutorial time and throughout the week as issues or concerns arise. The meetings will be conducted either online through a Teams meeting or in-person on campus. The team
-will hold an official meeting with the industry advisor once a week yet the time has not been decided. The meeting with the advisor will be online on Teams for the first 3 weeks, followed by in-person meetings later on. Meetings itself will be strutured as follows: 
-1. Each member will take turns giving a short recap of work they have accomplished throughout the week.
-2. Members will voice any concerns or issues they may be facing.
-3. Team will form a discussion and make decisions for the project.
-4. Any/all questions will be doucmented for the next meeting with the advisor.
-
-The team will go ahead and use Issues on Github to add anything they may want to talk about in the next meeting as the week progresses in order to have some form of agenda for the next meeting.}
-
-\section{Team Communication Plan}
-
-Issues on GitHub, Microsoft Teams for meetings, Discord for meetings with the advisor online, WhatsApp for informal project discussion.
 \section{Tasks}
 \subsection{Project Planning}
+\begin{itemize}
+ 
+  \item \textbf{Development Approach}
+  The team will use an agile development approach with the following high-level process:
+  \begin{enumerate}
+    \item Initial requirements gathering and product backlog creation
+    \item Sprint planning and execution
+    \item Regular testing and quality assurance
+    \item Stakeholder reviews and feedback
+    \item Iterative refinement
+    \item Release planning and deployment
+  \end{enumerate}
+  
+ \item \textbf{Key Tasks}
+  \begin{itemize}
+    \item Form cross-functional development team (already completed) 
+    \item Create initial product backlog and prioritize features
+    \item Set up development environments and tools
+    \item Establish CI/CD pipeline using GitHub Actions
+    \item Develop core functionality:
+      \begin{itemize}
+        \item Determine code smells to address for energy saving
+        \item Implement code smell detection
+        \item Develop appropriate refactorings for detected smells
+        \item Measure energy consumption before and after refactoring
+        \item Ensure original code functionality is preserved
+      \end{itemize}
+    \item Build out additional features iteratively
+    \item Conduct regular testing (unit, integration, user acceptance)
+    \item Refine based on stakeholder feedback
+    \item Prepare documentation and training materials
+    \item Plan phased rollout strategy
+    \item Execute deployment plan
+    \item Provide post-launch support
 
-The project planning includes the following key elements:
-\begin{enumerate}
+  \end{itemize}
+  \item \textbf{Timeline Estimate}
+    \begin{itemize}
+        \item Requirements Document (Revision 0): October 9th, 2024
+        \item Hazard Analysis (Revision 0): October 23rd, 2024
+        \item Verification \& Validation Plan (Revision 0): November 1st, 2024
+        \item Proof of Concept: November 11th-22nd, 2024
+        \item Design Document (Revision 0): January 15th, 2025
+        \item Project Demo (Revision 0): February 3rd-14th, 2025
+        \item Final Demonstration: March 17th-30th, 2025
+        \item Final Documentation: April 2nd, 2025
+        \item Capstone EXPO: TBD
+    \end{itemize}
+    
+  \item \textbf{Resource Estimates}
+  The team consists of 5 members who will all function as developers, sharing responsibilities for creating issues, coding, testing, and documentation.
 
-  \item \textbf{Project Structure}
-  \begin{itemize}
-    \item The team consists of five members: Nivetha Kuruparan, Sevhena Walker, Tanveer Brar, Mya Hussain, and Ayushi Amin.
-    \item Team members will share responsibilities for various tasks, including coding, testing, and documentation.
-  \end{itemize}
-    \item \textbf{Project Scope}
-  \begin{itemize}
-    \item Develop a refactoring library to optimize Python code for energy efficiency. 
-    \item Create a plugin that utilizes the refactoring library within an IDE.
-    \item Implement a reinforcement learning model to evolve refactoring recommendations over time.
-  \end{itemize}
-  \item \textbf{Stakeholder Management}
-  \begin{itemize}
-    \item Direct stakeholders include software developers, Dr. Istvan David (supervisor), and business sustainability teams.
-    \item Indirect stakeholders include business leaders, end users, and regulatory bodies.
-  \end{itemize}
-  \item \textbf{Environment}
-  \begin{itemize}
-    \item Utilize Stable Baselines for reinforcement learning techniques.
-    \item Use GitHub for version control and CI/CD integration.
-    \item Develop using Visual Studio Code as the primary IDE.
-    \item Implement a database for storing and retrieving refactoring and energy consumption metrics.
-  \end{itemize}
+  \item \textbf{Key Consideration}
+    \begin{itemize}
+        \item Data migration may be necessary for existing systems
+        \item User training will be required before full rollout
+        \item A phased deployment approach will help minimize disruption
+        \item Regular stakeholder involvement will ensure alignment with business needs
+        \item Post-launch support resources should be allocated
+    \end{itemize}
 
-\end{enumerate}
+  \item \textbf{Documentation Process}
+    \begin{itemize}
+        \item Pull changes from the appropriate epic branch (dev or docs)
+        \item Create working branch with format [main contributor name]/[descriptive topic]
+        \item Commit changes with descriptive names
+        \item Create unit tests for changes
+        \item Create pull request to merge changes into epic branch
+        \item Wait for all tests run with GitHub Actions to pass
+        \item Wait for at least two approvals from teammates
+        \item Merge changes into target branch
+    \end{itemize}
+  
+\end{itemize}
+
+By following this agile approach and development process, the team aims to deliver a high-quality product iteratively while maintaining flexibility to adapt to changing requirements
 
 \subsection{Planning of the Development Phases}
 
@@ -337,6 +372,7 @@ The planning of the development phases is based on the deliverables submissions 
         \item Date: TBD
     \end{itemize}
 \end{enumerate}
+
 
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
