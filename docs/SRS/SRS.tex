@@ -201,19 +201,72 @@ involved in the Project}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool must analyze and detect code smells in the input code within a reasonable time frame.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.
+  \end{itemize}
+  \item \textbf{Requirement:} The refactoring process must be executed efficiently without noticeable delays.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:}  The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).
+  \end{itemize}
+\end{enumerate}
+
 \subsection{Safety-Critical Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool must ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
+  \end{itemize}
+\end{enumerate}
+
 \subsection{Precision or Accuracy Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool must reliably identify code smells with minimal false positives and negatives.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} Detection accuracy should exceed 90\% when validated against a set of known cases.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must maintain the functionality of the original provided code in all its reccommended refactorings.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must produce valid refactored python code as output or indicate that no possible refactorings were found.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
+  \end{itemize}
+\end{enumerate}
 \subsection{Robustness or Fault-Tolerance Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool should gracefully handle unexpected inputs, such as invalid code or non-Python files.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must have fallback options if a specific refactoring attempt fails.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.
+  \end{itemize}
+\end{enumerate}
 \subsection{Capacity Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool should efficiently manage large codebases.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.
+  \end{itemize}
+\end{enumerate}
 \subsection{Scalability or Extensibility Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool should be designed to allow easy addition of new code smells and refactoring methods in future updates.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:}  New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.
+  \end{itemize}
+\end{enumerate}
 \subsection{Longevity Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool should be maintainable and adaptable to future versions of Python and changing coding standards.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The codebase should be well-documented and modular, facilitating updates with minimal effort.
+  \end{itemize}
+\end{enumerate}
 
 \section{Operational and Environmental Requirements}
 \subsection{Expected Physical Environment}
