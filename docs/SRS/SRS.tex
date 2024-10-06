@@ -109,13 +109,13 @@ involved in the Project}
 
 \section{The Scope of the Work}
 \subsection{The Current Situation}
-\lips
 \subsection{The Context of the Work}
-\lips
+
 \subsection{Work Partitioning}
-\lips
+
+
+
 \subsection{Specifying a Business Use Case (BUC)}
-\lips
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
@@ -411,9 +411,138 @@ Inhibit the New Product}
 \end{enumerate}
 \section{Tasks}
 \subsection{Project Planning}
-\lips
+\begin{itemize}
+ 
+  \item \textbf{Development Approach}
+  The team will use an agile development approach with the following high-level process:
+  \begin{enumerate}
+    \item Initial requirements gathering and product backlog creation
+    \item Sprint planning and execution
+    \item Regular testing and quality assurance
+    \item Stakeholder reviews and feedback
+    \item Iterative refinement
+    \item Release planning and deployment
+  \end{enumerate}
+  
+ \item \textbf{Key Tasks}
+  \begin{itemize}
+    \item Form cross-functional development team (already completed) 
+    \item Create initial product backlog and prioritize features
+    \item Set up development environments and tools
+    \item Establish CI/CD pipeline using GitHub Actions
+    \item Develop core functionality:
+      \begin{itemize}
+        \item Determine code smells to address for energy saving
+        \item Implement code smell detection
+        \item Develop appropriate refactorings for detected smells
+        \item Measure energy consumption before and after refactoring
+        \item Ensure original code functionality is preserved
+      \end{itemize}
+    \item Build out additional features iteratively
+    \item Conduct regular testing (unit, integration, user acceptance)
+    \item Refine based on stakeholder feedback
+    \item Present final solution to stakeholders
+
+  \end{itemize}
+  \item \textbf{Timeline Estimate}
+    \begin{itemize}
+        \item Requirements Document (Revision 0): October 9th, 2024
+        \item Hazard Analysis (Revision 0): October 23rd, 2024
+        \item Verification \& Validation Plan (Revision 0): November 1st, 2024
+        \item Proof of Concept: November 11th-22nd, 2024
+        \item Design Document (Revision 0): January 15th, 2025
+        \item Project Demo (Revision 0): February 3rd-14th, 2025
+        \item Final Demonstration: March 17th-30th, 2025
+        \item Final Documentation: April 2nd, 2025
+        \item Capstone EXPO: TBD
+    \end{itemize}
+    
+  \item \textbf{Resource Estimates}
+  The team consists of 5 members who will all function as developers, sharing responsibilities for creating issues, coding, testing, and documentation.
+
+  \item \textbf{Key Consideration}
+    \begin{itemize}
+        \item Data migration may be necessary for existing systems
+        \item A phased development approach will help minimize major setbacks
+        \item Regular stakeholder involvement will ensure alignment with business needs
+    \end{itemize}
+
+  \item \textbf{Documentation Process}
+    \begin{itemize}
+        \item Pull changes from \texttt{docs} (epic documentation branch)
+        \item Create working branch with format [main contributor name]/[descriptive topic]
+        \item Commit changes with descriptive names
+        \item Create unit tests for changes
+        \item Create pull request to merge changes into epic branch
+        \item Wait for all tests run with GitHub Actions to pass
+        \item Wait for at least two approvals from teammates
+        \item Merge changes into target branch
+    \end{itemize}
+  
+\end{itemize}
+
+By following this agile approach and development process, the team aims to deliver a high-quality product iteratively while maintaining flexibility to adapt to changing requirements
+
 \subsection{Planning of the Development Phases}
-\lips
+
+The planning of the development phases is based on the deliverables submissions as follows:
+
+\begin{enumerate}
+
+    \item \textbf{Requirements Phase}
+    \begin{itemize}
+        \item Deliverable: Requirements Document (Revision 0)
+        \item Due Date: October 9th, 2024
+    \end{itemize}
+    
+    \item \textbf{Risk Assessment Phase}
+    \begin{itemize}
+        \item Deliverable: Hazard Analysis (Revision 0)
+        \item Due Date: October 23rd, 2024
+    \end{itemize}
+    
+    \item \textbf{Verification and Validation Planning}
+    \begin{itemize}
+        \item Deliverable: Verification \& Validation Plan (Revision 0)
+        \item Due Date: November 1st, 2024
+    \end{itemize}
+    
+    \item \textbf{Proof of Concept Implementation}
+    \begin{itemize}
+        \item Period: November 11th-22nd, 2024
+    \end{itemize}
+    
+    \item \textbf{Design Phase}
+    \begin{itemize}
+        \item Deliverable: Design Document (Revision 0)
+        \item Due Date: January 15th, 2025
+    \end{itemize}
+    
+    \item \textbf{Initial Implementation and Demo}
+    \begin{itemize}
+        \item Deliverable: Project Demo (Revision 0)
+        \item Period: February 3rd-14th, 2025
+    \end{itemize}
+    
+    \item \textbf{Final Implementation and Testing}
+    \begin{itemize}
+        \item Deliverable: Final Demonstration
+        \item Period: March 17th-30th, 2025
+    \end{itemize}
+    
+    \item \textbf{Project Closure}
+    \begin{itemize}
+        \item Deliverable: Final Documentation
+        \item Due Date: April 2nd, 2025
+    \end{itemize}
+    
+    \item \textbf{Project Presentation}
+    \begin{itemize}
+        \item Event: Capstone EXPO
+        \item Date: TBD
+    \end{itemize}
+\end{enumerate}
+
 
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
