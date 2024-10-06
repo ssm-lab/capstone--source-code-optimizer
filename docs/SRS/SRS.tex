@@ -9,6 +9,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{enumitem}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
       colorlinks=true,      % false: boxed links; true: colored links
@@ -132,7 +133,53 @@ involved in the Project}
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
-\lips
+
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool must accept Python source code files.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool successfully processes valid Python files without errors and provides feedback for invalid files.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must identify specific code smells that can be targeted for energy saving.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool should be able to detect and report at least 80\% of the follwing code smells using predefined rules or existing linters. Code smells include: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The suggested refactored code demonstrates a measurable improvement in energy measured in joules.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must produce valid refactored python code as output or indicate that no possible refactorings were found.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must report to the user any discrepancies between the original and suggested refactored code.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} Discrepancy reports to user clearly highlight differences in outputs
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must allow users to input their original test suite as a required argument.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} Users can specify a path to their test suite, and the tool recognizes and utilizes it for testing the refactored code.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must ensure that the original functionality of the code is preserved after refactoring.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool runs the original test suite against the refactored code, and passes 100\% of the tests.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must be compatible with various Python versions and common libraries.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:}  Reports are clear, well-structured, and provide actionable insights, with users able to easily understand the results.
+  \end{itemize}
+  \item \textbf{Requirement:} The tool must provide comprehensive documentation and help resources.
+  \begin{itemize}[label={}]
+      \item \textbf{Fit Criteria:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.
+  \end{itemize}
+\end{enumerate}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
