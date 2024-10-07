@@ -8,6 +8,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{hyperref}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -88,21 +89,69 @@ user feedback.
 
 \section{Stakeholders}
 \subsection{Client}
-\lips
+The client of this project is \textbf{Dr. Istvan David} from McMaster's Department of Computing and Software. As the project supervisor, his role is to guide the development team with his technical and domain expertise. As the client, he sets the product's requirements and will be involved throughout its development. 
 \subsection{Customer}
-\lips
+The customers of this product are all the \textbf{software developers} that use it to improve the energy efficiency of their codebase. They will be the primary users of the product and, therefore, will offer critical feedback on its effectiveness. Suggestions for improvement and/or additional features may come from this stakeholder. 
+
 \subsection{Other Stakeholders}
-\lips
+\subsubsection*{\textcolor{Maroon}{Project Managers}}
+They oversee project operations and focus on reducing energy costs associated with large-scale or cloud-hosted applications. They might leverage the refactoring library to reduce operational costs and achieve business sustainability goals.
+
+\subsubsection*{\textcolor{Maroon}{Business Sustainability Teams}}
+This stakeholder is responsible for reducing their company's environmental footprint by analyzing its energy emissions. They will use the energy efficiency metrics provided by the refactoring library to improve environmental sustainability practices within their organization.
+
+\subsubsection*{\textcolor{Maroon}{End Users}}
+End users refer to the users of software that uses the product in its development. They will indirectly reap benefits from these applications that have been optimised using the refactoring library. They might experience more responsive, efficient software, particularly in mobile or embedded environments where battery life is a key concern. They have no involvement in the development of the product. 
+
+\subsubsection*{\textcolor{Maroon}{Regulatory Bodies}}
+This stakeholder is responsible for establishing regulations governing energy consumption and sustainability standards. They can promote the adoption of energy-efficient software practices and potentially certify tools that meet regulatory standards. 
+
 \subsection{Hands-On Users of the Project}
-\lips
+\subsubsection*{\textcolor{Maroon}{Software Developers}}
+\begin{itemize}
+  \item \textbf{User Role}: Integrate library into codebase, provide tests to check refactoring against original functionality
+
+  \item \textbf{Subject Matter Experience}: Journeyman to Master
+  
+  \item \textbf{Technological Experience}: Journeyman to Master
+  
+  \item \textbf{Attitude toward technology}: Varies (conservative to positive)
+  
+  \item \textbf{Physical location}: Remote (at home), in-person (work office) or hybrid
+\end{itemize}
+
+\subsubsection*{\textcolor{Maroon}{Business Sustainability Teams}}
+\begin{itemize}
+  \item \textbf{User Role}: Access metrics provided by library
+
+  \item \textbf{Subject Matter Experience}: Journeyman
+
+  \item \textbf{Technological Experience}: Novice to Journeyman
+  
+  \item \textbf{Attitude toward technology}: Neutral to positive
+
+\end{itemize}
+
 \subsection{Personas}
-\lips
+
+\textbf{Persona 1} \\
+Raven Reyes, a 34-year-old senior software developer, has over a decade of experience in backend development. Now working at a SaaS company focused on sustainability, Raven faces the challenge of reducing the energy consumption of their software. Manually refactoring code is time-consuming, especially when trying to pinpoint which parts of the code are draining the most energy. With tight deadlines and a need to balance sustainability with performance, Raven seeks a tool that automates energy-efficient refactoring and provides clear metrics. \\
+
+\noindent
+\textbf{Persona 2} \\
+Draco Malfoy, a 29-year-old sustainability analyst at a large tech company, is tasked with reducing the environmental impact of the company’s operations. With expertise in corporate sustainability, Jordan’s role is to track and report energy consumption and carbon emissions, but they face challenges quantifying the data coming from the software development team. With the company's push toward greener technology, Jordan needs clear, easy-to-understand metrics on how the software team’s refactoring efforts are improving energy efficiency. Bridging the gap between the sustainability and development teams, Jordan relies on these insights to report progress on key sustainability goals to executives, ensuring that both technical improvements and environmental targets are aligned.
+
 \subsection{Priorities Assigned to Users}
-\lips
+\textbf{Key Users:} Software Developers, Business Sustainability Teams \\
+\textbf{Secondary User:} Project Managers
+
 \subsection{User Participation}
-\lips
+For the bulk of the development process, requirements will be gathered from the development team itself with the help of the project supervisor, Dr. Istvan David.
+
+During the testing phase, usability testing will be conducted to further refine the product.
+
 \subsection{Maintenance Users and Service Technicians}
-\lips
+Due to the nature of this project as a capstone requirement, there are currently no expected maintenance users.
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
@@ -137,13 +186,140 @@ involved in the Project}
 
 \section{The Scope of the Work}
 \subsection{The Current Situation}
+
+  The current software development landscape often prioritizes functionality and performance over energy efficiency. Many existing Python codebases are not optimized for energy consumption, leading to unnecessary power usage and increased carbon footprint. The following aspects characterize the current situation:
+  \begin{enumerate}
+    \item \textbf{Manual Refactoring:} Developers typically perform refactoring manually, which is time-consuming and prone to errors.
+    \item \textbf{Limited Awareness:} Many developers lack awareness of energy-efficient coding practices and their impact on overall energy consumption.
+    \item \textbf{Absence of Automated Tools:} There is a lack of widely adopted automated tools specifically designed to refactor Python code for energy efficiency.
+    \item \textbf{Performance-Centric Optimization:} Most existing optimization tools focus on performance improvements rather than energy efficiency.
+    \item \textbf{Inefficient Code Patterns:} Many codebases contain inefficient code patterns that consume more energy than necessary.
+  \end{enumerate}
+
+  The project aims to address these issues by:
+  \begin{enumerate}
+    \item \textbf{Automated Refactoring Library:} Developing a Python library that automatically detects and refactors code for improved energy efficiency.
+    \item \textbf{IDE Integration:} Creating a Visual Studio Code plugin that integrates the refactoring library, providing real-time suggestions and automated refactoring options.
+    \item \textbf{Energy Consumption Measurement:} Implementing tools to measure and compare energy consumption before and after refactoring.
+    \item \textbf{Developer Education:} Raising awareness about energy-efficient coding practices through the tool's suggestions and documentation.
+    \item \textbf{Continuous Improvement:} Implementing a reinforcement learning model to improve refactoring suggestions over time based on developer feedback and real-world energy savings data.
+  \end{enumerate}  
+
 \subsection{The Context of the Work}
+
+\includegraphics[scale=0.5]{../images/WorkContextModel.png}
 
 \subsection{Work Partitioning}
 
+\scriptsize
+\begin{tabular}{ |c|p{2.5cm}|c|c| }
+  \hline
+  Event \# & Event Name & Input & Output(s) \\
+  \hline\hline
 
+  1 & Users submit Python code & Python Code & Refactored Code \\
+  2 & Energy Analysis of code & Python Code & Total Energy Consumed \\
+  3 & RI Model produces refactoring & Python Code & Correct Refactoring \\
+  4 & Testing and Validation of refactored code & Refactored Code & Test Results \\
+  5 & Reporting Performance metrics of new code & Refactored Code & Performance Reports \\
+  6 & Viewing Energy consumption reports & Refactored Code & Energy Consumption Statistics \\
+
+  \hline
+\end{tabular}
 
 \subsection{Specifying a Business Use Case (BUC)}
+
+\subsubsection{Business Use Case Scenario 1}
+\textbf{Event Name:} Code Submission \\
+\textbf{Input:} Python Code \\
+\textbf{Output:} Refactored Code \\
+\textbf{Pre-condition:} User uses either GitHub Action or a VS code plugin to submit code to the refactoring tool \\  
+\textbf{Scenario:}
+    \begin{enumerate}
+        \item Refactoring tool receives the Python code
+        \item PyJoules is used to store energy consumption data for original Python code submitted
+        \item Tool analyzes the code for inefficiencies (PySmells)
+        \item Python code is provided to Re-enforcement learning model to find a refactoring
+        \item Energy consumption is measured of refactored code and compared to the original data
+        \item Refactored code is tested to ensure functionality is maintained from original code
+        \item Refactored code is received by the user
+    \end{enumerate}
+\textbf{Sub Variation: }
+    \begin{itemize}
+        \item \textit{4a:} If no PySmells identified, then code is returned to the user
+        \item \textit{6a:} If energy consumption increases for refactored code, the reinforcement model is asked to find another refactoring
+        \item \textit{7a:} If code functionality is not preserved for refactored code, the reinforcement model is asked to find another refactoring
+    \end{itemize}
+
+\subsubsection{Business Use Case Scenario 2} 
+\textbf{Event Name:} Energy Analysis of Code \\
+\textbf{Input:} Python Code \\
+\textbf{Output:} Total Energy Consumed \\
+\textbf{Pre-condition:} Submission of Python code to the Energy Consumption Tool \\
+\textbf{Scenario: } 
+\begin{itemize}
+    \item \textit{1:} Tool receives Python Code
+    \item \textit{2:} Energy consumed is measured during execution
+    \item \textit{3:} The analysis results are compiled into a report
+    \item \textit{4:} Report of total energy consumed is received by the refactoring tool
+\end{itemize}
+
+\subsubsection{Business Use Case Scenario 3} 
+\textbf{Event Name:} Reinforcement Learning Model Produces Refactoring \\
+\textbf{Input:} Python Code \\
+\textbf{Output:} Correct Refactoring \\
+\textbf{Pre-condition:} Request for refactored code from the Reinforcement Learning Model \\
+\textbf{Scenario: } 
+\begin{itemize}
+    \item \textit{1:} Model receives Python Code
+    \item \textit{2:} Analyze Code for potential refactoring
+    \item \textit{3:} Generate suggestions based on previous learning and data
+    \item \textit{4:} Implement suggested refactorings
+\end{itemize}
+\textbf{Sub Variation: }
+\begin{itemize}
+    \item \textit{2a:} If there are no refactorings found, Model outputs given code back to the refactoring tool 
+\end{itemize}
+
+\subsubsection{Business Use Case Scenario 4} 
+\textbf{Event Name:} Testing and Validation of Refactored Code \\
+\textbf{Input:} Refactored Code \\
+\textbf{Output:} Test Results \\
+\textbf{Pre-condition:} Energy consumed for refactored code is less than energy consumed for original code \\
+\textbf{Scenario: } \\
+\begin{itemize}
+    \item \textit{1:} Conduct tests on refactored code
+    \item \textit{2:} Conduct tests on original code
+    \item \textit{3:} Validate results of refactored code to the results of the original code to ensure functionality is intact
+    \item \textit{4:} Signal to refactoring tool to send refactored code to user
+\end{itemize}
+\textbf{Sub Variation: }
+\begin{itemize}
+    \item \textit{4a:} If functionality is not preserved, signal to the refactoring tool to refactor again
+\end{itemize}
+
+\subsubsection{Business Use Case Scenario 5} 
+\textbf{Event Name:} Reporting Performance Metrics of New Code \\
+\textbf{Input:} Refactored Code \\
+\textbf{Output:} Performance Reports\\
+\textbf{Pre-condition:} Testing and validation is completed successfully \\
+\textbf{Scenario: } \\
+\begin{itemize}
+    \item \textit{1:} Generate detailed performance report based on testing outcomes
+    \item \textit{2:} User receives the performance report
+\end{itemize}
+
+\subsubsection{Business Use Case Scenario 6} 
+\textbf{Event Name:} Viewing Energy Consumption Reports \\
+\textbf{Input:} Refactored Code \\
+\textbf{Output:} Energy Consumption Statistics \\
+\textbf{Pre-condition:} Testing and validation is completed successfully \\
+\textbf{Scenario: } \\
+\begin{itemize}
+    \item \textit{1:} Comprehensive statistics are compiled from energy analysis data
+    \item \textit{2:} Information is compiled in an accessible format for developers to review
+\end{itemize}
+
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
