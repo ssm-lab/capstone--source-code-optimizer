@@ -388,9 +388,44 @@ involved in the Project}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\lips
+\begin{enumerate}
+    \item \textbf{Requirement:} The refactoring interface should clearly present the original and refactored code side by side, allowing developers to easily compare and choose between them.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} The interface must display the original code on one side and the refactored code on the other, with options for developers to accept or reject the refactorings without confusion.
+    \end{itemize}
+    \item \textbf{Requirement:} The plugin should have a minimalist design, focusing only on essential elements to reduce clutter.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} The interface should prominently display only the code, refactoring suggestions, and energy metrics, without unnecessary visual elements or distractions.
+    \end{itemize}
+    \item \textbf{Requirement:} The plugin should adapt to the user’s VS Code theme, supporting both light and dark modes.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} The plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), with no manual changes required.
+    \end{itemize}
+    \item \textbf{Requirement:} The tool should highlight refactoring suggestions using visual indicators based on the impact of energy savings.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} The plugin must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), and developers should be able to identify refactoring opportunities quickly.
+    \end{itemize}
+    \item \textbf{Requirement:} The GitHub Action should highlight significant energy savings with visual alerts in PRs.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).
+    \end{itemize}
+\end{enumerate}
+
 \subsection{Style Requirements}
-\lips
+\begin{enumerate}
+    \item \textbf{Requirement:} The  IDE plugin and GitHub action tool should convey a professional and authoritative appearance to instill confidence in developers.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} After their first encounter with the tools, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
+    \end{itemize}
+    \item \textbf{Requirement:} The IDE plugin interface should promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} Developers should report feeling less distracted and more productive while using the tools, with 70\% indicating a positive change in their coding environment.
+    \end{itemize}
+    \item \textbf{Requirement:} The IDE plugin and GitHub action tools' design should be visually appealing and modern, aligning with contemporary software development tools.
+    \begin{itemize}[label={}]
+        \item \textbf{Fit Criteria:} At least 75\% of users should express satisfaction with the tools' visual design and layout after their initial interaction.
+    \end{itemize}
+\end{enumerate}
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
