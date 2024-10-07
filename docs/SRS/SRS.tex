@@ -497,43 +497,35 @@ involved in the Project}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\begin{enumerate}
-    \item \textbf{Requirement:} The IDE plugin refactoring interface should present the original and refactored code side by side, allowing developers to compare and choose between them easily.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The interface must display the original code on one side and the refactored code on the other, with options for developers to accept or reject the refactorings without confusion.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool should have a minimalist design, focusing only on essential elements to reduce clutter.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, without unnecessary visual elements or distractions.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin should adapt to the user’s VS Code theme, supporting both light and dark modes.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), with no manual changes required.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool should highlight refactoring suggestions using visual indicators based on the impact of energy savings.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), and developers should be able to identify refactoring opportunities quickly.
-    \end{itemize}
-    \item \textbf{Requirement:} The GitHub Action should highlight significant energy savings with visual alerts in PRs.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).
-    \end{itemize}
+\begin{enumerate}[label=LFR-AP \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The IDE plugin refactoring interface shall present the original and refactored code side by side, allowing developers to compare and choose between them easily.}\\
+    {\bf Rationale:} Providing a side-by-side view of the original and refactored code helps developers make informed decisions about applying changes.\\
+    {\bf Fit Criterion:} The interface must display the original code on one side and the refactored code on the other, with clear options for developers to accept or reject the refactorings without confusion.
+    \item \emph{The tool shall have a minimalist design, focusing only on essential elements to reduce clutter.}\\
+    {\bf Rationale:} A clean and simple interface allows developers to focus on the code and refactoring suggestions without distractions, improving usability.\\
+    {\bf Fit Criterion:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, omitting unnecessary visual elements or distractions.
+    \item \emph{The IDE plugin shall adapt to the user’s VS Code theme, supporting both light and dark modes.}\\
+    {\bf Rationale:} Ensuring that the plugin matches the user's theme preference enhances user experience and visual comfort.\\
+    {\bf Fit Criterion:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), requiring no manual changes.
+    \item \emph{The tool shall highlight refactoring suggestions using visual indicators based on the impact of energy savings.}\\
+    {\bf Rationale:} Visual indicators make it easier for developers to quickly identify and prioritize refactoring opportunities based on their energy-saving potential.\\
+    {\bf Fit Criterion:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), allowing developers to identify refactoring opportunities quickly.
+    \item \emph{The GitHub Action shall highlight significant energy savings with visual alerts in pull requests (PRs).}\\
+    {\bf Rationale:} Visual alerts in PRs inform developers of the energy savings achieved, encouraging the adoption of energy-efficient practices.\\
+    {\bf Fit Criterion:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).
 \end{enumerate}
 
 \subsection{Style Requirements}
-\begin{enumerate}
-    \item \textbf{Requirement:} The tool should convey a professional and authoritative appearance to instill confidence in developers.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin interface should promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} Developers should report feeling less distracted and more productive while using the tools, with 70\% indicating a positive change in their coding environment.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool design should be visually appealing and modern, aligning with contemporary software development tools.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.
-    \end{itemize}
+\begin{enumerate}[label=LFR-ST \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall convey a professional and authoritative appearance to instill confidence in developers.}\\
+    {\bf Rationale:} A professional appearance helps build trust and encourages developers to use the tool confidently for energy-efficient refactoring.\\
+    {\bf Fit Criterion:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
+    \item \emph{The IDE plugin interface shall promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.}\\
+    {\bf Rationale:} A calm environment reduces distractions and improves productivity, allowing developers to focus on their work effectively.\\
+    {\bf Fit Criterion:} Developers should report feeling less distracted and more productive while using the tool, with 70\% indicating a positive change in their coding environment.
+    \item \emph{The tool design shall be visually appealing and modern, aligning with contemporary software development tools.}\\
+    {\bf Rationale:} A modern design improves user experience and satisfaction, making the tool more enjoyable to use.\\
+    {\bf Fit Criterion:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.
 \end{enumerate}
 
 \section{Usability and Humanity Requirements}
