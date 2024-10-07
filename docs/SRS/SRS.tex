@@ -454,218 +454,172 @@ involved in the Project}
 \section{Functional Requirements}
 \subsection{Functional Requirements}
 
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must accept Python source code files.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool successfully processes valid Python files without errors and provides feedback for invalid files.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must identify specific code smells that can be targeted for energy saving.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should be able to detect and report at least 80\% of the following code smells using predefined rules or existing linters. Code smells include Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The suggested refactored code demonstrates a measurable improvement in energy measured in joules.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must report to the user any discrepancies between the original and suggested refactored code.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Discrepancy reports to the user clearly highlight differences in outputs
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must allow users to input their original test suite as a required argument.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users can specify a path to their test suite, and the tool recognizes and utilizes it for testing the refactored code.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must ensure that the original functionality of the code is preserved after refactoring.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool runs the original test suite against the refactored code and passes 100\% of the tests.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must be compatible with various Python versions and common libraries.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  Reports are clear, well-structured, and provide actionable insights, with users able to easily understand the results.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must provide comprehensive documentation and help resources.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.
-  \end{itemize}
+\begin{enumerate}[label=FR \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must accept Python source code files.}\\
+    {\bf Fit Criteria:} The tool successfully processes valid Python files without errors and provides feedback for invalid files.
+    
+  \item \emph{The tool must identify specific code smells that can be targeted for energy saving.}\\
+    {\bf Fit Criteria:} The tool should be able to detect and report at least 80\% of the following code smells using predefined rules or existing linters: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).
+    
+  \item \emph{The tool must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.}\\
+    {\bf Fit Criteria:} The suggested refactored code demonstrates a measurable improvement in energy measured in joules.
+    
+  \item \emph{The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.}\\
+    {\bf Fit Criteria:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.
+    
+  \item \emph{The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\
+    {\bf Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
+    
+  \item \emph{The tool must report to the user any discrepancies between the original and suggested refactored code.}\\
+    {\bf Fit Criteria:} Discrepancy reports clearly highlight differences in outputs.
+    
+  \item \emph{The tool must allow users to input their original test suite as a required argument.}\\
+    {\bf Fit Criteria:} Users can specify a path to their test suite, and the tool recognizes and utilizes it for testing the refactored code.
+    
+  \item \emph{The tool must ensure that the original functionality of the code is preserved after refactoring.}\\
+    {\bf Fit Criteria:} The tool runs the original test suite against the refactored code and passes 100\% of the tests.
+    
+  \item \emph{The tool must be compatible with various Python versions and common libraries.}\\
+    {\bf Fit Criteria:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.
+    
+  \item \emph{The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.}\\
+    {\bf Fit Criteria:} Reports are clear, well-structured, and provide actionable insights, with users able to easily understand the results.
+    
+  \item \emph{The tool must provide comprehensive documentation and help resources.}\\
+    {\bf Fit Criteria:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.
 \end{enumerate}
+
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\begin{enumerate}
-    \item \textbf{Requirement:} The IDE plugin refactoring interface should present the original and refactored code side by side, allowing developers to compare and choose between them easily.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The interface must display the original code on one side and the refactored code on the other, with options for developers to accept or reject the refactorings without confusion.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool should have a minimalist design, focusing only on essential elements to reduce clutter.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, without unnecessary visual elements or distractions.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin should adapt to the user’s VS Code theme, supporting both light and dark modes.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), with no manual changes required.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool should highlight refactoring suggestions using visual indicators based on the impact of energy savings.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), and developers should be able to identify refactoring opportunities quickly.
-    \end{itemize}
-    \item \textbf{Requirement:} The GitHub Action should highlight significant energy savings with visual alerts in PRs.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).
-    \end{itemize}
+\begin{enumerate}[label=LF-APS \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The IDE plugin refactoring interface should present the original and refactored code side by side, allowing developers to compare and choose between them easily.}\\
+    {\bf Fit Criteria:} The interface must display the original code on one side and the refactored code on the other, with options for developers to accept or reject the refactorings without confusion.
+    
+    \item \emph{The tool should have a minimalist design, focusing only on essential elements to reduce clutter.}\\
+    {\bf Fit Criteria:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, without unnecessary visual elements or distractions.
+    
+    \item \emph{The IDE plugin should adapt to the user’s VS Code theme, supporting both light and dark modes.}\\
+    {\bf Fit Criteria:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), with no manual changes required.
+    
+    \item \emph{The tool should highlight refactoring suggestions using visual indicators based on the impact of energy savings.}\\
+    {\bf Fit Criteria:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), and developers should be able to identify refactoring opportunities quickly.
+    
+    \item \emph{The GitHub Action should highlight significant energy savings with visual alerts in PRs.}\\
+    {\bf Fit Criteria:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).
 \end{enumerate}
 
 \subsection{Style Requirements}
-\begin{enumerate}
-    \item \textbf{Requirement:} The tool should convey a professional and authoritative appearance to instill confidence in developers.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin interface should promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} Developers should report feeling less distracted and more productive while using the tools, with 70\% indicating a positive change in their coding environment.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool design should be visually appealing and modern, aligning with contemporary software development tools.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.
-    \end{itemize}
+\begin{enumerate}[label=LF-STY \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool should convey a professional and authoritative appearance to instill confidence in developers.}\\
+    {\bf Fit Criteria:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
+    
+    \item \emph{The IDE plugin interface should promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.}\\
+    {\bf Fit Criteria:} Developers should report feeling less distracted and more productive while using the tools, with 70\% indicating a positive change in their coding environment.
+    
+    \item \emph{The tool design should be visually appealing and modern, aligning with contemporary software development tools.}\\
+    {\bf Fit Criteria:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.
 \end{enumerate}
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must have an intuitive user interface that simplifies navigation and functionality.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should provide clear and concise prompts for user input.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} At least 90\% of test users should report that prompts are straightforward and guide them effectively through the process.
-  \end{itemize}
+\begin{enumerate}[label=LF-EOU \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must have an intuitive user interface that simplifies navigation and functionality.}\\
+  {\bf Fit Criteria:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.
+  
+  \item \emph{The tool should provide clear and concise prompts for user input.}\\
+  {\bf Fit Criteria:} At least 90\% of test users should report that prompts are straightforward and guide them effectively through the process.
 \end{enumerate}
+
 \subsection{Personalization and Internationalization Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should allow users to customize settings to match their preferences (e.g., refactoring styles, detection sensitivity).
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users should be able to save and load custom configurations easily.
-  \end{itemize}
-  \item \textbf{Requirement:} User guide must be available in French and English.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} French and English installation and use instructions available.
-  \end{itemize} 
+\begin{enumerate}[label=LF-PSI \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool should allow users to customize settings to match their preferences (e.g., refactoring styles, detection sensitivity).}\\
+  {\bf Fit Criteria:} Users should be able to save and load custom configurations easily.
+  
+  \item \emph{User guide must be available in French and English.}\\
+  {\bf Fit Criteria:} French and English installation and use instructions available.
 \end{enumerate}
+
 \subsection{Learning Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must have an available YouTube video demonstrating installation.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Youtube video present and easily accessible
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should provide context-sensitive help that offers assistance based on the current user actions.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Help resources should be accessible within 1-3 clicks.
-  \end{itemize}
+\begin{enumerate}[label=LF-LRN \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must have an available YouTube video demonstrating installation.}\\
+  {\bf Fit Criteria:} Youtube video present and easily accessible.
+  
+  \item \emph{The tool should provide context-sensitive help that offers assistance based on the current user actions.}\\
+  {\bf Fit Criteria:} Help resources should be accessible within 1-3 clicks.
 \end{enumerate}
+
 \subsection{Understandability and Politeness Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should communicate errors and issues politely and constructively.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} User feedback should reflect that at least 80\% of users perceive error messages as helpful and courteous, rather than frustrating or vague.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should provide context-sensitive help that offers assistance based on the current user actions.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Help resources should be accessible within 1-3 clicks.
-  \end{itemize}
+\begin{enumerate}[label=LF-UPL \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool should communicate errors and issues politely and constructively.}\\
+  {\bf Fit Criteria:} User feedback should reflect that at least 80\% of users perceive error messages as helpful and courteous, rather than frustrating or vague.
+  
+  \item \emph{The tool should provide context-sensitive help that offers assistance based on the current user actions.}\\
+  {\bf Fit Criteria:} Help resources should be accessible within 1-3 clicks.
 \end{enumerate}
+
 \subsection{Accessibility Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should provide high-contrast color themes to improve visibility for users with visual impairments.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users should have access to at least 1 high contrast theme.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should offer audio cues for important actions and alerts to assist users with use and navigation.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} At least 70\% of users should report that the audio cues enhance their understanding of important notifications or actions.
-  \end{itemize}
+\begin{enumerate}[label=LF-ACS \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool should provide high-contrast color themes to improve visibility for users with visual impairments.}\\
+  {\bf Fit Criteria:} Users should have access to at least 1 high contrast theme.
+  
+  \item \emph{The tool should offer audio cues for important actions and alerts to assist users with use and navigation.}\\
+  {\bf Fit Criteria:} At least 70\% of users should report that the audio cues enhance their understanding of important notifications or actions.
 \end{enumerate}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must analyze and detect code smells in the input code within a reasonable time frame.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.
-  \end{itemize}
-  \item \textbf{Requirement:} The refactoring process must be executed efficiently without noticeable delays.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).
-  \end{itemize}
+\begin{enumerate}[label=PR-SL \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must analyze and detect code smells in the input code within a reasonable time frame.}\\
+  {\bf Fit Criteria:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.
+  
+  \item \emph{The refactoring process must be executed efficiently without noticeable delays.}\\
+  {\bf Fit Criteria:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).
 \end{enumerate}
 
 \subsection{Safety-Critical Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
+\begin{enumerate}[label=PR-SCL \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.}\\
+  {\bf Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
 \end{enumerate}
 
 \subsection{Precision or Accuracy Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must reliably identify code smells with minimal false positives and negatives.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Detection accuracy should exceed 90\% when validated against a set of known cases.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must maintain the functionality of the original provided code in all its recommended refactorings.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
+\begin{enumerate}[label=PR-PRAC \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must reliably identify code smells with minimal false positives and negatives.}\\
+  {\bf Fit Criteria:} Detection accuracy should exceed 90\% when validated against a set of known cases.
+  
+  \item \emph{The tool must maintain the functionality of the original provided code in all its recommended refactorings.}\\
+  {\bf Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.
+  
+  \item \emph{The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\
+  {\bf Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
 \end{enumerate}
+
 \subsection{Robustness or Fault-Tolerance Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should gracefully handle unexpected inputs, such as invalid code or non-Python files.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must have fallback options if a specific refactoring attempt fails.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.
-  \end{itemize}
+\begin{enumerate}[label=PR-RBFT \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool should gracefully handle unexpected inputs, such as invalid code or non-Python files.}\\
+  {\bf Fit Criteria:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.
+  
+  \item \emph{The tool must have fallback options if a specific refactoring attempt fails.}\\
+  {\bf Fit Criteria:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.
 \end{enumerate}
+
 \subsection{Capacity Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should efficiently manage large codebases.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.
-  \end{itemize}
+\begin{enumerate}[label=PR-CAP \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool should efficiently manage large codebases.}\\
+  {\bf Fit Criteria:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.
 \end{enumerate}
+
 \subsection{Scalability or Extensibility Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should be designed to allow easy addition of new code smells and refactoring methods in future updates.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.
-  \end{itemize}
+\begin{enumerate}[label=PR-SCE \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool should be designed to allow easy addition of new code smells and refactoring methods in future updates.}\\
+  {\bf Fit Criteria:} New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.
 \end{enumerate}
+
 \subsection{Longevity Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should be maintainable and adaptable to future versions of Python and changing coding standards.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The codebase should be well-documented and modular, facilitating updates with minimal effort.
-  \end{itemize}
+\begin{enumerate}[label=PR-LGT \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool should be maintainable and adaptable to future versions of Python and changing coding standards.}\\
+  {\bf Fit Criteria:} The codebase should be well-documented and modular, facilitating updates with minimal effort.
 \end{enumerate}
 
 \section{Operational and Environmental Requirements}
@@ -724,47 +678,33 @@ involved in the Project}
 
 \section{Maintainability and Support Requirements}
 \subsection{Maintenance Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must allow new refactoring techniques to be added within one week of identification.
-     \begin{itemize}
-         \item \textbf{Rationale:} Rapid integration of new techniques ensures the tool remains up-to-date with evolving best practices in energy-efficient coding.
-         \item \textbf{Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.
-     \end{itemize}
-     
-  \item \textbf{Requirement:} The tool must be maintainable by developers who are not the original creators.
-     \begin{itemize}
-         \item \textbf{Rationale:} Ensuring that new developers can easily understand and modify the system reduces dependency on original developers and facilitates long-term maintenance.
-         \item \textbf{Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.
-     \end{itemize}
-     
-  \item \textbf{Requirement:} The tool must allow for easy rollback of updates in case of errors.
-     \begin{itemize}
-         \item \textbf{Rationale:} Quick rollback capabilities minimize downtime and user disruption in case an update introduces issues.
-         \item \textbf{Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.
-     \end{itemize}
-     
-  \item \textbf{Requirement:} The tool must provide automated testing for all refactoring functions.
-     \begin{itemize}
-         \item \textbf{Rationale:} Automated testing ensures that changes do not introduce new bugs, maintaining the reliability and stability of the tool.
-         \item \textbf{Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.
-     \end{itemize}
-     
-  \item \textbf{Requirement:} Each version of the library must maintain compatibility with the current releases of external libraries during its development phase.
-     \begin{itemize}
-         \item \textbf{Rationale:} Keeping external libraries up-to-date ensures compatibility and leverages improvements or security patches provided by library maintainers.
-         \item \textbf{Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.
-     \end{itemize}
+\begin{enumerate}[label=MS-MNT \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must allow new refactoring techniques to be added within one week of identification.}\\
+  {\bf Rationale:} Rapid integration of new techniques ensures the tool remains up-to-date with evolving best practices in energy-efficient coding.\\
+  {\bf Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.
   
-  \end{enumerate}
+  \item \emph{The tool must be maintainable by developers who are not the original creators.}\\
+  {\bf Rationale:} Ensuring that new developers can easily understand and modify the system reduces dependency on original developers and facilitates long-term maintenance.\\
+  {\bf Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.
+  
+  \item \emph{The tool must allow for easy rollback of updates in case of errors.}\\
+  {\bf Rationale:} Quick rollback capabilities minimize downtime and user disruption in case an update introduces issues.\\
+  {\bf Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.
+  
+  \item \emph{The tool must provide automated testing for all refactoring functions.}\\
+  {\bf Rationale:} Automated testing ensures that changes do not introduce new bugs, maintaining the reliability and stability of the tool.\\
+  {\bf Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.
+  
+  \item \emph{Each version of the library must maintain compatibility with the current releases of external libraries during its development phase.}\\
+  {\bf Rationale:} Keeping external libraries up-to-date ensures compatibility and leverages improvements or security patches provided by library maintainers.\\
+  {\bf Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.
+\end{enumerate}
 
 \subsection{Supportability Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must offer bilingual support for help documentation.
-  \begin{itemize}
-      \item \textbf{Rationale:} Bilingual support ensures that users from different regions can understand and use the tool effectively, increasing its accessibility.
-      \item \textbf{Fit Criteria:} Help documentation is available in both major languages, English and French.
-  \end{itemize}
-  
+\begin{enumerate}[label=MS-SP \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must offer bilingual support for help documentation.}\\
+  {\bf Rationale:} Bilingual support ensures that users from different regions can understand and use the tool effectively, increasing its accessibility.\\
+  {\bf Fit Criteria:} Help documentation is available in both major languages, English and French.
 \end{enumerate}
 
 \subsection{Adaptability Requirements}
@@ -784,25 +724,18 @@ Not applicable in this project currently
 
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must avoid using colours or symbols that could be culturally sensitive or offensive.
-  \begin{itemize}
-      \item \textbf{Rationale:}  Ensuring cultural sensitivity in design helps avoid alienating or offending users from diverse backgrounds, which is critical for global acceptance and usability.
-      \item \textbf{Fit Criteria:} Conduct a cultural review to ensure that all icons and colours used in the tool are neutral and universally acceptable.
-  \end{itemize}
+\begin{enumerate}[label=CULT \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must avoid using colours or symbols that could be culturally sensitive or offensive.}\\
+  {\bf Rationale:} Ensuring cultural sensitivity in design helps avoid alienating or offending users from diverse backgrounds, which is critical for global acceptance and usability.\\
+  {\bf Fit Criteria:} Conduct a cultural review to ensure that all icons and colours used in the tool are neutral and universally acceptable.
   
-  \item \textbf{Requirement:} The tool must support both metric and imperial measurement units.
-  \begin{itemize}
-      \item \textbf{Rationale:} Users have different preferences and standards for measurement units. Supporting both metric and imperial units ensures accessibility and ease of use for a global audience.
-      \item \textbf{Fit Criteria:} Users can toggle between metric and imperial units for any measurements related to energy consumption.
-  \end{itemize}   
+  \item \emph{The tool must support both metric and imperial measurement units.}\\
+  {\bf Rationale:} Users have different preferences and standards for measurement units. Supporting both metric and imperial units ensures accessibility and ease of use for a global audience.\\
+  {\bf Fit Criteria:} Users can toggle between metric and imperial units for any measurements related to energy consumption.
   
-  \item \textbf{Requirement:} The tool must not include content that could be considered culturally insensitive.
-  \begin{itemize}
-      \item \textbf{Rationale:} Avoiding culturally insensitive content ensures that the tool is respectful and inclusive, fostering a positive user experience across different cultures.
-      \item \textbf{Fit Criteria:} A cultural sensitivity review is conducted to ensure all content is appropriate for a global audience.
-  \end{itemize}
-
+  \item \emph{The tool must not include content that could be considered culturally insensitive.}\\
+  {\bf Rationale:} Avoiding culturally insensitive content ensures that the tool is respectful and inclusive, fostering a positive user experience across different cultures.\\
+  {\bf Fit Criteria:} A cultural sensitivity review is conducted to ensure all content is appropriate for a global audience.
 \end{enumerate}
 
 \section{Compliance Requirements}
