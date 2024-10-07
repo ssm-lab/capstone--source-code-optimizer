@@ -321,11 +321,96 @@ involved in the Project}
 
 \section{The Scope of the Product}
 \subsection{Product Boundary}
-\lips
+\includegraphics[scale=0.4]{../Images/UseCaseDiagram.png}
 \subsection{Product Use Case Table}
-\lips
+\scriptsize
+\begin{tabular}{ |c|p{3cm}|p{4cm}|p{5cm}| }
+  \hline
+  PUC \# & PUC Name & Actor/s & Input \& Output(s) \\
+  \hline\hline
+
+  1 & Receive Code for Refactoring & User & Original Python Code (in) \\ \hline
+  2 & Analyze Energy Consumption of Original Code & Energy Consumption Tool & Original Code (in), Energy Consumption Report (out) \\ \hline
+  3 & Refactor Code & Reinforcement Learning Model & Code Segment (in), Previous Energy Saving Patterns (out) \\ \hline
+  4 & Test Refactored Code Functionality & Testing Service & Refactored Code (in), Test Results (out) \\ \hline
+  5 & Generate Performance Metrics of Refactored Code & Energy Consumption Tool & Refactored Code (in), Energy Consumption Report (out) \\ \hline
+  6 & Show Results & User & Refactored Code, Performance Metrics (out) \\
+
+  \hline
+\end{tabular}
 \subsection{Individual Product Use Cases (PUC's)}
-\lips
+\setlength{\parindent}{0pt}
+\begin{enumerate}
+\item \textbf{PUC 1: Receive Code for Refactoring} \\
+\textbf{Trigger:} User submits Python code via GitHub Actions or IDE plugin. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item User has access to the refactoring tool.
+    \item The refactoring tool is active and ready to receive code.
+\end{itemize}
+\textbf{Actors:} User. \\
+\textbf{Outcome:} Python code is received by the refactoring tool. \\
+\textbf{Input:} Original Python Code. \\
+\textbf{Output:} Code is stored for further analysis (internal).
+
+\item \textbf{PUC 2: Analyze Energy Consumption of Original Code} \\
+\textbf{Trigger:} The refactoring tool submits the original code to the energy consumption tool. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item The refactoring tool has received the original code.
+    \item Energy Consumption Tool is active and connected to the refactoring tool.
+\end{itemize}
+\textbf{Actors:} Energy Consumption Tool. \\
+\textbf{Outcome:} Energy consumption data is collected and returned to the refactoring tool. \\
+\textbf{Input:} Original Python Code. \\
+\textbf{Output:} Energy Consumption Report.
+
+\item \textbf{PUC 3: Refactor Code} \\
+\textbf{Trigger:} Refactoring tool identifies inefficiencies in the original code. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Energy consumption report has been generated.
+\end{itemize}
+\textbf{Actors:} Reinforcement Learning Model. \\
+\textbf{Outcome:} Code is refactored. Previous energy-saving patterns are utilized, if present. \\
+\textbf{Input:} Code Segment. \\
+\textbf{Output:} Refactored Python Code.
+
+\item \textbf{PUC 4: Test Refactored Code Functionality} \\
+\textbf{Trigger:} Refactored code is ready for validation. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Refactoring process has completed.
+    \item Testing Service is available.
+\end{itemize}
+\textbf{Actors:} Testing Service. \\
+\textbf{Outcome:} Refactored code is validated for functional correctness. \\
+\textbf{Input:} Refactored Code. \\
+\textbf{Output:} Test Results.
+
+\item \textbf{PUC 5: Generate Performance Metrics of Refactored Code} \\
+\textbf{Trigger:} Refactored code passes functionality tests. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Refactored code has been validated.
+\end{itemize}
+\textbf{Actors:} Energy Consumption Tool. \\
+\textbf{Outcome:} Performance report is generated and sent to the user. \\
+\textbf{Input:} Refactored Code. \\
+\textbf{Output:} Energy Consumption Report.
+
+\item \textbf{PUC 6: Show Results} \\
+\textbf{Trigger:} Refactored code and performance metrics are generated. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Preceding use cases have successfully been completed.
+    \item Results are ready to be shared with the user.
+\end{itemize}
+\textbf{Actors:} User. \\
+\textbf{Outcome:} Refactored code and performance metrics are presented to the user. \\
+\textbf{Output:} Refactored Code, Performance Metrics.
+
+\end{enumerate}
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
