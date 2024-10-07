@@ -239,34 +239,32 @@ involved in the Project}
 
 \subsection{The Context of the Work}
 
-% \includegraphics[scale=0.5]{../images/WorkContextModel.png}
+\includegraphics[scale=0.5]{../images/WorkContextModel.png}
 
 \subsection{Work Partitioning}
 
-\begin{tabular}{ |c|p{2.5cm}|c|c| }
-  \hline
-  Event \# & Event Name & Input & Output(s) \\
-  \hline\hline
-
+\setlength\extrarowheight{5mm}
+\begin{tabularx}{\textwidth}{|c|X|l|p{1.5in}|}
+  \toprule \textbf{Event \#} & \textbf{Event Name} & \textbf{Input} & \textbf{Output(s)} \\
+  \midrule
   1 & Users submit Python code & Python Code & Refactored Code \\
   2 & Energy Analysis of code & Python Code & Total Energy Consumed \\
   3 & RI Model produces refactoring & Python Code & Correct Refactoring \\
   4 & Testing and Validation of refactored code & Refactored Code & Test Results \\
   5 & Reporting Performance metrics of new code & Refactored Code & Performance Reports \\
   6 & Viewing Energy consumption reports & Refactored Code & Energy Consumption Statistics \\
-
-  \hline
-\end{tabular}
+  \bottomrule
+\end{tabularx}
 
 \subsection{Specifying a Business Use Case (BUC)}
 
-\subsubsection{Business Use Case Scenario 1}
-\textbf{Event Name:} Code Submission \\
-\textbf{Input:} Python Code \\
-\textbf{Output:} Refactored Code \\
-\textbf{Pre-condition:} User uses either GitHub Action or a VS code plugin to submit code to the refactoring tool \\  
-\textbf{Scenario:}
-    \begin{enumerate}
+\begin{enumerate}[label={\bf BUC \arabic*:}, wide=0pt, font=\itshape]
+  \item {\bf Code Submission} \\[2mm]
+    \textbf{Input:} Python Code \\
+    \textbf{Output:} Refactored Code \\
+    \textbf{Pre-condition:} User uses either GitHub Action or a VS code plugin to submit code to the refactoring tool \\[2mm]  
+    \textbf{Scenario:}
+      \begin{enumerate}[label=\arabic*.]
         \item Refactoring tool receives the Python code
         \item PyJoules is used to store energy consumption data for the original Python code submitted
         \item Tool analyzes the code for inefficiencies (PySmells)
@@ -274,83 +272,78 @@ involved in the Project}
         \item Energy consumption is measured of refactored code and compared to the original data
         \item Refactored code is tested to ensure functionality is maintained from the original code
         \item Refactored code is received by the user
-    \end{enumerate}
-\textbf{Sub Variation: }
-    \begin{itemize}
+      \end{enumerate}
+    \textbf{Sub Variation: }
+      \begin{itemize}
         \item \textit{4a:} If no PySmells are identified, then code is returned to the user
         \item \textit{6a:} If energy consumption increases for refactored code, the reinforcement model is asked to find another refactoring
         \item \textit{7a:} If code functionality is not preserved for refactored code, the reinforcement model is asked to find another refactoring
+      \end{itemize}
+
+  \item {\bf Energy Analysis of Code}\\[2mm]
+    \textbf{Input:} Python Code \\
+    \textbf{Output:} Total Energy Consumed \\
+    \textbf{Pre-condition:} Submission of Python code to the Energy Consumption Tool \\[2mm]
+    \textbf{Scenario: } 
+    \begin{enumerate}[label=\arabic*.]
+        \item Tool receives Python Code
+        \item Energy consumed is measured during execution
+        \item The analysis results are compiled into a report
+        \item Report of total energy consumed is received by the refactoring tool
+    \end{enumerate}
+  
+  \item {\bf Reinforcement Learning Model Produces Refactoring} \\[2mm]
+    \textbf{Input:} Python Code \\
+    \textbf{Output:} Correct Refactoring \\
+    \textbf{Pre-condition:} Request for refactored code from the Reinforcement Learning Model \\[2mm]
+    \textbf{Scenario: } 
+    \begin{enumerate}[label=\arabic*.]
+        \item Model receives Python Code
+        \item Analyze Code for potential refactoring
+        \item Generate suggestions based on previous learning and data
+        \item Implement suggested refactorings
+    \end{enumerate}
+    \textbf{Sub Variation: }
+    \begin{itemize}
+        \item \textit{2a:} If there are no refactorings found, Model outputs are given code back to the refactoring tool 
     \end{itemize}
 
-\subsubsection{Business Use Case Scenario 2} 
-\textbf{Event Name:} Energy Analysis of Code \\
-\textbf{Input:} Python Code \\
-\textbf{Output:} Total Energy Consumed \\
-\textbf{Pre-condition:} Submission of Python code to the Energy Consumption Tool \\
-\textbf{Scenario: } 
-\begin{itemize}
-    \item \textit{1:} Tool receives Python Code
-    \item \textit{2:} Energy consumed is measured during execution
-    \item \textit{3:} The analysis results are compiled into a report
-    \item \textit{4:} Report of total energy consumed is received by the refactoring tool
-\end{itemize}
+  \item {\bf Testing and Validation of Refactored Code} \\[2mm]
+    \textbf{Input:} Refactored Code \\
+    \textbf{Output:} Test Results \\
+    \textbf{Pre-condition:} Energy consumed for refactored code is less than the energy consumed for original code \\[2mm]
+    \textbf{Scenario: }
+    \begin{enumerate}[label=\arabic*.]
+        \item Conduct tests on refactored code
+        \item Conduct tests on original code
+        \item Validate results of refactored code to the results of the original code to ensure functionality is intact
+        \item Signal to refactoring tool to send refactored code to the user
+    \end{enumerate}
+    \textbf{Sub Variation: }
+    \begin{itemize}
+        \item \textit{4a:} If functionality is not preserved, signal to the refactoring tool to refactor again
+    \end{itemize}
 
-\subsubsection{Business Use Case Scenario 3} 
-\textbf{Event Name:} Reinforcement Learning Model Produces Refactoring \\
-\textbf{Input:} Python Code \\
-\textbf{Output:} Correct Refactoring \\
-\textbf{Pre-condition:} Request for refactored code from the Reinforcement Learning Model \\
-\textbf{Scenario: } 
-\begin{itemize}
-    \item \textit{1:} Model receives Python Code
-    \item \textit{2:} Analyze Code for potential refactoring
-    \item \textit{3:} Generate suggestions based on previous learning and data
-    \item \textit{4:} Implement suggested refactorings
-\end{itemize}
-\textbf{Sub Variation: }
-\begin{itemize}
-    \item \textit{2a:} If there are no refactorings found, Model outputs are given code back to the refactoring tool 
-\end{itemize}
+  \item {\bf Reporting Performance Metrics of New Code} \\[2mm]
+    \textbf{Input:} Refactored Code \\
+    \textbf{Output:} Performance Reports\\
+    \textbf{Pre-condition:} Testing and validation is completed successfully \\[2mm]
+    \textbf{Scenario: }
+    \begin{enumerate}[label=\arabic*.]
+        \item Generate detailed performance report based on testing outcomes
+        \item User receives the performance report
+    \end{enumerate}
 
-\subsubsection{Business Use Case Scenario 4} 
-\textbf{Event Name:} Testing and Validation of Refactored Code \\
-\textbf{Input:} Refactored Code \\
-\textbf{Output:} Test Results \\
-\textbf{Pre-condition:} Energy consumed for refactored code is less than the energy consumed for original code \\
-\textbf{Scenario: } \\
-\begin{itemize}
-    \item \textit{1:} Conduct tests on refactored code
-    \item \textit{2:} Conduct tests on original code
-    \item \textit{3:} Validate results of refactored code to the results of the original code to ensure functionality is intact
-    \item \textit{4:} Signal to refactoring tool to send refactored code to the user
-\end{itemize}
-\textbf{Sub Variation: }
-\begin{itemize}
-    \item \textit{4a:} If functionality is not preserved, signal to the refactoring tool to refactor again
-\end{itemize}
-
-\subsubsection{Business Use Case Scenario 5} 
-\textbf{Event Name:} Reporting Performance Metrics of New Code \\
-\textbf{Input:} Refactored Code \\
-\textbf{Output:} Performance Reports\\
-\textbf{Pre-condition:} Testing and validation is completed successfully \\
-\textbf{Scenario: } \\
-\begin{itemize}
-    \item \textit{1:} Generate detailed performance report based on testing outcomes
-    \item \textit{2:} User receives the performance report
-\end{itemize}
-
-\subsubsection{Business Use Case Scenario 6} 
-\textbf{Event Name:} Viewing Energy Consumption Reports \\
-\textbf{Input:} Refactored Code \\
-\textbf{Output:} Energy Consumption Statistics \\
-\textbf{Pre-condition:} Testing and validation is completed successfully \\
-\textbf{Scenario: } \\
-\begin{itemize}
-    \item \textit{1:} Comprehensive statistics are compiled from energy analysis data
-    \item \textit{2:} Information is compiled in an accessible format for developers to review
-\end{itemize}
-
+  \item {\bf Viewing Energy Consumption Reports} \\[2mm]
+    \textbf{Input:} Refactored Code \\
+    \textbf{Output:} Energy Consumption Statistics \\
+    \textbf{Pre-condition:} Testing and validation is completed successfully \\[2mm]
+    \textbf{Scenario: }
+    \begin{enumerate}[label=\arabic*.]
+        \item Comprehensive statistics are compiled from energy analysis data
+        \item Information is compiled in an accessible format for developers to review
+    \end{enumerate}
+\end{enumerate}
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
@@ -362,26 +355,29 @@ involved in the Project}
 \subsection{Product Boundary}
 \includegraphics[scale=0.4]{../Images/UseCaseDiagram.png}
 \subsection{Product Use Case Table}
-\scriptsize
-\begin{tabular}{ |c|p{3cm}|p{4cm}|p{5cm}| }
-  \hline
-  PUC \# & PUC Name & Actor/s & Input \& Output(s) \\
-  \hline\hline
 
-  1 & Receive Code for Refactoring & User & Original Python Code (in) \\ \hline
-  2 & Analyze Energy Consumption of Original Code & Energy Consumption Tool & Original Code (in), Energy Consumption Report (out) \\ \hline
-  3 & Refactor Code & Reinforcement Learning Model & Code Segment (in), Previous Energy Saving Patterns (out) \\ \hline
-  4 & Test Refactored Code Functionality & Testing Service & Refactored Code (in), Test Results (out) \\ \hline
-  5 & Generate Performance Metrics of Refactored Code & Energy Consumption Tool & Refactored Code (in), Energy Consumption Report (out) \\ \hline
+\setlength\extrarowheight{5mm}
+\begin{tabularx}{\textwidth}{|
+  c|
+  >{\raggedright\arraybackslash}X|
+  p{1.5in}|
+  >{\raggedright\arraybackslash}X|}
+  \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} \\
+  \midrule
+  1 & Receive Code for Refactoring & User & Original Python Code (in) \\ 
+  2 & Analyze Energy Consumption of Original Code & Energy Consumption Tool & Original Code (in), Energy Consumption Report (out) \\ 
+  3 & Refactor Code & Reinforcement Learning Model & Code Segment (in), Previous Energy Saving Patterns (out) \\ 
+  4 & Test Refactored Code Functionality & Testing Service & Refactored Code (in), Test Results (out) \\ 
+  5 & Generate Performance Metrics of Refactored Code & Energy Consumption Tool & Refactored Code (in), Energy Consumption Report (out) \\ 
   6 & Show Results & User & Refactored Code, Performance Metrics (out) \\
+  \bottomrule
+\end{tabularx}
 
-  \hline
-\end{tabular}
 \subsection{Individual Product Use Cases (PUC's)}
 \setlength{\parindent}{0pt}
-\begin{enumerate}
-\item \textbf{PUC 1: Receive Code for Refactoring} \\
-\textbf{Trigger:} User submits Python code via GitHub Actions or IDE plugin. \\
+\begin{enumerate}[label={\bf PUC \arabic*:}, wide=0pt, font=\itshape]
+\item {\bf Receive Code for Refactoring} \\[2mm]
+\textbf{Trigger:} User submits Python code via GitHub Actions or IDE plugin. \\[2mm]
 \textbf{Preconditions:}
 \begin{itemize}
     \item User has access to the refactoring tool.
@@ -392,8 +388,8 @@ involved in the Project}
 \textbf{Input:} Original Python Code. \\
 \textbf{Output:} Code is stored for further analysis (internal).
 
-\item \textbf{PUC 2: Analyze Energy Consumption of Original Code} \\
-\textbf{Trigger:} The refactoring tool submits the original code to the energy consumption tool. \\
+\item \textbf{Analyze Energy Consumption of Original Code} \\[2mm]
+\textbf{Trigger:} The refactoring tool submits the original code to the energy consumption tool. \\[2mm]
 \textbf{Preconditions:}
 \begin{itemize}
     \item The refactoring tool has received the original code.
@@ -404,8 +400,8 @@ involved in the Project}
 \textbf{Input:} Original Python Code. \\
 \textbf{Output:} Energy Consumption Report.
 
-\item \textbf{PUC 3: Refactor Code} \\
-\textbf{Trigger:} Refactoring tool identifies inefficiencies in the original code. \\
+\item \textbf{Refactor Code} \\[2mm]
+\textbf{Trigger:} Refactoring tool identifies inefficiencies in the original code. \\[2mm]
 \textbf{Preconditions:}
 \begin{itemize}
     \item Energy consumption report has been generated.
@@ -415,8 +411,8 @@ involved in the Project}
 \textbf{Input:} Code Segment. \\
 \textbf{Output:} Refactored Python Code.
 
-\item \textbf{PUC 4: Test Refactored Code Functionality} \\
-\textbf{Trigger:} Refactored code is ready for validation. \\
+\item \textbf{Test Refactored Code Functionality} \\[2mm]
+\textbf{Trigger:} Refactored code is ready for validation. \\[2mm]
 \textbf{Preconditions:}
 \begin{itemize}
     \item Refactoring process has completed.
@@ -427,8 +423,8 @@ involved in the Project}
 \textbf{Input:} Refactored Code. \\
 \textbf{Output:} Test Results.
 
-\item \textbf{PUC 5: Generate Performance Metrics of Refactored Code} \\
-\textbf{Trigger:} Refactored code passes functionality tests. \\
+\item \textbf{Generate Performance Metrics of Refactored Code} \\[2mm]
+\textbf{Trigger:} Refactored code passes functionality tests. \\[2mm]
 \textbf{Preconditions:}
 \begin{itemize}
     \item Refactored code has been validated.
@@ -438,8 +434,8 @@ involved in the Project}
 \textbf{Input:} Refactored Code. \\
 \textbf{Output:} Energy Consumption Report.
 
-\item \textbf{PUC 6: Show Results} \\
-\textbf{Trigger:} Refactored code and performance metrics are generated. \\
+\item \textbf{Show Results} \\[2mm]
+\textbf{Trigger:} Refactored code and performance metrics are generated. \\[2mm]
 \textbf{Preconditions:}
 \begin{itemize}
     \item Preceding use cases have successfully been completed.
