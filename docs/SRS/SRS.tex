@@ -204,7 +204,6 @@ involved in the Project}
 
 \subsection{Work Partitioning}
 
-\scriptsize
 \begin{tabular}{ |c|p{2.5cm}|c|c| }
   \hline
   Event \# & Event Name & Input & Output(s) \\
@@ -546,11 +545,6 @@ involved in the Project}
 \end{enumerate}
 
 \section{Operational and Environmental Requirements}
-% \begin{enumerate}[{OER-WE}1. ]
-	% \item \emph{}\\
-  %   {\bf Rationale:} \\
-  %   {\bf Fit Criterion:}  
-% \end{enumerate}
 \subsection{Expected Physical Environment}
 
 \begin{enumerate}[label=OER-EP \arabic*., wide=0pt, leftmargin=*]
@@ -914,7 +908,36 @@ The planning of the development phases is based on the deliverables submissions 
 Not Applicable.
 
 \section{Waiting Room}
-\lips
+\begin{enumerate}[label=WTRM \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The IDE plugin must provide interactive tips and progress indicators to guide users during the refactoring process.}\\
+    {\bf Rationale:} This helps prevent user confusion during the refactoring process and enhances the user experience by providing clear, real-time feedback.\\
+    {\bf Fit Criterion:} Tips and progress indicators display automatically when users initiate a refactoring action in the VSCode interface.\\
+    {\bf Priority:} Medium
+  \item \emph{The tool must provide automated error reporting with user consent.}\\
+    {\bf Rationale:} Automated error reporting helps developers quickly identify and address issues, improving the tool's reliability and reducing downtime with an option to include additional comments for context.\\
+    {\bf Fit Criterion:} Users are prompted to send error reports when an issue occurs, \\
+    {\bf Priority:} Medium
+  \item \emph{The tool must allow users to define custom refactoring rules or preferences within the plugin.}\\
+    {\bf Rationale:} This would allow developers more flexibility and control, enabling them to apply refactorings that best suit their projects while maintaining energy efficiency.\\
+    {\bf Fit Criterion:} Users can create a configuration file that describes their refactoring preferences.\\
+    {\bf Priority:} High
+  \item \emph{The tool should provide a dashboard that offers deeper insights into refactoring decisions, showing side-by-side comparisons of energy consumption before and after refactoring, along with performance metrics.}\\
+    {\bf Rationale:} This would help users better understand the impact of refactoring on both energy consumption and performance.\\
+    {\bf Fit Criterion:} Users are able to access energy metrics for all their projects on a centralized platform.\\
+    {\bf Priority:} High
+  \item \emph{The tool show provide a plugin that integrates with multiple popular IDEs and syncs information across them through a centralized database.}\\
+    {\bf Rationale:} Supporting multiple IDEs allows developes to use the tool within their preferred coding environments, enhancing user experience and adoption.\\
+    {\bf Fit Criterion:} Integration guides are provided for each supported IDE, with successful installation and functionality confirmed through user testing.\\
+    {\bf Priority:} Low
+  \item \emph{The refactoring library must be able to provide energy efficient refactorings for a wide variety of program languages (e.g., Java, C/C++, C\#, JavaScript, TypeScript, Go, Rust, etc.)}\\
+    {\bf Rationale:} Users around the world code projects in multitudes of languages depending on the context of their work. Being able to refactor in most popular languages would allow for the widespread usage of the tool.\\
+    {\bf Fit Criterion:} The tool tailors accepts and tailors code from the detected/specified language.\\
+    {\bf Priority:} Low
+  \item \emph{The reinforcement learning model for the tool should accept human feedback in the reinforcement learning process.}\\
+    {\bf Rationale:} This will allow users to guide the system's refactoring decisions based on developer expertise and preferences. Moreover, it will balance automated refactoring with human oversight to ensure that complex refactoring decisions align with the project's goals and constraints.\\
+    {\bf Fit Criterion:} The language model accepts human feedback and incorporates it into its future decisions.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
 \section{Ideas for Solution}
 \lips
