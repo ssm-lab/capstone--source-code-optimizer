@@ -670,34 +670,43 @@ involved in the Project}
 \end{enumerate}
 
 \section{Maintainability and Support Requirements}
+The following are defined as maintainability requirements:
 \subsection{Maintenance Requirements}
 \begin{enumerate}[label=MS-MNT \arabic*., wide=0pt, leftmargin=*]
   \item \emph{The tool must allow new refactoring techniques to be added within one week of identification.}\\
   {\bf Rationale:} Rapid integration of new techniques ensures the tool remains up-to-date with evolving best practices in energy-efficient coding.\\
   {\bf Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.
-  
+  {\bf Priority:} Medium
+
   \item \emph{The tool must be maintainable by developers who are not the original creators.}\\
   {\bf Rationale:} Ensuring that new developers can easily understand and modify the system reduces dependency on original developers and facilitates long-term maintenance.\\
   {\bf Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.
-  
+  {\bf Priority:} High
+
   \item \emph{The tool must allow for easy rollback of updates in case of errors.}\\
   {\bf Rationale:} Quick rollback capabilities minimize downtime and user disruption in case an update introduces issues.\\
   {\bf Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.
-  
+  {\bf Priority:} Medium
+
   \item \emph{The tool must provide automated testing for all refactoring functions.}\\
   {\bf Rationale:} Automated testing ensures that changes do not introduce new bugs, maintaining the reliability and stability of the tool.\\
   {\bf Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.
-  
+  {\bf Priority:} High
+
   \item \emph{Each version of the library must maintain compatibility with the current releases of external libraries during its development phase.}\\
   {\bf Rationale:} Keeping external libraries up-to-date ensures compatibility and leverages improvements or security patches provided by library maintainers.\\
   {\bf Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.
+  {\bf Priority:} Medium
+
 \end{enumerate}
 
+The following are defined as maintainability requirements:
 \subsection{Supportability Requirements}
 \begin{enumerate}[label=MS-SP \arabic*., wide=0pt, leftmargin=*]
   \item \emph{The tool must offer bilingual support for help documentation.}\\
   {\bf Rationale:} Bilingual support ensures that users from different regions can understand and use the tool effectively, increasing its accessibility.\\
   {\bf Fit Criteria:} Help documentation is available in both major languages, English and French.
+  {\bf Priority:} Low
 \end{enumerate}
 
 \subsection{Adaptability Requirements}
@@ -745,19 +754,24 @@ Not applicable in this project currently
 \end{enumerate}
 
 \section{Cultural Requirements}
+The cultural reuquirements of this project include the following:
 \subsection{Cultural Requirements}
 \begin{enumerate}[label=CULT \arabic*., wide=0pt, leftmargin=*]
   \item \emph{The tool must avoid using colours or symbols that could be culturally sensitive or offensive.}\\
   {\bf Rationale:} Ensuring cultural sensitivity in design helps avoid alienating or offending users from diverse backgrounds, which is critical for global acceptance and usability.\\
   {\bf Fit Criteria:} Conduct a cultural review to ensure that all icons and colours used in the tool are neutral and universally acceptable.
-  
+  {\bf Priority:} Low
+
   \item \emph{The tool must support both metric and imperial measurement units.}\\
   {\bf Rationale:} Users have different preferences and standards for measurement units. Supporting both metric and imperial units ensures accessibility and ease of use for a global audience.\\
   {\bf Fit Criteria:} Users can toggle between metric and imperial units for any measurements related to energy consumption.
-  
+  {\bf Priority:} Medium
+
   \item \emph{The tool must not include content that could be considered culturally insensitive.}\\
   {\bf Rationale:} Avoiding culturally insensitive content ensures that the tool is respectful and inclusive, fostering a positive user experience across different cultures.\\
   {\bf Fit Criteria:} A cultural sensitivity review is conducted to ensure all content is appropriate for a global audience.
+  {\bf Priority:} Medium
+
 \end{enumerate}
 
 \section{Compliance Requirements}
