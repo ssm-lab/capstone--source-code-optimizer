@@ -148,7 +148,28 @@ Due to the nature of this project as a capstone requirement, there are currently
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\lips
+\begin{enumerate}
+    \item \textbf{Requirement:} The tool must be able to refactor Python code to improve its energy efficiency.
+    \begin{itemize}
+        \item \textbf{Rationale:} The core purpose of this tool is to optimize Python code for energy efficiency. Without the ability to refactor Python code, the tool would not meet its primary objective.
+        \item \textbf{Fit Criterion:} The tool must successfully refactor inefficient Python code patterns, and improve the energy consumption by at least 5\%, as verified through energy consumption tests.
+    \end{itemize}
+    \item \textbf{Requirement:} The product shall integrate with GitHub Actions for automating the refactoring process during CI/CD.
+    \begin{itemize}
+        \item \textbf{Rationale:} GitHub Actions is required to automate the refactoring process in a DevOps workflow, ensuring the solution can be implemented seamlessly across different development teams and projects.
+        \item \textbf{Fit Criterion:} The tool must trigger and run successfully within a GitHub Actions CI/CD pipeline, passing predefined energy-efficiency and functionality tests.
+    \end{itemize}
+    \item \textbf{Requirement:} The IDE plugin must be developed for Visual Studio Code (VS Code).
+    \begin{itemize}
+        \item \textbf{Rationale:} VS Code is one of the most popular development environments among Python developers, and using it ensures a wide user base and easy adoption of the tool.
+        \item \textbf{Fit Criterion:} The plugin must be installable and functional in Visual Studio Code, verified by successful installation and use of the plugin in the IDE without any compatibility issues.
+    \end{itemize}
+    \item \textbf{Requirement:} The project must be finished within the academic year (September 2024 - March 2025).
+    \begin{itemize}
+        \item \textbf{Rationale:} The fully working end-to-end software that refactors Python code to be more energy efficient needs to be completed by the capstone course's set deadlines.
+        \item \textbf{Fit Criterion:} Must submit the finished project by the end of the academic year as per project requirements.
+    \end{itemize}
+\end{enumerate}
 \subsection{Implementation Environment of the Current System}
 \lips
 \subsection{Partner or Collaborative Applications}
@@ -158,11 +179,29 @@ Due to the nature of this project as a capstone requirement, there are currently
 \subsection{Anticipated Workplace Environment}
 \lips
 \subsection{Schedule Constraints}
-\lips
+\begin{enumerate}
+    \item \textbf{Requirement:} The project must be completed by April 2025, with interim deadlines for key milestones such as Proof of Concept (November 2024) and the final demonstration (March 2025).
+    \begin{itemize}
+        \item \textbf{Rationale:} These deadlines are based on the academic timeline and the expectations of the capstone course.
+        \item \textbf{Fit Criterion:} All project components must be completed and fully functional by the final demonstration in March 2025.
+    \end{itemize}
+\end{enumerate}
 \subsection{Budget Constraints}
-\lips
+\begin{enumerate}
+    \item \textbf{Requirement:} The project must not exceed the resources available to the team, which includes free open-source software and free services like GitHub for hosting and CI/CD pipelines.
+    \begin{itemize}
+        \item \textbf{Rationale:} The team does not have a budget for paid services or proprietary software.
+        \item \textbf{Fit Criterion:} The project must be implemented using free tools and libraries and hosted on GitHub.
+    \end{itemize}
+\end{enumerate}
 \subsection{Enterprise Constraints}
-\lips
+\begin{enumerate}
+    \item \textbf{Requirement:} The product shall be built to comply with the standards of McMaster University’s capstone project requirements and academic integrity policies.
+    \begin{itemize}
+        \item \textbf{Rationale:} The project is part of the university’s curriculum and must adhere to its standards.
+        \item \textbf{Fit Criterion:} The product must meet the requirements specified by the course syllabus and project advisor.
+    \end{itemize}
+\end{enumerate}
 
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
@@ -200,7 +239,7 @@ involved in the Project}
 
 \subsection{The Context of the Work}
 
-\includegraphics[scale=0.5]{../images/WorkContextModel.png}
+% \includegraphics[scale=0.5]{../images/WorkContextModel.png}
 
 \subsection{Work Partitioning}
 
@@ -321,11 +360,96 @@ involved in the Project}
 
 \section{The Scope of the Product}
 \subsection{Product Boundary}
-\lips
+\includegraphics[scale=0.4]{../Images/UseCaseDiagram.png}
 \subsection{Product Use Case Table}
-\lips
+\scriptsize
+\begin{tabular}{ |c|p{3cm}|p{4cm}|p{5cm}| }
+  \hline
+  PUC \# & PUC Name & Actor/s & Input \& Output(s) \\
+  \hline\hline
+
+  1 & Receive Code for Refactoring & User & Original Python Code (in) \\ \hline
+  2 & Analyze Energy Consumption of Original Code & Energy Consumption Tool & Original Code (in), Energy Consumption Report (out) \\ \hline
+  3 & Refactor Code & Reinforcement Learning Model & Code Segment (in), Previous Energy Saving Patterns (out) \\ \hline
+  4 & Test Refactored Code Functionality & Testing Service & Refactored Code (in), Test Results (out) \\ \hline
+  5 & Generate Performance Metrics of Refactored Code & Energy Consumption Tool & Refactored Code (in), Energy Consumption Report (out) \\ \hline
+  6 & Show Results & User & Refactored Code, Performance Metrics (out) \\
+
+  \hline
+\end{tabular}
 \subsection{Individual Product Use Cases (PUC's)}
-\lips
+\setlength{\parindent}{0pt}
+\begin{enumerate}
+\item \textbf{PUC 1: Receive Code for Refactoring} \\
+\textbf{Trigger:} User submits Python code via GitHub Actions or IDE plugin. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item User has access to the refactoring tool.
+    \item The refactoring tool is active and ready to receive code.
+\end{itemize}
+\textbf{Actors:} User. \\
+\textbf{Outcome:} Python code is received by the refactoring tool. \\
+\textbf{Input:} Original Python Code. \\
+\textbf{Output:} Code is stored for further analysis (internal).
+
+\item \textbf{PUC 2: Analyze Energy Consumption of Original Code} \\
+\textbf{Trigger:} The refactoring tool submits the original code to the energy consumption tool. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item The refactoring tool has received the original code.
+    \item Energy Consumption Tool is active and connected to the refactoring tool.
+\end{itemize}
+\textbf{Actors:} Energy Consumption Tool. \\
+\textbf{Outcome:} Energy consumption data is collected and returned to the refactoring tool. \\
+\textbf{Input:} Original Python Code. \\
+\textbf{Output:} Energy Consumption Report.
+
+\item \textbf{PUC 3: Refactor Code} \\
+\textbf{Trigger:} Refactoring tool identifies inefficiencies in the original code. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Energy consumption report has been generated.
+\end{itemize}
+\textbf{Actors:} Reinforcement Learning Model. \\
+\textbf{Outcome:} Code is refactored. Previous energy-saving patterns are utilized, if present. \\
+\textbf{Input:} Code Segment. \\
+\textbf{Output:} Refactored Python Code.
+
+\item \textbf{PUC 4: Test Refactored Code Functionality} \\
+\textbf{Trigger:} Refactored code is ready for validation. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Refactoring process has completed.
+    \item Testing Service is available.
+\end{itemize}
+\textbf{Actors:} Testing Service. \\
+\textbf{Outcome:} Refactored code is validated for functional correctness. \\
+\textbf{Input:} Refactored Code. \\
+\textbf{Output:} Test Results.
+
+\item \textbf{PUC 5: Generate Performance Metrics of Refactored Code} \\
+\textbf{Trigger:} Refactored code passes functionality tests. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Refactored code has been validated.
+\end{itemize}
+\textbf{Actors:} Energy Consumption Tool. \\
+\textbf{Outcome:} Performance report is generated and sent to the user. \\
+\textbf{Input:} Refactored Code. \\
+\textbf{Output:} Energy Consumption Report.
+
+\item \textbf{PUC 6: Show Results} \\
+\textbf{Trigger:} Refactored code and performance metrics are generated. \\
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Preceding use cases have successfully been completed.
+    \item Results are ready to be shared with the user.
+\end{itemize}
+\textbf{Actors:} User. \\
+\textbf{Outcome:} Refactored code and performance metrics are presented to the user. \\
+\textbf{Output:} Refactored Code, Performance Metrics.
+
+\end{enumerate}
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
@@ -683,7 +807,10 @@ Not applicable in this project currently
 \lips
 
 \section{Open Issues}
-\lips
+\begin{itemize}
+  \item Further research is needed to determine the optimal balance between energy efficiency and code readability. While refactoring may improve energy consumption metrics, it could inadvertently make the codebase less maintainable and more difficult to expand in the long term.
+  \item The same can be said when it comes to performance. More energy efficient code might actually end up being less efficient when it comes to time and space complexity.
+\end{itemize}
 
 \section{Off-the-Shelf Solutions}
 \subsection{Ready-Made Products}
