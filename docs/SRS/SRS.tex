@@ -6,6 +6,7 @@
 % Risks are removed because they are covered by the Hazard Analysis
 \documentclass[12pt]{article}
 
+\usepackage[round]{natbib}
 \usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
 \usepackage{siunitx}
@@ -181,7 +182,7 @@ involved in the Project}
 
 \begin{enumerate}[{OER-EP}1. ]
 	\item \emph{The product shall be used in temperatures ranging from \SI{10}{\celsius} - \SI{35}{\celsius}.}\\
-    {\bf Rationale:} A computer's safe operating range is \SI{10}{\celsius} - \SI{35}{\celsius}. If the computer doesn't work then it is not possible to use the refactoring library. \\
+    {\bf Rationale:} A computer's safe operating range is \SI{10}{\celsius} - \SI{35}{\celsius} ~\citep{PCTemp}. If the computer doesn't work then it is not possible to use the refactoring library. \\
     {\bf Fit Criterion:} The computer turns on, and no temperature warning is issued.
   \item \emph{The product shall be used in proximity to a stable power supply.}\\
   {\bf Rationale:} As a coding library, the product depends on the continuing operation of the computer system it is used on. Should the computer lose power, the refactoring library will see its processes halted. \\
@@ -190,7 +191,7 @@ involved in the Project}
 
 \subsection{Wider Environment Requirements}
 \begin{enumerate}[{OER-WE}1. ]
-	\item \emph{The system must align with widely used emissions standards (e.g., GRI 305, GHG, ISO 14064).}\\
+	\item \emph{The system must align with widely used emissions standards (e.g., GRI 305, GHG, ISO 14064) ~\citep{GHG,ISO14064,GRI305}.}\\
     {\bf Rationale:} Providing metrics tailored to these standards, makes the library reporting tool more attractive to users part of companies looking to reduce their ecological footprint. \\
     {\bf Fit Criterion:} The emissions tracked by the standards are present in the reported metrics.  
 \end{enumerate}
@@ -324,5 +325,8 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   mastering the skill?  Of the identified approaches, which will each team
   member pursue, and why did they make this choice?
 \end{enumerate}
+
+\bibliographystyle {plainnat}
+\bibliography{../../refs/References}
 
 \end{document}
