@@ -56,31 +56,16 @@ Date 2 & 1.1 & Notes\\
 ~\newpage
 \section{Purpose of the Project}
 \subsection{User Business}
-The Information and Communications Technology (ICT) sector, an essential component of the global economy, is 
-responsible for 2-4\% of global CO2 emissions today, with projections suggesting this could rise to 14\% by 
-2040 ~\citep{BelkhirAndElmeligi2018}. To meet sustainability goals, including a 72\% reduction in CO2 
-emissions by 2040 ~\citep{FreitagAndBernersLee2021}, this sector must find ways to improve energy efficiency.
+The Information and Communications Technology (ICT) sector, an essential component of the global economy, is responsible for 2-4\% of global CO2 emissions today, with projections suggesting this could rise to 14\% by 2040 ~\citep{BelkhirAndElmeligi2018}. To meet sustainability goals, including a 72\% reduction in CO2 emissions by 2040 ~\citep{FreitagAndBernersLee2021}, this sector must find ways to improve energy efficiency.
 
-One area of concern is the energy consumption of software systems. However, for software engineers, it is 
-not practical for them to focus on optimizing energy consumption while developing complex programs. 
-Instead, supporting tools and technologies are needed to assist in improving energy efficiency without 
-altering the intended behaviour of the software.
+One area of concern is the energy consumption of software systems. However, for software engineers, it is not practical for them to focus on optimizing energy consumption while developing complex programs. Instead, supporting tools and technologies are needed to assist in improving energy efficiency without altering the intended behaviour of the software.
 
-This project aims to tackle Python, a popular but energy-inefficient programming language. Python consumes 
-significantly more energy compared to more efficient languages like C and Rust—over 70 times more energy, 
-on average, for similar tasks ~\citep{PereiraEtAl2017}. The project's goal is to develop tools to reduce 
-Python's energy consumption through automated refactoring. While this will not solve the entire problem of 
-the carbon footprint associated with the software, it is a step towards more energy-efficient practices in 
-the software development process.
+This project aims to tackle Python, a popular but energy inefficient programming language. Python consumes significantly more energy compared to more efficient languages like C and Rust—over 70 times more energy, on average, for similar tasks ~\citep{PereiraEtAl2017}. The project's goal is to develop tools to reduce Python's energy consumption through automated refactoring. While this will not solve the entire problem of the carbon footprint associated with the software, it is a step towards more energy-efficient practices in the software development process.
 
 \subsection{Goals of the Project}
-\noindent \textbf{Purpose}: The purpose of this project is to provide software engineers with tools to optimize 
-the energy efficiency of Python programs by automating refactoring suggestions, while still allowing 
-users to review and decide whether or not to apply the changes.
+\noindent \textbf{Purpose}: The purpose of this project is to provide software engineers with tools to optimize the energy efficiency of Python programs by automating refactoring suggestions, while still allowing users to review and decide whether or not to apply the changes.
 
-\noindent \textbf{Advantage}: By reducing the energy consumption of Python programs, this project will 
-contribute to the broader effort of decreasing the carbon footprint of software development, supporting 
-the ICT sector's goal of reducing CO2 emissions by 72\% by 2040 ~\citep{FreitagAndBernersLee2021}.
+\noindent \textbf{Advantage}: By reducing the energy consumption of Python programs, this project will contribute to the broader effort of decreasing the carbon footprint of software development, supporting the ICT sector's goal of reducing CO2 emissions by 72\% by 2040 ~\citep{FreitagAndBernersLee2021}.
 
 \noindent \textbf{Measurement}: The project's success can be measured by the reduction in energy usage 
 achieved after applying the refactorings. Benchmarks will compare the energy consumption of original 
@@ -99,10 +84,10 @@ The customers of this product are all the \textbf{software developers} that use 
 They oversee project operations and focus on reducing energy costs associated with large-scale or cloud-hosted applications. They might leverage the refactoring library to reduce operational costs and achieve business sustainability goals.
 
 \subsubsection*{\textcolor{Maroon}{Business Sustainability Teams}}
-This stakeholder is responsible for reducing their company's environmental footprint by analyzing its energy emissions. They will use the energy efficiency metrics provided by the refactoring library to improve environmental sustainability practices within their organization.
+This stakeholder is responsible for reducing the company's environmental footprint by analyzing its energy emissions. They will use the energy efficiency metrics provided by the refactoring library to improve environmental sustainability practices within their organization.
 
 \subsubsection*{\textcolor{Maroon}{End Users}}
-End users refer to the users of software that uses the product in its development. They will indirectly reap benefits from these applications that have been optimised using the refactoring library. They might experience more responsive, efficient software, particularly in mobile or embedded environments where battery life is a key concern. They have no involvement in the development of the product. 
+End users refer to the users of software that uses the product in its development. They will indirectly reap benefits from these applications that have been optimized using the refactoring library. They might experience more responsive, efficient software, particularly in mobile or embedded environments where battery life is a key concern. They have no involvement in the development of the product. 
 
 \subsubsection*{\textcolor{Maroon}{Regulatory Bodies}}
 This stakeholder is responsible for establishing regulations governing energy consumption and sustainability standards. They can promote the adoption of energy-efficient software practices and potentially certify tools that meet regulatory standards. 
@@ -110,7 +95,7 @@ This stakeholder is responsible for establishing regulations governing energy co
 \subsection{Hands-On Users of the Project}
 \subsubsection*{\textcolor{Maroon}{Software Developers}}
 \begin{itemize}
-  \item \textbf{User Role}: Integrate library into codebase, provide tests to check refactoring against original functionality
+  \item \textbf{User Role}: Integrate library into the codebase, provide tests to check refactoring against original functionality
 
   \item \textbf{Subject Matter Experience}: Journeyman to Master
   
@@ -238,16 +223,16 @@ involved in the Project}
 \textbf{Scenario:}
     \begin{enumerate}
         \item Refactoring tool receives the Python code
-        \item PyJoules is used to store energy consumption data for original Python code submitted
+        \item PyJoules is used to store energy consumption data for the original Python code submitted
         \item Tool analyzes the code for inefficiencies (PySmells)
-        \item Python code is provided to Re-enforcement learning model to find a refactoring
+        \item Python code is provided to the Re-enforcement learning model to find a refactoring
         \item Energy consumption is measured of refactored code and compared to the original data
-        \item Refactored code is tested to ensure functionality is maintained from original code
+        \item Refactored code is tested to ensure functionality is maintained from the original code
         \item Refactored code is received by the user
     \end{enumerate}
 \textbf{Sub Variation: }
     \begin{itemize}
-        \item \textit{4a:} If no PySmells identified, then code is returned to the user
+        \item \textit{4a:} If no PySmells are identified, then code is returned to the user
         \item \textit{6a:} If energy consumption increases for refactored code, the reinforcement model is asked to find another refactoring
         \item \textit{7a:} If code functionality is not preserved for refactored code, the reinforcement model is asked to find another refactoring
     \end{itemize}
@@ -279,20 +264,20 @@ involved in the Project}
 \end{itemize}
 \textbf{Sub Variation: }
 \begin{itemize}
-    \item \textit{2a:} If there are no refactorings found, Model outputs given code back to the refactoring tool 
+    \item \textit{2a:} If there are no refactorings found, Model outputs are given code back to the refactoring tool 
 \end{itemize}
 
 \subsubsection{Business Use Case Scenario 4} 
 \textbf{Event Name:} Testing and Validation of Refactored Code \\
 \textbf{Input:} Refactored Code \\
 \textbf{Output:} Test Results \\
-\textbf{Pre-condition:} Energy consumed for refactored code is less than energy consumed for original code \\
+\textbf{Pre-condition:} Energy consumed for refactored code is less than the energy consumed for original code \\
 \textbf{Scenario: } \\
 \begin{itemize}
     \item \textit{1:} Conduct tests on refactored code
     \item \textit{2:} Conduct tests on original code
     \item \textit{3:} Validate results of refactored code to the results of the original code to ensure functionality is intact
-    \item \textit{4:} Signal to refactoring tool to send refactored code to user
+    \item \textit{4:} Signal to refactoring tool to send refactored code to the user
 \end{itemize}
 \textbf{Sub Variation: }
 \begin{itemize}
@@ -346,7 +331,7 @@ involved in the Project}
   \end{itemize}
   \item \textbf{Requirement:} The tool must identify specific code smells that can be targeted for energy saving.
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should be able to detect and report at least 80\% of the follwing code smells using predefined rules or existing linters. Code smells include: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).
+      \item \textbf{Fit Criteria:} The tool should be able to detect and report at least 80\% of the following code smells using predefined rules or existing linters. Code smells include Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).
   \end{itemize}
   \item \textbf{Requirement:} The tool must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.
   \begin{itemize}[label={}]
@@ -356,13 +341,13 @@ involved in the Project}
   \begin{itemize}[label={}]
       \item \textbf{Fit Criteria:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.
   \end{itemize}
-  \item \textbf{Requirement:} The tool must produce valid refactored python code as output or indicate that no possible refactorings were found.
+  \item \textbf{Requirement:} The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.
   \begin{itemize}[label={}]
       \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
   \end{itemize}
   \item \textbf{Requirement:} The tool must report to the user any discrepancies between the original and suggested refactored code.
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Discrepancy reports to user clearly highlight differences in outputs
+      \item \textbf{Fit Criteria:} Discrepancy reports to the user clearly highlight differences in outputs
   \end{itemize}
   \item \textbf{Requirement:} The tool must allow users to input their original test suite as a required argument.
   \begin{itemize}[label={}]
@@ -370,7 +355,7 @@ involved in the Project}
   \end{itemize}
   \item \textbf{Requirement:} The tool must ensure that the original functionality of the code is preserved after refactoring.
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool runs the original test suite against the refactored code, and passes 100\% of the tests.
+      \item \textbf{Fit Criteria:} The tool runs the original test suite against the refactored code and passes 100\% of the tests.
   \end{itemize}
   \item \textbf{Requirement:} The tool must be compatible with various Python versions and common libraries.
   \begin{itemize}[label={}]
@@ -389,21 +374,21 @@ involved in the Project}
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
 \begin{enumerate}
-    \item \textbf{Requirement:} The refactoring interface should clearly present the original and refactored code side by side, allowing developers to easily compare and choose between them.
+    \item \textbf{Requirement:} The IDE plugin refactoring interface should present the original and refactored code side by side, allowing developers to compare and choose between them easily.
     \begin{itemize}[label={}]
         \item \textbf{Fit Criteria:} The interface must display the original code on one side and the refactored code on the other, with options for developers to accept or reject the refactorings without confusion.
     \end{itemize}
-    \item \textbf{Requirement:} The plugin should have a minimalist design, focusing only on essential elements to reduce clutter.
+    \item \textbf{Requirement:} The tool should have a minimalist design, focusing only on essential elements to reduce clutter.
     \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The interface should prominently display only the code, refactoring suggestions, and energy metrics, without unnecessary visual elements or distractions.
+        \item \textbf{Fit Criteria:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, without unnecessary visual elements or distractions.
     \end{itemize}
-    \item \textbf{Requirement:} The plugin should adapt to the user’s VS Code theme, supporting both light and dark modes.
+    \item \textbf{Requirement:} The IDE plugin should adapt to the user’s VS Code theme, supporting both light and dark modes.
     \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), with no manual changes required.
+        \item \textbf{Fit Criteria:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), with no manual changes required.
     \end{itemize}
     \item \textbf{Requirement:} The tool should highlight refactoring suggestions using visual indicators based on the impact of energy savings.
     \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The plugin must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), and developers should be able to identify refactoring opportunities quickly.
+        \item \textbf{Fit Criteria:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), and developers should be able to identify refactoring opportunities quickly.
     \end{itemize}
     \item \textbf{Requirement:} The GitHub Action should highlight significant energy savings with visual alerts in PRs.
     \begin{itemize}[label={}]
@@ -413,17 +398,17 @@ involved in the Project}
 
 \subsection{Style Requirements}
 \begin{enumerate}
-    \item \textbf{Requirement:} The  IDE plugin and GitHub action tool should convey a professional and authoritative appearance to instill confidence in developers.
+    \item \textbf{Requirement:} The tool should convey a professional and authoritative appearance to instill confidence in developers.
     \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} After their first encounter with the tools, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
+        \item \textbf{Fit Criteria:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
     \end{itemize}
     \item \textbf{Requirement:} The IDE plugin interface should promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.
     \begin{itemize}[label={}]
         \item \textbf{Fit Criteria:} Developers should report feeling less distracted and more productive while using the tools, with 70\% indicating a positive change in their coding environment.
     \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin and GitHub action tools' design should be visually appealing and modern, aligning with contemporary software development tools.
+    \item \textbf{Requirement:} The tool design should be visually appealing and modern, aligning with contemporary software development tools.
     \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} At least 75\% of users should express satisfaction with the tools' visual design and layout after their initial interaction.
+        \item \textbf{Fit Criteria:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.
     \end{itemize}
 \end{enumerate}
 
@@ -432,7 +417,7 @@ involved in the Project}
 \begin{enumerate}
   \item \textbf{Requirement:} The tool must have an intuitive user interface that simplifies navigation and functionality.
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.
+      \item \textbf{Fit Criteria:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.
   \end{itemize}
   \item \textbf{Requirement:} The tool should provide clear and concise prompts for user input.
   \begin{itemize}[label={}]
@@ -441,20 +426,20 @@ involved in the Project}
 \end{enumerate}
 \subsection{Personalization and Internationalization Requirements}
 \begin{enumerate}
-  \item \textbf{Requirement:}The tool should allow users to customize settings to match their preferences (e.g., refactoring styles, detection sensitivity).
+  \item \textbf{Requirement:} The tool should allow users to customize settings to match their preferences (e.g., refactoring styles, detection sensitivity).
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  Users should be able to save and load custom configurations easily.
+      \item \textbf{Fit Criteria:} Users should be able to save and load custom configurations easily.
   \end{itemize}
   \item \textbf{Requirement:} User guide must be available in French and English.
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} French and english installation and use instructions available.
+      \item \textbf{Fit Criteria:} French and English installation and use instructions available.
   \end{itemize} 
 \end{enumerate}
 \subsection{Learning Requirements}
 \begin{enumerate}
-  \item \textbf{Requirement:} The tool must have an availible youtube video demonstrating installation.
+  \item \textbf{Requirement:} The tool must have an available YouTube video demonstrating installation.
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  Youtube video present and easily accessible
+      \item \textbf{Fit Criteria:} Youtube video present and easily accessible
   \end{itemize}
   \item \textbf{Requirement:} The tool should provide context-sensitive help that offers assistance based on the current user actions.
   \begin{itemize}[label={}]
@@ -493,7 +478,7 @@ involved in the Project}
   \end{itemize}
   \item \textbf{Requirement:} The refactoring process must be executed efficiently without noticeable delays.
   \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).
+      \item \textbf{Fit Criteria:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).
   \end{itemize}
 \end{enumerate}
 
@@ -511,11 +496,11 @@ involved in the Project}
   \begin{itemize}[label={}]
       \item \textbf{Fit Criteria:} Detection accuracy should exceed 90\% when validated against a set of known cases.
   \end{itemize}
-  \item \textbf{Requirement:} The tool must maintain the functionality of the original provided code in all its reccommended refactorings.
+  \item \textbf{Requirement:} The tool must maintain the functionality of the original provided code in all its recommended refactorings.
   \begin{itemize}[label={}]
       \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.
   \end{itemize}
-  \item \textbf{Requirement:} The tool must produce valid refactored python code as output or indicate that no possible refactorings were found.
+  \item \textbf{Requirement:} The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.
   \begin{itemize}[label={}]
       \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
   \end{itemize}
@@ -592,7 +577,7 @@ involved in the Project}
          \item \textbf{Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.
      \end{itemize}
      
-  \item \textbf{Requirement:} Each version of the library must maintain compatibility with the current releases of external libraries during its development phase. .
+  \item \textbf{Requirement:} Each version of the library must maintain compatibility with the current releases of external libraries during its development phase.
      \begin{itemize}
          \item \textbf{Rationale:} Keeping external libraries up-to-date ensures compatibility and leverages improvements or security patches provided by library maintainers.
          \item \textbf{Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.
@@ -628,10 +613,10 @@ Not applicable in this project currently
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
 \begin{enumerate}
-  \item \textbf{Requirement:} The tool must avoid using colors or symbols that could be culturally sensitive or offensive.
+  \item \textbf{Requirement:} The tool must avoid using colours or symbols that could be culturally sensitive or offensive.
   \begin{itemize}
       \item \textbf{Rationale:}  Ensuring cultural sensitivity in design helps avoid alienating or offending users from diverse backgrounds, which is critical for global acceptance and usability.
-      \item \textbf{Fit Criteria:} Conduct a cultural review to ensure that all icons and colors used in the tool are neutral and universally acceptable.
+      \item \textbf{Fit Criteria:} Conduct a cultural review to ensure that all icons and colours used in the tool are neutral and universally acceptable.
   \end{itemize}
   
   \item \textbf{Requirement:} The tool must support both metric and imperial measurement units.
@@ -679,13 +664,13 @@ Not applicable in this project currently
 \subsection{Effects on the Current Environment}
 The introduction of the energy efficiency refactoring tool may lead to several changes in the current development environment. These effects include:
 \begin{enumerate}
-  \item The tool temporarily increasing CPU and memory usage while running. The tool aims to optimize energy efficency in code however it takes energy to run - in large codebases this could be significant energy and impact the performance of other applications running concurrently. 
-  \item The tool may have it's own dependencies that now need to be included in the app or installed into the current system. Think Pysmells, Pyjoule etc.
+  \item The tool temporarily increases CPU and memory usage while running. The tool aims to optimize energy efficiency in code however it takes energy to run - in large codebases this could be significant energy and impact the performance of other applications running concurrently. 
+  \item The tool may have its own dependencies that now need to be included in the app or installed into the current system. Think Pysmells, Pyjoule etc.
 \end{enumerate}
 
 \subsection{Effects on the Installed Systems}
 \begin{enumerate}
-  \item Existing systems may need to be evaluated for compatibility with the new tool. Older versions of python or other needed dependencies may not support the tool.
+  \item Existing systems may need to be evaluated for compatibility with the new tool. Older versions of Python or other needed dependencies may not support the tool.
   \item The refactoring process could lead to variations in the performance of existing applications
   \item As the tool updates existing code, thorough testing will be needed to ensure everything still works correctly. This may require more effort from QA teams and additional time and resources to check the updated code.
 \end{enumerate}
@@ -731,7 +716,7 @@ Inhibit the New Product}
     \item Establish CI/CD pipeline using GitHub Actions
     \item Develop core functionality:
       \begin{itemize}
-        \item Determine code smells to address for energy saving
+        \item Determine code smells to address for energy-saving
         \item Implement code smell detection
         \item Develop appropriate refactorings for detected smells
         \item Measure energy consumption before and after refactoring
@@ -769,13 +754,13 @@ Inhibit the New Product}
   \item \textbf{Documentation Process}
     \begin{itemize}
         \item Pull changes from \texttt{docs} (epic documentation branch)
-        \item Create working branch with format [main contributor name]/[descriptive topic]
+        \item Create a working branch with format [main contributor name]/[descriptive topic]
         \item Commit changes with descriptive names
         \item Create unit tests for changes
-        \item Create pull request to merge changes into epic branch
+        \item Create a pull request to merge changes into an epic branch
         \item Wait for all tests run with GitHub Actions to pass
         \item Wait for at least two approvals from teammates
-        \item Merge changes into target branch
+        \item Merge changes into the target branch
     \end{itemize}
   
 \end{itemize}
@@ -907,8 +892,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
 
 \subsubsection*{Mya Hussain Reflection}
 \begin{enumerate}
-  \item \textit{What knowledge and skills will the team collectively need to acquire to
-  successfully complete this capstone project?}
+  \item \textit{What knowledge and skills will the team collectively need to acquire to successfully complete this capstone project?}
 
     \begin{itemize}
       \item Understanding of Python's performance characteristics and common code smells
