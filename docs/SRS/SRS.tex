@@ -6,11 +6,15 @@
 % Risks are removed because they are covered by the Hazard Analysis
 \documentclass[12pt]{article}
 
+\usepackage[round]{natbib}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
+\usepackage{siunitx}
 \usepackage{tabularx}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{graphicx}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
       colorlinks=true,      % false: boxed links; true: colored links
@@ -27,15 +31,16 @@
 
 \begin{document}
 
+\pagenumbering{roman}
+
 \title{Software Requirements Specification for \progname: subtitle describing software} 
 \author{\authname}
 \date{\today}
 	
 \maketitle
+\thispagestyle{empty}
 
 ~\newpage
-
-\pagenumbering{roman}
 
 \tableofcontents
 
@@ -54,6 +59,8 @@ Date 2 & 1.1 & Notes\\
 ~\\
 
 ~\newpage
+\pagenumbering{arabic}
+
 \section{Purpose of the Project}
 \subsection{User Business}
 The Information and Communications Technology (ICT) sector, an essential component of the global economy, is 
@@ -519,16 +526,58 @@ involved in the Project}
 \end{enumerate}
 
 \section{Operational and Environmental Requirements}
+% \begin{enumerate}[{OER-WE}1. ]
+	% \item \emph{}\\
+  %   {\bf Rationale:} \\
+  %   {\bf Fit Criterion:}  
+% \end{enumerate}
 \subsection{Expected Physical Environment}
-\lips
+
+\begin{enumerate}[label=OER-EP \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The product shall be used in temperatures ranging from \SI{10}{\celsius} - \SI{35}{\celsius}.}\\
+    {\bf Rationale:} A computer's safe operating range is \SI{10}{\celsius} - \SI{35}{\celsius} ~\citep{PCTemp}. If the computer doesn't work then it is not possible to use the refactoring library. \\
+    {\bf Fit Criterion:} The computer turns on, and no temperature warning is issued.
+  \item \emph{The product shall be used in proximity to a stable power supply.}\\
+  {\bf Rationale:} As a coding library, the product depends on the continuing operation of the computer system it is used on. Should the computer lose power, the refactoring library will see its processes halted. \\
+  {\bf Fit Criterion:} The computer is connected to a power outlet or the computer possesses charge on its battery. 
+\end{enumerate}
+
 \subsection{Wider Environment Requirements}
-\lips
+\begin{enumerate}[label=OER-WE \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The system must align with widely used emissions standards (e.g., GRI 305, GHG, ISO 14064) ~\citep{GHG,ISO14064,GRI305}.}\\
+    {\bf Rationale:} Providing metrics tailored to these standards, makes the library reporting tool more attractive to users part of companies looking to reduce their ecological footprint. \\
+    {\bf Fit Criterion:} The emissions tracked by the standards are present in the reported metrics.  
+\end{enumerate}
+
 \subsection{Requirements for Interfacing with Adjacent Systems}
-\lips
+\begin{enumerate}[label=OER-IAS \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The refactoring library must provide integration capabilities with GitHub Actions.}\\
+    {\bf Rationale:} This will allow the automation of the refactoring process within existing workflows to ensure that energy-efficient practices are consistently applied during continuous integration.\\
+    {\bf Fit Criterion:} The library is available to use via GitHub Actions when writing workflows.
+  \item \emph{The library should be compatible with the Visual Studio Code (VSCode) IDE.}\\
+    {\bf Rationale:} Developers will be able to refactor code easily without leaving their working environment, therefore enhancing the accessibility and usability of the library.\\
+    {\bf Fit Criterion:} An extension is available for installation in VSCode marketplace.
+  \item \emph{The library should support importing existing codebases and exporting refactored code and energy savings reports in standard formats (e.g., JSON, XML)}\\
+    {\bf Rationale:} This ensures that users can easily integrate the library into their existing workflows without significant disruption.\\
+    {\bf Fit Criterion:} Developers are able to refactor existing codebases and view relevant metrics.
+\end{enumerate}
+
 \subsection{Productization Requirements}
-\lips
+\begin{enumerate}[label=OER-PR \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The library shall be package with PIP and made available to python users through the public package manager.}\\
+    {\bf Rationale:} As a widely used package manager, PIP will be able to distribute the library to any users that wish to use it.\\
+    {\bf Fit Criterion:} Users are able to install the library using \texttt{pip install}. 
+\end{enumerate}
+
 \subsection{Release Requirements}
-\lips
+\begin{enumerate}[label=OER-RL \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{All core functionalities specified in the requirements must be implemented and tested, including energy consumption measurement, automated refactoring, and reporting features.}\\
+    {\bf Rationale:} This will ensures that the library delivers the promised capabilities to users.\\
+    {\bf Fit Criterion:} Follows the steps outlined in the Verification and Validation (V\&V) plan.  
+  \item \emph{The library must be ready for release by March 17th, 2025.}\\
+    {\bf Rationale:} The library must be ready for final demonstration as a requirement of the McMaster University SFRWENG 4G06 Capstone course.\\
+    {\bf Fit Criterion:} The project is ready for the final demonstration of the appointed date.
+\end{enumerate}
 
 \section{Maintainability and Support Requirements}
 \subsection{Maintenance Requirements}
@@ -883,6 +932,9 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
     \end{itemize}
  
 \end{enumerate}
+
+\bibliographystyle {plainnat}
+\bibliography{../../refs/References}
 
 \end{document}
 
