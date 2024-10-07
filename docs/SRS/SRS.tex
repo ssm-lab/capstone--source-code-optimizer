@@ -532,11 +532,51 @@ involved in the Project}
 
 \section{Maintainability and Support Requirements}
 \subsection{Maintenance Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool must allow new refactoring techniques to be added within one week of identification.
+     \begin{itemize}
+         \item \textbf{Rationale:} Rapid integration of new techniques ensures the tool remains up-to-date with evolving best practices in energy-efficient coding.
+         \item \textbf{Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.
+     \end{itemize}
+     
+  \item \textbf{Requirement:} The tool must be maintainable by developers who are not the original creators.
+     \begin{itemize}
+         \item \textbf{Rationale:} Ensuring that new developers can easily understand and modify the system reduces dependency on original developers and facilitates long-term maintenance.
+         \item \textbf{Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.
+     \end{itemize}
+     
+  \item \textbf{Requirement:} The tool must allow for easy rollback of updates in case of errors.
+     \begin{itemize}
+         \item \textbf{Rationale:} Quick rollback capabilities minimize downtime and user disruption in case an update introduces issues.
+         \item \textbf{Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.
+     \end{itemize}
+     
+  \item \textbf{Requirement:} The tool must provide automated testing for all refactoring functions.
+     \begin{itemize}
+         \item \textbf{Rationale:} Automated testing ensures that changes do not introduce new bugs, maintaining the reliability and stability of the tool.
+         \item \textbf{Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.
+     \end{itemize}
+     
+  \item \textbf{Requirement:} Each version of the library must maintain compatibility with the current releases of external libraries during its development phase. .
+     \begin{itemize}
+         \item \textbf{Rationale:} Keeping external libraries up-to-date ensures compatibility and leverages improvements or security patches provided by library maintainers.
+         \item \textbf{Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.
+     \end{itemize}
+  
+  \end{enumerate}
+
 \subsection{Supportability Requirements}
-\lips
+\begin{enumerate}
+  \item \textbf{Requirement:} The tool must offer bilingual support for help documentation.
+  \begin{itemize}
+      \item \textbf{Rationale:} Bilingual support ensures that users from different regions can understand and use the tool effectively, increasing its accessibility.
+      \item \textbf{Fit Criteria:} Help documentation is available in both major languages, English and French.
+  \end{itemize}
+  
+\end{enumerate}
+
 \subsection{Adaptability Requirements}
-\lips
+Not applicable in this project currently
 
 \section{Security Requirements}
 \subsection{Access Requirements}
