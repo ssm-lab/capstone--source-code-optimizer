@@ -456,43 +456,56 @@ involved in the Project}
 \begin{enumerate}[label=FR \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The system must accept Python source code files.}\\
     {\bf Rationale:} The system needs to process Python code as its primary input to refactor and improve energy efficiency.\\
-    {\bf Fit Criterion:} The system successfully processes valid Python files without errors and provides feedback for invalid files.
+    {\bf Fit Criterion:} The system successfully processes valid Python files without errors and provides feedback for invalid files.\\
+    {\bf Priority:} High
     \item \emph{The system must identify specific code smells that can be targeted for energy saving.}\\
     {\bf Rationale:} Energy inefficiencies are often related to well-known code smells, so identifying them is the first step in improving efficiency.\\
-    {\bf Fit Criterion:} The tool should detect and report at least 80\% of the following code smells: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).
-    \item \emph{The system must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.}\\
-    {\bf Rationale:} For developers to optimize their code, the tool must provide appropriate refactoring suggestions based on detected code smells.\\
-    {\bf Fit Criterion:} The suggested refactored code demonstrates a measurable improvement in energy consumption as measured in joules.
-    \item \emph{The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.}\\
-    {\bf Rationale:} There may be multiple ways to refactor code, but the most energy-efficient one should be chosen.\\
-    {\bf Fit Criterion:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.
-    \item \emph{The system must produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\
-    {\bf Rationale:} Refactored code must remain functional and error-free to ensure maintainability and usability.\\
-    {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
+    {\bf Fit Criterion:} The tool should detect and report at least 80\% of the following code smells: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).\\
+    {\bf Priority:} High
+    \item \emph{The system shall maintain the original functionality of the Python code after refactoring.}\\
+    {\bf Rationale:} Ensuring that the refactored code preserves the original behavior is critical to avoid regressions or unexpected issues in the software.\\
+    {\bf Fit Criterion:} The system runs the original test suite against the refactored code and passes 100\% of the tests.\\
+    {\bf Priority:} High
     \item \emph{The system must allow users to input their original test suite as a required argument.}\\
     {\bf Rationale:} Verifying that the refactored code preserves functionality requires the use of the original test suite.\\
-    {\bf Fit Criterion:} Users can specify a path to their test suite that the tool recognizes and utilizes for testing the refactored code.
-    \item \emph{The system shall maintain the original functionality of the Python code after refactoring.}\\
-    {\bf Rationale:} Ensuring that the refactored code preserves the original behaviour is critical to avoid regressions or unexpected issues in the software.\\
-    {\bf Fit Criterion:} The system runs the original test suite against the refactored code and passes 100\% of the tests.
+    {\bf Fit Criterion:} Users can specify a path to their test suite that the tool recognizes and utilizes for testing the refactored code.\\
+    {\bf Priority:} High
+    \item \emph{The system must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.}\\
+    {\bf Rationale:} For developers to optimize their code, the tool must provide appropriate refactoring suggestions based on detected code smells.\\
+    {\bf Fit Criterion:} The suggested refactored code demonstrates a measurable improvement in energy consumption as measured in joules.\\
+    {\bf Priority:} High
+    \item \emph{The system must produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\
+    {\bf Rationale:} Refactored code must remain functional and error-free to ensure maintainability and usability.\\
+    {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} High
+    \item \emph{The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.}\\
+    {\bf Rationale:} There may be multiple ways to refactor code, but the most energy-efficient one should be chosen.\\
+    {\bf Fit Criterion:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.\\
+    {\bf Priority:} Medium
     \item \emph{The tool must be compatible with various Python versions and common libraries.}\\
     {\bf Rationale:} The tool should be flexible enough to be used across different Python environments.\\
-    {\bf Fit Criterion:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.
+    {\bf Fit Criterion:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.\\
+    {\bf Priority:} Medium
     \item \emph{The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.}\\
     {\bf Rationale:} Developers need clear reports to understand the impact of the refactorings and to track changes effectively.\\
-    {\bf Fit Criterion:} Reports are clear, well-structured, and provide actionable insights, allowing users to easily understand the results.
+    {\bf Fit Criterion:} Reports are clear, well-structured, and provide actionable insights, allowing users to easily understand the results.\\
+    {\bf Priority:} Medium
     \item \emph{The tool must provide comprehensive documentation and help resources.}\\
     {\bf Rationale:} Detailed documentation is necessary to help users install, understand, and use the tool effectively.\\
-    {\bf Fit Criterion:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.
+    {\bf Fit Criterion:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.\\
+    {\bf Priority:} Medium
     \item \emph{The system shall provide developers with refactoring suggestions within an IDE before committing code, allowing them to review and approve energy-efficient changes.}\\
     {\bf Rationale:} Giving developers control over which refactorings are applied ensures that they can maintain the balance between energy efficiency and their coding style or project requirements.\\
-    {\bf Fit Criterion:} The IDE plugin must display at least two refactoring options for inefficient code patterns, allowing developers to either apply or reject them before committing the changes.
+    {\bf Fit Criterion:} The IDE plugin must display at least two refactoring options for inefficient code patterns, allowing developers to either apply or reject them before committing the changes.\\
+    {\bf Priority:} Medium
     \item \emph{The system shall integrate with GitHub and provide an automated refactoring process that is triggered when code is pushed to a repository.}\\
     {\bf Rationale:} Automated refactoring integrated into CI/CD pipelines ensures that energy-efficient code is maintained across all stages of development, reducing the burden on developers.\\
-    {\bf Fit Criterion:} The refactoring process must be triggered automatically on GitHub commits, with at least 95\% of refactorings improving energy efficiency without introducing any functional errors.
+    {\bf Fit Criterion:} The refactoring process must be triggered automatically on GitHub commits, with at least 95\% of refactorings improving energy efficiency without introducing any functional errors.\\
+    {\bf Priority:} Medium
     \item \emph{The system shall allow developers to undo any refactorings applied, restoring the code to its previous state.}\\
     {\bf Rationale:} Developers may want to revert changes if they do not align with specific project goals or introduce performance bottlenecks unrelated to energy consumption.\\
-    {\bf Fit Criterion:} The system must provide an option to revert any refactoring applied within the last 5 commits, restoring both code and energy consumption metrics to their original state.
+    {\bf Fit Criterion:} The system must provide an option to revert any refactoring applied within the last 5 commits, restoring both code and energy consumption metrics to their original state.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \section{Look and Feel Requirements}
