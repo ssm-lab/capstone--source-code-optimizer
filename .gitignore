@@ -280,3 +280,6 @@ TSWLatexianTemp*
 
 #IDEA project settings and configuration files
 .idea/
+
+# VSCode
+.vscode/
