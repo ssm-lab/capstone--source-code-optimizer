@@ -594,71 +594,69 @@ involved in the Project}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must analyze and detect code smells in the input code within a reasonable time frame.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.
-  \end{itemize}
-  \item \textbf{Requirement:} The refactoring process must be executed efficiently without noticeable delays.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).
-  \end{itemize}
+\begin{enumerate}[label=PR-SL \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall analyze and detect code smells in the input code within a reasonable time frame.}\\
+    {\bf Rationale:} Fast analysis ensures that developers do not experience significant delays while reviewing code.\\
+    {\bf Fit Criterion:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.\\
+    {\bf Priority:} High
+    \item \emph{The refactoring process shall be executed efficiently without noticeable delays.}\\
+    {\bf Rationale:} Fast refactoring ensures a smooth workflow for developers, preventing frustration during development.\\
+    {\bf Fit Criterion:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).\\
+    {\bf Priority:} Medium
 \end{enumerate}
-
 \subsection{Safety-Critical Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
+\begin{enumerate}[label=PR-SCR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.}\\
+    {\bf Rationale:} Preventing runtime errors ensures system stability and reliability after refactoring.\\
+    {\bf Fit Criterion:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} High
 \end{enumerate}
-
 \subsection{Precision or Accuracy Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must reliably identify code smells with minimal false positives and negatives.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Detection accuracy should exceed 90\% when validated against a set of known cases.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must maintain the functionality of the original provided code in all its recommended refactorings.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
+\begin{enumerate}[label=PR-PAR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall maintain the functionality of the original provided code in all its recommended refactorings.}\\
+    {\bf Rationale:} Ensuring functionality preservation is critical for refactorings to be reliable.\\
+    {\bf Fit Criterion:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall reliably identify code smells with minimal false positives and negatives.}\\
+    {\bf Rationale:} High detection accuracy ensures that developers are not misled by incorrect or missed suggestions.\\
+    {\bf Fit Criterion:} Detection accuracy should exceed 90\% when validated against a set of known cases.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool shall produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\
+    {\bf Rationale:} Ensuring that the tool produces valid output is essential for maintaining code quality.\\
+    {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Robustness or Fault-Tolerance Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should gracefully handle unexpected inputs, such as invalid code or non-Python files.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must have fallback options if a specific refactoring attempt fails.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.
-  \end{itemize}
+\begin{enumerate}[label=PR-RFT \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall gracefully handle unexpected inputs, such as invalid code or non-Python files.}\\
+    {\bf Rationale:} Ensuring stability with error handling prevents tool crashes and improves user experience.\\
+    {\bf Fit Criterion:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall have fallback options if a specific refactoring attempt fails.}\\
+    {\bf Rationale:} Providing fallback options ensures the tool remains functional even when a refactoring fails, reducing disruptions in development.\\
+    {\bf Fit Criterion:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Capacity Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should efficiently manage large codebases.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.
-  \end{itemize}
+\begin{enumerate}[label=PR-CR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall efficiently manage large codebases.}\\
+    {\bf Rationale:} Efficient handling of large projects ensures that the tool remains usable for teams working with extensive codebases.\\
+    {\bf Fit Criterion:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Scalability or Extensibility Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should be designed to allow easy addition of new code smells and refactoring methods in future updates.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.
-  \end{itemize}
+\begin{enumerate}[label=PR-SER \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall be designed to allow easy addition of new code smells and refactoring methods in future updates.}\\
+    {\bf Rationale:} Extensibility ensures that the tool remains relevant and adaptable to future developments in coding standards and practices.\\
+    {\bf Fit Criterion:} New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Longevity Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should be maintainable and adaptable to future versions of Python and changing coding standards.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The codebase should be well-documented and modular, facilitating updates with minimal effort.
-  \end{itemize}
+\begin{enumerate}[label=PR-LR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall be maintainable and adaptable to future versions of Python and changing coding standards.}\\
+    {\bf Rationale:} Ensuring the tool can be updated easily guarantees that it will remain useful and relevant over time.\\
+    {\bf Fit Criterion:} The codebase should be well-documented and modular, facilitating updates with minimal effort.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \section{Operational and Environmental Requirements}
