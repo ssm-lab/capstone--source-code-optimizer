@@ -1046,12 +1046,17 @@ The planning of the development phases is based on the deliverables submissions 
     \end{itemize}
 \end{enumerate}
 
-
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
-\lips
+Given that the new tool is made to function smoothly with Visual Studio Code and GitHub Actions, there won't be much of an impact on current workflows throughout the migration. By adding the refactoring tool as an IDE plugin and as a component of their CI/CD pipeline, developers will be able to keep utilizing their existing workflows. Without having to completely redesign current infrastructure or procedures, developers can easily embrace the minimal installation and integration requirements.
+\begin{itemize}
+    \item \textbf{Installation Phase:} The IDE plugin will be installed by users through the Visual Studio Code marketplace, while the GitHub Action will be incorporated into the project’s CI/CD pipeline.
+    \item \textbf{Parallel Running:} There is no need for a phased implementation or parallel running of old and new systems. The tool can be directly integrated without affecting existing code or infrastructure.
+    \item \textbf{Manual Backups:} Since the tool does not alter data but rather provides refactoring suggestions, no manual backups are required before installation.
+    \item \textbf{Phased Rollout:} If required, developers can start using the IDE plugin first and later integrate the GitHub Action into their repositories to automate refactorings.
+\end{itemize}
 \subsection{Data That Has to be Modified or Translated for the New System}
-\lips
+Not Applicable
 
 \section{Costs}
 The total cost of developing this project is primarily based on the effort involved by the development team, given that the tools and platforms used (GitHub, open-source libraries) are free. The project must be completed within the academic year (MVP ready by February 2025), which warrants smart planning and efficient resource allocation.
