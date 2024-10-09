@@ -148,59 +148,48 @@ Due to the nature of this project as a capstone requirement, there are currently
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The tool must be able to refactor Python code to improve its energy efficiency.
-    \begin{itemize}
-        \item \textbf{Rationale:} The core purpose of this tool is to optimize Python code for energy efficiency. Without the ability to refactor Python code, the tool would not meet its primary objective.
-        \item \textbf{Fit Criterion:} The tool must successfully refactor inefficient Python code patterns, and improve the energy consumption by at least 5\%, as verified through energy consumption tests.
-    \end{itemize}
-    \item \textbf{Requirement:} The product shall integrate with GitHub Actions for automating the refactoring process during CI/CD.
-    \begin{itemize}
-        \item \textbf{Rationale:} GitHub Actions is required to automate the refactoring process in a DevOps workflow, ensuring the solution can be implemented seamlessly across different development teams and projects.
-        \item \textbf{Fit Criterion:} The tool must trigger and run successfully within a GitHub Actions CI/CD pipeline, passing predefined energy-efficiency and functionality tests.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin must be developed for Visual Studio Code (VS Code).
-    \begin{itemize}
-        \item \textbf{Rationale:} VS Code is one of the most popular development environments among Python developers, and using it ensures a wide user base and easy adoption of the tool.
-        \item \textbf{Fit Criterion:} The plugin must be installable and functional in Visual Studio Code, verified by successful installation and use of the plugin in the IDE without any compatibility issues.
-    \end{itemize}
-    \item \textbf{Requirement:} The project must be finished within the academic year (September 2024 - March 2025).
-    \begin{itemize}
-        \item \textbf{Rationale:} The fully working end-to-end software that refactors Python code to be more energy efficient needs to be completed by the capstone course's set deadlines.
-        \item \textbf{Fit Criterion:} Must submit the finished project by the end of the academic year as per project requirements.
-    \end{itemize}
+\begin{enumerate}[label=SC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The system must refactor Python code without changing its original functionality.}\\
+    {\bf Rationale:} The project is focused on energy-efficient refactoring for Python code, and altering functionality could break existing software behaviour.\\
+    {\bf Fit Criterion:} The system must pass all original test cases after refactoring, ensuring that functionality remains unchanged.\\
+    {\bf Priority:} High
+    \item \emph{The refactored code must result in measurable energy savings.}\\
+    {\bf Rationale:} The primary objective of the project is to improve the energy efficiency of the code. Refactorings should lead to a noticeable reduction in energy consumption.\\
+    {\bf Fit Criterion:} The system must show at least a 5\% reduction in energy consumption, as measured by tools like \texttt{PyJoules}, for most of the refactored code.\\
+    {\bf Priority:} High
+    \item \emph{The refactored code must be provided to the user upon completion of the refactoring process.}\\
+    {\bf Rationale:} Developers need access to the refactored code to utilize it in their projects immediately after the refactoring process.\\
+    {\bf Fit Criterion:} The system must deliver the refactored code to the user in a clear format, ensuring that it is readily available for implementation.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Implementation Environment of the Current System}
 \lips
 \subsection{Partner or Collaborative Applications}
-\lips
+The project will interact with various applications, including potential integration with GitHub Actions and Visual Studio Code (VSCode) IDE, but there are no strict requirements or constraints on specific partner applications. The focus will primarily be on developing the tool itself, with flexibility for integration as needed. While there are no mandatory constraints, understanding potential partner applications can aid in smoother integration if the need arises. The tool could potentially integrate with CI/CD services like GitHub Actions or existing Python development tools. Future collaboration may involve educational tools or code analysis platforms, but these are not mandatory for the project’s success. Any partner applications will be assessed during development, but no formal interface specifications are required at this time.
 \subsection{Off-the-Shelf Software}
-\lips
+The project does not have strict requirements to use specific off-the-shelf software (OTS). However, open-source libraries and tools will be utilized where applicable to enhance functionality. Utilizing open-source software will help maintain cost-effectiveness while ensuring that the project remains flexible and adaptable. The tool may rely on open-source libraries for energy measurement (e.g., PyJoules) and Python code analysis (e.g., ast or pylint). There are no specific legal implications anticipated from the use of OTS, but any libraries or tools used will be assessed for compatibility with the project goals. Documentation for any libraries or tools used will be maintained, but specific requirements or constraints will not be established at this stage.
 \subsection{Anticipated Workplace Environment}
-\lips
+The workplace environment will consist of typical software development settings, including personal workstations equipped with IDEs, collaboration tools, and access to version control systems like GitHub. Understanding the workplace environment helps in tailoring the user experience and ensuring that the tool integrates well into the developers’ workflows. Developers may work in quiet office spaces, so the tool should provide a non-intrusive interface that does not distract from coding. If used in collaborative settings, the tool should facilitate quick feedback mechanisms, such as integration with chat applications or project management tools. The product design will consider the user’s need for accessibility to online resources and collaboration tools, ensuring it operates smoothly in diverse environments. A written description of the typical workplace, possibly supplemented by diagrams to illustrate team setups and interaction flows, will be provided.
 \subsection{Schedule Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The project must be completed by April 2025, with interim deadlines for key milestones such as Proof of Concept (November 2024) and the final demonstration (March 2025).
-    \begin{itemize}
-        \item \textbf{Rationale:} These deadlines are based on the academic timeline and the expectations of the capstone course.
-        \item \textbf{Fit Criterion:} All project components must be completed and fully functional by the final demonstration in March 2025.
-    \end{itemize}
+\begin{enumerate}[label=SC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The project shall be completed by April 2025, with interim deadlines for key milestones such as Proof of Concept (November 2024) and the final demonstration (March 2025).}\\
+    {\bf Rationale:} These deadlines are based on the academic timeline and the expectations of the capstone course.\\
+    {\bf Fit Criterion:} All project components must be completed and fully functional by the final demonstration in March 2025.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Budget Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The project must not exceed the resources available to the team, which includes free open-source software and free services like GitHub for hosting and CI/CD pipelines.
-    \begin{itemize}
-        \item \textbf{Rationale:} The team does not have a budget for paid services or proprietary software.
-        \item \textbf{Fit Criterion:} The project must be implemented using free tools and libraries and hosted on GitHub.
-    \end{itemize}
+\begin{enumerate}[label=BC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The project shall not exceed the resources available to the team, which includes free open-source software and free services like GitHub for hosting and CI/CD pipelines.}\\
+    {\bf Rationale:} The team does not have a budget for paid services or proprietary software.\\
+    {\bf Fit Criterion:} The project must be implemented using free tools and libraries and hosted on GitHub.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Enterprise Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The product shall be built to comply with the standards of McMaster University’s capstone project requirements and academic integrity policies.
-    \begin{itemize}
-        \item \textbf{Rationale:} The project is part of the university’s curriculum and must adhere to its standards.
-        \item \textbf{Fit Criterion:} The product must meet the requirements specified by the course syllabus and project advisor.
-    \end{itemize}
+\begin{enumerate}[label=EC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The product shall be built to comply with the standards of McMaster University’s capstone project requirements and academic integrity policies.}\\
+    {\bf Rationale:} The project is part of the university’s curriculum and must adhere to its standards.\\
+    {\bf Fit Criterion:} The product must meet the requirements specified by the course syllabus and project advisor.\\
+    {\bf Priority:} High
 \end{enumerate}
 
 \section{Naming Conventions and Terminology}
