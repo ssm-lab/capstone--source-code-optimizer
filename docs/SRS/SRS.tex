@@ -1048,12 +1048,18 @@ The planning of the development phases is based on the deliverables submissions 
 
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
-Given that the new tool is made to function smoothly with Visual Studio Code and GitHub Actions, there won't be much of an impact on current workflows throughout the migration. By adding the refactoring tool as an IDE plugin and as a component of their CI/CD pipeline, developers will be able to keep utilizing their existing workflows. Without having to completely redesign current infrastructure or procedures, developers can easily embrace the minimal installation and integration requirements.
+The migration to the new tool will involve minimal disruption to existing workflows, as the product is designed to integrate seamlessly with GitHub Actions and Visual Studio Code. Developers will be able to continue using their current workflows, with the addition of the refactoring tool as a library that can be installed directly via Python's package manager (pip), an IDE plugin for an enhanced development experience, and a GitHub Action for automated refactoring in their CI/CD pipelines. The minimal installation and integration requirements ensure ease of adoption for developers without needing to overhaul existing infrastructure or processes.
 \begin{itemize}
-    \item \textbf{Installation Phase:} The IDE plugin will be installed by users through the Visual Studio Code marketplace, while the GitHub Action will be incorporated into the project’s CI/CD pipeline.
-    \item \textbf{Parallel Running:} There is no need for a phased implementation or parallel running of old and new systems. The tool can be directly integrated without affecting existing code or infrastructure.
-    \item \textbf{Manual Backups:} Since the tool does not alter data but rather provides refactoring suggestions, no manual backups are required before installation.
-    \item \textbf{Phased Rollout:} If required, developers can start using the IDE plugin first and later integrate the GitHub Action into their repositories to automate refactorings.
+    \item \textbf{Installation Phase:} 
+    Developers can install the refactoring library directly using pip:
+    \verb|pip install ecooptimizers|
+    The IDE plugin can be installed by users through the Visual Studio Code marketplace. The GitHub Action can be integrated by adding the appropriate YAML configuration to the repository's workflow files.
+    \item \textbf{Parallel Running:} 
+    There is no need for a phased implementation or parallel running of old and new systems. The tool can be directly integrated without affecting existing code or infrastructure.
+    \item \textbf{Manual Backups:} 
+    Since the tool does not alter data but rather provides refactoring suggestions, no manual backups are required before installation.
+    \item \textbf{Phased Rollout:} 
+    If required, developers can start using the refactoring library first, followed by the IDE plugin, and then integrate the GitHub Action to automate refactoring in their CI/CD workflows.
 \end{itemize}
 \subsection{Data That Has to be Modified or Translated for the New System}
 Not Applicable
