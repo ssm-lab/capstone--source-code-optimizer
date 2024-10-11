@@ -280,3 +280,7 @@ TSWLatexianTemp*
 
 #IDEA project settings and configuration files
 .idea/
+
+# DRAW.IO files
+*.drawio
+*.drawio.bkp
