@@ -9,6 +9,7 @@
 \usepackage[round]{natbib}
 \usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{siunitx}
 \usepackage{tabularx}
 \usepackage[dvipsnames]{xcolor}
@@ -373,9 +374,34 @@ involved in the Project}
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
-\lips
+\includegraphics[width=\textwidth]{../Images/business-data-model.png}
 \subsection{Data Dictionary}
-\lips
+
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{|p{3.5cm}|p{9cm}|p{2cm}|}
+  \toprule \textbf{Name} & \textbf{Content} & \textbf{Type} \\
+  \midrule
+  EcoOptimizer & CentralCtrl + RefactoringCtrl + TestingCtrl + Reinforcement Learning Model & package \\ \hline
+  GitHub Actions & External tool for automated customizable workflows & External Service Provider \\ \hline
+  VS Code extension & A plugin containing the EcoOptimizer package delivered through Visual Studio Code Marketplace & External Service Provider \\ \hline
+  Rope & External refactoring library & package \\ \hline
+  Pysmell & External python smell detection module & package \\ \hline
+  pyJoules & External python energy measuring module & package \\ \hline
+  CentralCtrl & source + excluded + tests + initialEnergy + smells + measureEnergy + getSmells + refactor + checkFunctionality & Class \\ \hline
+  TestingCtrl & testDir + runTests & Class \\ \hline
+  RefactoringCtrl & selectRefactoring & Class \\ \hline
+  Reinforcement Learning Model & Data model for improved energy efficient refactoring & Module \\ \hline
+  source & directory containing the code to be refactored & string \\ \hline
+  excluded & files and directories that should not be refactored & list[string] \\ \hline
+  testDir & directory containing tests related to the source code & string \\ \hline
+  initialEnergy & file containing all initial energy measurements prior to refactoring & string \\ \hline
+  smells & all code smells detected & list[string] \\ \hline
+  measureEnergy() & measures the energy consumption of the given source code & method \\ \hline
+  getSmells() & returns all the smells detected in the source code & method \\ \hline
+  refactor(smell) & refactors the source code based on the given code smell & method \\ \hline
+  checkFunctionality() & checks that the original functionality of the code is maintained & method \\
+  \bottomrule
+\end{longtable}
 
 \section{The Scope of the Product}
 \subsection{Product Boundary}
