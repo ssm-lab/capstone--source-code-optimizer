@@ -1,142 +1,47 @@
-% THIS DOCUMENT IS TAILORED TO REQUIREMENTS FOR SCIENTIFIC COMPUTING.  IT SHOULDN'T
-% BE USED FOR NON-SCIENTIFIC COMPUTING PROJECTS
+% THIS DOCUMENT IS FOLLOWS THE VOLERE TEMPLATE BY Suzanne Robertson and James Robertson
+% ONLY THE SECTION HEADINGS ARE PROVIDED
+%
+% Initial draft from https://github.com/Dieblich/volere
+%
+% Risks are removed because they are covered by the Hazard Analysis
 \documentclass[12pt]{article}
 
-\usepackage{amsmath, mathtools}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{colortbl}
-\usepackage{xr}
-\usepackage{hyperref}
-\usepackage{longtable}
-\usepackage{xfrac}
-\usepackage{tabularx}
-\usepackage{float}
-\usepackage{siunitx}
-\usepackage{booktabs}
-\usepackage{caption}
-\usepackage{pdflscape}
-\usepackage{afterpage}
-
 \usepackage[round]{natbib}
-
-%\usepackage{refcheck}
-
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{siunitx}
+\usepackage{tabularx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
-      colorlinks=true,       % false: boxed links; true: colored links
+      colorlinks=true,      % false: boxed links; true: colored links
     linkcolor=red,          % color of internal links (change box color with linkbordercolor)
     citecolor=green,        % color of links to bibliography
     filecolor=magenta,      % color of file links
     urlcolor=cyan           % color of external links
 }
 
+\newcommand{\lips}{\textit{Insert your content here.}}
+
 \input{../Comments}
 \input{../Common}
 
-% For easy change of table widths
-\newcommand{\colZwidth}{1.0\textwidth}
-\newcommand{\colAwidth}{0.13\textwidth}
-\newcommand{\colBwidth}{0.82\textwidth}
-\newcommand{\colCwidth}{0.1\textwidth}
-\newcommand{\colDwidth}{0.05\textwidth}
-\newcommand{\colEwidth}{0.8\textwidth}
-\newcommand{\colFwidth}{0.17\textwidth}
-\newcommand{\colGwidth}{0.5\textwidth}
-\newcommand{\colHwidth}{0.28\textwidth}
-
-% Used so that cross-references have a meaningful prefix
-\newcounter{defnum} %Definition Number
-\newcommand{\dthedefnum}{GD\thedefnum}
-\newcommand{\dref}[1]{GD\ref{#1}}
-\newcounter{datadefnum} %Datadefinition Number
-\newcommand{\ddthedatadefnum}{DD\thedatadefnum}
-\newcommand{\ddref}[1]{DD\ref{#1}}
-\newcounter{theorynum} %Theory Number
-\newcommand{\tthetheorynum}{TM\thetheorynum}
-\newcommand{\tref}[1]{TM\ref{#1}}
-\newcounter{tablenum} %Table Number
-\newcommand{\tbthetablenum}{TB\thetablenum}
-\newcommand{\tbref}[1]{TB\ref{#1}}
-\newcounter{assumpnum} %Assumption Number
-\newcommand{\atheassumpnum}{A\theassumpnum}
-\newcommand{\aref}[1]{A\ref{#1}}
-\newcounter{goalnum} %Goal Number
-\newcommand{\gthegoalnum}{GS\thegoalnum}
-\newcommand{\gsref}[1]{GS\ref{#1}}
-\newcounter{instnum} %Instance Number
-\newcommand{\itheinstnum}{IM\theinstnum}
-\newcommand{\iref}[1]{IM\ref{#1}}
-\newcounter{reqnum} %Requirement Number
-\newcommand{\rthereqnum}{R\thereqnum}
-\newcommand{\rref}[1]{R\ref{#1}}
-\newcounter{nfrnum} %NFR Number
-\newcommand{\rthenfrnum}{NFR\thenfrnum}
-\newcommand{\nfrref}[1]{NFR\ref{#1}}
-\newcounter{lcnum} %Likely change number
-\newcommand{\lthelcnum}{LC\thelcnum}
-\newcommand{\lcref}[1]{LC\ref{#1}}
-
-\usepackage{fullpage}
-
-\newcommand{\deftheory}[9][Not Applicable]
-{
-\newpage
-\noindent \rule{\textwidth}{0.5mm}
-
-\paragraph{RefName: } \textbf{#2} \phantomsection 
-\label{#2}
-
-\paragraph{Label:} #3
-
-\noindent \rule{\textwidth}{0.5mm}
-
-\paragraph{Equation:}
-
-#4
-
-\paragraph{Description:}
-
-#5
-
-\paragraph{Notes:}
-
-#6
-
-\paragraph{Source:}
-
-#7
-
-\paragraph{Ref.\ By:}
-
-#8
-
-\paragraph{Preconditions for \hyperref[#2]{#2}:}
-\label{#2_precond}
-
-#9
-
-\paragraph{Derivation for \hyperref[#2]{#2}:}
-\label{#2_deriv}
-
-#1
-
-\noindent \rule{\textwidth}{0.5mm}
-
-}
-
 \begin{document}
+
+\pagenumbering{roman}
 
 \title{Software Requirements Specification for \progname: subtitle describing software} 
 \author{\authname}
 \date{\today}
 	
 \maketitle
+\thispagestyle{empty}
 
 ~\newpage
-
-\pagenumbering{roman}
 
 \tableofcontents
 
@@ -144,1251 +49,1521 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{3.5cm}p{2cm}X}
+\toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+October 11th, 2024 & 0 & Created initial revision of SRS\\
 \bottomrule
 \end{tabularx}
 
 ~\\
-\plt{This template is intended for use by CAS 741.  For CAS 741 the template
-should be used exactly as given, except the Reflection Appendix can be deleted.
-For the capstone course it is a source of ideas, but shouldn't be followed
-exactly.  The exception is the reflection appendix.  All capstone SRS documents
-should have a refelection appendix.}
 
 ~\newpage
-
-\section{Reference Material}
-
-This section records information for easy reference.
-
-\subsection{Table of Units}
-
-Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
-as the unit system.  In addition to the basic units, several derived units are
-used as described below.  For each unit, the symbol is given followed by a
-description of the unit and the SI name.
-~\newline
-
-\renewcommand{\arraystretch}{1.2}
-%\begin{table}[ht]
-  \noindent \begin{tabular}{l l l} 
-    \toprule		
-    \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
-    \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
-    \si{\second} & time & second\\
-    \si{\celsius} & temperature & centigrade\\
-    \si{\joule} & energy & joule\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
-    \bottomrule
-  \end{tabular}
-  %	\caption{Provide a caption}
-%\end{table}
-
-\plt{Only include the units that your SRS actually uses.}
-
-\plt{Derived units, like newtons, pascal, etc, should show their derivation
-    (the units they are derived from) if their constituent units are in the
-    table of units (that is, if the units they are derived from are used in the
-    document).  For instance, the derivation of pascals as
-    $\si{\pascal}=\si{\newton\per\square\meter}$ is shown if newtons and m are
-    both in the table.  The derivations of newtons would not be shown if kg and
-    s are not both in the table.}
-
-\plt{The symbol for units named after people use capital letters, but the name
-  of the unit itself uses lower case.  For instance, pascals use the symbol Pa,
-  watts use the symbol W, teslas use the symbol T, newtons use the symbol N,
-  etc.  The one exception to this is degree Celsius.  Details on writing metric
-  units can be found on the 
-  \href{https://www.nist.gov/pml/weights-and-measures/writing-metric-units}
-  {NIST} web-page.}
-
-\subsection{Table of Symbols}
-
-The table that follows summarizes the symbols used in this document along with
-their units.  The choice of symbols was made to be consistent with the heat
-transfer literature and with existing documentation for solar water heating
-systems.  The symbols are listed in alphabetical order.
-
-\renewcommand{\arraystretch}{1.2}
-%\noindent \begin{tabularx}{1.0\textwidth}{l l X}
-\noindent \begin{longtable*}{l l p{12cm}} \toprule
-\textbf{symbol} & \textbf{unit} & \textbf{description}\\
-\midrule 
-$A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
-\\
-$A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over 
-which heat is transferred in
-\\ 
-\bottomrule
-\end{longtable*}
-\plt{Use your problems actual symbols.  The si package is a good idea to use for
-  units.}
-
-\subsection{Abbreviations and Acronyms}
-
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  A & Assumption\\
-  DD & Data Definition\\
-  GD & General Definition\\
-  GS & Goal Statement\\
-  IM & Instance Model\\
-  LC & Likely Change\\
-  PS & Physical System Description\\
-  R & Requirement\\
-  SRS & Software Requirements Specification\\
-  \progname{} & \plt{put an expanded version of your program name here (as appropriate)}\\
-  TM & Theoretical Model\\
-  \bottomrule
-\end{tabular}\\
-
-\plt{Add any other abbreviations or acronyms that you add}
-
-\subsection{Mathematical Notation}
-
-\plt{This section is optional, but should be included for projects that make use
-  of notation to convey mathematical information.  For instance, if typographic
-  conventions (like bold face font) are used to distinguish matrices, this
-  should be stated here.  If symbols are used to show mathematical operations,
-  these should be summarized here.  In some cases the easiest way to summarize
-  the notation is to point to a text or other source that explains the
-  notation.}
-
-\plt{This section was added to the template because some students use very
-  domain specific notation.  This notation will not be readily understandable to
-  people outside of your domain.  It should be explained.}
-
-\newpage
-
 \pagenumbering{arabic}
 
-\plt{This SRS template is based on \citet{SmithAndLai2005, SmithEtAl2007,
-  SmithAndKoothoor2016}.  It will get you started.  You should not modify the
-  section headings, without first discussing the change with the course
-  instructor.  Modification means you are not following the template, which
-  loses some of the advantage of a template, especially standardization.
-  Although the bits shown below do not include type information, you may need to
-  add this information for your problem.  If you are unsure, please can ask the
-  instructor.}
+\section{Purpose of the Project}
+\subsection{User Business}
+The Information and Communications Technology (ICT) sector, an essential component of the global economy, is responsible for 2-4\% of global CO2 emissions today, with projections suggesting this could rise to 14\% by 2040 ~\citep{BelkhirAndElmeligi2018}. To meet sustainability goals, including a 72\% reduction in CO2 emissions by 2040 ~\citep{FreitagAndBernersLee2021}, this sector must find ways to improve energy efficiency.
 
-\plt{Feel free to change the appearance of the report by modifying the LaTeX
-  commands.}
+One area of concern is the energy consumption of software systems. However, for software engineers, it is not practical for them to focus on optimizing energy consumption while developing complex programs. Instead, supporting tools and technologies are needed to assist in improving energy efficiency without altering the intended behaviour of the software.
 
-\plt{This template document assumes that a single program is being documented.
-  If you are documenting a family of models, you should start with a commonality
-  analysis.  A separate template is provided for this.  For program
-  families you should look at \cite{Smith2006, SmithMcCutchanAndCarette2017}.
-  Single family member programs are often programs based on a single physical
-  model.  General purpose tools are usually documented as a family.  Families of
-  physical models also come up.}
+This project aims to tackle Python, a popular but energy inefficient programming language. Python consumes significantly more energy compared to more efficient languages like C and Rust—over 70 times more energy, on average, for similar tasks ~\citep{PereiraEtAl2017}. The project's goal is to develop tools to reduce Python's energy consumption through automated refactoring. While this will not solve the entire problem of the carbon footprint associated with the software, it is a step towards more energy-efficient practices in the software development process.
 
-\plt{The SRS is not generally written, or read, sequentially.  The SRS is a
-  reference document.  It is generally read in an ad hoc order, as the need
-  arises.  For writing an SRS, and for reading one for the first time, the
-  suggested order of sections is:
+\subsection{Goals of the Project}
+\noindent \textbf{Purpose}: The purpose of this project is to provide software engineers with tools to optimize the energy efficiency of Python programs by automating refactoring suggestions, while still allowing users to review and decide whether to apply the changes.
+
+\noindent \textbf{Advantage}: By reducing the energy consumption of Python programs, this project will contribute to the broader effort of decreasing the carbon footprint of software development, supporting the ICT sector's goal of reducing CO2 emissions by 72\% by 2040 ~\citep{FreitagAndBernersLee2021}.
+
+\noindent \textbf{Measurement}: The project's success can be measured by the reduction in energy usage 
+achieved after applying the refactorings. Benchmarks will compare the energy consumption of original 
+and refactored code, to achieve a measurable percentage reduction in energy consumption. The user's 
+ability to make informed choices about whether to apply refactorings will also be evaluated through 
+user feedback.
+
+\section{Stakeholders}
+
+The stakeholders involved in this project include all individuals and groups that have a direct or indirect interest in the development, implementation, and usage of the refactoring library for energy efficiency. These stakeholders influence project decisions and will be impacted by their outcomes. Understanding their roles and expectations is crucial for ensuring that the library meets the needs of its users and aligns with broader organizational goals.\\
+
+This section introduces the \textbf{client}, \textbf{customer}, and \textbf{other stakeholders} that are involved in the project. Finally, we will look at the users of the product, specifically the \textbf{hands-on-users}, what their \textbf{personas} may look like, their \textbf{priority} levels, and what kind of \textbf{participation} we can expect from them throughout the development of this product.
+\subsection{Client}
+The client of this project is \textbf{Dr. Istvan David} from McMaster's Department of Computing and Software. As the project supervisor, his role is to guide the development team with his technical and domain expertise. As the client, he sets the product's requirements and will be involved throughout its development. 
+\subsection{Customer}
+The customers of this product are all the \textbf{software developers} that use it to improve the energy efficiency of their codebase. As members of corporations or independent workers, they will be the primary users of the product and, therefore, will offer critical feedback on its effectiveness. Suggestions for improvement and/or additional features may come from this stakeholder. 
+
+\subsection{Other Stakeholders}
+\subsubsection*{\textcolor{Maroon}{Project Managers}}
+They oversee project operations and focus on reducing energy costs associated with large-scale or cloud-hosted applications. They might leverage the refactoring library to reduce operational costs and achieve business sustainability goals.
+
+\subsubsection*{\textcolor{Maroon}{Business Sustainability Teams}}
+This stakeholder is responsible for reducing the company's environmental footprint by analyzing its energy emissions. They will use the energy efficiency metrics provided by the refactoring library to improve environmental sustainability practices within their organization.
+
+\subsubsection*{\textcolor{Maroon}{End Users}}
+End users refer to the users of software that uses the product in its development. They will indirectly reap benefits from these applications that have been optimized using the refactoring library. Software used, especially mobile or embedded environments where battery life is a key concern, might prove to be more responsive and efficient. They have no involvement in the development of the product. 
+
+\subsubsection*{\textcolor{Maroon}{Regulatory Bodies}}
+This stakeholder is responsible for establishing regulations governing energy consumption and sustainability standards. They can promote the adoption of energy-efficient software practices and potentially certify tools that meet regulatory standards. 
+
+\subsection{Hands-On Users of the Project}
+\subsubsection*{\textcolor{Maroon}{Software Developers}}
 \begin{itemize}
-\item Goal Statement
-\item Instance Models
-\item Requirements
-\item Introduction
-\item Specific System Description
-\end{itemize}
-}
+  \item \textbf{User Role}: Integrate library into the codebase, provide tests to check refactoring against original functionality
 
-\plt{Guiding principles for the SRS document:
-\begin{itemize}
-\item Do not repeat the same information at the same abstraction level.  If
-  information is repeated, the repetition should be at a different abstraction
-  level.  For instance, there will be overlap between the scope section and the
-  assumptions, but the scope section will not go into as much detail as the
-  assumptions section.
-\end{itemize}
-}
-
-\plt{The template description comments should be disabled before submitting this
-  document for grading.}
-
-\plt{You can borrow any wording from the text given in the template.  It is part
-  of the template, and not considered an instance of academic integrity.  Of
-  course, you need to cite the source of the template.}
-
-\plt{When the documentation is done, it should be possible to trace back to the
-  source of every piece of information.  Some information will come from
-  external sources, like terminology.  Other information will be derived, like
-  General Definitions.}
-
-\plt{An SRS document should have the following qualities: unambiguous,
-  consistent, complete, validatable, abstract and traceable.}
-
-\plt{The overall goal of the SRS is that someone that meets the Characteristics
-  of the Intended Reader (Section~\ref{sec_IntendedReader}) can learn,
-  understand and verify the captured domain knowledge.  They should not have to
-  trust the authors of the SRS on any statements.  They should be able to
-  independently verify/derive every statement made.}
-
-\section{Introduction}
-
-\plt{The introduction section is written to introduce the problem.  It starts
-  general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
-expect in the Introduction section.}
-
-\subsection{Purpose of Document}
-
-\plt{This section summarizes the purpose of the SRS document.  It does not focus
-  on the problem itself.  The problem is described in the ``Problem
-  Description'' section (Section~\ref{Sec_pd}).  The purpose is for the document
-  in the context of the project itself, not in the context of this course.
-  Although the ``purpose'' of the document is to get a grade, you should not
-  mention this.  Instead, ``fake it'' as if this is a real project.  The purpose
-  section will be similar between projects.  The purpose of the document is the
-  purpose of the SRS, including communication, planning for the design stage,
-  etc.}
-
-\subsection{Scope of Requirements} 
-
-\plt{Modelling the real world requires simplification.  The full complexity of
-  the actual physics, chemistry, biology is too much for existing models, and
-  for existing computational solution techniques.  Rather than say what is in
-  the scope, it is usually easier to say what is not.  You can think of it as
-  the scope is initially everything, and then it is constrained to create the
-  actual scope.  For instance, the problem can be restricted to 2 dimensions, or
-  it can ignore the effect of temperature (or pressure) on the material
-  properties, etc.}  
-
-\plt{The scope section is related to the assumptions section
-  (Section~\ref{sec_assumpt}).  However, the scope and the assumptions are not
-  at the same level of abstraction.  The scope is at a high level.  The focus is
-  on the ``big picture'' assumptions.  The assumptions section lists, and
-  describes, all of the assumptions.}
-
-\plt{The scope section is relevant for later determining typical values of inputs. The scope should make it clear what inputs are reasonable to expect. This is a distinction between scope and context (context is a later section).  Scope affects the inputs while context affects how the software will be used.}
-
-\subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
-
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
-
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
-
-\subsection{Organization of Document}
-
-\plt{This section provides a roadmap of the SRS document.  It will help the
-  reader orient themselves.  It will provide direction that will help them
-  select which sections they want to read, and in what order.  This section will
-  be similar between project.}
-
-\section{General System Description}
-
-This section provides general information about the system.  It identifies the
-interfaces between the system and its environment, describes the user
-characteristics and lists the system constraints.  \plt{This text can likely be
-  borrowed verbatim.}
-
-\plt{The purpose of this section is to provide general information about the
-  system so the specific requirements in the next section will be easier to
-  understand. The general system description section is designed to be
-  changeable independent of changes to the functional requirements documented in
-  the specific system description. The general system description provides a
-  context for a family of related models.  The general description can stay the
-  same, while specific details are changed between family members.}
-
-\subsection{System Context}
-
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  Often in a scientific context, the program can be viewed
-  abstractly following the design pattern of Inputs $\rightarrow$ Calculations
-  $\rightarrow$ Outputs.  The system context will therefore often follow this
-  pattern.  The user provides inputs, the system does the calculations, and then
-  provides the outputs to the user.  The figure should not show all of the
-  inputs, just an abstract view of the main categories of inputs (like material
-  properties, geometry, etc.).  Likewise, the outputs should be presented from
-  an abstract point of view.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
-
-\begin{figure}[h!]
-\begin{center}
- \includegraphics[width=0.6\textwidth]{SystemContextFigure}
-\caption{System Context}
-\label{Fig_SystemContext} 
-\end{center}
-\end{figure}
-
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilities should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
-
-\begin{itemize}
-\item User Responsibilities:
-\begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
+  \item \textbf{Subject Matter Experience}: Journeyman to Master
+  
+  \item \textbf{Technological Experience}: Journeyman to Master
+  
+  \item \textbf{Attitude toward technology}: Varies (conservative to positive)
+  
+  \item \textbf{Physical location}: Remote (at home), in-person (work office) or hybrid
 \end{itemize}
 
-\plt{Identify in what context the software will typically be used.  Is it for
-exploration? education? engineering work? scientific work?. Identify whether it
-will be used for mission-critical or safety-critical applications.} \plt{This
-additional context information is needed to determine how much effort should be
-devoted to the rationale section.  If the application is safety-critical, the
-bar is higher.  This is currently less structured, but analogous to, the idea to
-the Automotive Safety Integrity Levels (ASILs) that McSCert uses in their
-automotive hazard analyses.}
-
-\wss{The }
-\subsection{User Characteristics} \label{SecUserCharacteristics}
-
-\plt{This section summarizes the knowledge/skills expected of the user.
-  Measuring usability, which is often a required non-function requirement,
-  requires knowledge of a typical user.  As mentioned above, the user is a
-  different role from the ``intended reader,'' as given in
-  Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-  user characteristics should be specific an unambiguous.  For instance, ``The
-  end user of \progname{} should have an understanding of undergraduate Level 1
-  Calculus and Physics.''}
-
-\subsection{System Constraints}
-
-\plt{System constraints differ from other type of requirements because they
-  limit the developers' options in the system design and they identify how the
-  eventual system must fit into the world. This is the only place in the SRS
-  where design decisions can be specified.  That is, the quality requirement for
-  abstraction is relaxed here.  However, system constraints should only be
-  included if they are truly required.}
-
-\section{Specific System Description}
-
-This section first presents the problem description, which gives a high-level
-view of the problem to be solved.  This is followed by the solution characteristics
-specification, which presents the assumptions, theories, definitions and finally
-the instance models.  \plt{Add any project specific details that are relevant
-  for the section overview.}
-
-\subsection{Problem Description} \label{Sec_pd}
-
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
-
-\subsubsection{Terminology and  Definitions}
-
-\plt{This section is expressed in words, not with equations.  It provide the
-  meaning of the different words and phrases used in the domain of the problem.
-The terminology is used to introduce concepts from the world outside of the
-mathematical model  The terminology provides a real world connection to give the
-mathematical model meaning.}
-
-This subsection provides a list of terms that are used in the subsequent
-sections and their meaning, with the purpose of reducing ambiguity and making it
-easier to correctly understand the requirements:
-
+\subsubsection*{\textcolor{Maroon}{Business Sustainability Teams}}
 \begin{itemize}
+  \item \textbf{User Role}: Access metrics provided by library
 
-\item 
+  \item \textbf{Subject Matter Experience}: Journeyman
+
+  \item \textbf{Technological Experience}: Novice to Journeyman
+  
+  \item \textbf{Attitude toward technology}: Neutral to positive
 
 \end{itemize}
 
-\subsubsection{Physical System Description} \label{sec_phySystDescrip}
-
-\plt{The purpose of this section is to clearly and unambiguously state the
-  physical system that is to be modelled. Effective problem solving requires a
-  logical and organized approach. The statements on the physical system to be
-  studied should cover enough information to solve the problem. The physical
-  description involves element identification, where elements are defined as
-  independent and separable items of the physical system. Some example elements
-  include acceleration due to gravity, the mass of an object, and the size and
-  shape of an object. Each element should be identified and labelled, with their
-  interesting properties specified clearly. The physical description can also
-  include interactions of the elements, such as the following: i) the
-  interactions between the elements and their physical environment; ii) the
-  interactions between elements; and, iii) the initial or boundary conditions.}
-
-\plt{The elements of the physical system do not have to correspond to an actual
-physical entity.  They can be conceptual.  This is particularly important when
-the documentation is for a numerical method. }
-
-The physical system of \progname{}, as shown in Figure~?,
-includes the following elements:
-
-\begin{itemize}
-
-\item[PS1:] 
-
-\item[PS2:] ...
-
-\end{itemize}
-
-\plt{A figure here makes sense for most SRS documents}
-
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
-
-\subsubsection{Goal Statements}
-
-\plt{The goal statements refine the ``Problem Description''
-  (Section~\ref{Sec_pd}).  A goal is a functional objective the system under
-  consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements
-  pertinence. Goals will be refined in Section “Instanced Models”
-  (Section~\ref{sec_instance}). Large and complex goals should be decomposed
-  into smaller sub-goals.  The goals are written abstractly, with a minimal
-  amount of technical language.  They should be understandable by non-domain
-  experts.}
-
-\noindent Given the \plt{inputs}, the goal statements are:
-
-\begin{itemize}
-
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
-    sentence description of the goal.  There may be more than one.  Each Goal
-    should have a meaningful label.}
-
-\end{itemize}
-
-\subsection{Solution Characteristics Specification}
-
-\plt{This section specifies the information in the solution domain of the system
-  to be developed. This section is intended to express what is required in
-  such a way that analysts and stakeholders get a clear picture, and the
-  latter will accept it. The purpose of this section is to reduce the problem
-  into one expressed in mathematical terms. Mathematical expertise is used to
-  extract the essentials from the underlying physical description of the
-  problem, and to collect and substantiate all physical data pertinent to the
-  problem.}
-
-\plt{This section presents the solution characteristics by successively refining
-  models.  It starts with the abstract/general Theoretical Models (TMs) and
-  refines them to the concrete/specific Instance Models (IMs).  If necessary
-  there are intermediate refinements to General Definitions (GDs).  All of these
-  refinements can potentially use Assumptions (A) and Data Definitions (DD).
-  TMs are refined to create new models, that are called GMs or IMs. DDs are not
-  refined; they are just used. GDs and IMs are derived, or refined, from other
-  models. DDs are not derived; they are just given. TMs are also just given, but
-  they are refined, not used.  If a potential DD includes a derivation, then
-  that means it is refining other models, which would make it a GD or an IM.}
-
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-  refined to another model if it is changed by the refinement. When we change a
-  general 3D equation to a 2D equation, we are making a refinement, by applying
-  the assumption that the third dimension does not matter. If we use a
-  definition, like the definition of density, we aren't refining, or changing
-  that definition, we are just using it.}
-
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-  about how the information is used.  In one problem the definition of
-  acceleration can be a TM, in another it would be a DD.}
-
-\plt{There is repetition between the information given in the different chunks
-  (TM, GDs etc) with other information in the document.  For instance, the
-  meaning of the symbols, the units etc are repeated.  This is so that the
-  chunks can stand on their own when being read by a reviewer/user.  It also
-  facilitates reuse of the models in a different context.}
-
-\noindent \plt{The relationships between the parts of the document are show in
-  the following figure.  In this diagram ``may ref'' has the same role as
-  ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-  reference (use) Assumptions.}
-
-\begin{figure}[H]
-  \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
-\end{figure}
-
-The instance models that govern \progname{} are presented in
-Subsection~\ref{sec_instance}.  The information to understand the meaning of the
-instance models and their derivation is also presented, so that the instance
-models can be verified.
-
-\subsubsection{Types}
-
-\plt{This section is optional. Defining types can make the document easier to
-understand.}
-
-\subsubsection{Scope Decisions}
-
-\plt{This section is optional.}
-\subsubsection{Modelling Decisions}
-
-\plt{This section is optional.}
-
-\subsubsection{Assumptions} \label{sec_assumpt}
-
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-  the assumptions are specific.  All assumptions should be listed, even those
-  that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-  assumptions have been made. In the case of unusual assumptions, it is
-  recommended that the documentation either include, or point to, an explanation
-  and justification for the assumption.}
-\plt{If it helps with the organization and understandability, the assumptions can be presented as sub sections.  The following sub-sections are options: background theory assumptions, helper theory assumptions, generic theory assumptions, problem specific assumptions, and rationale assumptions}
-
-This section simplifies the original problem and helps in developing the
-theoretical model by filling in the missing information for the physical system.
-The numbers given in the square brackets refer to the theoretical model [TM],
-general definition [GD], data definition [DD], instance model [IM], or likely
-change [LC], in which the respective assumption is used.
-
-\begin{itemize}
-
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-  \plt{Short description of each assumption.  Each assumption
-    should have a meaningful label.  Use cross-references to identify the
-    appropriate traceability to TM, GD, DD etc., using commands like dref, ddref
-    etc.  Each assumption should be atomic - that is, there should not be an
-    explicit (or implicit) ``and'' in the text of an assumption.}
-
-\end{itemize}
-
-\subsubsection{Theoretical Models}\label{sec_theoretical}
-
-\plt{Theoretical models are sets of abstract mathematical equations or axioms
-  for solving the problem described in Section ``Physical System Description''
-  (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
-  physical laws, constitutive equations, relevant conversion factors, etc.}
-
-\plt{Optionally the theory section could be divided into subsections to provide more structure and improve understandability and reusability.  Potential subsections include the following: Context theories, background theories, helper theories, generic theories, problem specific theories, final theories and rationale theories.}
-
-This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-  as appropriate.}
-
-~\newline
-
-\noindent
-\deftheory
-% #2 refname of theory
-{TM:COE}
-% #3 label
-{Conservation of thermal energy}
-% #4 equation
-{
-  $-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$
-}
-% #5 description
-{
-  The above equation gives the conservation of energy for transient heat transfer in a material
-  of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$ 
-  (\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-  $g$ is the volumetric heat generation
-  (\si{\watt\per\cubic\metre}), $T$ is the temperature
-  (\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-  the gradient operator.  For this equation to apply, other forms
-  of energy, such as mechanical energy, are assumed to be negligible in the
-  system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.
-}
-% #6 Notes
-{
-None.
-}
-% #7 Source
-{
-  \url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}
-}
-% #8 Referenced by
-{
-  \dref{ROCT}
-}
-% #9 Preconditions
-{
-None
-}
-% #1 derivation - not applicable by default
-{}
-
-\plt{``Ref.\ By'' is used repeatedly with the different types of information.
-  This stands for Referenced By.  It means that the models, definitions and
-  assumptions listed reference the current model, definition or assumption.
-  This information is given for traceability.  Ref. By provides a pointer in the
-  opposite direction to what we commonly do.  You still need to have a reference
-  in the other direction pointing to the current model, definition or
-  assumption.  As an example, if TM1 is referenced by GD2, that means that GD2 will
-  explicitly include a reference to TM1.}
-
-~\newline
-
-\subsubsection{General Definitions}\label{sec_gendef}
-
-\plt{General Definitions (GDs) are a refinement of one or more TMs, and/or of
-  other GDs.  The GDs are less abstract than the TMs.  Generally the reduction
-  in abstraction is possible through invoking (using/referencing) Assumptions.
-  For instance, the TM could be Newton's Law of Cooling stated abstracting.  The
-  GD could take the general law and apply it to get a 1D equation.}
-
-This section collects the laws and equations that will be used in building the
-instance models.
-
-\plt{Some projects may not have any content for this section, but the section
-  heading should be kept.}  \plt{Modify the examples below for your problem, and
-  add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
-\hline
-Label &\bf Newton's law of cooling \\
-\hline
-% Units&$MLt^{-3}T^0$\\
-% \hline
-SI Units&\si{\watt\per\square\metre}\\
-\hline
-Equation&$ q(t) = h \Delta T(t)$  \\
-\hline
-Description &
-Newton's law of cooling describes convective cooling from a surface.  The law is
-stated as: the rate of heat loss from a body is proportional to the difference
-in temperatures between the body and its surroundings.
-\\
-& $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).\\
-& $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-	(\si{\watt\per\square\metre\per\celsius}).\\
-&$\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-between the environment and the object (\si{\celsius}).
-\\
-\hline
-  Source & Citation here \\
-  \hline
-  Ref.\ By & \ddref{FluxCoil}, \ddref{FluxPCM}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
-
-\plt{This may be necessary when the necessary information does not fit in the
-  description field.}
-\plt{Derivations are important for justifying a given GD.  You want it to be
-  clear where the equation came from.}
-
-\subsubsection{Data Definitions}\label{sec_datadef}
-
-\plt{The Data Definitions are definitions of symbols and equations that are
-  given for the problem.  They are not derived; they are simply used by other
-  models.  For instance, if a problem depends on density, there may be a data
-  definition for the equation defining density.  The DDs are given information
-  that you can use in your other modules.}
-
-\plt{All Data Definitions should be used (referenced) by at least one other
-  model.}
-
-This section collects and defines all the data needed to build the instance
-models. The dimension of each quantity is also given.  \plt{Modify the examples
-  below for your problem, and add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil}\\
-\hline
-Label& \bf Heat flux out of coil\\
-\hline
-Symbol &$q_C$\\
-\hline
-% Units& $Mt^{-3}$\\
-% \hline
-  SI Units & \si{\watt\per\square\metre}\\
-  \hline
-  Equation&$q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$\\
-  \hline
-  Description & 
-                $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).  
-                The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-                assuming that Newton's Law 
-                of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the surface of
-                the coil, which has area $A_C$ (\si{\square\metre}) and heat 
-                transfer coefficient $h_C$
-                (\si{\watt\per\square\metre\per\celsius}).  This equation
-                assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-                of the coil (\aref{A_tlcoil}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{ewat}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Data Types}\label{sec_datatypes}
-
-\plt{This section is optional.  In many scientific computing programs it isn't
-  necessary, since the inputs and outpus are straightforward types, like reals,
-  integers, and sequences of reals and integers.  However, for some problems it
-  is very helpful to capture the type information.}
-
-\plt{The data types are not derived; they are simply stated and used by other
-  models.}
-
-\plt{All data types must be used by at least one of the models.}
-
-\plt{For the mathematical notation for expressing types, the recommendation is
-  to use the notation of~\citet{HoffmanAndStrooper1995}.}
-
-This section collects and defines all the data types needed to document the
-models. \plt{Modify the examples below for your problem, and add additional
-  definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Type Name & Name for Type\\
-  \hline
-  Type Def & mathematical definition of the type\\
-  \hline
-  Description & description here
-  \\
-  \hline
-  Sources & Citation here, if the type is borrowed from another source\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Instance Models} \label{sec_instance}    
-
-\plt{The motivation for this section is to reduce the problem defined in
-  ``Physical System Description'' (Section~\ref{sec_phySystDescrip}) to one
-  expressed in mathematical terms. The IMs are built by refining the TMs and/or
-  GDs.  This section should remain abstract.  The SRS should specify the
-  requirements without considering the implementation.}
-
-This section transforms the problem defined in Section~\ref{Sec_pd} into 
-one which is expressed in mathematical terms. It uses concrete symbols defined 
-in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
-identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
-
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-  models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-  appropriate.}
-
-~\newline
-
-%Instance Model 1
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Number& IM\refstepcounter{instnum}\theinstnum \label{ewat}\\
-  \hline
-  Label& \bf Energy balance on water to find $T_W$\\
-  \hline
-  Input&$m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$, 
-  $T_\text{init}$, $T_P(t)$ from \iref{epcm}\\
-  & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})\\
-  \hline
-  Output&$T_W(t)$, $0\leq t \leq t_\text{final}$, such that\\
-  &$\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,\\
-  &$T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
-  \hline
-  Description&$T_W$ is the water temperature (\si{\celsius}).\\
-  &$T_P$ is the PCM temperature (\si{\celsius}).\\
-  &$T_C$ is the coil temperature (\si{\celsius}).\\
-  &$\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).\\
-  &$\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).\\
-  & The above equation applies as long as the water is in liquid form,
-  $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-  and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{epcm}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-%~\newline
-
-\subsubsection*{Derivation of ...}
-
-\plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
-  where the derivation cannot be described under the Description field, it will
-  be necessary to include this subsection.}
-
-\subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
-
-Table~\ref{TblInputVar} shows the data constraints on the input output
-variables.  The column for physical constraints gives the physical limitations
-on the range of values that can be taken by the variable.  The column for
-software constraints restricts the range of inputs to reasonable values.  The
-software constraints will be helpful in the design stage for picking suitable
-algorithms.  The constraints are conservative, to give the user of the model the
-flexibility to experiment with unusual situations.  The column of typical values
-is intended to provide a feel for a common scenario.  The uncertainty column
-provides an estimate of the confidence with which the physical quantities can be
-measured.  This information would be part of the input if one were performing an
-uncertainty quantification exercise.
-
-The specification parameters in Table~\ref{TblInputVar} are listed in
-Table~\ref{TblSpecParams}.
-
-\begin{table}[!h]
-  \caption{Input Variables} \label{TblInputVar}
-  \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l l l c} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
-                             \textbf{Typical Value} & \textbf{Uncertainty}\\
-  \midrule 
-  $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
-  \\
+\subsection{Personas}
+
+\subsubsection*{Persona: Raven Reyes}
+\textbf{Age:} 37\\
+\textbf{Job Title:} Senior Software Developer\\
+\textbf{Education:} Bachelor's in Computer 
+Science\\[2mm]
+\textbf{Work Environment:} Works at a mid-sized SaaS company with a focus on improving their environmental footprint.\\
+\textbf{Professional Background:} Has over 15 years of experience in software development, specializing in backend systems. Worked with various programming languages (Python, Java, and C++), and is well-versed in optimizing code for performance.\\[2mm]
+\textbf{Need:} With the company more focused on sustainability, Raven and her team need to go through their codebase and apply energy efficient changes to their code.\\
+\textbf{Challenges:} Knowing what to change in their code to make it more efficient is challenging, not to mention the incredible amount of code they will have to sift through. We are talking hundreds of thousands of lines of code!
+
+\subsubsection*{Persona: Christopher Robin}
+\textbf{Age:} 34\\
+\textbf{Job Title:} Data Analyst\\
+\textbf{Education:} Bachelor's in Data Science\\[2mm]
+\textbf{Work Environment:} Works at a large corporation that has recently started increasing their efforts to become a sustainable company.\\
+\textbf{Professional Background:} Over 8 years of experience in data analysis, just recently looking into sustainability metrics. Christopher regularly collaborates with IT teams to track performance metrics and recently energy consumption metrics to help identify areas for improvement.\\[2mm]
+\textbf{Need:} Christopher needs accurate data on energy consumption from the company's software systems to generate insights that drive sustainability initiatives and help meet corporate environmental targets.\\
+\textbf{Challenges:} Translating raw technical data into meaningful insights that can guide decisions is difficult, especially when working with complex systems. 
+
+\subsubsection*{Persona: Draco Malfoy}
+\textbf{Age:} 29\\
+\textbf{Job Title:} Freelance Software Developer\\
+\textbf{Education:} Bachelor's in Software Engineering\\[2mm]
+\textbf{Work Environment:} Works remotely on multiple freelance projects for small and mid-sized businesses, focusing on web applications and backend systems.\\
+\textbf{Professional Background:} Has 7 years of experience working with various clients to develop and optimize software, primarily in Python and JavaScript. He often works on tight deadlines, where balancing performance and development speed is key.\\[2mm]
+\textbf{Need:} Draco needs efficient ways to optimize the code he writes for clients, particularly in terms of performance and energy efficiency, as more businesses become environmentally conscious.\\
+\textbf{Challenges:} As a freelancer, time is money. Draco needs tools that help him quickly identify inefficiencies in the code and refactor them, without spending hours analyzing large codebases or learning new systems.
+
+\subsection{Priorities Assigned to Users}
+\textbf{Key Users:} Software Developers, Business Sustainability Teams \\
+\textbf{Secondary User:} Project Managers
+
+\subsection{User Participation}
+For the bulk of the development process, requirements will be gathered from the development team itself with the help of the project supervisor, Dr. Istvan David.
+
+During the testing phase, usability testing will be conducted to further refine the product.
+
+\subsection{Maintenance Users and Service Technicians}
+Due to the nature of this project as a capstone requirement, there are currently no expected maintenance users.
+
+\section{Mandated Constraints}
+\subsection{Solution Constraints}
+\begin{enumerate}[label=MD-SL \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The system must refactor Python code without changing its original functionality.}\\[2mm]
+    {\bf Rationale:} The project is focused on energy-efficient refactoring for Python code, and altering functionality could break existing software behaviour.\\
+    {\bf Fit Criterion:} The system must pass all original test cases after refactoring, ensuring that functionality remains unchanged.\\
+    {\bf Priority:} High
+    \item \emph{The refactored code must result in measurable energy savings.}\\[2mm]
+    {\bf Rationale:} The project's primary objective is to improve the code's energy efficiency. Refactorings should lead to a noticeable reduction in energy consumption.\\
+    {\bf Fit Criterion:} The system must show at least a 5\% reduction in energy consumption, as measured by tools like \texttt{PyJoules}, for most of the refactored code.\\
+    {\bf Priority:} High
+    \item \emph{The refactored code must be provided to the user upon completion of the refactoring process.}\\[2mm]
+    {\bf Rationale:} Developers need access to the refactored code to utilize it in their projects immediately after the refactoring process.\\
+    {\bf Fit Criterion:} The system must deliver the refactored code to the user in a clear format, ensuring it is readily available for implementation.\\
+    {\bf Priority:} High
+\end{enumerate}
+
+\subsection{Implementation Environment of the Current System}
+\begin{enumerate}[label=MD-EC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The product shall be able to run on standard laptop environments, including typical developer setups with operating systems such as Windows, macOS, and Linux.}\\[2mm]
+    {\bf Rationale:} Developers will primarily use the tool on personal workstations, including laptops, and it must integrate smoothly with typical development environments. Supporting standard laptop environments ensures that the tool is accessible to a wide range of users without the need for specialized hardware.\\
+    {\bf Fit Criterion:} The tool must be installable and functional on a standard laptop with commonly used IDEs (such as Visual Studio Code) and tools like GitHub for version control. It should perform well without requiring excessive processing power or memory.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Partner or Collaborative Applications}
+The project will focus on developing the tool with flexibility for potential integration with applications like GitHub Actions and Visual Studio Code. While no specific partner applications are required, understanding these possibilities can aid smoother integration. Future collaboration with CI/CD services or Python development tools may be considered, but no formal interface constraints are needed at this stage.
+\subsection{Off-the-Shelf Software}
+The project has no strict requirements for off-the-shelf software but will leverage open-source libraries to enhance functionality and maintain flexibility. Tools like PyJoules for energy measurement and Python analysis libraries may be used. While no legal issues are expected, all tools will be assessed for compatibility. Documentation will be maintained, though no specific constraints are set at this stage.
+\subsection{Anticipated Workplace Environment}
+The workplace will include standard software development setups with IDEs, version control (e.g., GitHub), and collaboration tools. The tool should integrate smoothly into workflows, offering a non-intrusive interface suited for quiet workspaces and providing quick feedback in collaborative environments. Accessibility to online resources and collaboration tools will be considered, ensuring the tool functions well in diverse settings. A description of the typical workplace, possibly with diagrams, will be provided.
+\subsection{Schedule Constraints}
+\begin{enumerate}[label=SCHD \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The project shall be completed by April 2025, with interim deadlines for key milestones such as Proof of Concept (November 2024) and the final demonstration (March 2025).}\\[2mm]
+    {\bf Rationale:} These deadlines are based on the academic timeline and the expectations of the capstone course.\\
+    {\bf Fit Criterion:} All project components must be completed and fully functional by the final demonstration in March 2025.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Budget Constraints}
+\begin{enumerate}[label=BDGT \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The project shall not exceed the resources available to the team, which includes free open-source software and free services like GitHub for hosting and CI/CD pipelines.}\\[2mm]
+    {\bf Rationale:} The team does not have a budget for paid services or proprietary software.\\
+    {\bf Fit Criterion:} The project must be implemented using free tools and libraries and hosted on GitHub.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Enterprise Constraints}
+\begin{enumerate}[label=ENTP \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The product shall be built to comply with the standards of McMaster University’s capstone project requirements and academic integrity policies.}\\[2mm]
+    {\bf Rationale:} The project is part of the university’s curriculum and must adhere to its standards.\\
+    {\bf Fit Criterion:} The product must meet the requirements specified by the course syllabus and project advisor.\\
+    {\bf Priority:} High
+\end{enumerate}
+
+\section{Naming Conventions and Terminology}
+\subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
+involved in the Project}
+
+% --- TERMS PRESENT IN THE STAKEHOLDER SECTION ---
+\paragraph*{supervisor}
+A member of faculty from McMaster University responsible for overseeing a project being worked on by students taking the SFWRENG 4G06 Capstone course.
+
+\paragraph*{large-scale applications}
+Applications that manage high volumes of data, users, or transactions, typically requiring scalable architectures.
+
+\paragraph*{cloud-hosted applications}
+Software applications deployed and run on remote cloud servers, accessible over the internet.
+
+\paragraph*{environmental footprint}
+The total impact an activity or product has on the environment, measured by metrics like carbon emissions and resource consumption.
+
+\paragraph*{refactoring}
+The process of restructuring existing code without changing its external behaviour to improve readability, performance, or maintainability.
+
+\paragraph*{mobile environment}
+A software environment specifically designed for mobile devices, such as smartphones or tablets, which have limited resources.
+
+\paragraph*{embedded environment}
+A software environment where applications run on specialized hardware with constrained resources, often without traditional operating systems.
+
+\paragraph*{SaaS}
+Software as a Service (SaaS) refers to cloud-based software applications delivered to users via the internet on a subscription basis.
+
+\paragraph*{backend}
+The part of a software system that handles server-side logic, database interactions, and application functionality not directly visible to users.
+
+\paragraph*{software developer}
+A professional who designs, writes, and maintains software applications or systems.
+
+\paragraph*{data analyst}
+A professional who processes and analyzes large sets of data to help organizations make informed decisions.
+
+\paragraph*{tech company}
+A company focused on technology products and services, including software, hardware, and IT services.
+
+\paragraph*{freelance}
+Self-employed individuals who offer specialized services, such as software development, without long-term commitments to any employer.
+
+\paragraph*{usability testing}
+A method of evaluating how easy and user-friendly a software application or product is by observing real users interacting with it.
+
+% --- TERMS PRESENT IN THE OPERATIONAL AND ENVIRONMENTAL REQUIREMENTS SECTION ---
+\paragraph*{Python Code}
+Refers to the original Python code given by the end user to refactor.
+
+\paragraph*{Refactored Code}
+Refers to the Python code that had refactorings made to it.
+
+\paragraph*{library}
+A collection of pre-written code that developers can reuse in their projects to add specific functionalities.
+
+\paragraph*{Git}
+\label{term:git}
+A distributed version control system that allows multiple developers to track changes in source code, collaborate, and manage project history efficiently.
+
+\paragraph*{GitHub}
+\label{term:GitH}
+A web-based platform used for version control and collaboration on code through \hyperref[term:git]{Git} repositories.
+
+\paragraph*{Actions}
+A \hyperref[term:GitH]{GitHub} feature that automates tasks such as testing, deployment, and continuous integration via custom workflows.
+
+\paragraph*{workflow}
+A sequence of automated steps or actions that define a process, often for continuous integration, deployment, or testing.
+
+\paragraph*{Visual Studio Code}
+\label{term:VSC}
+A free, open-source code editor developed by Microsoft, known for its versatility and wide range of extensions.
+
+\paragraph*{VS Code}
+An abbreviation of \hyperref[term:VSC]{Visual Studio Code}
+
+\paragraph*{Visual Studio Code (VS Code) marketplace}
+An online platform where users can discover, install, and manage extensions that enhance the functionality of \hyperref[term:VSC]{Visual Studio Code}.
+
+\paragraph*{JSON}
+\label{term:JSON}
+\hyperref[term:JS]{JavaScript} Object Notation, a lightweight data format used to store and exchange information between systems.
+
+\paragraph*{XML}
+\label{term:XML}
+Extensible Markup Language, a data format used to encode documents in a way that is both human-readable and machine-readable.
+
+\paragraph*{package manager}
+A tool that automates the process of installing, updating, and managing software packages or libraries in a project.
+
+\paragraph*{PIP}
+A package manager for \hyperref[term:python]{Python} that simplifies the installation and management of Python libraries.
+
+% --- TERMS PRESENT IN WAITING ROOM SECTION ---
+\paragraph*{IDE}
+Integrated Development Environment, a software application providing tools like a code editor, debugger, and compiler to facilitate development.
+
+\paragraph*{progress indicators}
+Visual or textual cues, such as loading bars or percentages, that inform users about the status of ongoing processes.
+
+\paragraph*{plugin}
+A software component that adds specific features or functionalities to an existing software system.
+
+\paragraph*{configuration file}
+A file used to define settings or preferences for a software application, often stored in a human-readable format like \hyperref[term:JSON]{JSON} or \hyperref[term:XML]{XML}.
+
+\paragraph*{dashboard}
+A user interface that provides an overview of key information and metrics, typically presented in graphs, charts, and tables.
+
+\paragraph*{sync}
+The process of ensuring that data is consistent across multiple systems or devices by automatically updating changes in real-time.
+
+\paragraph*{programming language}
+\label{term:progl}
+A formal language used to write software programs by providing instructions that a computer can execute.
+
+\paragraph*{Python}
+\label{term:python}
+A \hyperref[term:progl]{programming language} known for its simplicity and versatility, widely used in web development, data science, and automation.
+
+\paragraph*{Java}
+A \hyperref[term:progl]{programming language} known for its portability and scalability, commonly used for enterprise-level applications.
+
+\paragraph*{C/C++}
+A \hyperref[term:progl]{programming language} family used for system programming, game development, and applications requiring high performance.
+
+\paragraph*{C\#}
+A \hyperref[term:progl]{programming language} developed by Microsoft, primarily used for developing applications on the .NET platform.
+
+\paragraph*{JavaScript}
+\label{term:JS}
+A \hyperref[term:progl]{programming language} used primarily for adding interactivity to web pages and building dynamic web applications.
+
+\paragraph*{TypeScript}
+A \hyperref[term:progl]{programming language} that builds on JavaScript by adding static typing, improving code reliability and scalability.
+
+\paragraph*{Go}
+A \hyperref[term:progl]{programming language} created by Google, designed for simplicity and efficiency in building scalable applications.
+
+\paragraph*{Rust}
+A \hyperref[term:progl]{programming language} focused on safety, performance, and concurrency, often used in system programming.
+
+
+
+\section{Relevant Facts And Assumptions}
+\subsection{Relevant Facts}
+Not applicable to this system.
+\subsection{Business Rules}
+
+The following are some business rules established between the team.
+
+\begin{enumerate}
+  \item \textbf{Project Timeline Adherence:} All milestones must be completed according to the established project timeline. Any delays or unexpected circumstances must be reported to the team as soon as possible.
+  \item \textbf{Pull Request Review Requirement:} All pull requests must receive at least two independent reviews before they can be merged into the main branch. Reviewers must provide feedback or approval within 48 hours of the request to ensure timely progress.
+  \item \textbf{Team Communication Standard:} All team members are required to communicate in a friendly and respectful manner during discussions, meetings, and in all written communications. Constructive feedback should be provided with the intent to support and enhance team collaboration.
+\end{enumerate}
+
+
+\subsection{Assumptions}
+It is assumed for this system that users will be seeking to refactor Python code and will make use of Visual Studio Code.
+
+\section{The Scope of the Work}
+\subsection{The Current Situation}
+
+  The current software development landscape often prioritizes functionality and performance over energy efficiency. Many existing Python codebases are not optimized for energy consumption, leading to unnecessary power usage and increased carbon footprint. The following aspects characterize the current situation:
+  \begin{enumerate}
+    \item \textbf{Manual Refactoring:} Developers typically perform refactoring manually, which is time-consuming and prone to errors.
+    \item \textbf{Limited Awareness:} Many developers lack awareness of energy-efficient coding practices and their impact on overall energy consumption.
+    \item \textbf{Absence of Automated Tools:} There is a lack of widely adopted automated tools specifically designed to refactor Python code for energy efficiency.
+    \item \textbf{Performance-Centric Optimization:} Most existing optimization tools focus on performance improvements rather than energy efficiency.
+    \item \textbf{Inefficient Code Patterns:} Many codebases contain inefficient code patterns that consume more energy than necessary.
+  \end{enumerate}
+
+  \textcolor{red}{The project aims to address these issues by:}
+  \begin{enumerate}
+    \item \textbf{Automated Refactoring Library:} Developing a Python library that automatically detects and refactors code for improved energy efficiency.
+    \item \textbf{IDE Integration:} Creating a Visual Studio Code plugin that integrates the refactoring library, providing real-time suggestions and automated refactoring options.
+    \item \textbf{Energy Consumption Measurement:} Implementing tools to measure and compare energy consumption before and after refactoring.
+    \item \textbf{Developer Education:} Raising awareness about energy-efficient coding practices through the tool's suggestions and documentation.
+    \item \textbf{Continuous Improvement:} Implementing a reinforcement learning model to improve refactoring suggestions over time based on developer feedback and real-world energy savings data.
+  \end{enumerate}  
+
+\subsection{The Context of the Work}
+
+\includegraphics[scale=0.5]{../images/WorkContextModel.png}
+
+\subsection{Work Partitioning}
+
+\setlength\extrarowheight{5mm}
+\begin{tabularx}{\textwidth}{|c|X|l|p{1.5in}|}
+  \toprule \textbf{Event \#} & \textbf{Event Name} & \textbf{Input} & \textbf{Output(s)} \\
+  \midrule
+  1 & Users submit Python code & Python Code & Refactored Code \\
+  2 & Energy Analysis of code & Python Code & Total Energy Consumed \\
+  3 & RI Model produces refactoring & Python Code & Correct Refactoring \\
+  4 & Testing and Validation of refactored code & Refactored Code & Test Results \\
+  5 & Reporting Performance metrics of new code & Refactored Code & Performance Reports \\
+  6 & Viewing Energy consumption reports & Refactored Code & Energy Consumption Statistics \\
   \bottomrule
-\end{longtable*}
-\end{table}
+\end{tabularx}
 
-\noindent 
-\begin{description}
-\item[(*)] \plt{you might need to add some notes or clarifications}
-\end{description}
+\subsection{Specifying a Business Use Case (BUC)}
 
-\begin{table}[!h]
-\caption{Specification Parameter Values} \label{TblSpecParams}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Value} \\
-  \midrule 
-  $L_\text{min}$ & 0.1 \si{\metre}\\
+\begin{enumerate}[label={\bf BUC \arabic*:}, wide=0pt, font=\itshape]
+  \item {\bf Code Submission} \\[2mm]
+    \textbf{Input:} Python Code \\
+    \textbf{Output:} Refactored Code \\
+    \textbf{Pre-condition:} User uses either GitHub Action or a VS Code plugin to submit code to the refactoring tool \\[2mm]  
+    \textbf{Scenario:}
+      \begin{enumerate}[label=\arabic*.]
+        \item Refactoring tool receives the Python code
+        \item PyJoules is used to store energy consumption data for the original Python code submitted
+        \item Tool analyzes the code for inefficiencies (PySmells)
+        \item Python code is provided to the Re-enforcement learning model to find a refactoring
+        \item Energy consumption is measured of refactored code and compared to the original data
+        \item Refactored code is tested to ensure functionality is maintained from the original code
+        \item Refactored code is received by the user
+      \end{enumerate}
+    \textbf{Sub Variation: }
+      \begin{itemize}
+        \item \textit{4a:} If no PySmells are identified, then code is returned to the user
+        \item \textit{6a:} If energy consumption increases for refactored code, the reinforcement model is asked to find another refactoring
+        \item \textit{7a:} If code functionality is not preserved for refactored code, the reinforcement model is asked to find another refactoring
+      \end{itemize}
+
+  \item {\bf Energy Analysis of Code}\\[2mm]
+    \textbf{Input:} Python Code \\
+    \textbf{Output:} Total Energy Consumed \\
+    \textbf{Pre-condition:} Submission of Python code to the Energy Consumption Tool \\[2mm]
+    \textbf{Scenario: } 
+    \begin{enumerate}[label=\arabic*.]
+        \item Tool receives Python Code
+        \item Energy consumed is measured during execution
+        \item The analysis results are compiled into a report
+        \item Report of total energy consumed is received by the refactoring tool
+    \end{enumerate}
+  
+  \item {\bf Reinforcement Learning Model Produces Refactoring} \\[2mm]
+    \textbf{Input:} Python Code \\
+    \textbf{Output:} Correct Refactoring \\
+    \textbf{Pre-condition:} Request for refactored code from the Reinforcement Learning Model \\[2mm]
+    \textbf{Scenario: } 
+    \begin{enumerate}[label=\arabic*.]
+        \item Model receives Python Code
+        \item Analyze Code for potential refactoring
+        \item Generate suggestions based on previous learning and data
+        \item Implement suggested refactorings
+    \end{enumerate}
+    \textbf{Sub Variation: }
+    \begin{itemize}
+        \item \textit{2a:} If there are no refactorings found, Model outputs are given code back to the refactoring tool 
+    \end{itemize}
+
+  \item {\bf Testing and Validation of Refactored Code} \\[2mm]
+    \textbf{Input:} Refactored Code \\
+    \textbf{Output:} Test Results \\
+    \textbf{Pre-condition:} Energy consumed for refactored code is less than the energy consumed for original code \\[2mm]
+    \textbf{Scenario: }
+    \begin{enumerate}[label=\arabic*.]
+        \item Conduct tests on refactored code
+        \item Conduct tests on original code
+        \item Validate results of refactored code to the results of the original code to ensure functionality is intact
+        \item Signal to refactoring tool to send refactored code to the user
+    \end{enumerate}
+    \textbf{Sub Variation: }
+    \begin{itemize}
+        \item \textit{4a:} If functionality is not preserved, signal to the refactoring tool to refactor again
+    \end{itemize}
+
+  \item {\bf Reporting Performance Metrics of New Code} \\[2mm]
+    \textbf{Input:} Refactored Code \\
+    \textbf{Output:} Performance Reports\\
+    \textbf{Pre-condition:} Testing and validation is completed successfully \\[2mm]
+    \textbf{Scenario: }
+    \begin{enumerate}[label=\arabic*.]
+        \item Generate detailed performance report based on testing outcomes
+        \item User receives the performance report
+    \end{enumerate}
+
+  \item {\bf Viewing Energy Consumption Reports} \\[2mm]
+    \textbf{Input:} Refactored Code \\
+    \textbf{Output:} Energy Consumption Statistics \\
+    \textbf{Pre-condition:} Testing and validation is completed successfully \\[2mm]
+    \textbf{Scenario: }
+    \begin{enumerate}[label=\arabic*.]
+        \item Comprehensive statistics are compiled from energy analysis data
+        \item Information is compiled in an accessible format for developers to review
+    \end{enumerate}
+\end{enumerate}
+
+\section{Business Data Model and Data Dictionary}
+\subsection{Business Data Model}
+\includegraphics[width=\textwidth]{../Images/business-data-model.png}
+\subsection{Data Dictionary}
+
+% \renewcommand{\arraystretch}{1}
+\begin{longtable}{|p{3.5cm}|p{9cm}|p{2cm}|}
+  \toprule \textbf{Name} & \textbf{Content} & \textbf{Type} \\
+  \midrule
+  EcoOptimizer & CentralCtrl + RefactoringCtrl + TestingCtrl + Reinforcement Learning Model & package \\ \hline
+  GitHub Actions & External tool for automated customizable workflows & External Service Provider \\ \hline
+  VS Code extension & A plugin containing the EcoOptimizer package delivered through Visual Studio Code Marketplace & External Service Provider \\ \hline
+  Rope & External refactoring library & package \\ \hline
+  Pysmell & External python smell detection module & package \\ \hline
+  pyJoules & External python energy measuring module & package \\ \hline
+  CentralCtrl & source + excluded + tests + initialEnergy + smells + measureEnergy + getSmells + refactor + checkFunctionality & Class \\ \hline
+  TestingCtrl & testDir + runTests & Class \\ \hline
+  RefactoringCtrl & selectRefactoring & Class \\ \hline
+  Reinforcement Learning Model & Data model for improved energy efficient refactoring & Module \\ \hline
+  source & directory containing the code to be refactored & string \\ \hline
+  excluded & files and directories that should not be refactored & list[string] \\ \hline
+  testDir & directory containing tests related to the source code & string \\ \hline
+  initialEnergy & file containing all initial energy measurements prior to refactoring & string \\ \hline
+  smells & all code smells detected & list[string] \\ \hline
+  measureEnergy() & measures the energy consumption of the given source code & method \\ \hline
+  getSmells() & returns all the smells detected in the source code & method \\ \hline
+  refactor(smell) & refactors the source code based on the given code smell & method \\ \hline
+  checkFunctionality() & checks that the original functionality of the code is maintained & method \\
   \bottomrule
-\end{longtable*}
-\end{table}
+\end{longtable}
 
-\subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
+\section{The Scope of the Product}
+\subsection{Product Boundary}
+\includegraphics[width=0.8\textwidth]{../Images/UseCaseDiagram.png}
+\subsection{Product Use Case Table}
 
-\noindent
-A correct solution must exhibit \plt{fill in the details}.  \plt{These
-  properties are in addition to the stated requirements.  There is no need to
-  repeat the requirements here.  These additional properties may not exist for
-  every problem.  Examples include conservation laws (like conservation of
-  energy or mass) and known constraints on outputs, which are usually summarized
-  in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
-
-\begin{table}[!h]
-\caption{Output Variables} \label{TblOutputVar}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} \\
-  \midrule 
-  $T_W$ & $T_\text{init} \leq T_W \leq T_C$ (by~\aref{A_charge})
-  \\
+\setlength\extrarowheight{2mm}
+\begin{tabularx}{\textwidth}{|c|
+  >{\raggedright\arraybackslash}X|p{1.2in}|
+  >{\raggedright\arraybackslash}X|}
+  \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} \\
+  \midrule
+  1 & Receive Code for Refactoring & User & Original Python Code (in) \\ 
+  2 & Analyze Energy Consumption of Original Code & Energy Consumption Tool & Original Code (in), Energy Consumption Report (out) \\ 
+  3 & Refactor Code & Reinforcement Learning Model & Code Segment (in), Previous Energy Saving Patterns (out) \\ 
+  4 & Test Refactored Code Functionality & Testing Service & Refactored Code (in), Test Results (out) \\ 
+  5 & Generate Performance Metrics of Refactored Code & Energy Consumption Tool & Refactored Code (in), Energy Consumption Report (out) \\ 
+  6 & Show Results & User & Refactored Code, Performance Metrics (out) \\
   \bottomrule
-\end{longtable*}
-\end{table}
+\end{tabularx}
 
-\plt{This section is not for test cases or techniques for verification and
-  validation.  Those topics will be addressed in the Verification and Validation
-  plan.}
+\subsection{Individual Product Use Cases (PUC's)}
+\setlength{\parindent}{0pt}
+\begin{enumerate}[label={\bf PUC \arabic*:}, wide=0pt, font=\itshape]
+\item {\bf Receive Code for Refactoring} \\[2mm]
+\textbf{Trigger:} User submits Python code via GitHub Actions or IDE plugin. \\[2mm]
+\textbf{Preconditions:}
+\begin{itemize}
+    \item User has access to the refactoring tool.
+    \item The refactoring tool is active and ready to receive code.
+\end{itemize}
+\textbf{Actors:} User. \\
+\textbf{Outcome:} Python code is received by the refactoring tool. \\
+\textbf{Input:} Original Python Code. \\
+\textbf{Output:} Code is stored for further analysis (internal).
 
-\section{Requirements}
+\item \textbf{Analyze Energy Consumption of Original Code} \\[2mm]
+\textbf{Trigger:} The refactoring tool submits the original code to the energy consumption tool. \\[2mm]
+\textbf{Preconditions:}
+\begin{itemize}
+    \item The refactoring tool has received the original code.
+    \item Energy Consumption Tool is active and connected to the refactoring tool.
+\end{itemize}
+\textbf{Actors:} Energy Consumption Tool. \\
+\textbf{Outcome:} Energy consumption data is collected and returned to the refactoring tool. \\
+\textbf{Input:} Original Python Code. \\
+\textbf{Output:} Energy Consumption Report.
 
-\plt{The requirements refine the goal statement.  They will make heavy use of
-  references to the instance models.}
+\item \textbf{Refactor Code} \\[2mm]
+\textbf{Trigger:} Refactoring tool identifies inefficiencies in the original code. \\[2mm]
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Energy consumption report has been generated.
+\end{itemize}
+\textbf{Actors:} Reinforcement Learning Model. \\
+\textbf{Outcome:} Code is refactored. Previous energy-saving patterns are utilized, if present. \\
+\textbf{Input:} Code Segment. \\
+\textbf{Output:} Refactored Python Code.
 
-This section provides the functional requirements, the business tasks that the
-software is expected to complete, and the nonfunctional requirements, the
-qualities that the software is expected to exhibit.
+\item \textbf{Test Refactored Code Functionality} \\[2mm]
+\textbf{Trigger:} Refactored code is ready for validation. \\[2mm]
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Refactoring process has completed.
+    \item Testing Service is available.
+\end{itemize}
+\textbf{Actors:} Testing Service. \\
+\textbf{Outcome:} Refactored code is validated for functional correctness. \\
+\textbf{Input:} Refactored Code. \\
+\textbf{Output:} Test Results.
 
+\item \textbf{Generate Performance Metrics of Refactored Code} \\[2mm]
+\textbf{Trigger:} Refactored code passes functionality tests. \\[2mm]
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Refactored code has been validated.
+\end{itemize}
+\textbf{Actors:} Energy Consumption Tool. \\
+\textbf{Outcome:} Performance report is generated and sent to the user. \\
+\textbf{Input:} Refactored Code. \\
+\textbf{Output:} Energy Consumption Report.
+
+\item \textbf{Show Results} \\[2mm]
+\textbf{Trigger:} Refactored code and performance metrics are generated. \\[2mm]
+\textbf{Preconditions:}
+\begin{itemize}
+    \item Preceding use cases have successfully been completed.
+    \item Results are ready to be shared with the user.
+\end{itemize}
+\textbf{Actors:} User. \\
+\textbf{Outcome:} Refactored code and performance metrics are presented to the user. \\
+\textbf{Output:} Refactored Code, Performance Metrics.
+
+\end{enumerate}
+
+\section{Functional Requirements}
 \subsection{Functional Requirements}
-
-\noindent \begin{itemize}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-    for the inputs that are supplied by the user.  This information has to be
-    explicit.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-    always required, but often echoing the inputs as part of the output is a
-    good idea.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
-
-\end{itemize}
-
-\plt{Every IM should map to at least one requirement, but not every requirement
-  has to map to a corresponding IM.}
-
-\subsection{Nonfunctional Requirements}
-
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
-
-\noindent \begin{itemize}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  A link to the VnV plan would be a nice extra.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  A
-    link to the VnV plan would be a nice extra.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
-
-\item Other NFRs that might be discussed include verifiability,
-  understandability and reusability.
-
-\end{itemize}
-
-\subsection{Rationale}
-
-\plt{Provide a rationale for the decisions made in the documentation.  Rationale
-should be provided for scope decisions, modelling decisions, assumptions and
-typical values.}
-
-\section{Likely Changes}    
-
-\noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
-
-\end{itemize}
-
-\section{Unlikely Changes}    
-
-\noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
-
-\end{itemize}
-
-\section{Traceability Matrices and Graphs}
-
-The purpose of the traceability matrices is to provide easy references on what
-has to be additionally modified if a certain component is changed.  Every time a
-component is changed, the items in the column of that component that are marked
-with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
-dependencies of theoretical models, general definitions, data definitions, and
-instance models with each other. Table~\ref{Table:R_trace} shows the
-dependencies of instance models, requirements, and data constraints on each
-other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, and likely changes on
-the assumptions.
-
-\plt{You will have to modify these tables for your problem.}
-
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-  means that GD1's derivation or presentation requires invocation of A1.  A1
-  does not use GD1.  A1 is ``used by'' GD1.}
-
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-  your best.  In the future tools (like Drasil) will make this much easier.}
-
-\afterpage{
-\begin{landscape}
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
-\hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
-\label{Table:A_trace}
-\end{table}
-\end{landscape}
-}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline        
-	& \tref{T_COE}& \tref{T_SHE}& \tref{T_LHE}& \dref{NL}& \dref{ROCT} & \ddref{FluxCoil}& \ddref{FluxPCM} & \ddref{D_HOF}& \ddref{D_MF}& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM} \\
-\hline
-\tref{T_COE}     & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}     & & & X& & & & & & & & & & \\ \hline
-\tref{T_LHE}     & & & & & & & & & & & & & \\ \hline
-\dref{NL}        & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}      & X& & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil} & & & & X& & & & & & & & & \\ \hline
-\ddref{FluxPCM}  & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}    & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}     & & & & & & & & X& & & & & \\ \hline
-\iref{ewat}      & & & & & X& X& X& & & & X& & \\ \hline
-\iref{epcm}      & & & & & X& & X& & X& X& & & X \\ \hline
-\iref{I_HWAT}    & & X& & & & & & & & & & & \\ \hline
-\iref{I_HPCM}    & & X& X& & & & X& X& X& & X& & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
-\label{Table:trace}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-	& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM}& \ref{sec_DataConstraints}& \rref{R_RawInputs}& \rref{R_MassInputs} \\
-\hline
-\iref{ewat}            & & X& & & & X& X \\ \hline
-\iref{epcm}            & X& & & X& & X& X \\ \hline
-\iref{I_HWAT}          & & & & & & X& X \\ \hline
-\iref{I_HPCM}          & & X& & & & X& X \\ \hline
-\rref{R_RawInputs}     & & & & & & & \\ \hline
-\rref{R_MassInputs}    & & & & & & X& \\ \hline
-\rref{R_CheckInputs}   & & & & & X& & \\ \hline
-\rref{R_OutputInputs}  & X& X& & & & X& X \\ \hline
-\rref{R_TempWater}     & X& & & & & & \\ \hline 
-\rref{R_TempPCM}       & & X& & & & & \\ \hline
-\rref{R_EnergyWater}   & & & X& & & & \\ \hline
-\rref{R_EnergyPCM}     & & & & X& & & \\ \hline
-\rref{R_VerifyOutput}  & & & X& X& & & \\ \hline
-\rref{R_timeMeltBegin} & & X& & & & & \\ \hline
-\rref{R_timeMeltEnd}   & & X& & & & & \\ 
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
-\label{Table:R_trace}
-\end{table}
-
-The purpose of the traceability graphs is also to provide easy references on
-what has to be additionally modified if a certain component is changed.  The
-arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
-component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=\textwidth]{ATrace.png}
-% 		}
-% 		\caption{\label{Fig_ATrace} Traceability Matrix Showing the Connections Between Items of Different Sections}
-% 	\end{center}
-% \end{figure}
+\begin{enumerate}[label=FR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The system must accept Python source code files.}\\[2mm]
+    {\bf Rationale:} The system needs to process Python code as its primary input to refactor and improve energy efficiency.\\
+    {\bf Fit Criterion:} The system successfully processes valid Python files without errors and provides feedback for invalid files.\\
+    {\bf Priority:} High
+    \item \emph{The system must identify specific code smells that can be targeted for energy saving.}\\[2mm]
+    {\bf Rationale:} Energy inefficiencies are often related to well-known code smells, so identifying them is the first step in improving efficiency.\\
+    {\bf Fit Criterion:} The tool should detect and report at least 80\% of the following code smells: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).\\
+    {\bf Priority:} High
+    \item \emph{The system shall maintain the original functionality of the Python code after refactoring.}\\[2mm]
+    {\bf Rationale:} Ensuring that the refactored code preserves the original behaviour is critical to avoid regressions or unexpected issues in the software.\\
+    {\bf Fit Criterion:} The system runs the original test suite against the refactored code and passes 100\% of the tests.\\
+    {\bf Priority:} High
+    \item \emph{The system must allow users to input their original test suite as a required argument.}\\[2mm]
+    {\bf Rationale:} Verifying that the refactored code preserves functionality requires the use of the original test suite.\\
+    {\bf Fit Criterion:} Users can specify a path to their test suite that the tool recognizes and utilizes for testing the refactored code.\\
+    {\bf Priority:} High
+    \item \emph{The system must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.}\\[2mm]
+    {\bf Rationale:} For developers to optimize their code, the tool must provide appropriate refactoring suggestions based on detected code smells.\\
+    {\bf Fit Criterion:} The suggested refactored code demonstrates a measurable improvement in energy consumption as measured in joules.\\
+    {\bf Priority:} High
+    \item \emph{The system must produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\[2mm]
+    {\bf Rationale:} Refactored code must remain functional and error-free to ensure maintainability and usability.\\
+    {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} High
+    \item \emph{The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.}\\[2mm]
+    {\bf Rationale:} There may be multiple ways to refactor code, but the most energy-efficient one should be chosen.\\
+    {\bf Fit Criterion:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool must be compatible with various Python versions and common libraries.}\\[2mm]
+    {\bf Rationale:} The tool should be flexible enough to be used across different Python environments.\\
+    {\bf Fit Criterion:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.}\\[2mm]
+    {\bf Rationale:} Developers need clear reports to understand the impact of the refactorings and to track changes effectively.\\
+    {\bf Fit Criterion:} Reports are clear, well-structured, and provide actionable insights, allowing users to easily understand the results.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool must provide comprehensive documentation and help resources.}\\[2mm]
+    {\bf Rationale:} Detailed documentation is necessary to help users install, understand, and use the tool effectively.\\
+    {\bf Fit Criterion:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.\\
+    {\bf Priority:} Medium
+    \item \emph{The system shall provide developers with refactoring suggestions within an IDE before committing code, allowing them to review and approve energy-efficient changes.}\\[2mm]
+    {\bf Rationale:} Giving developers control over which refactorings are applied ensures that they can maintain the balance between energy efficiency and their coding style or project requirements.\\
+    {\bf Fit Criterion:} The IDE plugin must display at least two refactoring options for inefficient code patterns, allowing developers to either apply or reject them before committing the changes.\\
+    {\bf Priority:} Medium
+    \item \emph{The system shall integrate with GitHub and provide an automated refactoring process that is triggered when code is pushed to a repository.}\\[2mm]
+    {\bf Rationale:} Automated refactoring integrated into CI/CD pipelines ensures that energy-efficient code is maintained across all stages of development, reducing the burden on developers.\\
+    {\bf Fit Criterion:} The refactoring process must be triggered automatically on GitHub commits, with at least 95\% of refactorings improving energy efficiency without introducing any functional errors.\\
+    {\bf Priority:} Medium
+    \item \emph{The system shall allow developers to undo any refactorings applied, restoring the code to its previous state.}\\[2mm]
+    {\bf Rationale:} Developers may want to revert changes if they do not align with specific project goals or introduce performance bottlenecks unrelated to energy consumption.\\
+    {\bf Fit Criterion:} The system must provide an option to revert any refactoring applied within the last 5 commits, restoring both code and energy consumption metrics to their original state.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
 
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=0.7\textwidth]{RTrace.png}
-% 		}
-% 		\caption{\label{Fig_RTrace} Traceability Matrix Showing the Connections Between Requirements, Instance Models, and Data Constraints}
-% 	\end{center}
-% \end{figure}
+\section{Look and Feel Requirements}
+\subsection{Appearance Requirements}
+\begin{enumerate}[label=LFR-AP \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The IDE plugin refactoring interface shall present the original and refactored code side by side, allowing developers to compare and choose between them easily.}\\[2mm]
+    {\bf Rationale:} Providing a side-by-side view of the original and refactored code helps developers make informed decisions about applying changes.\\
+    {\bf Fit Criterion:} The interface must display the original code on one side and the refactored code on the other, with clear options for developers to accept or reject the refactorings without confusion.\\
+    {\bf Priority:} High
+    \item \emph{The IDE plugin shall adapt to the user’s VS Code theme, supporting both light and dark modes.}\\[2mm]
+    {\bf Rationale:} Ensuring that the plugin matches the user's theme preference enhances user experience and visual comfort.\\
+    {\bf Fit Criterion:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), requiring no manual changes.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool shall highlight refactoring suggestions using visual indicators based on the impact of energy savings.}\\[2mm]
+    {\bf Rationale:} Visual indicators make it easier for developers to quickly identify and prioritize refactoring opportunities based on their energy-saving potential.\\
+    {\bf Fit Criterion:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), allowing developers to identify refactoring opportunities quickly.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool shall have a minimalist design, focusing only on essential elements to reduce clutter.}\\[2mm]
+    {\bf Rationale:} A clean and simple interface allows developers to focus on the code and refactoring suggestions without distractions, improving usability.\\
+    {\bf Fit Criterion:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, omitting unnecessary visual elements or distractions.\\
+    {\bf Priority:} Low
+    \item \emph{The GitHub Action shall highlight significant energy savings with visual alerts in pull requests (PRs).}\\[2mm]
+    {\bf Rationale:} Visual alerts in PRs inform developers of the energy savings achieved, encouraging the adoption of energy-efficient practices.\\
+    {\bf Fit Criterion:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).\\
+    {\bf Priority:} Low
+\end{enumerate}
+\subsection{Style Requirements}
+\begin{enumerate}[label=LFR-ST \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall convey a professional and authoritative appearance to instill confidence in developers.}\\[2mm]
+    {\bf Rationale:} A professional appearance helps build trust and encourages developers to use the tool confidently for energy-efficient refactoring.\\
+    {\bf Fit Criterion:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.\\
+    {\bf Priority:} High
+    \item \emph{The IDE plugin interface shall promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.}\\[2mm]
+    {\bf Rationale:} A calm environment reduces distractions and improves productivity, allowing developers to focus on their work effectively.\\
+    {\bf Fit Criterion:} Developers should report feeling less distracted and more productive while using the tool, with 70\% indicating a positive change in their coding environment.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool design shall be visually appealing and modern, aligning with contemporary software development tools.}\\[2mm]
+    {\bf Rationale:} A modern design improves user experience and satisfaction, making the tool more enjoyable to use.\\
+    {\bf Fit Criterion:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
-\section{Development Plan}
+\section{Usability and Humanity Requirements}
+\subsection{Ease of Use Requirements}
+\begin{enumerate}[label=UHR-EOU \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall have an intuitive user interface that simplifies navigation and functionality.}\\[2mm]
+    {\bf Rationale:} A simple, intuitive interface allows users to access the tool's key features quickly, improving usability and reducing the learning curve.\\
+    {\bf Fit Criterion:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall provide clear and concise prompts for user input.}\\[2mm]
+    {\bf Rationale:} Clear instructions help users understand what inputs are required, minimizing confusion and errors during the process.\\
+    {\bf Fit Criterion:} At least 90\% of test users should report that prompts are straightforward and guide them effectively through the process.\\
+    {\bf Priority:} High
+\end{enumerate}
 
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could should the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
+\subsection{Personalization and Internationalization Requirements}
+\begin{enumerate}[label=UHR-PSI \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall allow users to customize settings to match their preferences (e.g., refactoring styles, detection sensitivity).}\\[2mm]
+    {\bf Rationale:} Allowing customization improves the user experience by letting developers tailor the tool to their specific needs and workflows.\\
+    {\bf Fit Criterion:} Users should be able to save and load custom configurations easily.\\
+    {\bf Priority:} Medium
+    \item \emph{The user guide shall be available in French and English.}\\[2mm]
+    {\bf Rationale:} Providing multilingual support ensures that non-English-speaking users can effectively use the tool.\\
+    {\bf Fit Criterion:} French and English installation and use instructions must be available.\\
+    {\bf Priority:} Low
+\end{enumerate}
 
-\section{Values of Auxiliary Constants}
+\subsection{Learning Requirements}
+\begin{enumerate}[label=UHR-LRN \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall provide context-sensitive help that offers assistance based on the current user actions.}\\[2mm]
+    {\bf Rationale:} Context-sensitive help ensures that users can receive timely and relevant assistance, reducing confusion and improving usability.\\
+    {\bf Fit Criterion:} Help resources should be accessible within 1-3 clicks.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall have an available YouTube video demonstrating installation.}\\[2mm]
+    {\bf Rationale:} Video tutorials provide visual learning resources that can make the installation process more accessible to users.\\
+    {\bf Fit Criterion:} A YouTube video demonstrating installation should be present and easily accessible.\\
+    {\bf Priority:} Low
+\end{enumerate}
 
-\plt{Show the values of the symbolic parameters introduced in the report.}
+\subsection{Understandability and Politeness Requirements}
+\begin{enumerate}[label=UHR-UPL \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall communicate errors and issues politely and constructively.}\\[2mm]
+    {\bf Rationale:} Polite and constructive error messages reduce frustration and enhance the user experience, making the tool more approachable.\\
+    {\bf Fit Criterion:} User feedback should reflect that at least 80\% of users perceive error messages as helpful and courteous, rather than frustrating or vague.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
-\plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.}
+\subsection{Accessibility Requirements}
+\begin{enumerate}[label=UHR-ACS \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall provide high-contrast colour themes to improve visibility for users with visual impairments.}\\[2mm]
+    {\bf Rationale:} High-contrast themes ensure that visually impaired users can easily navigate and use the tool, enhancing accessibility.\\
+    {\bf Fit Criterion:} Users should have access to at least 1 high contrast theme.\\
+    {\bf Priority:} Low
+    \item \emph{The tool shall offer audio cues for important actions and alerts to assist users with use and navigation.}\\[2mm]
+    {\bf Rationale:} Audio cues help users with visual impairments or cognitive difficulties to stay informed about important events or actions.\\
+    {\bf Fit Criterion:} At least 70\% of users should report that the audio cues enhance their understanding of important notifications or actions.\\
+    {\bf Priority:} Low
+\end{enumerate}
 
-\plt{The value of FRACTION, for the Maintainability NFR would be given here.}
+\section{Performance Requirements}
+\subsection{Speed and Latency Requirements}
+\begin{enumerate}[label=PR-SL \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall analyze and detect code smells in the input code within a reasonable time frame.}\\[2mm]
+    {\bf Rationale:} Fast analysis ensures that developers do not experience significant delays while reviewing code.\\
+    {\bf Fit Criterion:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.\\
+    {\bf Priority:} High
+    \item \emph{The refactoring process shall be executed efficiently without noticeable delays.}\\[2mm]
+    {\bf Rationale:} Fast refactoring ensures a smooth workflow for developers, preventing frustration during development.\\
+    {\bf Fit Criterion:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).\\
+    {\bf Priority:} Medium
+\end{enumerate}
+\subsection{Safety-Critical Requirements}
+\begin{enumerate}[label=PR-SCR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.}\\[2mm]
+    {\bf Rationale:} Preventing runtime errors ensures system stability and reliability after refactoring.\\
+    {\bf Fit Criterion:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Precision or Accuracy Requirements}
+\begin{enumerate}[label=PR-PAR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall maintain the functionality of the original provided code in all its recommended refactorings.}\\[2mm]
+    {\bf Rationale:} Ensuring functionality preservation is critical for refactorings to be reliable.\\
+    {\bf Fit Criterion:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall reliably identify code smells with minimal false positives and negatives.}\\[2mm]
+    {\bf Rationale:} High detection accuracy ensures that developers are not misled by incorrect or missed suggestions.\\
+    {\bf Fit Criterion:} Detection accuracy should exceed 90\% when validated against a set of known cases.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool shall produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\[2mm]
+    {\bf Rationale:} Ensuring that the tool produces valid output is essential for maintaining code quality.\\
+    {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
-\newpage
+\subsection{Robustness or Fault-Tolerance Requirements}
+\begin{enumerate}[label=PR-RFT \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall gracefully handle unexpected inputs, such as invalid code or non-Python files.}\\[2mm]
+    {\bf Rationale:} Ensuring stability with error handling prevents tool crashes and improves user experience.\\
+    {\bf Fit Criterion:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall have fallback options if a specific refactoring attempt fails.}\\[2mm]
+    {\bf Rationale:} Providing fallback options ensures the tool remains functional even when a refactoring fails, reducing disruptions in development.\\
+    {\bf Fit Criterion:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
-\bibliographystyle {plainnat}
-\bibliography {../../refs/References}
+\subsection{Capacity Requirements}
+\begin{enumerate}[label=PR-CR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall efficiently manage large codebases.}\\[2mm]
+    {\bf Rationale:} Efficient handling of large projects ensures that the tool remains usable for teams working with extensive codebases.\\
+    {\bf Fit Criterion:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.\\
+    {\bf Priority:} High
+\end{enumerate}
 
-\newpage
+\subsection{Scalability or Extensibility Requirements}
+\begin{enumerate}[label=PR-SER \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall be designed to allow easy addition of new code smells and refactoring methods in future updates.}\\[2mm]
+    {\bf Rationale:} Extensibility ensures that the tool remains relevant and adaptable to future developments in coding standards and practices.\\
+    {\bf Fit Criterion:} New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
-\noindent \plt{The following is not part of the template, just some things to consider
-  when filing in the template.}
+\subsection{Longevity Requirements}
+\begin{enumerate}[label=PR-LR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall be maintainable and adaptable to future versions of Python and changing coding standards.}\\[2mm]
+    {\bf Rationale:} Ensuring the tool can be updated easily guarantees that it will remain useful and relevant over time.\\
+    {\bf Fit Criterion:} The codebase should be well-documented and modular, facilitating updates with minimal effort.\\
+    {\bf Priority:} Medium
+\end{enumerate}
 
-\noindent \plt{Grammar, flow and \LaTeX advice:
+\section{Operational and Environmental Requirements}
+
+The Operational and Environmental Requirements define the conditions under which the system must function effectively. These requirements ensure that the system performs reliably within specified operational boundaries, such as compatibility, deployment, and environmental constraints. Additionally, this section addresses the external environmental factors that could influence the system. Meeting these requirements is critical to ensure the tool’s proper operation and sustainability in various working environments.
+
+\subsection{Expected Physical Environment}
+
+\begin{enumerate}[label=OER-EP \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The product shall be used in temperatures ranging from \SI{10}{\celsius} - \SI{35}{\celsius}.}\\[2mm]
+    {\bf Rationale:} A computer's safe operating range is \SI{10}{\celsius} - \SI{35}{\celsius} ~\citep{PCTemp}. If the computer doesn't work then it is not possible to use the refactoring library. \\
+    {\bf Fit Criterion:} The computer turns on, and no temperature warning is issued. \\
+    {\bf Priority:} High
+  \item \emph{The product shall be used in proximity to a stable power supply.}\\
+  {\bf Rationale:} As a coding library, the product depends on the continuing operation of the computer system it is used on. Should the computer lose power, the refactoring library will see its processes halted. \\
+  {\bf Fit Criterion:} The computer is connected to a power outlet or the computer possesses charge on its battery. \\
+  {\bf Priority:} High
+\end{enumerate}
+
+\subsection{Wider Environment Requirements}
+\begin{enumerate}[label=OER-WE \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The system must align with widely used emissions standards (e.g., GRI 305, GHG, ISO 14064) ~\citep{GHG,ISO14064,GRI305}.}\\[2mm]
+    {\bf Rationale:} Providing metrics tailored to these standards, makes the library reporting tool more attractive to users part of companies looking to reduce their ecological footprint. \\
+    {\bf Fit Criterion:} The emissions tracked by the standards are present in the reported metrics. \\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\subsection{Requirements for Interfacing with Adjacent Systems}
+\begin{enumerate}[label=OER-IAS \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The refactoring library must provide integration capabilities with GitHub Actions.}\\[2mm]
+    {\bf Rationale:} This will allow the automation of the refactoring process within existing workflows to ensure that energy-efficient practices are consistently applied during continuous integration.\\
+    {\bf Fit Criterion:} The library is available to use via GitHub Actions when writing workflows.\\
+    {\bf Priority:} Low
+  \item \emph{The library should be compatible with the Visual Studio Code (VSCode) IDE.}\\[2mm]
+    {\bf Rationale:} Developers will be able to refactor code easily without leaving their working environment, therefore enhancing the accessibility and usability of the library.\\
+    {\bf Fit Criterion:} An extension is available for installation in VSCode marketplace.\\
+    {\bf Priority:} Medium
+  \item \emph{The library should support importing existing codebases and exporting refactored code and energy savings reports in standard formats (e.g., JSON, XML)}\\[2mm]
+    {\bf Rationale:} This ensures that users can easily integrate the library into their existing workflows without significant disruption.\\
+    {\bf Fit Criterion:} Developers are able to refactor existing codebases and view relevant metrics.\\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\subsection{Productization Requirements}
+\begin{enumerate}[label=OER-PR \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The library shall be package with PIP and made available to python users through the public package manager.}\\[2mm]
+    {\bf Rationale:} As a widely used package manager, PIP will be able to distribute the library to any users that wish to use it.\\
+    {\bf Fit Criterion:} Users are able to install the library using \texttt{pip install}. \\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\subsection{Release Requirements}
+\begin{enumerate}[label=OER-RL \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{All core functionalities specified in the requirements must be implemented and tested, including energy consumption measurement, automated refactoring, and reporting features.}\\[2mm]
+    {\bf Rationale:} This will ensure that the library delivers the promised capabilities to users.\\
+    {\bf Fit Criterion:} Follows the steps outlined in the Verification and Validation (V\&V) plan.  \\
+    {\bf Priority:} Medium
+  \item \emph{The library must be ready for release by March 17th, 2025.}\\[2mm]
+    {\bf Rationale:} The library must be ready for final demonstration as a requirement of the McMaster University SFRWENG 4G06 Capstone course.\\
+    {\bf Fit Criterion:} The project is ready for the final demonstration of the appointed date.\\
+    {\bf Priority:} Low
+\end{enumerate}
+
+\section{Maintainability and Support Requirements}
+The following are defined as maintainability requirements:
+\subsection{Maintenance Requirements}
+\begin{enumerate}[label=MS-MNT \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must allow new refactoring techniques to be added within one week of identification.}\\
+  {\bf Rationale:} Rapid integration of new techniques ensures the tool remains up-to-date with evolving best practices in energy-efficient coding.\\
+  {\bf Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.\\
+  {\bf Priority:} Medium
+
+  \item \emph{The tool must be maintainable by developers who are not the original creators.}\\
+  {\bf Rationale:} Ensuring that new developers can easily understand and modify the system reduces dependency on original developers and facilitates long-term maintenance.\\
+  {\bf Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.\\
+  {\bf Priority:} High
+
+  \item \emph{The tool must allow for easy rollback of updates in case of errors.}\\
+  {\bf Rationale:} Quick rollback capabilities minimize downtime and user disruption in case an update introduces issues.\\
+  {\bf Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.\\
+  {\bf Priority:} Medium
+
+  \item \emph{The tool must provide automated testing for all refactoring functions.}\\
+  {\bf Rationale:} Automated testing ensures that changes do not introduce new bugs, maintaining the reliability and stability of the tool.\\
+  {\bf Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.\\
+  {\bf Priority:} High
+
+  \item \emph{Each version of the library must maintain compatibility with the current releases of external libraries during its development phase.}\\
+  {\bf Rationale:} Keeping external libraries up-to-date ensures compatibility and leverages improvements or security patches provided by library maintainers.\\
+  {\bf Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.\\
+  {\bf Priority:} Medium
+
+\end{enumerate}
+
+The following are defined as maintainability requirements:
+\subsection{Supportability Requirements}
+\begin{enumerate}[label=MS-SP \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must offer bilingual support for help documentation.}\\
+  {\bf Rationale:} Bilingual support ensures that users from different regions can understand and use the tool effectively, increasing its accessibility.\\
+  {\bf Fit Criteria:} Help documentation is available in both major languages, English and French.\\
+  {\bf Priority:} Low
+\end{enumerate}
+
+\subsection{Adaptability Requirements}
+Not applicable in this project currently
+
+\section{Security Requirements}
+\subsection{Access Requirements}
+\begin{enumerate}[label=SR-AR \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{Users must authenticate before accessing any feature of the refactoring tool, especially the refactored code or reports.}\\[2mm]
+    {\bf Rationale:} User’s code and refactoring results are private data that must only be accessed by legitimate, authenticated users. \\
+    {\bf Fit Criterion:} The user can submit code and view refactoring results once authenticated using their company’s credentials.\\
+    {\bf Priority:} High
+    \item \emph{Only the refactoring tool can communicate with the energy consumption tool and the reinforcement learning model.}\\
+    {\bf Rationale:} Reinforcement learning model and energy consumption tools are internal, abstracted services that are not directly needed by the user.\\
+    {\bf Fit Criterion:} The refactoring tool does not include any exposed API endpoints to the energy consumption tool and reinforcement learning model.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Integrity Requirements}
+\begin{enumerate}[label=SR-IR \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The tool must prevent unauthorized, external changes to the refactored code and energy reports.}\\[2mm]
+    {\bf Rationale:} The system must maintain code consistency and correctness vis-à-vis the original input and energy improvement data. Any corruption of the code and/or performance reports could undermine trust in the tool.\\
+    {\bf Fit Criterion:} The system should be fully secure against any external attempts to modify the data in each implemented layer.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Privacy Requirements}
+\begin{enumerate}[label=SR-PR \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The user must be notified of data collection, usage, storage and processing practices related to their code. }\\[2mm]
+    {\bf Rationale:} The tool must safeguard user privacy rights.\\
+    {\bf Fit Criterion:} The system notifies and obtains explicit consent from users in compliance with PIPIEDA before collecting their code.\\
+    {\bf Priority:} High
+    \item \emph{Any data related to user submissions, energy reports and refactored results must be treated as confidential and handled according to Personal Information Protection and Electronic Documents Act (PIPEDA).}\\
+    {\bf Rationale:} The tool must ensure compliance with PIPEDA to avoid any legal action and gain user trust.\\
+    {\bf Fit Criterion:} All submitted code, energy reports and refactored code are encrypted when being transmitted or stored. The system includes an option to allow users to request modification of their personal data as per PIPEDA specifications.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Audit Requirements}
+\begin{enumerate}[label=SR-AUR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool should record which users submitted the code and/or accessed the refactored code and energy reports.}\\[2mm]
+    {\bf Rationale:} The system must ensure accountability and traceability of the refactoring process to resolve any future conflicts.\\
+    {\bf Fit Criterion:} The system maintains tamper-proof logs of the following events: login, code submission and access to refactoring results.\\[2mm]
+    {\bf Priority:} Medium
+    \item \emph{The system should maintain an audit log of all refactoring processes including pattern analysis, energy analysis and report generation. }\\
+    {\bf Rationale:} The tool must include a trail of refactoring events for any future security disputes.\\
+    {\bf Fit Criterion:}  The system maintains tamper-proof logs of refactoring changes made to the original code.\\
+    {\bf Priority:} Medium
+\end{enumerate}
+\subsection{Immunity Requirements}
+\begin{enumerate}[label=SR-AUR \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The tool must be protected from any malware, viruses and unauthorized programs that could alter the refactoring process. }\\[2mm]
+    {\bf Rationale:} Users need a secure and reliable system that is resistant to external attacks.\\
+    {\bf Fit Criterion:} The system includes a regularly updated security component that is tested against new threats.\\
+    {\bf Priority:} High
+\end{enumerate}
+
+\section{Cultural Requirements}
+The cultural requirements of this project include the following:
+\subsection{Cultural Requirements}
+\begin{enumerate}[label=CULT \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The tool must avoid using colours or symbols that could be culturally sensitive or offensive.}\\
+  {\bf Rationale:} Ensuring cultural sensitivity in design helps avoid alienating or offending users from diverse backgrounds, which is critical for global acceptance and usability.\\
+  {\bf Fit Criteria:} Conduct a cultural review to ensure that all icons and colours used in the tool are neutral and universally acceptable.
+  {\bf Priority:} Low
+
+  \item \emph{The tool must support both metric and imperial measurement units.}\\
+  {\bf Rationale:} Users have different preferences and standards for measurement units. Supporting both metric and imperial units ensures accessibility and ease of use for a global audience.\\
+  {\bf Fit Criteria:} Users can toggle between metric and imperial units for any measurements related to energy consumption.
+  {\bf Priority:} Medium
+
+  \item \emph{The tool must not include content that could be considered culturally insensitive.}\\
+  {\bf Rationale:} Avoiding culturally insensitive content ensures that the tool is respectful and inclusive, fostering a positive user experience across different cultures.\\
+  {\bf Fit Criteria:} A cultural sensitivity review is conducted to ensure all content is appropriate for a global audience.
+  {\bf Priority:} Medium
+
+\end{enumerate}
+
+\section{Compliance Requirements}
+\subsection{Legal Requirements}
+\begin{enumerate}[label=CR-LR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The system must comply with Personal Information Protection and Electronic Documents Act (PIPEDA)~\citep{PIPEDA2024} and Canada’s Anti-Spam Legislation (CASL)~\citep{CASL2024}}\\[2mm]
+    {\bf Rationale:} The product should not violate any Canadian laws, which could result in  financial penalties, delays in bringing the product to market or loss of user trust.\\
+    {\bf Fit Criterion:} The system has obtained successful compliance reports for CASL, PIPEDA and third party IP rights.\\
+    {\bf Priority:} High
+\end{enumerate}
+\subsection{Standards Compliance Requirements}
+\begin{enumerate}[label=CR-SCR \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The system must adhere to applicable industry standards for team work and software development.}\\[2mm]
+    {\bf Rationale:} Compliance with standards builds trust with stakeholders and improves the likelihood of the product’s acceptance in the market.\\
+    {\bf Fit Criterion:} The system has obtained ISO 9001 certification~\citep{ISO9001} for quality management as well as Compliance with SSADM (Structured Systems Analysis and Design Method)~\citep{SSADM2024} for software development processes.\\
+    {\bf Priority:} High
+\end{enumerate}
+
+\section{Open Issues}
+
+This section outlines unresolved questions and challenges that may impact the development, functionality, or integration of the system. These issues require further research, discussion, or testing to ensure successful project completion.\\
+
 \begin{itemize}
-\item For Mac users \texttt{*.DS\_Store} should be in \texttt{.gitignore}
-\item \LaTeX{} and formatting rules
-\begin{itemize}
-\item Variables are italic, everything else not, includes subscripts (link to
-  document)
-\begin{itemize}
-\item \href{https://physics.nist.gov/cuu/pdf/typefaces.pdf}{Conventions}
-\item Watch out for implied multiplication
+  \item Further research is needed to determine the optimal balance between energy efficiency and code readability. While refactoring may improve energy consumption metrics, it could inadvertently make the codebase less maintainable and more difficult to expand in the long term.
+  \item The same can be said when it comes to performance. More energy efficient code might actually end up being less efficient when it comes to time and space complexity.
 \end{itemize}
-\item Use BibTeX
-\item Use cross-referencing
-\end{itemize}
-\item Grammar and writing rules
-\begin{itemize}
-\item Acronyms expanded on first usage (not just in table of acronyms)
-\item ``In order to'' should be ``to''
-\end{itemize}
-\end{itemize}}
 
-\noindent \plt{Advice on using the template:
+\section{Off-the-Shelf Solutions}
+\subsection{Ready-Made Products}
+
 \begin{itemize}
-\item Difference between physical and software constraints
-\item Properties of a correct solution means \emph{additional} properties, not
-  a restating of the requirements (may be ``not applicable'' for your problem).
-  If you have a table of output constraints, then these are properties of a
-  correct solution.
-\item Assumptions have to be invoked somewhere
-\item ``Referenced by'' implies that there is an explicit reference
-\item Think of traceability matrix, list of assumption invocations and list of
-  reference by fields as automatically generatable
-\item If you say the format of the output (plot, table etc), then your
-  requirement could be more abstract
+  \item \textbf{Pylint:} A widely used static code analysis tool that detects various code smells in Python. It can be integrated into the refactoring tool to help identify inefficiencies in the code.
+  \item \textbf{Flake8:} Linter that combines checks for style guide enforcement and code quality. Flake8 can assist in maintaining code standards while the tool focuses on energy efficiency.
+  \item \textbf{PyJoule:} A tool for measuring the energy consumption of Python code. This product can provide essential data to evaluate the impact of refactorings on energy usage.
 \end{itemize}
-}
+
+\subsection{Reusable Components}
+\begin{itemize}
+  \item \textbf{Rope:} A library for Python that provides automated refactoring capabilities, helping streamline the process of improving code quality.
+\end{itemize}
+\subsection{Products That Can Be Copied}
+\begin{itemize}
+  \item \textbf{SonarQube:} An open-source platform designed for continuous inspection of code quality. It helps developers manage code quality and security by analyzing source code to identify potential issues. Its architecture and methods for detecting code smells could be adapted to focus specifically on energy efficiency. 
+\end{itemize}
+
+\section{New Problems}
+\subsection{Effects on the Current Environment}
+The introduction of the energy efficiency refactoring tool may lead to several changes in the current development environment. These effects include:
+\begin{enumerate}
+  \item The tool temporarily increases CPU and memory usage while running. The tool aims to optimize energy efficiency in code however it takes energy to run - in large codebases this could be significant energy and impact the performance of other applications running concurrently. 
+  \item The tool may have its own dependencies that now need to be included in the app or installed into the current system. Think Pysmells, Pyjoule etc.
+\end{enumerate}
+
+\subsection{Effects on the Installed Systems}
+\begin{enumerate}
+  \item Existing systems may need to be evaluated for compatibility with the new tool. Older versions of Python or other needed dependencies may not support the tool.
+  \item The refactoring process could lead to variations in the performance of existing applications
+  \item As the tool updates existing code, thorough testing will be needed to ensure everything still works correctly. This may require more effort from QA teams and additional time and resources to check the updated code.
+\end{enumerate}
+
+\subsection{Potential User Problems}
+\begin{enumerate}
+  \item Users may face difficulties in understanding how to effectively utilize the tool, particularly if they are not familiar with concepts like code smells and refactoring techniques. This learning curve may lead to initial frustration or reduced productivity.
+  \item Some users may be resistant to adopting new tools or processes, particularly if they perceive the existing workflows as sufficient. This resistance could hinder the tool's successful implementation and limit its overall effectiveness.
+  \item Users may misinterpret the output reports generated by the tool, such as energy savings or performance metrics. If users do not fully understand how to interpret these results, it could lead to incorrect conclusions about the tool's impact on their code.
+  \item There is a risk that users might become overly reliant on the tool for refactoring without fully understanding the underlying principles. This could result in poor coding practices if users do not engage in thoughtful analysis of the suggested changes.
+\end{enumerate}
+\subsection{Limitations in the Anticipated Implementation Environment That May
+Inhibit the New Product}
+\begin{enumerate}
+  \item \textbf{Limited Computational Resources:} Environments with restricted computational power may face challenges when running the tool, especially for large codebases. Limited resources could result in longer processing times or failures during analysis and refactoring.
+  \item \textbf{Lack of Test Coverage:} If existing codebases lack comprehensive test suites, validating the functionality of refactored code may become challenging. Without adequate tests, it will be difficult to ensure that the tool's changes do not introduce new issues.
+\end{enumerate}
+\subsection{Follow-Up Problems}
+\begin{enumerate}
+  \item \textbf{Ongoing Maintenance:} The tool will need regular updates to stay compatible with new programming languages or standards, adding to the workload.
+  \item \textbf{Performance Trade-offs:} Users may find that while some refactorings improve energy efficiency, they could negatively impact other performance metrics, such as execution speed.
+\end{enumerate}
+\section{Tasks}
+\subsection{Project Planning}
+\begin{itemize}
+ 
+  \item \textbf{Development Approach}
+  The team will use an agile development approach with the following high-level process:
+  \begin{enumerate}
+    \item Initial requirements gathering and product backlog creation
+    \item Sprint planning and execution
+    \item Regular testing and quality assurance
+    \item Stakeholder reviews and feedback
+    \item Iterative refinement
+    \item Release planning and deployment
+  \end{enumerate}
+  
+ \item \textbf{Key Tasks}
+  \begin{itemize}
+    \item Form cross-functional development team (already completed) 
+    \item Create initial product backlog and prioritize features
+    \item Set up development environments and tools
+    \item Establish CI/CD pipeline using GitHub Actions
+    \item Develop core functionality:
+      \begin{itemize}
+        \item Determine code smells to address for energy-saving
+        \item Implement code smell detection
+        \item Develop appropriate refactorings for detected smells
+        \item Measure energy consumption before and after refactoring
+        \item Ensure original code functionality is preserved
+      \end{itemize}
+    \item Build out additional features iteratively
+    \item Conduct regular testing (unit, integration, user acceptance)
+    \item Refine based on stakeholder feedback
+    \item Present final solution to stakeholders
+
+  \end{itemize}
+  \item \textbf{Timeline Estimate}
+    \begin{itemize}
+        \item Requirements Document (Revision 0): October 9th, 2024
+        \item Hazard Analysis (Revision 0): October 23rd, 2024
+        \item Verification \& Validation Plan (Revision 0): November 1st, 2024
+        \item Proof of Concept: November 11th-22nd, 2024
+        \item Design Document (Revision 0): January 15th, 2025
+        \item Project Demo (Revision 0): February 3rd-14th, 2025
+        \item Final Demonstration: March 17th-30th, 2025
+        \item Final Documentation: April 2nd, 2025
+        \item Capstone EXPO: TBD
+    \end{itemize}
+    
+  \item \textbf{Resource Estimates}
+  The team consists of 5 members who will all function as developers, sharing responsibilities for creating issues, coding, testing, and documentation.
+
+  \item \textbf{Key Consideration}
+    \begin{itemize}
+        \item Data migration may be necessary for existing systems
+        \item A phased development approach will help minimize major setbacks
+        \item Regular stakeholder involvement will ensure alignment with business needs
+    \end{itemize}
+
+  \item \textbf{Documentation Process}
+    \begin{itemize}
+        \item Pull changes from \texttt{docs} (epic documentation branch)
+        \item Create a working branch with format [main contributor name]/[descriptive topic]
+        \item Commit changes with descriptive names
+        \item Create unit tests for changes
+        \item Create a pull request to merge changes into an epic branch
+        \item Wait for all tests run with GitHub Actions to pass
+        \item Wait for at least two approvals from teammates
+        \item Merge changes into the target branch
+    \end{itemize}
+  
+\end{itemize}
+
+By following this agile approach and development process, the team aims to deliver a high-quality product iteratively while maintaining flexibility to adapt to changing requirements
+
+\subsection{Planning of the Development Phases}
+
+The planning of the development phases is based on the deliverables submissions as follows:
+
+\begin{enumerate}
+
+    \item \textbf{Requirements Phase}
+    \begin{itemize}
+        \item Deliverable: Requirements Document (Revision 0)
+        \item Due Date: October 9th, 2024
+    \end{itemize}
+    
+    \item \textbf{Risk Assessment Phase}
+    \begin{itemize}
+        \item Deliverable: Hazard Analysis (Revision 0)
+        \item Due Date: October 23rd, 2024
+    \end{itemize}
+    
+    \item \textbf{Verification and Validation Planning}
+    \begin{itemize}
+        \item Deliverable: Verification \& Validation Plan (Revision 0)
+        \item Due Date: November 1st, 2024
+    \end{itemize}
+    
+    \item \textbf{Proof of Concept Implementation}
+    \begin{itemize}
+        \item Period: November 11th-22nd, 2024
+    \end{itemize}
+    
+    \item \textbf{Design Phase}
+    \begin{itemize}
+        \item Deliverable: Design Document (Revision 0)
+        \item Due Date: January 15th, 2025
+    \end{itemize}
+    
+    \item \textbf{Initial Implementation and Demo}
+    \begin{itemize}
+        \item Deliverable: Project Demo (Revision 0)
+        \item Period: February 3rd-14th, 2025
+    \end{itemize}
+    
+    \item \textbf{Final Implementation and Testing}
+    \begin{itemize}
+        \item Deliverable: Final Demonstration
+        \item Period: March 17th-30th, 2025
+    \end{itemize}
+    
+    \item \textbf{Project Closure}
+    \begin{itemize}
+        \item Deliverable: Final Documentation
+        \item Due Date: April 2nd, 2025
+    \end{itemize}
+    
+    \item \textbf{Project Presentation}
+    \begin{itemize}
+        \item Event: Capstone EXPO
+        \item Date: TBD
+    \end{itemize}
+\end{enumerate}
+
+\section{Migration to the New Product}
+\subsection{Requirements for Migration to the New Product}
+The migration to the new tool will involve minimal disruption to existing workflows, as the product is designed to integrate seamlessly with GitHub Actions and Visual Studio Code. Developers will be able to continue using their current workflows, with the addition of the refactoring tool as a library that can be installed directly via Python's package manager (pip), an IDE plugin for an enhanced development experience, and a GitHub Action for automated refactoring in their CI/CD pipelines. The minimal installation and integration requirements ensure ease of adoption for developers without needing to overhaul existing infrastructure or processes.
+\begin{itemize}
+    \item \textbf{Installation Phase:} 
+    Developers can install the refactoring library directly using pip:
+    \verb|pip install ecooptimizer|
+    The IDE plugin can be installed by users through the Visual Studio Code marketplace. The GitHub Action can be integrated by adding the appropriate YAML configuration to the repository's workflow files.
+    \item \textbf{Parallel Running:} 
+    There is no need for a phased implementation or parallel running of old and new systems. The tool can be directly integrated without affecting existing code or infrastructure.
+    \item \textbf{Manual Backups:} 
+    Since the tool does not alter data but rather provides refactoring suggestions, no manual backups are required before installation.
+    \item \textbf{Phased Rollout:} 
+    If required, developers can start using the refactoring library first, followed by the IDE plugin, and then integrate the GitHub Action to automate refactoring in their CI/CD workflows.
+\end{itemize}
+\subsection{Data That Has to be Modified or Translated for the New System}
+Not Applicable
+
+\section{Costs}
+The total cost of developing this project is primarily based on the effort involved by the development team, given that the tools and platforms used (GitHub, open-source libraries) are free. The project must be completed within the academic year (MVP ready by February 2025), which warrants smart planning and efficient resource allocation.
+
+\subsection{Metrics for Estimation}
+To estimate the total cost in terms of time and effort, the following key metrics have been considered:
+\begin{itemize}
+    \item Number of input/output flows for the system.
+    \item Number of business events.
+    \item Number of product use cases.
+    \item Number of functional and non-functional requirements.
+    \item Number of constraint requirements.
+\end{itemize}
+
+\subsection{Estimation Approach}
+Each deliverable has been assessed to estimate the time it will take to implement based on the development environment. Early cost estimates are based on general knowledge of the system and refined as the team gradually gets a better understanding of the scope.
+
+\subsection{Cost Breakdown}
+\begin{itemize}
+    \item \textbf{Development Effort:} Based on the team size and project timeline, following time allocation is estimated:
+        \begin{itemize}
+            \item Initial Research \& Setup: 50 hours per team member.
+            \item Core development (e.g., refactoring tool, plugin): 300 hours per team member.
+            \item Testing and debugging: 80 hours per team member.
+            \item Documentation \& finalization: 100 hours per team member.
+            \item \textbf{Total estimated effort:} 530 hours per team member.
+        \end{itemize}
+
+    \item \textbf{Tools and Software:}
+    \begin{itemize}
+        \item GitHub (for CI/CD): Free account, with no cost expected.
+        \item Open-source libraries (PySmells, PyJoules): No associated costs.
+    \end{itemize}
+
+    \item \textbf{Testing Environment:}
+    \begin{itemize}
+        \item The testing of the refactoring tool and energy consumption measurements is planned to be carried out using free tools on open source projects, with no additional cost expected.
+    \end{itemize}
+
+\end{itemize}
+
+\subsection{Estimated Cost}
+The above discussion indicates that the total effort will be approximately 2650 team hours spread across the project phases. These estimates could be refined using more detailed information as the project progresses.
+\section{User Documentation and Training}
+\subsection{User Documentation Requirements}
+\begin{enumerate}
+  \item \textbf{User Manual}
+  \begin{itemize}
+      \item \textbf{Purpose:} Provide comprehensive guidance on how to use the refactoring library
+      \item \textbf{Target Audience:} Software developers integrating the library into their projects
+      \item \textbf{Content:} Installation instructions, API reference, usage examples, and best practices
+  \end{itemize}
+
+  \item \textbf{Technical Specification}
+  \begin{itemize}
+      \item \textbf{Purpose:} Detail the library's architecture, algorithms, and integration points
+      \item \textbf{Target Audience:} Technical leads and architects evaluating the library
+      \item \textbf{Content:} System design, performance characteristics, and technical limitations
+  \end{itemize}
+
+  \item \textbf{Quick Start Guide}
+  \begin{itemize}
+      \item \textbf{Purpose:} Enable rapid adoption and basic usage of the library
+      \item \textbf{Target Audience:} New users looking to quickly implement the library
+      \item \textbf{Content:} Concise setup instructions and simple usage examples
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Training Requirements}
+Not Applicable.
+
+\section{Waiting Room}
+
+This section lists potential features and enhancements that are not critical for the initial release of the system but may be considered for future updates. These ideas represent additional functionalities that could improve the tool’s performance, user experience, or integration with other systems.
+
+\begin{enumerate}[label=WTRM \arabic*., wide=0pt, leftmargin=*]
+	\item \emph{The IDE plugin must provide interactive tips and progress indicators to guide users during the refactoring process.}\\[2mm]
+    {\bf Rationale:} This helps prevent user confusion during the refactoring process and enhances the user experience by providing clear, real-time feedback.\\
+    {\bf Fit Criterion:} Tips and progress indicators display automatically when users initiate a refactoring action in the VSCode interface.\\
+    {\bf Priority:} Medium
+  \item \emph{The tool must provide automated error reporting with user consent.}\\[2mm]
+    {\bf Rationale:} Automated error reporting helps developers quickly identify and address issues, improving the tool's reliability and reducing downtime with an option to include additional comments for context.\\
+    {\bf Fit Criterion:} Users are prompted to send error reports when an issue occurs, \\
+    {\bf Priority:} Medium
+  \item \emph{The tool must allow users to define custom refactoring rules or preferences within the plugin.}\\[2mm]
+    {\bf Rationale:} This would allow developers more flexibility and control, enabling them to apply refactorings that best suit their projects while maintaining energy efficiency.\\
+    {\bf Fit Criterion:} Users can create a configuration file that describes their refactoring preferences.\\
+    {\bf Priority:} High
+  \item \emph{The tool should provide a dashboard that offers deeper insights into refactoring decisions, showing side-by-side comparisons of energy consumption before and after refactoring, along with performance metrics.}\\[2mm]
+    {\bf Rationale:} This would help users better understand the impact of refactoring on both energy consumption and performance.\\
+    {\bf Fit Criterion:} Users are able to access energy metrics for all their projects on a centralized platform.\\
+    {\bf Priority:} High
+  \item \emph{The tool show provide a plugin that integrates with multiple popular IDEs and syncs information across them through a centralized database.}\\[2mm]
+    {\bf Rationale:} Supporting multiple IDEs allows developers to use the tool within their preferred coding environments, enhancing user experience and adoption.\\
+    {\bf Fit Criterion:} Integration guides are provided for each supported IDE, with successful installation and functionality confirmed through user testing.\\
+    {\bf Priority:} Low
+  \item \emph{The refactoring library must be able to provide energy efficient refactorings for a wide variety of program languages (e.g., Java, C/C++, C\#, JavaScript, TypeScript, Go, Rust, etc.)}\\[2mm]
+    {\bf Rationale:} Users around the world code projects in multitudes of languages depending on the context of their work. Being able to refactor in most popular languages would allow for the widespread usage of the tool.\\
+    {\bf Fit Criterion:} The tool accepts and tailors code from the detected/specified language.\\
+    {\bf Priority:} Low
+  \item \emph{The reinforcement learning model for the tool should accept human feedback in the reinforcement learning process.}\\[2mm]
+    {\bf Rationale:} This will allow users to guide the system's refactoring decisions based on developer expertise and preferences. Moreover, it will balance automated refactoring with human oversight to ensure that complex refactoring decisions align with the project's goals and constraints.\\
+    {\bf Fit Criterion:} The language model accepts human feedback and incorporates it into its future decisions.\\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\section{Ideas for Solution}
+In this section, we capture various ideas for implementing the project requirements. These ideas provide technical approaches and methods for achieving the energy-efficient refactoring of Python code through the refactoring tool, IDE integration, and CI/CD automation. By capturing these ideas now, we ensure that potential technical approaches are not lost and can be referred to during the design and development phase.
+\begin{itemize}
+    \item \textbf{Refactoring Library Implementation via AST Parsing:} 
+    Use Python’s built-in \texttt{ast} (Abstract Syntax Tree) module to analyze code structure. The refactoring library can traverse the AST to detect inefficiencies and apply refactorings without modifying code functionality.
+    \item \textbf{IDE Plugin for Refactoring – Leveraging VS Code API:} 
+    Build an extension for Visual Studio Code that hooks into the editor’s event system to provide real-time refactoring suggestions.
+    \item \textbf{Integration with Existing Tools via Pre-Commit Hooks:} 
+    Integrate the refactoring tool with popular tools like PyLint or Black by setting up pre-commit hooks to run the refactoring library before committing.
+    \item \textbf{Energy Usage Dashboard Using JavaScript and Flask:} 
+    Build a simple dashboard that displays energy consumption metrics for code refactorings over time.
+\end{itemize}
+
+
 
 \newpage{}
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741}
+\begin{enumerate}[wide=0pt, leftmargin=*]
+  \item \textit{What knowledge and skills will the team collectively need to acquire to successfully complete this capstone project?}
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  
+    \begin{itemize}
+      \item Learn how reinforcement learning works as well as how to incorporate it into our project.
+      \item Understanding of Python's performance characteristics and common code smells
+      \item Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.
+      \item Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.
+      \item Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.
+    \end{itemize}
 
-\input{../Reflection.tex}
+  \item \textit{(\textbf{team}) For each of the knowledge areas and skills identified in the previous question, what are at least two approaches to acquiring the knowledge or mastering the skill?}
 
-\begin{enumerate}
-  \item What went well while writing this deliverable? 
-  \item What pain points did you experience during this deliverable, and how did
-  you resolve them?
-  \item How many of your requirements were inspired by speaking to your
-  client(s) or their proxies (e.g. your peers, stakeholders, potential users)?
-  \item Which of the courses you have taken, or are currently taking, will help
-  your team to be successful with your capstone project.
-  \item What knowledge and skills will the team collectively need to acquire to
-  successfully complete this capstone project?  Examples of possible knowledge
-  to acquire include domain specific knowledge from the domain of your
-  application, or software engineering knowledge, mechatronics knowledge or
-  computer science knowledge.  Skills may be related to technology, or writing,
-  or presentation, or team management, etc.  You should look to identify at
-  least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
-  question, what are at least two approaches to acquiring the knowledge or
-  mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
+    \begin{itemize}
+      \item \textit{Learn how reinforcement learning works as well as how to incorporate it into our project.}
+      \begin{itemize}
+        \item Watch online courses on reinforcement learning.
+        \item Read articles/books teaching reinforcement learning.
+        \item Look through open source python projects that use reinforcement learning tools such as PyTorch or TensorFlow.
+        \item Read through the documentation for reinforcement learning tools.
+      \end{itemize}
+      
+      \item \textit{Understanding of Python's performance characteristics and common code smells.}
+      \begin{itemize}
+        \item Enrol in courses like Effective Python or Python Performance Optimization on platforms like Coursera, edX, or Udemy.
+        \item Work on real-world projects or contribute to open-source Python projects. Regular code reviews with a focus on performance 
+        will help identify common code smells and inefficiencies.
+      \end{itemize}
+      
+      \item \textit{Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.}
+      \begin{itemize}
+        \item Set up a personal or team-based project that uses rope for refactoring and integrates linters (Pylint or Flake8). Experimenting with these tools in a real project will provide direct experience with their workflows and limitations
+        \item Read through documentation for the tools.
+        \item Follow comprehensive tutorials or attend workshops focused on Python tooling.
+      \end{itemize}
+      
+      \item \textit{Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.}
+      \begin{itemize}
+        \item Conduct research on energy-efficient algorithms and their application in Python refactoring. Experiment with PyJoule to analyze the energy impact of different code structures.
+        \item Work under the guidance of a mentor or collaborate with experts in energy-efficient computing.
+      \end{itemize}
+
+      \item \textit{Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.}
+      \begin{itemize}
+        \item Practise by building simple VS Code extensions using JavaScript or TypeScript using tutorials on YouTube.
+        \item Take online courses specifically tailored to JavaScript or TypeScript for extension development
+      \end{itemize}
+
+    \end{itemize}
+ 
+ 
 \end{enumerate}
 
+
+2. \textit{(\textbf{Individual}) Of the identified approaches, which will each team member pursue, and why did they make this choice?}
+
+\subsubsection*{Ayushi Amin Reflection}
+
+\medskip
+
+\begin{itemize}[label={}, wide=0pt, leftmargin=*]
+
+  \item \textit{Learn how reinforcement learning works as well as how to incorporate it into our project.}
+  
+  I would choose looking through open-source Python projects that use reinforcement learning tools like PyTorch or TensorFlow. It lets me see real-world applications, understand how others are using reinforcement learning, and gives me concrete examples to work with, which helps me learn more effectively through hands-on experience.
+      
+  \item \textit{Understanding of Python's performance characteristics and common code smells.}
+  
+  I would go with practical experience, contributing to open-source projects, where I can directly apply performance optimizations and get feedback through code reviews. Real-world application will help cement these concepts better.
+      
+  \item \textit{Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.} 
+  
+  I would go for hands-on implementation in my projects. I learn best by doing, so I would set up a project where I can integrate rope for refactoring and Pylint or Flake8 for linting. This would give me a chance to really see how these tools fit into the development process, and I could refine my setup as I work.
+      
+  \item \textit{Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.}
+  
+  I would prefer diving into the research around energy-efficient algorithms and then trying things out with PyJoule. I enjoy exploring new tools and methods, so experimenting with how different code changes affect energy use would be a good challenge for me.
+
+  \item \textit{Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.}
+
+  I like learning by creating, so I would build an extension right away. This way, I would get immediate experience with JavaScript and TypeScript while learning the VS Code extension framework.
+
+\end{itemize}
+
+ \subsubsection*{Mya Hussain Reflection}
+ To advance my skills for the capstone project, I plan on deepening my understanding of Python’s performance characteristics and common code smells while leveraging my existing knowledge of Python. I plan to read up on different potential code smells, detection methods and possible refactoring remedies and immediately apply these insights to help develop a proof of concept (POC) for our project. For mastering refactoring tools like Rope and integrating linters such as Pylint and Flake8, I will set up a local project environment to experiment with these tools specifically for our POC. Additionally, I’ll explore energy-efficient algorithms and use PyJoule to analyze how different refactoring strategies impact performance in our specific context. To enhance my proficiency in JavaScript or TypeScript for developing VS Code extensions, I plan on watching online tutorials and perhaps take an online Javascript/Typescript course as it has been a while since I have been familiar with the syntax. I will also watch tutorials on how to set up a VSCode extension as this project will be my first time doing it. I'm very excited to start coding up a POC and move on from the documentation stage. With every requirement we write the team feels more and more pressure to make sure our idea will work. It's hard to write so much about a product that doesn't yet exist without having the proof that it can exist. Or at least my mind is having a hard time writing so much about what currently is an empty repository. 
+
+\subsubsection*{Tanveer Brar Reflection}
+\medskip
+
+\begin{itemize}[label={}, wide=0pt, leftmargin=*]
+
+\item \textit{Learn how reinforcement learning works as well as how to incorporate it into our project.}
+
+I plan to watch online courses on reinforcement learning. I prefer learning visually whenever possible. Since this is a fairly new concept for me, I think online courses would be the best, providing a mix of lectures and self-assignments. A lot of courses also provide access to an online learning community which is perfect for a beginner like me.
+
+
+\item \textit{Understanding of Python's performance characteristics and common code smells.}
+
+For this, I will contribute to open source Python projects. Live projects are a good way to expose to practical coding challenges related to performance and code smells. It will also allow me to learn from more experience contributors and spot common code smells so that I can write scalable and efficient Python code.
+
+\item \textit{Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.} 
+
+I will follow comprehensive tutorials to get experience in using Rope for automatic refactoring. Comprehension tutorials provide guided experience with Python tooling, helping to explore features of tools like Rope, Pylint, and Flake8 in-depth.  The tutorials are structured, therefore helping to quickly gain familiarity with functionality and usage in real-world scenarios.
+
+\item \textit{Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.}
+
+For this I will conduct research on energy-efficient algorithms and their application in Python refactoring. This will give me the option to follow a hands-on approach which allows for comparing different strategies and asses their energy consumption in multiple scenarios.
+
+\item \textit{Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.}
+
+For this I will practise building simple VS Code extensions using JavaScript or TypeScript through YouTube tutorials. It can help me gain hands-on experience with the languages in a real-world context. These practical exercises can be used to not only solidfiy my understanding of JavaScript/TypeScript but also familiarize me with how these languages are used to create functional VS Code extensions, enhancing both my coding skills and extension development proficiency.
+
+\end{itemize}
+
+\subsubsection*{Sevhena Walker Reflection}
+\medskip
+
+\begin{itemize}[label={}, wide=0pt, leftmargin=*]
+
+  \item \textit{Learn how reinforcement learning works as well as how to incorporate it into our project.}
+  
+  For this topic, I plan on watching online courses and tutorials since it's a subject I have basically no experience in. Watching videos is the better option for me in this case since having someone explain the knowledge and providing examples will allow me to grasp the material faster.
+      
+  \item \textit{Understanding of Python's performance characteristics and common code smells.}
+  
+  I believe reading articles and going through documentation will be best for me for this topic. I already have a good base in programming and Python specifically so written documents will allow me to digest the new information at my own pace.
+      
+  \item \textit{Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.} 
+  
+  When it comes to libraries and modules, I tend to fare well by just reading the documentation and looking over code examples using those tools.
+      
+  \item \textit{Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.}
+  
+  For this topic, experimentation will be my best option as it is not really a matter of learning something completely new but applying a new tool in a known environment. 
+
+  \item \textit{Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.}
+
+  I already have some experience working with those languages, so I will only need to refer to the documentation for the occasional refresher on syntax and such.
+
+\end{itemize}
+
+\subsubsection*{Nivetha  Reflection}
+\medskip
+
+\begin{itemize}[label={}, wide=0pt, leftmargin=*]
+
+\item \textit{Learn how reinforcement learning works as well as how to incorporate it into our project.}
+
+I prefer to look through open source Python projects that use reinforcement learning tools to get used to it. While documentation and tutorials are readily available online whenever I need to reference them, I’m interested in seeing how tools such as PyTorch are applied in a live project so that I can get a clear understanding of their use. If possible, I will also contribute to these open source projects to implement these tools in a side project before doing for the capstone. This way I can be ready to implement in our project.
+
+\item \textit{Understanding of Python's performance characteristics and common code smells.}
+
+I will enrol in online courses since they include structured learning for these tools to optimize Python code. These courses also include hands on exercises that I can practice solidifying my skills for identifying performance bottlenecks and avoiding code smells.
+
+\item \textit{Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.} 
+
+I plan to follow comprehensive tutorials as these can break down complex topics into manageable subtopics, therefore helping in gradually building experience in these libraries. I can follow them at my own pace, so I have time to both experiment and troubleshoot. This way I can fully grasp the process of integrating these into Python projects.
+
+\item \textit{Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.}
+
+I plan to conduct research on analyzing the energy impact on various code structures using PyJoules. This way I can gather data to make informed refactoring decisions. This also opens up the opportunity to develop more efficient algorithms that can optimize performance and energy usage in Python applications.
+
+\item \textit{Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.}
+
+Taking online courses tailored to JavaScript or TypeScript for extension development would give me a deeper understanding of how these languages are used in developing VS Code extensions. These focused courses include key concepts and best practices, helping me quickly become comfortable  in the exact skills needed for extension development.
+
+\end{itemize}
+
+~\newpage
+
+\bibliographystyle {plainnat}
+\bibliography{../../refs/References}
+
 \end{document}
+
