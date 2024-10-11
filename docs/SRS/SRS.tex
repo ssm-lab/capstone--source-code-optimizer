@@ -9,6 +9,7 @@
 \usepackage[round]{natbib}
 \usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{siunitx}
 \usepackage{tabularx}
 \usepackage[dvipsnames]{xcolor}
@@ -81,10 +82,14 @@ ability to make informed choices about whether to apply refactorings will also b
 user feedback.
 
 \section{Stakeholders}
+
+The stakeholders involved in this project include all individuals and groups that have a direct or indirect interest in the development, implementation, and usage of the refactoring library for energy efficiency. These stakeholders influence project decisions and will be impacted by their outcomes. Understanding their roles and expectations is crucial for ensuring that the library meets the needs of its users and aligns with broader organizational goals.\\
+
+This section introduces the \textbf{client}, \textbf{customer}, and \textbf{other stakeholders} that are involved in the project. Finally, we will look at the users of the product, specifically the \textbf{hands-on-users}, what their \textbf{personas} may look like, their \textbf{priority} levels, and what kind of \textbf{participation} we can expect from them throughout the development of this product.
 \subsection{Client}
 The client of this project is \textbf{Dr. Istvan David} from McMaster's Department of Computing and Software. As the project supervisor, his role is to guide the development team with his technical and domain expertise. As the client, he sets the product's requirements and will be involved throughout its development. 
 \subsection{Customer}
-The customers of this product are all the \textbf{software developers} that use it to improve the energy efficiency of their codebase. They will be the primary users of the product and, therefore, will offer critical feedback on its effectiveness. Suggestions for improvement and/or additional features may come from this stakeholder. 
+The customers of this product are all the \textbf{software developers} that use it to improve the energy efficiency of their codebase. As members of corporations or independent workers, they will be the primary users of the product and, therefore, will offer critical feedback on its effectiveness. Suggestions for improvement and/or additional features may come from this stakeholder. 
 
 \subsection{Other Stakeholders}
 \subsubsection*{\textcolor{Maroon}{Project Managers}}
@@ -127,12 +132,33 @@ This stakeholder is responsible for establishing regulations governing energy co
 
 \subsection{Personas}
 
-\textbf{Persona 1} \\
-Raven Reyes, a 34-year-old senior software developer, has over a decade of experience in backend development. Now working at a SaaS company focused on sustainability, Raven faces the challenge of reducing the energy consumption of their software. Manually refactoring code is time-consuming, especially when trying to pinpoint which parts of the code are draining the most energy. With tight deadlines and a need to balance sustainability with performance, Raven seeks a tool that automates energy-efficient refactoring and provides clear metrics. \\
+\subsubsection*{Persona: Raven Reyes}
+\textbf{Age:} 37\\
+\textbf{Job Title:} Senior Software Developer\\
+\textbf{Education:} Bachelor's in Computer 
+Science\\[2mm]
+\textbf{Work Environment:} Works at a mid-sized SaaS company with a focus on improving their environmental footprint.\\
+\textbf{Professional Background:} Has over 15 years of experience in software development, specializing in backend systems. Worked with various programming languages (Python, Java, and C++), and is well-versed in optimizing code for performance.\\[2mm]
+\textbf{Need:} With the company more focused on sustainability, Raven and her team need to go through their codebase and apply energy efficient changes to their code.\\
+\textbf{Challenges:} Knowing what to change in their code to make it more efficient is challenging, not to mention the incredible amount of code they will have to sift through. We are talking hundreds of thousands of lines of code!
 
-\noindent
-\textbf{Persona 2} \\
-Draco Malfoy, a 29-year-old sustainability analyst at a large tech company, is tasked with reducing the environmental impact of the company’s operations. With expertise in corporate sustainability, Jordan’s role is to track and report energy consumption and carbon emissions, but they face challenges quantifying the data coming from the software development team. With the company's push toward greener technology, Jordan needs clear, easy-to-understand metrics on how the software team’s refactoring efforts are improving energy efficiency. Bridging the gap between the sustainability and development teams, Jordan relies on these insights to report progress on key sustainability goals to executives, ensuring that both technical improvements and environmental targets are aligned.
+\subsubsection*{Persona: Christopher Robin}
+\textbf{Age:} 34\\
+\textbf{Job Title:} Data Analyst\\
+\textbf{Education:} Bachelor's in Data Science\\[2mm]
+\textbf{Work Environment:} Works at a large corporation that has recently started increasing their efforts to become a sustainable company.\\
+\textbf{Professional Background:} Over 8 years of experience in data analysis, just recently looking into sustainability metrics. Christopher regularly collaborates with IT teams to track performance metrics and recently energy consumption metrics to help identify areas for improvement.\\[2mm]
+\textbf{Need:} Christopher needs accurate data on energy consumption from the company's software systems to generate insights that drive sustainability initiatives and help meet corporate environmental targets.\\
+\textbf{Challenges:} Translating raw technical data into meaningful insights that can guide decisions is difficult, especially when working with complex systems. 
+
+\subsubsection*{Persona: Draco Malfoy}
+\textbf{Age:} 29\\
+\textbf{Job Title:} Freelance Software Developer\\
+\textbf{Education:} Bachelor's in Software Engineering\\[2mm]
+\textbf{Work Environment:} Works remotely on multiple freelance projects for small and mid-sized businesses, focusing on web applications and backend systems.\\
+\textbf{Professional Background:} Has 7 years of experience working with various clients to develop and optimize software, primarily in Python and JavaScript. He often works on tight deadlines, where balancing performance and development speed is key.\\[2mm]
+\textbf{Need:} Draco needs efficient ways to optimize the code he writes for clients, particularly in terms of performance and energy efficiency, as more businesses become environmentally conscious.\\
+\textbf{Challenges:} As a freelancer, time is money. Draco needs tools that help him quickly identify inefficiencies in the code and refactor them, without spending hours analyzing large codebases or learning new systems.
 
 \subsection{Priorities Assigned to Users}
 \textbf{Key Users:} Software Developers, Business Sustainability Teams \\
@@ -148,71 +174,221 @@ Due to the nature of this project as a capstone requirement, there are currently
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The tool must be able to refactor Python code to improve its energy efficiency.
-    \begin{itemize}
-        \item \textbf{Rationale:} The core purpose of this tool is to optimize Python code for energy efficiency. Without the ability to refactor Python code, the tool would not meet its primary objective.
-        \item \textbf{Fit Criterion:} The tool must successfully refactor inefficient Python code patterns, and improve the energy consumption by at least 5\%, as verified through energy consumption tests.
-    \end{itemize}
-    \item \textbf{Requirement:} The product shall integrate with GitHub Actions for automating the refactoring process during CI/CD.
-    \begin{itemize}
-        \item \textbf{Rationale:} GitHub Actions is required to automate the refactoring process in a DevOps workflow, ensuring the solution can be implemented seamlessly across different development teams and projects.
-        \item \textbf{Fit Criterion:} The tool must trigger and run successfully within a GitHub Actions CI/CD pipeline, passing predefined energy-efficiency and functionality tests.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin must be developed for Visual Studio Code (VS Code).
-    \begin{itemize}
-        \item \textbf{Rationale:} VS Code is one of the most popular development environments among Python developers, and using it ensures a wide user base and easy adoption of the tool.
-        \item \textbf{Fit Criterion:} The plugin must be installable and functional in Visual Studio Code, verified by successful installation and use of the plugin in the IDE without any compatibility issues.
-    \end{itemize}
-    \item \textbf{Requirement:} The project must be finished within the academic year (September 2024 - March 2025).
-    \begin{itemize}
-        \item \textbf{Rationale:} The fully working end-to-end software that refactors Python code to be more energy efficient needs to be completed by the capstone course's set deadlines.
-        \item \textbf{Fit Criterion:} Must submit the finished project by the end of the academic year as per project requirements.
-    \end{itemize}
+\begin{enumerate}[label=SC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The system must refactor Python code without changing its original functionality.}\\
+    {\bf Rationale:} The project is focused on energy-efficient refactoring for Python code, and altering functionality could break existing software behaviour.\\
+    {\bf Fit Criterion:} The system must pass all original test cases after refactoring, ensuring that functionality remains unchanged.\\
+    {\bf Priority:} High
+    \item \emph{The refactored code must result in measurable energy savings.}\\
+    {\bf Rationale:} The project's primary objective is to improve the code's energy efficiency. Refactorings should lead to a noticeable reduction in energy consumption.\\
+    {\bf Fit Criterion:} The system must show at least a 5\% reduction in energy consumption, as measured by tools like \texttt{PyJoules}, for most of the refactored code.\\
+    {\bf Priority:} High
+    \item \emph{The refactored code must be provided to the user upon completion of the refactoring process.}\\
+    {\bf Rationale:} Developers need access to the refactored code to utilize it in their projects immediately after the refactoring process.\\
+    {\bf Fit Criterion:} The system must deliver the refactored code to the user in a clear format, ensuring it is readily available for implementation.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Implementation Environment of the Current System}
-\lips
+\begin{enumerate}[label=EC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The product shall be able to run on standard laptop environments, including typical developer setups with operating systems such as Windows, macOS, and Linux.}\\
+    {\bf Rationale:} Developers will primarily use the tool on personal workstations, including laptops, and it must integrate smoothly with typical development environments. Supporting standard laptop environments ensures that the tool is accessible to a wide range of users without the need for specialized hardware.\\
+    {\bf Fit Criterion:} The tool must be installable and functional on a standard laptop with commonly used IDEs (such as Visual Studio Code) and tools like GitHub for version control. It should perform well without requiring excessive processing power or memory.\\
+    {\bf Priority:} High
+\end{enumerate}
 \subsection{Partner or Collaborative Applications}
-\lips
+The project will focus on developing the tool with flexibility for potential integration with applications like GitHub Actions and Visual Studio Code. While no specific partner applications are required, understanding these possibilities can aid smoother integration. Future collaboration with CI/CD services or Python development tools may be considered, but no formal interface constraints are needed at this stage.
 \subsection{Off-the-Shelf Software}
-\lips
+The project has no strict requirements for off-the-shelf software but will leverage open-source libraries to enhance functionality and maintain flexibility. Tools like PyJoules for energy measurement and Python analysis libraries may be used. While no legal issues are expected, all tools will be assessed for compatibility. Documentation will be maintained, though no specific constraints are set at this stage.
 \subsection{Anticipated Workplace Environment}
-\lips
+The workplace will include standard software development setups with IDEs, version control (e.g., GitHub), and collaboration tools. The tool should integrate smoothly into workflows, offering a non-intrusive interface suited for quiet workspaces and providing quick feedback in collaborative environments. Accessibility to online resources and collaboration tools will be considered, ensuring the tool functions well in diverse settings. A description of the typical workplace, possibly with diagrams, will be provided.
 \subsection{Schedule Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The project must be completed by April 2025, with interim deadlines for key milestones such as Proof of Concept (November 2024) and the final demonstration (March 2025).
-    \begin{itemize}
-        \item \textbf{Rationale:} These deadlines are based on the academic timeline and the expectations of the capstone course.
-        \item \textbf{Fit Criterion:} All project components must be completed and fully functional by the final demonstration in March 2025.
-    \end{itemize}
+\begin{enumerate}[label=SC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The project shall be completed by April 2025, with interim deadlines for key milestones such as Proof of Concept (November 2024) and the final demonstration (March 2025).}\\
+    {\bf Rationale:} These deadlines are based on the academic timeline and the expectations of the capstone course.\\
+    {\bf Fit Criterion:} All project components must be completed and fully functional by the final demonstration in March 2025.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Budget Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The project must not exceed the resources available to the team, which includes free open-source software and free services like GitHub for hosting and CI/CD pipelines.
-    \begin{itemize}
-        \item \textbf{Rationale:} The team does not have a budget for paid services or proprietary software.
-        \item \textbf{Fit Criterion:} The project must be implemented using free tools and libraries and hosted on GitHub.
-    \end{itemize}
+\begin{enumerate}[label=BC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The project shall not exceed the resources available to the team, which includes free open-source software and free services like GitHub for hosting and CI/CD pipelines.}\\
+    {\bf Rationale:} The team does not have a budget for paid services or proprietary software.\\
+    {\bf Fit Criterion:} The project must be implemented using free tools and libraries and hosted on GitHub.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Enterprise Constraints}
-\begin{enumerate}
-    \item \textbf{Requirement:} The product shall be built to comply with the standards of McMaster University’s capstone project requirements and academic integrity policies.
-    \begin{itemize}
-        \item \textbf{Rationale:} The project is part of the university’s curriculum and must adhere to its standards.
-        \item \textbf{Fit Criterion:} The product must meet the requirements specified by the course syllabus and project advisor.
-    \end{itemize}
+\begin{enumerate}[label=EC \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The product shall be built to comply with the standards of McMaster University’s capstone project requirements and academic integrity policies.}\\
+    {\bf Rationale:} The project is part of the university’s curriculum and must adhere to its standards.\\
+    {\bf Fit Criterion:} The product must meet the requirements specified by the course syllabus and project advisor.\\
+    {\bf Priority:} High
 \end{enumerate}
 
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
 involved in the Project}
-\lips
+
+\paragraph*{Insert term here}
+\lips % Replace with definition of term
+
+%\paragraph*{Insert term here}
+% \lips
+
+% --- TERMS PRESENT IN THE STAKEHOLDER SECTION ---
+\paragraph*{supervisor}
+A member of faculty from McMaster University responsible for overseeing a project being worked on by students taking the SFWRENG 4G06 Capstone course.
+
+\paragraph*{large-scale applications}
+Applications that manage high volumes of data, users, or transactions, typically requiring scalable architectures.
+
+\paragraph*{cloud-hosted applications}
+Software applications deployed and run on remote cloud servers, accessible over the internet.
+
+\paragraph*{environmental footprint}
+The total impact an activity or product has on the environment, measured by metrics like carbon emissions and resource consumption.
+
+\paragraph*{refactoring}
+The process of restructuring existing code without changing its external behavior to improve readability, performance, or maintainability.
+
+\paragraph*{mobile environment}
+A software environment specifically designed for mobile devices, such as smartphones or tablets, which have limited resources.
+
+\paragraph*{embedded environment}
+A software environment where applications run on specialized hardware with constrained resources, often without traditional operating systems.
+
+\paragraph*{SaaS}
+Software as a Service (SaaS) refers to cloud-based software applications delivered to users via the internet on a subscription basis.
+
+\paragraph*{backend}
+The part of a software system that handles server-side logic, database interactions, and application functionality not directly visible to users.
+
+\paragraph*{software developer}
+A professional who designs, writes, and maintains software applications or systems.
+
+\paragraph*{data analyst}
+A professional who processes and analyzes large sets of data to help organizations make informed decisions.
+
+\paragraph*{tech company}
+A company focused on technology products and services, including software, hardware, and IT services.
+
+\paragraph*{freelance}
+Self-employed individuals who offer specialized services, such as software development, without long-term commitments to any employer.
+
+\paragraph*{usability testing}
+A method of evaluating how easy and user-friendly a software application or product is by observing real users interacting with it.
+
+% --- TERMS PRESENT IN THE OPERATIONAL AND ENVIRONMENTAL REQUIREMENTS SECTION ---
+\paragraph*{Python Code}
+Refers to the original Python code given by the end user to refactor.
+
+\paragraph*{Refactored Code}
+Refers to the Python code that had refactorings made to it.
+
+\paragraph*{library}
+A collection of pre-written code that developers can reuse in their projects to add specific functionalities.
+
+\paragraph*{Git}
+\label{term:git}
+A distributed version control system that allows multiple developers to track changes in source code, collaborate, and manage project history efficiently.
+
+\paragraph*{GitHub}
+\label{term:GitH}
+A web-based platform used for version control and collaboration on code through \hyperref[term:git]{Git} repositories.
+
+\paragraph*{Actions}
+A \hyperref[term:GitH]{GitHub} feature that automates tasks such as testing, deployment, and continuous integration via custom workflows.
+
+\paragraph*{workflow}
+A sequence of automated steps or actions that define a process, often for continuous integration, deployment, or testing.
+
+\paragraph*{Visual Studio Code}
+\label{term:VSC}
+A free, open-source code editor developed by Microsoft, known for its versatility and wide range of extensions.
+
+\paragraph*{VS Code}
+An abbreviation of \hyperref[term:VSC]{Visual Studio Code}
+
+\paragraph*{Visual Studio Code (VS Code) marketplace}
+An online platform where users can discover, install, and manage extensions that enhance the functionality of \hyperref[term:VSC]{Visual Studio Code}.
+
+\paragraph*{JSON}
+\label{term:JSON}
+\hyperref[term:JS]{JavaScript} Object Notation, a lightweight data format used to store and exchange information between systems.
+
+\paragraph*{XML}
+\label{term:XML}
+Extensible Markup Language, a data format used to encode documents in a way that is both human-readable and machine-readable.
+
+\paragraph*{package manager}
+A tool that automates the process of installing, updating, and managing software packages or libraries in a project.
+
+\paragraph*{PIP}
+A package manager for \hyperref[term:python]{Python} that simplifies the installation and management of Python libraries.
+
+% --- TERMS PRESENT IN WAITING ROOM SECTION ---
+\paragraph*{IDE}
+Integrated Development Environment, a software application providing tools like a code editor, debugger, and compiler to facilitate development.
+
+\paragraph*{progress indicators}
+Visual or textual cues, such as loading bars or percentages, that inform users about the status of ongoing processes.
+
+\paragraph*{plugin}
+A software component that adds specific features or functionalities to an existing software system.
+
+\paragraph*{configuration file}
+A file used to define settings or preferences for a software application, often stored in a human-readable format like \hyperref[term:JSON]{JSON} or \hyperref[term:XML]{XML}.
+
+\paragraph*{dashboard}
+A user interface that provides an overview of key information and metrics, typically presented in graphs, charts, and tables.
+
+\paragraph*{sync}
+The process of ensuring that data is consistent across multiple systems or devices by automatically updating changes in real-time.
+
+\paragraph*{programming language}
+\label{term:progl}
+A formal language used to write software programs by providing instructions that a computer can execute.
+
+\paragraph*{Python}
+\label{term:python}
+A \hyperref[term:progl]{programming language} known for its simplicity and versatility, widely used in web development, data science, and automation.
+
+\paragraph*{Java}
+A \hyperref[term:progl]{programming language} known for its portability and scalability, commonly used for enterprise-level applications.
+
+\paragraph*{C/C++}
+A \hyperref[term:progl]{programming language} family used for system programming, game development, and applications requiring high performance.
+
+\paragraph*{C\#}
+A \hyperref[term:progl]{programming language} developed by Microsoft, primarily used for developing applications on the .NET platform.
+
+\paragraph*{JavaScript}
+\label{term:JS}
+A \hyperref[term:progl]{programming language} used primarily for adding interactivity to web pages and building dynamic web applications.
+
+\paragraph*{TypeScript}
+A \hyperref[term:progl]{programming language} that builds on JavaScript by adding static typing, improving code reliability and scalability.
+
+\paragraph*{Go}
+A \hyperref[term:progl]{programming language} created by Google, designed for simplicity and efficiency in building scalable applications.
+
+\paragraph*{Rust}
+A \hyperref[term:progl]{programming language} focused on safety, performance, and concurrency, often used in system programming.
+
+
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
 \lips
 \subsection{Business Rules}
-\lips
+
+The following are some business rules established between the team.
+
+\begin{enumerate}
+  \item \textbf{Project Timeline Adherence:} All milestones must be completed according to the established project timeline. Any delays or unexpected circumstances must be reported to the team as soon as possible.
+  \item \textbf{Pull Request Review Requirement:} All pull requests must receive at least two independent reviews before they can be merged into the main branch. Reviewers must provide feedback or approval within 48 hours of the request to ensure timely progress.
+  \item \textbf{Team Communication Standard:} All team members are required to communicate in a friendly and respectful manner during discussions, meetings, and in all written communications. Constructive feedback should be provided with the intent to support and enhance team collaboration.
+\end{enumerate}
+
+
 \subsection{Assumptions}
 \lips
 
@@ -239,7 +415,7 @@ involved in the Project}
 
 \subsection{The Context of the Work}
 
-% \includegraphics[scale=0.5]{../images/WorkContextModel.png}
+\includegraphics[scale=0.5]{../images/WorkContextModel.png}
 
 \subsection{Work Partitioning}
 
@@ -354,9 +530,34 @@ involved in the Project}
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
-\lips
+\includegraphics[width=\textwidth]{../Images/business-data-model.png}
 \subsection{Data Dictionary}
-\lips
+
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{|p{3.5cm}|p{9cm}|p{2cm}|}
+  \toprule \textbf{Name} & \textbf{Content} & \textbf{Type} \\
+  \midrule
+  EcoOptimizer & CentralCtrl + RefactoringCtrl + TestingCtrl + Reinforcement Learning Model & package \\ \hline
+  GitHub Actions & External tool for automated customizable workflows & External Service Provider \\ \hline
+  VS Code extension & A plugin containing the EcoOptimizer package delivered through Visual Studio Code Marketplace & External Service Provider \\ \hline
+  Rope & External refactoring library & package \\ \hline
+  Pysmell & External python smell detection module & package \\ \hline
+  pyJoules & External python energy measuring module & package \\ \hline
+  CentralCtrl & source + excluded + tests + initialEnergy + smells + measureEnergy + getSmells + refactor + checkFunctionality & Class \\ \hline
+  TestingCtrl & testDir + runTests & Class \\ \hline
+  RefactoringCtrl & selectRefactoring & Class \\ \hline
+  Reinforcement Learning Model & Data model for improved energy efficient refactoring & Module \\ \hline
+  source & directory containing the code to be refactored & string \\ \hline
+  excluded & files and directories that should not be refactored & list[string] \\ \hline
+  testDir & directory containing tests related to the source code & string \\ \hline
+  initialEnergy & file containing all initial energy measurements prior to refactoring & string \\ \hline
+  smells & all code smells detected & list[string] \\ \hline
+  measureEnergy() & measures the energy consumption of the given source code & method \\ \hline
+  getSmells() & returns all the smells detected in the source code & method \\ \hline
+  refactor(smell) & refactors the source code based on the given code smell & method \\ \hline
+  checkFunctionality() & checks that the original functionality of the code is maintained & method \\
+  \bottomrule
+\end{longtable}
 
 \section{The Scope of the Product}
 \subsection{Product Boundary}
@@ -453,268 +654,280 @@ involved in the Project}
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
-
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must accept Python source code files.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool successfully processes valid Python files without errors and provides feedback for invalid files.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must identify specific code smells that can be targeted for energy saving.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should be able to detect and report at least 80\% of the following code smells using predefined rules or existing linters. Code smells include Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The suggested refactored code demonstrates a measurable improvement in energy measured in joules.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must report to the user any discrepancies between the original and suggested refactored code.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Discrepancy reports to the user clearly highlight differences in outputs
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must allow users to input their original test suite as a required argument.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users can specify a path to their test suite, and the tool recognizes and utilizes it for testing the refactored code.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must ensure that the original functionality of the code is preserved after refactoring.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool runs the original test suite against the refactored code and passes 100\% of the tests.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must be compatible with various Python versions and common libraries.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  Reports are clear, well-structured, and provide actionable insights, with users able to easily understand the results.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must provide comprehensive documentation and help resources.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.
-  \end{itemize}
+\begin{enumerate}[label=FR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The system must accept Python source code files.}\\
+    {\bf Rationale:} The system needs to process Python code as its primary input to refactor and improve energy efficiency.\\
+    {\bf Fit Criterion:} The system successfully processes valid Python files without errors and provides feedback for invalid files.\\
+    {\bf Priority:} High
+    \item \emph{The system must identify specific code smells that can be targeted for energy saving.}\\
+    {\bf Rationale:} Energy inefficiencies are often related to well-known code smells, so identifying them is the first step in improving efficiency.\\
+    {\bf Fit Criterion:} The tool should detect and report at least 80\% of the following code smells: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).\\
+    {\bf Priority:} High
+    \item \emph{The system shall maintain the original functionality of the Python code after refactoring.}\\
+    {\bf Rationale:} Ensuring that the refactored code preserves the original behavior is critical to avoid regressions or unexpected issues in the software.\\
+    {\bf Fit Criterion:} The system runs the original test suite against the refactored code and passes 100\% of the tests.\\
+    {\bf Priority:} High
+    \item \emph{The system must allow users to input their original test suite as a required argument.}\\
+    {\bf Rationale:} Verifying that the refactored code preserves functionality requires the use of the original test suite.\\
+    {\bf Fit Criterion:} Users can specify a path to their test suite that the tool recognizes and utilizes for testing the refactored code.\\
+    {\bf Priority:} High
+    \item \emph{The system must suggest at least one appropriate refactoring for each detected code smell to decrease energy consumption or indicate that none can be found.}\\
+    {\bf Rationale:} For developers to optimize their code, the tool must provide appropriate refactoring suggestions based on detected code smells.\\
+    {\bf Fit Criterion:} The suggested refactored code demonstrates a measurable improvement in energy consumption as measured in joules.\\
+    {\bf Priority:} High
+    \item \emph{The system must produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\
+    {\bf Rationale:} Refactored code must remain functional and error-free to ensure maintainability and usability.\\
+    {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} High
+    \item \emph{The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.}\\
+    {\bf Rationale:} There may be multiple ways to refactor code, but the most energy-efficient one should be chosen.\\
+    {\bf Fit Criterion:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool must be compatible with various Python versions and common libraries.}\\
+    {\bf Rationale:} The tool should be flexible enough to be used across different Python environments.\\
+    {\bf Fit Criterion:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.}\\
+    {\bf Rationale:} Developers need clear reports to understand the impact of the refactorings and to track changes effectively.\\
+    {\bf Fit Criterion:} Reports are clear, well-structured, and provide actionable insights, allowing users to easily understand the results.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool must provide comprehensive documentation and help resources.}\\
+    {\bf Rationale:} Detailed documentation is necessary to help users install, understand, and use the tool effectively.\\
+    {\bf Fit Criterion:} Documentation covers installation, usage, and troubleshooting, receiving positive feedback for clarity and completeness from users.\\
+    {\bf Priority:} Medium
+    \item \emph{The system shall provide developers with refactoring suggestions within an IDE before committing code, allowing them to review and approve energy-efficient changes.}\\
+    {\bf Rationale:} Giving developers control over which refactorings are applied ensures that they can maintain the balance between energy efficiency and their coding style or project requirements.\\
+    {\bf Fit Criterion:} The IDE plugin must display at least two refactoring options for inefficient code patterns, allowing developers to either apply or reject them before committing the changes.\\
+    {\bf Priority:} Medium
+    \item \emph{The system shall integrate with GitHub and provide an automated refactoring process that is triggered when code is pushed to a repository.}\\
+    {\bf Rationale:} Automated refactoring integrated into CI/CD pipelines ensures that energy-efficient code is maintained across all stages of development, reducing the burden on developers.\\
+    {\bf Fit Criterion:} The refactoring process must be triggered automatically on GitHub commits, with at least 95\% of refactorings improving energy efficiency without introducing any functional errors.\\
+    {\bf Priority:} Medium
+    \item \emph{The system shall allow developers to undo any refactorings applied, restoring the code to its previous state.}\\
+    {\bf Rationale:} Developers may want to revert changes if they do not align with specific project goals or introduce performance bottlenecks unrelated to energy consumption.\\
+    {\bf Fit Criterion:} The system must provide an option to revert any refactoring applied within the last 5 commits, restoring both code and energy consumption metrics to their original state.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\begin{enumerate}
-    \item \textbf{Requirement:} The IDE plugin refactoring interface should present the original and refactored code side by side, allowing developers to compare and choose between them easily.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The interface must display the original code on one side and the refactored code on the other, with options for developers to accept or reject the refactorings without confusion.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool should have a minimalist design, focusing only on essential elements to reduce clutter.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, without unnecessary visual elements or distractions.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin should adapt to the user’s VS Code theme, supporting both light and dark modes.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), with no manual changes required.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool should highlight refactoring suggestions using visual indicators based on the impact of energy savings.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), and developers should be able to identify refactoring opportunities quickly.
-    \end{itemize}
-    \item \textbf{Requirement:} The GitHub Action should highlight significant energy savings with visual alerts in PRs.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).
-    \end{itemize}
+\begin{enumerate}[label=LFR-AP \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The IDE plugin refactoring interface shall present the original and refactored code side by side, allowing developers to compare and choose between them easily.}\\
+    {\bf Rationale:} Providing a side-by-side view of the original and refactored code helps developers make informed decisions about applying changes.\\
+    {\bf Fit Criterion:} The interface must display the original code on one side and the refactored code on the other, with clear options for developers to accept or reject the refactorings without confusion.\\
+    {\bf Priority:} High
+    \item \emph{The IDE plugin shall adapt to the user’s VS Code theme, supporting both light and dark modes.}\\
+    {\bf Rationale:} Ensuring that the plugin matches the user's theme preference enhances user experience and visual comfort.\\
+    {\bf Fit Criterion:} The IDE plugin’s interface must automatically adjust to match the user’s current VS Code theme settings (light or dark), requiring no manual changes.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool shall highlight refactoring suggestions using visual indicators based on the impact of energy savings.}\\
+    {\bf Rationale:} Visual indicators make it easier for developers to quickly identify and prioritize refactoring opportunities based on their energy-saving potential.\\
+    {\bf Fit Criterion:} The tool must use colour-coded indicators (e.g., yellow for minor energy savings, red for major savings), allowing developers to identify refactoring opportunities quickly.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool shall have a minimalist design, focusing only on essential elements to reduce clutter.}\\
+    {\bf Rationale:} A clean and simple interface allows developers to focus on the code and refactoring suggestions without distractions, improving usability.\\
+    {\bf Fit Criterion:} The tool should prominently display only the code, refactoring suggestions, and energy metrics, omitting unnecessary visual elements or distractions.\\
+    {\bf Priority:} Low
+    \item \emph{The GitHub Action shall highlight significant energy savings with visual alerts in pull requests (PRs).}\\
+    {\bf Rationale:} Visual alerts in PRs inform developers of the energy savings achieved, encouraging the adoption of energy-efficient practices.\\
+    {\bf Fit Criterion:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).\\
+    {\bf Priority:} Low
 \end{enumerate}
-
 \subsection{Style Requirements}
-\begin{enumerate}
-    \item \textbf{Requirement:} The tool should convey a professional and authoritative appearance to instill confidence in developers.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.
-    \end{itemize}
-    \item \textbf{Requirement:} The IDE plugin interface should promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} Developers should report feeling less distracted and more productive while using the tools, with 70\% indicating a positive change in their coding environment.
-    \end{itemize}
-    \item \textbf{Requirement:} The tool design should be visually appealing and modern, aligning with contemporary software development tools.
-    \begin{itemize}[label={}]
-        \item \textbf{Fit Criteria:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.
-    \end{itemize}
+\begin{enumerate}[label=LFR-ST \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall convey a professional and authoritative appearance to instill confidence in developers.}\\
+    {\bf Rationale:} A professional appearance helps build trust and encourages developers to use the tool confidently for energy-efficient refactoring.\\
+    {\bf Fit Criterion:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.\\
+    {\bf Priority:} High
+    \item \emph{The IDE plugin interface shall promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.}\\
+    {\bf Rationale:} A calm environment reduces distractions and improves productivity, allowing developers to focus on their work effectively.\\
+    {\bf Fit Criterion:} Developers should report feeling less distracted and more productive while using the tool, with 70\% indicating a positive change in their coding environment.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool design shall be visually appealing and modern, aligning with contemporary software development tools.}\\
+    {\bf Rationale:} A modern design improves user experience and satisfaction, making the tool more enjoyable to use.\\
+    {\bf Fit Criterion:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must have an intuitive user interface that simplifies navigation and functionality.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should provide clear and concise prompts for user input.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} At least 90\% of test users should report that prompts are straightforward and guide them effectively through the process.
-  \end{itemize}
+\begin{enumerate}[label=UHR-EOU \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall have an intuitive user interface that simplifies navigation and functionality.}\\
+    {\bf Rationale:} A simple, intuitive interface allows users to access the tool's key features quickly, improving usability and reducing the learning curve.\\
+    {\bf Fit Criterion:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall provide clear and concise prompts for user input.}\\
+    {\bf Rationale:} Clear instructions help users understand what inputs are required, minimizing confusion and errors during the process.\\
+    {\bf Fit Criterion:} At least 90\% of test users should report that prompts are straightforward and guide them effectively through the process.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Personalization and Internationalization Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should allow users to customize settings to match their preferences (e.g., refactoring styles, detection sensitivity).
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users should be able to save and load custom configurations easily.
-  \end{itemize}
-  \item \textbf{Requirement:} User guide must be available in French and English.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} French and English installation and use instructions available.
-  \end{itemize} 
+\begin{enumerate}[label=UHR-PSI \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall allow users to customize settings to match their preferences (e.g., refactoring styles, detection sensitivity).}\\
+    {\bf Rationale:} Allowing customization improves the user experience by letting developers tailor the tool to their specific needs and workflows.\\
+    {\bf Fit Criterion:} Users should be able to save and load custom configurations easily.\\
+    {\bf Priority:} Medium
+    \item \emph{The user guide shall be available in French and English.}\\
+    {\bf Rationale:} Providing multilingual support ensures that non-English-speaking users can effectively use the tool.\\
+    {\bf Fit Criterion:} French and English installation and use instructions must be available.\\
+    {\bf Priority:} Low
 \end{enumerate}
 \subsection{Learning Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must have an available YouTube video demonstrating installation.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Youtube video present and easily accessible
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should provide context-sensitive help that offers assistance based on the current user actions.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Help resources should be accessible within 1-3 clicks.
-  \end{itemize}
+\begin{enumerate}[label=UHR-LRN \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall provide context-sensitive help that offers assistance based on the current user actions.}\\
+    {\bf Rationale:} Context-sensitive help ensures that users can receive timely and relevant assistance, reducing confusion and improving usability.\\
+    {\bf Fit Criterion:} Help resources should be accessible within 1-3 clicks.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall have an available YouTube video demonstrating installation.}\\
+    {\bf Rationale:} Video tutorials provide visual learning resources that can make the installation process more accessible to users.\\
+    {\bf Fit Criterion:} A YouTube video demonstrating installation should be present and easily accessible.\\
+    {\bf Priority:} Low
 \end{enumerate}
 \subsection{Understandability and Politeness Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should communicate errors and issues politely and constructively.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} User feedback should reflect that at least 80\% of users perceive error messages as helpful and courteous, rather than frustrating or vague.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should provide context-sensitive help that offers assistance based on the current user actions.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Help resources should be accessible within 1-3 clicks.
-  \end{itemize}
+\begin{enumerate}[label=UHR-UPL \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall communicate errors and issues politely and constructively.}\\
+    {\bf Rationale:} Polite and constructive error messages reduce frustration and enhance the user experience, making the tool more approachable.\\
+    {\bf Fit Criterion:} User feedback should reflect that at least 80\% of users perceive error messages as helpful and courteous, rather than frustrating or vague.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Accessibility Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should provide high-contrast color themes to improve visibility for users with visual impairments.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Users should have access to at least 1 high contrast theme.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool should offer audio cues for important actions and alerts to assist users with use and navigation.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} At least 70\% of users should report that the audio cues enhance their understanding of important notifications or actions.
-  \end{itemize}
+\begin{enumerate}[label=UHR-ACS \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall provide high-contrast colour themes to improve visibility for users with visual impairments.}\\
+    {\bf Rationale:} High-contrast themes ensure that visually impaired users can easily navigate and use the tool, enhancing accessibility.\\
+    {\bf Fit Criterion:} Users should have access to at least 1 high contrast theme.\\
+    {\bf Priority:} Low
+    \item \emph{The tool shall offer audio cues for important actions and alerts to assist users with use and navigation.}\\
+    {\bf Rationale:} Audio cues help users with visual impairments or cognitive difficulties to stay informed about important events or actions.\\
+    {\bf Fit Criterion:} At least 70\% of users should report that the audio cues enhance their understanding of important notifications or actions.\\
+    {\bf Priority:} Low
 \end{enumerate}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must analyze and detect code smells in the input code within a reasonable time frame.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.
-  \end{itemize}
-  \item \textbf{Requirement:} The refactoring process must be executed efficiently without noticeable delays.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).
-  \end{itemize}
+\begin{enumerate}[label=PR-SL \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall analyze and detect code smells in the input code within a reasonable time frame.}\\
+    {\bf Rationale:} Fast analysis ensures that developers do not experience significant delays while reviewing code.\\
+    {\bf Fit Criterion:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.\\
+    {\bf Priority:} High
+    \item \emph{The refactoring process shall be executed efficiently without noticeable delays.}\\
+    {\bf Rationale:} Fast refactoring ensures a smooth workflow for developers, preventing frustration during development.\\
+    {\bf Fit Criterion:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).\\
+    {\bf Priority:} Medium
 \end{enumerate}
-
 \subsection{Safety-Critical Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
+\begin{enumerate}[label=PR-SCR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall ensure that no runtime errors are introduced in the refactored code that could result in data loss or system failures.}\\
+    {\bf Rationale:} Preventing runtime errors ensures system stability and reliability after refactoring.\\
+    {\bf Fit Criterion:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact. The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} High
 \end{enumerate}
-
 \subsection{Precision or Accuracy Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool must reliably identify code smells with minimal false positives and negatives.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} Detection accuracy should exceed 90\% when validated against a set of known cases.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must maintain the functionality of the original provided code in all its recommended refactorings.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must produce valid refactored Python code as output or indicate that no possible refactorings were found.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.
-  \end{itemize}
+\begin{enumerate}[label=PR-PAR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall maintain the functionality of the original provided code in all its recommended refactorings.}\\
+    {\bf Rationale:} Ensuring functionality preservation is critical for refactorings to be reliable.\\
+    {\bf Fit Criterion:} The tool should pass all tests from the user-provided test suite after refactoring, confirming that the original functionality remains intact.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall reliably identify code smells with minimal false positives and negatives.}\\
+    {\bf Rationale:} High detection accuracy ensures that developers are not misled by incorrect or missed suggestions.\\
+    {\bf Fit Criterion:} Detection accuracy should exceed 90\% when validated against a set of known cases.\\
+    {\bf Priority:} Medium
+    \item \emph{The tool shall produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\
+    {\bf Rationale:} Ensuring that the tool produces valid output is essential for maintaining code quality.\\
+    {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Robustness or Fault-Tolerance Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should gracefully handle unexpected inputs, such as invalid code or non-Python files.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.
-  \end{itemize}
-  \item \textbf{Requirement:} The tool must have fallback options if a specific refactoring attempt fails.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.
-  \end{itemize}
+\begin{enumerate}[label=PR-RFT \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall gracefully handle unexpected inputs, such as invalid code or non-Python files.}\\
+    {\bf Rationale:} Ensuring stability with error handling prevents tool crashes and improves user experience.\\
+    {\bf Fit Criterion:} The tool should provide clear error messages and recover from input errors without crashing, ensuring stability.\\
+    {\bf Priority:} High
+    \item \emph{The tool shall have fallback options if a specific refactoring attempt fails.}\\
+    {\bf Rationale:} Providing fallback options ensures the tool remains functional even when a refactoring fails, reducing disruptions in development.\\
+    {\bf Fit Criterion:} In the event of a failed refactoring, the tool should log the error and propose alternative refactorings without stopping the process.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Capacity Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should efficiently manage large codebases.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.
-  \end{itemize}
+\begin{enumerate}[label=PR-CR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall efficiently manage large codebases.}\\
+    {\bf Rationale:} Efficient handling of large projects ensures that the tool remains usable for teams working with extensive codebases.\\
+    {\bf Fit Criterion:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Scalability or Extensibility Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should be designed to allow easy addition of new code smells and refactoring methods in future updates.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:}  New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.
-  \end{itemize}
+\begin{enumerate}[label=PR-SER \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall be designed to allow easy addition of new code smells and refactoring methods in future updates.}\\
+    {\bf Rationale:} Extensibility ensures that the tool remains relevant and adaptable to future developments in coding standards and practices.\\
+    {\bf Fit Criterion:} New code smells or refactorings can be incorporated with minimal changes to existing code, ensuring that current functionality remains intact.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Longevity Requirements}
-\begin{enumerate}
-  \item \textbf{Requirement:} The tool should be maintainable and adaptable to future versions of Python and changing coding standards.
-  \begin{itemize}[label={}]
-      \item \textbf{Fit Criteria:} The codebase should be well-documented and modular, facilitating updates with minimal effort.
-  \end{itemize}
+\begin{enumerate}[label=PR-LR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The tool shall be maintainable and adaptable to future versions of Python and changing coding standards.}\\
+    {\bf Rationale:} Ensuring the tool can be updated easily guarantees that it will remain useful and relevant over time.\\
+    {\bf Fit Criterion:} The codebase should be well-documented and modular, facilitating updates with minimal effort.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \section{Operational and Environmental Requirements}
+
+The Operational and Environmental Requirements define the conditions under which the system must function effectively. These requirements ensure that the system performs reliably within specified operational boundaries, such as compatibility, deployment, and environmental constraints. Additionally, this section addresses the external environmental factors that could influence the system. Meeting these requirements is critical to ensure the tool’s proper operation and sustainability in various working environments.
+
 \subsection{Expected Physical Environment}
 
 \begin{enumerate}[label=OER-EP \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{The product shall be used in temperatures ranging from \SI{10}{\celsius} - \SI{35}{\celsius}.}\\
     {\bf Rationale:} A computer's safe operating range is \SI{10}{\celsius} - \SI{35}{\celsius} ~\citep{PCTemp}. If the computer doesn't work then it is not possible to use the refactoring library. \\
-    {\bf Fit Criterion:} The computer turns on, and no temperature warning is issued.
+    {\bf Fit Criterion:} The computer turns on, and no temperature warning is issued. \\
+    {\bf Priority:} High
   \item \emph{The product shall be used in proximity to a stable power supply.}\\
   {\bf Rationale:} As a coding library, the product depends on the continuing operation of the computer system it is used on. Should the computer lose power, the refactoring library will see its processes halted. \\
-  {\bf Fit Criterion:} The computer is connected to a power outlet or the computer possesses charge on its battery. 
+  {\bf Fit Criterion:} The computer is connected to a power outlet or the computer possesses charge on its battery. \\
+  {\bf Priority:} High
 \end{enumerate}
 
 \subsection{Wider Environment Requirements}
 \begin{enumerate}[label=OER-WE \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{The system must align with widely used emissions standards (e.g., GRI 305, GHG, ISO 14064) ~\citep{GHG,ISO14064,GRI305}.}\\
     {\bf Rationale:} Providing metrics tailored to these standards, makes the library reporting tool more attractive to users part of companies looking to reduce their ecological footprint. \\
-    {\bf Fit Criterion:} The emissions tracked by the standards are present in the reported metrics.  
+    {\bf Fit Criterion:} The emissions tracked by the standards are present in the reported metrics. \\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \subsection{Requirements for Interfacing with Adjacent Systems}
 \begin{enumerate}[label=OER-IAS \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{The refactoring library must provide integration capabilities with GitHub Actions.}\\
     {\bf Rationale:} This will allow the automation of the refactoring process within existing workflows to ensure that energy-efficient practices are consistently applied during continuous integration.\\
-    {\bf Fit Criterion:} The library is available to use via GitHub Actions when writing workflows.
+    {\bf Fit Criterion:} The library is available to use via GitHub Actions when writing workflows.\\
+    {\bf Priority:} Low
   \item \emph{The library should be compatible with the Visual Studio Code (VSCode) IDE.}\\
     {\bf Rationale:} Developers will be able to refactor code easily without leaving their working environment, therefore enhancing the accessibility and usability of the library.\\
-    {\bf Fit Criterion:} An extension is available for installation in VSCode marketplace.
+    {\bf Fit Criterion:} An extension is available for installation in VSCode marketplace.\\
+    {\bf Priority:} Medium
   \item \emph{The library should support importing existing codebases and exporting refactored code and energy savings reports in standard formats (e.g., JSON, XML)}\\
     {\bf Rationale:} This ensures that users can easily integrate the library into their existing workflows without significant disruption.\\
-    {\bf Fit Criterion:} Developers are able to refactor existing codebases and view relevant metrics.
+    {\bf Fit Criterion:} Developers are able to refactor existing codebases and view relevant metrics.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \subsection{Productization Requirements}
 \begin{enumerate}[label=OER-PR \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{The library shall be package with PIP and made available to python users through the public package manager.}\\
     {\bf Rationale:} As a widely used package manager, PIP will be able to distribute the library to any users that wish to use it.\\
-    {\bf Fit Criterion:} Users are able to install the library using \texttt{pip install}. 
+    {\bf Fit Criterion:} Users are able to install the library using \texttt{pip install}. \\
+    {\bf Priority:} Medium
 \end{enumerate}
 
 \subsection{Release Requirements}
 \begin{enumerate}[label=OER-RL \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{All core functionalities specified in the requirements must be implemented and tested, including energy consumption measurement, automated refactoring, and reporting features.}\\
     {\bf Rationale:} This will ensures that the library delivers the promised capabilities to users.\\
-    {\bf Fit Criterion:} Follows the steps outlined in the Verification and Validation (V\&V) plan.  
+    {\bf Fit Criterion:} Follows the steps outlined in the Verification and Validation (V\&V) plan.  \\
+    {\bf Priority:} Medium
   \item \emph{The library must be ready for release by March 17th, 2025.}\\
     {\bf Rationale:} The library must be ready for final demonstration as a requirement of the McMaster University SFRWENG 4G06 Capstone course.\\
-    {\bf Fit Criterion:} The project is ready for the final demonstration of the appointed date.
+    {\bf Fit Criterion:} The project is ready for the final demonstration of the appointed date.\\
+    {\bf Priority:} Low
 \end{enumerate}
 
 \section{Maintainability and Support Requirements}
@@ -854,6 +1067,9 @@ Not applicable in this project currently
 \end{enumerate}
 
 \section{Open Issues}
+
+This section outlines unresolved questions and challenges that may impact the development, functionality, or integration of the system. These issues require further research, discussion, or testing to ensure successful project completion.\\
+
 \begin{itemize}
   \item Further research is needed to determine the optimal balance between energy efficiency and code readability. While refactoring may improve energy consumption metrics, it could inadvertently make the codebase less maintainable and more difficult to expand in the long term.
   \item The same can be said when it comes to performance. More energy efficient code might actually end up being less efficient when it comes to time and space complexity.
@@ -1044,15 +1260,66 @@ The planning of the development phases is based on the deliverables submissions 
     \end{itemize}
 \end{enumerate}
 
-
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
-\lips
+The migration to the new tool will involve minimal disruption to existing workflows, as the product is designed to integrate seamlessly with GitHub Actions and Visual Studio Code. Developers will be able to continue using their current workflows, with the addition of the refactoring tool as a library that can be installed directly via Python's package manager (pip), an IDE plugin for an enhanced development experience, and a GitHub Action for automated refactoring in their CI/CD pipelines. The minimal installation and integration requirements ensure ease of adoption for developers without needing to overhaul existing infrastructure or processes.
+\begin{itemize}
+    \item \textbf{Installation Phase:} 
+    Developers can install the refactoring library directly using pip:
+    \verb|pip install ecooptimizers|
+    The IDE plugin can be installed by users through the Visual Studio Code marketplace. The GitHub Action can be integrated by adding the appropriate YAML configuration to the repository's workflow files.
+    \item \textbf{Parallel Running:} 
+    There is no need for a phased implementation or parallel running of old and new systems. The tool can be directly integrated without affecting existing code or infrastructure.
+    \item \textbf{Manual Backups:} 
+    Since the tool does not alter data but rather provides refactoring suggestions, no manual backups are required before installation.
+    \item \textbf{Phased Rollout:} 
+    If required, developers can start using the refactoring library first, followed by the IDE plugin, and then integrate the GitHub Action to automate refactoring in their CI/CD workflows.
+\end{itemize}
 \subsection{Data That Has to be Modified or Translated for the New System}
-\lips
+Not Applicable
 
 \section{Costs}
-\lips
+The total cost of developing this project is primarily based on the effort involved by the development team, given that the tools and platforms used (GitHub, open-source libraries) are free. The project must be completed within the academic year (MVP ready by February 2025), which warrants smart planning and efficient resource allocation.
+
+\subsection{Metrics for Estimation}
+To estimate the total cost in terms of time and effort, the following key metrics have been considered:
+\begin{itemize}
+    \item Number of input/output flows for the system.
+    \item Number of business events.
+    \item Number of product use cases.
+    \item Number of functional and non-functional requirements.
+    \item Number of constraint requirements.
+\end{itemize}
+
+\subsection{Estimation Approach}
+Each deliverable has been assessed to estimate the time it will take to implement based on the development environment. Early cost estimates are based on general knowledge of the system and refined as the team gradually gets a better understanding of the scope.
+
+\subsection{Cost Breakdown}
+\begin{itemize}
+    \item \textbf{Development Effort:} Based on the team size and project timeline, following time allocation is estimated:
+        \begin{itemize}
+            \item Initial Research \& Setup: 50 hours per team member.
+            \item Core development (e.g., refactoring tool, plugin): 300 hours per team member.
+            \item Testing and debugging: 80 hours per team member.
+            \item Documentation \& finalization: 100 hours per team member.
+            \item \textbf{Total estimated effort:} 530 hours per team member.
+        \end{itemize}
+
+    \item \textbf{Tools and Software:}
+    \begin{itemize}
+        \item GitHub (for CI/CD): Free account, with no cost expected.
+        \item Open-source libraries (PySmells, PyJoules): No associated costs.
+    \end{itemize}
+
+    \item \textbf{Testing Environment:}
+    \begin{itemize}
+        \item The testing of the refactoring tool and energy consumption measurements is planned to be carried out using free tools on open source projects, with no additional cost expected.
+    \end{itemize}
+
+\end{itemize}
+
+\subsection{Estimated Cost}
+The above discussion indicates that the total effort will be approximately 2650 team hours spread across the project phases. These estimates could be refined using more detailed information as the project progresses.
 \section{User Documentation and Training}
 \subsection{User Documentation Requirements}
 \begin{enumerate}
@@ -1082,6 +1349,9 @@ The planning of the development phases is based on the deliverables submissions 
 Not Applicable.
 
 \section{Waiting Room}
+
+This section lists potential features and enhancements that are not critical for the initial release of the system but may be considered for future updates. These ideas represent additional functionalities that could improve the tool’s performance, user experience, or integration with other systems.
+
 \begin{enumerate}[label=WTRM \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{The IDE plugin must provide interactive tips and progress indicators to guide users during the refactoring process.}\\
     {\bf Rationale:} This helps prevent user confusion during the refactoring process and enhances the user experience by providing clear, real-time feedback.\\
@@ -1114,7 +1384,19 @@ Not Applicable.
 \end{enumerate}
 
 \section{Ideas for Solution}
-\lips
+In this section, we capture various ideas for implementing the project requirements. These ideas provide technical approaches and methods for achieving the energy-efficient refactoring of Python code through the refactoring tool, IDE integration, and CI/CD automation. By capturing these ideas now, we ensure that potential technical approaches are not lost and can be referred to during the design and development phase.
+\begin{itemize}
+    \item \textbf{Refactoring Library Implementation via AST Parsing:} 
+    Use Python’s built-in \texttt{ast} (Abstract Syntax Tree) module to analyze code structure. The refactoring library can traverse the AST to detect inefficiencies and apply refactorings without modifying code functionality.
+    \item \textbf{IDE Plugin for Refactoring – Leveraging VS Code API:} 
+    Build an extension for Visual Studio Code that hooks into the editor’s event system to provide real-time refactoring suggestions.
+    \item \textbf{Integration with Existing Tools via Pre-Commit Hooks:} 
+    Integrate the refactoring tool with popular tools like PyLint or Black by setting up pre-commit hooks to run the refactoring library before committing.
+    \item \textbf{Energy Usage Dashboard Using JavaScript and Flask:} 
+    Build a simple dashboard that displays energy consumption metrics for code refactorings over time.
+\end{itemize}
+
+
 
 \newpage{}
 \section*{Appendix --- Reflection}
@@ -1136,7 +1418,6 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   member pursue, and why did they make this choice?
 \end{enumerate}
 
-\subsubsection*{Mya Hussain Reflection}
 \begin{enumerate}
   \item \textit{What knowledge and skills will the team collectively need to acquire to successfully complete this capstone project?}
 
@@ -1144,10 +1425,59 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
       \item Understanding of Python's performance characteristics and common code smells
       \item Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.
       \item Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.
-      \item  Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.
+      \item Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.
+    \end{itemize}
+
+  \item \textit{For each of the knowledge areas and skills identified in the previous
+  question, what are at least two approaches to acquiring the knowledge or
+  mastering the skill?  Of the identified approaches, which will each team
+  member pursue, and why did they make this choice?}
+
+    \begin{itemize}
+      
+      \item \textit{Understanding of Python's performance characteristics and common code smells}
+      \begin{itemize}
+        \item Enroll in courses like Effective Python or Python Performance Optimization on platforms like Coursera, edX, or Udemy.
+        \item Work on real-world projects or contribute to open-source Python projects. Regular code reviews with a focus on performance 
+        will help identify common code smells and inefficiencies.
+      \end{itemize}
+      
+      \item \textit{Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.}
+      \begin{itemize}
+        \item Set up a personal or team-based project that uses rope for refactoring and integrates linters (Pylint or Flake8). 
+        Experimenting with these tools in a real project will provide direct experience with their workflows and limitations
+        \item Follow comprehensive tutorials or attend workshops focused on Python tooling.
+      \end{itemize}
+      
+      \item \textit{Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.}
+      \begin{itemize}
+        \item Conduct research on energy-efficient algorithms and their application in Python refactoring. Experiment with PyJoule to analyze the energy impact of different code structures.
+        \item Work under the guidance of a mentor or collaborate with experts in energy-efficient computing.
+      \end{itemize}
+
+      \item \textit{Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.}
+      \begin{itemize}
+        \item Practise by building simple VS Code extensions using JavaScript or TypeScript using tutorials on YouTube.
+        \item Take online courses specifically tailored to JavaScript or TypeScript for extension development
+      \end{itemize}
+
     \end{itemize}
  
+ 
 \end{enumerate}
+
+\subsubsection*{Ayushi Amin Reflection}
+\begin{enumerate}
+
+    \item I would go with practical experience, contributing to open-source projects, where I can directly apply performance optimizations and get feedback through code reviews. Real-world application will help cement these concepts better
+    
+    \item I would go for hands-on implementation in my projects. I learn best by doing, so I would set up a project where I can integrate rope for refactoring and Pylint or Flake8 for linting. This would give me a chance to really see how these tools fit into the development process, and I could refine my setup as I work.
+
+    \item I would prefer diving into the research around energy-efficient algorithms and then trying things out with PyJoule. I enjoy exploring new tools and methods, so experimenting with how different code changes affect energy use would be a good challenge for me.
+
+    \item I like learning by creating, so I would build an extension right away. This way, I would get immediate experience with JavaScript and TypeScript while learning the VS Code extension framework.
+
+ \end{enumerate}
 
 \bibliographystyle {plainnat}
 \bibliography{../../refs/References}
