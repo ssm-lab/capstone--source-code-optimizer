@@ -49,11 +49,10 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{3.5cm}p{2cm}X}
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+October 11th, 2024 & 0 & Created initial revision of SRS\\
 \bottomrule
 \end{tabularx}
 
@@ -174,7 +173,7 @@ Due to the nature of this project as a capstone requirement, there are currently
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\begin{enumerate}[label=SC \arabic*., wide=0pt, leftmargin=*]
+\begin{enumerate}[label=MD-SL \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The system must refactor Python code without changing its original functionality.}\\[2mm]
     {\bf Rationale:} The project is focused on energy-efficient refactoring for Python code, and altering functionality could break existing software behaviour.\\
     {\bf Fit Criterion:} The system must pass all original test cases after refactoring, ensuring that functionality remains unchanged.\\
@@ -190,7 +189,7 @@ Due to the nature of this project as a capstone requirement, there are currently
 \end{enumerate}
 
 \subsection{Implementation Environment of the Current System}
-\begin{enumerate}[label=EC \arabic*., wide=0pt, leftmargin=*]
+\begin{enumerate}[label=MD-EC \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The product shall be able to run on standard laptop environments, including typical developer setups with operating systems such as Windows, macOS, and Linux.}\\[2mm]
     {\bf Rationale:} Developers will primarily use the tool on personal workstations, including laptops, and it must integrate smoothly with typical development environments. Supporting standard laptop environments ensures that the tool is accessible to a wide range of users without the need for specialized hardware.\\
     {\bf Fit Criterion:} The tool must be installable and functional on a standard laptop with commonly used IDEs (such as Visual Studio Code) and tools like GitHub for version control. It should perform well without requiring excessive processing power or memory.\\
@@ -203,21 +202,21 @@ The project has no strict requirements for off-the-shelf software but will lever
 \subsection{Anticipated Workplace Environment}
 The workplace will include standard software development setups with IDEs, version control (e.g., GitHub), and collaboration tools. The tool should integrate smoothly into workflows, offering a non-intrusive interface suited for quiet workspaces and providing quick feedback in collaborative environments. Accessibility to online resources and collaboration tools will be considered, ensuring the tool functions well in diverse settings. A description of the typical workplace, possibly with diagrams, will be provided.
 \subsection{Schedule Constraints}
-\begin{enumerate}[label=SC \arabic*., wide=0pt, leftmargin=*]
+\begin{enumerate}[label=SCHD \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The project shall be completed by April 2025, with interim deadlines for key milestones such as Proof of Concept (November 2024) and the final demonstration (March 2025).}\\[2mm]
     {\bf Rationale:} These deadlines are based on the academic timeline and the expectations of the capstone course.\\
     {\bf Fit Criterion:} All project components must be completed and fully functional by the final demonstration in March 2025.\\
     {\bf Priority:} High
 \end{enumerate}
 \subsection{Budget Constraints}
-\begin{enumerate}[label=BC \arabic*., wide=0pt, leftmargin=*]
+\begin{enumerate}[label=BDGT \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The project shall not exceed the resources available to the team, which includes free open-source software and free services like GitHub for hosting and CI/CD pipelines.}\\[2mm]
     {\bf Rationale:} The team does not have a budget for paid services or proprietary software.\\
     {\bf Fit Criterion:} The project must be implemented using free tools and libraries and hosted on GitHub.\\
     {\bf Priority:} High
 \end{enumerate}
 \subsection{Enterprise Constraints}
-\begin{enumerate}[label=EC \arabic*., wide=0pt, leftmargin=*]
+\begin{enumerate}[label=ENTP \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The product shall be built to comply with the standards of McMaster University’s capstone project requirements and academic integrity policies.}\\[2mm]
     {\bf Rationale:} The project is part of the university’s curriculum and must adhere to its standards.\\
     {\bf Fit Criterion:} The product must meet the requirements specified by the course syllabus and project advisor.\\
@@ -227,12 +226,6 @@ The workplace will include standard software development setups with IDEs, versi
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
 involved in the Project}
-
-\paragraph*{Insert term here}
-\lips % Replace with definition of term
-
-%\paragraph*{Insert term here}
-% \lips
 
 % --- TERMS PRESENT IN THE STAKEHOLDER SECTION ---
 \paragraph*{supervisor}
@@ -248,7 +241,7 @@ Software applications deployed and run on remote cloud servers, accessible over 
 The total impact an activity or product has on the environment, measured by metrics like carbon emissions and resource consumption.
 
 \paragraph*{refactoring}
-The process of restructuring existing code without changing its external behavior to improve readability, performance, or maintainability.
+The process of restructuring existing code without changing its external behaviour to improve readability, performance, or maintainability.
 
 \paragraph*{mobile environment}
 A software environment specifically designed for mobile devices, such as smartphones or tablets, which have limited resources.
@@ -378,7 +371,7 @@ A \hyperref[term:progl]{programming language} focused on safety, performance, an
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
-\lips
+Not applicable to this system.
 \subsection{Business Rules}
 
 The following are some business rules established between the team.
@@ -391,7 +384,7 @@ The following are some business rules established between the team.
 
 
 \subsection{Assumptions}
-\lips
+It is assumed for this system that users will be seeking to refactor Python code and will make use of Visual Studio Code.
 
 \section{The Scope of the Work}
 \subsection{The Current Situation}
@@ -405,7 +398,7 @@ The following are some business rules established between the team.
     \item \textbf{Inefficient Code Patterns:} Many codebases contain inefficient code patterns that consume more energy than necessary.
   \end{enumerate}
 
-  The project aims to address these issues by:
+  \textcolor{red}{The project aims to address these issues by:}
   \begin{enumerate}
     \item \textbf{Automated Refactoring Library:} Developing a Python library that automatically detects and refactors code for improved energy efficiency.
     \item \textbf{IDE Integration:} Creating a Visual Studio Code plugin that integrates the refactoring library, providing real-time suggestions and automated refactoring options.
@@ -527,7 +520,7 @@ The following are some business rules established between the team.
 \includegraphics[width=\textwidth]{../Images/business-data-model.png}
 \subsection{Data Dictionary}
 
-\renewcommand{\arraystretch}{1.5}
+% \renewcommand{\arraystretch}{1}
 \begin{longtable}{|p{3.5cm}|p{9cm}|p{2cm}|}
   \toprule \textbf{Name} & \textbf{Content} & \textbf{Type} \\
   \midrule
@@ -555,7 +548,7 @@ The following are some business rules established between the team.
 
 \section{The Scope of the Product}
 \subsection{Product Boundary}
-\includegraphics[scale=0.4]{../Images/UseCaseDiagram.png}
+\includegraphics[width=0.8\textwidth]{../Images/UseCaseDiagram.png}
 \subsection{Product Use Case Table}
 
 \setlength\extrarowheight{2mm}
@@ -659,7 +652,7 @@ The following are some business rules established between the team.
     {\bf Fit Criterion:} The tool should detect and report at least 80\% of the following code smells: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).\\
     {\bf Priority:} High
     \item \emph{The system shall maintain the original functionality of the Python code after refactoring.}\\[2mm]
-    {\bf Rationale:} Ensuring that the refactored code preserves the original behavior is critical to avoid regressions or unexpected issues in the software.\\
+    {\bf Rationale:} Ensuring that the refactored code preserves the original behaviour is critical to avoid regressions or unexpected issues in the software.\\
     {\bf Fit Criterion:} The system runs the original test suite against the refactored code and passes 100\% of the tests.\\
     {\bf Priority:} High
     \item \emph{The system must allow users to input their original test suite as a required argument.}\\[2mm]
@@ -925,7 +918,7 @@ The Operational and Environmental Requirements define the conditions under which
 \subsection{Release Requirements}
 \begin{enumerate}[label=OER-RL \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{All core functionalities specified in the requirements must be implemented and tested, including energy consumption measurement, automated refactoring, and reporting features.}\\[2mm]
-    {\bf Rationale:} This will ensures that the library delivers the promised capabilities to users.\\
+    {\bf Rationale:} This will ensure that the library delivers the promised capabilities to users.\\
     {\bf Fit Criterion:} Follows the steps outlined in the Verification and Validation (V\&V) plan.  \\
     {\bf Priority:} Medium
   \item \emph{The library must be ready for release by March 17th, 2025.}\\[2mm]
@@ -940,27 +933,27 @@ The following are defined as maintainability requirements:
 \begin{enumerate}[label=MS-MNT \arabic*., wide=0pt, leftmargin=*]
   \item \emph{The tool must allow new refactoring techniques to be added within one week of identification.}\\
   {\bf Rationale:} Rapid integration of new techniques ensures the tool remains up-to-date with evolving best practices in energy-efficient coding.\\
-  {\bf Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.
+  {\bf Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.\\
   {\bf Priority:} Medium
 
   \item \emph{The tool must be maintainable by developers who are not the original creators.}\\
   {\bf Rationale:} Ensuring that new developers can easily understand and modify the system reduces dependency on original developers and facilitates long-term maintenance.\\
-  {\bf Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.
+  {\bf Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.\\
   {\bf Priority:} High
 
   \item \emph{The tool must allow for easy rollback of updates in case of errors.}\\
   {\bf Rationale:} Quick rollback capabilities minimize downtime and user disruption in case an update introduces issues.\\
-  {\bf Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.
+  {\bf Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.\\
   {\bf Priority:} Medium
 
   \item \emph{The tool must provide automated testing for all refactoring functions.}\\
   {\bf Rationale:} Automated testing ensures that changes do not introduce new bugs, maintaining the reliability and stability of the tool.\\
-  {\bf Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.
+  {\bf Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.\\
   {\bf Priority:} High
 
   \item \emph{Each version of the library must maintain compatibility with the current releases of external libraries during its development phase.}\\
   {\bf Rationale:} Keeping external libraries up-to-date ensures compatibility and leverages improvements or security patches provided by library maintainers.\\
-  {\bf Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.
+  {\bf Fit Criteria:} The system successfully integrates updates from external libraries without breaking existing functionality.\\
   {\bf Priority:} Medium
 
 \end{enumerate}
@@ -970,7 +963,7 @@ The following are defined as maintainability requirements:
 \begin{enumerate}[label=MS-SP \arabic*., wide=0pt, leftmargin=*]
   \item \emph{The tool must offer bilingual support for help documentation.}\\
   {\bf Rationale:} Bilingual support ensures that users from different regions can understand and use the tool effectively, increasing its accessibility.\\
-  {\bf Fit Criteria:} Help documentation is available in both major languages, English and French.
+  {\bf Fit Criteria:} Help documentation is available in both major languages, English and French.\\
   {\bf Priority:} Low
 \end{enumerate}
 
@@ -1263,7 +1256,7 @@ The migration to the new tool will involve minimal disruption to existing workfl
 \begin{itemize}
     \item \textbf{Installation Phase:} 
     Developers can install the refactoring library directly using pip:
-    \verb|pip install ecooptimizers|
+    \verb|pip install ecooptimizer|
     The IDE plugin can be installed by users through the Visual Studio Code marketplace. The GitHub Action can be integrated by adding the appropriate YAML configuration to the repository's workflow files.
     \item \textbf{Parallel Running:} 
     There is no need for a phased implementation or parallel running of old and new systems. The tool can be directly integrated without affecting existing code or infrastructure.
@@ -1434,7 +1427,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
       
       \item \textit{Understanding of Python's performance characteristics and common code smells}
       \begin{itemize}
-        \item Enroll in courses like Effective Python or Python Performance Optimization on platforms like Coursera, edX, or Udemy.
+        \item Enrol in courses like Effective Python or Python Performance Optimization on platforms like Coursera, edX, or Udemy.
         \item Work on real-world projects or contribute to open-source Python projects. Regular code reviews with a focus on performance 
         will help identify common code smells and inefficiencies.
       \end{itemize}
@@ -1475,6 +1468,9 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
     \item I like learning by creating, so I would build an extension right away. This way, I would get immediate experience with JavaScript and TypeScript while learning the VS Code extension framework.
 
  \end{enumerate}
+
+
+~\newpage
 
 \bibliographystyle {plainnat}
 \bibliography{../../refs/References}
