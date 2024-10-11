@@ -9,6 +9,7 @@
 \usepackage[round]{natbib}
 \usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{siunitx}
 \usepackage{tabularx}
 \usepackage[dvipsnames]{xcolor}
@@ -226,13 +227,169 @@ The workplace will include standard software development setups with IDEs, versi
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
 involved in the Project}
-\lips
+
+\paragraph*{Insert term here}
+\lips % Replace with definition of term
+
+%\paragraph*{Insert term here}
+% \lips
+
+% --- TERMS PRESENT IN THE STAKEHOLDER SECTION ---
+\paragraph*{supervisor}
+A member of faculty from McMaster University responsible for overseeing a project being worked on by students taking the SFWRENG 4G06 Capstone course.
+
+\paragraph*{large-scale applications}
+Applications that manage high volumes of data, users, or transactions, typically requiring scalable architectures.
+
+\paragraph*{cloud-hosted applications}
+Software applications deployed and run on remote cloud servers, accessible over the internet.
+
+\paragraph*{environmental footprint}
+The total impact an activity or product has on the environment, measured by metrics like carbon emissions and resource consumption.
+
+\paragraph*{refactoring}
+The process of restructuring existing code without changing its external behavior to improve readability, performance, or maintainability.
+
+\paragraph*{mobile environment}
+A software environment specifically designed for mobile devices, such as smartphones or tablets, which have limited resources.
+
+\paragraph*{embedded environment}
+A software environment where applications run on specialized hardware with constrained resources, often without traditional operating systems.
+
+\paragraph*{SaaS}
+Software as a Service (SaaS) refers to cloud-based software applications delivered to users via the internet on a subscription basis.
+
+\paragraph*{backend}
+The part of a software system that handles server-side logic, database interactions, and application functionality not directly visible to users.
+
+\paragraph*{software developer}
+A professional who designs, writes, and maintains software applications or systems.
+
+\paragraph*{data analyst}
+A professional who processes and analyzes large sets of data to help organizations make informed decisions.
+
+\paragraph*{tech company}
+A company focused on technology products and services, including software, hardware, and IT services.
+
+\paragraph*{freelance}
+Self-employed individuals who offer specialized services, such as software development, without long-term commitments to any employer.
+
+\paragraph*{usability testing}
+A method of evaluating how easy and user-friendly a software application or product is by observing real users interacting with it.
+
+% --- TERMS PRESENT IN THE OPERATIONAL AND ENVIRONMENTAL REQUIREMENTS SECTION ---
+\paragraph*{Python Code}
+Refers to the original Python code given by the end user to refactor.
+
+\paragraph*{Refactored Code}
+Refers to the Python code that had refactorings made to it.
+
+\paragraph*{library}
+A collection of pre-written code that developers can reuse in their projects to add specific functionalities.
+
+\paragraph*{Git}
+\label{term:git}
+A distributed version control system that allows multiple developers to track changes in source code, collaborate, and manage project history efficiently.
+
+\paragraph*{GitHub}
+\label{term:GitH}
+A web-based platform used for version control and collaboration on code through \hyperref[term:git]{Git} repositories.
+
+\paragraph*{Actions}
+A \hyperref[term:GitH]{GitHub} feature that automates tasks such as testing, deployment, and continuous integration via custom workflows.
+
+\paragraph*{workflow}
+A sequence of automated steps or actions that define a process, often for continuous integration, deployment, or testing.
+
+\paragraph*{Visual Studio Code}
+\label{term:VSC}
+A free, open-source code editor developed by Microsoft, known for its versatility and wide range of extensions.
+
+\paragraph*{VS Code}
+An abbreviation of \hyperref[term:VSC]{Visual Studio Code}
+
+\paragraph*{Visual Studio Code (VS Code) marketplace}
+An online platform where users can discover, install, and manage extensions that enhance the functionality of \hyperref[term:VSC]{Visual Studio Code}.
+
+\paragraph*{JSON}
+\label{term:JSON}
+\hyperref[term:JS]{JavaScript} Object Notation, a lightweight data format used to store and exchange information between systems.
+
+\paragraph*{XML}
+\label{term:XML}
+Extensible Markup Language, a data format used to encode documents in a way that is both human-readable and machine-readable.
+
+\paragraph*{package manager}
+A tool that automates the process of installing, updating, and managing software packages or libraries in a project.
+
+\paragraph*{PIP}
+A package manager for \hyperref[term:python]{Python} that simplifies the installation and management of Python libraries.
+
+% --- TERMS PRESENT IN WAITING ROOM SECTION ---
+\paragraph*{IDE}
+Integrated Development Environment, a software application providing tools like a code editor, debugger, and compiler to facilitate development.
+
+\paragraph*{progress indicators}
+Visual or textual cues, such as loading bars or percentages, that inform users about the status of ongoing processes.
+
+\paragraph*{plugin}
+A software component that adds specific features or functionalities to an existing software system.
+
+\paragraph*{configuration file}
+A file used to define settings or preferences for a software application, often stored in a human-readable format like \hyperref[term:JSON]{JSON} or \hyperref[term:XML]{XML}.
+
+\paragraph*{dashboard}
+A user interface that provides an overview of key information and metrics, typically presented in graphs, charts, and tables.
+
+\paragraph*{sync}
+The process of ensuring that data is consistent across multiple systems or devices by automatically updating changes in real-time.
+
+\paragraph*{programming language}
+\label{term:progl}
+A formal language used to write software programs by providing instructions that a computer can execute.
+
+\paragraph*{Python}
+\label{term:python}
+A \hyperref[term:progl]{programming language} known for its simplicity and versatility, widely used in web development, data science, and automation.
+
+\paragraph*{Java}
+A \hyperref[term:progl]{programming language} known for its portability and scalability, commonly used for enterprise-level applications.
+
+\paragraph*{C/C++}
+A \hyperref[term:progl]{programming language} family used for system programming, game development, and applications requiring high performance.
+
+\paragraph*{C\#}
+A \hyperref[term:progl]{programming language} developed by Microsoft, primarily used for developing applications on the .NET platform.
+
+\paragraph*{JavaScript}
+\label{term:JS}
+A \hyperref[term:progl]{programming language} used primarily for adding interactivity to web pages and building dynamic web applications.
+
+\paragraph*{TypeScript}
+A \hyperref[term:progl]{programming language} that builds on JavaScript by adding static typing, improving code reliability and scalability.
+
+\paragraph*{Go}
+A \hyperref[term:progl]{programming language} created by Google, designed for simplicity and efficiency in building scalable applications.
+
+\paragraph*{Rust}
+A \hyperref[term:progl]{programming language} focused on safety, performance, and concurrency, often used in system programming.
+
+
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
 \lips
 \subsection{Business Rules}
-\lips
+
+The following are some business rules established between the team.
+
+\begin{enumerate}
+  \item \textbf{Project Timeline Adherence:} All milestones must be completed according to the established project timeline. Any delays or unexpected circumstances must be reported to the team as soon as possible.
+  \item \textbf{Pull Request Review Requirement:} All pull requests must receive at least two independent reviews before they can be merged into the main branch. Reviewers must provide feedback or approval within 48 hours of the request to ensure timely progress.
+  \item \textbf{Team Communication Standard:} All team members are required to communicate in a friendly and respectful manner during discussions, meetings, and in all written communications. Constructive feedback should be provided with the intent to support and enhance team collaboration.
+\end{enumerate}
+
+
 \subsection{Assumptions}
 \lips
 
@@ -367,9 +524,34 @@ involved in the Project}
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
-\lips
+\includegraphics[width=\textwidth]{../Images/business-data-model.png}
 \subsection{Data Dictionary}
-\lips
+
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{|p{3.5cm}|p{9cm}|p{2cm}|}
+  \toprule \textbf{Name} & \textbf{Content} & \textbf{Type} \\
+  \midrule
+  EcoOptimizer & CentralCtrl + RefactoringCtrl + TestingCtrl + Reinforcement Learning Model & package \\ \hline
+  GitHub Actions & External tool for automated customizable workflows & External Service Provider \\ \hline
+  VS Code extension & A plugin containing the EcoOptimizer package delivered through Visual Studio Code Marketplace & External Service Provider \\ \hline
+  Rope & External refactoring library & package \\ \hline
+  Pysmell & External python smell detection module & package \\ \hline
+  pyJoules & External python energy measuring module & package \\ \hline
+  CentralCtrl & source + excluded + tests + initialEnergy + smells + measureEnergy + getSmells + refactor + checkFunctionality & Class \\ \hline
+  TestingCtrl & testDir + runTests & Class \\ \hline
+  RefactoringCtrl & selectRefactoring & Class \\ \hline
+  Reinforcement Learning Model & Data model for improved energy efficient refactoring & Module \\ \hline
+  source & directory containing the code to be refactored & string \\ \hline
+  excluded & files and directories that should not be refactored & list[string] \\ \hline
+  testDir & directory containing tests related to the source code & string \\ \hline
+  initialEnergy & file containing all initial energy measurements prior to refactoring & string \\ \hline
+  smells & all code smells detected & list[string] \\ \hline
+  measureEnergy() & measures the energy consumption of the given source code & method \\ \hline
+  getSmells() & returns all the smells detected in the source code & method \\ \hline
+  refactor(smell) & refactors the source code based on the given code smell & method \\ \hline
+  checkFunctionality() & checks that the original functionality of the code is maintained & method \\
+  \bottomrule
+\end{longtable}
 
 \section{The Scope of the Product}
 \subsection{Product Boundary}
@@ -1223,7 +1405,6 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   member pursue, and why did they make this choice?
 \end{enumerate}
 
-\subsubsection*{Mya Hussain Reflection}
 \begin{enumerate}
   \item \textit{What knowledge and skills will the team collectively need to acquire to successfully complete this capstone project?}
 
@@ -1231,10 +1412,59 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
       \item Understanding of Python's performance characteristics and common code smells
       \item Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.
       \item Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.
-      \item  Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.
+      \item Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.
+    \end{itemize}
+
+  \item \textit{For each of the knowledge areas and skills identified in the previous
+  question, what are at least two approaches to acquiring the knowledge or
+  mastering the skill?  Of the identified approaches, which will each team
+  member pursue, and why did they make this choice?}
+
+    \begin{itemize}
+      
+      \item \textit{Understanding of Python's performance characteristics and common code smells}
+      \begin{itemize}
+        \item Enroll in courses like Effective Python or Python Performance Optimization on platforms like Coursera, edX, or Udemy.
+        \item Work on real-world projects or contribute to open-source Python projects. Regular code reviews with a focus on performance 
+        will help identify common code smells and inefficiencies.
+      \end{itemize}
+      
+      \item \textit{Experience in using libraries like rope for automated refactoring and familiarity with integrating linters such as Pylint or Flake8 into the development workflow.}
+      \begin{itemize}
+        \item Set up a personal or team-based project that uses rope for refactoring and integrates linters (Pylint or Flake8). 
+        Experimenting with these tools in a real project will provide direct experience with their workflows and limitations
+        \item Follow comprehensive tutorials or attend workshops focused on Python tooling.
+      \end{itemize}
+      
+      \item \textit{Ability to develop algorithms that analyze and compare different refactoring strategies, using tools like PyJoule for energy profiling.}
+      \begin{itemize}
+        \item Conduct research on energy-efficient algorithms and their application in Python refactoring. Experiment with PyJoule to analyze the energy impact of different code structures.
+        \item Work under the guidance of a mentor or collaborate with experts in energy-efficient computing.
+      \end{itemize}
+
+      \item \textit{Proficiency in JavaScript or TypeScript, as most VS Code extensions are developed using these languages.}
+      \begin{itemize}
+        \item Practise by building simple VS Code extensions using JavaScript or TypeScript using tutorials on YouTube.
+        \item Take online courses specifically tailored to JavaScript or TypeScript for extension development
+      \end{itemize}
+
     \end{itemize}
  
+ 
 \end{enumerate}
+
+\subsubsection*{Ayushi Amin Reflection}
+\begin{enumerate}
+
+    \item I would go with practical experience, contributing to open-source projects, where I can directly apply performance optimizations and get feedback through code reviews. Real-world application will help cement these concepts better
+    
+    \item I would go for hands-on implementation in my projects. I learn best by doing, so I would set up a project where I can integrate rope for refactoring and Pylint or Flake8 for linting. This would give me a chance to really see how these tools fit into the development process, and I could refine my setup as I work.
+
+    \item I would prefer diving into the research around energy-efficient algorithms and then trying things out with PyJoule. I enjoy exploring new tools and methods, so experimenting with how different code changes affect energy use would be a good challenge for me.
+
+    \item I like learning by creating, so I would build an extension right away. This way, I would get immediate experience with JavaScript and TypeScript while learning the VS Code extension framework.
+
+ \end{enumerate}
 
 \bibliographystyle {plainnat}
 \bibliography{../../refs/References}

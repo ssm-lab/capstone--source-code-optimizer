@@ -283,3 +283,7 @@ TSWLatexianTemp*
 
 # VSCode
 .vscode/
+
+# DRAW.IO files
+*.drawio
+*.drawio.bkp
