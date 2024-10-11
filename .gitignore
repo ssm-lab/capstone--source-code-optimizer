@@ -281,6 +281,9 @@ TSWLatexianTemp*
 #IDEA project settings and configuration files
 .idea/
 
+# VSCode
+.vscode/
+
 # DRAW.IO files
 *.drawio
 *.drawio.bkp
