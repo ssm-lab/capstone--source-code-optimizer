@@ -981,42 +981,50 @@ Not applicable in this project currently
 \section{Security Requirements}
 \subsection{Access Requirements}
 \begin{enumerate}[label=SR-AR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{Users must authenticate before accessing any feature of the refactoring tool, especially the refactored code or reports.}\\
+    \item \emph{Users must authenticate before accessing any feature of the refactoring library, especially the refactored code or reports.}\\
     {\bf Rationale:} User’s code and refactoring results are private data that must only be accessed by legitimate, authenticated users. \\
-    {\bf Fit Criterion:} The user can submit code and view refactoring results once authenticated using their company’s credentials.
-  \item \emph{Only the refactoring tool can communicate with the energy consumption tool and the reinforcement learning model.}\\
-  {\bf Rationale:} Reinforcement learning model and energy consumption tools are internal, abstracted services that are not directly needed by the user.\\
-  {\bf Fit Criterion:} The refactoring tool does not include any exposed API endpoints to the energy consumption tool and reinforcement learning model.
+    {\bf Fit Criterion:} The user can submit code and view refactoring results once authenticated using their company’s credentials.\\
+    {\bf Priority:} High
+    \item \emph{Only the refactoring tool can communicate with the energy consumption tool and the reinforcement learning model.}\\
+    {\bf Rationale:} Reinforcement learning model and energy consumption tools are internal, abstracted services that are not directly needed by the user.\\
+    {\bf Fit Criterion:} The refactoring tool does not include any exposed API endpoints to the energy consumption tool and reinforcement learning model.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Integrity Requirements}
 \begin{enumerate}[label=SR-IR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The tool must prevent unauthorized, external changes to the refactored code and energy reports.}\\
+    \item \emph{The tool must prevent unauthorized, external changes to the refactored code and energy reports.}\\
     {\bf Rationale:} The system must maintain code consistency and correctness vis-à-vis the original input and energy improvement data. Any corruption of the code and/or performance reports could undermine trust in the tool.\\
-    {\bf Fit Criterion:} The system should be fully secure against any external attempts to modify the data in each implemented layer.
+    {\bf Fit Criterion:} The system should be fully secure against any external attempts to modify the data in each implemented layer.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Privacy Requirements}
 \begin{enumerate}[label=SR-PR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The user must be notified of data collection, usage, storage and processing practices related to their code. }\\
+    \item \emph{The user must be notified of data collection, usage, storage and processing practices related to their code. }\\
     {\bf Rationale:} The tool must safeguard user privacy rights.\\
-    {\bf Fit Criterion:} The system notifies and obtains explicit consent from users in compliance with PIPIEDA before collecting their code.
-  \item \emph{Any data related to user submissions, energy reports and refactored results must be treated as confidential and handled according to Personal Information Protection and Electronic Documents Act (PIPEDA).}\\
-  {\bf Rationale:} The tool must ensure compliance with PIPEDA to avoid any legal action and gain user trust.\\
-  {\bf Fit Criterion:} All submitted code, energy reports and refactored code are encrypted when being transmitted or stored. The system includes an option to allow users to request modification of their personal data as per PIPEDA specifications.
+    {\bf Fit Criterion:} The system notifies and obtains explicit consent from users in compliance with PIPIEDA before collecting their code.\\
+    {\bf Priority:} High
+    \item \emph{Any data related to user submissions, energy reports and refactored results must be treated as confidential and handled according to Personal Information Protection and Electronic Documents Act (PIPEDA).}\\
+    {\bf Rationale:} The tool must ensure compliance with PIPEDA to avoid any legal action and gain user trust.\\
+    {\bf Fit Criterion:} All submitted code, energy reports and refactored code are encrypted when being transmitted or stored. The system includes an option to allow users to request modification of their personal data as per PIPEDA specifications.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Audit Requirements}
 \begin{enumerate}[label=SR-AUR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The tool should record which users submitted the code and/or accessed the refactored code and energy reports.}\\
+    \item \emph{The tool should record which users submitted the code and/or accessed the refactored code and energy reports.}\\
     {\bf Rationale:} The sytem must ensure accountability and traceability of the refactoring process to resolve any future conflicts.\\
-    {\bf Fit Criterion:} The system maintains tamper-proof logs of the following events: login, code submission and access to refacotoring results.
-  \item \emph{The system should maintain an audit log of all refactoring processes including pattern analysis, energy analysis and report generation. }\\
-  {\bf Rationale:} The tool must include a trail of refactoring events for any future security disputes.\\
-  {\bf Fit Criterion:}  The system maintains tamper-proof logs of refactoring changes made to the original code.
+    {\bf Fit Criterion:} The system maintains tamper-proof logs of the following events: login, code submission and access to refacotoring results.\\
+    {\bf Priority:} Medium
+    \item \emph{The system should maintain an audit log of all refactoring processes including pattern analysis, energy analysis and report generation. }\\
+    {\bf Rationale:} The tool must include a trail of refactoring events for any future security disputes.\\
+    {\bf Fit Criterion:}  The system maintains tamper-proof logs of refactoring changes made to the original code.\\
+    {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Immunity Requirements}
 \begin{enumerate}[label=SR-AUR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The tool must be protected from any malware, viruses and unauthorized programs that could alter the refactoring process. }\\
+    \item \emph{The tool must be protected from any malware, viruses and unauthorized programs that could alter the refactoring process. }\\
     {\bf Rationale:} Users need a secure and reliable system that is resistant to external attacks.\\
-    {\bf Fit Criterion:} The system includes a regularly updated security component that is tested against new threats.
+    {\bf Fit Criterion:} The system includes a regularly updated security component that is tested against new threats.\\
+    {\bf Priority:} High
 \end{enumerate}
 
 \section{Cultural Requirements}
@@ -1045,15 +1053,17 @@ Not applicable in this project currently
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
 \begin{enumerate}[label=CR-LR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The system must comply with Personal Information Protection and Electronic Documents Act (PIPEDA) and Canada’s Anti-Spam Legislation (CASL)}\\
+    \item \emph{The system must comply with Personal Information Protection and Electronic Documents Act (PIPEDA)~\citep{PIPEDA2024} and Canada’s Anti-Spam Legislation (CASL)~\citep{CASL2024}}\\
     {\bf Rationale:} The product should not violate any Canadian laws, which could result in  financial penalties, delays in bringing the product to market or loss of user trust.\\
-    {\bf Fit Criterion:} The system has obtained successful compliance reports for CASL, PIPEDA and third party IP rights.
+    {\bf Fit Criterion:} The system has obtained successful compliance reports for CASL, PIPEDA and third party IP rights.\\
+    {\bf Priority:} High
 \end{enumerate}
 \subsection{Standards Compliance Requirements}
 \begin{enumerate}[label=CR-SCR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The system must adhere to applicable industry standards for team work and software development.}\\
+    \item \emph{The system must adhere to applicable industry standards for team work and software development.}\\
     {\bf Rationale:} Compliance with standards builds trust with stakeholders and improves the likelihood of the product’s acceptance in the market.\\
-    {\bf Fit Criterion:} The system has obtained ISO 9001 certification for quality management as well as Compliance with SSADM (Structured Systems Analysis and Design Method) for software development processes.
+    {\bf Fit Criterion:} The system has obtained ISO 9001 certification~\citep{ISO9001} for quality management as well as Compliance with SSADM (Structured Systems Analysis and Design Method)~\citep{SSADM2024} for software development processes.\\
+    {\bf Priority:} High
 \end{enumerate}
 
 \section{Open Issues}
