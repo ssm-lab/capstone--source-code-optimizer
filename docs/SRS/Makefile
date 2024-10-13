@@ -1,7 +1,7 @@
 # Makefile
 # From https://danielkaes.wordpress.com/2009/03/14/compiling-latex-documents-using-makefiles/
 
-PROJECT=SRS #SRS or CA
+PROJECT=SRS
 TEX=latexmk
 BUILDTEX=$(TEX) -pdf $(PROJECT).tex
 
