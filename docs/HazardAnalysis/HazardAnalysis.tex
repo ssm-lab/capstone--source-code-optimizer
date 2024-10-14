@@ -4,6 +4,12 @@
 \usepackage{tabularx}
 \usepackage{hyperref}
 
+\usepackage[round]{natbib}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{blindtext}
+
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
     linkcolor=red,          % color of internal links (change box color with linkbordercolor)
@@ -51,16 +57,72 @@ Date2 & Name(s) & Description of changes\\
 
 \pagenumbering{arabic}
 
-\wss{You are free to modify this template.}
+
 
 \section{Introduction}
 
-\wss{You can include your definition of what a hazard is here.}
+\subsection{Problem Statement}
+The Information and Communications Technology (ICT) sector is currently responsible
+for approximately 2-4\% of global CO2 emissions, a figure projected to rise to 14\% 
+by 2040 without intervention ~\citep{BelkhirAndElmeligi2018}. To align with broader 
+economic sustainability goals, the ICT industry must reduce its CO2 emissions by 72\% 
+by 2040 ~\citep{FreitagAndBernersLee2021}. Optimizing energy consumption in software 
+systems is a complex task that cannot rely solely on software engineers, who often 
+face strict deadlines and busy schedules. This creates a pressing need for supporting 
+technologies that help automate this process. This project aims to develop a tool that 
+applies automated refactoring techniques to optimize Python code for energy efficiency 
+while preserving its original functionality. 
+
+\subsection{Hazard Analysis Introduction}
+
+As noted in lecture, a hazard is defined as a property or condition in the system, 
+combined with a condition in the environment, that has the potential to cause harm 
+or damage—referred to as loss. In software development, hazards can take various 
+forms beyond just safety hazards, including security risks, usability challenges, 
+incorrect inputs, or technical limitations like lack of internet connectivity.
+\\
+
+This project focuses on developing an automated tool to refactor Python code 
+for energy efficiency while preserving its original functionality. While this 
+initiative holds significant potential for reducing CO2 emissions in the 
+Information and Communications Technology (ICT) sector, it also introduces 
+various hazards. These hazards could arise from technical shortcomings, ethical 
+challenges, or the inadvertent introduction of new problems during the refactoring 
+process. This hazard analysis aims to identify and assess these risks to ensure 
+the successful development and adoption of the tool.
 
 \section{Scope and Purpose of Hazard Analysis}
 
-\wss{You should say what \textbf{loss} could be incurred because of the
-hazards.}
+The scope of this hazard analysis covers the potential risks and losses associated 
+with the automated refactoring tool throughout its lifecycle. The primary hazards include:
+
+\begin{itemize}
+
+    \item \textbf{Technical Failures}: Inaccurate refactorings, undetected code 
+    smells, or energy optimization that does not meet its intended goals could 
+    result in performance issues or loss of functionality. 
+
+    \item \textbf{Security Risks}: The automated nature of the tool may introduce 
+    security vulnerabilities, particularly if the refactorings unintentionally 
+    affect the security posture of the original code.
+
+    \item \textbf{User Insensitivity}: If the tool is not designed with the users 
+    in mind, it could disrupt developer workflows or lead to the rejection of the 
+    tool. This can result in loss of productivity or missed opportunities for 
+    energy efficiency.
+    
+    \item \textbf{External Conditions}: The tool’s dependency on environmental 
+    factors, such as the availability of internet connection or access to 
+    third-party libraries, could limit its usefulness in certain scenarios. 
+    This can lead to delays or failures in the refactoring process.
+
+\end{itemize}
+
+The purpose of this analysis is to identify these hazards, assess their potential 
+impact, and outline strategies for mitigating them. By doing so, we aim to prevent 
+losses related to time, resources, security, and the overall effectiveness of the 
+tool, ensuring that it contributes positively to reducing the ICT sector's energy 
+consumption and CO2 emissions.
 
 \section{System Boundaries and Components}
 
@@ -119,4 +181,6 @@ Which requirements will be implemented in the future?}
     software products. Why are they important to consider?
 \end{enumerate}
 
+\bibliographystyle {plainnat}
+\bibliography{../../refs/References}
 \end{document}
