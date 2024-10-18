@@ -969,7 +969,48 @@ The following are defined as maintainability requirements:
 \end{enumerate}
 
 \subsection{Adaptability Requirements}
-Not applicable in this project currently
+\begin{enumerate}[label=MS-AD \arabic*., wide=0pt, leftmargin=*]
+  \item \emph{The system must be compatible with the latest stable version of python (v3.13).}\\
+  {\bf Rationale:} This allows the library to use the most up-to-date features, performance improvements, and security patches. Furthermore, it will ensure that users can integrate the library into modern projects without compatibility issues, reduces the risk of vulnerabilities.\\
+  {\bf Fit Criteria:} The system passes all test cases when run in python 3.13.\\
+  {\bf Priority:} High
+
+  \item \emph{The system should offer backward compatibility with Python 3.10 and higher.}\\
+  {\bf Rationale:} Offering backwards compatibility makes the library more accessible to users who may need to use the library in legacy codebases that can't easily be upgraded. Based on Python's versioning schedule, version 3.10 will not be considered end-of-life until nearly 2 years after the scheduled end of the development of this system.\\
+  {\bf Fit Criteria:} All features of the system must work on Python 3.10 and higher versions, with minimal degradation in performance or functionality\\
+  {\bf Priority:} Low
+
+  \item \emph{The system must be able to detect and handle Python version-specific features and syntax.}\\
+  {\bf Rationale:} Depending on the Python version of the source code, the refactorings should be made accordingly to not introduce compatibility errors.\\
+  {\bf Fit Criteria:} The input source code should pass the given test cases.\\
+  {\bf Priority:} High
+
+  \item \emph{The energy measurement module must be adaptable to cloud-based systems.}\\
+  {\bf Rationale:} Many modern applications are hosted and run in cloud environments so, it is essential for the energy measurement module to operate effectively in cloud-based systems. This ensures that developers can accurately measure the energy consumption of their cloud-hosted applications.\\
+  {\bf Fit Criteria:} The energy consumption module returns usable statistics related to the energy consumption of the cloud-application.\\
+  {\bf Priority:} Medium
+
+  \item \emph{The system must be deployable in both cloud-based environments and on-premise infrastructures to meet different user needs.}\\
+  {\bf Rationale:} Whether the system is being used locally or in the cloud, developers still need access to the features offered by the system. Some developers might not even host their applications, and, even if they do, they might want to conduct local testing. \\
+  {\bf Fit Criteria:} The system should be fully functional in both cloud and local environments, with minimal configuration changes.\\
+  {\bf Priority:} Medium
+
+  \item \emph{The system must support major operating systems, including Windows, macOS, and Linux.}\\
+  {\bf Rationale:} Developers may not all use the same operating system (OS), it's actually unlikely (even impossible) that they do. Allowing users to use the library on their preferred OS will only increase the adoption of the system.\\
+  {\bf Fit Criteria:} The system must pass all tests on Windows 10+, macOS 13+ (Ventura and later), and Linux distributions such as Ubuntu 22.04.5+ without requiring different codebases or significant modifications.\\
+  {\bf Priority:} Low
+
+  \item \emph{The system must provide seamless functionality across different versions of the same operating system.}\\
+  {\bf Rationale:} Users do not adopt the latest version of an OS at the same rate and some programs are to complex or fragile to upgrade to newer systems.\\
+  {\bf Fit Criteria:} The system runs without errors or crashes across multiple versions of Windows, macOS, and Linux, with no compatibility issues in handling file systems, dependencies, or libraries.\\
+  {\bf Priority:} Low
+
+  \item \emph{The system must offer consistent performance (e.g., refactoring speed, energy consumption measurements) regardless of the underlying operating system.}\\
+  {\bf Rationale:} Having the system be OS dependent would invalidate the point of being compatible with multiple OSes and conflict with requirement MS-AD 6.\\
+  {\bf Fit Criteria:} Performance metrics, such as time taken for refactoring and energy measurements, must not vary by more than 5\% across different operating systems during testing.\\
+  {\bf Priority:} Low
+
+\end{enumerate}
 
 \section{Security Requirements}
 \subsection{Access Requirements}
