@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 
 \usepackage[round]{natbib}
 \usepackage{tabularx}
@@ -126,11 +127,34 @@ consumption and CO2 emissions.
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
+The system boundary refers to the library being developed and its core constituent modules, as well as peripheral tools that serve to expand on the system's utility and usability. \\
+
+It is also important to make note of elements not controlled by the development team such as the database, the physical computer that will run the system, and any cloud hosting platforms used to utilize the system on a greater scale.
+
+\subsection{Core Modules}
+
+\subsubsection*{Energy Measurement Module}
+This module tracks and analyzes the energy consumption of the software being refactored, providing detailed metrics that help assess the efficiency of the code before and after refactoring. External tools will be used to implement this module with the primary one being pyJoules\footnote{A python library that energies the energy footprint of a host machine.}. Other libraries may be added should the need arise. 
+
+\subsubsection*{Testing Module}
+The testing module runs automated tests on the refactored code to ensure that the functionality remains intact and that no errors are introduced during the refactoring process. Testing will be done through AST\footnote{Abstract Syntax Tree: a data structure used to represent the structure of a program.} parsing and any provided tests from the user.
+
+\subsubsection*{Refactoring module}
+This core module identifies code smells and inefficiencies in the original code and suggests or applies appropriate refactorings to optimize the code for better performance and energy efficiency. Refactoring will be done through a mix of custom-made refactoring strategies and with the help of the python library, Rope.
+
+\subsubsection*{Reinforcement Learning Model}
+The reinforcement learning model uses data from previous refactorings to improve its suggestions, helping the system learn and refine its refactoring strategies based on outcomes and energy consumption metrics. The model shall be built with the help of the machine learning library, PyTorch.
+
+\subsection{Peripherals}
+
+\subsubsection*{Visual Studio Code (VS Code) Extension}
+The VS Code extension provides a user-friendly interface within the IDE\footnote{Integrated Development Environment}, allowing developers to interact with the refactoring tool, view energy consumption metrics, and apply refactorings suggestions directly from their development environment.
+
+\subsubsection*{GitHub Action}
+The GitHub Action automates the refactoring process within CI/CD workflows, applying refactoring suggestions and running energy consumption analyses during code integration, ensuring consistent energy-efficient practices.
+
+\subsubsection*{Web Client}
+The web client offers a user interface that allows users to interact with the refactoring system remotely, enabling them to view energy consumption reports, and track performance metrics from a browser.
 
 \section{Critical Assumptions}
 
