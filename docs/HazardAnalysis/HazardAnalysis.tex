@@ -158,10 +158,16 @@ The web client offers a user interface that allows users to interact with the re
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+\begin{itemize}
+    \item The Energy Measurement Model will provide accurate and consistent energy consumption metrics across different platforms (Windows, macOS, Linux). There are no discrepancies in measurements due to platform differences that could result in ineffective refactoring.
+    \item Refactoring will not introduce new bugs or alter the intended functionality of the original Python code.
+    \item The Testing Module is provided with automated tests that have enough coverage to detect post refactoring bugs, functionality regressions, etc.
+    \item Code smells identified by the Refactoring Module always involve code that could be more energy efficient.
+    \item Custom-made refactoring strategies and Rope are capable of generating effective and correct refactoring.
+    \item Sufficient data sets are available for the reinforcement learning model to provide increasingly accurate and efficient refactoring suggestions over time.
+    \item GitHub Actions, which is a third-party dependency for the DevOps integration, is not suspended for a prolonged period of time.
+    \item The tool can handle large codebases without requiring excessive computational resources.
+\end{itemize}
 
 \section{Failure Mode and Effect Analysis}
 
