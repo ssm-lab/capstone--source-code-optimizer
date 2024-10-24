@@ -3,12 +3,14 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 
 \usepackage[round]{natbib}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{xcolor}
 \usepackage{blindtext}
+\usepackage{enumitem}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -128,11 +130,34 @@ consumption and CO2 emissions.
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
+The system boundary refers to the library being developed and its core constituent modules, as well as peripheral tools that serve to expand on the system's utility and usability. \\
+
+It is also important to make note of elements not controlled by the development team such as the database, the physical computer that will run the system, and any cloud hosting platforms used to utilize the system on a greater scale.
+
+\subsection{Core Modules}
+
+\subsubsection*{Energy Measurement Module}
+This module tracks and analyzes the energy consumption of the software being refactored, providing detailed metrics that help assess the efficiency of the code before and after refactoring. External tools will be used to implement this module with the primary one being pyJoules\footnote{A python library that energies the energy footprint of a host machine.}. Other libraries may be added should the need arise. 
+
+\subsubsection*{Testing Module}
+The testing module runs automated tests on the refactored code to ensure that the functionality remains intact and that no errors are introduced during the refactoring process. Testing will be done through AST\footnote{Abstract Syntax Tree: a data structure used to represent the structure of a program.} parsing and any provided tests from the user.
+
+\subsubsection*{Refactoring module}
+This core module identifies code smells and inefficiencies in the original code and suggests or applies appropriate refactorings to optimize the code for better performance and energy efficiency. Refactoring will be done through a mix of custom-made refactoring strategies and with the help of the python library, Rope.
+
+\subsubsection*{Reinforcement Learning Model}
+The reinforcement learning model uses data from previous refactorings to improve its suggestions, helping the system learn and refine its refactoring strategies based on outcomes and energy consumption metrics. The model shall be built with the help of the machine learning library, PyTorch.
+
+\subsection{Peripherals}
+
+\subsubsection*{Visual Studio Code (VS Code) Extension}
+The VS Code extension provides a user-friendly interface within the IDE\footnote{Integrated Development Environment}, allowing developers to interact with the refactoring tool, view energy consumption metrics, and apply refactorings suggestions directly from their development environment.
+
+\subsubsection*{GitHub Action}
+The GitHub Action automates the refactoring process within CI/CD workflows, applying refactoring suggestions and running energy consumption analyses during code integration, ensuring consistent energy-efficient practices.
+
+\subsubsection*{Web Client}
+The web client offers a user interface that allows users to interact with the refactoring system remotely, enabling them to view energy consumption reports, and track performance metrics from a browser.
 
 \section{Critical Assumptions}
 
@@ -153,9 +178,63 @@ entered in the table, including strategies involving providing additional
 documentation, and/or test cases.}
 
 \section{Safety and Security Requirements}
+Requirements that should have been included in Revision 0 of the System Requirements document are written in \textbf{bold}.
 
-\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
-rationale design process how and why to fake it.)}
+\subsection{Access Requirements}
+\begin{enumerate}[label=SR-AP \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{\textbf{The energy analysis log must include which processes were measured to avoid including background tasks unintentionally.}}\\[2mm]
+    \textbf{Rationale:} This ensures only relevant processes are accurately included in energy measurements, leading to more precise analysis.\\
+    \textbf{Associated Hazards:} \\
+    \textbf{Priority:} High
+\end{enumerate}
+
+\subsection{Integrity Requirements}
+\begin{enumerate}[label=SR-IN \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{Refactorings must result in energy savings, validated against energy consumption statistics before applying the changes.}\\[2mm]
+    {\bf Rationale:} Ensures that refactorings improve energy efficiency.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+    \item \emph{The system must validate that refactorings preserve the original functionality and correctness of the code.}\\[2mm]
+    {\bf Rationale:} Ensures that refactorings do not introduce bugs or functional changes.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+    \item \emph{\textbf{The reinforcement learning model must be audited regularly to detect and prevent bias, ensuring fair refactorings.}}\\[2mm]
+    {\bf Rationale:} Prevents bias in the learning model, ensuring effective refactorings.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\subsection{Availability and Performance Requirements}
+\begin{enumerate}[label=SR-AV \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{\textbf{Implement process-level tracking to distinguish between Python code and background tasks during energy measurement.}}\\[2mm]
+    {\bf Rationale:} This prevents irrelevant tasks from affecting energy measurement results.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+    \item \emph{\textbf{Garbage collection or memory deallocation should occur after each refactoring step to prevent memory leaks.}}\\[2mm]
+    {\bf Rationale:} Prevents performance issues or crashes due to excessive memory use.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\subsection{Privacy Requirements}
+\begin{enumerate}[label=SR-PR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{\textbf{Process isolation must be ensured so that only relevant processes are analyzed for energy consumption.}}\\[2mm]
+    {\bf Rationale:} Protects the user's privacy and ensures relevant data is analyzed.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+\end{enumerate}
+
+\subsection{Usability and Training Requirements}
+\begin{enumerate}[label=SR-UT \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The interface should undergo user testing to refine its design and reduce user frustration.}\\[2mm]
+    {\bf Rationale:} A well-designed interface reduces user errors and improves user satisfaction.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+    \item \emph{Provide comprehensive user manuals and video tutorials to guide users.}\\[2mm]
+    {\bf Rationale:} Ensures that users understand how to effectively use the tool.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+\end{enumerate}
 
 \section{Roadmap}
 
