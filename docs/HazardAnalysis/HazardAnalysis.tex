@@ -10,6 +10,7 @@
 \usepackage{booktabs}
 \usepackage{xcolor}
 \usepackage{blindtext}
+\usepackage{enumitem}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -179,9 +180,63 @@ entered in the table, including strategies involving providing additional
 documentation, and/or test cases.}
 
 \section{Safety and Security Requirements}
+Requirements that should have been included in Revision 0 of the System Requirements document are written in \textbf{bold}.
 
-\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
-rationale design process how and why to fake it.)}
+\subsection{Access Requirements}
+\begin{enumerate}[label=SR-AP \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{\textbf{The energy analysis log must include which processes were measured to avoid including background tasks unintentionally.}}\\[2mm]
+    \textbf{Rationale:} This ensures only relevant processes are accurately included in energy measurements, leading to more precise analysis.\\
+    \textbf{Associated Hazards:} \\
+    \textbf{Priority:} High
+\end{enumerate}
+
+\subsection{Integrity Requirements}
+\begin{enumerate}[label=SR-IN \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{Refactorings must result in energy savings, validated against energy consumption statistics before applying the changes.}\\[2mm]
+    {\bf Rationale:} Ensures that refactorings improve energy efficiency.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+    \item \emph{The system must validate that refactorings preserve the original functionality and correctness of the code.}\\[2mm]
+    {\bf Rationale:} Ensures that refactorings do not introduce bugs or functional changes.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+    \item \emph{\textbf{The reinforcement learning model must be audited regularly to detect and prevent bias, ensuring fair refactorings.}}\\[2mm]
+    {\bf Rationale:} Prevents bias in the learning model, ensuring effective refactorings.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\subsection{Availability and Performance Requirements}
+\begin{enumerate}[label=SR-AV \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{\textbf{Implement process-level tracking to distinguish between Python code and background tasks during energy measurement.}}\\[2mm]
+    {\bf Rationale:} This prevents irrelevant tasks from affecting energy measurement results.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+    \item \emph{\textbf{Garbage collection or memory deallocation should occur after each refactoring step to prevent memory leaks.}}\\[2mm]
+    {\bf Rationale:} Prevents performance issues or crashes due to excessive memory use.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+\end{enumerate}
+
+\subsection{Privacy Requirements}
+\begin{enumerate}[label=SR-PR \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{\textbf{Process isolation must be ensured so that only relevant processes are analyzed for energy consumption.}}\\[2mm]
+    {\bf Rationale:} Protects the user's privacy and ensures relevant data is analyzed.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} High
+\end{enumerate}
+
+\subsection{Usability and Training Requirements}
+\begin{enumerate}[label=SR-UT \arabic*., wide=0pt, leftmargin=*]
+    \item \emph{The interface should undergo user testing to refine its design and reduce user frustration.}\\[2mm]
+    {\bf Rationale:} A well-designed interface reduces user errors and improves user satisfaction.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+    \item \emph{Provide comprehensive user manuals and video tutorials to guide users.}\\[2mm]
+    {\bf Rationale:} Ensures that users understand how to effectively use the tool.\\
+    {\bf Associated Hazards:} \\
+    {\bf Priority:} Medium
+\end{enumerate}
 
 \section{Roadmap}
 
