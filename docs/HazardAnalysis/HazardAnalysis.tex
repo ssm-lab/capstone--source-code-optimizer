@@ -46,9 +46,7 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+25 October 2024 & All & Created initial revision of Hazard Analysis\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -371,13 +369,16 @@ documentation, and/or test cases.}
 
 \begin{enumerate}
     \item[3.] \textit{Which of your listed risks had your team thought of before this deliverable, and which did you think of while doing this deliverable? For the latter ones (ones you thought of while doing the Hazard Analysis), how did they come about?}
-    
-    \lips
+
+    The risks that we had thought of before this deliverable include  HZ6, HZ7, HZ9 and HZ10. All remaining risks(HZ1, HZ2, HZ3, HZ4, HZ5, HZ8, HZ11, HZ12, HZ13, HZ14, HZ15 and HZ16) were thought of during the deliverable. To come up with ideas, we analyzed the system on a component by component basis in order to identify risks on a granular level(components defined earlier in Section 3 of this document).  Defining critical assumptions before brainstorming the risks helped create a boundary for lookout for possible things that could go wrong with each component. It is important to note that a deeper understanding of our dependencies, such as PyJoules for energy measurements, helped identify possible things that could go wrong when implementing those in their respective modules. We adopted an iterative approach to the brainstorming, as identifying ground level risks helped to identify other risks over an entire week of deliberation.
 
     \item[4.] \textit{Other than the risk of physical harm (some projects may not have any appreciable risks of this form),
     list at least 2 other types of risk in software products. Why are they important to consider?}
 
-    \lips
+    \begin{enumerate}
+        \item Data Security Risk: Software products are a storehouse of data related to its users. If sensitive data is exposed to vulnerabilities, it can leads to breaches. This risk is important to consider as a a breach can harm users as well as the organization’s reputation. Addressing this risk is critical for maintaining trust and preventing legal battles.
+        \item Operational Risk: Live hosted software products are bound to face risks related to live performance, such as slow performance and/or system downtime. These are important to consider as they are post-implementation risks that directly impact system availability to users. This can impact user productivity and cause financial loss to the organization, which is why they should be considered.
+    \end{enumerate}
 
 \end{enumerate}
 
