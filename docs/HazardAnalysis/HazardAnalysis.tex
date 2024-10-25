@@ -176,62 +176,69 @@ entered in the table, including strategies involving providing additional
 documentation, and/or test cases.}
 
 \section{Safety and Security Requirements}
-Requirements that should have been included in Revision 0 of the System Requirements document are written in \textbf{bold}.
 
-\subsection{Access Requirements}
-\begin{enumerate}[label=SR-AP \arabic*., wide=0pt, leftmargin=*]
-    \item \emph{\textbf{The energy analysis log must include which processes were measured to avoid including background tasks unintentionally.}}\\[2mm]
-    \textbf{Rationale:} This ensures only relevant processes are accurately included in energy measurements, leading to more precise analysis.\\
-    \textbf{Associated Hazards:} \\
-    \textbf{Priority:} High
-\end{enumerate}
+\begin{enumerate}[label=SCR \arabic*., wide=0pt, leftmargin=*]
 
-\subsection{Integrity Requirements}
-\begin{enumerate}[label=SR-IN \arabic*., wide=0pt, leftmargin=*]
-    \item \emph{Refactorings must result in energy savings, validated against energy consumption statistics before applying the changes.}\\[2mm]
-    {\bf Rationale:} Ensures that refactorings improve energy efficiency.\\
-    {\bf Associated Hazards:} \\
+    \item \emph{The system shall log all energy consumption measurements with timestamps and indicate which processes were measured to aid in future analysis and troubleshooting.}\\
+    {\bf Rationale:} Detailed logging with timestamps and process attribution ensures accurate energy data and helps identify delays or misattributions.\\
+    {\bf Fit Criterion:} 100\% of energy analysis logs must include timestamps and process-level breakdowns of all measured processes.\\
+    {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3\\
     {\bf Priority:} High
-    \item \emph{The system must validate that refactorings preserve the original functionality and correctness of the code.}\\[2mm]
-    {\bf Rationale:} Ensures that refactorings do not introduce bugs or functional changes.\\
-    {\bf Associated Hazards:} \\
-    {\bf Priority:} High
-    \item \emph{\textbf{The reinforcement learning model must be audited regularly to detect and prevent bias, ensuring fair refactorings.}}\\[2mm]
-    {\bf Rationale:} Prevents bias in the learning model, ensuring effective refactorings.\\
-    {\bf Associated Hazards:} \\
-    {\bf Priority:} Medium
-\end{enumerate}
 
-\subsection{Availability and Performance Requirements}
-\begin{enumerate}[label=SR-AV \arabic*., wide=0pt, leftmargin=*]
-    \item \emph{\textbf{Implement process-level tracking to distinguish between Python code and background tasks during energy measurement.}}\\[2mm]
-    {\bf Rationale:} This prevents irrelevant tasks from affecting energy measurement results.\\
-    {\bf Associated Hazards:} \\
+    \item \emph{The system shall ensure that all refactored code has comprehensive test coverage and passes performance metrics such as energy efficiency, speed, and memory usage.}\\
+    {\bf Rationale:} Proper test coverage and performance checks prevent faulty code from being introduced and ensure refactorings improve or maintain performance.\\
+    {\bf Fit Criterion:} 100\% of refactorings must pass tests covering all code paths, and performance must remain within a 5\% tolerance across energy, speed, and memory metrics.\\
+    {\bf Associated Hazards:} HZ-5, HZ-6, HZ-7, HZ-10\\
     {\bf Priority:} High
-    \item \emph{\textbf{Garbage collection or memory deallocation should occur after each refactoring step to prevent memory leaks.}}\\[2mm]
-    {\bf Rationale:} Prevents performance issues or crashes due to excessive memory use.\\
-    {\bf Associated Hazards:} \\
-    {\bf Priority:} Medium
-\end{enumerate}
 
-\subsection{Privacy Requirements}
-\begin{enumerate}[label=SR-PR \arabic*., wide=0pt, leftmargin=*]
-    \item \emph{\textbf{Process isolation must be ensured so that only relevant processes are analyzed for energy consumption.}}\\[2mm]
-    {\bf Rationale:} Protects the user's privacy and ensures relevant data is analyzed.\\
-    {\bf Associated Hazards:} \\
+    \item \emph{The system shall check for necessary system-level permissions to access energy consumption data and alert users if permissions are missing.}\\
+    {\bf Rationale:} Lack of access may lead to failure in energy data retrieval, which can hinder the accuracy of analysis.\\
+    {\bf Fit Criterion:} 100\% of runs shall check for and request permissions if required, and alert the user in case of failures.\\
+    {\bf Associated Hazards:} HZ-3\\
     {\bf Priority:} High
-\end{enumerate}
 
-\subsection{Usability and Training Requirements}
-\begin{enumerate}[label=SR-UT \arabic*., wide=0pt, leftmargin=*]
-    \item \emph{The interface should undergo user testing to refine its design and reduce user frustration.}\\[2mm]
-    {\bf Rationale:} A well-designed interface reduces user errors and improves user satisfaction.\\
-    {\bf Associated Hazards:} \\
+    \item \emph{The system shall ensure version control for each refactoring, allowing changes to be reverted in case of errors.}\\
+    {\bf Rationale:} Version control helps prevent loss of code or data and allows developers to revert refactorings if necessary.\\
+    {\bf Fit Criterion:} 100\% of changes shall be recorded, allowing full reversion with no data loss.\\
+    {\bf Associated Hazards:} HZ-9\\
+    {\bf Priority:} High
+
+    \item \emph{The system shall detect and exempt external library dependencies from refactorings to avoid compatibility issues.}\\
+    {\bf Rationale:} Modifying external dependencies could lead to system instability or incompatibility with other tools or frameworks.\\
+    {\bf Fit Criterion:} 100\% detection accuracy for external library code during refactoring.\\
+    {\bf Associated Hazards:} HZ-11\\
     {\bf Priority:} Medium
-    \item \emph{Provide comprehensive user manuals and video tutorials to guide users.}\\[2mm]
-    {\bf Rationale:} Ensures that users understand how to effectively use the tool.\\
-    {\bf Associated Hazards:} \\
+
+    \item \emph{The system shall not refactor or alter code containing sensitive information (noted by user), ensuring security is maintained.}\\
+    {\bf Associated Rationale:} Refactoring sensitive code may introduce vulnerabilities and compromise security.\\
+    {\bf Fit Criterion:} 100\% of refactorings must pass a security check to avoid tampering with sensitive information.\\
+    {\bf Associated Hazards:} HZ-12\\
+    {\bf Priority:} High
+
+    \item \emph{The reinforcement learning model shall be trained on diverse datasets and periodically audited to avoid bias and prevent degradation.}\\
+    {\bf Rationale:} Overfitting or model degradation can lead to suboptimal or biased refactorings, impacting the system's effectiveness.\\
+    {\bf Fit Criterion:} 95\% of refactorings should be equally effective across different types of projects, and model audits should occur at least quarterly.\\
+    {\bf Associated Hazards:} HZ-13, HZ-14, HZ-15\\
     {\bf Priority:} Medium
+
+    \item \emph{The system shall implement memory leak detection during refactoring and alert users if any issues are detected.}\\
+    {\bf Rationale:} Memory leaks may cause system crashes and reduce performance.\\
+    {\bf Fit Criterion:} 100\% of memory leak incidents should trigger an error alert and resolution process.\\
+    {\bf Associated Hazards:} HZ-8\\
+    {\bf Priority:} Medium
+
+    \item \emph{The system shall require user approval for high-impact refactorings or those with low confidence, providing visibility and oversight for critical changes.}\\
+    {\bf Rationale:} Automated decisions could introduce errors without human oversight, and users should be aware of significant changes.\\
+    {\bf Fit Criterion:} 100\% of high-risk or low-confidence refactorings must require user approval before proceeding.\\
+    {\bf Associated Hazards:} HZ-16\\
+    {\bf Priority:} High
+
+    \item \emph{The system shall alert users to any delays or failures in reporting energy consumption, ensuring transparency in reporting.}\\
+    {\bf Rationale:} Users need to be aware of any issues in energy reporting to troubleshoot and resolve potential problems.\\
+    {\bf Fit Criterion:} 100\% of energy measurement delays or failures must trigger a user alert.\\
+    {\bf Associated Hazards:} HZ-2, HZ-3\\
+    {\bf Priority:} High
+
 \end{enumerate}
 
 \section{Roadmap}
