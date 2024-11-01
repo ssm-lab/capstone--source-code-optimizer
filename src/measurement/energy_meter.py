@@ -1,5 +1,3 @@
-# src/measurement/energy_meter.py
-
 import time
 from typing import Callable
 import pyJoules.energy as joules
