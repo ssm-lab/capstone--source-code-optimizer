@@ -10,11 +10,22 @@
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
+
+%Includes "References" in the table of contents
+\usepackage[nottoc]{tocbibind}
+
+\usepackage[toc,page]{appendix}
+
+\usepackage[square,numbers,compress]{natbib}
+\bibliographystyle{abbrvnat}
 \usepackage{amssymb}
 
 \input{../Comments}
 \input{../Common}
+
+\newcommand{\SRS}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/SRS/SRS.pdf}{SRS}}
+\newcommand{\MG}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Design/SoftArchitecture/MG.pdf}{MG}}
+\newcommand{\MIS}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Design/SoftDetailedDes/MIS.pdf}{MIS}}
 
 \begin{document}
 
@@ -75,7 +86,7 @@ in.}
 \end{tabular}\\
 
 \wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
+  \cite{SRS} tables, if appropriate}
 
 \wss{Remove this section if it isn't needed}
 
@@ -90,56 +101,30 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+The software being tested is called EcoOptimizer. EcoOptimizer is a python refactoring library that focuses on optimizing code in a way that reduces its energy consumption. The system will be capable to analyze python code in order to spot inefficiencies (code smells) within, measuring the energy efficiency of the inputted code and, of course, apply appropriate refactorings that preserve the initial function of the source code. \\
+
+Furthermore, peripheral tools such as a Visual Studio Code (VS Code) extension and GitHub Action are also to be tested. The extension will integrate the library with Visual Studio Code for a more efficient development process and the GitHub Action will allow a proper integration of the library into continuous integration (CI) workflows.
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+The primary objective of this project is to build confidence in the \textbf{correctness} and \textbf{energy efficiency} of the refactoring library, ensuring that it performs as expected in improving code efficiency while maintaining functionality. Usability is also emphasized, particularly in the user interfaces provided through the \textbf{VS Code extension} and \textbf{GitHub Action} integrations, as ease of use is critical for adoption by software developers. These qualities—correctness, energy efficiency, and usability—are central to the project’s success, as they directly impact user experience, performance, and the sustainable benefits of the tool.\\
 
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+Certain objectives are intentionally left out-of-scope due to resource constraints. We will not independently verify external libraries or dependencies; instead, we assume they have been validated by their respective development teams. 
 
 \subsection{Challenge Level and Extras}
 
-\wss{State the challenge level (advanced, general, basic) for your project.
-Your challenge level should exactly match what is included in your problem
-statement.  This should be the challenge level agreed on between you and the
-course instructor.  You can use a pull request to update your challenge level
-(in TeamComposition.csv or Repos.csv) if your plan changes as a result of the
-VnV planning exercise.}
-
-\wss{Summarize the extras (if any) that were tackled by this project.  Extras
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  Extras should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your extras (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+Our project, set at a \textbf{general} challenge level, includes two additional focuses: \textbf{user documentation} and \textbf{usability testing}. The user documentation aims to provide clear, accessible guidance for developers, making it easy to understand the tool’s setup, functionality, and integration into existing workflows. Usability testing will ensure that the tool is intuitive and meets user needs effectively, offering insights to refine the user interface and optimize interactions with it's features.
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
-
-\citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+The Verification and Validation (VnV) plan relies on three key documents to guide testing and assessment: 
+\begin{itemize}
+  \item[] \textbf{Software Requirements Specification (\SRS)\cite{SRS}:} The foundation for the VnV plan, as it defines the functional and non-functional requirements the software must meet; aligning tests with these requirements ensures that the software performs as expected in terms of correctness, performance, and usability.
+  
+  \item[] \textbf{Module Interface Specification (\MG)\cite{MGDoc}:} Provides detailed information about each module's interfaces, which is crucial for integration testing to verify that all modules interact correctly within the system.
+  
+  \item[] \textbf{Module Guide (\MIS)\cite{MISDoc}:} Outlines the system's architectural design and module structure, ensuring the design of tests that align with the intended flow and dependencies within the system.
+\end{itemize}
 
 \section{Plan}
 
@@ -585,12 +570,13 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
-				
-\bibliographystyle{plainnat}
+			
 
 \bibliography{../../refs/References}
 
 \newpage
+
+\begin{appendices}
 
 \section{Appendix}
 
@@ -606,7 +592,7 @@ Their values are defined in this section for easy maintenance.
 \wss{This is a section that would be appropriate for some projects.}
 
 \newpage{}
-\section*{Appendix --- Reflection}
+\section{Reflection}
 
 \wss{This section is not required for CAS 741}
 
@@ -629,5 +615,7 @@ graduate attribute of Lifelong Learning.
   mastering the skill?  Of the identified approaches, which will each team
   member pursue, and why did they make this choice?
 \end{enumerate}
+
+\end{appendices}
 
 \end{document}
