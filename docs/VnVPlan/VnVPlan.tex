@@ -400,6 +400,48 @@ How test will be performed:
   \item Verify that all tests in the original test suite pass, indicating that the original code is valid and functioning as expected.
 \end{enumerate}
 
+ \item{Valid Python Test Suite Acceptance\\}
+
+    Control: Automatic
+
+    Initial State: Tool is idle.
+
+    Input: A valid Python test suite file (\texttt{testSuite.py}) with valid syntax and tests.
+
+    Output: The system accepts the test suite and confirms it is ready for execution.
+
+    Test Case Derivation: Confirms that the tool can accept a valid test suite as input, as required by FR 2.
+
+    How test will be performed: Load a valid test suite \texttt{.py} file into the tool and observe that it is accepted without errors.
+
+    \item{Feedback for Test Suite with Invalid Syntax\\}
+
+    Control: Automatic
+
+    Initial State: Tool is idle.
+
+    Input: A test suite file (\texttt{invalid\_test\_suite.py}) containing syntax errors.
+
+    Output: The system rejects the test suite and provides an error message detailing the syntax issue.
+
+    Test Case Derivation: Verifies the tool's capability to identify and report errors in test suites, meeting FR 2.
+
+    How test will be performed: Load a test suite file with syntax errors into the tool and check for appropriate error reporting.
+
+    \item{Test Suite with No Test Cases\\}
+
+    Control: Automatic
+
+    Initial State: Tool is idle.
+
+    Input: A valid Python file (\texttt{empty\_test\_suite.py}) that contains no test cases.
+
+    Output: The system rejects the file and provides an error message indicating that there are no test cases present.
+
+    Test Case Derivation: Ensures the tool identifies test suites lacking test cases, complying with FR 2.
+
+    How test will be performed: Load a test suite file with no defined test cases and verify that the system produces an appropriate error message.
+
 
 \end{enumerate}
 
@@ -784,6 +826,19 @@ The following tests aim to validate the tool's capability to suggest appropriate
   
   How test will be performed: Provide a code example that includes a complex smell and observe the output for an appropriate message regarding the lack of suggestions.
 
+  \item{Selection of Identical Energy Consumption Refactorings\\}
+
+  Control: Automatic
+  
+  Initial State: The refactoring tool has analyzed a Python code file and identified multiple minimal refactorings.
+  
+  Input: Two or more refactorings that result in the same minimal energy consumption improvement.
+  
+  Output: The tool randomly selects one refactoring to apply.
+  
+  Test Case Derivation: This test ensures that when multiple refactorings provide the same energy efficiency gain, the tool correctly implements one of them without preference, thereby fulfilling FR 5.
+  
+  How test will be performed: The tool will be run on a Python file containing code smells. It will be observed whether it selects one of the refactorings with identical energy improvements for application.
 \end{enumerate}
 
 \subsubsection{Output Validation Tests}
