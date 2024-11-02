@@ -13,12 +13,14 @@
 
 %Includes "References" in the table of contents
 \usepackage[nottoc]{tocbibind}
-
 \usepackage[toc,page]{appendix}
-
 \usepackage[square,numbers,compress]{natbib}
 \bibliographystyle{abbrvnat}
+
 \usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage[dvipsnames]{xcolor}
 
 \input{../Comments}
 \input{../Common}
@@ -113,7 +115,7 @@ Certain objectives are intentionally left out-of-scope due to resource constrain
 
 \subsection{Challenge Level and Extras}
 
-Our project, set at a \textbf{general} challenge level, includes two additional focuses: \textbf{user documentation} and \textbf{usability testing}. The user documentation aims to provide clear, accessible guidance for developers, making it easy to understand the tool’s setup, functionality, and integration into existing workflows. Usability testing will ensure that the tool is intuitive and meets user needs effectively, offering insights to refine the user interface and optimize interactions with it's features.
+Our project, set at a \textbf{general} challenge level, includes two additional focuses: \textbf{user documentation} and \textbf{usability testing}. The user documentation aims to provide clear, accessible guidance for developers, making it easy to understand the tool’s setup, functionality, and integration into existing workflows. Usability testing will ensure that the tool is intuitive and meets user needs effectively, offering insights to refine the user interface and optimize interactions with its features.
 
 \subsection{Relevant Documentation}
 
@@ -384,64 +386,522 @@ How test will be performed:
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
+The section will cover system tests for the non-functional requirements (NFR) listed in the \SRS \hspace{1pt} document\cite{SRS}. The goal for these tests is to address the fit criteria for the requirements. Each test will be linked back to a specific NFR that can be observed in section \ref{trace-sys}.
 
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
+\noindent
+\rule{\linewidth}{2pt}
 
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
+\subsubsection{Look and Feel}
+\rule{\linewidth}{2pt}
 
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
+\medskip
 
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
+\noindent
+The following subsection tests cover all Look and Feel requirements listed in the SRS \cite{SRS}. They seek to validate that the system is modern, visually appealing, and supporting of a calm and focused user experience. 
 		
-\paragraph{Title for Test}
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-LF-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Side-by-side code comparison in IDE plugin} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open in VS Code, with a sample code file loaded \\
+    \textbf{Input/Condition:} The user initiates a refactoring operation \\
+    \textbf{Output/Result:} The plugin displays the original and refactored code side by side\\[2mm]
+    \textbf{How test will be performed:} The tester will open a sample code file within the IDE plugin and apply a refactoring operation. After refactoring, they will verify that the original code appears on one side of the interface and the refactored code on the other, with clear options to accept or reject each change. The tester will interact with the accept/reject buttons to ensure functionality and usability, confirming that users can seamlessly make refactoring decisions with both versions displayed side by side.
 
-\begin{enumerate}
+  \item \textbf{Theme adaptation in VS Code} \\[2mm]
+    \textbf{Type:} Non-functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open in VS Code with either light or dark theme enabled \\
+    \textbf{Input/Condition:} The user switches between light and dark themes in VS Code \\
+    \textbf{Output/Result:} The plugin’s interface adjusts automatically to match the theme \\[2mm]
+    \textbf{How test will be performed:} The tester will open the plugin in both light and dark themes within VS Code by toggling the theme settings in the IDE. They will observe the plugin interface each time the theme is switched, ensuring that the plugin automatically adjusts to match the selected theme without any manual adjustments required. 
 
-\item{test-id1\\}
+  \item \textbf{Colour-coded refactoring indicators for energy savings} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with sample code loaded \\
+    \textbf{Input/Condition:} The plugin displays refactoring suggestions based on energy savings \\
+    \textbf{Output/Result:} Refactoring suggestions are colour-coded according to energy-saving potential (e.g., yellow for minor savings, red for major savings) \\[2mm]
+    \textbf{How test will be performed:} The tester will load sample code with multiple refactoring suggestions based on energy-saving potential and activate the plugin’s analysis feature. The tester will then review each suggestion, confirming that they are visually differentiated by colour codes (e.g., yellow for minor savings and red for major savings). They will interact with each coloured indicator to ensure that it is responsive and accurately represents the suggested energy savings levels.
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+  \item \textbf{Visual alerts in GitHub Action for significant energy savings} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} GitHub Action enabled for a pull request (PR) \\
+    \textbf{Input/Condition:} PR analysis indicates energy savings exceeding a predefined threshold. \\
+    \textbf{Output/Result:} A success icon or green label appears in the PR summary \\[2mm]
+    \textbf{How test will be performed:} The tester will set up a pull request (PR) with changes that yield significant energy savings. When the GitHub Action completes the analysis, the tester will check the PR summary to confirm that a green label or success icon appears, indicating substantial energy savings. The tester will repeat the test with a PR that does not meet the threshold to ensure no alert is displayed. 
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+  \item \textbf{Minimalist design of the refactoring interface} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} After a testing session, developers fill out the survey found in \ref{A.2} evaluating their experience with the plugin.
 
+  \item \textbf{Professional and authoritative appearance of the plugin} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} After a testing session, developers fill out the survey found in \ref{A.2} evaluating the professionalism and trustworthiness of the plugin interface.
+
+  \item \textbf{Calm and focused atmosphere of plugin interface} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} Following a testing session, developers complete the survey found in \ref{A.2} evaluating the plugin’s atmosphere and its impact on focus.
+
+  \item \textbf{Modern, visually appealing design} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give a answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} After initial interaction, developers complete the survey found in \ref{A.2} on the tool’s design aesthetics.
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\noindent
+\rule{\linewidth}{2pt}
+    
+\subsubsection{Usability \& Humanity}
+\rule{\linewidth}{2pt}
 
-...
+\medskip
 
-\subsection{Traceability Between Test Cases and Requirements}
+\noindent
+The following subsection tests cover all Usability \& Humanity requirements listed in the SRS \cite{SRS}. They seek to validate that the system is accessible, user-centred, intuitive and easy to navigate.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-UH-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Customizable settings for refactoring preferences} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with settings panel accessible \\
+    \textbf{Input/Condition:} User customizes refactoring style and detection sensitivity \\
+    \textbf{Output/Result:} Custom configurations save and load successfully \\[2mm]
+    \textbf{How test will be performed:} The tester will navigate to the settings menu within the tool and adjust various options, including refactoring style, colour-coded indicators, and unit preferences (metric vs. imperial). After each adjustment, the tester will observe if the interface and refactoring suggestions reflect the changes made. 
+
+  \item \textbf{Multilingual support in user guide} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\ 
+    \textbf{Initial State:} Bilingual user navigates to system documentation \\
+    \textbf{Input/Condition:} User accesses guide in both English and French \\
+    \textbf{Output/Result:} The guide is accessible in both languages \\[2mm]
+    \textbf{How test will be performed:} The tester will set the tool’s language to French and access the user guide, reviewing each section to ensure accurate translation and readability. After verifying the French version, they will switch the language to English, confirming consistency in content, layout, and clarity between both versions.
+
+  \item \textbf{YouTube installation tutorial availability} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\ 
+    \textbf{Initial State:} User access documentation resources \\
+    \textbf{Input/Condition:} User follows the provided link to a YouTube tutorial \\
+    \textbf{Output/Result:} Installation tutorial is available and accessible on YouTube, and user successfully installs the system. \\[2mm]
+    \textbf{How test will be performed:} The tester will start with the installation instructions provided in the user guide and follow the link to the YouTube installation tutorial. They will watch the video and proceed with each installation step as demonstrated. Throughout the process, the tester will note the clarity and pacing of the instructions, any gaps between the video and the actual steps, and if the video effectively guides them to a successful installation. 
+
+  \item \textbf{High-Contrast Theme Accessibility Check} \\[2mm]
+    \textbf{Objective:} Evaluate the high-contrast themes in the refactoring tool for compliance with accessibility standards to ensure usability for visually impaired users. \\
+    \textbf{Scope:} Focus on UI components that utilize high-contrast themes, including text, buttons, and backgrounds. \\
+    \textbf{Methodology:} Static Analysis \\
+    \textbf{Process:} 
+    \begin{itemize}
+      \item Identify all colour codes used in the system and categorize them by their role in the UI (i.e. background, foreground text, buttons, etc.).
+      \item Use tools to measure color contrast ratios against WCAG thresholds (4.5:1 for normal text, 3:1 for large text)\cite{WCAG}.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} Developers implement themes that pass the testing process. \\[2mm]
+    \textbf{Tools and Resources:} WebAIM Color Contrast Checker, WCAG guidelines documentation, internal coding standards. \\[2mm]
+    \textbf{Acceptance Criteria:} All UI elements must meet WCAG contrast ratios; documentation must accurately reflect theme usage.
+
+  \item \textbf{Audio cues for important actions} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with audio cues enabled \\
+    \textbf{Input/Condition:} User performs actions triggering audio cues \\
+    \textbf{Output/Result:} The system emits an audible attention catching sound. \\[2mm]
+    \textbf{How test will be performed:} The tester will enable audio cues in the tool's settings, then perform a series of tasks, such as running code analysis, applying refactorings, and saving changes. Each action should trigger an audio cue indicating task completion or user feedback. The tester will evaluate the volume, timing, and appropriateness of each cue and document whether the cues enhance the user experience or cause any distractions. 
+
+  \item \textbf{Intuitive user interface for core functionality} \\[2mm]
+    \textbf{Type:} Non-Functional, User Testing, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with code loaded \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} Users can access core functions within three clicks or less \\[2mm]
+    \textbf{How test will be performed:} After a testing session, developers fill out the survey found in \ref{A.2} evaluating their experience with the plugin.
+
+  \item \textbf{Clear and concise user prompts} \\[2mm]
+    \textbf{Type:} Non-Functional, User Survey, Dynamic \\
+    \textbf{Initial State:} IDE plugin prompts user for input \\
+    \textbf{Input/Condition:} Users follow on-screen instructions \\
+    \textbf{Output/Result:} 90\% of users report the prompts are straightforward and effective \\[2mm]
+    \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on the clarity of guidance provided.
+
+  \item \textbf{Context-sensitive help based on user actions} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with help function enabled \\
+    \textbf{Input/Condition:} User engages in various actions, requiring guidance \\
+    \textbf{Output/Result:} Help resources are accessible within 1-3 clicks \\[2mm]
+    \textbf{How test will be performed:} The tester will perform a series of tasks within the tool, such as initiating a code analysis, applying a refactoring, and adjusting settings. At each step, they will access the context-sensitive help option to confirm that the information provided is relevant to the current task. The tester will evaluate the ease of accessing help, the relevance and clarity of guidance, and whether the help content effectively supports task completion.
+
+  \item \textbf{Clear and constructive error messaging} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with possible error scenarios triggered \\
+    \textbf{Input/Condition:} User encounters an error during use \\
+    \textbf{Output/Result:} 80\% of users report that error messages are helpful and courteous \\[2mm]
+    \textbf{How test will be performed:} After receiving error messages, users fill out the survey found in \ref{A.2} on their clarity and constructiveness.
+
+  % \item \textbf{Usability and Design Acceptance} \\
+  %   \textbf{Type:} Non-Functional, Manual, Dynamic \\
+  %   \textbf{Initial State:} User’s IDE environment is prepared without the refactoring tool installed \\
+  %   \textbf{Input/Condition:} User installs the refactoring tool, explores its key features, and completes a survey to provide feedback on usability, intuitiveness, and design quality \\
+  %   \textbf{Output/Result:} User installs the tool successfully, completes each feature exploration task without issues, and fills out a survey on the tool’s usability and design \\
+  %   \textbf{How test will be performed:} The tester will start from a clean slate and perform the following steps:
+  %   \begin{itemize}
+  %       \item \textbf{Installation:} The tester will install the refactoring tool from the PIP package manager by running \texttt{pip install ecooptimizer}. After installation, they will open the tool within the IDE, authenticate as prompted, and confirm successful setup by verifying the tool’s presence in the IDE interface.
+  %       \item \textbf{Code Analysis:} The tester will load a sample code file and initiate the code analysis feature. They will review the output, focusing on the clarity of refactoring suggestions and ease of accessing this feature within the interface.
+  %       \item \textbf{Refactoring Options and Side-by-Side Comparison:} The tester will apply a refactoring operation and evaluate the side-by-side comparison of original and refactored code. They will interact with the accept/reject buttons, assessing the ease of making refactoring decisions while viewing both code versions.
+  %       \item \textbf{Settings and Customisation:} The tester will navigate to the settings menu to explore customisation options, such as refactoring styles, colour-coded indicators, and measurement unit toggles between metric and imperial. They will adjust various settings and evaluate the intuitiveness of the settings menu and customisation process.
+  %       \item \textbf{Help and Error Handling:} The tester will simulate a common error (e.g., loading an incompatible file type) to trigger an error message, reviewing the clarity and guidance provided. They will also explore help resources, assessing their relevance, accessibility, and ease of use.
+  %       \item \textbf{Metrics Reporting and Export Functionality:} The tester will explore the metrics reporting feature to view data on energy savings or emissions and attempt to export this data in formats such as JSON and XML. They will assess the readability of metrics, usability of export options, and format accuracy.
+  %   \end{itemize}
+  %   After completing the walkthrough, the tester will fill out a survey to provide structured feedback on each feature, including the tool’s minimalist design, professional appearance, intuitive UI, clarity of prompts, error handling, and overall usability. This feedback will be used to identify areas for improvement in user experience and interface quality.
+\end{enumerate}
+
+\noindent
+\rule{\linewidth}{2pt}
+
+\subsubsection{Performance}
+\rule{\linewidth}{2pt}
+
+\medskip
+
+\noindent
+The following subsection tests cover all Performance requirements listed in the SRS \cite{SRS}. These tests validate the tool’s efficiency and responsiveness under varying workloads, including code analysis, refactoring, and data reporting.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Performance and capacity validation for analysis and refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} IDE open with multiple python projects of varying sizes ready (1,000, 5,000, 10,000, 100,000 lines of code). \\
+    \textbf{Input/Condition:} Initiate the refactoring process for each project sequentially \\
+    \textbf{Output/Result:} Process completes within 15 seconds for projects up to 5,000 lines of code, 20 seconds for 10,000 lines of code and within 2 minutes for 100,000 lines of code. \\[2mm]
+    \textbf{How test will be performed:} The tester will use four python projects of different sizes: small (1,000 lines), medium (5,000 and 10,000 lines), and large (100,000 lines). For each project, start the refactoring process while running a timer. The scope of the test ends when the system presents the user with the completed refactoring proposal. The time taken for each project is checked against the expected result.
+
+  \item \textbf{Integrity of refactored code against runtime errors} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} Refactoring tool ready, with user-provided code and test suite loaded \\
+    \textbf{Input/Condition:} User initiates refactoring on the input code \\
+    \textbf{Output/Result:} Refactored code passes all tests in the user-provided suite without runtime errors and adheres to Python syntax standards \\[2mm]
+    \textbf{How test will be performed:} The refactoring tool will first apply the refactoring to the user-provided code. After refactoring, an automated test suite will run, confirming that all original tests pass, indicating no loss of functionality. The refactored code will then be validated by an automatic linter to ensure compliance with Python syntax standards.
+
+  \item \textbf{Functionality preservation post-refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} Python file ready for refactoring with proper configurations for the system \\
+    \textbf{Input/Condition:} User initiates refactoring on the code file \\
+    \textbf{Output/Result:} The refactored code should pass 100\% of user-provided tests \\[2mm]
+    \textbf{How test will be performed:} see test \ref{tfr-?}
+
+  \item \textbf{Accuracy of code smell detection} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} Python file containing pre-determined code smells ready for refactoring with proper configurations for the system \\
+    \textbf{Input/Condition:} User initiates refactoring on the code file \\
+    \textbf{Output/Result:} All code smells determined prior to the test are detected. \\[2mm]
+    \textbf{How test will be performed:} see test \ref{tfr-?}
+
+  \item \textbf{Valid syntax and structure in refactored code} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} A refactored code file is present in the user's workspace \\
+    \textbf{Input/Condition:} A python linter is run on the refactored python file \\
+    \textbf{Output/Result:} Refactored code meets Python syntax and structural standards \\[2mm]
+    \textbf{How test will be performed:} see test \ref{tfr-?}
+
+  \item \textbf{Handling unexpected inputs} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE open and ready with various non-standard and invalid input files \\
+    \textbf{Input/Condition:} User attempts to refactor invalid code files and non-Python files \\
+    \textbf{Output/Result:} Tool detects invalid input, displays a clear error message, and does not crash \\[2mm]
+    \textbf{How test will be performed:} The tester will sequentially give any of the following invalid files as input to the system :
+    \begin{itemize}
+        \item Non-Python files (e.g., .txt, .java, .cpp, .js)
+        \item Invalid Python files with syntax errors (e.g., unmatched brackets, improper indentation)
+        \item Corrupted files that contain random symbols or partially deleted code
+    \end{itemize}
+    For each file type, the tester will initiate the refactoring process and observe the tool's response. The tool should detect each invalid input, display an error message describing the issue, and recover from the error without crashing. 
+
+  \item \textbf{Fallback options for failed refactoring attempts} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Static \\ %TODO: Change test format
+    \textbf{Initial State:} IDE open with sample code that will cause a refactoring failure (e.g., complex code with unsupported patterns) \\
+    \textbf{Input/Condition:} User initiates a refactoring operation on code that is incompatible with the refactoring tool’s capabilities \\
+    \textbf{Output/Result:} Tool logs the refactoring error, displays a notification to the user, and proposes alternative refactoring options without stopping the process \\[2mm]
+    \textbf{How test will be performed:} The tester will load code with patterns known to cause refactoring issues or require specific handling. Upon starting the refactoring, the tool should detect the failure, log the error internally, and present an error notification to the user. The tool should then offer alternative refactoring options (e.g., a simpler refactoring method or partial refactoring). The tester will verify that the process continues smoothly without requiring a restart and document each fallback option suggested by the tool.
+\end{enumerate}
+
+\noindent
+\rule{\linewidth}{2pt}
+
+\subsubsection{Operational \& Environmental}
+\rule{\linewidth}{2pt}
+
+\medskip
+
+\noindent
+The following subsection tests cover all Operational and Environmental requirements listed in the SRS \cite{SRS}. Testing includes adherence to emissions standards, integration with environmental metrics, and adaptability to diverse operational settings.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-OPE-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Emissions Standards Compliance} \\[2mm]
+    \textbf{Objective:} Ensure that the tool’s emissions metrics and reports align with widely used standards (e.g., GRI 305, GHG, ISO 14064) to support users in environmental compliance and sustainability tracking. \\[2mm]
+    \textbf{Scope:} This test applies to the tool's metrics and reporting components, including data format and labelling in the emissions report. \\[2mm]
+    \textbf{Methodology:} Static analysis and documentation walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review emissions metrics in the tool’s documentation and compare them with requirements from GRI 305, GHG, and ISO 14064 standards.
+      \item Verify that all required emissions metrics from these standards are present in the tool’s reports, with proper format and units.
+      \item Confirm that all emissions categories and labels align with standard definitions to ensure consistency and accuracy.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team and project supervisor will conduct the documentation review and patch any discrepencies. \\[2mm]
+    \textbf{Tools and Resources:} Tool’s user guide, sample emissions reports, GRI 305, GHG, and ISO 14064 standards documentation \\[2mm]
+    \textbf{Acceptance Criteria:} The tool’s emissions metrics meet or exceed the coverage required by GRI 305, GHG, and ISO 14064 standards. All labels and units are accurate, consistent, and aligned with these standards.
+
+
+  \item \textbf{Integration with GitHub Actions for automated refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} GitHub repository with access to the refactoring library in GitHub Actions \\
+    \textbf{Input/Condition:} User sets up a GitHub Actions workflow that calls the refactoring library \\
+    \textbf{Output/Result:} GitHub Actions successfully initiates refactoring processes through the library as part of a continuous integration workflow \\[2mm]
+    \textbf{How test will be performed:} The tester will configure a GitHub Actions workflow in a test repository, specifying steps to call the refactoring library. After committing a sample code change, the workflow should trigger automatically. The tester will verify that the refactoring library runs within GitHub Actions, completes the refactoring process, and provides feedback in the workflow logs. Successful integration will be confirmed by viewing refactoring results directly within the GitHub Actions logs.
+
+  \item \textbf{VSCode compatibility for refactoring library extension} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} VS Code IDE open and library installed\\
+    \textbf{Input/Condition:} User installs and opens the refactoring library extension in VS Code \\
+    \textbf{Output/Result:} The refactoring library extension installs successfully and runs within VS Code \\[2mm]
+    \textbf{How test will be performed:} The tester will navigate to the VS Code marketplace, search for the refactoring library extension, and install it. Once installed, the tester will open the extension and perform a basic refactoring task to ensure the tool operates correctly within the VS Code environment and has access to the system library.
+
+  \item \textbf{Import and export capabilities for codebases and metrics} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with the option to import/export codebases and metrics \\
+    \textbf{Input/Condition:} User imports an existing codebase and exports refactored code and metrics reports \\
+    \textbf{Output/Result:} The tool successfully imports codebases, refactors them, and exports both code and metrics reports \\[2mm]
+    \textbf{How test will be performed:} The tester will load an existing codebase into the tool, initiate refactoring, and select the option to export the refactored code and metrics report. The export should generate files in the selected format. The tester will verify the file formats, check for correct data structure, and validate that the content accurately reflects the refactoring and metrics generated by the tool.
+
+  \item \textbf{PIP package installation availability} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} Python environment ready without the refactoring library installed \\
+    \textbf{Input/Condition:} User installs the refactoring library using the command \texttt{pip install ecooptimizer} \\
+    \textbf{Output/Result:} The library installs successfully without errors and is available for use in Python scripts \\[2mm]
+    \textbf{How test will be performed:} The tester will open a new Python environment and enter the command to install the refactoring library via PIP. Once installed, the tester will import the library in a Python script and execute a basic function to confirm successful installation and functionality. The test verifies the library’s availability and ease of installation for end users.
+\end{enumerate}
+
+\noindent
+\rule{\linewidth}{2pt}
+
+\subsubsection{Maintenance and Support}
+\rule{\linewidth}{2pt}
+
+\medskip
+
+\noindent
+The following subsection tests cover all Maintenance and Support requirements listed in the SRS \cite{SRS}. These tests focus on rollback capabilities, compatibility with external libraries, automated testing, and extensibility for adding new code smells and refactoring functions.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-MS-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Extensibility for New Code Smells and Refactorings} \\[2mm]
+    \textbf{Objective:} Confirm that the tool’s architecture allows for the addition of new code smell detections and refactoring techniques with minimal code changes and disruption to existing functionality. \\[2mm]
+    \textbf{Scope:} This test applies to the tool’s extensibility, including modularity of code structure, ease of integration for new detection methods, and support for customization. \\[2mm]
+    \textbf{Methodology:} Code walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a code walkthrough focusing on the modularity and structure of the code smell detection and refactoring components.
+      \item Add a sample code smell detection and refactoring function to validate the ease of integration within the existing architecture.
+      \item Verify that the new function integrates seamlessly without altering existing features and that it is accessible through the tool’s main interface.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} Once the system is complete, the development team will perform the code walkthrough and integration. They will review and approve any structural changes required. \\[2mm]
+    \textbf{Tools and Resources:} Code editor, tool’s developer documentation, sample code smell and refactoring patterns \\[2mm]
+    \textbf{Acceptance Criteria:} New code smells and refactoring functions can be added within the existing modular structure, requiring minimal changes. The new function does not impact the performance or functionality of existing features.
+
+
+    \item \textbf{Maintainable and Adaptable Codebase} \\[2mm]
+    \textbf{Objective:} Ensure that the codebase is modular, well-documented, and maintainable, supporting future updates and adaptations for new Python versions and standards. \\[2mm]
+    \textbf{Scope:} This test covers the maintainability of the codebase, including structure, documentation, and modularity of key components. \\[2mm]
+    \textbf{Methodology:} Static analysis and documentation walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the codebase to verify the modular organization and clear separation of concerns between components.
+      \item Examine documentation for code clarity and completeness, especially around key functions and configuration files.
+      \item Assess code comments and the quality of function/method naming conventions, ensuring readability and consistency for future maintenance.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} Once the system is complete, the development team will conduct the code review, to identify areas for improvement. If necessary, they will also ensure to improve the quality of the documentation. \\[2mm]
+    \textbf{Tools and Resources:} Code editor, documentation templates, code commenting standards, Python development guides \\[2mm]
+    \textbf{Acceptance Criteria:} The codebase is modular and maintainable, with sufficient documentation to support future development. All major components are organized to allow for easy updates with minimal impact on existing functionality.
+  
+  \item \textbf{Easy rollback of updates in case of errors} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} Latest version of the tool installed with the ability to apply and revert updates \\
+    \textbf{Input/Condition:} User applies a simulated new update and initiates a rollback \\
+    \textbf{Output/Result:} The system reverts to the previous stable state without any errors \\[2mm]
+    \textbf{How test will be performed:} The tester will apply a simulated update. Following this, they will initiate the rollback function, which should restore the tool to its previous stable version. The tester will verify that all features function as expected post-rollback and document the time taken to complete the rollback process
+\end{enumerate}
+
+\noindent
+\rule{\linewidth}{2pt}
+
+\subsubsection{Security}
+\rule{\linewidth}{2pt}
+
+\medskip
+
+\noindent
+The following subsection tests cover all Security requirements listed in the SRS \cite{SRS}. These tests seek to validate that the tool is protected against unauthorized access, data breaches, and external threats.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-SRT-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{User authentication before accessing tool features} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} System installed, user unauthenticated \\
+    \textbf{Input/Condition:} User attempts to submit code or view refactoring reports \\
+    \textbf{Output/Result:} Access is denied \\[2mm]
+    \textbf{How test will be performed:} The tester will first attempt to submit code and access refactored reports without logging in, verifying that access is denied. The tester will then log in using valid company credentials and repeat the actions to confirm access is granted only after successful authentication.
+  
+  \item \textbf{Internal-Only Communication with Energy and Reinforcement Learning Tools} \\[2mm]
+    \textbf{Objective:} Ensure that the refactoring tool communicates exclusively with the internal energy consumption tool and reinforcement learning model, without exposing any public API endpoints. \\[2mm]
+    \textbf{Scope:} This test applies to all network and API interactions between the refactoring tool and internal services, ensuring no direct access is available to users or external applications. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a code walkthrough of the network and API components, focusing on the access control configurations for the energy consumption tool and reinforcement learning model.
+      \item Inspect the code for any exposed API endpoints or network configurations that might allow external access.
+      \item Attempt to access the internal tools directly from an external environment, ensuring that all external attempts are blocked.
+      \item Verify that the tool’s communication is contained within internal environments and restricted to authorized system components.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review and testing, ensuring secure access protocols. \\[2mm]
+    \textbf{Tools and Resources:} Access to the codebase, network configuration files, and security audit tools \\[2mm]
+    \textbf{Acceptance Criteria:} No public or external API endpoints exist for the internal tools, and only the refactoring tool can access the energy consumption and reinforcement learning models.
+  
+    \item \textbf{Preventing Unauthorized Changes to Refactored Code and Reports} \\[2mm]
+    \textbf{Objective:} Ensure the tool’s refactored code and energy reports are protected from any unauthorized external modifications, maintaining data integrity and user trust. \\[2mm]
+    \textbf{Scope:} This test applies to the data security of refactored code and energy report storage layers, verifying that access is restricted to authorized users and processes only. \\[2mm]
+    \textbf{Methodology:} Static analysis and code walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the codebase and database configurations to verify the implementation of access controls and data security measures.
+      \item Confirm that the tool’s security settings prevent any unauthorized external modifications, maintaining data integrity across all storage layers.
+      \item Document any vulnerabilities found and evaluate with the development team to ensure improvements are made where necessary.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review while the project supervisor will oversee the test results and approve any necessary security enhancements. \\[2mm]
+    \textbf{Tools and Resources:} Access to security configuration files, code editor \\[2mm]
+    \textbf{Acceptance Criteria:} The review attendees find no egregious faults within the system that might allow unauthorized external access or modifications to refactored code and energy report data.
+
+  \item \textbf{Notification and consent for data handling (SR-PR 1)} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\ 
+    \textbf{Initial State:} System idle \\
+    \textbf{Input/Condition:} User initiates refactoring on their source code \\
+    \textbf{Output/Result:} Tool displays data handling notice and requests explicit consent before data collection \\[2mm]
+    \textbf{How test will be performed:} The tester will begin the refactoring process, and the tool should present a notice explaining data collection, storage, and processing practices, in compliance with PIPEDA. The user must provide explicit consent before proceeding. The tester will confirm that no data collection occurs until consent is granted.
+  
+  \item \textbf{Confidential Handling of User Data in Compliance with PIPEDA} \\[2mm]
+    \textbf{Objective:} Ensure that all user-submitted data, energy reports, and refactored code are treated as confidential, encrypted during storage and transmission, and managed according to PIPEDA. \\[2mm]
+    \textbf{Scope:} This test applies to the tool’s data handling practices, specifically the encryption protocols for transmission and storage, and data modification options for user compliance requests. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the encryption settings in the codebase to confirm that all data related to user submissions, energy reports, and refactored code is encrypted during transmission and storage.
+      \item Verify that an option is available for users to request modifications to their personal data as per PIPEDA requirements.
+      \item Document any gaps in data security or user request handling, and collaborate with the development team to implement improvements as needed.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review and implement any necessary improvements, with the project supervisor overseeing the compliance with PIPEDA standards. \\[2mm]
+    \textbf{Tools and Resources:} Access to encryption libraries, security configuration files \\[2mm]
+    \textbf{Acceptance Criteria:} All user data is encrypted during storage and transmission, and users have a reliable method for requesting data modifications as per PIPEDA specifications.
+
+  \item \textbf{Audit Logs for User Actions} \\[2mm]
+    \textbf{Objective:} Ensure the tool maintains tamper-proof logs of key user actions, including code submissions, login events, and access to refactored code and reports, to ensure accountability and traceability. \\[2mm]
+    \textbf{Scope:} This test applies to the logging mechanisms for user actions, focusing on the security and tamper-proof nature of logs. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the logging mechanisms within the codebase to confirm that events such as logins, code submissions, and report accesses are properly recorded with timestamps and user identifiers.
+      \item Document the integrity of the logs and any vulnerabilities found, and collaborate with the development team on any necessary improvements.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review, with oversight by the project supervisor to verify that logging mechanisms meet security requirements. \\[2mm]
+    \textbf{Tools and Resources:} Access to log files, logging library documentation, security testing tools \\[2mm]
+    \textbf{Acceptance Criteria:} Logs are tamper-proof, recording all critical user actions with integrity, and resistant to unauthorized modifications.
+
+  \item \textbf{Audit Logs for Refactoring Processes} \\[2mm]
+    \textbf{Objective:} Ensure that the tool maintains a secure, tamper-proof log of all refactoring processes, including pattern analysis, energy analysis, and report generation, for accountability in refactoring events. \\[2mm]
+    \textbf{Scope:} This test covers the logging of refactoring events, ensuring logs are complete and tamper-proof for future auditing needs. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the codebase to confirm that each refactoring event (e.g., pattern analysis, energy analysis, report generation) is logged with details such as timestamps and event descriptions.
+      \item Document any logging gaps or security vulnerabilities, and consult with the development team to implement enhancements.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will review and test the logging mechanisms, with the project supervisor ensuring alignment with auditing requirements. \\[2mm]
+    \textbf{Tools and Resources:} Access to logging components, tamper-proof logging tools \\[2mm]
+    \textbf{Acceptance Criteria:} All refactoring processes are logged in a secure, tamper-proof manner, ensuring complete traceability for future audits.
+\end{enumerate}
+
+\noindent
+\rule{\linewidth}{2pt}
+
+\subsubsection{Cultural}
+\rule{\linewidth}{2pt}
+
+\medskip
+
+\noindent
+The following subsection tests cover all Cultural requirements listed in the SRS \cite{SRS}. These test are to ensure that the tool is accessible and appropriate for a global audience, avoiding any culturally sensitive or inappropriate elements. 
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-CULT-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Cultural sensitivity of icons and colours} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on cultural sensitivity of the interface design.
+
+  \item \textbf{Support for metric and imperial units (CULT 2)} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} Tool ready with energy consumption metrics displayed in the default unit system \\
+    \textbf{Input/Condition:} User toggles the measurement units between metric and imperial \\
+    \textbf{Output/Result:} Energy consumption measurements update correctly between metric and imperial units \\[2mm]
+    \textbf{How test will be performed:} The tester will navigate to the settings, locate the measurement unit toggle, and switch between metric and imperial units. After each toggle, the displayed energy consumption data should reflect the correct measurement units. The tester will validate accuracy by comparing values against known conversions to ensure the toggle functions accurately and smoothly.
+
+  \item \textbf{Cultural sensitivity of content} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on cultural sensitivity of the content of the system.
+\end{enumerate}
+
+\noindent
+\rule{\linewidth}{2pt}
+
+\subsubsection{Compliance}
+\rule{\linewidth}{2pt}
+
+\medskip
+
+\noindent
+The following subsection tests cover all Compliance requirements listed in the SRS \cite{SRS}. The tests focus on adherence to PIPEDA, CASL, and ISO 9001, as well as SSADM standards, ensuring the tool complies with relevant regulations and aligns with professional development practices.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-CPL-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Compliance with PIPEDA and CASL} \\[2mm]
+    \textbf{Objective:} Ensure the tool’s data collection, usage, storage, and communication practices are fully compliant with the Personal Information Protection and Electronic Documents Act (PIPEDA) and Canada’s Anti-Spam Legislation (CASL), to avoid legal penalties and enhance user trust. \\[2mm]
+    \textbf{Scope:} This test applies to all processes related to data handling, storage, and user communication to verify compliance with PIPEDA and CASL. \\[2mm]
+    \textbf{Methodology:} Documentation walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the tool’s data handling and storage protocols to confirm compliance with PIPEDA, particularly focusing on secure storage, data usage transparency, and privacy rights.
+      \item Verify the presence of a user consent mechanism that informs users of data collection and provides options for managing their data.
+      \item Inspect communication practices to ensure compliance with CASL, confirming that the tool provides users with notification and opt-in options for all communications.
+      \item Document any gaps in compliance and consult with the development team for required adjustments.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the compliance review and implement any necessary updates. \\[2mm]
+    \textbf{Tools and Resources:} Access to documentation on PIPEDA and CASL requirements, tool’s data handling and communication protocols, test user accounts for opt-in verification \\[2mm]
+    \textbf{Acceptance Criteria:} The tool complies with all PIPEDA and CASL requirements, with secure data handling, user consent options, and compliant communication practices.
+
+\item \textbf{Compliance with ISO 9001 and SSADM Standards} \\[2mm]
+    \textbf{Objective:} Ensure the tool’s quality management and software development processes align with ISO 9001 for quality management and SSADM (Structured Systems Analysis and Design Method) standards for software development, building stakeholder trust and market acceptance. \\[2mm]
+    \textbf{Scope:} This test covers the tool’s adherence to ISO 9001 quality management practices and SSADM methodologies for software development processes. \\[2mm]
+    \textbf{Methodology:} Documentation walkthrough and code walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a review of the tool’s quality management procedures to verify alignment with ISO 9001 standards, including documentation, testing, and feedback mechanisms.
+      \item Examine software development workflows to confirm adherence to SSADM standards, focusing on design, analysis, and structured development practices.
+      \item Identify any deviations from ISO 9001 and SSADM requirements, document these findings, and discuss necessary adjustments with the development team.
+      \item Validate improvements in quality management and software development after implementing recommendations.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the standards compliance review, and the project supervisor will oversee the review process. \\[2mm]
+    \textbf{Tools and Resources:} Access to ISO 9001 and SSADM standards documentation, project quality management records, and development workflows \\[2mm]
+    \textbf{Acceptance Criteria:} The tool’s quality management and software development processes fully adhere to ISO 9001 and SSADM standards, supporting a high-quality, structured approach to development.
+\end{enumerate}
+
+\subsection{Traceability Between Test Cases and Requirements} \label{trace-sys}
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
@@ -587,7 +1047,7 @@ This is where you can place additional information.
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.
 
-\subsection{Usability Survey Questions?}
+\subsection{Usability Survey Questions?} \label{A.2}
 
 \wss{This is a section that would be appropriate for some projects.}
 
