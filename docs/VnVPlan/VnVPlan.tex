@@ -323,64 +323,700 @@ as a Rev 0 demo for the supervisor.}
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
-
 \subsection{Tests for Functional Requirements}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
+The subsections below outline tests corresponding to functional 
+requirements in the SRS. Each test is associated with a unique 
+functional area, helping to confirm that the tool meets the 
+specified requirements. Each functional area has its own subsection 
+for clarity.
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
+\subsubsection{Code Input Acceptance Tests}
 
-\subsubsection{Area of Testing1}
-
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
+This section covers the tests for ensuring the system correctly accepts 
+Python source code files, detects errors in invalid files, and provides 
+suitable feedback (FR 1).
 		
-\paragraph{Title for Test}
-
+\paragraph{1. Input Acceptance}
 \begin{enumerate}
+\item{Valid Python File Acceptance\\}
 
-\item{test-id1\\}
+Control: Automatic
+					
+Initial State: Tool is idle.
+					
+Input: A valid Python file (filename.py) with valid standard syntax.
+					
+Output: The system accepts the file without errors.
 
-Control: Manual versus Automatic
+Test Case Derivation: Confirming that the system correctly processes a valid Python file as per FR 1.
 					
-Initial State: 
+How test will be performed: Feed a syntactically valid .py file to the tool and observe if it’s accepted without issues.
 					
-Input: 
-					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
+\item{Feedback for Python File with Bad Syntax\\}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Control: Automatic
 					
+Initial State: Tool is idle.
+					
+Input: A .py file (badSyntax.py) containing deliberate syntax errors that render the file unrunable.
+					
+Output: The system rejects the file and provides an error message detailing the syntax issue.
+
+Test Case Derivation: Verifies the tool’s handling of syntactically invalid Python files to ensure user awareness of the syntax issue, meeting FR 1.
+
+How test will be performed: Feed a .py file with syntax errors to the tool and check that the system identifies it as invalid and produces an appropriate error message.
+
+\item{Feedback for Non-Python File\\}
+
+Control: Automatic
+					
+Initial State: Tool is idle.
+					
+Input: A non-Python file (document.txt) or a file with an incorrect extension (script.js).
+					
+Output: The system rejects the file and provides an error message indicating the invalid file format.
+
+Test Case Derivation: Ensures the tool detects unsupported file types and provides feedback, satisfying FR 1.
+
+How test will be performed: Attempt to load a .txt or other non-Python file, and verify that the system rejects it with a message indicating an invalid file type.
+
+
+\item{Test for Original Code Passing the Original Test Suite\\}
+
+Control: Automatic
+
+Initial State: Idle.
+
+Input: Python code and its associated test suite.
+
+Output: The original code passes 100\% of the test suite.
+
+Test Case Derivation:  This test ensures that the original code is functional and compliant with the provided test suite, confirming that the input code is valid.
+
 How test will be performed: 
-					
-\item{test-id2\\}
+\begin{enumerate}
+  \item The original code will be executed against its associated test suite.
+  \item Verify that all tests in the original test suite pass, indicating that the original code is valid and functioning as expected.
+\end{enumerate}
 
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+ \item{Valid Python Test Suite Acceptance\\}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+    Control: Automatic
 
-How test will be performed: 
+    Initial State: Tool is idle.
+
+    Input: A valid Python test suite file (\texttt{testSuite.py}) with valid syntax and tests.
+
+    Output: The system accepts the test suite and confirms it is ready for execution.
+
+    Test Case Derivation: Confirms that the tool can accept a valid test suite as input, as required by FR 2.
+
+    How test will be performed: Load a valid test suite \texttt{.py} file into the tool and observe that it is accepted without errors.
+
+    \item{Feedback for Test Suite with Invalid Syntax\\}
+
+    Control: Automatic
+
+    Initial State: Tool is idle.
+
+    Input: A test suite file (\texttt{invalid\_test\_suite.py}) containing syntax errors.
+
+    Output: The system rejects the test suite and provides an error message detailing the syntax issue.
+
+    Test Case Derivation: Verifies the tool's capability to identify and report errors in test suites, meeting FR 2.
+
+    How test will be performed: Load a test suite file with syntax errors into the tool and check for appropriate error reporting.
+
+    \item{Test Suite with No Test Cases\\}
+
+    Control: Automatic
+
+    Initial State: Tool is idle.
+
+    Input: A valid Python file (\texttt{empty\_test\_suite.py}) that contains no test cases.
+
+    Output: The system rejects the file and provides an error message indicating that there are no test cases present.
+
+    Test Case Derivation: Ensures the tool identifies test suites lacking test cases, complying with FR 2.
+
+    How test will be performed: Load a test suite file with no defined test cases and verify that the system produces an appropriate error message.
+
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
 
-...
+\subsubsection{Code Smell Detection Tests}
+
+This area includes tests to verify the detection of specified code 
+smells that impact energy efficiency (FR 2).
+		
+\paragraph{2. Code Smell Detection}
+\begin{enumerate}
+\item{Detection of Large Class (LC)\\}
+
+Control: Automatic
+          
+Initial State: Tool has loaded a `.py` file containing a class with a large number of methods and attributes.
+          
+Input: Python file with a class that exceeds the threshold for "Large Class" smell.
+          
+Output: Tool identifies the "Large Class" smell and suggests refactoring options like breaking the class into smaller classes.
+
+Test Case Derivation: Ensures "Large Class" code smells are identified and appropriately refactored.
+          
+How test will be performed: Load a file with a large class and verify detection.
+
+\item{Detection of Long Parameter List (LPL)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file containing a method with a long parameter list.
+					
+Input: Python file with a method using more parameters than the threshold.
+					
+Output: Tool flags the "Long Parameter List" smell and suggests bundling parameters into objects or reducing parameters.
+
+Test Case Derivation: Ensures "Long Parameter List" code smell detection.
+					
+How test will be performed: Load a file with a method having a long parameter list and confirm detection.
+
+\item{Detection of Long Method (LM)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file with a method that exceeds the line limit threshold.
+					
+Input: Python file containing a long method.
+					
+Output: Tool detects "Long Method" and suggests breaking it into smaller methods.
+
+Test Case Derivation: Ensures "Long Method" detection and suggestions for improving readability.
+					
+How test will be performed: Load a file with a long method and check for detection.
+
+\item{Detection of Long Message Chain (LMC)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file with a chain of method calls.
+					
+Input: Python file containing a message chain exceeding the threshold.
+					
+Output: Tool flags the "Long Message Chain" smell and suggests ways to simplify it, such as introducing intermediary methods.
+
+Test Case Derivation: Validates "Long Message Chain" detection and suggestions for code simplification.
+					
+How test will be performed: Load a file with a long chain of method calls and confirm detection.
+
+\item{Detection of Long Scope Chaining (LSC)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file containing deeply nested scopes.
+					
+Input: Python file with excessive scope chaining.
+					
+Output: Tool detects "Long Scope Chaining" and suggests reducing nesting or refactoring.
+
+Test Case Derivation: Ensures tool detects deep nesting and provides ways to make code more readable.
+					
+How test will be performed: Load a file with nested scopes and confirm detection.
+
+\item{Detection of Long Base Class List (LBCL)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file with a class that inherits from many base classes.
+					
+Input: Python file containing a class with an extensive inheritance list.
+					
+Output: Tool flags "Long Base Class List" and suggests refactoring, such as restructuring inheritance.
+
+Test Case Derivation: Validates that long inheritance lists are detected and refactoring options are provided.
+					
+How test will be performed: Load a file with a long base class list and confirm detection.
+
+\item{Detection of Useless Exception Handling (UEH)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file with empty or redundant `try-except` blocks.
+					
+Input: Python file containing useless exception handling blocks.
+					
+Output: Tool flags "Useless Exception Handling" and suggests meaningful handling or removal.
+
+Test Case Derivation: Confirms detection of redundant exception handling and refactoring options.
+					
+How test will be performed: Load a file with empty `try-except` blocks and verify detection.
+
+\item{Detection of Long Lambda Function (LLF)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file containing lambda functions that exceed the line or complexity threshold.
+					
+Input: Python file with a long lambda function.
+					
+Output: Tool detects "Long Lambda Function" and suggests converting it to a named function.
+
+Test Case Derivation: Validates detection of long lambda functions and refactoring suggestions for clarity.
+					
+How test will be performed: Load a file with a long lambda and verify detection.
+
+\item{Detection of Complex List Comprehension (CLC)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file with list comprehensions containing nested conditions.
+					
+Input: Python file with a complex list comprehension.
+					
+Output: Tool flags "Complex List Comprehension" and suggests simplifying the expression.
+
+Test Case Derivation: Ensures tool detects complex list comprehensions and suggests simplifications.
+					
+How test will be performed: Load a file with complex list comprehension and confirm detection.
+
+\item{Detection of Long Element Chain (LEC)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file with a long sequence of chained elements (e.g., dictionary access).
+					
+Input: Python file containing an element chain exceeding the length threshold.
+					
+Output: Tool detects "Long Element Chain" and suggests restructuring the code for readability.
+
+Test Case Derivation: Confirms tool detects long element chains and suggests simplification.
+					
+How test will be performed: Load a file with a long element chain and verify detection.
+
+\item{Detection of Long Ternary Conditional Expression (LTCE)\\}
+
+Control: Automatic
+					
+Initial State: Tool has loaded a `.py` file with a ternary conditional expression that exceeds the line or complexity threshold.
+					
+Input: Python file containing a long ternary conditional.
+					
+Output: Tool flags "Long Ternary Conditional Expression" and suggests converting to a standard `if-else` block.
+
+Test Case Derivation: Ensures long ternary expressions are detected and refactoring options are provided.
+					
+How test will be performed: Load a file with a long ternary expression and confirm detection.
+
+
+\item{No Code Smells Detected Handling\\}
+
+Control: Automatic
+
+Initial State: Tool is idle.
+
+Input: A valid Python file (filename.py) that adheres to best practices and contains no detectable code smells.
+
+Output: The system returns a message indicating that no code smells were found in the code.
+
+Test Case Derivation: This test ensures that the tool can correctly identify when there are no code smells present, as per functional requirement FR 2.
+
+How test will be performed: Provide a Python file that is well-structured and free of common code smells, and verify that the tool outputs a message confirming the absence of smells.
+
+\end{enumerate}
+
+\subsubsection{Refactoring Suggestion Tests}
+
+The following tests aim to validate the tool's capability to suggest appropriate refactorings in response to identified code smells, as outlined in the functional requirements (FR 5). These tests ensure that for each detected code smell, the tool provides actionable code modifications that not only enhance maintainability but also lead to measurable reductions in energy consumption.
+		
+\paragraph{3. Refactoring Suggestion Tests}
+\begin{enumerate}
+  \item{Large Class (LC) Refactoring Suggestion\\}
+
+  Control: Automatic
+            
+  Initial State: Tool has identified a large class in the provided Python file.
+            
+  Input: A Python file containing a class with a high number of lines of code and methods.
+            
+  Output: The tool suggests splitting the large class into smaller, more manageable classes and displays the suggested modifications.
+  
+  Test Case Derivation: Ensures that the tool provides a refactoring suggestion that reduces energy consumption while maintaining functionality as per FR 5.
+            
+  How test will be performed: Feed a Python file with a large class to the tool and verify that it displays a refactoring suggestion to break the class into smaller parts.
+  
+  \item{Long Parameter List (LPL) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has detected a method with too many parameters.
+            
+  Input: A Python file with a method signature that contains an excessive number of parameters.
+            
+  Output: The tool suggests using a data structure (e.g., a dictionary or an object) to encapsulate the parameters and shows the modified method signature.
+  
+  Test Case Derivation: Confirms that the tool can identify long parameter lists and suggest refactoring to improve code clarity and energy efficiency.
+            
+  How test will be performed: Submit a Python file with a method featuring a long parameter list and check that the tool provides a refactoring suggestion.
+  
+  \item{Long Method (LM) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has identified a method that exceeds a predefined line count.
+            
+  Input: A Python file containing a method that is excessively long.
+            
+  Output: The tool suggests breaking the long method into smaller methods and displays the proposed modifications.
+  
+  Test Case Derivation: Validates that the tool recognizes long methods and suggests refactoring to enhance maintainability and reduce energy usage.
+            
+  How test will be performed: Provide the tool with a Python file containing a long method and observe if it suggests breaking it into smaller methods with clear modifications.
+  
+  \item{Long Message Chain (LMC) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has identified a long message chain in the code.
+            
+  Input: A Python file with chained method calls resulting in a long message chain.
+            
+  Output: The tool suggests simplifying the message chain by assigning intermediate results to variables and shows the refactored code.
+  
+  Test Case Derivation: Ensures that the tool can detect long message chains and provide effective refactoring suggestions that improve energy efficiency.
+            
+  How test will be performed: Use a Python file containing a long message chain and confirm that the tool displays a suggestion to simplify it.
+  
+  \item{Long Scope Chaining (LSC) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has detected a long scope chain in the provided code.
+            
+  Input: A Python file with multiple nested function calls or scope references.
+            
+  Output: The tool suggests flattening the scope chain by refactoring into clearer, standalone function calls and displays the proposed modifications.
+  
+  Test Case Derivation: Confirms that the tool can identify long scope chaining and suggest refactoring to enhance clarity and maintainability.
+            
+  How test will be performed: Feed a Python file with a long scope chain to the tool and check if it suggests appropriate refactoring.
+  
+  \item{Long Base Class List (LBCL) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has identified a class inheriting from many base classes.
+            
+  Input: A Python file with a class declaration that inherits from multiple base classes.
+            
+  Output: The tool suggests refactoring the class to reduce the number of base classes, possibly by using composition instead of inheritance, and displays the suggested changes.
+  
+  Test Case Derivation: Validates that the tool recognizes long base class lists and provides suggestions for improving class design and energy efficiency.
+            
+  How test will be performed: Provide the tool with a Python file containing a class with a long base class list and observe if it suggests refactoring.
+  
+  \item{Useless Exception Handling (UEH) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has detected unnecessary exception handling in the code.
+            
+  Input: A Python file containing try-except blocks that do not provide meaningful handling.
+            
+  Output: The tool suggests removing or modifying the exception handling and displays the modified code.
+  
+  Test Case Derivation: Validates that the tool can identify useless exception handling and suggests actionable refactorings to enhance clarity and efficiency.
+            
+  How test will be performed: Feed the tool a Python file with unnecessary exception handling and check if it suggests modifications.
+  
+  \item{Long Lambda Function (LLF) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has identified a lambda function that is too complex or lengthy.
+            
+  Input: A Python file containing a long or complex lambda function.
+            
+  Output: The tool suggests refactoring the lambda function into a named function and shows the proposed changes.
+  
+  Test Case Derivation: Confirms that the tool recognizes long lambda functions and provides suggestions for refactoring to enhance readability and performance.
+            
+  How test will be performed: Submit a Python file with a long lambda function to the tool and verify that it suggests converting it into a named function.
+  
+  \item{Complex List Comprehension (CLC) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has detected a complex list comprehension.
+            
+  Input: A Python file containing a list comprehension that is hard to read or understand.
+            
+  Output: The tool suggests breaking the list comprehension into a for loop and displays the modified code.
+  
+  Test Case Derivation: Ensures that the tool identifies complex list comprehensions and suggests refactoring for clarity and efficiency.
+            
+  How test will be performed: Provide a Python file with a complex list comprehension and observe if the tool offers a simpler alternative.
+  
+  \item{Long Element Chain (LEC) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has detected a long chain of method calls on an object.
+            
+  Input: A Python file with an object undergoing multiple chained calls.
+            
+  Output: The tool suggests breaking the chain into separate calls and displays the refactored code.
+  
+  Test Case Derivation: Validates that the tool can recognize long element chains and provide suggestions to improve code structure and efficiency.
+            
+  How test will be performed: Use a Python file featuring a long element chain and verify that the tool suggests breaking it apart.
+  
+  \item{Long Ternary Conditional Expression (LTCE) Refactoring Suggestion\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has detected a complex ternary conditional expression.
+            
+  Input: A Python file with a long ternary expression that is difficult to read.
+            
+  Output: The tool suggests refactoring the ternary expression into a standard if-else statement and shows the suggested changes.
+  
+  Test Case Derivation: Ensures that the tool identifies long ternary conditional expressions and provides clearer refactoring alternatives.
+            
+  How test will be performed: Submit a Python file containing a long ternary expression to the tool and confirm that it suggests refactoring it into an if-else statement.
+  
+  \item{Energy Consumption Measurement for Suggested Refactoring\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has suggested a refactoring for detected code smells.
+            
+  Input: Suggested refactored code.
+            
+  Output: Measurement showing improved energy consumption in joules.
+  
+  Test Case Derivation: Confirms suggestions provide measurable energy efficiency improvement, per FR 5.
+            
+  How test will be performed: Apply a refactoring and measure energy consumption before and after.
+  
+  \item{Optimal Refactoring Selection\\}
+  
+  Control: Automatic
+            
+  Initial State: Tool has identified multiple refactoring options for a single code smell.
+            
+  Input: Multiple refactoring options.
+            
+  Output: System chooses the refactoring with the lowest measured energy consumption.
+  
+  Test Case Derivation: Ensures that the tool optimizes for energy efficiency, meeting FR 7.
+            
+  How test will be performed: Provide multiple refactoring options and verify the tool selects the most energy-efficient one.
+  
+  \item{Refactoring Suggestion Not Possible Handling\\}
+
+  Control: Automatic
+  
+  Initial State: Tool is idle.
+  
+  Input: Code containing a complex smell that cannot be refactored due to constraints.
+  
+  Output: The system provides a message indicating that no refactoring suggestions can be made for the identified smell or given code.
+  
+  Test Case Derivation: Ensures the tool gracefully handles situations where refactoring is too complex or not feasible.
+  
+  How test will be performed: Provide a code example that includes a complex smell and observe the output for an appropriate message regarding the lack of suggestions.
+
+  \item{Selection of Identical Energy Consumption Refactorings\\}
+
+  Control: Automatic
+  
+  Initial State: The refactoring tool has analyzed a Python code file and identified multiple minimal refactorings.
+  
+  Input: Two or more refactorings that result in the same minimal energy consumption improvement.
+  
+  Output: The tool randomly selects one refactoring to apply.
+  
+  Test Case Derivation: This test ensures that when multiple refactorings provide the same energy efficiency gain, the tool correctly implements one of them without preference, thereby fulfilling FR 5.
+  
+  How test will be performed: The tool will be run on a Python file containing code smells. It will be observed whether it selects one of the refactorings with identical energy improvements for application.
+\end{enumerate}
+
+\subsubsection{Output Validation Tests}
+
+The following tests are designed to validate that the functionality of the original Python code remains intact after refactoring. Each test ensures that the refactored code passes the same test suite as the original code, confirming compliance with functional requirement FR 3.
+		
+\paragraph{4. Output Validation Tests}
+\begin{enumerate}
+  \item{Validate Refactored Code Functionality On Provided Test Suite\\}
+
+  Control: Automatic
+  
+  Initial State: The original Python code is equipped with an existing test suite it passes.
+  
+  Input: The original Python code and its associated test suite.
+  
+  Output: The refactored code passes 100\% of the original test suite.
+  
+  Test Case Derivation: This test confirms that the refactored code preserves the original functionality by passing all tests from the original suite, as stipulated in FR 3.
+  
+  How test will be performed: The tool will refactor the code, and then the original test suite will be executed against the refactored code to check for passing results.
+  
+  \item{Verification of Valid Python Output\\}
+
+  Control: Automatic
+  
+  Initial State: Tool has processed a file with detected code smells.
+  
+  Input: Output refactored Python code.
+  
+  Output: Refactored code is syntactically correct and Python-compliant.
+  
+  Test Case Derivation: Ensures refactored code remains valid and usable, satisfying FR 6.
+  
+  How test will be performed: Run a linter on the output code and verify it passes without syntax errors.
+  
+\end{enumerate}
+
+\subsubsection{Tests for Reporting Functionality}
+
+The reporting functionality of the tool is crucial for providing users with comprehensive insights into the refactoring process, including detected code smells, refactorings applied, energy consumption measurements, and the results of the original test suite. This section outlines tests that ensure the reporting feature operates correctly and delivers accurate, well-structured information as specified in the functional requirements (FR 9). 
+		
+\paragraph{5. Tests for Report Generation\\}
+\begin{enumerate}
+  \item{A Report With All Components Is Generated\\}
+
+Control: Manual
+
+Initial State: The tool has completed refactoring a Python code file.
+
+Input: The refactoring results, including detected code smells, applied refactorings, and energy consumption metrics.
+
+Output: A well-structured report is generated, summarizing the refactoring process.
+
+Test Case Derivation: This test ensures that the tool generates a comprehensive report that includes all necessary information as required by FR 9.
+
+How test will be performed: After refactoring, the tool will invoke the report generation feature and a user can validate that the output meets the structure and content specifications.
+
+
+\item{Validation of Code Smell and Refactoring Data in Report\\}
+
+Control: Automatic
+
+Initial State: The tool has identified code smells and performed refactorings.
+
+Input: The results of the refactoring process.
+
+Output: The generated report accurately lists all detected code smells and the corresponding refactorings applied.
+
+Test Case Derivation: This test verifies that the report includes correct and complete information about code smells and refactorings, in compliance with FR 9.
+
+How test will be performed: The tool will compare the contents of the generated report against the detected code smells and refactorings to ensure accuracy.
+
+
+\item{Energy Consumption Metrics Included in Report\\}
+
+Control: Manual
+
+Initial State: The tool has measured energy consumption before and after refactoring.
+
+Input: Energy consumption metrics obtained during the refactoring process.
+
+Output: The report presents a clear comparison of energy usage before and after the refactorings.
+
+Test Case Derivation: This test confirms that the reporting feature effectively communicates energy consumption improvements, aligning with FR 9.
+
+How test will be performed: A user will analyze the energy metrics in the report to ensure they accurately reflect the measurements taken during the refactoring.
+
+
+\item{Functionality Test Results Included in Report\\}
+
+Control: Automatic
+
+Initial State: The original test suite has been executed against the refactored code.
+
+Input: The outcomes of the test suite execution.
+
+Output: The report summarizes the test results, indicating which tests passed and failed.
+
+Test Case Derivation: This test ensures that the reporting functionality accurately reflects the results of the test suite as specified in FR 9.
+
+How test will be performed: The tool will generate the report and validate that it contains a summary of test results consistent with the actual test outcomes.
+
+\end{enumerate}
+
+
+\subsubsection{Documentation Availability Tests}
+
+The following test is designed to ensure the availability of documentation as per FR 10.
+		
+\paragraph{6. Documentation Availability}
+\begin{enumerate}
+  \item{Test for Documentation Availability\\}
+
+  Control: Manual
+  
+  Initial State: The may or may not be installed.
+  
+  Input: User attempts to access the documentation.
+  
+  Output: The documentation is available and covers installation, usage, and troubleshooting.
+  
+  Test Case Derivation: Validates that the documentation meets user needs (FR 10).
+  
+  How test will be performed: Review the documentation for completeness and clarity.
+\end{enumerate}
+
+\subsubsection{IDE Extension Tests}
+
+The following tests are designed to ensure that the user can integrate the tool into VSCode IDE as specified in FR 11 and that the tool works as intended as an extension.
+		
+\paragraph{6. IDE Integration}
+\begin{enumerate}
+  \item{Installation of Extension in Visual Studio Code\\}
+
+  Control: Manual
+  
+  Initial State: The user has Visual Studio Code installed on their machine.
+  
+  Input: The user attempts to install the refactoring tool extension from the Visual Studio Code Marketplace.
+  
+  Output: The extension installs successfully, and the user is able to see it listed in the Extensions view.
+  
+  Test Case Derivation: This test validates the installation process of the extension to ensure that users can easily add the tool to their development environment.
+  
+  How test will be performed: 
+  \begin{enumerate}
+      \item Open Visual Studio Code.
+      \item Navigate to the Extensions view (Ctrl+Shift+X).
+      \item Search for the refactoring tool extension in the marketplace.
+      \item Click on the "Install" button.
+      \item After installation, verify that the extension appears in the installed extensions list.
+      \item Confirm that the extension is enabled and ready for use by checking its functionality within the editor.
+  \end{enumerate}
+
+  \item{Running the Extension in Visual Studio Code\\}
+
+Control: Manual
+
+Initial State: The user has successfully installed the refactoring tool extension in Visual Studio Code.
+
+Input: The user opens a Python file and activates the refactoring tool extension.
+
+Output: The extension runs successfully, and the user can see a list of detected code smells and suggested refactorings.
+
+Test Case Derivation: This test validates that the extension can be executed within the development environment and that it correctly identifies code smells as per the functional requirements in the SRS.
+
+How test will be performed:
+\begin{enumerate}
+    \item Open Visual Studio Code.
+    \item Open a valid Python file that contains known code smells.
+    \item Activate the refactoring tool extension using the command palette (Ctrl+Shift+P) and selecting the extension command.
+    \item Observe the output panel for the detection of code smells.
+    \item Verify that the extension lists the identified code smells and provides appropriate refactoring suggestions.
+    \item Confirm that the suggestions are relevant and feasible for the detected code smells.
+\end{enumerate}
+
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -570,6 +1206,27 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
+
+\begin{table}[ht]
+  \centering
+  \caption{Sections and Corresponding Functional Requirements}
+  \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
+  \hline
+  \textbf{Section} & \textbf{Functional Requirement} \\ \hline
+  
+  Input Acceptance Tests & FR 1 \\ \hline
+  Code Smell Detection Tests & FR 2 \\ \hline
+  Refactoring Suggestion Tests & FR 4 \\ \hline
+  Output Validation Tests & FR 3, FR 6 \\ \hline
+  Tests for Report Generation & FR 9 \\ \hline
+  Documentation Availability Tests & FR 10 \\ \hline
+  IDE Integration Tests & FR 11 \\ \hline
+  
+  \end{tabular}
+  \label{tab:sections_requirements}
+  \end{table}
+  
+  
 			
 
 \bibliography{../../refs/References}
