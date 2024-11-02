@@ -382,19 +382,23 @@ Test Case Derivation: Ensures the tool detects unsupported file types and provid
 How test will be performed: Attempt to load a .txt or other non-Python file, and verify that the system rejects it with a message indicating an invalid file type.
 
 
-\item{Missing Original Test Suite Handling\\}
+\item{Test for Original Code Passing the Original Test Suite\\}
 
 Control: Automatic
 
-Initial State: Tool is idle.
+Initial State: Idle.
 
-Input: User runs the tool without providing an original test suite.
+Input: Python code and its associated test suite.
 
-Output: The system returns an error message indicating that the test suite is required.
+Output: The original code passes 100\% of the test suite.
 
-Test Case Derivation: Confirms that the tool appropriately requires an original test suite to ensure functionality preservation after refactoring.
+Test Case Derivation:  This test ensures that the original code is functional and compliant with the provided test suite, confirming that the input code is valid.
 
-How test will be performed: Execute the tool command without specifying a test suite and observe the error message for missing input.
+How test will be performed: 
+\begin{enumerate}
+  \item The original code will be executed against its associated test suite.
+  \item Verify that all tests in the original test suite pass, indicating that the original code is valid and functioning as expected.
+\end{enumerate}
 
 
 \end{enumerate}
