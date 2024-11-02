@@ -1539,8 +1539,24 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \subsection{Traceability Between Test Cases and Requirements} \label{trace-sys}
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+  \begin{table}[ht]
+    \centering
+    \caption{Sections and Corresponding Functional Requirements}
+    \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
+      \hline
+      \textbf{Section} & \textbf{Functional Requirement} \\ \hline
+      
+      Input Acceptance Tests & FR 1 \\ \hline
+      Code Smell Detection Tests & FR 2 \\ \hline
+      Refactoring Suggestion Tests & FR 4 \\ \hline
+      Output Validation Tests & FR 3, FR 6 \\ \hline
+      Tests for Report Generation & FR 9 \\ \hline
+      Documentation Availability Tests & FR 10 \\ \hline
+      IDE Integration Tests & FR 11 \\ \hline
+    
+    \end{tabular}
+  \label{tab:sections_requirements}
+  \end{table}
 
 \section{Unit Test Description}
 
@@ -1666,28 +1682,7 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
-
-\begin{table}[ht]
-  \centering
-  \caption{Sections and Corresponding Functional Requirements}
-  \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
-  \hline
-  \textbf{Section} & \textbf{Functional Requirement} \\ \hline
   
-  Input Acceptance Tests & FR 1 \\ \hline
-  Code Smell Detection Tests & FR 2 \\ \hline
-  Refactoring Suggestion Tests & FR 4 \\ \hline
-  Output Validation Tests & FR 3, FR 6 \\ \hline
-  Tests for Report Generation & FR 9 \\ \hline
-  Documentation Availability Tests & FR 10 \\ \hline
-  IDE Integration Tests & FR 11 \\ \hline
-  
-  \end{tabular}
-  \label{tab:sections_requirements}
-  \end{table}
-  
-  
-			
 
 \bibliography{../../refs/References}
 
