@@ -16,9 +16,12 @@ class PylintAnalyzer(BaseAnalyzer):
             "R0915": "Long Method",  # Too many statements
             "C0200": "Complex List Comprehension",  # Loop can be simplified
             "C0103": "Invalid Naming Convention",  # Non-standard names
-            
+            "R0912": "Long Lambda Function (LLF)",
+            "R0914": "Long Message Chain (LMC)"
             # Add other pylint codes as needed
         }
+
+        self.codes = set(self.code_smells.keys())
 
     def analyze(self):
         """
@@ -44,6 +47,24 @@ class PylintAnalyzer(BaseAnalyzer):
 
         return pylint_results
 
+    def filter_for_all_wanted_code_smells(self, pylint_results):
+        filtered_results =[]
+        for error in pylint_results:
+            if(error["message-id"] in self.codes ):
+                filtered_results.append(error)
+
+        return filtered_results
+
+    @classmethod
+    def filter_for_one_code_smell(pylint_results, code):
+        filtered_results =[]
+        for error in pylint_results:
+            if(error["message-id"] == code ):
+                filtered_results.append(error)
+
+        return filtered_results
+
+
 
 
 from pylint.lint import Run
@@ -62,5 +83,7 @@ if __name__ == "__main__":
     )
     report = analyzer.analyze()
 
-    print("THIS IS REPORT:")
-    print(report)
+    print("THIS IS REPORT for our smells:")
+    print(analyzer.filter_for_all_wanted_code_smells(report))
+
+   
