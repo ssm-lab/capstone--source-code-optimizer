@@ -4,21 +4,25 @@ from io import StringIO
 import os
 from pylint import run_pylint
 from base_analyzer import BaseAnalyzer
+from refactorer.large_class_refactorer import LargeClassRefactorer
+from refactorer.long_lambda_function_refactorer import LongLambdaFunctionRefactorer
+from refactorer.long_message_chain_refactorer import LongMessageChainRefactorer
 
 # THIS WORKS ITS JUST THE PATH
+
 
 class PylintAnalyzer(BaseAnalyzer):
     def __init__(self, code_path: str):
         super().__init__(code_path)
         # We are going to use the codes to identify the smells this is a dict of all of them
         self.code_smells = {
-            "R0902": "Large Class",  # Too many instance attributes
-            "R0913": "Long Parameter List",  # Too many arguments
-            "R0915": "Long Method",  # Too many statements
-            "C0200": "Complex List Comprehension",  # Loop can be simplified
-            "C0103": "Invalid Naming Convention",  # Non-standard names
-            "R0912": "Long Lambda Function (LLF)",
-            "R0914": "Long Message Chain (LMC)"
+            # "R0902": LargeClassRefactorer,  # Too many instance attributes
+            # "R0913": "Long Parameter List",  # Too many arguments
+            # "R0915": "Long Method",  # Too many statements
+            # "C0200": "Complex List Comprehension",  # Loop can be simplified
+            # "C0103": "Invalid Naming Convention",  # Non-standard names
+            "R0912": LongLambdaFunctionRefactorer,
+            "R0914": LongMessageChainRefactorer,
             # Add other pylint codes as needed
         }
 
@@ -49,23 +53,21 @@ class PylintAnalyzer(BaseAnalyzer):
         return pylint_results
 
     def filter_for_all_wanted_code_smells(self, pylint_results):
-        filtered_results =[]
+        filtered_results = []
         for error in pylint_results:
-            if(error["message-id"] in self.codes ):
+            if error["message-id"] in self.codes:
                 filtered_results.append(error)
 
         return filtered_results
 
     @classmethod
     def filter_for_one_code_smell(pylint_results, code):
-        filtered_results =[]
+        filtered_results = []
         for error in pylint_results:
-            if(error["message-id"] == code ):
+            if error["message-id"] == code:
                 filtered_results.append(error)
 
         return filtered_results
-
-
 
 
 from pylint.lint import Run
@@ -86,5 +88,3 @@ if __name__ == "__main__":
 
     print("THIS IS REPORT for our smells:")
     print(analyzer.filter_for_all_wanted_code_smells(report))
-
-   
