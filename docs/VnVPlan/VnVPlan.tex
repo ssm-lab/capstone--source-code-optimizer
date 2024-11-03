@@ -15,12 +15,15 @@
 \usepackage[nottoc]{tocbibind}
 \usepackage[toc,page]{appendix}
 \usepackage[square,numbers,compress]{natbib}
+\usepackage{placeins}
 \bibliographystyle{abbrvnat}
 
 \usepackage{amssymb}
 \usepackage{enumitem}
 \usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage[dvipsnames]{xcolor}
+
+\usepackage{float}
 
 \input{../Comments}
 \input{../Common}
@@ -406,7 +409,7 @@ This section covers the tests for ensuring the system correctly accepts Python s
 \noindent
 \rule{\linewidth}{2pt}
 
-\subsubsection{Code Smell Detection Tests}
+\subsubsection{Code Smell Detection Tests} \label{4.1.2}
 \rule{\linewidth}{2pt}
 
 \medskip
@@ -660,6 +663,7 @@ The following tests aim to validate the tool's capability to suggest appropriate
 The following tests are designed to validate that the functionality of the original Python code remains intact after refactoring. Each test ensures that the refactored code passes the same test suite as the original code, confirming compliance with functional requirement FR 3.
 		
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-OV-\arabic*}}, wide=0pt, font=\itshape]
+  \label{itm:FR-OV-1}
   \item \textbf{Validate Refactored Code Functionality On Provided Test Suite}\\[2mm]
     \textbf{Control:} Automatic \\
     \textbf{Initial State:} The original Python code is equipped with an existing test suite it passes.\\
@@ -668,6 +672,7 @@ The following tests are designed to validate that the functionality of the origi
     \textbf{Test Case Derivation:} This test confirms that the refactored code preserves the original functionality by passing all tests from the original suite, as stipulated in FR 3.\\[2mm]
     \textbf{How test will be performed:} The tool will refactor the code, and then the original test suite will be executed against the refactored code to check for passing results.
   
+  \label{itm:FR-OV-2}
   \item \textbf{Verification of Valid Python Output}\\[2mm]
     \textbf{Control:} Automatic \\
     \textbf{Initial State:} Tool has processed a file with detected code smells.\\
@@ -799,6 +804,7 @@ The section will cover system tests for the non-functional requirements (NFR) li
 \rule{\linewidth}{2pt}
 
 \subsubsection{Look and Feel}
+
 \rule{\linewidth}{2pt}
 
 \medskip
@@ -835,39 +841,19 @@ The following subsection tests cover all Look and Feel requirements listed in th
     \textbf{Output/Result:} A success icon or green label appears in the PR summary \\[2mm]
     \textbf{How test will be performed:} The tester will set up a pull request (PR) with changes that yield significant energy savings. When the GitHub Action completes the analysis, the tester will check the PR summary to confirm that a green label or success icon appears, indicating substantial energy savings. The tester will repeat the test with a PR that does not meet the threshold to ensure no alert is displayed. 
 
-  \item \textbf{Minimalist design of the refactoring interface} \\[2mm]
+  \item \textbf{Design Acceptance} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
     \textbf{Initial State:} IDE plugin open \\
     \textbf{Input/Condition:} User interacts with the plugin \\
-    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{Output/Result:} A survey report \\[2mm]
     \textbf{How test will be performed:} After a testing session, developers fill out the survey found in \ref{A.2} evaluating their experience with the plugin.
-
-  \item \textbf{Professional and authoritative appearance of the plugin} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open \\
-    \textbf{Input/Condition:} User interacts with the plugin \\
-    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
-    \textbf{How test will be performed:} After a testing session, developers fill out the survey found in \ref{A.2} evaluating the professionalism and trustworthiness of the plugin interface.
-
-  \item \textbf{Calm and focused atmosphere of plugin interface} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open \\
-    \textbf{Input/Condition:} User interacts with the plugin \\
-    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
-    \textbf{How test will be performed:} Following a testing session, developers complete the survey found in \ref{A.2} evaluating the plugin’s atmosphere and its impact on focus.
-
-  \item \textbf{Modern, visually appealing design} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open \\
-    \textbf{Input/Condition:} User interacts with the plugin \\
-    \textbf{Output/Result:} More than 60\% of users give a answer greater than 3 the survey question targeting this test. \\[2mm]
-    \textbf{How test will be performed:} After initial interaction, developers complete the survey found in \ref{A.2} on the tool’s design aesthetics.
 \end{enumerate}
 
 \noindent
 \rule{\linewidth}{2pt}
     
 \subsubsection{Usability \& Humanity}
+
 \rule{\linewidth}{2pt}
 
 \medskip
@@ -944,22 +930,6 @@ The following subsection tests cover all Usability \& Humanity requirements list
     \textbf{Input/Condition:} User encounters an error during use \\
     \textbf{Output/Result:} 80\% of users report that error messages are helpful and courteous \\[2mm]
     \textbf{How test will be performed:} After receiving error messages, users fill out the survey found in \ref{A.2} on their clarity and constructiveness.
-
-  % \item \textbf{Usability and Design Acceptance} \\
-  %   \textbf{Type:} Non-Functional, Manual, Dynamic \\
-  %   \textbf{Initial State:} User’s IDE environment is prepared without the refactoring tool installed \\
-  %   \textbf{Input/Condition:} User installs the refactoring tool, explores its key features, and completes a survey to provide feedback on usability, intuitiveness, and design quality \\
-  %   \textbf{Output/Result:} User installs the tool successfully, completes each feature exploration task without issues, and fills out a survey on the tool’s usability and design \\
-  %   \textbf{How test will be performed:} The tester will start from a clean slate and perform the following steps:
-  %   \begin{itemize}
-  %       \item \textbf{Installation:} The tester will install the refactoring tool from the PIP package manager by running \texttt{pip install ecooptimizer}. After installation, they will open the tool within the IDE, authenticate as prompted, and confirm successful setup by verifying the tool’s presence in the IDE interface.
-  %       \item \textbf{Code Analysis:} The tester will load a sample code file and initiate the code analysis feature. They will review the output, focusing on the clarity of refactoring suggestions and ease of accessing this feature within the interface.
-  %       \item \textbf{Refactoring Options and Side-by-Side Comparison:} The tester will apply a refactoring operation and evaluate the side-by-side comparison of original and refactored code. They will interact with the accept/reject buttons, assessing the ease of making refactoring decisions while viewing both code versions.
-  %       \item \textbf{Settings and Customisation:} The tester will navigate to the settings menu to explore customisation options, such as refactoring styles, colour-coded indicators, and measurement unit toggles between metric and imperial. They will adjust various settings and evaluate the intuitiveness of the settings menu and customisation process.
-  %       \item \textbf{Help and Error Handling:} The tester will simulate a common error (e.g., loading an incompatible file type) to trigger an error message, reviewing the clarity and guidance provided. They will also explore help resources, assessing their relevance, accessibility, and ease of use.
-  %       \item \textbf{Metrics Reporting and Export Functionality:} The tester will explore the metrics reporting feature to view data on energy savings or emissions and attempt to export this data in formats such as JSON and XML. They will assess the readability of metrics, usability of export options, and format accuracy.
-  %   \end{itemize}
-  %   After completing the walkthrough, the tester will fill out a survey to provide structured feedback on each feature, including the tool’s minimalist design, professional appearance, intuitive UI, clarity of prompts, error handling, and overall usability. This feedback will be used to identify areas for improvement in user experience and interface quality.
 \end{enumerate}
 
 \noindent
@@ -993,21 +963,21 @@ The following subsection tests cover all Performance requirements listed in the 
     \textbf{Initial State:} Python file ready for refactoring with proper configurations for the system \\
     \textbf{Input/Condition:} User initiates refactoring on the code file \\
     \textbf{Output/Result:} The refactored code should pass 100\% of user-provided tests \\[2mm]
-    \textbf{How test will be performed:} see test \ref{tfr-?}
+    \textbf{How test will be performed:} see test \hyperref[itm:FR-OV-1]{test-FR-OV-1}
 
   \item \textbf{Accuracy of code smell detection} \\[2mm]
     \textbf{Type:} Non-Functional, Automated, Dynamic \\
     \textbf{Initial State:} Python file containing pre-determined code smells ready for refactoring with proper configurations for the system \\
     \textbf{Input/Condition:} User initiates refactoring on the code file \\
     \textbf{Output/Result:} All code smells determined prior to the test are detected. \\[2mm]
-    \textbf{How test will be performed:} see test \ref{tfr-?}
+    \textbf{How test will be performed:} see tests in the \hyperref[4.1.2]{Code Smell Detection} section.
 
   \item \textbf{Valid syntax and structure in refactored code} \\[2mm]
     \textbf{Type:} Non-Functional, Automated, Dynamic \\
     \textbf{Initial State:} A refactored code file is present in the user's workspace \\
     \textbf{Input/Condition:} A python linter is run on the refactored python file \\
     \textbf{Output/Result:} Refactored code meets Python syntax and structural standards \\[2mm]
-    \textbf{How test will be performed:} see test \ref{tfr-?}
+    \textbf{How test will be performed:} see test \hyperref[itm:FR-OV-2]{test-FR-OV-2}
 
   \item \textbf{Handling unexpected inputs} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
@@ -1028,6 +998,22 @@ The following subsection tests cover all Performance requirements listed in the 
     \textbf{Input/Condition:} User initiates a refactoring operation on code that is incompatible with the refactoring tool’s capabilities \\
     \textbf{Output/Result:} Tool logs the refactoring error, displays a notification to the user, and proposes alternative refactoring options without stopping the process \\[2mm]
     \textbf{How test will be performed:} The tester will load code with patterns known to cause refactoring issues or require specific handling. Upon starting the refactoring, the tool should detect the failure, log the error internally, and present an error notification to the user. The tool should then offer alternative refactoring options (e.g., a simpler refactoring method or partial refactoring). The tester will verify that the process continues smoothly without requiring a restart and document each fallback option suggested by the tool.
+
+    \item \textbf{Maintainability and Adaptability of the Tool} \\[2mm]
+    \textbf{Objective:} Ensure that the tool’s codebase is structured to support future updates for new Python versions and evolving coding standards, minimizing the effort required for maintenance. \\[2mm]
+    \textbf{Scope:} This test applies to the tool’s code structure, documentation quality, and modularity to facilitate adaptability and maintainability over time. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a code walkthrough to evaluate the modular structure of the codebase, verifying that components are organized to allow independent updates.
+      \item Review code comments, documentation, and naming conventions to ensure clarity and consistency, supporting ease of understanding for future developers.
+      \item Identify any dependencies on specific Python versions and assess the ease of updating these components for compatibility with newer versions.
+      \item Document any gaps in modularity or documentation and consult with the development team on improvements to support maintainability.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review and documentation assessment, with the project supervisor overseeing and validating improvements for long-term adaptability. \\[2mm]
+    \textbf{Tools and Resources:} Code editor, documentation templates, Python development guidelines, and coding standards \\[2mm]
+    \textbf{Acceptance Criteria:} The codebase is modular, well-documented, and adaptable, allowing for straightforward updates with minimal impact on existing functionality.
+
 \end{enumerate}
 
 \noindent
@@ -1084,6 +1070,7 @@ The following subsection tests cover all Operational and Environmental requireme
     \textbf{Input/Condition:} User installs the refactoring library using the command \texttt{pip install ecooptimizer} \\
     \textbf{Output/Result:} The library installs successfully without errors and is available for use in Python scripts \\[2mm]
     \textbf{How test will be performed:} The tester will open a new Python environment and enter the command to install the refactoring library via PIP. Once installed, the tester will import the library in a Python script and execute a basic function to confirm successful installation and functionality. The test verifies the library’s availability and ease of installation for end users.
+
 \end{enumerate}
 
 \noindent
@@ -1135,6 +1122,8 @@ The following subsection tests cover all Maintenance and Support requirements li
     \textbf{How test will be performed:} The tester will apply a simulated update. Following this, they will initiate the rollback function, which should restore the tool to its previous stable version. The tester will verify that all features function as expected post-rollback and document the time taken to complete the rollback process
 \end{enumerate}
 
+\newpage
+
 \noindent
 \rule{\linewidth}{2pt}
 
@@ -1183,7 +1172,7 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{Tools and Resources:} Access to security configuration files, code editor \\[2mm]
     \textbf{Acceptance Criteria:} The review attendees find no egregious faults within the system that might allow unauthorized external access or modifications to refactored code and energy report data.
 
-  \item \textbf{Notification and consent for data handling (SR-PR 1)} \\[2mm]
+  \item \textbf{Notification and consent for data handling} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\ 
     \textbf{Initial State:} System idle \\
     \textbf{Input/Condition:} User initiates refactoring on their source code \\
@@ -1250,7 +1239,7 @@ The following subsection tests cover all Cultural requirements listed in the SRS
     \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
     \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on cultural sensitivity of the interface design.
 
-  \item \textbf{Support for metric and imperial units (CULT 2)} \\[2mm]
+  \item \textbf{Support for metric and imperial units} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
     \textbf{Initial State:} Tool ready with energy consumption metrics displayed in the default unit system \\
     \textbf{Input/Condition:} User toggles the measurement units between metric and imperial \\
@@ -1310,24 +1299,164 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \subsection{Traceability Between Test Cases and Requirements} \label{trace-sys}
 
-  \begin{table}[ht]
-    \centering
-    \caption{Sections and Corresponding Functional Requirements}
-    \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
-      \hline
-      \textbf{Section} & \textbf{Functional Requirement} \\ \hline
-      
-      Input Acceptance Tests & FR 1 \\ \hline
-      Code Smell Detection Tests & FR 2 \\ \hline
-      Refactoring Suggestion Tests & FR 4 \\ \hline
-      Output Validation Tests & FR 3, FR 6 \\ \hline
-      Tests for Report Generation & FR 9 \\ \hline
-      Documentation Availability Tests & FR 10 \\ \hline
-      IDE Integration Tests & FR 11 \\ \hline
+\listoftables
+
+\begin{table}[H]
+  \centering
+  \caption{Functional Requirements and Corresponding Test Sections}
+  \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
+    \toprule \textbf{Section} & \textbf{Functional Requirement} \\ 
     
-    \end{tabular}
+    \midrule
+    Input Acceptance Tests & FR 1 \\ \hline
+    Code Smell Detection Tests & FR 2 \\ \hline
+    Refactoring Suggestion Tests & FR 4 \\ \hline
+    Output Validation Tests & FR 3, FR 6 \\ \hline
+    Tests for Report Generation & FR 9 \\ \hline
+    Documentation Availability Tests & FR 10 \\ \hline
+    IDE Integration Tests & FR 11 \\
+    \bottomrule
+  \end{tabular}
   \label{tab:sections_requirements}
-  \end{table}
+\end{table}
+
+\label{tab:nfr-trace-reqs}
+\begin{table}[H]
+  \centering
+  \caption{Look \& Feel Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Look and Feel
+    LF-1 & LFR-AP 1 \\ 
+    LF-2 & LFR-AP 2 \\ 
+    LF-3 & LFR-AP 3 \\ 
+    LF-4 & LFR-AP 5 \\ 
+    LF-5 & LFR-AP 4, LFR-ST 1-3 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Usability \& Humanity Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Usability and Humanity
+    UH-1 & UHR-PS1 1 \\ 
+    UH-2 & UHR-PS1 2, MS-SP 1 \\ 
+    UH-3 & UHR-LRN 2 \\ 
+    UH-4 & UHR-ACS 1 \\ 
+    UH-5 & UHR-ACS 2 \\ 
+    UH-6 & UHR-EOU 1 \\ 
+    UH-7 & UHR-EOU 2 \\ 
+    UH-8 & UHR-LRN 1 \\ 
+    UH-9 & UHR-UPL 1 \\ 
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Performance Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Performance
+    PF-1 & PR-SL 1, PR-SL 2, PR-CR 1 \\ 
+    PF-2 & PR-SCR 1 \\ 
+    PF-3 & PR-PAR 1 \\ 
+    PF-4 & PR-PAR 2 \\ 
+    PF-5 & PR-PAR 3 \\ 
+    PF-6 & PR-RFT 1 \\ 
+    PF-7 & PR-RFT 2 \\ 
+    PF-8 & PR-LR 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Operational \& Environmental Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Operational and Environmental
+    Not explicitly tested & OER-EP 1 \\
+    Not explicitly tested & OER-EP 2 \\
+    OPE-1 & OER-WE 1 \\
+    OPE-2 & OER-IAS 1 \\
+    OPE-3 & OER-IAS 2 \\
+    OPE-4 & OER-IAS 3 \\
+    OPE-5 & OER-PR 1 \\
+    Not explicitly tested & OER-RL 1 \\
+    Not explicitly tested & OER-RL 2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Maintenance \& Support Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Maintenance and Support
+    MS-1 & MS-MNT 1, PR-SER 1 \\
+    MS-2 & MS-MNT 2 \\
+    MS-3 & MS-MNT 3 \\
+    Not explicitly tested & MS-MNT 4 \\
+    Not tested & MS-MNT 5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Security Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Security
+    SRT-1 & SR-AR 1 \\
+    SRT-2 & SR-AR 2 \\
+    SRT-3 & SR-IR 1 \\
+    SRT-4 & SR-PR 1 \\
+    SRT-5 & SR-PR 2 \\
+    SRT-6 & SR-AUR 1 \\
+    SRT-7 & SR-AUR 2 \\
+    Not tested & SR-IM 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Cultural Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Cultural
+    CULT-1 & CULT 1 \\
+    CULT-2 & CULT 2 \\
+    CULT-3 & CULT 3 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Compliance Requirements and Corresponding Tests}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Compliance
+    CPL-1 & CL-LR 1 \\
+    CPL-2 & CL-SCR 1 \\ 
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \section{Unit Test Description}
 
@@ -1471,8 +1600,6 @@ The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.
 
 \subsection{Usability Survey Questions?} \label{A.2}
-
-\wss{This is a section that would be appropriate for some projects.}
 
 \newpage{}
 \section{Reflection}
