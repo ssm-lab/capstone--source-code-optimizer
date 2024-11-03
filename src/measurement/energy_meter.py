@@ -9,6 +9,8 @@ from pyJoules.energy_meter import EnergyMeter
 # pip install pyJoules
 # pip install nvidia-ml-py3
 
+# TEST TO SEE IF PYJOULE WORKS FOR YOU
+
 
 class EnergyMeterWrapper:
     """

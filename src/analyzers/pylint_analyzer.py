@@ -5,6 +5,7 @@ import os
 from pylint import run_pylint
 from base_analyzer import BaseAnalyzer
 
+# THIS WORKS ITS JUST THE PATH
 
 class PylintAnalyzer(BaseAnalyzer):
     def __init__(self, code_path: str):
