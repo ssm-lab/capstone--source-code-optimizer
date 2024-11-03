@@ -1,70 +1,66 @@
-import subprocess
+import io
 import json
-from analyzers.base_analyzer import BaseAnalyzer
+from io import StringIO
+import os
+from pylint import run_pylint
+from base_analyzer import BaseAnalyzer
+
 
 class PylintAnalyzer(BaseAnalyzer):
     def __init__(self, code_path: str):
         super().__init__(code_path)
+        # We are going to use the codes to identify the smells this is a dict of all of them
         self.code_smells = {
-            "R0902": "Large Class",       # Too many instance attributes
+            "R0902": "Large Class",  # Too many instance attributes
             "R0913": "Long Parameter List",  # Too many arguments
-            "R0915": "Long Method",       # Too many statements
+            "R0915": "Long Method",  # Too many statements
             "C0200": "Complex List Comprehension",  # Loop can be simplified
             "C0103": "Invalid Naming Convention",  # Non-standard names
+            
             # Add other pylint codes as needed
         }
 
     def analyze(self):
         """
-        Runs Pylint on the specified code path and returns a report of code smells.
-        """
-        pylint_command = [
-            "pylint", "--output-format=json", self.code_path
-        ]
-        
-        try:
-            result = subprocess.run(pylint_command, capture_output=True, text=True, check=True)
-            pylint_output = result.stdout
-            report = self._parse_pylint_output(pylint_output)
-            return report
-        except subprocess.CalledProcessError as e:
-            print("Pylint analysis failed:", e)
-            return {}
-        except FileNotFoundError:
-            print("Pylint is not installed or not found in PATH.")
-            return {}
-        except json.JSONDecodeError:
-            print("Failed to parse pylint output. Check if pylint output is in JSON format.")
-            return {}
+        Runs pylint on the specified Python file and returns the output as a list of dictionaries.
+        Each dictionary contains information about a code smell or warning identified by pylint.
 
-    def _parse_pylint_output(self, output: str):
+        :param file_path: The path to the Python file to be analyzed.
+        :return: A list of dictionaries with pylint messages.
         """
-        Parses the Pylint JSON output to identify specific code smells.
-        """
+        # Capture pylint output into a string stream
+        output_stream = io.StringIO()
+
+        # Run pylint
+        Run(["--output-format=json", self.code_path])
+
+        # Retrieve and parse output as JSON
+        output = output_stream.getvalue()
         try:
             pylint_results = json.loads(output)
         except json.JSONDecodeError:
-            print("Error: Failed to parse pylint output")
-            return []
-        
-        code_smell_report = []
+            print("Error: Could not decode pylint output")
+            pylint_results = []
 
-        for entry in pylint_results:
-            message_id = entry.get("message-id")
-            if message_id in self.code_smells:
-                code_smell_report.append({
-                    "type": self.code_smells[message_id],
-                    "message": entry.get("message"),
-                    "line": entry.get("line"),
-                    "column": entry.get("column"),
-                    "path": entry.get("path")
-                })
-        
-        return code_smell_report
+        return pylint_results
+
+
+
+from pylint.lint import Run
 
 # Example usage
 if __name__ == "__main__":
-    analyzer = PylintAnalyzer("your_file.py")
+
+    print(os.path.abspath("../test/inefficent_code_example.py"))
+
+    # FOR SOME REASON THIS ISNT WORKING UNLESS THE PATH IS ABSOLUTE
+    # this is probably because its executing from the location of the interpreter
+    # weird thing is it breaks when you use abs path instead... uhhh idk what to do here rn ...
+
+    analyzer = PylintAnalyzer(
+        "/Users/mya/Code/Capstone/capstone--source-code-optimizer/test/inefficent_code_example.py"
+    )
     report = analyzer.analyze()
-    for issue in report:
-        print(f"{issue['type']} at {issue['path']}:{issue['line']}:{issue['column']} - {issue['message']}")
+
+    print("THIS IS REPORT:")
+    print(report)
