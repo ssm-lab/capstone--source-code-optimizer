@@ -4,7 +4,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
     """
     Refactorer that targets long methods to improve readability.
     """
-    @classmethod
+    @staticmethod
     def refactor(self):
         """
         Refactor long methods into smaller methods.

@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 
+
 class BaseRefactorer(ABC):
     """
     Abstract base class for refactorers.
@@ -16,7 +17,8 @@ class BaseRefactorer(ABC):
         """
         self.code = code
 
-    def refactor(self):
+    @staticmethod
+    def refactor(code_smell_error, input_code):
         """
         Perform the refactoring process.
         Must be implemented by subclasses.
