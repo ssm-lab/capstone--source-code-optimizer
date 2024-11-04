@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{paralist}
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -291,40 +292,34 @@ CAS741) for a partial usability survey.}
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
+\textbf{Unit Testing Framework:} Pytest is chosen as the main framework for unit testing due to its \begin{inparaenum}[(i)]
+                                                                                                        \item scalability
+                                                                                                        \item integration with other tools(\texttt{coverage.py} for code coverage)
+                                                                                                        \item extensive support for parameterized tests.
+\end{inparaenum} These features make it easy to test the codebase as it grows, adapting to changes throughout the project's development \citep{pytest}.\\
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
+\noindent\textbf{Profiling Tool:} The codebase will be evaluated based on results from both time and memory profiling to optimize computational speed and resource usage. For time profiling (recording the number of function calls, time spent in each function, and its descendants), \texttt{cProfile} will be used, as it is included within Python, making it a convenient choice for profiling. For memory profiling, \texttt{memory\_profiler} will be used, as it is easy to install and includes built-in support for visual display of output \citep{memory_profiler}.\\
 
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+\noindent\textbf{Static Analyzer:} The codebase will be statically analyzed using the PyLint tool, as it is easy to integrate with most IDEs and is actively maintained (as opposed to PySmells). PyLint provides a wide range of support, including error detection, refactoring suggestions, and code style enforcement, making it a strong choice for static analysis \citep{pylint}.\\
+
+\noindent\textbf{Code Coverage Tools and Plan for Summary:} The code base will be analyzed to determine the percentage of code executed during tests. For granular-level coverage, \texttt{coverage.py} will be used, as it supports branch, line, and path coverage. Additionally, \texttt{coverage.py} is test framework-independent, allowing integration with the project's unit test framework, Pytest.\\
+Initially the aim is to achieve a 40\% coverage and gradually increment the level with time. Weekly reports generated from \texttt{coverage.py} will be used to track coverage trends and set goals accordingly to address any gaps in testing in the growing codebase.\\
+
+
+\noindent\textbf{Test Coverage Tools:} The project will use \texttt{TestRail}, a test case management tool, to provide traceability from test cases to requirements, ensuring all requirements are covered by tests. Additionally, TestRail can help run tests and track results in integration with Pytest \citep{testrail}.\\
+
+
+\noindent\textbf{Linters:} To enforce the official Python PEP 8 style guide, the team will use \texttt{PyLint}, which is also the choice for static analysis of the code.\\
+
+\noindent\textbf{CI Plan:} As mentioned in the Development Plan, GitHub Actions will integrate the above tools within the CI pipeline. GitHub Actions will be configured to run unit tests written in \texttt{Pytest} as well as \texttt{PyLint} checks on every code push. Through automated testing, any errors and code smells will be promptly identified.\\
 
 \subsection{Software Validation Plan}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
-
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
-
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
-
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
-
-\wss{This section might reference back to the SRS verification section.}
+\begin{itemize}
+    \item One or more open source Python code bases will be used to test the tool on. Based on its performance in functional and non functional tests outlined in further sections of the document, the software can be validated against defined requirements.
+    \item In addition to this, the team will reach out to Dr David as well as a group of volunteer Python developers to perform usability testing on the IDE plugin workflow as well as the CI/CD workflow.
+    \item The team will conduct a comprehensive review of the requirements from Dr David through the Rev 0 Demo.
+\end{itemize}
 
 \section{System Tests}
 
