@@ -297,16 +297,19 @@ The Verification and Validation (V\&V) Plan for the Source Code Optimizer projec
 
 \subsection{Implementation Verification Plan}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+The Implementation Verification Plan for the Source Code Optimizer project aims to ensure that the software implementation adheres to the requirements and design specifications defined in the SRS. Key components of this plan include:
 
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
-
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+\begin{itemize}
+    \item \textbf{Unit Testing}: A comprehensive suite of unit tests will be established to validate the functionality of individual components within the optimizer. These tests will specifically focus on the effectiveness of the code refactoring methods employed by the optimizer, utilizing \texttt{pytest} for writing and executing these tests.
+    
+    \item \textbf{Static Code Analysis}: To maintain high code quality, static analysis tools such as \texttt{Pylint} and \texttt{Flake8} will be employed. These tools will help identify potential bugs, security vulnerabilities, and adherence to coding standards in the Python codebase, ensuring that the optimizer is both efficient and secure.
+    
+    \item \textbf{Code Walkthroughs and Reviews}: The development team will hold regular code reviews and walkthrough sessions to collaboratively evaluate the implementation of the source code optimizer. These sessions will focus on code quality, readability, and compliance with the project’s design patterns. Additionally, the final presentation in CAS 741 will provide an opportunity for a thorough code walkthrough, allowing peers to contribute feedback on usability and functionality.
+    
+    \item \textbf{Continuous Integration}: The project will implement continuous integration practices using tools like GitHub Actions. This approach will automate the build and testing processes, allowing the team to verify that each change to the optimizer codebase meets the established quality criteria and integrates smoothly with the overall system.
+    
+    \item \textbf{Performance Testing}: The performance of the source code optimizer will be assessed to simulate various usage scenarios. This testing will focus on evaluating how effectively the optimizer processes large codebases and applies refactorings, ensuring that the tool operates efficiently under different workloads.
+\end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
 
