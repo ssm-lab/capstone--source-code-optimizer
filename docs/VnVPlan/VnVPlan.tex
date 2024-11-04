@@ -47,11 +47,10 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{4cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+November 4th, 2024 & 0.0 & Created initial revision of VnV Plan\\
 \bottomrule
 \end{tabularx}
 
@@ -77,33 +76,34 @@ in.}
 \listoftables
 \wss{Remove this section if it isn't needed}
 
-\listoffigures
-\wss{Remove this section if it isn't needed}
+% \listoffigures
+% \wss{Remove this section if it isn't needed}
 
 \newpage
 
-\section{Symbols, Abbreviations, and Acronyms}
+% \section{Symbols, Abbreviations, and Acronyms}
 
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  T & Test\\
-  \bottomrule
-\end{tabular}\\
+% \renewcommand{\arraystretch}{1.2}
+% \begin{tabular}{l l} 
+%   \toprule		
+%   \textbf{symbol} & \textbf{description}\\
+%   \midrule 
+%   T & Test\\
+%   \bottomrule
+% \end{tabular}\\
 
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \cite{SRS} tables, if appropriate}
+% \wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
+%   \cite{SRS} tables, if appropriate}
 
-\wss{Remove this section if it isn't needed}
+% \wss{Remove this section if it isn't needed}
 
-\newpage
+% \newpage
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+This document outlines the process and methods to ensure that the software meets its requirements and functions as intended. This document provides a structured approach to evaluating the product, incorporating both verification (to confirm that the software is built correctly) and validation (to confirm that the correct software has been built). By systematically identifying and mitigating potential issues, the V\&V process aims to enhance quality, reduce risks, and ensure compliance with both functional and non-functional requirements.\\
+
+The following sections will go over the approach for verification and validation, including the team structure, verification strategies at various stages and tools to be employed. Furthermore, a detailed list of system and unit tests are also included in this document.
 
 \section{General Information}
 
@@ -136,8 +136,7 @@ The Verification and Validation (VnV) plan relies on three key documents to guid
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+The following section outlines the comprehensive Verification and Validation (VnV) strategy, detailing the team structure, specific plans for verifying the Software Requirements Specification (SRS), design, implementation, and overall VnV process, as well as the automated tools employed and the approach to software validation.
 
 \subsection{Verification and Validation Team}
 
@@ -331,7 +330,7 @@ The Implementation Verification Plan for the Source Code Optimizer project aims 
 
 \noindent\textbf{Static Analyzer:} The codebase will be statically analyzed using the PyLint tool, as it is easy to integrate with most IDEs and is actively maintained (as opposed to PySmells). PyLint provides a wide range of support, including error detection, refactoring suggestions, and code style enforcement, making it a strong choice for static analysis \citep{pylint}.\\
 
-\noindent\textbf{Code Coverage Tools and Plan for Summary:} The code base will be analyzed to determine the percentage of code executed during tests. For granular-level coverage, \texttt{coverage.py} will be used, as it supports branch, line, and path coverage. Additionally, \texttt{coverage.py} is test framework-independent, allowing integration with the project's unit test framework, Pytest.\\
+\noindent\textbf{Code Coverage Tools and Plan for Summary:} The code base will be analyzed to determine the percentage of code executed during tests. For granular-level coverage, \texttt{coverage.py} will be used, as it supports branch, line, and path coverage. Additionally, \texttt{coverage.py} is a test framework-independent, allowing integration with the project's unit test framework, Pytest.\\
 Initially the aim is to achieve a 40\% coverage and gradually increment the level with time. Weekly reports generated from \texttt{coverage.py} will be used to track coverage trends and set goals accordingly to address any gaps in testing in the growing codebase.\\
 
 
@@ -345,12 +344,14 @@ Initially the aim is to achieve a 40\% coverage and gradually increment the leve
 \subsection{Software Validation Plan}
 
 \begin{itemize}
-    \item One or more open source Python code bases will be used to test the tool on. Based on its performance in functional and non functional tests outlined in further sections of the document, the software can be validated against defined requirements.
+    \item One or more open source Python code bases will be used to test the tool on. Based on its performance in functional and non-functional tests outlined in further sections of the document, the software can be validated against defined requirements.
     \item In addition to this, the team will reach out to Dr David as well as a group of volunteer Python developers to perform usability testing on the IDE plugin workflow as well as the CI/CD workflow.
     \item The team will conduct a comprehensive review of the requirements from Dr David through the Rev 0 Demo.
 \end{itemize}
 
 \section{System Tests}
+
+This section outlines the tests for verifying both functional and nonfunctional requirements of the software, ensuring it meets user expectations and performs reliably. This includes tests for code quality, usability, performance, security, and traceability, covering essential aspects of the software’s operation and compliance.
 
 \subsection{Tests for Functional Requirements}
 
@@ -445,7 +446,7 @@ smells that impact energy efficiency (FR 2).
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-CSD-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Detection of Large Class (LC)}\\[2mm]
     \textbf{Control:} Automatic \\
-    \textbf{Initial State:} Tool has loaded a \texttt{.py} file containing a class with a large number of methods and attributes.\\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file containing a class with many methods and attributes.\\
     \textbf{Input:} Python file with a class that exceeds the threshold for "Large Class" smell.\\
     \textbf{Output:} Tool identifies the "Large Class" smell and suggests refactoring options like breaking the class into smaller classes.\\[2mm]
     \textbf{Test Case Derivation:} Ensures "Large Class" code smells are identified and appropriately refactored.\\[2mm]
@@ -488,7 +489,7 @@ smells that impact energy efficiency (FR 2).
     \textbf{Initial State:} Tool has loaded a \texttt{.py} file with a class that inherits from many base classes.\\
     \textbf{Input:} Python file containing a class with an extensive inheritance list.\\
     \textbf{Output:} Tool flags "Long Base Class List" and suggests refactoring, such as restructuring inheritance.\\[2mm]
-    \textbf{Test Case Derivation:} Validates that long inheritance lists are detected and refactoring options are provided.\\[2mm]
+    \textbf{Test Case Derivation:} Validates that long inheritance lists are detected, and refactoring options are provided.\\[2mm]
     \textbf{How test will be performed:} Load a file with a long base class list and confirm detection.
 
   \item \textbf{Detection of Useless Exception Handling (UEH)}\\[2mm]
@@ -528,7 +529,7 @@ smells that impact energy efficiency (FR 2).
     \textbf{Initial State:} Tool has loaded a \texttt{.py} file with a ternary conditional expression that exceeds the line or complexity threshold.\\
     \textbf{Input:} Python file containing a long ternary conditional.\\
     \textbf{Output:} Tool flags "Long Ternary Conditional Expression" and suggests converting to a standard \texttt{if-else} block.\\[2mm]
-    \textbf{Test Case Derivation:} Ensures long ternary expressions are detected and refactoring options are provided.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures long ternary expressions are detected, and refactoring options are provided.\\[2mm]
     \textbf{How test will be performed:} Load a file with a long ternary expression and confirm detection.
 
 
@@ -768,7 +769,7 @@ The following test is designed to ensure the availability of documentation as pe
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-DA-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Test for Documentation Availability}\\[2mm]
     \textbf{Control:} Manual
-    \textbf{Initial State:} The may or may not be installed.\\
+    \textbf{Initial State:} The system may or may not be installed.\\
     \textbf{Input:} User attempts to access the documentation.\\
     \textbf{Output:} The documentation is available and covers installation, usage, and troubleshooting.\\[2mm]
     \textbf{Test Case Derivation:} Validates that the documentation meets user needs (FR 10).\\[2mm]
@@ -784,7 +785,7 @@ The following test is designed to ensure the availability of documentation as pe
 \medskip
 
 \noindent
-The following tests are designed to ensure that the user can integrate the tool into VSCode IDE as specified in FR 11 and that the tool works as intended as an extension.
+The following tests are designed to ensure that the user can integrate the tool into VS Code IDE as specified in FR 11 and that the tool works as intended as an extension.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-IE-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Installation of Extension in Visual Studio Code}\\[2mm]
@@ -914,7 +915,7 @@ The following subsection tests cover all Usability \& Humanity requirements list
     \textbf{Process:} 
     \begin{itemize}
       \item Identify all colour codes used in the system and categorize them by their role in the UI (i.e. background, foreground text, buttons, etc.).
-      \item Use tools to measure color contrast ratios against WCAG thresholds (4.5:1 for normal text, 3:1 for large text)\cite{WCAG}.
+      \item Use tools to measure colour contrast ratios against WCAG thresholds (4.5:1 for normal text, 3:1 for large text)\cite{WCAG}.
     \end{itemize}
     \textbf{Roles and Responsibilities:} Developers implement themes that pass the testing process. \\[2mm]
     \textbf{Tools and Resources:} WebAIM Color Contrast Checker, WCAG guidelines documentation, internal coding standards. \\[2mm]
@@ -1063,7 +1064,7 @@ The following subsection tests cover all Operational and Environmental requireme
       \item Verify that all required emissions metrics from these standards are present in the tool’s reports, with proper format and units.
       \item Confirm that all emissions categories and labels align with standard definitions to ensure consistency and accuracy.
     \end{itemize}
-    \textbf{Roles and Responsibilities:} The development team and project supervisor will conduct the documentation review and patch any discrepencies. \\[2mm]
+    \textbf{Roles and Responsibilities:} The development team and project supervisor will conduct the documentation review and patch any discrepancies. \\[2mm]
     \textbf{Tools and Resources:} Tool’s user guide, sample emissions reports, GRI 305, GHG, and ISO 14064 standards documentation \\[2mm]
     \textbf{Acceptance Criteria:} The tool’s emissions metrics meet or exceed the coverage required by GRI 305, GHG, and ISO 14064 standards. All labels and units are accurate, consistent, and aligned with these standards.
 
@@ -1075,7 +1076,7 @@ The following subsection tests cover all Operational and Environmental requireme
     \textbf{Output/Result:} GitHub Actions successfully initiates refactoring processes through the library as part of a continuous integration workflow \\[2mm]
     \textbf{How test will be performed:} The tester will configure a GitHub Actions workflow in a test repository, specifying steps to call the refactoring library. After committing a sample code change, the workflow should trigger automatically. The tester will verify that the refactoring library runs within GitHub Actions, completes the refactoring process, and provides feedback in the workflow logs. Successful integration will be confirmed by viewing refactoring results directly within the GitHub Actions logs.
 
-  \item \textbf{VSCode compatibility for refactoring library extension} \\[2mm]
+  \item \textbf{VS Code compatibility for refactoring library extension} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
     \textbf{Initial State:} VS Code IDE open and library installed\\
     \textbf{Input/Condition:} User installs and opens the refactoring library extension in VS Code \\
@@ -1500,14 +1501,16 @@ The following subsection tests cover all Compliance requirements listed in the S
 philosophy for test case selection.}  
 
 \wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
+For the unit tests you can potentially lay out your testing strategy here.  That is, you 
 can explain how tests will be selected for each module.  For instance, your test building 
 approach could be test cases for each access program, including one test for normal behaviour 
 and as many tests as needed for edge cases.  Rather than create the details of the input 
 and output here, you could point to the unit testing code.  For this to work, you code 
 needs to be well-documented, with meaningful names for all of the tests.}
 
-\subsection{Unit Testing Scope}
+This will be done after the Detailed Design.
+
+% \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
   developed by someone else, then you would say here if you aren't planning on
@@ -1515,106 +1518,107 @@ needs to be well-documented, with meaningful names for all of the tests.}
   have a lower priority for verification than others.  If this is the case,
   explain your rationale for the ranking of module importance.}
 
-\subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+% \subsection{Tests for Functional Requirements}
 
-\subsubsection{Module 1}
+% \wss{Most of the verification will be through automated unit testing.  If
+%   appropriate specific modules can be verified by a non-testing based
+%   technique.  That can also be documented in this section.}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+% \subsubsection{Module 1}
 
-\begin{enumerate}
+% \wss{Include a blurb here to explain why the subsections below cover the module.
+%   References to the MIS would be good.  You will want tests from a black box
+%   perspective and from a white box perspective.  Explain to the reader how the
+%   tests were selected.}
 
-\item \textbf{test-id1\\}
+% \begin{enumerate}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% \item \textbf{test-id1\\}
+
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-\textbf{Initial State:} 
+% \textbf{Initial State:} 
 					
-\textbf{Input:} 
+% \textbf{Input:} 
 					
-\textbf{Output:} \wss{The expected result for the given inputs}
+% \textbf{Output:} \wss{The expected result for the given inputs}
 
-\textbf{Test Case Derivation:} \wss{Justify the expected value given in the Output field}
+% \textbf{Test Case Derivation:} \wss{Justify the expected value given in the Output field}
 
-\textbf{How test will be performed:} 
+% \textbf{How test will be performed:} 
 					
-\item \textbf{test-id2\\}
+% \item \textbf{test-id2\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-\textbf{Initial State:} 
+% \textbf{Initial State:} 
 					
-\textbf{Input:} 
+% \textbf{Input:} 
 					
-\textbf{Output:} \wss{The expected result for the given inputs}
+% \textbf{Output:} \wss{The expected result for the given inputs}
 
-\textbf{Test Case Derivation:} \wss{Justify the expected value given in the Output field}
+% \textbf{Test Case Derivation:} \wss{Justify the expected value given in the Output field}
 
-\textbf{How test will be performed:} 
+% \textbf{How test will be performed:} 
 
-\item \textbf{...\\}
+% \item \textbf{...\\}
     
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module 2}
+% \subsubsection{Module 2}
 
-...
+% ...
 
-\subsection{Tests for Nonfunctional Requirements}
+% \subsection{Tests for Nonfunctional Requirements}
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
+% \wss{If there is a module that needs to be independently assessed for
+%   performance, those test cases can go here.  In some projects, planning for
+%   nonfunctional tests of units will not be that relevant.}
 
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
+% \wss{These tests may involve collecting performance data from previously
+%   mentioned functional tests.}
 
-\subsubsection{Module ?}
+% \subsubsection{Module 1}
 		
-\begin{enumerate}
+% \begin{enumerate}
 
-\item \textbf{test-id1\\}
+% \item \textbf{test-id1\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-\textbf{Initial State:} 
+% \textbf{Initial State:} 
 					
-Input/Condition: 
+% Input/Condition: 
 					
-Output/Result: 
+% Output/Result: 
 					
-\textbf{How test will be performed:} 
+% \textbf{How test will be performed:} 
 					
-\item \textbf{test-id2\\}
+% \item \textbf{test-id2\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+% Type: Functional, Dynamic, Manual, Static etc.
 					
-\textbf{Initial State:} 
+% \textbf{Initial State:} 
 					
-\textbf{Input:} 
+% \textbf{Input:} 
 					
-Output: 
+% Output: 
 					
-\textbf{How test will be performed:} 
+% \textbf{How test will be performed:} 
 
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module ?}
+% \subsubsection{Module 2}
 
-...
+% ...
 
-\subsection{Traceability Between Test Cases and Modules}
+% \subsection{Traceability Between Test Cases and Modules}
 
-\wss{Provide evidence that all of the modules have been considered.}
+% \wss{Provide evidence that all of the modules have been considered.}
   
 
 \bibliography{../../refs/References}
@@ -1625,19 +1629,18 @@ Output:
 
 \section{Appendix}
 
-This is where you can place additional information.
+\wss{This is where you can place additional information.}
 
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+Not applicable at the moment.
 
-\subsection{Usability Survey Questions?} \label{A.2}
+\subsection{Usability Survey Questions} \label{A.2}
 
 \subsubsection*{Minimalist Design}
 Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
 \begin{enumerate}
-  \item The tool's interface feels uncluttered, showing only essential elements .
+  \item The tool's interface feels uncluttered, showing only essential elements.
   \item I am able to focus on refactoring tasks without unnecessary distractions (rate 1-5).
 \end{enumerate}
 
