@@ -989,12 +989,13 @@ The following subsection tests cover all Performance requirements listed in the 
     \end{itemize}
     For each file type, the tester will initiate the refactoring process and observe the tool's response. The tool should detect each invalid input, display an error message describing the issue, and recover from the error without crashing. 
 
-  \item \textbf{Fallback options for failed refactoring attempts} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Static \\ %TODO: Change test format
-    \textbf{Initial State:} IDE open with sample code that will cause a refactoring failure (e.g., complex code with unsupported patterns) \\
-    \textbf{Input/Condition:} User initiates a refactoring operation on code that is incompatible with the refactoring tool’s capabilities \\
-    \textbf{Output/Result:} Tool logs the refactoring error, displays a notification to the user, and proposes alternative refactoring options without stopping the process \\[2mm]
-    \textbf{How test will be performed:} The tester will load code with patterns known to cause refactoring issues or require specific handling. Upon starting the refactoring, the tool should detect the failure, log the error internally, and present an error notification to the user. The tool should then offer alternative refactoring options (e.g., a simpler refactoring method or partial refactoring). The tester will verify that the process continues smoothly without requiring a restart and document each fallback option suggested by the tool.
+  \item \textbf{Fallback Options for Failed Refactoring Attempts} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} The tool is set up in an IDE with a sample code file that includes code smells \\
+    \textbf{Input/Condition:} User initiates a refactoring process on the sample code file \\
+    \textbf{Output/Result:} The tool logs failed refactoring attempts, provides a clear error notification, and suggests alternative refactoring options without interrupting the overall process. \\[2mm]
+    \textbf{How test will be performed:} The tester will load a sample code file into the tool that contains code smells. Upon initiating the refactoring, the tester will observe the tool’s response to any failed attempts, verifying that it logs the error. The tool should then attempt alternative refactorings without restarting the process. The tester will document the clarity of the error message, the relevance of alternative suggestions, and confirm that the tool remains functional, supporting uninterrupted refactoring of other code smells.
+  
 
     \item \textbf{Maintainability and Adaptability of the Tool} \\[2mm]
     \textbf{Objective:} Ensure that the tool’s codebase is structured to support future updates for new Python versions and evolving coding standards, minimizing the effort required for maintenance. \\[2mm]
@@ -1329,7 +1330,7 @@ The following subsection tests cover all Compliance requirements listed in the S
 \label{tab:nfr-trace-reqs}
 \begin{table}[H]
   \centering
-  \caption{Look \& Feel Requirements and Corresponding Tests}
+  \caption{Look \& Feel Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
@@ -1345,7 +1346,7 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \begin{table}[H]
   \centering
-  \caption{Usability \& Humanity Requirements and Corresponding Tests}
+  \caption{Usability \& Humanity Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
@@ -1365,7 +1366,7 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \begin{table}[H]
   \centering
-  \caption{Performance Requirements and Corresponding Tests}
+  \caption{Performance Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
@@ -1377,14 +1378,14 @@ The following subsection tests cover all Compliance requirements listed in the S
     PF-5 & PR-PAR 3 \\ 
     PF-6 & PR-RFT 1 \\ 
     PF-7 & PR-RFT 2 \\ 
-    PF-8 & PR-LR 1 \\
+    PF-8 & PR-LR 1, MS-MNT 5 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{table}[H]
   \centering
-  \caption{Operational \& Environmental Requirements and Corresponding Tests}
+  \caption{Operational \& Environmental Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
@@ -1396,7 +1397,7 @@ The following subsection tests cover all Compliance requirements listed in the S
     OPE-3 & OER-IAS 2 \\
     OPE-4 & OER-IAS 3 \\
     OPE-5 & OER-PR 1 \\
-    Not explicitly tested & OER-RL 1 \\
+    Tested by FRs & OER-RL 1 \\
     Not explicitly tested & OER-RL 2 \\
     \bottomrule
   \end{tabular}
@@ -1404,7 +1405,7 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \begin{table}[H]
   \centering
-  \caption{Maintenance \& Support Requirements and Corresponding Tests}
+  \caption{Maintenance \& Support Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
@@ -1413,14 +1414,13 @@ The following subsection tests cover all Compliance requirements listed in the S
     MS-2 & MS-MNT 2 \\
     MS-3 & MS-MNT 3 \\
     Not explicitly tested & MS-MNT 4 \\
-    Not tested & MS-MNT 5 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{table}[H]
   \centering
-  \caption{Security Requirements and Corresponding Tests}
+  \caption{Security Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
@@ -1439,7 +1439,7 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \begin{table}[H]
   \centering
-  \caption{Cultural Requirements and Corresponding Tests}
+  \caption{Cultural Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
@@ -1453,7 +1453,7 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \begin{table}[H]
   \centering
-  \caption{Compliance Requirements and Corresponding Tests}
+  \caption{Compliance Tests and Corresponding Requirements}
   \begin{tabular}{|c|c|}
     \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
     \midrule
