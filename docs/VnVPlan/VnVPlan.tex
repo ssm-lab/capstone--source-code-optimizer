@@ -14,12 +14,17 @@
 
 %Includes "References" in the table of contents
 \usepackage[nottoc]{tocbibind}
-
 \usepackage[toc,page]{appendix}
-
 \usepackage[square,numbers,compress]{natbib}
+\usepackage{placeins}
 \bibliographystyle{abbrvnat}
+
 \usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{float}
 
 \input{../Comments}
 \input{../Common}
@@ -27,6 +32,8 @@
 \newcommand{\SRS}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/SRS/SRS.pdf}{SRS}}
 \newcommand{\MG}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Design/SoftArchitecture/MG.pdf}{MG}}
 \newcommand{\MIS}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Design/SoftDetailedDes/MIS.pdf}{MIS}}
+
+\newcommand{\colorrule}{\textcolor{BlueViolet}{\rule{\linewidth}{2pt}}}
 
 \begin{document}
 
@@ -114,7 +121,7 @@ Certain objectives are intentionally left out-of-scope due to resource constrain
 
 \subsection{Challenge Level and Extras}
 
-Our project, set at a \textbf{general} challenge level, includes two additional focuses: \textbf{user documentation} and \textbf{usability testing}. The user documentation aims to provide clear, accessible guidance for developers, making it easy to understand the tool’s setup, functionality, and integration into existing workflows. Usability testing will ensure that the tool is intuitive and meets user needs effectively, offering insights to refine the user interface and optimize interactions with it's features.
+Our project, set at a \textbf{general} challenge level, includes two additional focuses: \textbf{user documentation} and \textbf{usability testing}. The user documentation aims to provide clear, accessible guidance for developers, making it easy to understand the tool’s setup, functionality, and integration into existing workflows. Usability testing will ensure that the tool is intuitive and meets user needs effectively, offering insights to refine the user interface and optimize interactions with its features.
 
 \subsection{Relevant Documentation}
 
@@ -321,761 +328,1141 @@ Initially the aim is to achieve a 40\% coverage and gradually increment the leve
 \subsection{Tests for Functional Requirements}
 
 The subsections below outline tests corresponding to functional 
-requirements in the SRS. Each test is associated with a unique 
-functional area, helping to confirm that the tool meets the 
-specified requirements. Each functional area has its own subsection 
-for clarity.
+requirements in the \SRS \cite{SRS}. Each test is associated with a unique functional area, helping to confirm that the tool meets the specified requirements. Each functional area has its own subsection for clarity.
+
+\noindent
+\colorrule
 
 \subsubsection{Code Input Acceptance Tests}
+\colorrule
 
-This section covers the tests for ensuring the system correctly accepts 
-Python source code files, detects errors in invalid files, and provides 
-suitable feedback (FR 1).
-		
-\paragraph{1. Input Acceptance}
-\begin{enumerate}
-\item{Valid Python File Acceptance\\}
+\medskip
 
-Control: Automatic
-					
-Initial State: Tool is idle.
-					
-Input: A valid Python file (filename.py) with valid standard syntax.
-					
-Output: The system accepts the file without errors.
+\noindent
+This section covers the tests for ensuring the system correctly accepts Python source code files, detects errors in invalid files, and provides suitable feedback (FR 1).
 
-Test Case Derivation: Confirming that the system correctly processes a valid Python file as per FR 1.
-					
-How test will be performed: Feed a syntactically valid .py file to the tool and observe if it’s accepted without issues.
-					
-\item{Feedback for Python File with Bad Syntax\\}
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-IA-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Valid Python File Acceptance} \\[2mm]
+    \textbf{Control:} Automatic \\    
+    \textbf{Initial State:} Tool is idle.  \\
+    \textbf{Input:} A valid Python file (filename.py) with valid standard syntax. \\
+    \textbf{Output:} The system accepts the file without errors.\\[2mm]
+    \textbf{Test Case Derivation:} Confirming that the system correctly processes a valid Python file as per FR 1.\\[2mm]
+    \textbf{How test will be performed:} Feed a syntactically valid .py file to the tool and observe if it’s accepted without issues.
+            
+  \item \textbf{Feedback for Python File with Bad Syntax} \\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A .py file (badSyntax.py) containing deliberate syntax errors that render the file unrunnable. \\
+    \textbf{Output:} The system rejects the file and provides an error message detailing the syntax issue. \\[2mm]
+    \textbf{Test Case Derivation:} Verifies the tool’s handling of syntactically invalid Python files to ensure user awareness of the syntax issue, meeting FR 1. \\[2mm]
+    \textbf{How test will be performed:} Feed a .py file with syntax errors to the tool and check that the system identifies it as invalid and produces an appropriate error message.
 
-Control: Automatic
-					
-Initial State: Tool is idle.
-					
-Input: A .py file (badSyntax.py) containing deliberate syntax errors that render the file unrunable.
-					
-Output: The system rejects the file and provides an error message detailing the syntax issue.
+  \item \textbf{Feedback for Non-Python File}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool is idle.\\
+    \textbf{Input:} A non-Python file (document.txt) or a file with an incorrect extension (script.js).\\
+    \textbf{Output:} The system rejects the file and provides an error message indicating the invalid file format.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures the tool detects unsupported file types and provides feedback, satisfying FR 1.\\[2mm]
+    \textbf{How test will be performed:} Attempt to load a .txt or other non-Python file, and verify that the system rejects it with a message indicating an invalid file type.
 
-Test Case Derivation: Verifies the tool’s handling of syntactically invalid Python files to ensure user awareness of the syntax issue, meeting FR 1.
+  \item \textbf{Test for Original Code Passing the Original Test Suite}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Idle.\\
+    \textbf{Input:} Python code and its associated test suite.\\
+    \textbf{Output:} The original code passes 100\% of the test suite.\\[2mm]
+    \textbf{Test Case Derivation:}  This test ensures that the original code is functional and compliant with the provided test suite, confirming that the input code is valid.\\[2mm]
+    \textbf{How test will be performed:} 
+    \begin{enumerate}
+      \item The original code will be executed against its associated test suite.
+      \item Verify that all tests in the original test suite pass, indicating that the original code is valid and functioning as expected.
+    \end{enumerate}
 
-How test will be performed: Feed a .py file with syntax errors to the tool and check that the system identifies it as invalid and produces an appropriate error message.
+  \item \textbf{Valid Python Test Suite Acceptance}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool is idle.\\
+    \textbf{Input:} A valid Python test suite file (\texttt{testSuite.py}) with valid syntax and tests.\\
+    \textbf{Output:} The system accepts the test suite and confirms it is ready for execution.\\[2mm]
+    \textbf{Test Case Derivation:} Confirms that the tool can accept a valid test suite as input, as required by FR 2.\\[2mm]
+    \textbf{How test will be performed:} Load a valid test suite \texttt{.py} file into the tool and observe that it is accepted without errors.
 
-\item{Feedback for Non-Python File\\}
+  \item \textbf{Feedback for Test Suite with Invalid Syntax}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool is idle.\\
+    \textbf{Input:} A test suite file (\texttt{invalid\_test\_suite.py}) containing syntax errors.\\
+    \textbf{Output:} The system rejects the test suite and provides an error message detailing the syntax issue.\\[2mm]
+    \textbf{Test Case Derivation:} Verifies the tool's capability to identify and report errors in test suites, meeting FR 2.\\[2mm]
+    \textbf{How test will be performed:} Load a test suite file with syntax errors into the tool and check for appropriate error reporting.
 
-Control: Automatic
-					
-Initial State: Tool is idle.
-					
-Input: A non-Python file (document.txt) or a file with an incorrect extension (script.js).
-					
-Output: The system rejects the file and provides an error message indicating the invalid file format.
-
-Test Case Derivation: Ensures the tool detects unsupported file types and provides feedback, satisfying FR 1.
-
-How test will be performed: Attempt to load a .txt or other non-Python file, and verify that the system rejects it with a message indicating an invalid file type.
-
-
-\item{Test for Original Code Passing the Original Test Suite\\}
-
-Control: Automatic
-
-Initial State: Idle.
-
-Input: Python code and its associated test suite.
-
-Output: The original code passes 100\% of the test suite.
-
-Test Case Derivation:  This test ensures that the original code is functional and compliant with the provided test suite, confirming that the input code is valid.
-
-How test will be performed: 
-\begin{enumerate}
-  \item The original code will be executed against its associated test suite.
-  \item Verify that all tests in the original test suite pass, indicating that the original code is valid and functioning as expected.
+  \item \textbf{Test Suite with No Test Cases}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool is idle.\\
+    \textbf{Input:} A valid Python file (\texttt{empty\_test\_suite.py}) that contains no test cases.\\
+    \textbf{Output:} The system rejects the file and provides an error message indicating that there are no test cases present.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures the tool identifies test suites lacking test cases, complying with FR 2.\\[2mm]
+    \textbf{How test will be performed:} Load a test suite file with no defined test cases and verify that the system produces an appropriate error message.
 \end{enumerate}
 
- \item{Valid Python Test Suite Acceptance\\}
+\noindent
+\colorrule
 
-    Control: Automatic
+\subsubsection{Code Smell Detection Tests} \label{4.1.2}
+\colorrule
 
-    Initial State: Tool is idle.
+\medskip
 
-    Input: A valid Python test suite file (\texttt{testSuite.py}) with valid syntax and tests.
-
-    Output: The system accepts the test suite and confirms it is ready for execution.
-
-    Test Case Derivation: Confirms that the tool can accept a valid test suite as input, as required by FR 2.
-
-    How test will be performed: Load a valid test suite \texttt{.py} file into the tool and observe that it is accepted without errors.
-
-    \item{Feedback for Test Suite with Invalid Syntax\\}
-
-    Control: Automatic
-
-    Initial State: Tool is idle.
-
-    Input: A test suite file (\texttt{invalid\_test\_suite.py}) containing syntax errors.
-
-    Output: The system rejects the test suite and provides an error message detailing the syntax issue.
-
-    Test Case Derivation: Verifies the tool's capability to identify and report errors in test suites, meeting FR 2.
-
-    How test will be performed: Load a test suite file with syntax errors into the tool and check for appropriate error reporting.
-
-    \item{Test Suite with No Test Cases\\}
-
-    Control: Automatic
-
-    Initial State: Tool is idle.
-
-    Input: A valid Python file (\texttt{empty\_test\_suite.py}) that contains no test cases.
-
-    Output: The system rejects the file and provides an error message indicating that there are no test cases present.
-
-    Test Case Derivation: Ensures the tool identifies test suites lacking test cases, complying with FR 2.
-
-    How test will be performed: Load a test suite file with no defined test cases and verify that the system produces an appropriate error message.
-
-
-\end{enumerate}
-
-
-\subsubsection{Code Smell Detection Tests}
-
+\noindent
 This area includes tests to verify the detection of specified code 
 smells that impact energy efficiency (FR 2).
-		
-\paragraph{2. Code Smell Detection}
-\begin{enumerate}
-\item{Detection of Large Class (LC)\\}
 
-Control: Automatic
-          
-Initial State: Tool has loaded a `.py` file containing a class with a large number of methods and attributes.
-          
-Input: Python file with a class that exceeds the threshold for "Large Class" smell.
-          
-Output: Tool identifies the "Large Class" smell and suggests refactoring options like breaking the class into smaller classes.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-CSD-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Detection of Large Class (LC)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file containing a class with a large number of methods and attributes.\\
+    \textbf{Input:} Python file with a class that exceeds the threshold for "Large Class" smell.\\
+    \textbf{Output:} Tool identifies the "Large Class" smell and suggests refactoring options like breaking the class into smaller classes.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures "Large Class" code smells are identified and appropriately refactored.\\[2mm]
+    \textbf{How test will be performed:} Load a file with a large class and verify detection.
 
-Test Case Derivation: Ensures "Large Class" code smells are identified and appropriately refactored.
-          
-How test will be performed: Load a file with a large class and verify detection.
+  \item \textbf{Detection of Long Parameter List (LPL)}\\[2mm]
+    \textbf{Control:} Automatic \\       
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file containing a method with a long parameter list.       \\
+    \textbf{Input:} Python file with a method using more parameters than the threshold.\\
+    \textbf{Output:} Tool flags the "Long Parameter List" smell and suggests bundling parameters into objects or reducing parameters.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures "Long Parameter List" code smell detection.\\[2mm]
+    \textbf{How test will be performed:} Load a file with a method having a long parameter list and confirm detection.
 
-\item{Detection of Long Parameter List (LPL)\\}
+  \item \textbf{Detection of Long Method (LM)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file with a method that exceeds the line limit threshold.\\
+    \textbf{Input:} Python file containing a long method.\\
+    \textbf{Output:} Tool detects "Long Method" and suggests breaking it into smaller methods.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures "Long Method" detection and suggestions for improving readability.\\[2mm]
+    \textbf{How test will be performed:} Load a file with a long method and check for detection.
 
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file containing a method with a long parameter list.
-					
-Input: Python file with a method using more parameters than the threshold.
-					
-Output: Tool flags the "Long Parameter List" smell and suggests bundling parameters into objects or reducing parameters.
+  \item \textbf{Detection of Long Message Chain (LMC)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file with a chain of method calls.\\
+    \textbf{Input:} Python file containing a message chain exceeding the threshold.\\
+    \textbf{Output:} Tool flags the "Long Message Chain" smell and suggests ways to simplify it, such as introducing intermediary methods.\\[2mm]
+    \textbf{Test Case Derivation:} Validates "Long Message Chain" detection and suggestions for code simplification.     \\[2mm]
+    \textbf{How test will be performed:} Load a file with a long chain of method calls and confirm detection.
 
-Test Case Derivation: Ensures "Long Parameter List" code smell detection.
-					
-How test will be performed: Load a file with a method having a long parameter list and confirm detection.
+  \item \textbf{Detection of Long Scope Chaining (LSC)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file containing deeply nested scopes.\\
+    \textbf{Input:} Python file with excessive scope chaining.\\
+    \textbf{Output:} Tool detects "Long Scope Chaining" and suggests reducing nesting or refactoring.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures tool detects deep nesting and provides ways to make code more readable.\\[2mm]
+    \textbf{How test will be performed:} Load a file with nested scopes and confirm detection.
 
-\item{Detection of Long Method (LM)\\}
+  \item \textbf{Detection of Long Base Class List (LBCL)}\\[2mm]
+    \textbf{Control:} Automatic \\         
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file with a class that inherits from many base classes.\\
+    \textbf{Input:} Python file containing a class with an extensive inheritance list.\\
+    \textbf{Output:} Tool flags "Long Base Class List" and suggests refactoring, such as restructuring inheritance.\\[2mm]
+    \textbf{Test Case Derivation:} Validates that long inheritance lists are detected and refactoring options are provided.\\[2mm]
+    \textbf{How test will be performed:} Load a file with a long base class list and confirm detection.
 
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file with a method that exceeds the line limit threshold.
-					
-Input: Python file containing a long method.
-					
-Output: Tool detects "Long Method" and suggests breaking it into smaller methods.
+  \item \textbf{Detection of Useless Exception Handling (UEH)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file with empty or redundant \texttt{try-except} blocks.\\
+    \textbf{Input:} Python file containing useless exception handling blocks.\\
+    \textbf{Output:} Tool flags "Useless Exception Handling" and suggests meaningful handling or removal.\\[2mm]
+    \textbf{Test Case Derivation:} Confirms detection of redundant exception handling and refactoring options.\\[2mm]
+    \textbf{How test will be performed:} Load a file with empty \texttt{try-except} blocks and verify detection.
 
-Test Case Derivation: Ensures "Long Method" detection and suggestions for improving readability.
-					
-How test will be performed: Load a file with a long method and check for detection.
+  \item \textbf{Detection of Long Lambda Function (LLF)}\\[2mm]
+    \textbf{Control:} Automatic \\    
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file containing lambda functions that exceed the line or complexity threshold.     \\
+    \textbf{Input:} Python file with a long lambda function.\\
+    \textbf{Output:} Tool detects "Long Lambda Function" and suggests converting it to a named function.\\[2mm]
+    \textbf{Test Case Derivation:} Validates detection of long lambda functions and refactoring suggestions for clarity.\\[2mm]
+    \textbf{How test will be performed:} Load a file with a long lambda and verify detection.
 
-\item{Detection of Long Message Chain (LMC)\\}
+  \item \textbf{Detection of Complex List Comprehension (CLC)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file with list comprehensions containing nested conditions.\\
+    \textbf{Input:} Python file with a complex list comprehension.\\
+    \textbf{Output:} Tool flags "Complex List Comprehension" and suggests simplifying the expression.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures tool detects complex list comprehensions and suggests simplifications.\\[2mm]
+    \textbf{How test will be performed:} Load a file with complex list comprehension and confirm detection.
 
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file with a chain of method calls.
-					
-Input: Python file containing a message chain exceeding the threshold.
-					
-Output: Tool flags the "Long Message Chain" smell and suggests ways to simplify it, such as introducing intermediary methods.
+  \item \textbf{Detection of Long Element Chain (LEC)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file with a long sequence of chained elements (e.g., dictionary access).\\
+    \textbf{Input:} Python file containing an element chain exceeding the length threshold.\\
+    \textbf{Output:} Tool detects "Long Element Chain" and suggests restructuring the code for readability.\\[2mm]
+    \textbf{Test Case Derivation:} Confirms tool detects long element chains and suggests simplification.\\[2mm]
+    \textbf{How test will be performed:} Load a file with a long element chain and verify detection.
 
-Test Case Derivation: Validates "Long Message Chain" detection and suggestions for code simplification.
-					
-How test will be performed: Load a file with a long chain of method calls and confirm detection.
-
-\item{Detection of Long Scope Chaining (LSC)\\}
-
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file containing deeply nested scopes.
-					
-Input: Python file with excessive scope chaining.
-					
-Output: Tool detects "Long Scope Chaining" and suggests reducing nesting or refactoring.
-
-Test Case Derivation: Ensures tool detects deep nesting and provides ways to make code more readable.
-					
-How test will be performed: Load a file with nested scopes and confirm detection.
-
-\item{Detection of Long Base Class List (LBCL)\\}
-
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file with a class that inherits from many base classes.
-					
-Input: Python file containing a class with an extensive inheritance list.
-					
-Output: Tool flags "Long Base Class List" and suggests refactoring, such as restructuring inheritance.
-
-Test Case Derivation: Validates that long inheritance lists are detected and refactoring options are provided.
-					
-How test will be performed: Load a file with a long base class list and confirm detection.
-
-\item{Detection of Useless Exception Handling (UEH)\\}
-
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file with empty or redundant `try-except` blocks.
-					
-Input: Python file containing useless exception handling blocks.
-					
-Output: Tool flags "Useless Exception Handling" and suggests meaningful handling or removal.
-
-Test Case Derivation: Confirms detection of redundant exception handling and refactoring options.
-					
-How test will be performed: Load a file with empty `try-except` blocks and verify detection.
-
-\item{Detection of Long Lambda Function (LLF)\\}
-
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file containing lambda functions that exceed the line or complexity threshold.
-					
-Input: Python file with a long lambda function.
-					
-Output: Tool detects "Long Lambda Function" and suggests converting it to a named function.
-
-Test Case Derivation: Validates detection of long lambda functions and refactoring suggestions for clarity.
-					
-How test will be performed: Load a file with a long lambda and verify detection.
-
-\item{Detection of Complex List Comprehension (CLC)\\}
-
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file with list comprehensions containing nested conditions.
-					
-Input: Python file with a complex list comprehension.
-					
-Output: Tool flags "Complex List Comprehension" and suggests simplifying the expression.
-
-Test Case Derivation: Ensures tool detects complex list comprehensions and suggests simplifications.
-					
-How test will be performed: Load a file with complex list comprehension and confirm detection.
-
-\item{Detection of Long Element Chain (LEC)\\}
-
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file with a long sequence of chained elements (e.g., dictionary access).
-					
-Input: Python file containing an element chain exceeding the length threshold.
-					
-Output: Tool detects "Long Element Chain" and suggests restructuring the code for readability.
-
-Test Case Derivation: Confirms tool detects long element chains and suggests simplification.
-					
-How test will be performed: Load a file with a long element chain and verify detection.
-
-\item{Detection of Long Ternary Conditional Expression (LTCE)\\}
-
-Control: Automatic
-					
-Initial State: Tool has loaded a `.py` file with a ternary conditional expression that exceeds the line or complexity threshold.
-					
-Input: Python file containing a long ternary conditional.
-					
-Output: Tool flags "Long Ternary Conditional Expression" and suggests converting to a standard `if-else` block.
-
-Test Case Derivation: Ensures long ternary expressions are detected and refactoring options are provided.
-					
-How test will be performed: Load a file with a long ternary expression and confirm detection.
+  \item \textbf{Detection of Long Ternary Conditional Expression (LTCE)}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has loaded a \texttt{.py} file with a ternary conditional expression that exceeds the line or complexity threshold.\\
+    \textbf{Input:} Python file containing a long ternary conditional.\\
+    \textbf{Output:} Tool flags "Long Ternary Conditional Expression" and suggests converting to a standard \texttt{if-else} block.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures long ternary expressions are detected and refactoring options are provided.\\[2mm]
+    \textbf{How test will be performed:} Load a file with a long ternary expression and confirm detection.
 
 
-\item{No Code Smells Detected Handling\\}
-
-Control: Automatic
-
-Initial State: Tool is idle.
-
-Input: A valid Python file (filename.py) that adheres to best practices and contains no detectable code smells.
-
-Output: The system returns a message indicating that no code smells were found in the code.
-
-Test Case Derivation: This test ensures that the tool can correctly identify when there are no code smells present, as per functional requirement FR 2.
-
-How test will be performed: Provide a Python file that is well-structured and free of common code smells, and verify that the tool outputs a message confirming the absence of smells.
+  \item \textbf{No Code Smells Detected Handling}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool is idle.\\
+    \textbf{Input:} A valid Python file (filename.py) that adheres to best practices and contains no detectable code smells.\\
+    \textbf{Output:} The system returns a message indicating that no code smells were found in the code.\\[2mm]
+    \textbf{Test Case Derivation:} This test ensures that the tool can correctly identify when there are no code smells present, as per functional requirement FR 2.\\[2mm]
+    \textbf{How test will be performed:} Provide a Python file that is well-structured and free of common code smells, and verify that the tool outputs a message confirming the absence of smells.
 
 \end{enumerate}
 
-\subsubsection{Refactoring Suggestion Tests}
+\noindent
+\colorrule
 
+\subsubsection{Refactoring Suggestion (RS) Tests}
+\colorrule
+
+\medskip
+
+\noindent
 The following tests aim to validate the tool's capability to suggest appropriate refactorings in response to identified code smells, as outlined in the functional requirements (FR 5). These tests ensure that for each detected code smell, the tool provides actionable code modifications that not only enhance maintainability but also lead to measurable reductions in energy consumption.
 		
-\paragraph{3. Refactoring Suggestion Tests}
-\begin{enumerate}
-  \item{Large Class (LC) Refactoring Suggestion\\}
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-RS-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Large Class (LC) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has identified a large class in the provided Python file.\\
+    \textbf{Input:} A Python file containing a class with a high number of lines of code and methods.\\
+    \textbf{Output:} The tool suggests splitting the large class into smaller, more manageable classes and displays the suggested modifications.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures that the tool provides a refactoring suggestion that reduces energy consumption while maintaining functionality as per FR 5.\\[2mm]
+    \textbf{How test will be performed:} Feed a Python file with a large class to the tool and verify that it displays a refactoring suggestion to break the class into smaller parts.
+  
+  \item \textbf{Long Parameter List (LPL) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has detected a method with too many parameters.\\
+    \textbf{Input:} A Python file with a method signature that contains an excessive number of parameters.\\
+    \textbf{Output:} The tool suggests using a data structure (e.g., a dictionary or an object) to encapsulate the parameters and shows the modified method signature.\\[2mm]
+    \textbf{Test Case Derivation:} Confirms that the tool can identify long parameter lists and suggest refactoring to improve code clarity and energy efficiency.\\[2mm]
+    \textbf{How test will be performed:} Submit a Python file with a method featuring a long parameter list and check that the tool provides a refactoring suggestion.
+  
+  \item \textbf{Long Method (LM) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has identified a method that exceeds a predefined line count.\\
+    \textbf{Input:} A Python file containing a method that is excessively long.\\
+    \textbf{Output:} The tool suggests breaking the long method into smaller methods and displays the proposed modifications.\\[2mm]
+    \textbf{Test Case Derivation:} Validates that the tool recognizes long methods and suggests refactoring to enhance maintainability and reduce energy usage.\\[2mm]
+    \textbf{How test will be performed:} Provide the tool with a Python file containing a long method and observe if it suggests breaking it into smaller methods with clear modifications.
+  
+  \item \textbf{Long Message Chain (LMC) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has identified a long message chain in the code.\\
+    \textbf{Input:} A Python file with chained method calls resulting in a long message chain.\\
+    \textbf{Output:} The tool suggests simplifying the message chain by assigning intermediate results to variables and shows the refactored code.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures that the tool can detect long message chains and provide effective refactoring suggestions that improve energy efficiency.\\[2mm]
+    \textbf{How test will be performed:} Use a Python file containing a long message chain and confirm that the tool displays a suggestion to simplify it.
+  
+  \item \textbf{Long Scope Chaining (LSC) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has detected a long scope chain in the provided code.\\
+    \textbf{Input:} A Python file with multiple nested function calls or scope references.\\
+    \textbf{Output:} The tool suggests flattening the scope chain by refactoring into clearer, standalone function calls and displays the proposed modifications.\\[2mm]
+    \textbf{Test Case Derivation:} Confirms that the tool can identify long scope chaining and suggest refactoring to enhance clarity and maintainability.\\[2mm]
+    \textbf{How test will be performed:} Feed a Python file with a long scope chain to the tool and check if it suggests appropriate refactoring.
+  
+  \item \textbf{Long Base Class List (LBCL) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has identified a class inheriting from many base classes.\\
+    \textbf{Input:} A Python file with a class declaration that inherits from multiple base classes.\\
+    \textbf{Output:} The tool suggests refactoring the class to reduce the number of base classes, possibly by using composition instead of inheritance, and displays the suggested changes.\\[2mm]
+    \textbf{Test Case Derivation:} Validates that the tool recognizes long base class lists and provides suggestions for improving class design and energy efficiency.\\[2mm]
+    \textbf{How test will be performed:} Provide the tool with a Python file containing a class with a long base class list and observe if it suggests refactoring.
+  
+  \item \textbf{Useless Exception Handling (UEH) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has detected unnecessary exception handling in the code.\\
+    \textbf{Input:} A Python file containing try-except blocks that do not provide meaningful handling.\\
+    \textbf{Output:} The tool suggests removing or modifying the exception handling and displays the modified code.\\[2mm]
+    \textbf{Test Case Derivation:} Validates that the tool can identify useless exception handling and suggests actionable refactorings to enhance clarity and efficiency.\\[2mm]
+    \textbf{How test will be performed:} Feed the tool a Python file with unnecessary exception handling and check if it suggests modifications.
+  
+  \item \textbf{Long Lambda Function (LLF) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has identified a lambda function that is too complex or lengthy.\\
+    \textbf{Input:} A Python file containing a long or complex lambda function.\\
+    \textbf{Output:} The tool suggests refactoring the lambda function into a named function and shows the proposed changes.\\[2mm]
+    \textbf{Test Case Derivation:} Confirms that the tool recognizes long lambda functions and provides suggestions for refactoring to enhance readability and performance.\\[2mm]
+    \textbf{How test will be performed:} Submit a Python file with a long lambda function to the tool and verify that it suggests converting it into a named function.
+  
+  \item \textbf{Complex List Comprehension (CLC) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has detected a complex list comprehension.\\
+    \textbf{Input:} A Python file containing a list comprehension that is hard to read or understand.\\
+    \textbf{Output:} The tool suggests breaking the list comprehension into a for loop and displays the modified code.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures that the tool identifies complex list comprehensions and suggests refactoring for clarity and efficiency.\\[2mm]
+    \textbf{How test will be performed:} Provide a Python file with a complex list comprehension and observe if the tool offers a simpler alternative.
+  
+  \item \textbf{Long Element Chain (LEC) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has detected a long chain of method calls on an object.\\
+    \textbf{Input:} A Python file with an object undergoing multiple chained calls.\\
+    \textbf{Output:} The tool suggests breaking the chain into separate calls and displays the refactored code.\\[2mm]
+    \textbf{Test Case Derivation:} Validates that the tool can recognize long element chains and provide suggestions to improve code structure and efficiency.\\[2mm]
+    \textbf{How test will be performed:} Use a Python file featuring a long element chain and verify that the tool suggests breaking it apart.
+  
+  \item \textbf{Long Ternary Conditional Expression (LTCE) RS}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has detected a complex ternary conditional expression.\\
+    \textbf{Input:} A Python file with a long ternary expression that is difficult to read.\\
+    \textbf{Output:} The tool suggests refactoring the ternary expression into a standard if-else statement and shows the suggested changes.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures that the tool identifies long ternary conditional expressions and provides clearer refactoring alternatives.\\[2mm]
+    \textbf{How test will be performed:} Submit a Python file containing a long ternary expression to the tool and confirm that it suggests refactoring it into an if-else statement.
+  
+  \item \textbf{Energy Consumption Measurement for Suggested Refactoring}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has suggested a refactoring for detected code smells.\\
+    \textbf{Input:} Suggested refactored code.\\
+    \textbf{Output:} Measurement showing improved energy consumption in joules.\\[2mm]
+    \textbf{Test Case Derivation:} Confirms suggestions provide measurable energy efficiency improvement, per FR 5.\\[2mm]
+    \textbf{How test will be performed:} Apply a refactoring and measure energy consumption before and after.
+  
+  \item \textbf{Optimal Refactoring Selection}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has identified multiple refactoring options for a single code smell.\\
+    \textbf{Input:} Multiple refactoring options.\\
+    \textbf{Output:} System chooses the refactoring with the lowest measured energy consumption.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures that the tool optimizes for energy efficiency, meeting FR 7.\\[2mm]
+    \textbf{How test will be performed:} Provide multiple refactoring options and verify the tool selects the most energy-efficient one.
+  
+  \item \textbf{RS Not Possible Handling}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool is idle.\\
+    \textbf{Input:} Code containing a complex smell that cannot be refactored due to constraints.\\
+    \textbf{Output:} The system provides a message indicating that no refactoring suggestions can be made for the identified smell or given code.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures the tool gracefully handles situations where refactoring is too complex or not feasible.\\[2mm]
+    \textbf{How test will be performed:} Provide a code example that includes a complex smell and observe the output for an appropriate message regarding the lack of suggestions.
 
-  Control: Automatic
-            
-  Initial State: Tool has identified a large class in the provided Python file.
-            
-  Input: A Python file containing a class with a high number of lines of code and methods.
-            
-  Output: The tool suggests splitting the large class into smaller, more manageable classes and displays the suggested modifications.
-  
-  Test Case Derivation: Ensures that the tool provides a refactoring suggestion that reduces energy consumption while maintaining functionality as per FR 5.
-            
-  How test will be performed: Feed a Python file with a large class to the tool and verify that it displays a refactoring suggestion to break the class into smaller parts.
-  
-  \item{Long Parameter List (LPL) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has detected a method with too many parameters.
-            
-  Input: A Python file with a method signature that contains an excessive number of parameters.
-            
-  Output: The tool suggests using a data structure (e.g., a dictionary or an object) to encapsulate the parameters and shows the modified method signature.
-  
-  Test Case Derivation: Confirms that the tool can identify long parameter lists and suggest refactoring to improve code clarity and energy efficiency.
-            
-  How test will be performed: Submit a Python file with a method featuring a long parameter list and check that the tool provides a refactoring suggestion.
-  
-  \item{Long Method (LM) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has identified a method that exceeds a predefined line count.
-            
-  Input: A Python file containing a method that is excessively long.
-            
-  Output: The tool suggests breaking the long method into smaller methods and displays the proposed modifications.
-  
-  Test Case Derivation: Validates that the tool recognizes long methods and suggests refactoring to enhance maintainability and reduce energy usage.
-            
-  How test will be performed: Provide the tool with a Python file containing a long method and observe if it suggests breaking it into smaller methods with clear modifications.
-  
-  \item{Long Message Chain (LMC) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has identified a long message chain in the code.
-            
-  Input: A Python file with chained method calls resulting in a long message chain.
-            
-  Output: The tool suggests simplifying the message chain by assigning intermediate results to variables and shows the refactored code.
-  
-  Test Case Derivation: Ensures that the tool can detect long message chains and provide effective refactoring suggestions that improve energy efficiency.
-            
-  How test will be performed: Use a Python file containing a long message chain and confirm that the tool displays a suggestion to simplify it.
-  
-  \item{Long Scope Chaining (LSC) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has detected a long scope chain in the provided code.
-            
-  Input: A Python file with multiple nested function calls or scope references.
-            
-  Output: The tool suggests flattening the scope chain by refactoring into clearer, standalone function calls and displays the proposed modifications.
-  
-  Test Case Derivation: Confirms that the tool can identify long scope chaining and suggest refactoring to enhance clarity and maintainability.
-            
-  How test will be performed: Feed a Python file with a long scope chain to the tool and check if it suggests appropriate refactoring.
-  
-  \item{Long Base Class List (LBCL) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has identified a class inheriting from many base classes.
-            
-  Input: A Python file with a class declaration that inherits from multiple base classes.
-            
-  Output: The tool suggests refactoring the class to reduce the number of base classes, possibly by using composition instead of inheritance, and displays the suggested changes.
-  
-  Test Case Derivation: Validates that the tool recognizes long base class lists and provides suggestions for improving class design and energy efficiency.
-            
-  How test will be performed: Provide the tool with a Python file containing a class with a long base class list and observe if it suggests refactoring.
-  
-  \item{Useless Exception Handling (UEH) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has detected unnecessary exception handling in the code.
-            
-  Input: A Python file containing try-except blocks that do not provide meaningful handling.
-            
-  Output: The tool suggests removing or modifying the exception handling and displays the modified code.
-  
-  Test Case Derivation: Validates that the tool can identify useless exception handling and suggests actionable refactorings to enhance clarity and efficiency.
-            
-  How test will be performed: Feed the tool a Python file with unnecessary exception handling and check if it suggests modifications.
-  
-  \item{Long Lambda Function (LLF) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has identified a lambda function that is too complex or lengthy.
-            
-  Input: A Python file containing a long or complex lambda function.
-            
-  Output: The tool suggests refactoring the lambda function into a named function and shows the proposed changes.
-  
-  Test Case Derivation: Confirms that the tool recognizes long lambda functions and provides suggestions for refactoring to enhance readability and performance.
-            
-  How test will be performed: Submit a Python file with a long lambda function to the tool and verify that it suggests converting it into a named function.
-  
-  \item{Complex List Comprehension (CLC) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has detected a complex list comprehension.
-            
-  Input: A Python file containing a list comprehension that is hard to read or understand.
-            
-  Output: The tool suggests breaking the list comprehension into a for loop and displays the modified code.
-  
-  Test Case Derivation: Ensures that the tool identifies complex list comprehensions and suggests refactoring for clarity and efficiency.
-            
-  How test will be performed: Provide a Python file with a complex list comprehension and observe if the tool offers a simpler alternative.
-  
-  \item{Long Element Chain (LEC) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has detected a long chain of method calls on an object.
-            
-  Input: A Python file with an object undergoing multiple chained calls.
-            
-  Output: The tool suggests breaking the chain into separate calls and displays the refactored code.
-  
-  Test Case Derivation: Validates that the tool can recognize long element chains and provide suggestions to improve code structure and efficiency.
-            
-  How test will be performed: Use a Python file featuring a long element chain and verify that the tool suggests breaking it apart.
-  
-  \item{Long Ternary Conditional Expression (LTCE) Refactoring Suggestion\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has detected a complex ternary conditional expression.
-            
-  Input: A Python file with a long ternary expression that is difficult to read.
-            
-  Output: The tool suggests refactoring the ternary expression into a standard if-else statement and shows the suggested changes.
-  
-  Test Case Derivation: Ensures that the tool identifies long ternary conditional expressions and provides clearer refactoring alternatives.
-            
-  How test will be performed: Submit a Python file containing a long ternary expression to the tool and confirm that it suggests refactoring it into an if-else statement.
-  
-  \item{Energy Consumption Measurement for Suggested Refactoring\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has suggested a refactoring for detected code smells.
-            
-  Input: Suggested refactored code.
-            
-  Output: Measurement showing improved energy consumption in joules.
-  
-  Test Case Derivation: Confirms suggestions provide measurable energy efficiency improvement, per FR 5.
-            
-  How test will be performed: Apply a refactoring and measure energy consumption before and after.
-  
-  \item{Optimal Refactoring Selection\\}
-  
-  Control: Automatic
-            
-  Initial State: Tool has identified multiple refactoring options for a single code smell.
-            
-  Input: Multiple refactoring options.
-            
-  Output: System chooses the refactoring with the lowest measured energy consumption.
-  
-  Test Case Derivation: Ensures that the tool optimizes for energy efficiency, meeting FR 7.
-            
-  How test will be performed: Provide multiple refactoring options and verify the tool selects the most energy-efficient one.
-  
-  \item{Refactoring Suggestion Not Possible Handling\\}
-
-  Control: Automatic
-  
-  Initial State: Tool is idle.
-  
-  Input: Code containing a complex smell that cannot be refactored due to constraints.
-  
-  Output: The system provides a message indicating that no refactoring suggestions can be made for the identified smell or given code.
-  
-  Test Case Derivation: Ensures the tool gracefully handles situations where refactoring is too complex or not feasible.
-  
-  How test will be performed: Provide a code example that includes a complex smell and observe the output for an appropriate message regarding the lack of suggestions.
-
-  \item{Selection of Identical Energy Consumption Refactorings\\}
-
-  Control: Automatic
-  
-  Initial State: The refactoring tool has analyzed a Python code file and identified multiple minimal refactorings.
-  
-  Input: Two or more refactorings that result in the same minimal energy consumption improvement.
-  
-  Output: The tool randomly selects one refactoring to apply.
-  
-  Test Case Derivation: This test ensures that when multiple refactorings provide the same energy efficiency gain, the tool correctly implements one of them without preference, thereby fulfilling FR 5.
-  
-  How test will be performed: The tool will be run on a Python file containing code smells. It will be observed whether it selects one of the refactorings with identical energy improvements for application.
+  \item \textbf{Selection of Identical Energy Consumption Refactorings}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} The refactoring tool has analyzed a Python code file and identified multiple minimal refactorings.\\
+    \textbf{Input:} Two or more refactorings that result in the same minimal energy consumption improvement.\\
+    \textbf{Output:} The tool randomly selects one refactoring to apply.\\[2mm]
+    \textbf{Test Case Derivation:} This test ensures that when multiple refactorings provide the same energy efficiency gain, the tool correctly implements one of them without preference, thereby fulfilling FR 5.\\[2mm]
+    \textbf{How test will be performed:} The tool will be run on a Python file containing code smells. It will be observed whether it selects one of the refactorings with identical energy improvements for application.
 \end{enumerate}
+
+\noindent
+\colorrule
 
 \subsubsection{Output Validation Tests}
+\colorrule
 
+\medskip
+
+\noindent
 The following tests are designed to validate that the functionality of the original Python code remains intact after refactoring. Each test ensures that the refactored code passes the same test suite as the original code, confirming compliance with functional requirement FR 3.
 		
-\paragraph{4. Output Validation Tests}
-\begin{enumerate}
-  \item{Validate Refactored Code Functionality On Provided Test Suite\\}
-
-  Control: Automatic
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-OV-\arabic*}}, wide=0pt, font=\itshape]
+  \label{itm:FR-OV-1}
+  \item \textbf{Validate Refactored Code Functionality On Provided Test Suite}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} The original Python code is equipped with an existing test suite it passes.\\
+    \textbf{Input:} The original Python code and its associated test suite.\\
+    \textbf{Output:} The refactored code passes 100\% of the original test suite.\\[2mm]
+    \textbf{Test Case Derivation:} This test confirms that the refactored code preserves the original functionality by passing all tests from the original suite, as stipulated in FR 3.\\[2mm]
+    \textbf{How test will be performed:} The tool will refactor the code, and then the original test suite will be executed against the refactored code to check for passing results.
   
-  Initial State: The original Python code is equipped with an existing test suite it passes.
-  
-  Input: The original Python code and its associated test suite.
-  
-  Output: The refactored code passes 100\% of the original test suite.
-  
-  Test Case Derivation: This test confirms that the refactored code preserves the original functionality by passing all tests from the original suite, as stipulated in FR 3.
-  
-  How test will be performed: The tool will refactor the code, and then the original test suite will be executed against the refactored code to check for passing results.
-  
-  \item{Verification of Valid Python Output\\}
-
-  Control: Automatic
-  
-  Initial State: Tool has processed a file with detected code smells.
-  
-  Input: Output refactored Python code.
-  
-  Output: Refactored code is syntactically correct and Python-compliant.
-  
-  Test Case Derivation: Ensures refactored code remains valid and usable, satisfying FR 6.
-  
-  How test will be performed: Run a linter on the output code and verify it passes without syntax errors.
+  \label{itm:FR-OV-2}
+  \item \textbf{Verification of Valid Python Output}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} Tool has processed a file with detected code smells.\\
+    \textbf{Input:} Output refactored Python code.\\
+    \textbf{Output:} Refactored code is syntactically correct and Python-compliant.\\[2mm]
+    \textbf{Test Case Derivation:} Ensures refactored code remains valid and usable, satisfying FR 6.\\[2mm]
+    \textbf{How test will be performed:} Run a linter on the output code and verify it passes without syntax errors.
   
 \end{enumerate}
+
+\newpage
+
+\noindent
+\colorrule
 
 \subsubsection{Tests for Reporting Functionality}
+\colorrule
 
+\medskip
+
+\noindent
 The reporting functionality of the tool is crucial for providing users with comprehensive insights into the refactoring process, including detected code smells, refactorings applied, energy consumption measurements, and the results of the original test suite. This section outlines tests that ensure the reporting feature operates correctly and delivers accurate, well-structured information as specified in the functional requirements (FR 9). 
 		
-\paragraph{5. Tests for Report Generation\\}
-\begin{enumerate}
-  \item{A Report With All Components Is Generated\\}
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-RP-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{A Report With All Components Is Generated}\\[2mm]
+    \textbf{Control:} Manual
+    \textbf{Initial State:} The tool has completed refactoring a Python code file.\\
+    \textbf{Input:} The refactoring results, including detected code smells, applied refactorings, and energy consumption metrics.\\
+    \textbf{Output:} A well-structured report is generated, summarizing the refactoring process.\\[2mm]
+    \textbf{Test Case Derivation:} This test ensures that the tool generates a comprehensive report that includes all necessary information as required by FR 9.\\[2mm]
+    \textbf{How test will be performed:} After refactoring, the tool will invoke the report generation feature and a user can validate that the output meets the structure and content specifications.
 
-Control: Manual
+  \item \textbf{Validation of Code Smell and Refactoring Data in Report}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} The tool has identified code smells and performed refactorings.\\
+    \textbf{Input:} The results of the refactoring process.\\
+    \textbf{Output:} The generated report accurately lists all detected code smells and the corresponding refactorings applied.\\[2mm]
+    \textbf{Test Case Derivation:} This test verifies that the report includes correct and complete information about code smells and refactorings, in compliance with FR 9.\\[2mm]
+    \textbf{How test will be performed:} The tool will compare the contents of the generated report against the detected code smells and refactorings to ensure accuracy.
 
-Initial State: The tool has completed refactoring a Python code file.
+  \item \textbf{Energy Consumption Metrics Included in Report}\\[2mm]
+    \textbf{Control:} Manual
+    \textbf{Initial State:} The tool has measured energy consumption before and after refactoring.\\
+    \textbf{Input:} Energy consumption metrics obtained during the refactoring process.\\
+    \textbf{Output:} The report presents a clear comparison of energy usage before and after the refactorings.\\[2mm]
+    \textbf{Test Case Derivation:} This test confirms that the reporting feature effectively communicates energy consumption improvements, aligning with FR 9.\\[2mm]
+    \textbf{How test will be performed:} A user will analyze the energy metrics in the report to ensure they accurately reflect the measurements taken during the refactoring.
 
-Input: The refactoring results, including detected code smells, applied refactorings, and energy consumption metrics.
-
-Output: A well-structured report is generated, summarizing the refactoring process.
-
-Test Case Derivation: This test ensures that the tool generates a comprehensive report that includes all necessary information as required by FR 9.
-
-How test will be performed: After refactoring, the tool will invoke the report generation feature and a user can validate that the output meets the structure and content specifications.
-
-
-\item{Validation of Code Smell and Refactoring Data in Report\\}
-
-Control: Automatic
-
-Initial State: The tool has identified code smells and performed refactorings.
-
-Input: The results of the refactoring process.
-
-Output: The generated report accurately lists all detected code smells and the corresponding refactorings applied.
-
-Test Case Derivation: This test verifies that the report includes correct and complete information about code smells and refactorings, in compliance with FR 9.
-
-How test will be performed: The tool will compare the contents of the generated report against the detected code smells and refactorings to ensure accuracy.
-
-
-\item{Energy Consumption Metrics Included in Report\\}
-
-Control: Manual
-
-Initial State: The tool has measured energy consumption before and after refactoring.
-
-Input: Energy consumption metrics obtained during the refactoring process.
-
-Output: The report presents a clear comparison of energy usage before and after the refactorings.
-
-Test Case Derivation: This test confirms that the reporting feature effectively communicates energy consumption improvements, aligning with FR 9.
-
-How test will be performed: A user will analyze the energy metrics in the report to ensure they accurately reflect the measurements taken during the refactoring.
-
-
-\item{Functionality Test Results Included in Report\\}
-
-Control: Automatic
-
-Initial State: The original test suite has been executed against the refactored code.
-
-Input: The outcomes of the test suite execution.
-
-Output: The report summarizes the test results, indicating which tests passed and failed.
-
-Test Case Derivation: This test ensures that the reporting functionality accurately reflects the results of the test suite as specified in FR 9.
-
-How test will be performed: The tool will generate the report and validate that it contains a summary of test results consistent with the actual test outcomes.
-
+  \item \textbf{Functionality Test Results Included in Report}\\[2mm]
+    \textbf{Control:} Automatic \\
+    \textbf{Initial State:} The original test suite has been executed against the refactored code.\\
+    \textbf{Input:} The outcomes of the test suite execution.\\
+    \textbf{Output:} The report summarizes the test results, indicating which tests passed and failed.\\[2mm]
+    \textbf{Test Case Derivation:} This test ensures that the reporting functionality accurately reflects the results of the test suite as specified in FR 9.\\[2mm]
+    \textbf{How test will be performed:} The tool will generate the report and validate that it contains a summary of test results consistent with the actual test outcomes.
 \end{enumerate}
 
+\noindent
+\colorrule
 
 \subsubsection{Documentation Availability Tests}
+\colorrule
 
+\medskip
+
+\noindent
 The following test is designed to ensure the availability of documentation as per FR 10.
-		
-\paragraph{6. Documentation Availability}
-\begin{enumerate}
-  \item{Test for Documentation Availability\\}
 
-  Control: Manual
-  
-  Initial State: The may or may not be installed.
-  
-  Input: User attempts to access the documentation.
-  
-  Output: The documentation is available and covers installation, usage, and troubleshooting.
-  
-  Test Case Derivation: Validates that the documentation meets user needs (FR 10).
-  
-  How test will be performed: Review the documentation for completeness and clarity.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-DA-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Test for Documentation Availability}\\[2mm]
+    \textbf{Control:} Manual
+    \textbf{Initial State:} The may or may not be installed.\\
+    \textbf{Input:} User attempts to access the documentation.\\
+    \textbf{Output:} The documentation is available and covers installation, usage, and troubleshooting.\\[2mm]
+    \textbf{Test Case Derivation:} Validates that the documentation meets user needs (FR 10).\\[2mm]
+    \textbf{How test will be performed:} Review the documentation for completeness and clarity.
 \end{enumerate}
+
+\noindent
+\colorrule
 
 \subsubsection{IDE Extension Tests}
+\colorrule
 
+\medskip
+
+\noindent
 The following tests are designed to ensure that the user can integrate the tool into VSCode IDE as specified in FR 11 and that the tool works as intended as an extension.
-		
-\paragraph{6. IDE Integration}
-\begin{enumerate}
-  \item{Installation of Extension in Visual Studio Code\\}
 
-  Control: Manual
-  
-  Initial State: The user has Visual Studio Code installed on their machine.
-  
-  Input: The user attempts to install the refactoring tool extension from the Visual Studio Code Marketplace.
-  
-  Output: The extension installs successfully, and the user is able to see it listed in the Extensions view.
-  
-  Test Case Derivation: This test validates the installation process of the extension to ensure that users can easily add the tool to their development environment.
-  
-  How test will be performed: 
-  \begin{enumerate}
-      \item Open Visual Studio Code.
-      \item Navigate to the Extensions view (Ctrl+Shift+X).
-      \item Search for the refactoring tool extension in the marketplace.
-      \item Click on the "Install" button.
-      \item After installation, verify that the extension appears in the installed extensions list.
-      \item Confirm that the extension is enabled and ready for use by checking its functionality within the editor.
-  \end{enumerate}
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-FR-IE-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Installation of Extension in Visual Studio Code}\\[2mm]
+    \textbf{Control:} Manual
+    \textbf{Initial State:} The user has Visual Studio Code installed on their machine.\\
+    \textbf{Input:} The user attempts to install the refactoring tool extension from the Visual Studio Code Marketplace.\\
+    \textbf{Output:} The extension installs successfully, and the user is able to see it listed in the Extensions view.\\[2mm]
+    \textbf{Test Case Derivation:} This test validates the installation process of the extension to ensure that users can easily add the tool to their development environment.\\[2mm]
+    \textbf{How test will be performed:} 
+    \begin{enumerate}[label=\arabic*.]
+        \item Open Visual Studio Code.
+        \item Navigate to the Extensions view (Ctrl+Shift+X).
+        \item Search for the refactoring tool extension in the marketplace.
+        \item Click on the "Install" button.
+        \item After installation, verify that the extension appears in the installed extensions list.
+        \item Confirm that the extension is enabled and ready for use by checking its functionality within the editor.
+    \end{enumerate}
 
-  \item{Running the Extension in Visual Studio Code\\}
-
-Control: Manual
-
-Initial State: The user has successfully installed the refactoring tool extension in Visual Studio Code.
-
-Input: The user opens a Python file and activates the refactoring tool extension.
-
-Output: The extension runs successfully, and the user can see a list of detected code smells and suggested refactorings.
-
-Test Case Derivation: This test validates that the extension can be executed within the development environment and that it correctly identifies code smells as per the functional requirements in the SRS.
-
-How test will be performed:
-\begin{enumerate}
-    \item Open Visual Studio Code.
-    \item Open a valid Python file that contains known code smells.
-    \item Activate the refactoring tool extension using the command palette (Ctrl+Shift+P) and selecting the extension command.
-    \item Observe the output panel for the detection of code smells.
-    \item Verify that the extension lists the identified code smells and provides appropriate refactoring suggestions.
-    \item Confirm that the suggestions are relevant and feasible for the detected code smells.
-\end{enumerate}
-
+  \item \textbf{Running the Extension in Visual Studio Code}\\[2mm]
+    \textbf{Control:} Manual
+    \textbf{Initial State:} The user has successfully installed the refactoring tool extension in Visual Studio Code.\\
+    \textbf{Input:} The user opens a Python file and activates the refactoring tool extension.\\
+    \textbf{Output:} The extension runs successfully, and the user can see a list of detected code smells and suggested refactorings.\\[2mm]
+    \textbf{Test Case Derivation:} This test validates that the extension can be executed within the development environment and that it correctly identifies code smells as per the functional requirements in the SRS.\\[2mm]
+    \textbf{How test will be performed:}
+    \begin{enumerate}[label=\arabic*.]
+        \item Open Visual Studio Code.
+        \item Open a valid Python file that contains known code smells.
+        \item Activate the refactoring tool extension using the command palette (Ctrl+Shift+P) and selecting the extension command.
+        \item Observe the output panel for the detection of code smells.
+        \item Verify that the extension lists the identified code smells and provides appropriate refactoring suggestions.
+        \item Confirm that the suggestions are relevant and feasible for the detected code smells.
+    \end{enumerate}
 \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
+The section will cover system tests for the non-functional requirements (NFR) listed in the \SRS \hspace{1pt} document\cite{SRS}. The goal for these tests is to address the fit criteria for the requirements. Each test will be linked back to a specific NFR that can be observed in section \ref{trace-sys}.
 
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
+\noindent
+\colorrule
 
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
+\subsubsection{Look and Feel}
 
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
+\colorrule
 
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
+\medskip
 
-\subsubsection{Area of Testing1}
+\noindent
+The following subsection tests cover all Look and Feel requirements listed in the SRS \cite{SRS}. They seek to validate that the system is modern, visually appealing, and supporting of a calm and focused user experience. 
 		
-\paragraph{Title for Test}
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-LF-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Side-by-side code comparison in IDE plugin} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open in VS Code, with a sample code file loaded \\
+    \textbf{Input/Condition:} The user initiates a refactoring operation \\
+    \textbf{Output/Result:} The plugin displays the original and refactored code side by side\\[2mm]
+    \textbf{How test will be performed:} The tester will open a sample code file within the IDE plugin and apply a refactoring operation. After refactoring, they will verify that the original code appears on one side of the interface and the refactored code on the other, with clear options to accept or reject each change. The tester will interact with the accept/reject buttons to ensure functionality and usability, confirming that users can seamlessly make refactoring decisions with both versions displayed side by side.
 
-\begin{enumerate}
+  \item \textbf{Theme adaptation in VS Code} \\[2mm]
+    \textbf{Type:} Non-functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open in VS Code with either light or dark theme enabled \\
+    \textbf{Input/Condition:} The user switches between light and dark themes in VS Code \\
+    \textbf{Output/Result:} The plugin’s interface adjusts automatically to match the theme \\[2mm]
+    \textbf{How test will be performed:} The tester will open the plugin in both light and dark themes within VS Code by toggling the theme settings in the IDE. They will observe the plugin interface each time the theme is switched, ensuring that the plugin automatically adjusts to match the selected theme without any manual adjustments required. 
 
-\item{test-id1\\}
+  \item \textbf{Colour-coded refactoring indicators for energy savings} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with sample code loaded \\
+    \textbf{Input/Condition:} The plugin displays refactoring suggestions based on energy savings \\
+    \textbf{Output/Result:} Refactoring suggestions are colour-coded according to energy-saving potential (e.g., yellow for minor savings, red for major savings) \\[2mm]
+    \textbf{How test will be performed:} The tester will load sample code with multiple refactoring suggestions based on energy-saving potential and activate the plugin’s analysis feature. The tester will then review each suggestion, confirming that they are visually differentiated by colour codes (e.g., yellow for minor savings and red for major savings). They will interact with each coloured indicator to ensure that it is responsive and accurately represents the suggested energy savings levels.
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+  \item \textbf{Visual alerts in GitHub Action for significant energy savings} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} GitHub Action enabled for a pull request (PR) \\
+    \textbf{Input/Condition:} PR analysis indicates energy savings exceeding a predefined threshold. \\
+    \textbf{Output/Result:} A success icon or green label appears in the PR summary \\[2mm]
+    \textbf{How test will be performed:} The tester will set up a pull request (PR) with changes that yield significant energy savings. When the GitHub Action completes the analysis, the tester will check the PR summary to confirm that a green label or success icon appears, indicating substantial energy savings. The tester will repeat the test with a PR that does not meet the threshold to ensure no alert is displayed. 
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+  \item \textbf{Design Acceptance} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} A survey report \\[2mm]
+    \textbf{How test will be performed:} After a testing session, developers fill out the survey found in \ref{A.2} evaluating their experience with the plugin.
+\end{enumerate}
+
+\noindent
+\colorrule
+    
+\subsubsection{Usability \& Humanity}
+
+\colorrule
+
+\medskip
+
+\noindent
+The following subsection tests cover all Usability \& Humanity requirements listed in the SRS \cite{SRS}. They seek to validate that the system is accessible, user-centred, intuitive and easy to navigate.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-UH-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Customizable settings for refactoring preferences} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with settings panel accessible \\
+    \textbf{Input/Condition:} User customizes refactoring style and detection sensitivity \\
+    \textbf{Output/Result:} Custom configurations save and load successfully \\[2mm]
+    \textbf{How test will be performed:} The tester will navigate to the settings menu within the tool and adjust various options, including refactoring style, colour-coded indicators, and unit preferences (metric vs. imperial). After each adjustment, the tester will observe if the interface and refactoring suggestions reflect the changes made. 
+
+  \item \textbf{Multilingual support in user guide} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\ 
+    \textbf{Initial State:} Bilingual user navigates to system documentation \\
+    \textbf{Input/Condition:} User accesses guide in both English and French \\
+    \textbf{Output/Result:} The guide is accessible in both languages \\[2mm]
+    \textbf{How test will be performed:} The tester will set the tool’s language to French and access the user guide, reviewing each section to ensure accurate translation and readability. After verifying the French version, they will switch the language to English, confirming consistency in content, layout, and clarity between both versions.
+
+  \item \textbf{YouTube installation tutorial availability} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\ 
+    \textbf{Initial State:} User access documentation resources \\
+    \textbf{Input/Condition:} User follows the provided link to a YouTube tutorial \\
+    \textbf{Output/Result:} Installation tutorial is available and accessible on YouTube, and user successfully installs the system. \\[2mm]
+    \textbf{How test will be performed:} The tester will start with the installation instructions provided in the user guide and follow the link to the YouTube installation tutorial. They will watch the video and proceed with each installation step as demonstrated. Throughout the process, the tester will note the clarity and pacing of the instructions, any gaps between the video and the actual steps, and if the video effectively guides them to a successful installation. 
+
+  \item \textbf{High-Contrast Theme Accessibility Check} \\[2mm]
+    \textbf{Objective:} Evaluate the high-contrast themes in the refactoring tool for compliance with accessibility standards to ensure usability for visually impaired users. \\
+    \textbf{Scope:} Focus on UI components that utilize high-contrast themes, including text, buttons, and backgrounds. \\
+    \textbf{Methodology:} Static Analysis \\
+    \textbf{Process:} 
+    \begin{itemize}
+      \item Identify all colour codes used in the system and categorize them by their role in the UI (i.e. background, foreground text, buttons, etc.).
+      \item Use tools to measure color contrast ratios against WCAG thresholds (4.5:1 for normal text, 3:1 for large text)\cite{WCAG}.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} Developers implement themes that pass the testing process. \\[2mm]
+    \textbf{Tools and Resources:} WebAIM Color Contrast Checker, WCAG guidelines documentation, internal coding standards. \\[2mm]
+    \textbf{Acceptance Criteria:} All UI elements must meet WCAG contrast ratios; documentation must accurately reflect theme usage.
+
+  \item \textbf{Audio cues for important actions} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with audio cues enabled \\
+    \textbf{Input/Condition:} User performs actions triggering audio cues \\
+    \textbf{Output/Result:} The system emits an audible attention catching sound. \\[2mm]
+    \textbf{How test will be performed:} The tester will enable audio cues in the tool's settings, then perform a series of tasks, such as running code analysis, applying refactorings, and saving changes. Each action should trigger an audio cue indicating task completion or user feedback. The tester will evaluate the volume, timing, and appropriateness of each cue and document whether the cues enhance the user experience or cause any distractions. 
+
+  \item \textbf{Intuitive user interface for core functionality} \\[2mm]
+    \textbf{Type:} Non-Functional, User Testing, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with code loaded \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} Users can access core functions within three clicks or less \\[2mm]
+    \textbf{How test will be performed:} After a testing session, developers fill out the survey found in \ref{A.2} evaluating their experience with the plugin.
+
+  \item \textbf{Clear and concise user prompts} \\[2mm]
+    \textbf{Type:} Non-Functional, User Survey, Dynamic \\
+    \textbf{Initial State:} IDE plugin prompts user for input \\
+    \textbf{Input/Condition:} Users follow on-screen instructions \\
+    \textbf{Output/Result:} 90\% of users report the prompts are straightforward and effective \\[2mm]
+    \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on the clarity of guidance provided.
+
+  \item \textbf{Context-sensitive help based on user actions} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with help function enabled \\
+    \textbf{Input/Condition:} User engages in various actions, requiring guidance \\
+    \textbf{Output/Result:} Help resources are accessible within 1-3 clicks \\[2mm]
+    \textbf{How test will be performed:} The tester will perform a series of tasks within the tool, such as initiating a code analysis, applying a refactoring, and adjusting settings. At each step, they will access the context-sensitive help option to confirm that the information provided is relevant to the current task. The tester will evaluate the ease of accessing help, the relevance and clarity of guidance, and whether the help content effectively supports task completion.
+
+  \item \textbf{Clear and constructive error messaging} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with possible error scenarios triggered \\
+    \textbf{Input/Condition:} User encounters an error during use \\
+    \textbf{Output/Result:} 80\% of users report that error messages are helpful and courteous \\[2mm]
+    \textbf{How test will be performed:} After receiving error messages, users fill out the survey found in \ref{A.2} on their clarity and constructiveness.
+\end{enumerate}
+
+\noindent
+\textcolor{Blue}{\colorrule}
+
+\subsubsection{Performance}
+\colorrule
+
+\medskip
+
+\noindent
+The following subsection tests cover all Performance requirements listed in the SRS \cite{SRS}. These tests validate the tool’s efficiency and responsiveness under varying workloads, including code analysis, refactoring, and data reporting.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Performance and capacity validation for analysis and refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} IDE open with multiple python projects of varying sizes ready (1,000, 5,000, 10,000, 100,000 lines of code). \\
+    \textbf{Input/Condition:} Initiate the refactoring process for each project sequentially \\
+    \textbf{Output/Result:} Process completes within 15 seconds for projects up to 5,000 lines of code, 20 seconds for 10,000 lines of code and within 2 minutes for 100,000 lines of code. \\[2mm]
+    \textbf{How test will be performed:} The tester will use four python projects of different sizes: small (1,000 lines), medium (5,000 and 10,000 lines), and large (100,000 lines). For each project, start the refactoring process while running a timer. The scope of the test ends when the system presents the user with the completed refactoring proposal. The time taken for each project is checked against the expected result.
+
+  \item \textbf{Integrity of refactored code against runtime errors} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} Refactoring tool ready, with user-provided code and test suite loaded \\
+    \textbf{Input/Condition:} User initiates refactoring on the input code \\
+    \textbf{Output/Result:} Refactored code passes all tests in the user-provided suite without runtime errors and adheres to Python syntax standards \\[2mm]
+    \textbf{How test will be performed:} The refactoring tool will first apply the refactoring to the user-provided code. After refactoring, an automated test suite will run, confirming that all original tests pass, indicating no loss of functionality. The refactored code will then be validated by an automatic linter to ensure compliance with Python syntax standards.
+
+  \item \textbf{Functionality preservation post-refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} Python file ready for refactoring with proper configurations for the system \\
+    \textbf{Input/Condition:} User initiates refactoring on the code file \\
+    \textbf{Output/Result:} The refactored code should pass 100\% of user-provided tests \\[2mm]
+    \textbf{How test will be performed:} see test \hyperref[itm:FR-OV-1]{test-FR-OV-1}
+
+  \item \textbf{Accuracy of code smell detection} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} Python file containing pre-determined code smells ready for refactoring with proper configurations for the system \\
+    \textbf{Input/Condition:} User initiates refactoring on the code file \\
+    \textbf{Output/Result:} All code smells determined prior to the test are detected. \\[2mm]
+    \textbf{How test will be performed:} see tests in the \hyperref[4.1.2]{Code Smell Detection} section.
+
+  \item \textbf{Valid syntax and structure in refactored code} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} A refactored code file is present in the user's workspace \\
+    \textbf{Input/Condition:} A python linter is run on the refactored python file \\
+    \textbf{Output/Result:} Refactored code meets Python syntax and structural standards \\[2mm]
+    \textbf{How test will be performed:} see test \hyperref[itm:FR-OV-2]{test-FR-OV-2}
+
+  \item \textbf{Handling unexpected inputs} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE open and ready with various non-standard and invalid input files \\
+    \textbf{Input/Condition:} User attempts to refactor invalid code files and non-Python files \\
+    \textbf{Output/Result:} Tool detects invalid input, displays a clear error message, and does not crash \\[2mm]
+    \textbf{How test will be performed:} The tester will sequentially give any of the following invalid files as input to the system :
+    \begin{itemize}
+        \item Non-Python files (e.g., .txt, .java, .cpp, .js)
+        \item Invalid Python files with syntax errors (e.g., unmatched brackets, improper indentation)
+        \item Corrupted files that contain random symbols or partially deleted code
+    \end{itemize}
+    For each file type, the tester will initiate the refactoring process and observe the tool's response. The tool should detect each invalid input, display an error message describing the issue, and recover from the error without crashing. 
+
+  \item \textbf{Fallback Options for Failed Refactoring Attempts} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} The tool is set up in an IDE with a sample code file that includes code smells \\
+    \textbf{Input/Condition:} User initiates a refactoring process on the sample code file \\
+    \textbf{Output/Result:} The tool logs failed refactoring attempts, provides a clear error notification, and suggests alternative refactoring options without interrupting the overall process. \\[2mm]
+    \textbf{How test will be performed:} The tester will load a sample code file into the tool that contains code smells. Upon initiating the refactoring, the tester will observe the tool’s response to any failed attempts, verifying that it logs the error. The tool should then attempt alternative refactorings without restarting the process. The tester will document the clarity of the error message, the relevance of alternative suggestions, and confirm that the tool remains functional, supporting uninterrupted refactoring of other code smells.
+  
+
+    \item \textbf{Maintainability and Adaptability of the Tool} \\[2mm]
+    \textbf{Objective:} Ensure that the tool’s codebase is structured to support future updates for new Python versions and evolving coding standards, minimizing the effort required for maintenance. \\[2mm]
+    \textbf{Scope:} This test applies to the tool’s code structure, documentation quality, and modularity to facilitate adaptability and maintainability over time. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a code walkthrough to evaluate the modular structure of the codebase, verifying that components are organized to allow independent updates.
+      \item Review code comments, documentation, and naming conventions to ensure clarity and consistency, supporting ease of understanding for future developers.
+      \item Identify any dependencies on specific Python versions and assess the ease of updating these components for compatibility with newer versions.
+      \item Document any gaps in modularity or documentation and consult with the development team on improvements to support maintainability.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review and documentation assessment, with the project supervisor overseeing and validating improvements for long-term adaptability. \\[2mm]
+    \textbf{Tools and Resources:} Code editor, documentation templates, Python development guidelines, and coding standards \\[2mm]
+    \textbf{Acceptance Criteria:} The codebase is modular, well-documented, and adaptable, allowing for straightforward updates with minimal impact on existing functionality.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\noindent
+\colorrule
 
-...
+\subsubsection{Operational \& Environmental}
+\colorrule
 
-\subsection{Traceability Between Test Cases and Requirements}
+\medskip
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+\noindent
+The following subsection tests cover all Operational and Environmental requirements listed in the SRS \cite{SRS}. Testing includes adherence to emissions standards, integration with environmental metrics, and adaptability to diverse operational settings.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-OPE-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Emissions Standards Compliance} \\[2mm]
+    \textbf{Objective:} Ensure that the tool’s emissions metrics and reports align with widely used standards (e.g., GRI 305, GHG, ISO 14064) to support users in environmental compliance and sustainability tracking. \\[2mm]
+    \textbf{Scope:} This test applies to the tool's metrics and reporting components, including data format and labelling in the emissions report. \\[2mm]
+    \textbf{Methodology:} Static analysis and documentation walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review emissions metrics in the tool’s documentation and compare them with requirements from GRI 305, GHG, and ISO 14064 standards.
+      \item Verify that all required emissions metrics from these standards are present in the tool’s reports, with proper format and units.
+      \item Confirm that all emissions categories and labels align with standard definitions to ensure consistency and accuracy.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team and project supervisor will conduct the documentation review and patch any discrepencies. \\[2mm]
+    \textbf{Tools and Resources:} Tool’s user guide, sample emissions reports, GRI 305, GHG, and ISO 14064 standards documentation \\[2mm]
+    \textbf{Acceptance Criteria:} The tool’s emissions metrics meet or exceed the coverage required by GRI 305, GHG, and ISO 14064 standards. All labels and units are accurate, consistent, and aligned with these standards.
+
+
+  \item \textbf{Integration with GitHub Actions for automated refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} GitHub repository with access to the refactoring library in GitHub Actions \\
+    \textbf{Input/Condition:} User sets up a GitHub Actions workflow that calls the refactoring library \\
+    \textbf{Output/Result:} GitHub Actions successfully initiates refactoring processes through the library as part of a continuous integration workflow \\[2mm]
+    \textbf{How test will be performed:} The tester will configure a GitHub Actions workflow in a test repository, specifying steps to call the refactoring library. After committing a sample code change, the workflow should trigger automatically. The tester will verify that the refactoring library runs within GitHub Actions, completes the refactoring process, and provides feedback in the workflow logs. Successful integration will be confirmed by viewing refactoring results directly within the GitHub Actions logs.
+
+  \item \textbf{VSCode compatibility for refactoring library extension} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} VS Code IDE open and library installed\\
+    \textbf{Input/Condition:} User installs and opens the refactoring library extension in VS Code \\
+    \textbf{Output/Result:} The refactoring library extension installs successfully and runs within VS Code \\[2mm]
+    \textbf{How test will be performed:} The tester will navigate to the VS Code marketplace, search for the refactoring library extension, and install it. Once installed, the tester will open the extension and perform a basic refactoring task to ensure the tool operates correctly within the VS Code environment and has access to the system library.
+
+  \item \textbf{Import and export capabilities for codebases and metrics} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open with the option to import/export codebases and metrics \\
+    \textbf{Input/Condition:} User imports an existing codebase and exports refactored code and metrics reports \\
+    \textbf{Output/Result:} The tool successfully imports codebases, refactors them, and exports both code and metrics reports \\[2mm]
+    \textbf{How test will be performed:} The tester will load an existing codebase into the tool, initiate refactoring, and select the option to export the refactored code and metrics report. The export should generate files in the selected format. The tester will verify the file formats, check for correct data structure, and validate that the content accurately reflects the refactoring and metrics generated by the tool.
+
+  \item \textbf{PIP package installation availability} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} Python environment ready without the refactoring library installed \\
+    \textbf{Input/Condition:} User installs the refactoring library using the command \texttt{pip install ecooptimizer} \\
+    \textbf{Output/Result:} The library installs successfully without errors and is available for use in Python scripts \\[2mm]
+    \textbf{How test will be performed:} The tester will open a new Python environment and enter the command to install the refactoring library via PIP. Once installed, the tester will import the library in a Python script and execute a basic function to confirm successful installation and functionality. The test verifies the library’s availability and ease of installation for end users.
+
+\end{enumerate}
+
+\noindent
+\colorrule
+
+\subsubsection{Maintenance and Support}
+\colorrule
+
+\medskip
+
+\noindent
+The following subsection tests cover all Maintenance and Support requirements listed in the SRS \cite{SRS}. These tests focus on rollback capabilities, compatibility with external libraries, automated testing, and extensibility for adding new code smells and refactoring functions.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-MS-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Extensibility for New Code Smells and Refactorings} \\[2mm]
+    \textbf{Objective:} Confirm that the tool’s architecture allows for the addition of new code smell detections and refactoring techniques with minimal code changes and disruption to existing functionality. \\[2mm]
+    \textbf{Scope:} This test applies to the tool’s extensibility, including modularity of code structure, ease of integration for new detection methods, and support for customization. \\[2mm]
+    \textbf{Methodology:} Code walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a code walkthrough focusing on the modularity and structure of the code smell detection and refactoring components.
+      \item Add a sample code smell detection and refactoring function to validate the ease of integration within the existing architecture.
+      \item Verify that the new function integrates seamlessly without altering existing features and that it is accessible through the tool’s main interface.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} Once the system is complete, the development team will perform the code walkthrough and integration. They will review and approve any structural changes required. \\[2mm]
+    \textbf{Tools and Resources:} Code editor, tool’s developer documentation, sample code smell and refactoring patterns \\[2mm]
+    \textbf{Acceptance Criteria:} New code smells and refactoring functions can be added within the existing modular structure, requiring minimal changes. The new function does not impact the performance or functionality of existing features.
+
+
+    \item \textbf{Maintainable and Adaptable Codebase} \\[2mm]
+    \textbf{Objective:} Ensure that the codebase is modular, well-documented, and maintainable, supporting future updates and adaptations for new Python versions and standards. \\[2mm]
+    \textbf{Scope:} This test covers the maintainability of the codebase, including structure, documentation, and modularity of key components. \\[2mm]
+    \textbf{Methodology:} Static analysis and documentation walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the codebase to verify the modular organization and clear separation of concerns between components.
+      \item Examine documentation for code clarity and completeness, especially around key functions and configuration files.
+      \item Assess code comments and the quality of function/method naming conventions, ensuring readability and consistency for future maintenance.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} Once the system is complete, the development team will conduct the code review, to identify areas for improvement. If necessary, they will also ensure to improve the quality of the documentation. \\[2mm]
+    \textbf{Tools and Resources:} Code editor, documentation templates, code commenting standards, Python development guides \\[2mm]
+    \textbf{Acceptance Criteria:} The codebase is modular and maintainable, with sufficient documentation to support future development. All major components are organized to allow for easy updates with minimal impact on existing functionality.
+  
+  \item \textbf{Easy rollback of updates in case of errors} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} Latest version of the tool installed with the ability to apply and revert updates \\
+    \textbf{Input/Condition:} User applies a simulated new update and initiates a rollback \\
+    \textbf{Output/Result:} The system reverts to the previous stable state without any errors \\[2mm]
+    \textbf{How test will be performed:} The tester will apply a simulated update. Following this, they will initiate the rollback function, which should restore the tool to its previous stable version. The tester will verify that all features function as expected post-rollback and document the time taken to complete the rollback process
+\end{enumerate}
+
+\newpage
+
+\noindent
+\colorrule
+
+\subsubsection{Security}
+\colorrule
+
+\medskip
+
+\noindent
+The following subsection tests cover all Security requirements listed in the SRS \cite{SRS}. These tests seek to validate that the tool is protected against unauthorized access, data breaches, and external threats.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-SRT-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{User authentication before accessing tool features} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} System installed, user unauthenticated \\
+    \textbf{Input/Condition:} User attempts to submit code or view refactoring reports \\
+    \textbf{Output/Result:} Access is denied \\[2mm]
+    \textbf{How test will be performed:} The tester will first attempt to submit code and access refactored reports without logging in, verifying that access is denied. The tester will then log in using valid company credentials and repeat the actions to confirm access is granted only after successful authentication.
+  
+  \item \textbf{Internal-Only Communication with Energy and Reinforcement Learning Tools} \\[2mm]
+    \textbf{Objective:} Ensure that the refactoring tool communicates exclusively with the internal energy consumption tool and reinforcement learning model, without exposing any public API endpoints. \\[2mm]
+    \textbf{Scope:} This test applies to all network and API interactions between the refactoring tool and internal services, ensuring no direct access is available to users or external applications. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a code walkthrough of the network and API components, focusing on the access control configurations for the energy consumption tool and reinforcement learning model.
+      \item Inspect the code for any exposed API endpoints or network configurations that might allow external access.
+      \item Attempt to access the internal tools directly from an external environment, ensuring that all external attempts are blocked.
+      \item Verify that the tool’s communication is contained within internal environments and restricted to authorized system components.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review and testing, ensuring secure access protocols. \\[2mm]
+    \textbf{Tools and Resources:} Access to the codebase, network configuration files, and security audit tools \\[2mm]
+    \textbf{Acceptance Criteria:} No public or external API endpoints exist for the internal tools, and only the refactoring tool can access the energy consumption and reinforcement learning models.
+  
+    \item \textbf{Preventing Unauthorized Changes to Refactored Code and Reports} \\[2mm]
+    \textbf{Objective:} Ensure the tool’s refactored code and energy reports are protected from any unauthorized external modifications, maintaining data integrity and user trust. \\[2mm]
+    \textbf{Scope:} This test applies to the data security of refactored code and energy report storage layers, verifying that access is restricted to authorized users and processes only. \\[2mm]
+    \textbf{Methodology:} Static analysis and code walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the codebase and database configurations to verify the implementation of access controls and data security measures.
+      \item Confirm that the tool’s security settings prevent any unauthorized external modifications, maintaining data integrity across all storage layers.
+      \item Document any vulnerabilities found and evaluate with the development team to ensure improvements are made where necessary.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review while the project supervisor will oversee the test results and approve any necessary security enhancements. \\[2mm]
+    \textbf{Tools and Resources:} Access to security configuration files, code editor \\[2mm]
+    \textbf{Acceptance Criteria:} The review attendees find no egregious faults within the system that might allow unauthorized external access or modifications to refactored code and energy report data.
+
+  \item \textbf{Notification and consent for data handling} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\ 
+    \textbf{Initial State:} System idle \\
+    \textbf{Input/Condition:} User initiates refactoring on their source code \\
+    \textbf{Output/Result:} Tool displays data handling notice and requests explicit consent before data collection \\[2mm]
+    \textbf{How test will be performed:} The tester will begin the refactoring process, and the tool should present a notice explaining data collection, storage, and processing practices, in compliance with PIPEDA. The user must provide explicit consent before proceeding. The tester will confirm that no data collection occurs until consent is granted.
+  
+  \item \textbf{Confidential Handling of User Data in Compliance with PIPEDA} \\[2mm]
+    \textbf{Objective:} Ensure that all user-submitted data, energy reports, and refactored code are treated as confidential, encrypted during storage and transmission, and managed according to PIPEDA. \\[2mm]
+    \textbf{Scope:} This test applies to the tool’s data handling practices, specifically the encryption protocols for transmission and storage, and data modification options for user compliance requests. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the encryption settings in the codebase to confirm that all data related to user submissions, energy reports, and refactored code is encrypted during transmission and storage.
+      \item Verify that an option is available for users to request modifications to their personal data as per PIPEDA requirements.
+      \item Document any gaps in data security or user request handling, and collaborate with the development team to implement improvements as needed.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review and implement any necessary improvements, with the project supervisor overseeing the compliance with PIPEDA standards. \\[2mm]
+    \textbf{Tools and Resources:} Access to encryption libraries, security configuration files \\[2mm]
+    \textbf{Acceptance Criteria:} All user data is encrypted during storage and transmission, and users have a reliable method for requesting data modifications as per PIPEDA specifications.
+
+  \item \textbf{Audit Logs for User Actions} \\[2mm]
+    \textbf{Objective:} Ensure the tool maintains tamper-proof logs of key user actions, including code submissions, login events, and access to refactored code and reports, to ensure accountability and traceability. \\[2mm]
+    \textbf{Scope:} This test applies to the logging mechanisms for user actions, focusing on the security and tamper-proof nature of logs. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the logging mechanisms within the codebase to confirm that events such as logins, code submissions, and report accesses are properly recorded with timestamps and user identifiers.
+      \item Document the integrity of the logs and any vulnerabilities found, and collaborate with the development team on any necessary improvements.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review, with oversight by the project supervisor to verify that logging mechanisms meet security requirements. \\[2mm]
+    \textbf{Tools and Resources:} Access to log files, logging library documentation, security testing tools \\[2mm]
+    \textbf{Acceptance Criteria:} Logs are tamper-proof, recording all critical user actions with integrity, and resistant to unauthorized modifications.
+
+  \item \textbf{Audit Logs for Refactoring Processes} \\[2mm]
+    \textbf{Objective:} Ensure that the tool maintains a secure, tamper-proof log of all refactoring processes, including pattern analysis, energy analysis, and report generation, for accountability in refactoring events. \\[2mm]
+    \textbf{Scope:} This test covers the logging of refactoring events, ensuring logs are complete and tamper-proof for future auditing needs. \\[2mm]
+    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the codebase to confirm that each refactoring event (e.g., pattern analysis, energy analysis, report generation) is logged with details such as timestamps and event descriptions.
+      \item Document any logging gaps or security vulnerabilities, and consult with the development team to implement enhancements.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will review and test the logging mechanisms, with the project supervisor ensuring alignment with auditing requirements. \\[2mm]
+    \textbf{Tools and Resources:} Access to logging components, tamper-proof logging tools \\[2mm]
+    \textbf{Acceptance Criteria:} All refactoring processes are logged in a secure, tamper-proof manner, ensuring complete traceability for future audits.
+
+  \item \textbf{Immunity Against Malware and Unauthorized Programs} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} The tool is deployed in a controlled test environment with security protocols enabled, ready to be tested against simulated malware attacks. \\
+    \textbf{Input/Condition:} Simulated malware attacks are executed using Atomic Red Team by Red Canary\cite{ARTCanary}, targeting vulnerabilities such as unauthorized data access, process interference, and data tampering. \\
+    \textbf{Output/Result:} The tool detects, blocks, and logs all simulated malware activities without any compromise to data integrity or tool functionality. \\[2mm]
+    \textbf{How test will be performed:} The tester will deploy the tool in a secure, isolated test environment and initiate simulated malware attacks using Atomic Red Team. Each simulation will mimic various malware behaviours, including attempts to access or modify data and disrupt the refactoring process. The tester will observe and document the tool's responses to each simulated attack, verifying that it blocks unauthorized actions, maintains data integrity, and logs the events for traceability.
+\end{enumerate}
+
+\newpage
+
+\noindent
+\colorrule
+
+\subsubsection{Cultural}
+\colorrule
+
+\medskip
+
+\noindent
+The following subsection tests cover all Cultural requirements listed in the SRS \cite{SRS}. These test are to ensure that the tool is accessible and appropriate for a global audience, avoiding any culturally sensitive or inappropriate elements. 
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-CULT-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Cultural sensitivity of icons and colours} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on cultural sensitivity of the interface design.
+
+  \item \textbf{Support for metric and imperial units} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} Tool ready with energy consumption metrics displayed in the default unit system \\
+    \textbf{Input/Condition:} User toggles the measurement units between metric and imperial \\
+    \textbf{Output/Result:} Energy consumption measurements update correctly between metric and imperial units \\[2mm]
+    \textbf{How test will be performed:} The tester will navigate to the settings, locate the measurement unit toggle, and switch between metric and imperial units. After each toggle, the displayed energy consumption data should reflect the correct measurement units. The tester will validate accuracy by comparing values against known conversions to ensure the toggle functions accurately and smoothly.
+
+  \item \textbf{Cultural sensitivity of content} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\
+    \textbf{Input/Condition:} User interacts with the plugin \\
+    \textbf{Output/Result:} More than 60\% of users give an answer greater than 3 the survey question targeting this test. \\[2mm]
+    \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on cultural sensitivity of the content of the system.
+\end{enumerate}
+
+\newpage
+
+\noindent
+\colorrule
+
+\subsubsection{Compliance}
+\colorrule
+
+\medskip
+
+\noindent
+The following subsection tests cover all Compliance requirements listed in the SRS \cite{SRS}. The tests focus on adherence to PIPEDA, CASL, and ISO 9001, as well as SSADM standards, ensuring the tool complies with relevant regulations and aligns with professional development practices.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-CPL-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Compliance with PIPEDA and CASL} \\[2mm]
+    \textbf{Objective:} Ensure the tool’s data collection, usage, storage, and communication practices are fully compliant with the Personal Information Protection and Electronic Documents Act (PIPEDA) and Canada’s Anti-Spam Legislation (CASL), to avoid legal penalties and enhance user trust. \\[2mm]
+    \textbf{Scope:} This test applies to all processes related to data handling, storage, and user communication to verify compliance with PIPEDA and CASL. \\[2mm]
+    \textbf{Methodology:} Documentation walkthrough and static analysis \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Review the tool’s data handling and storage protocols to confirm compliance with PIPEDA, particularly focusing on secure storage, data usage transparency, and privacy rights.
+      \item Verify the presence of a user consent mechanism that informs users of data collection and provides options for managing their data.
+      \item Inspect communication practices to ensure compliance with CASL, confirming that the tool provides users with notification and opt-in options for all communications.
+      \item Document any gaps in compliance and consult with the development team for required adjustments.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the compliance review and implement any necessary updates. \\[2mm]
+    \textbf{Tools and Resources:} Access to documentation on PIPEDA and CASL requirements, tool’s data handling and communication protocols, test user accounts for opt-in verification \\[2mm]
+    \textbf{Acceptance Criteria:} The tool complies with all PIPEDA and CASL requirements, with secure data handling, user consent options, and compliant communication practices.
+
+\item \textbf{Compliance with ISO 9001 and SSADM Standards} \\[2mm]
+    \textbf{Objective:} Ensure the tool’s quality management and software development processes align with ISO 9001 for quality management and SSADM (Structured Systems Analysis and Design Method) standards for software development, building stakeholder trust and market acceptance. \\[2mm]
+    \textbf{Scope:} This test covers the tool’s adherence to ISO 9001 quality management practices and SSADM methodologies for software development processes. \\[2mm]
+    \textbf{Methodology:} Documentation walkthrough and code walkthrough \\[2mm]
+    \textbf{Process:}
+    \begin{itemize}
+      \item Conduct a review of the tool’s quality management procedures to verify alignment with ISO 9001 standards, including documentation, testing, and feedback mechanisms.
+      \item Examine software development workflows to confirm adherence to SSADM standards, focusing on design, analysis, and structured development practices.
+      \item Identify any deviations from ISO 9001 and SSADM requirements, document these findings, and discuss necessary adjustments with the development team.
+      \item Validate improvements in quality management and software development after implementing recommendations.
+    \end{itemize}
+    \textbf{Roles and Responsibilities:} The development team will conduct the standards compliance review, and the project supervisor will oversee the review process. \\[2mm]
+    \textbf{Tools and Resources:} Access to ISO 9001 and SSADM standards documentation, project quality management records, and development workflows \\[2mm]
+    \textbf{Acceptance Criteria:} The tool’s quality management and software development processes fully adhere to ISO 9001 and SSADM standards, supporting a high-quality, structured approach to development.
+\end{enumerate}
+
+\subsection{Traceability Between Test Cases and Requirements} \label{trace-sys}
+
+\begin{table}[H]
+  \centering
+  \caption{Functional Requirements and Corresponding Test Sections}
+  \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
+    \toprule \textbf{Section} & \textbf{Functional Requirement} \\ 
+    
+    \midrule
+    Input Acceptance Tests & FR 1 \\ \hline
+    Code Smell Detection Tests & FR 2 \\ \hline
+    Refactoring Suggestion Tests & FR 4 \\ \hline
+    Output Validation Tests & FR 3, FR 6 \\ \hline
+    Tests for Report Generation & FR 9 \\ \hline
+    Documentation Availability Tests & FR 10 \\ \hline
+    IDE Integration Tests & FR 11 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:sections_requirements}
+\end{table}
+
+\label{tab:nfr-trace-reqs}
+\begin{table}[H]
+  \centering
+  \caption{Look \& Feel Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Look and Feel
+    LF-1 & LFR-AP 1 \\ 
+    LF-2 & LFR-AP 2 \\ 
+    LF-3 & LFR-AP 3 \\ 
+    LF-4 & LFR-AP 5 \\ 
+    LF-5 & LFR-AP 4, LFR-ST 1-3 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Usability \& Humanity Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Usability and Humanity
+    UH-1 & UHR-PS1 1 \\ 
+    UH-2 & UHR-PS1 2, MS-SP 1 \\ 
+    UH-3 & UHR-LRN 2 \\ 
+    UH-4 & UHR-ACS 1 \\ 
+    UH-5 & UHR-ACS 2 \\ 
+    UH-6 & UHR-EOU 1 \\ 
+    UH-7 & UHR-EOU 2 \\ 
+    UH-8 & UHR-LRN 1 \\ 
+    UH-9 & UHR-UPL 1 \\ 
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Performance Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Performance
+    PF-1 & PR-SL 1, PR-SL 2, PR-CR 1 \\ 
+    PF-2 & PR-SCR 1 \\ 
+    PF-3 & PR-PAR 1 \\ 
+    PF-4 & PR-PAR 2 \\ 
+    PF-5 & PR-PAR 3 \\ 
+    PF-6 & PR-RFT 1 \\ 
+    PF-7 & PR-RFT 2 \\ 
+    PF-8 & PR-LR 1, MS-MNT 5 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Operational \& Environmental Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Operational and Environmental
+    Not explicitly tested & OER-EP 1 \\
+    Not explicitly tested & OER-EP 2 \\
+    OPE-1 & OER-WE 1 \\
+    OPE-2 & OER-IAS 1 \\
+    OPE-3 & OER-IAS 2 \\
+    OPE-4 & OER-IAS 3 \\
+    OPE-5 & OER-PR 1 \\
+    Tested by FRs & OER-RL 1 \\
+    Not explicitly tested & OER-RL 2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Maintenance \& Support Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Maintenance and Support
+    MS-1 & MS-MNT 1, PR-SER 1 \\
+    MS-2 & MS-MNT 2 \\
+    MS-3 & MS-MNT 3 \\
+    Not explicitly tested & MS-MNT 4 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Security Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Security
+    SRT-1 & SR-AR 1 \\
+    SRT-2 & SR-AR 2 \\
+    SRT-3 & SR-IR 1 \\
+    SRT-4 & SR-PR 1 \\
+    SRT-5 & SR-PR 2 \\
+    SRT-6 & SR-AUR 1 \\
+    SRT-7 & SR-AUR 2 \\
+    SRT-8 & SR-IM 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Cultural Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Cultural
+    CULT-1 & CULT 1 \\
+    CULT-2 & CULT 2 \\
+    CULT-3 & CULT 3 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Compliance Tests and Corresponding Requirements}
+  \begin{tabular}{|c|c|}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Compliance
+    CPL-1 & CL-LR 1 \\
+    CPL-2 & CL-SCR 1 \\ 
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \section{Unit Test Description}
 
@@ -1116,37 +1503,37 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item \textbf{test-id1\\}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
 					
-Initial State: 
+\textbf{Initial State:} 
 					
-Input: 
+\textbf{Input:} 
 					
-Output: \wss{The expected result for the given inputs}
+\textbf{Output:} \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\textbf{Test Case Derivation:} \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+\textbf{How test will be performed:} 
 					
-\item{test-id2\\}
+\item \textbf{test-id2\\}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
 					
-Initial State: 
+\textbf{Initial State:} 
 					
-Input: 
+\textbf{Input:} 
 					
-Output: \wss{The expected result for the given inputs}
+\textbf{Output:} \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\textbf{Test Case Derivation:} \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+\textbf{How test will be performed:} 
 
-\item{...\\}
+\item \textbf{...\\}
     
 \end{enumerate}
 
@@ -1167,30 +1554,30 @@ How test will be performed:
 		
 \begin{enumerate}
 
-\item{test-id1\\}
+\item \textbf{test-id1\\}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
 					
-Initial State: 
+\textbf{Initial State:} 
 					
 Input/Condition: 
 					
 Output/Result: 
 					
-How test will be performed: 
+\textbf{How test will be performed:} 
 					
-\item{test-id2\\}
+\item \textbf{test-id2\\}
 
 Type: Functional, Dynamic, Manual, Static etc.
 					
-Initial State: 
+\textbf{Initial State:} 
 					
-Input: 
+\textbf{Input:} 
 					
 Output: 
 					
-How test will be performed: 
+\textbf{How test will be performed:} 
 
 \end{enumerate}
 
@@ -1201,28 +1588,7 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
-
-\begin{table}[ht]
-  \centering
-  \caption{Sections and Corresponding Functional Requirements}
-  \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
-  \hline
-  \textbf{Section} & \textbf{Functional Requirement} \\ \hline
   
-  Input Acceptance Tests & FR 1 \\ \hline
-  Code Smell Detection Tests & FR 2 \\ \hline
-  Refactoring Suggestion Tests & FR 4 \\ \hline
-  Output Validation Tests & FR 3, FR 6 \\ \hline
-  Tests for Report Generation & FR 9 \\ \hline
-  Documentation Availability Tests & FR 10 \\ \hline
-  IDE Integration Tests & FR 11 \\ \hline
-  
-  \end{tabular}
-  \label{tab:sections_requirements}
-  \end{table}
-  
-  
-			
 
 \bibliography{../../refs/References}
 
@@ -1239,9 +1605,93 @@ This is where you can place additional information.
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.
 
-\subsection{Usability Survey Questions?}
+\subsection{Usability Survey Questions?} \label{A.2}
 
-\wss{This is a section that would be appropriate for some projects.}
+\subsubsection*{Minimalist Design}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item The tool's interface feels uncluttered, showing only essential elements .
+  \item I am able to focus on refactoring tasks without unnecessary distractions (rate 1-5).
+\end{enumerate}
+
+\subsubsection*{Professional \& Authoritative Appearance}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item The tool has a professional appearance that instills confidence in its functionality.
+  \item I would feel comfortable recommending this tool to other professionals based on its visual design.
+\end{enumerate}
+
+\subsubsection*{Calm and Focused Atmosphere}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item The design of the tool creates a calm environment that supports my concentration on refactoring tasks.
+  \item The colours and layout used in the tool help reduce distractions and maintain my focus.
+\end{enumerate}
+
+\subsubsection*{Modern and Visually Appealing Design}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item The tool's design is modern and aligns well with contemporary software development tools.
+  \item The interface design is aesthetically pleasing and enjoyable to use.
+\end{enumerate}
+
+\subsubsection*{Intuitive UI and Ease of Use}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item The tool’s interface is intuitive and easy to navigate.
+  \item I can quickly find key features and settings within the tool.
+\end{enumerate}
+
+\subsubsection*{Clear and Concise Prompts}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item The prompts and instructions in the tool are clear and easy to understand.
+  \item The tool’s prompts guide me effectively through processes.
+\end{enumerate}
+
+\subsubsection*{Context-Sensitive Help}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item Help resources are easy to access and relevant to my current actions.
+  \item The tool provides useful help based on the task I am performing.
+\end{enumerate}
+
+\subsubsection*{Clear and Constructive Error Messaging}
+Please rate each statement on a scale of 1 to 5, where 1 = Strongly Disagree and 5 = Strongly Agree.
+\begin{enumerate}
+  \item The error messages in the tool are helpful and clearly explain the issue.
+  \item The tool provides constructive guidance on resolving errors I encounter.
+\end{enumerate}
+
+\subsubsection*{Cultural sensitivity}
+\begin{enumerate}
+  \item What is your ethnicity or cultural background? (This question is optional and helps us understand how the tool is perceived across different cultures.)
+  \begin{itemize}
+    \item African or African diaspora (e.g., African American, Afro-Caribbean)
+    \item East Asian (e.g., Chinese, Japanese, Korean)
+    \item South Asian (e.g., Indian, Pakistani, Bangladeshi)
+    \item Southeast Asian (e.g., Filipino, Vietnamese, Thai)
+    \item Middle Eastern or North African (MENA)
+    \item Hispanic or Latino/a
+    \item Indigenous or Native (e.g., Native American, First Nations, Aboriginal)
+    \item Pacific Islander
+    \item European or White/Caucasian
+    \item Mixed or Multi-ethnic
+    \item Prefer not to answer
+    \item Other (please specify): [Open text field] 
+  \end{itemize}
+  \item Did you encounter any language, imagery, or content that felt insensitive?
+  \begin{itemize}
+    \item No
+    \item Yes (Elaborate)
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Overall Feedback}
+\begin{enumerate}
+  \item Are there any design improvements you would suggest? (optional)
+  \item What do you like most about the tool’s design? (optional)
+\end{enumerate}
 
 \newpage{}
 \section{Reflection}
