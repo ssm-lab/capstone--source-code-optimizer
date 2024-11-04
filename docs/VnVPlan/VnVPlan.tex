@@ -33,6 +33,8 @@
 \newcommand{\MG}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Design/SoftArchitecture/MG.pdf}{MG}}
 \newcommand{\MIS}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Design/SoftDetailedDes/MIS.pdf}{MIS}}
 
+\newcommand{\colorrule}{\textcolor{BlueViolet}{\rule{\linewidth}{2pt}}}
+
 \begin{document}
 
 \title{System Verification and Validation Plan for \progname{}} 
@@ -329,10 +331,10 @@ The subsections below outline tests corresponding to functional
 requirements in the \SRS \cite{SRS}. Each test is associated with a unique functional area, helping to confirm that the tool meets the specified requirements. Each functional area has its own subsection for clarity.
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Code Input Acceptance Tests}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -402,10 +404,10 @@ This section covers the tests for ensuring the system correctly accepts Python s
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Code Smell Detection Tests} \label{4.1.2}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -514,10 +516,10 @@ smells that impact energy efficiency (FR 2).
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Refactoring Suggestion (RS) Tests}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -647,10 +649,10 @@ The following tests aim to validate the tool's capability to suggest appropriate
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Output Validation Tests}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -681,10 +683,10 @@ The following tests are designed to validate that the functionality of the origi
 \newpage
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Tests for Reporting Functionality}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -726,10 +728,10 @@ The reporting functionality of the tool is crucial for providing users with comp
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Documentation Availability Tests}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -747,10 +749,10 @@ The following test is designed to ensure the availability of documentation as pe
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{IDE Extension Tests}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -796,11 +798,11 @@ The following tests are designed to ensure that the user can integrate the tool 
 The section will cover system tests for the non-functional requirements (NFR) listed in the \SRS \hspace{1pt} document\cite{SRS}. The goal for these tests is to address the fit criteria for the requirements. Each test will be linked back to a specific NFR that can be observed in section \ref{trace-sys}.
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Look and Feel}
 
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -845,11 +847,11 @@ The following subsection tests cover all Look and Feel requirements listed in th
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
     
 \subsubsection{Usability \& Humanity}
 
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -928,10 +930,10 @@ The following subsection tests cover all Usability \& Humanity requirements list
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\textcolor{Blue}{\colorrule}
 
 \subsubsection{Performance}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -1012,10 +1014,10 @@ The following subsection tests cover all Performance requirements listed in the 
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Operational \& Environmental}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -1069,10 +1071,10 @@ The following subsection tests cover all Operational and Environmental requireme
 \end{enumerate}
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Maintenance and Support}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -1120,10 +1122,10 @@ The following subsection tests cover all Maintenance and Support requirements li
 \newpage
 
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Security}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -1213,13 +1215,22 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{Roles and Responsibilities:} The development team will review and test the logging mechanisms, with the project supervisor ensuring alignment with auditing requirements. \\[2mm]
     \textbf{Tools and Resources:} Access to logging components, tamper-proof logging tools \\[2mm]
     \textbf{Acceptance Criteria:} All refactoring processes are logged in a secure, tamper-proof manner, ensuring complete traceability for future audits.
+
+  \item \textbf{Immunity Against Malware and Unauthorized Programs} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} The tool is deployed in a controlled test environment with security protocols enabled, ready to be tested against simulated malware attacks. \\
+    \textbf{Input/Condition:} Simulated malware attacks are executed using Atomic Red Team by Red Canary\cite{ARTCanary}, targeting vulnerabilities such as unauthorized data access, process interference, and data tampering. \\
+    \textbf{Output/Result:} The tool detects, blocks, and logs all simulated malware activities without any compromise to data integrity or tool functionality. \\[2mm]
+    \textbf{How test will be performed:} The tester will deploy the tool in a secure, isolated test environment and initiate simulated malware attacks using Atomic Red Team. Each simulation will mimic various malware behaviours, including attempts to access or modify data and disrupt the refactoring process. The tester will observe and document the tool's responses to each simulated attack, verifying that it blocks unauthorized actions, maintains data integrity, and logs the events for traceability.
 \end{enumerate}
 
+\newpage
+
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Cultural}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -1249,11 +1260,13 @@ The following subsection tests cover all Cultural requirements listed in the SRS
     \textbf{How test will be performed:} Users complete tasks requiring prompts and answer the survey found in \ref{A.2} on cultural sensitivity of the content of the system.
 \end{enumerate}
 
+\newpage
+
 \noindent
-\rule{\linewidth}{2pt}
+\colorrule
 
 \subsubsection{Compliance}
-\rule{\linewidth}{2pt}
+\colorrule
 
 \medskip
 
@@ -1419,7 +1432,7 @@ The following subsection tests cover all Compliance requirements listed in the S
     SRT-5 & SR-PR 2 \\
     SRT-6 & SR-AUR 1 \\
     SRT-7 & SR-AUR 2 \\
-    Not tested & SR-IM 1 \\
+    SRT-8 & SR-IM 1 \\
     \bottomrule
   \end{tabular}
 \end{table}
