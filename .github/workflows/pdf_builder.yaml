@@ -52,6 +52,10 @@ jobs:
           files: |
             **/*.tex
           diff_relative: true # Get the list of files relative to the repo root
+          files_ignore: |
+            docs/Comments.tex
+            docs/Common.tex
+            docs/Reflection.tex
 
       # Build LaTeX files
       - name: Build changed tex files
