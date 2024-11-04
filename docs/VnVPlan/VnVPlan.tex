@@ -141,9 +141,16 @@ The Verification and Validation (VnV) plan relies on three key documents to guid
 
 \subsection{Verification and Validation Team}
 
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
+The Verification and Validation (VnV) Team for the Source Code Optimizer project consists of the following members and their specific roles:
+
+\begin{itemize}
+    \item \textbf{Sevhena Walker}: Lead Tester. Oversees and coordinates the testing process, ensuring all feedback is applied and all project goals are met.
+    \item \textbf{Mya Hussain}: Functional Requirements Tester. Tests the software to verify that it meets all specified functional requirements.
+    \item \textbf{Ayushi Amin}: Integration Tester. Focuses on testing the connection between the various components of the Python package, the VSCode plugin, and the GitHub Action to ensure seamless integration.
+    \item \textbf{Tanveer Brar}: Non-Functional Requirements Tester. Assesses performance/security compliance with project standards.
+    \item \textbf{Nivetha Kuruparan}: Non-Functional Requirements Tester. Ensures that the final product meets user expectations regarding user experience and interface intuitiveness.
+    \item \textbf{Istvan David} (supervisor): Supervises the overall VnV process, providing feedback and guidance based on industry standards and practices.
+\end{itemize}
 
 \subsection{SRS Verification Plan}
 
@@ -272,25 +279,45 @@ The Verification and Validation (VnV) plan relies on three key documents to guid
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+The Verification and Validation (V\&V) Plan for the Source Code Optimizer project serves as a critical document that requires a thorough examination to confirm its validity and effectiveness. To achieve this, the following strategies will be implemented:
 
-\wss{The review will include reviews by your classmates}
+\begin{enumerate}
+    \item \textbf{Peer Review}: Team members and peers will conduct a detailed review of the V\&V plan. This process aims to uncover any gaps or areas that could benefit from enhancement, leveraging the collective insights of the group to strengthen the overall plan.
+    
+    \item \textbf{Fault Injection Testing}: We will utilize mutation testing to assess the capability of our test cases to identify intentionally introduced faults. By generating variations of the original code, we can evaluate whether our testing strategies are robust enough to catch these discrepancies, hence enhancing the reliability of our verification process.
+    
+    \item \textbf{Feedback Loop Integration}: Continuous feedback from review sessions and testing activities will be systematically integrated to refine the V\&V plan. This ongoing process ensures the plan evolves based on insights gained from practical testing and peer input.
+\end{enumerate}
 
-\wss{Create a checklists?}
+
+\noindent To comprehensively verify the V\&V plan, we will utilize the following checklist:
+
+\begin{itemize}
+    \item[$\square$] Does the V\&V plan include all necessary aspects of software verification and validation?
+    \item[$\square$] Are the roles and responsibilities clearly outlined within the V\&V framework?
+    \item[$\square$] Is there a diversity of testing methodologies included (e.g., unit testing, integration testing, system testing)?
+    \item[$\square$] Does the plan have a clear process for incorporating feedback and gaining continuous improvement?
+    \item[$\square$] Are success criteria established for each phase of testing?
+    \item[$\square$] Is mutation testing considered to evaluate the effectiveness of the test cases?
+    \item[$\square$] Are mechanisms in place to monitor and address any identified issues during the V\&V process?
+    \item[$\square$] Does the V\&V plan align with the project timeline, available resources, and other constraints?
+\end{itemize}
 
 \subsection{Implementation Verification Plan}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+The Implementation Verification Plan for the Source Code Optimizer project aims to ensure that the software implementation adheres to the requirements and design specifications defined in the SRS. Key components of this plan include:
 
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
-
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+\begin{itemize}
+    \item \textbf{Unit Testing}: A comprehensive suite of unit tests will be established to validate the functionality of individual components within the optimizer. These tests will specifically focus on the effectiveness of the code refactoring methods employed by the optimizer, utilizing \texttt{pytest} for writing and executing these tests.
+    
+    \item \textbf{Static Code Analysis}: To maintain high code quality, static analysis tools such as \texttt{Pylint} and \texttt{Flake8} will be employed. These tools will help identify potential bugs, security vulnerabilities, and adherence to coding standards in the Python codebase, ensuring that the optimizer is both efficient and secure.
+    
+    \item \textbf{Code Walkthroughs and Reviews}: The development team will hold regular code reviews and walkthrough sessions to collaboratively evaluate the implementation of the source code optimizer. These sessions will focus on code quality, readability, and compliance with the project’s design patterns. Additionally, the final presentation will provide an opportunity for a thorough code walkthrough, allowing peers to contribute feedback on usability and functionality.
+    
+    \item \textbf{Continuous Integration}: The project will implement continuous integration practices using tools like GitHub Actions. This approach will automate the build and testing processes, allowing the team to verify that each change to the optimizer codebase meets the established quality criteria and integrates smoothly with the overall system.
+    
+    \item \textbf{Performance Testing}: The performance of the source code optimizer will be assessed to simulate various usage scenarios. This testing will focus on evaluating how effectively the optimizer processes large codebases and applies refactorings, ensuring that the tool operates efficiently under different workloads.
+\end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
 
