@@ -1,15 +1,20 @@
-import io
 import json
 from io import StringIO
-import os
+from os.path import dirname, abspath
+import sys
+
+# Sets src as absolute path, everything needs to be relative to src folder
+REFACTOR_DIR = dirname(abspath(__file__))
+sys.path.append(dirname(REFACTOR_DIR))
+
 from pylint import run_pylint
+from pylint.lint import Run
 from base_analyzer import BaseAnalyzer
 from refactorer.large_class_refactorer import LargeClassRefactorer
 from refactorer.long_lambda_function_refactorer import LongLambdaFunctionRefactorer
 from refactorer.long_message_chain_refactorer import LongMessageChainRefactorer
 
 # THIS WORKS ITS JUST THE PATH
-
 
 class PylintAnalyzer(BaseAnalyzer):
     def __init__(self, code_path: str):
@@ -37,7 +42,7 @@ class PylintAnalyzer(BaseAnalyzer):
         :return: A list of dictionaries with pylint messages.
         """
         # Capture pylint output into a string stream
-        output_stream = io.StringIO()
+        output_stream = StringIO()
 
         # Run pylint
         Run(["--output-format=json", self.code_path])
@@ -69,20 +74,17 @@ class PylintAnalyzer(BaseAnalyzer):
 
         return filtered_results
 
-
-from pylint.lint import Run
-
 # Example usage
 if __name__ == "__main__":
 
-    print(os.path.abspath("../test/inefficent_code_example.py"))
+    print(abspath("../test/inefficent_code_example.py"))
 
     # FOR SOME REASON THIS ISNT WORKING UNLESS THE PATH IS ABSOLUTE
     # this is probably because its executing from the location of the interpreter
     # weird thing is it breaks when you use abs path instead... uhhh idk what to do here rn ...
 
     analyzer = PylintAnalyzer(
-        "/Users/mya/Code/Capstone/capstone--source-code-optimizer/test/inefficent_code_example.py"
+        "test/inefficent_code_example.py"
     )
     report = analyzer.analyze()
 
