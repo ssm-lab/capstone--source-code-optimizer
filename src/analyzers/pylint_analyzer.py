@@ -22,7 +22,8 @@ from refactorer.long_message_chain_refactorer import LongMessageChainRefactorer
 from utils.code_smells import CodeSmells
 from utils.ast_parser import parse_line, parse_file
 
-# THIS WORKS ITS JUST THE PATH
+from utils.code_smells import CodeSmells
+from utils.ast_parser import parse_line, parse_file
 
 class PylintAnalyzer(BaseAnalyzer):
     def __init__(self, code_path: str):
