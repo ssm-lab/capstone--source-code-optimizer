@@ -4,6 +4,10 @@ class LongMethodRefactorer(BaseRefactorer):
     """
     Refactorer that targets long methods to improve readability.
     """
+    
+    def __init__(self, code):
+        super().__init__(code)
+
 
     def refactor(self):
         """

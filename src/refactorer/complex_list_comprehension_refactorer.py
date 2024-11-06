@@ -1,7 +1,8 @@
 import ast
 import astor
+from .base_refactorer import BaseRefactorer
 
-class ComplexListComprehensionRefactorer:
+class ComplexListComprehensionRefactorer(BaseRefactorer):
     """
     Refactorer for complex list comprehensions to improve readability.
     """
@@ -12,7 +13,7 @@ class ComplexListComprehensionRefactorer:
 
         :param code: The source code to refactor.
         """
-        self.code = code
+        super().__init__(code)
 
     def refactor(self):
         """
