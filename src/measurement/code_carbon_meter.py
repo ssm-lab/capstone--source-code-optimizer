@@ -30,7 +30,7 @@ class CarbonAnalyzer:
             else:
                 print("Emissions data:", emissions)
 
-    def save_report(self, report_path: str = "carbon_report.csv"):
+    def save_report(self, report_path: str):
         """
         Save the emissions report to a CSV file with two columns: attribute and value.
         """

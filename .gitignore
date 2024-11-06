@@ -287,3 +287,12 @@ TSWLatexianTemp*
 # DRAW.IO files
 *.drawio
 *.drawio.bkp
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Rope
+.ropeproject
+
+output/
