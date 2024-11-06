@@ -12,7 +12,7 @@ class LargeClassRefactorer:
         :param code: The source code of the class to refactor.
         :param method_threshold: The number of methods above which a class is considered large.
         """
-        self.code = code
+        super().__init__(code)
         self.method_threshold = method_threshold
 
     def refactor(self):

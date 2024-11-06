@@ -1,4 +1,6 @@
-class LongElementChainRefactorer:
+from .base_refactorer import BaseRefactorer
+
+class LongElementChainRefactorer(BaseRefactorer):
     """
     Refactorer for data objects (dictionary) that have too many deeply nested elements inside.
     Ex: deep_value = self.data[0][1]["details"]["info"]["more_info"][2]["target"]
@@ -11,7 +13,7 @@ class LongElementChainRefactorer:
         :param code: The source code of the class to refactor.
         :param method_threshold: The number of nested elements allowed before dictionary has too many deeply nested elements.
         """
-        self.code = code
+        super().__init__(code)
         self.element_threshold = element_threshold
 
     def refactor(self):
