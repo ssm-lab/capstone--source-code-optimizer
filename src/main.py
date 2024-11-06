@@ -2,6 +2,7 @@ import ast
 import os
 
 from analyzers.pylint_analyzer import PylintAnalyzer
+from measurement.code_carbon_meter import CarbonAnalyzer
 from utils.factory import RefactorerFactory
 from utils.code_smells import CodeSmells
 from utils import ast_parser
@@ -16,9 +17,14 @@ def main():
     """
 
     # okay so basically this guy gotta call 1) pylint 2) refactoring class for every bug
-    FILE_PATH = os.path.join(dirname, "../test/inefficent_code_example.py")
+    TEST_FILE_PATH = os.path.join(dirname, "../test/inefficent_code_example.py")
+    INITIAL_REPORT_FILE_PATH = os.path.join(dirname, "output/initial_carbon_report.csv")
+
+    carbon_analyzer = CarbonAnalyzer(TEST_FILE_PATH)
+    carbon_analyzer.run_and_measure()
+    carbon_analyzer.save_report(INITIAL_REPORT_FILE_PATH)
     
-    analyzer = PylintAnalyzer(FILE_PATH)
+    analyzer = PylintAnalyzer(TEST_FILE_PATH)
     report = analyzer.analyze()
 
     filtered_report = analyzer.filter_for_all_wanted_code_smells(report["messages"])
@@ -29,7 +35,7 @@ def main():
         smell_id = smell["messageId"]
 
         if smell_id == CodeSmells.LINE_TOO_LONG.value:
-            root_node = ast_parser.parse_line(FILE_PATH, smell["line"])
+            root_node = ast_parser.parse_line(TEST_FILE_PATH, smell["line"])
 
             if root_node is None:
                 continue
@@ -43,7 +49,7 @@ def main():
             #             smell_id = CodeSmells.LONG_TERN_EXPR
 
         print("Refactoring ", smell_id)
-        refactoring_class = RefactorerFactory.build(smell_id, FILE_PATH)
+        refactoring_class = RefactorerFactory.build(smell_id, TEST_FILE_PATH)
         refactoring_class.refactor()
 
 

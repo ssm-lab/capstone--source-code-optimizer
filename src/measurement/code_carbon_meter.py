@@ -11,7 +11,7 @@ sys.path.append(dirname(REFACTOR_DIR))
 class CarbonAnalyzer:
     def __init__(self, script_path: str):
         self.script_path = script_path
-        self.tracker = EmissionsTracker(allow_multiple_runs=True)
+        self.tracker = EmissionsTracker(save_to_file=False, allow_multiple_runs=True)
 
     def run_and_measure(self):
         script = Path(self.script_path)
@@ -55,6 +55,6 @@ class CarbonAnalyzer:
 
 # Example usage
 if __name__ == "__main__":
-    analyzer = CarbonAnalyzer("test/inefficent_code_example.py")
+    analyzer = CarbonAnalyzer("src/output/inefficent_code_example.py")
     analyzer.run_and_measure()
-    analyzer.save_report("test/carbon_report.csv")
+    analyzer.save_report("src/output/test/carbon_report.csv")
