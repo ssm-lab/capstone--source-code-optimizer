@@ -1,4 +1,5 @@
 import subprocess
+import sys
 from codecarbon import EmissionsTracker
 from pathlib import Path
 import pandas as pd
@@ -13,6 +14,12 @@ sys.path.append(dirname(REFACTOR_DIR))
 
 # To run run
 # pip install codecarbon
+from os.path import dirname, abspath
+import sys
+
+# Sets src as absolute path, everything needs to be relative to src folder
+REFACTOR_DIR = dirname(abspath(__file__))
+sys.path.append(dirname(REFACTOR_DIR))
 
 
 class CarbonAnalyzer:
@@ -21,7 +28,7 @@ class CarbonAnalyzer:
         Initialize with the path to the Python script to analyze.
         """
         self.script_path = script_path
-        self.tracker = EmissionsTracker(output_file=report_path)
+        self.tracker = EmissionsTracker(allow_multiple_runs=True, output_file=report_path)
 
     def run_and_measure(self):
         """
@@ -53,6 +60,8 @@ class CarbonAnalyzer:
         data = self.tracker.final_emissions_data
         if data:
             df = pd.DataFrame(data)
+            print("THIS IS THE DF:")
+            print(df)
             df.to_csv(report_path, index=False)
             print(f"Report saved to {report_path}")
         else:
@@ -64,7 +73,7 @@ if __name__ == "__main__":
 
     TEST_FILE_PATH = abspath("test/inefficent_code_example.py")
     REPORT_FILE_PATH = abspath("src/output/carbon_report.csv")
-    print(REPORT_FILE_PATH)
+    
     analyzer = CarbonAnalyzer(TEST_FILE_PATH, REPORT_FILE_PATH)
     analyzer.run_and_measure()
     analyzer.save_report(REPORT_FILE_PATH)
