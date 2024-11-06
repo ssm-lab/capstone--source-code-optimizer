@@ -1,9 +1,9 @@
 Attribute,Value
-timestamp,2024-11-06T15:41:03
+timestamp,2024-11-06T15:51:06
 project_name,codecarbon
-run_id,7de42608-e864-4267-bcac-db887eedee97
+run_id,427229d2-013a-4e77-8913-69eff642024e
 experiment_id,5b0fa12a-3dd7-45bb-9766-cc326314d9f1
-duration,4.944858557000089
+duration,4.923058721999951
 emissions,
 emissions_rate,
 cpu_power,
@@ -11,7 +11,7 @@ gpu_power,
 ram_power,6.0
 cpu_energy,
 gpu_energy,
-ram_energy,8.524578333322096e-08
+ram_energy,8.657804333324749e-08
 energy_consumed,
 country_name,Canada
 country_iso_code,CAN
