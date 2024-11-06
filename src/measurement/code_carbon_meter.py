@@ -12,7 +12,7 @@ class CarbonAnalyzer:
         Initialize with the path to the Python script to analyze.
         """
         self.script_path = script_path
-        self.tracker = EmissionsTracker()
+        self.tracker = EmissionsTracker(allow_multiple_runs=True)
 
     def run_and_measure(self):
         """
