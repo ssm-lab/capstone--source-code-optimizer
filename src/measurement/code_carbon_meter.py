@@ -1,18 +1,27 @@
 import subprocess
 from codecarbon import EmissionsTracker
 from pathlib import Path
+import pandas as pd
+
+from os.path import dirname, abspath
+import sys
+
+# FOR TESTING!!! Not necessary when running from main
+# Sets src as absolute path, everything needs to be relative to src folder
+REFACTOR_DIR = dirname(abspath(__file__))
+sys.path.append(dirname(REFACTOR_DIR))
 
 # To run run
 # pip install codecarbon
 
 
 class CarbonAnalyzer:
-    def __init__(self, script_path: str):
+    def __init__(self, script_path: str, report_path: str):
         """
         Initialize with the path to the Python script to analyze.
         """
         self.script_path = script_path
-        self.tracker = EmissionsTracker()
+        self.tracker = EmissionsTracker(output_file=report_path)
 
     def run_and_measure(self):
         """
@@ -37,13 +46,11 @@ class CarbonAnalyzer:
             emissions = self.tracker.stop()
             print("Emissions data:", emissions)
 
-    def save_report(self, report_path: str = "carbon_report.csv"):
+    def save_report(self, report_path: str):
         """
         Save the emissions report to a CSV file.
         """
-        import pandas as pd
-
-        data = self.tracker.emissions_data
+        data = self.tracker.final_emissions_data
         if data:
             df = pd.DataFrame(data)
             df.to_csv(report_path, index=False)
@@ -54,8 +61,10 @@ class CarbonAnalyzer:
 
 # Example usage
 if __name__ == "__main__":
-    analyzer = CarbonAnalyzer("/Users/mya/Code/Capstone/capstone--source-code-optimizer/src/test/inefficent_code_example.py")
+
+    TEST_FILE_PATH = abspath("test/inefficent_code_example.py")
+    REPORT_FILE_PATH = abspath("src/output/carbon_report.csv")
+    print(REPORT_FILE_PATH)
+    analyzer = CarbonAnalyzer(TEST_FILE_PATH, REPORT_FILE_PATH)
     analyzer.run_and_measure()
-    analyzer.save_report(
-        "/Users/mya/Code/Capstone/capstone--source-code-optimizer/src/measurement/carbon_report.csv"
-    )
+    analyzer.save_report(REPORT_FILE_PATH)
