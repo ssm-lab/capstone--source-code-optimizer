@@ -1,0 +1,33 @@
+Attribute,Value
+timestamp,2024-11-06T15:41:03
+project_name,codecarbon
+run_id,7de42608-e864-4267-bcac-db887eedee97
+experiment_id,5b0fa12a-3dd7-45bb-9766-cc326314d9f1
+duration,4.944858557000089
+emissions,
+emissions_rate,
+cpu_power,
+gpu_power,
+ram_power,6.0
+cpu_energy,
+gpu_energy,
+ram_energy,8.524578333322096e-08
+energy_consumed,
+country_name,Canada
+country_iso_code,CAN
+region,ontario
+cloud_provider,
+cloud_region,
+os,macOS-14.4-x86_64-i386-64bit
+python_version,3.10.10
+codecarbon_version,2.7.2
+cpu_count,16
+cpu_model,Intel(R) Core(TM) i9-9880H CPU @ 2.30GHz
+gpu_count,1
+gpu_model,Intel(R) Core(TM) i9-9880H CPU @ 2.30GHz
+longitude,-79.7172
+latitude,43.5639
+ram_total_size,16.0
+tracking_mode,machine
+on_cloud,N
+pue,1.0
