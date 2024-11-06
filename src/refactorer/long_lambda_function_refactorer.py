@@ -4,7 +4,9 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
     """
     Refactorer that targets long methods to improve readability.
     """
-    @staticmethod
+    def __init__(self, code):
+        super().__init__(code)
+        
     def refactor(self):
         """
         Refactor long methods into smaller methods.

@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecooptimizer"
+version = "0.0.1"
+dependencies = [
+  "pylint",
+  "flake8",
+  "radon",
+  "rope"
+]
+requires-python = ">=3.8"
+authors = [
+  {name = "Sevhena Walker"},
+  {name = "Mya Hussain"},
+  {name = "Nivetha Kuruparan"},
+  {name = "Ayushi Amin"},
+  {name = "Tanveer Brar"}
+]
+
+description = "A source code eco optimizer"
+readme = "README.md"
+license = {file = "LICENSE"}
+
+[dependency-groups]
+dev = ["pytest", "mypy", "ruff", "coverage"]
+
+[project.urls]
+Documentation = "https://readthedocs.org"
+Repository = "https://github.com/ssm-lab/capstone--source-code-optimizer"
+"Bug Tracker" = "https://github.com/ssm-lab/capstone--source-code-optimizer/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+ignore = ["E402"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
+docstring-code-line-length = 50

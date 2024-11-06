@@ -1,18 +1,26 @@
 import json
 from io import StringIO
-from os.path import dirname, abspath
-import sys
+# ONLY UNCOMMENT IF RUNNING FROM THIS FILE NOT MAIN
+# you will need to change imports too
+# ======================================================
+# from os.path import dirname, abspath
+# import sys
 
-# Sets src as absolute path, everything needs to be relative to src folder
-REFACTOR_DIR = dirname(abspath(__file__))
-sys.path.append(dirname(REFACTOR_DIR))
 
-from pylint import run_pylint
+# # Sets src as absolute path, everything needs to be relative to src folder
+# REFACTOR_DIR = dirname(abspath(__file__))
+# sys.path.append(dirname(REFACTOR_DIR))
+
 from pylint.lint import Run
-from base_analyzer import BaseAnalyzer
+from pylint.reporters.json_reporter import JSON2Reporter
+
+from analyzers.base_analyzer import BaseAnalyzer
 from refactorer.large_class_refactorer import LargeClassRefactorer
 from refactorer.long_lambda_function_refactorer import LongLambdaFunctionRefactorer
 from refactorer.long_message_chain_refactorer import LongMessageChainRefactorer
+
+from utils.code_smells import CodeSmells
+from utils.ast_parser import parse_line, parse_file
 
 # THIS WORKS ITS JUST THE PATH
 
@@ -20,18 +28,6 @@ class PylintAnalyzer(BaseAnalyzer):
     def __init__(self, code_path: str):
         super().__init__(code_path)
         # We are going to use the codes to identify the smells this is a dict of all of them
-        self.code_smells = {
-            # "R0902": LargeClassRefactorer,  # Too many instance attributes
-            # "R0913": "Long Parameter List",  # Too many arguments
-            # "R0915": "Long Method",  # Too many statements
-            # "C0200": "Complex List Comprehension",  # Loop can be simplified
-            # "C0103": "Invalid Naming Convention",  # Non-standard names
-            "R0912": LongLambdaFunctionRefactorer,
-            "R0914": LongMessageChainRefactorer,
-            # Add other pylint codes as needed
-        }
-
-        self.codes = set(self.code_smells.keys())
 
     def analyze(self):
         """
@@ -43,12 +39,14 @@ class PylintAnalyzer(BaseAnalyzer):
         """
         # Capture pylint output into a string stream
         output_stream = StringIO()
+        reporter = JSON2Reporter(output_stream)
 
         # Run pylint
-        Run(["--output-format=json", self.code_path])
+        Run(["--max-line-length=80", "--max-nested-blocks=3", "--max-branches=3", "--max-parents=3", self.code_path], reporter=reporter, exit=False)
 
         # Retrieve and parse output as JSON
         output = output_stream.getvalue()
+
         try:
             pylint_results = json.loads(output)
         except json.JSONDecodeError:
@@ -58,35 +56,55 @@ class PylintAnalyzer(BaseAnalyzer):
         return pylint_results
 
     def filter_for_all_wanted_code_smells(self, pylint_results):
+        statistics = {}
+        report = []
         filtered_results = []
+
         for error in pylint_results:
-            if error["message-id"] in self.codes:
+            if error["messageId"] in CodeSmells.list():
+                statistics[error["messageId"]] = True
                 filtered_results.append(error)
+        
+        report.append(filtered_results)
+        report.append(statistics)
 
-        return filtered_results
+        with open("src/output/report.txt", "w+") as f:
+            print(json.dumps(report, indent=2), file=f)
 
-    @classmethod
-    def filter_for_one_code_smell(pylint_results, code):
+        return report
+
+    def filter_for_one_code_smell(self, pylint_results, code):
         filtered_results = []
         for error in pylint_results:
-            if error["message-id"] == code:
+            if error["messageId"] == code:
                 filtered_results.append(error)
 
         return filtered_results
 
 # Example usage
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    print(abspath("../test/inefficent_code_example.py"))
+#     FILE_PATH = abspath("test/inefficent_code_example.py")
 
-    # FOR SOME REASON THIS ISNT WORKING UNLESS THE PATH IS ABSOLUTE
-    # this is probably because its executing from the location of the interpreter
-    # weird thing is it breaks when you use abs path instead... uhhh idk what to do here rn ...
+#     analyzer = PylintAnalyzer(FILE_PATH)
 
-    analyzer = PylintAnalyzer(
-        "test/inefficent_code_example.py"
-    )
-    report = analyzer.analyze()
+#     # print("THIS IS REPORT for our smells:")
+#     report = analyzer.analyze()
 
-    print("THIS IS REPORT for our smells:")
-    print(analyzer.filter_for_all_wanted_code_smells(report))
+#     with open("src/output/ast.txt", "w+") as f:
+#         print(parse_file(FILE_PATH), file=f)
+
+#     filtered_results = analyzer.filter_for_one_code_smell(report["messages"], "C0301")
+
+
+#     with open(FILE_PATH, "r") as f:
+#         file_lines = f.readlines()
+
+#     for smell in filtered_results:
+#         with open("src/output/ast_lines.txt", "a+") as f:
+#             print("Parsing line ", smell["line"], file=f)
+#             print(parse_line(file_lines, smell["line"]), end="\n", file=f)
+        
+
+
+    
