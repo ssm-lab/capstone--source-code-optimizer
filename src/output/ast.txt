@@ -1,0 +1,470 @@
+Module(
+  body=[
+    ClassDef(
+      name='DataProcessor',
+      body=[
+        FunctionDef(
+          name='__init__',
+          args=arguments(
+            args=[
+              arg(arg='self'),
+              arg(arg='data')]),
+          body=[
+            Assign(
+              targets=[
+                Attribute(
+                  value=Name(id='self', ctx=Load()),
+                  attr='data',
+                  ctx=Store())],
+              value=Name(id='data', ctx=Load())),
+            Assign(
+              targets=[
+                Attribute(
+                  value=Name(id='self', ctx=Load()),
+                  attr='processed_data',
+                  ctx=Store())],
+              value=List(ctx=Load()))]),
+        FunctionDef(
+          name='process_all_data',
+          args=arguments(
+            args=[
+              arg(arg='self')]),
+          body=[
+            Assign(
+              targets=[
+                Name(id='results', ctx=Store())],
+              value=List(ctx=Load())),
+            For(
+              target=Name(id='item', ctx=Store()),
+              iter=Attribute(
+                value=Name(id='self', ctx=Load()),
+                attr='data',
+                ctx=Load()),
+              body=[
+                Try(
+                  body=[
+                    Assign(
+                      targets=[
+                        Name(id='result', ctx=Store())],
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='complex_calculation',
+                          ctx=Load()),
+                        args=[
+                          Name(id='item', ctx=Load()),
+                          Constant(value=True),
+                          Constant(value=False),
+                          Constant(value='multiply'),
+                          Constant(value=10),
+                          Constant(value=20),
+                          Constant(value=None),
+                          Constant(value='end')])),
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='results', ctx=Load()),
+                          attr='append',
+                          ctx=Load()),
+                        args=[
+                          Name(id='result', ctx=Load())]))],
+                  handlers=[
+                    ExceptHandler(
+                      type=Name(id='Exception', ctx=Load()),
+                      name='e',
+                      body=[
+                        Expr(
+                          value=Call(
+                            func=Name(id='print', ctx=Load()),
+                            args=[
+                              Constant(value='An error occurred:'),
+                              Name(id='e', ctx=Load())]))])])]),
+            Expr(
+              value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                  Call(
+                    func=Attribute(
+                      value=Call(
+                        func=Attribute(
+                          value=Call(
+                            func=Attribute(
+                              value=Call(
+                                func=Attribute(
+                                  value=Subscript(
+                                    value=Attribute(
+                                      value=Name(id='self', ctx=Load()),
+                                      attr='data',
+                                      ctx=Load()),
+                                    slice=Constant(value=0),
+                                    ctx=Load()),
+                                  attr='upper',
+                                  ctx=Load())),
+                              attr='strip',
+                              ctx=Load())),
+                          attr='replace',
+                          ctx=Load()),
+                        args=[
+                          Constant(value=' '),
+                          Constant(value='_')]),
+                      attr='lower',
+                      ctx=Load()))])),
+            Assign(
+              targets=[
+                Attribute(
+                  value=Name(id='self', ctx=Load()),
+                  attr='processed_data',
+                  ctx=Store())],
+              value=Call(
+                func=Name(id='list', ctx=Load()),
+                args=[
+                  Call(
+                    func=Name(id='filter', ctx=Load()),
+                    args=[
+                      Lambda(
+                        args=arguments(
+                          args=[
+                            arg(arg='x')]),
+                        body=BoolOp(
+                          op=And(),
+                          values=[
+                            Compare(
+                              left=Name(id='x', ctx=Load()),
+                              ops=[
+                                NotEq()],
+                              comparators=[
+                                Constant(value=None)]),
+                            Compare(
+                              left=Name(id='x', ctx=Load()),
+                              ops=[
+                                NotEq()],
+                              comparators=[
+                                Constant(value=0)]),
+                            Compare(
+                              left=Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                  Call(
+                                    func=Name(id='str', ctx=Load()),
+                                    args=[
+                                      Name(id='x', ctx=Load())])]),
+                              ops=[
+                                Gt()],
+                              comparators=[
+                                Constant(value=1)])])),
+                      Name(id='results', ctx=Load())])])),
+            Return(
+              value=Attribute(
+                value=Name(id='self', ctx=Load()),
+                attr='processed_data',
+                ctx=Load()))])]),
+    ClassDef(
+      name='AdvancedProcessor',
+      bases=[
+        Name(id='DataProcessor', ctx=Load()),
+        Name(id='object', ctx=Load()),
+        Name(id='dict', ctx=Load()),
+        Name(id='list', ctx=Load()),
+        Name(id='set', ctx=Load()),
+        Name(id='tuple', ctx=Load())],
+      body=[
+        Pass(),
+        FunctionDef(
+          name='check_data',
+          args=arguments(
+            args=[
+              arg(arg='self'),
+              arg(arg='item')]),
+          body=[
+            Return(
+              value=IfExp(
+                test=Compare(
+                  left=Name(id='item', ctx=Load()),
+                  ops=[
+                    Gt()],
+                  comparators=[
+                    Constant(value=10)]),
+                body=Constant(value=True),
+                orelse=IfExp(
+                  test=Compare(
+                    left=Name(id='item', ctx=Load()),
+                    ops=[
+                      Lt()],
+                    comparators=[
+                      UnaryOp(
+                        op=USub(),
+                        operand=Constant(value=10))]),
+                  body=Constant(value=False),
+                  orelse=IfExp(
+                    test=Compare(
+                      left=Name(id='item', ctx=Load()),
+                      ops=[
+                        Eq()],
+                      comparators=[
+                        Constant(value=0)]),
+                    body=Constant(value=None),
+                    orelse=Name(id='item', ctx=Load())))))]),
+        FunctionDef(
+          name='complex_comprehension',
+          args=arguments(
+            args=[
+              arg(arg='self')]),
+          body=[
+            Assign(
+              targets=[
+                Attribute(
+                  value=Name(id='self', ctx=Load()),
+                  attr='processed_data',
+                  ctx=Store())],
+              value=ListComp(
+                elt=IfExp(
+                  test=Compare(
+                    left=BinOp(
+                      left=Name(id='x', ctx=Load()),
+                      op=Mod(),
+                      right=Constant(value=2)),
+                    ops=[
+                      Eq()],
+                    comparators=[
+                      Constant(value=0)]),
+                  body=BinOp(
+                    left=Name(id='x', ctx=Load()),
+                    op=Pow(),
+                    right=Constant(value=2)),
+                  orelse=BinOp(
+                    left=Name(id='x', ctx=Load()),
+                    op=Pow(),
+                    right=Constant(value=3))),
+                generators=[
+                  comprehension(
+                    target=Name(id='x', ctx=Store()),
+                    iter=Call(
+                      func=Name(id='range', ctx=Load()),
+                      args=[
+                        Constant(value=1),
+                        Constant(value=100)]),
+                    ifs=[
+                      BoolOp(
+                        op=And(),
+                        values=[
+                          Compare(
+                            left=BinOp(
+                              left=Name(id='x', ctx=Load()),
+                              op=Mod(),
+                              right=Constant(value=5)),
+                            ops=[
+                              Eq()],
+                            comparators=[
+                              Constant(value=0)]),
+                          Compare(
+                            left=Name(id='x', ctx=Load()),
+                            ops=[
+                              NotEq()],
+                            comparators=[
+                              Constant(value=50)]),
+                          Compare(
+                            left=Name(id='x', ctx=Load()),
+                            ops=[
+                              Gt()],
+                            comparators=[
+                              Constant(value=3)])])],
+                    is_async=0)]))]),
+        FunctionDef(
+          name='long_chain',
+          args=arguments(
+            args=[
+              arg(arg='self')]),
+          body=[
+            Try(
+              body=[
+                Assign(
+                  targets=[
+                    Name(id='deep_value', ctx=Store())],
+                  value=Subscript(
+                    value=Subscript(
+                      value=Subscript(
+                        value=Subscript(
+                          value=Subscript(
+                            value=Subscript(
+                              value=Subscript(
+                                value=Attribute(
+                                  value=Name(id='self', ctx=Load()),
+                                  attr='data',
+                                  ctx=Load()),
+                                slice=Constant(value=0),
+                                ctx=Load()),
+                              slice=Constant(value=1),
+                              ctx=Load()),
+                            slice=Constant(value='details'),
+                            ctx=Load()),
+                          slice=Constant(value='info'),
+                          ctx=Load()),
+                        slice=Constant(value='more_info'),
+                        ctx=Load()),
+                      slice=Constant(value=2),
+                      ctx=Load()),
+                    slice=Constant(value='target'),
+                    ctx=Load())),
+                Return(
+                  value=Name(id='deep_value', ctx=Load()))],
+              handlers=[
+                ExceptHandler(
+                  type=Name(id='KeyError', ctx=Load()),
+                  body=[
+                    Return(
+                      value=Constant(value=None))])])]),
+        FunctionDef(
+          name='long_scope_chaining',
+          args=arguments(
+            args=[
+              arg(arg='self')]),
+          body=[
+            For(
+              target=Name(id='a', ctx=Store()),
+              iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                  Constant(value=10)]),
+              body=[
+                For(
+                  target=Name(id='b', ctx=Store()),
+                  iter=Call(
+                    func=Name(id='range', ctx=Load()),
+                    args=[
+                      Constant(value=10)]),
+                  body=[
+                    For(
+                      target=Name(id='c', ctx=Store()),
+                      iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                          Constant(value=10)]),
+                      body=[
+                        For(
+                          target=Name(id='d', ctx=Store()),
+                          iter=Call(
+                            func=Name(id='range', ctx=Load()),
+                            args=[
+                              Constant(value=10)]),
+                          body=[
+                            For(
+                              target=Name(id='e', ctx=Store()),
+                              iter=Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                  Constant(value=10)]),
+                              body=[
+                                If(
+                                  test=Compare(
+                                    left=BinOp(
+                                      left=BinOp(
+                                        left=BinOp(
+                                          left=BinOp(
+                                            left=Name(id='a', ctx=Load()),
+                                            op=Add(),
+                                            right=Name(id='b', ctx=Load())),
+                                          op=Add(),
+                                          right=Name(id='c', ctx=Load())),
+                                        op=Add(),
+                                        right=Name(id='d', ctx=Load())),
+                                      op=Add(),
+                                      right=Name(id='e', ctx=Load())),
+                                    ops=[
+                                      Gt()],
+                                    comparators=[
+                                      Constant(value=25)]),
+                                  body=[
+                                    Return(
+                                      value=Constant(value='Done'))])])])])])])]),
+        FunctionDef(
+          name='complex_calculation',
+          args=arguments(
+            args=[
+              arg(arg='self'),
+              arg(arg='item'),
+              arg(arg='flag1'),
+              arg(arg='flag2'),
+              arg(arg='operation'),
+              arg(arg='threshold'),
+              arg(arg='max_value'),
+              arg(arg='option'),
+              arg(arg='final_stage')]),
+          body=[
+            If(
+              test=Compare(
+                left=Name(id='operation', ctx=Load()),
+                ops=[
+                  Eq()],
+                comparators=[
+                  Constant(value='multiply')]),
+              body=[
+                Assign(
+                  targets=[
+                    Name(id='result', ctx=Store())],
+                  value=BinOp(
+                    left=Name(id='item', ctx=Load()),
+                    op=Mult(),
+                    right=Name(id='threshold', ctx=Load())))],
+              orelse=[
+                If(
+                  test=Compare(
+                    left=Name(id='operation', ctx=Load()),
+                    ops=[
+                      Eq()],
+                    comparators=[
+                      Constant(value='add')]),
+                  body=[
+                    Assign(
+                      targets=[
+                        Name(id='result', ctx=Store())],
+                      value=BinOp(
+                        left=Name(id='item', ctx=Load()),
+                        op=Add(),
+                        right=Name(id='max_value', ctx=Load())))],
+                  orelse=[
+                    Assign(
+                      targets=[
+                        Name(id='result', ctx=Store())],
+                      value=Name(id='item', ctx=Load()))])]),
+            Return(
+              value=Name(id='result', ctx=Load()))])]),
+    If(
+      test=Compare(
+        left=Name(id='__name__', ctx=Load()),
+        ops=[
+          Eq()],
+        comparators=[
+          Constant(value='__main__')]),
+      body=[
+        Assign(
+          targets=[
+            Name(id='sample_data', ctx=Store())],
+          value=List(
+            elts=[
+              Constant(value=1),
+              Constant(value=2),
+              Constant(value=3),
+              Constant(value=4),
+              Constant(value=5)],
+            ctx=Load())),
+        Assign(
+          targets=[
+            Name(id='processor', ctx=Store())],
+          value=Call(
+            func=Name(id='DataProcessor', ctx=Load()),
+            args=[
+              Name(id='sample_data', ctx=Load())])),
+        Assign(
+          targets=[
+            Name(id='processed', ctx=Store())],
+          value=Call(
+            func=Attribute(
+              value=Name(id='processor', ctx=Load()),
+              attr='process_all_data',
+              ctx=Load()))),
+        Expr(
+          value=Call(
+            func=Name(id='print', ctx=Load()),
+            args=[
+              Constant(value='Processed Data:'),
+              Name(id='processed', ctx=Load())]))])])
