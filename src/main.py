@@ -20,7 +20,7 @@ def main():
     for smell in detected_smells:
         refactoring_class = analyzer.code_smells[smell["message-id"]]
 
-        refactoring_class.refactor(smell, path)
+        refactoring_class.refactor(smell, path) 
 
 
 if __name__ == "__main__":

@@ -14,7 +14,6 @@ from refactorer.large_class_refactorer import LargeClassRefactorer
 from refactorer.long_lambda_function_refactorer import LongLambdaFunctionRefactorer
 from refactorer.long_message_chain_refactorer import LongMessageChainRefactorer
 
-# THIS WORKS ITS JUST THE PATH
 
 class PylintAnalyzer(BaseAnalyzer):
     def __init__(self, code_path: str):
