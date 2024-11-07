@@ -83,11 +83,6 @@ We aim to have all team members present for any meetings we have with our superv
 
 \section{Lecture Attendance}
 
-\wss{For each team member how many lectures have they attended over the time
-period of interest.  This number should be determined from the lecture issues in
-the team's repo.  The first entry in the table should be the total number of
-lectures since the beginning of the term.}
-
 \begin{table}[H]
 \centering
 \begin{tabular}{ll}
@@ -104,12 +99,9 @@ Ayushi Amin & 6\\
 \end{tabular}
 \end{table}
 
-\wss{If needed, an explanation for the lecture attendance can be provided here.}
+We aim to have at least one team member present for lectures to make sure we don't miss any critical information regarding deliverables.
 
 \section{TA Document Discussion Attendance}
-
-\wss{For each team member how many of the informal document discussion meetings
-with the TA were attended over the time period of interest.}
 
 \begin{table}[H]
 \centering
@@ -117,17 +109,15 @@ with the TA were attended over the time period of interest.}
 \toprule
 \textbf{Student} & \textbf{Lectures}\\
 \midrule
-Total & Num\\
-Name 1 & Num\\
-Name 2 & Num\\
-Name 3 & Num\\
-Name 4 & Num\\
-Name 5 & Num\\
+Total & 3\\
+Sevhena Walker & 3\\
+NIvetha Kuruparan & 3\\
+Tanveer Brar & 3\\
+Mya Hussain & 3\\
+Ayushi Amin & 3\\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\wss{If needed, an explanation for the attendance can be provided here.}
 
 \section{Commits}
 
@@ -184,47 +174,9 @@ The numbers in the \textbf{Assigned} column give a better picture of each team m
 
 \section{CICD}
 
-The section outlines the plan to include CI/CD for this project. The plan will streamline development, testing and deployment processes, while ensuring consistent performance improvements.
+\wss{Say how CICD will be used in your project}
 
-\subsection{Source Control and Branching Strategy}
-\begin{itemize}
-    \item \textbf{Repository Setup}: Code is hosted on GitHub for version control and collaboration.
-    \item \textbf{Branching Strategy}:
-    \begin{itemize}
-        \item \textbf{main}: Production-ready code.
-        \item \textbf{dev}: Primary development branch.
-        \item \textbf{docs}: Primary documentation branch.
-    \end{itemize}
-    Based on deliverables, temporary branches are created on team and individual level and discarded once merged into one of the above branches.
-    \item \textbf{Merging Policy}: All pull requests should have at least two reviews before merging, as outlined in the Development Plan.
-\end{itemize}
-
-\subsection{Build and Testing Pipeline}
-GitHub Actions will be used for CI/CD to automate testing and code analysis on pull requests. They will include the following:
-\begin{itemize}
-    \item \textbf{Build Steps}
-    \begin{itemize}
-        \item \textbf{Static Code Analysis \& Linting}: \texttt{PyLint} will be used to handle both code smells for static analysis and enforce PEP 8 style guide.
-    \end{itemize}
-    \item \textbf{Testing}:
-    \begin{itemize}
-        \item \textbf{Unit Tests}: Unit tests will be written using \texttt{PyTest}.
-        \item \textbf{Code Coverage}: Test code coverage will be tracked using \texttt{coverage.py}.
-        \item \textbf{Performance Testing}: Metrics such as memory usage and execution time will be tracked using \texttt{cProfile}.
-    \end{itemize}
-\end{itemize}
-
-\subsection{Continuous Deployment}
-With every stable version, the product will need to be continuously deployed.
-\begin{itemize}
-    \item \textbf{Environment Setup}: To standardize environment settings across platforms, Docker containers will be used.
-    \item \textbf{Deployment}:
-    \begin{itemize}
-        \item \textbf{Refactoring Library}: The library will be rebuilt and updated on its public facing source.
-        \item \textbf{VS Code Extension}: With each update to main branch, the VS Code extension will automatically be built and updated on its public facing link.
-    \end{itemize}
-\end{itemize}
-
-\section{Additional Productivity Metrics}
-The team does not have any additional metrics of productivity.
+\wss{If your team has additional metrics of productivity, please feel free to
+add them to this report.}
+ remotes/origin/poc-plan
 \end{document}
