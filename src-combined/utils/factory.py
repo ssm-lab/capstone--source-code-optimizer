@@ -4,7 +4,7 @@ from refactorer.long_ternary_cond_expression import LTCERefactorer as LTCER
 
 from refactorer.base_refactorer import BaseRefactorer
 
-from utils.code_smells import CodeSmells
+from utils.analyzers_config import CustomSmell, PylintSmell
 
 class RefactorerFactory():
 
@@ -12,12 +12,10 @@ class RefactorerFactory():
     def build(smell_name: str, file_path: str) -> BaseRefactorer:
         selected = None
         match smell_name:
-            case CodeSmells.LONG_LAMBDA_FUNC:
-                selected = LLFR(file_path)
-            case CodeSmells.LONG_MESSAGE_CHAIN:
+            case PylintSmell.LONG_MESSAGE_CHAIN:
                 selected = LMCR(file_path)
-            case CodeSmells.LONG_TERN_EXPR:
+            case CustomSmell.LONG_TERN_EXPR:
                 selected = LTCER(file_path)
             case _:
-                raise ValueError(smell_name)
+                selected = None
         return selected

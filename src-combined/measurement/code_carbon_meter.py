@@ -5,9 +5,6 @@ from pathlib import Path
 import pandas as pd
 from os.path import dirname, abspath
 
-REFACTOR_DIR = dirname(abspath(__file__))
-sys.path.append(dirname(REFACTOR_DIR))
-
 class CarbonAnalyzer:
     def __init__(self, script_path: str):
         self.script_path = script_path
@@ -55,6 +52,9 @@ class CarbonAnalyzer:
 
 # Example usage
 if __name__ == "__main__":
+    REFACTOR_DIR = dirname(abspath(__file__))
+    sys.path.append(dirname(REFACTOR_DIR))
+    
     analyzer = CarbonAnalyzer("src/output/inefficent_code_example.py")
     analyzer.run_and_measure()
     analyzer.save_report("src/output/test/carbon_report.csv")

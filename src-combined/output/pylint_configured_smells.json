@@ -1,0 +1,32 @@
+[
+    {
+        "absolutePath": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\test\\inefficent_code_example.py",
+        "column": 4,
+        "confidence": "UNDEFINED",
+        "endColumn": 27,
+        "endLine": 73,
+        "line": 73,
+        "message": "Too many arguments (9/5)",
+        "messageId": "R0913",
+        "module": "inefficent_code_example",
+        "obj": "AdvancedProcessor.complex_calculation",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\test\\inefficent_code_example.py",
+        "symbol": "too-many-arguments",
+        "type": "refactor"
+    },
+    {
+        "absolutePath": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\test\\inefficent_code_example.py",
+        "column": 0,
+        "confidence": "UNDEFINED",
+        "endColumn": null,
+        "endLine": null,
+        "line": 41,
+        "message": "Line too long (87/80)",
+        "messageId": "CUST-1",
+        "module": "inefficent_code_example",
+        "obj": "",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\test\\inefficent_code_example.py",
+        "symbol": "line-too-long",
+        "type": "convention"
+    }
+]

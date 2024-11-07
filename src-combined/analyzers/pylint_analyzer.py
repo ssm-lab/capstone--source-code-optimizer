@@ -1,6 +1,7 @@
 import json
 from io import StringIO
 import ast
+from re import sub
 # ONLY UNCOMMENT IF RUNNING FROM THIS FILE NOT MAIN
 # you will need to change imports too
 # ======================================================
@@ -15,51 +16,61 @@ import ast
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
-from analyzers.base_analyzer import BaseAnalyzer
+from analyzers.base_analyzer import Analyzer
 
-from utils.analyzers_config import CustomSmell, PylintSmell
+from utils.analyzers_config import EXTRA_PYLINT_OPTIONS, CustomSmell, PylintSmell
 from utils.analyzers_config import IntermediateSmells
 from utils.ast_parser import parse_line
 
-class PylintAnalyzer(BaseAnalyzer):
+class PylintAnalyzer(Analyzer):
     def __init__(self, code_path: str):
         super().__init__(code_path)
+
+    def build_pylint_options(self):
+        """
+        Constructs the list of pylint options for analysis, including extra options from config.
+
+        :return: List of pylint options for analysis.
+        """
+        return [self.file_path] + EXTRA_PYLINT_OPTIONS
         
     def analyze(self):
         """
-        Runs pylint on the specified Python file and returns the output as a list of dictionaries.
-        Each dictionary contains information about a code smell or warning identified by pylint.
-
-        :param file_path: The path to the Python file to be analyzed.
-        :return: A list of dictionaries with pylint messages.
+        Executes pylint on the specified file and captures the output in JSON format.
         """
-        # Capture pylint output into a string stream
-        output_stream = StringIO()
-        reporter = JSON2Reporter(output_stream)
+        if not self.validate_file():
+            print(f"File not found: {self.file_path}")
+            return
 
-        # Run pylint
-        Run(["--max-line-length=80", "--max-nested-blocks=3", "--max-branches=3", "--max-parents=3", self.code_path], reporter=reporter, exit=False)
+        print(f"Running pylint analysis on {self.file_path}")
 
-        # Retrieve and parse output as JSON
-        output = output_stream.getvalue()
+        # Capture pylint output in a JSON format buffer
+        with StringIO() as buffer:
+            reporter = JSON2Reporter(buffer)
+            pylint_options = self.build_pylint_options()
 
-        try:
-            pylint_results: list[object] = json.loads(output)
-        except json.JSONDecodeError:
-            print("Error: Could not decode pylint output")
-            pylint_results = []
+            try:
+                # Run pylint with JSONReporter
+                Run(pylint_options, reporter=reporter, exit=False)
 
-        return pylint_results
+                # Parse the JSON output
+                buffer.seek(0)
+                self.report_data = json.loads(buffer.getvalue())
+                print("Pylint JSON analysis completed.")
+            except json.JSONDecodeError as e:
+                print("Failed to parse JSON output from pylint:", e)
+            except Exception as e:
+                print("An error occurred during pylint analysis:", e)
 
-    def filter_for_all_wanted_code_smells(self, pylint_results: list[object]):
+    def get_configured_smells(self):
         filtered_results: list[object] = []
 
-        for error in pylint_results:
+        for error in self.report_data["messages"]:
             if error["messageId"] in PylintSmell.list():
                 filtered_results.append(error)
 
         for smell in IntermediateSmells.list():
-            temp_smells = self.filter_for_one_code_smell(pylint_results, smell)
+            temp_smells = self.filter_for_one_code_smell(self.report_data["messages"], smell)
 
             if smell == IntermediateSmells.LINE_TOO_LONG.value:
                 filtered_results.extend(self.filter_long_lines(temp_smells))
@@ -80,21 +91,16 @@ class PylintAnalyzer(BaseAnalyzer):
     def filter_long_lines(self, long_line_smells: list[object]):
         selected_smells: list[object] = []
         for smell in long_line_smells:    
-            root_node = parse_line(self.code_path, smell["line"])
+            root_node = parse_line(self.file_path, smell["line"])
 
             if root_node is None:
                 continue
 
             for node in ast.walk(root_node):
-                if isinstance(node, ast.Expr):
-                    for expr in ast.walk(node):
-                        if isinstance(expr, ast.IfExp):  # Ternary expression node
-                            smell["messageId"] = CustomSmell.LONG_TERN_EXPR.value
-                            selected_smells.append(smell)
-
                 if isinstance(node, ast.IfExp):  # Ternary expression node
                     smell["messageId"] = CustomSmell.LONG_TERN_EXPR.value
-                    selected_smells.append(smell)\
+                    selected_smells.append(smell)
+                    break
                     
         return selected_smells
 
