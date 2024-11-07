@@ -8,7 +8,7 @@
         "message-id": "C0301",
         "module": "ineffcient_code_example_1",
         "obj": "",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "line-too-long",
         "type": "convention"
     },
@@ -21,7 +21,7 @@
         "message-id": "C0301",
         "module": "ineffcient_code_example_1",
         "obj": "",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "line-too-long",
         "type": "convention"
     },
@@ -34,7 +34,7 @@
         "message-id": "C0301",
         "module": "ineffcient_code_example_1",
         "obj": "",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "line-too-long",
         "type": "convention"
     },
@@ -47,7 +47,7 @@
         "message-id": "C0301",
         "module": "ineffcient_code_example_1",
         "obj": "",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "line-too-long",
         "type": "convention"
     },
@@ -60,7 +60,7 @@
         "message-id": "C0114",
         "module": "ineffcient_code_example_1",
         "obj": "",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-module-docstring",
         "type": "convention"
     },
@@ -73,7 +73,7 @@
         "message-id": "C0115",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-class-docstring",
         "type": "convention"
     },
@@ -86,7 +86,7 @@
         "message-id": "C0116",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.process_all_data",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-function-docstring",
         "type": "convention"
     },
@@ -99,7 +99,7 @@
         "message-id": "W0718",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.process_all_data",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "broad-exception-caught",
         "type": "warning"
     },
@@ -112,7 +112,7 @@
         "message-id": "C0116",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.complex_calculation",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-function-docstring",
         "type": "convention"
     },
@@ -125,7 +125,7 @@
         "message-id": "R0913",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.complex_calculation",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "too-many-arguments",
         "type": "refactor"
     },
@@ -138,7 +138,7 @@
         "message-id": "R0917",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.complex_calculation",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "too-many-positional-arguments",
         "type": "refactor"
     },
@@ -151,7 +151,7 @@
         "message-id": "W0613",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.complex_calculation",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "unused-argument",
         "type": "warning"
     },
@@ -164,7 +164,7 @@
         "message-id": "W0613",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.complex_calculation",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "unused-argument",
         "type": "warning"
     },
@@ -177,7 +177,7 @@
         "message-id": "W0613",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.complex_calculation",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "unused-argument",
         "type": "warning"
     },
@@ -190,7 +190,7 @@
         "message-id": "W0613",
         "module": "ineffcient_code_example_1",
         "obj": "DataProcessor.complex_calculation",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "unused-argument",
         "type": "warning"
     },
@@ -203,7 +203,7 @@
         "message-id": "C0115",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-class-docstring",
         "type": "convention"
     },
@@ -216,7 +216,7 @@
         "message-id": "C0116",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor.check_data",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-function-docstring",
         "type": "convention"
     },
@@ -229,7 +229,7 @@
         "message-id": "C0116",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor.complex_comprehension",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-function-docstring",
         "type": "convention"
     },
@@ -242,7 +242,7 @@
         "message-id": "C0116",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor.long_chain",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-function-docstring",
         "type": "convention"
     },
@@ -255,7 +255,7 @@
         "message-id": "C0116",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor.long_scope_chaining",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "missing-function-docstring",
         "type": "convention"
     },
@@ -268,7 +268,7 @@
         "message-id": "R0912",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor.long_scope_chaining",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "too-many-branches",
         "type": "refactor"
     },
@@ -281,7 +281,7 @@
         "message-id": "R1702",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor.long_scope_chaining",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "too-many-nested-blocks",
         "type": "refactor"
     },
@@ -294,7 +294,7 @@
         "message-id": "R1710",
         "module": "ineffcient_code_example_1",
         "obj": "AdvancedProcessor.long_scope_chaining",
-        "path": "C:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "C:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
         "symbol": "inconsistent-return-statements",
         "type": "refactor"
     }
