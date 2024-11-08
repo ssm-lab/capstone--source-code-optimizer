@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import subprocess
 import pandas as pd
 from codecarbon import EmissionsTracker
@@ -31,11 +32,11 @@ class CodeCarbonEnergyMeter(BaseEnergyMeter):
             os.environ['TEMP'] = custom_temp_dir  # For Windows
             os.environ['TMPDIR'] = custom_temp_dir  # For Unix-based systems
 
-            tracker = EmissionsTracker(output_dir=custom_temp_dir)
+            tracker = EmissionsTracker(output_dir=custom_temp_dir, allow_multiple_runs=True)
             tracker.start()
 
             try:
-                subprocess.run(["python", self.file_path], check=True)
+                subprocess.run([sys.executable, self.file_path], check=True)
                 self.logger.log("CodeCarbon measurement completed successfully.")
             except subprocess.CalledProcessError as e:
                 self.logger.log(f"Error executing file '{self.file_path}': {e}")
