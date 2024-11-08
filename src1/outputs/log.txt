@@ -1,0 +1,94 @@
+[2024-11-08 06:49:35] #####################################################################################################
+[2024-11-08 06:49:35]                                     CAPTURE INITIAL EMISSIONS                                        
+[2024-11-08 06:49:35] #####################################################################################################
+[2024-11-08 06:49:35] Starting CodeCarbon energy measurement on ineffcient_code_example_1.py
+[2024-11-08 06:49:40] CodeCarbon measurement completed successfully.
+[2024-11-08 06:49:43] Output saved to c:\Users\Nivetha\Documents\capstone--source-code-optimizer\src1\outputs\initial_emissions_data.txt
+[2024-11-08 06:49:43] Initial Emissions: 1.7910543037257115e-08 kg CO2
+[2024-11-08 06:49:43] #####################################################################################################
+
+
+[2024-11-08 06:49:43] #####################################################################################################
+[2024-11-08 06:49:43]                                          CAPTURE CODE SMELLS                                         
+[2024-11-08 06:49:43] #####################################################################################################
+[2024-11-08 06:49:43] Running Pylint analysis on ineffcient_code_example_1.py
+[2024-11-08 06:49:43] Pylint analyzer completed successfully.
+[2024-11-08 06:49:43] Examining pylint smells for custom code smells
+[2024-11-08 06:49:43] Output saved to c:\Users\Nivetha\Documents\capstone--source-code-optimizer\src1\outputs\all_configured_pylint_smells.json
+[2024-11-08 06:49:43] Refactorable code smells: 8
+[2024-11-08 06:49:43] #####################################################################################################
+
+
+[2024-11-08 06:49:43] #####################################################################################################
+[2024-11-08 06:49:43]                                         REFACTOR CODE SMELLS                                         
+[2024-11-08 06:49:43] #####################################################################################################
+[2024-11-08 06:49:43] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 5 for identified code smell.
+[2024-11-08 06:49:43] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:49:48] CodeCarbon measurement completed successfully.
+[2024-11-08 06:49:50] Measured emissions for 'refactored-test-case.py.temp': 4.095266300954314e-08
+[2024-11-08 06:49:50] Initial Emissions: 1.7910543037257115e-08 kg CO2. Final Emissions: 4.095266300954314e-08 kg CO2.
+[2024-11-08 06:49:50] No emission improvement after refactoring. Discarded refactored changes.
+
+[2024-11-08 06:49:50] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 9 for identified code smell.
+[2024-11-08 06:49:50] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:49:56] CodeCarbon measurement completed successfully.
+[2024-11-08 06:49:58] Measured emissions for 'refactored-test-case.py.temp': 4.0307671392924016e-08
+[2024-11-08 06:49:58] Initial Emissions: 4.095266300954314e-08 kg CO2. Final Emissions: 4.0307671392924016e-08 kg CO2.
+[2024-11-08 06:49:58] Refactored list comprehension to generator expression on line 9 and saved.
+
+[2024-11-08 06:49:58] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 13 for identified code smell.
+[2024-11-08 06:49:58] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:50:03] CodeCarbon measurement completed successfully.
+[2024-11-08 06:50:05] Measured emissions for 'refactored-test-case.py.temp': 1.9387173249895166e-08
+[2024-11-08 06:50:05] Initial Emissions: 4.0307671392924016e-08 kg CO2. Final Emissions: 1.9387173249895166e-08 kg CO2.
+[2024-11-08 06:50:05] Refactored list comprehension to generator expression on line 13 and saved.
+
+[2024-11-08 06:50:05] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 17 for identified code smell.
+[2024-11-08 06:50:05] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:50:10] CodeCarbon measurement completed successfully.
+[2024-11-08 06:50:13] Measured emissions for 'refactored-test-case.py.temp': 2.951190821474716e-08
+[2024-11-08 06:50:13] Initial Emissions: 1.9387173249895166e-08 kg CO2. Final Emissions: 2.951190821474716e-08 kg CO2.
+[2024-11-08 06:50:13] No emission improvement after refactoring. Discarded refactored changes.
+
+[2024-11-08 06:50:13] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 21 for identified code smell.
+[2024-11-08 06:50:13] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:50:18] CodeCarbon measurement completed successfully.
+[2024-11-08 06:50:20] Measured emissions for 'refactored-test-case.py.temp': 3.45807880672747e-08
+[2024-11-08 06:50:20] Initial Emissions: 2.951190821474716e-08 kg CO2. Final Emissions: 3.45807880672747e-08 kg CO2.
+[2024-11-08 06:50:20] No emission improvement after refactoring. Discarded refactored changes.
+
+[2024-11-08 06:50:20] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 25 for identified code smell.
+[2024-11-08 06:50:20] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:50:25] CodeCarbon measurement completed successfully.
+[2024-11-08 06:50:28] Measured emissions for 'refactored-test-case.py.temp': 3.4148420368067676e-08
+[2024-11-08 06:50:28] Initial Emissions: 3.45807880672747e-08 kg CO2. Final Emissions: 3.4148420368067676e-08 kg CO2.
+[2024-11-08 06:50:28] Refactored list comprehension to generator expression on line 25 and saved.
+
+[2024-11-08 06:50:28] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 29 for identified code smell.
+[2024-11-08 06:50:28] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:50:33] CodeCarbon measurement completed successfully.
+[2024-11-08 06:50:35] Measured emissions for 'refactored-test-case.py.temp': 4.0344935213547e-08
+[2024-11-08 06:50:35] Initial Emissions: 3.4148420368067676e-08 kg CO2. Final Emissions: 4.0344935213547e-08 kg CO2.
+[2024-11-08 06:50:35] No emission improvement after refactoring. Discarded refactored changes.
+
+[2024-11-08 06:50:35] Applying 'Use a Generator' refactor on 'refactored-test-case.py' at line 33 for identified code smell.
+[2024-11-08 06:50:35] Starting CodeCarbon energy measurement on refactored-test-case.py.temp
+[2024-11-08 06:50:40] CodeCarbon measurement completed successfully.
+[2024-11-08 06:50:42] Measured emissions for 'refactored-test-case.py.temp': 1.656956729885559e-08
+[2024-11-08 06:50:42] Initial Emissions: 4.0344935213547e-08 kg CO2. Final Emissions: 1.656956729885559e-08 kg CO2.
+[2024-11-08 06:50:42] Refactored list comprehension to generator expression on line 33 and saved.
+
+[2024-11-08 06:50:42] #####################################################################################################
+
+
+[2024-11-08 06:50:42] #####################################################################################################
+[2024-11-08 06:50:42]                                     CAPTURE FINAL EMISSIONS                                        
+[2024-11-08 06:50:42] #####################################################################################################
+[2024-11-08 06:50:42] Starting CodeCarbon energy measurement on ineffcient_code_example_1.py
+[2024-11-08 06:50:47] CodeCarbon measurement completed successfully.
+[2024-11-08 06:50:50] Output saved to c:\Users\Nivetha\Documents\capstone--source-code-optimizer\src1\outputs\final_emissions_data.txt
+[2024-11-08 06:50:50] Final Emissions: 1.3831601079554254e-08 kg CO2
+[2024-11-08 06:50:50] #####################################################################################################
+
+
+[2024-11-08 06:50:50] Saved 4.0789419577028616e-09 kg CO2

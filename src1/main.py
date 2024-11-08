@@ -3,7 +3,7 @@ import os
 
 from measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from analyzers.pylint_analyzer import PylintAnalyzer
-from utils.output_config import save_json_files, copy_file_to_output
+from utils.outputs_config import save_json_files, copy_file_to_output
 from utils.refactorer_factory import RefactorerFactory
 from utils.logger import Logger
 
