@@ -7,7 +7,7 @@ import os
 from .base_refactorer import BaseRefactorer
 
 class UseAGeneratorRefactor(BaseRefactorer):
-    def __init__(self, file_path, pylint_smell, initial_emission, logger):
+    def __init__(self, logger):
         """
         Initializes the UseAGeneratorRefactor with a file path, pylint
         smell, initial emission, and logger.
@@ -17,9 +17,9 @@ class UseAGeneratorRefactor(BaseRefactorer):
         :param initial_emission: Initial emission value before refactoring.
         :param logger: Logger instance to handle log messages.
         """
-        super().__init__(file_path, pylint_smell, initial_emission, logger)
+        super().__init__( logger)
 
-    def refactor(self):
+    def refactor(self, file_path, pylint_smell, initial_emission):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
