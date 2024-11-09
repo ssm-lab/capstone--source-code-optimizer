@@ -70,7 +70,7 @@ def main():
     logger.log(
         "#####################################################################################################\n\n"
     )
-    return
+    
     # Log start of refactoring codes
     logger.log(
         "#####################################################################################################"
@@ -90,7 +90,6 @@ def main():
         refactoring_class = RefactorerFactory.build_refactorer_class(
             TEST_FILE_COPY, pylint_smell["message-id"], pylint_smell, emission, logger
         )
-
         if refactoring_class:
             refactoring_class.refactor()
             emission = refactoring_class.final_emission
