@@ -8,7 +8,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "has_positive",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     },
@@ -21,7 +21,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "all_non_negative",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     },
@@ -34,7 +34,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "contains_large_strings",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     },
@@ -47,7 +47,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "all_uppercase",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     },
@@ -60,7 +60,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "contains_special_numbers",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     },
@@ -73,7 +73,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "all_lowercase",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     },
@@ -86,7 +86,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "any_even_numbers",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     },
@@ -99,7 +99,7 @@
         "message-id": "R1729",
         "module": "ineffcient_code_example_1",
         "obj": "all_strings_start_with_a",
-        "path": "c:\\Users\\Nivetha\\Documents\\capstone--source-code-optimizer\\src1-tests\\ineffcient_code_example_1.py",
+        "path": "c:\\Users\\sevhe\\OneDrive - McMaster University\\Year 5\\SFRWENG 4G06 - Capstone\\capstone--source-code-optimizer\\tests\\input\\ineffcient_code_example_1.py",
         "symbol": "use-a-generator",
         "type": "refactor"
     }

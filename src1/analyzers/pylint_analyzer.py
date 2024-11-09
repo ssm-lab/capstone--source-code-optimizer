@@ -1,21 +1,20 @@
 import json
+import ast
 import os
+
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSONReporter
 from io import StringIO
+
+from utils.logger import Logger
+
 from .base_analyzer import Analyzer
-from .ternary_expression_pylint_analyzer import TernaryExpressionPylintAnalyzer
-from utils.analyzers_config import AllPylintSmells, EXTRA_PYLINT_OPTIONS
+from utils.analyzers_config import PylintSmell, CustomSmell, IntermediateSmells, EXTRA_PYLINT_OPTIONS
+
+from utils.ast_parser import parse_line
 
 class PylintAnalyzer(Analyzer):
-    def __init__(self, file_path, logger):
-        """
-        Initializes the PylintAnalyzer with a file path and logger, 
-        setting up attributes to collect code smells.
-        
-        :param file_path: Path to the file to be analyzed.
-        :param logger: Logger instance to handle log messages.
-        """
+    def __init__(self, file_path: str, logger: Logger):
         super().__init__(file_path, logger)
 
     def build_pylint_options(self):
@@ -25,8 +24,8 @@ class PylintAnalyzer(Analyzer):
         :return: List of pylint options for analysis.
         """
         return [self.file_path] + EXTRA_PYLINT_OPTIONS
-
-    def analyze_smells(self):
+        
+    def analyze(self):
         """
         Executes pylint on the specified file and captures the output in JSON format.
         """
@@ -53,36 +52,42 @@ class PylintAnalyzer(Analyzer):
             except Exception as e:
                 self.logger.log(f"An error occurred during pylint analysis: {e}")
 
-            self._find_custom_pylint_smells()  # Find all custom smells in pylint-detected data
-
-    def _find_custom_pylint_smells(self):
-        """
-        Identifies custom smells, like long ternary expressions, in Pylint-detected data.
-        Updates self.smells_data with any new custom smells found.
-        """
-        self.logger.log("Examining pylint smells for custom code smells")
-        ternary_analyzer = TernaryExpressionPylintAnalyzer(self.file_path, self.smells_data)
-        self.smells_data = ternary_analyzer.detect_long_ternary_expressions()
-
-    def get_smells_by_name(self, smell):
-        """
-        Retrieves smells based on the Smell enum (e.g., Smell.LONG_MESSAGE_CHAIN).
-        
-        :param smell: The Smell enum member to filter by.
-        :return: List of report entries matching the smell name.
-        """
-        return [
-            item for item in self.smells_data
-            if item.get("message-id") == smell.value
-        ]
-
-    def get_configured_smells(self):
+    def configure_smells(self):
         """
         Filters the report data to retrieve only the smells with message IDs specified in the config.
-
-        :return: List of detected code smells based on the configuration.
         """
-        configured_smells = []
-        for smell in AllPylintSmells:
-            configured_smells.extend(self.get_smells_by_name(smell))
-        return configured_smells
+        self.logger.log("Filtering pylint smells")
+
+        configured_smells: list[object] = []
+
+        for smell in self.smells_data:
+            if smell["message-id"] in PylintSmell.list():
+                configured_smells.append(smell)
+
+            if smell == IntermediateSmells.LINE_TOO_LONG.value:
+                self.filter_ternary(smell)
+
+        self.smells_data = configured_smells
+
+    def filter_for_one_code_smell(self, pylint_results: list[object], code: str):
+        """
+        Filters LINE_TOO_LONG smells to find ternary expression smells
+        """
+        filtered_results: list[object] = []
+        for error in pylint_results:
+            if error["message-id"] == code:
+                filtered_results.append(error)
+
+        return filtered_results
+    
+    def filter_ternary(self, smell: object): 
+        root_node = parse_line(self.file_path, smell["line"])
+
+        if root_node is None:
+            return
+
+        for node in ast.walk(root_node):
+            if isinstance(node, ast.IfExp):  # Ternary expression node
+                smell["message-id"] = CustomSmell.LONG_TERN_EXPR.value
+                self.smells_data.append(smell)
+                break

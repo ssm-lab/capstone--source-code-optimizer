@@ -1,10 +1,18 @@
 # Any configurations that are done by the analyzers
-
 from enum import Enum
+from itertools import chain
+
+class ExtendedEnum(Enum):
+
+    @classmethod
+    def list(cls) -> list[str]:
+        return [c.value for c in cls]
+    
+    def __str__(self):
+        return str(self.value)
 
 # Enum class for standard Pylint code smells
-class PylintSmell(Enum):
-    LINE_TOO_LONG = "C0301"  # Pylint code smell for lines that exceed the max length
+class PylintSmell(ExtendedEnum):
     LONG_MESSAGE_CHAIN = "R0914"  # Pylint code smell for long message chains
     LARGE_CLASS = "R0902"  # Pylint code smell for classes with too many attributes
     LONG_PARAMETER_LIST = "R0913"  # Pylint code smell for functions with too many parameters
@@ -13,13 +21,20 @@ class PylintSmell(Enum):
     INVALID_NAMING_CONVENTIONS = "C0103"  # Pylint code smell for naming conventions violations
     USE_A_GENERATOR = "R1729"  # Pylint code smell for unnecessary list comprehensions inside `any()` or `all()`
 
-
 # Enum class for custom code smells not detected by Pylint
-class CustomPylintSmell(Enum):
+class CustomSmell(ExtendedEnum):
     LONG_TERN_EXPR = "CUST-1"  # Custom code smell for long ternary expressions
 
-# Combined enum for all smells
-AllPylintSmells = Enum('AllSmells', {**{s.name: s.value for s in PylintSmell}, **{s.name: s.value for s in CustomPylintSmell}})
+class IntermediateSmells(ExtendedEnum):
+    LINE_TOO_LONG = "C0301" # pylint smell
+
+# Enum containing all smells
+class AllSmells(ExtendedEnum):
+    _ignore_ = 'member cls'
+    cls = vars()
+    for member in chain(list(PylintSmell), 
+                        list(CustomSmell)):
+        cls[member.name] = member.value
 
 # Additional Pylint configuration options for analyzing code
 EXTRA_PYLINT_OPTIONS = [

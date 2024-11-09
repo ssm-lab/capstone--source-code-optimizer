@@ -3,7 +3,7 @@ import os
 from utils.logger import Logger
 
 class Analyzer(ABC):
-    def __init__(self, file_path, logger):
+    def __init__(self, file_path: str, logger: Logger):
         """
         Base class for analyzers to find code smells of a given file.
 
@@ -11,7 +11,7 @@ class Analyzer(ABC):
         :param logger: Logger instance to handle log messages.
         """
         self.file_path = file_path
-        self.smells_data = []
+        self.smells_data: list[object] = []
         self.logger = logger  # Use logger instance
 
     def validate_file(self):
@@ -26,7 +26,7 @@ class Analyzer(ABC):
         return is_valid
 
     @abstractmethod
-    def analyze_smells(self):
+    def analyze(self):
         """
         Abstract method to analyze the code smells of the specified file.
         Must be implemented by subclasses.

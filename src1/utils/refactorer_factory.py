@@ -3,7 +3,7 @@ from refactorers.use_a_generator_refactor import UseAGeneratorRefactor
 from refactorers.base_refactorer import BaseRefactorer
 
 # Import the configuration for all Pylint smells
-from utils.analyzers_config import AllPylintSmells
+from utils.analyzers_config import AllSmells
 
 class RefactorerFactory():
     """
@@ -30,7 +30,7 @@ class RefactorerFactory():
 
         # Use match statement to select the appropriate refactorer based on smell message ID
         match smell_messageId:
-            case AllPylintSmells.USE_A_GENERATOR.value:
+            case AllSmells.USE_A_GENERATOR.value:
                 selected = UseAGeneratorRefactor(file_path, smell_data, initial_emission, logger)
             case _:
                 selected = None

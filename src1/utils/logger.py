@@ -1,8 +1,8 @@
 # utils/logger.py
-
 import os
 from datetime import datetime
 
+# TODO: Make Logger class implement python logging.Logger
 class Logger:
     def __init__(self, log_path):
         """

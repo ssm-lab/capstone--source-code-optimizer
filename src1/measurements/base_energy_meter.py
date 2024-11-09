@@ -3,7 +3,7 @@ import os
 from utils.logger import Logger
 
 class BaseEnergyMeter(ABC):
-    def __init__(self, file_path, logger):
+    def __init__(self, file_path: str, logger: Logger):
         """
         Base class for energy meters to measure the emissions of a given file.
         
