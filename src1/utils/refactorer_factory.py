@@ -1,5 +1,6 @@
 # Import specific refactorer classes
 from refactorers.use_a_generator_refactor import UseAGeneratorRefactor
+from refactorers.unused_imports_refactor import RemoveUnusedImportsRefactor
 from refactorers.base_refactorer import BaseRefactorer
 
 # Import the configuration for all Pylint smells
@@ -32,6 +33,9 @@ class RefactorerFactory():
         match smell_messageId:
             case AllSmells.USE_A_GENERATOR.value:
                 selected = UseAGeneratorRefactor(file_path, smell_data, initial_emission, logger)
+            case AllSmells.UNUSED_IMPORT.value:
+                x = RemoveUnusedImportsRefactor(logger)
+                selected = x.refactor(file_path, smell_data, initial_emission)
             case _:
                 selected = None
 

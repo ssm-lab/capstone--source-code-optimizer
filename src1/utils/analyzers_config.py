@@ -26,7 +26,26 @@ class PylintSmell(ExtendedEnum):
     INVALID_NAMING_CONVENTIONS = (
         "C0103"  # Pylint code smell for naming conventions violations
     )
-    USE_A_GENERATOR = "R1729"  # Pylint code smell for unnecessary list comprehensions inside `any()` or `all()`
+
+    # unused stuff
+    UNUSED_IMPORT = (
+        "W0611" # Pylint code smell for unused imports
+    )
+    UNUSED_VARIABLE = (
+        "W0612" # Pylint code smell for unused variable 
+    )
+    UNUSED_ARGUMENT = (
+        "W0613" # Pylint code smell for unused function or method argument
+    )
+    UNUSED_CLASS_ATTRIBUTE = (
+        "W0615" # Pylint code smell for unused class attribute
+    )
+
+
+    USE_A_GENERATOR = (
+        "R1729"  # Pylint code smell for unnecessary list comprehensions inside `any()` or `all()`
+    )
+    
 
 
 # Enum class for custom code smells not detected by Pylint
