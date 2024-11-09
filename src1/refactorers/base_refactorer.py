@@ -12,7 +12,6 @@ class BaseRefactorer(ABC):
         :param logger: Logger instance to handle log messages.
         """
         
-        self.final_emission = None
         self.logger = logger  # Store the mandatory logger instance
 
     @abstractmethod

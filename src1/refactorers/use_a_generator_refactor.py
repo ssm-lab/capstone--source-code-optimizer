@@ -1,34 +1,37 @@
 # refactorers/use_a_generator_refactor.py
 
 import ast
-import astor  # For converting AST back to source code
+import ast  # For converting AST back to source code
 import shutil
 import os
 from .base_refactorer import BaseRefactorer
+
 
 class UseAGeneratorRefactor(BaseRefactorer):
     def __init__(self, logger):
         """
         Initializes the UseAGeneratorRefactor with a file path, pylint
         smell, initial emission, and logger.
-        
+
         :param file_path: Path to the file to be refactored.
         :param pylint_smell: Dictionary containing details of the Pylint smell.
         :param initial_emission: Initial emission value before refactoring.
         :param logger: Logger instance to handle log messages.
         """
-        super().__init__( logger)
+        super().__init__(logger)
 
     def refactor(self, file_path, pylint_smell, initial_emission):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
         """
-        line_number = self.pylint_smell['line']
-        self.logger.log(f"Applying 'Use a Generator' refactor on '{os.path.basename(self.file_path)}' at line {line_number} for identified code smell.")
-   
+        line_number = self.pylint_smell["line"]
+        self.logger.log(
+            f"Applying 'Use a Generator' refactor on '{os.path.basename(self.file_path)}' at line {line_number} for identified code smell."
+        )
+
         # Load the source code as a list of lines
-        with open(self.file_path, 'r') as file:
+        with open(self.file_path, "r") as file:
             original_lines = file.readlines()
 
         # Check if the line number is valid within the file
@@ -39,10 +42,12 @@ class UseAGeneratorRefactor(BaseRefactorer):
         # Target the specific line and remove leading whitespace for parsing
         line = original_lines[line_number - 1]
         stripped_line = line.lstrip()  # Strip leading indentation
-        indentation = line[:len(line) - len(stripped_line)]  # Track indentation
+        indentation = line[: len(line) - len(stripped_line)]  # Track indentation
 
         # Parse the line as an AST
-        line_ast = ast.parse(stripped_line, mode='exec')  # Use 'exec' mode for full statements
+        line_ast = ast.parse(
+            stripped_line, mode="exec"
+        )  # Use 'exec' mode for full statements
 
         # Look for a list comprehension within the AST of this line
         modified = False
@@ -50,11 +55,10 @@ class UseAGeneratorRefactor(BaseRefactorer):
             if isinstance(node, ast.ListComp):
                 # Convert the list comprehension to a generator expression
                 generator_expr = ast.GeneratorExp(
-                    elt=node.elt,
-                    generators=node.generators
+                    elt=node.elt, generators=node.generators
                 )
                 ast.copy_location(generator_expr, node)
-                
+
                 # Replace the list comprehension node with the generator expression
                 self._replace_node(line_ast, node, generator_expr)
                 modified = True
@@ -69,7 +73,7 @@ class UseAGeneratorRefactor(BaseRefactorer):
 
             # Temporarily write the modified content to a temporary file
             temp_file_path = f"{self.file_path}.temp"
-            with open(temp_file_path, 'w') as temp_file:
+            with open(temp_file_path, "w") as temp_file:
                 temp_file.writelines(modified_lines)
 
             # Measure emissions of the modified code
@@ -79,18 +83,24 @@ class UseAGeneratorRefactor(BaseRefactorer):
             if self.check_energy_improvement():
                 # If improved, replace the original file with the modified content
                 shutil.move(temp_file_path, self.file_path)
-                self.logger.log(f"Refactored list comprehension to generator expression on line {line_number} and saved.\n")
+                self.logger.log(
+                    f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
+                )
             else:
                 # Remove the temporary file if no improvement
                 os.remove(temp_file_path)
-                self.logger.log("No emission improvement after refactoring. Discarded refactored changes.\n")
+                self.logger.log(
+                    "No emission improvement after refactoring. Discarded refactored changes.\n"
+                )
         else:
-            self.logger.log("No applicable list comprehension found on the specified line.\n")
+            self.logger.log(
+                "No applicable list comprehension found on the specified line.\n"
+            )
 
     def _replace_node(self, tree, old_node, new_node):
         """
         Helper function to replace an old AST node with a new one within a tree.
-        
+
         :param tree: The AST tree or node containing the node to be replaced.
         :param old_node: The node to be replaced.
         :param new_node: The new node to replace it with.
