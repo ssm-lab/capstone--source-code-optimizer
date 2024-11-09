@@ -5,26 +5,25 @@ import os
 from measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
 class BaseRefactorer(ABC):
-    def __init__(self, file_path, pylint_smell, initial_emission, logger):
+    def __init__(self, logger):
         """
         Base class for refactoring specific code smells.
 
-        :param file_path: Path to the file to be refactored.
-        :param pylint_smell: Dictionary containing details of the Pylint smell.
-        :param initial_emission: Initial emission value before refactoring.
         :param logger: Logger instance to handle log messages.
         """
-        self.file_path = file_path
-        self.pylint_smell = pylint_smell
-        self.initial_emission = initial_emission
+        
         self.final_emission = None
         self.logger = logger  # Store the mandatory logger instance
 
     @abstractmethod
-    def refactor(self):
+    def refactor(self, file_path, pylint_smell, initial_emission):
         """
         Abstract method for refactoring the code smell.
         Each subclass should implement this method.
+
+        :param file_path: Path to the file to be refactored.
+        :param pylint_smell: Dictionary containing details of the Pylint smell.
+        :param initial_emission: Initial emission value before refactoring.
         """
         pass
 
