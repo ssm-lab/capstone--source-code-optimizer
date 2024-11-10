@@ -292,5 +292,9 @@ TSWLatexianTemp*
 __pycache__/
 *.py[cod]
 
+.venv/
+
 # Rope
 .ropeproject
+
+*.egg-info/
