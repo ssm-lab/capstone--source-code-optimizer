@@ -38,7 +38,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
 
         # remove specified line 
         modified_lines = original_lines[:]
-        del modified_lines[line_number - 1]
+        modified_lines[line_number - 1] = "\n"
 
         # for logging purpose to see what was removed
         if code_type == "W0611":  # UNUSED_IMPORT
