@@ -32,6 +32,25 @@ class DataProcessor:
             result = item
         return result
 
+    @staticmethod
+    def multi_param_calculation(item1, item2, item3, flag1, flag2, flag3, operation, threshold,
+                                max_value, option, final_stage, min_value):
+        value = 0
+        if operation == 'multiply':
+            value = item1 * item2 * item3
+        elif operation == 'add':
+            value = item1 + item2 + item3
+        elif flag1 == 'true':
+            value = item1
+        elif flag2 == 'true':
+            value = item2
+        elif flag3 == 'true':
+            value = item3
+        elif max_value < threshold:
+            value = max_value
+        else:
+            value = min_value
+        return value
 
 class AdvancedProcessor(DataProcessor):
 
