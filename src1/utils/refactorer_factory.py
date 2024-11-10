@@ -36,7 +36,11 @@ class RefactorerFactory():
         match smell_messageID:
             case AllSmells.USE_A_GENERATOR.value:
                 selected = UseAGeneratorRefactorer(logger)
-            case (AllSmells.UNUSED_IMPORT.value, AllSmells.UNUSED_VARIABLE.value, AllSmells.UNUSED_CLASS_ATTRIBUTE.value):
+            case AllSmells.UNUSED_IMPORT.value:
+                selected = RemoveUnusedRefactorer(logger)
+            case AllSmells.UNUSED_VARIABLE.value:
+                selected = RemoveUnusedRefactorer(logger)
+            case AllSmells.UNUSED_CLASS_ATTRIBUTE.value:
                 selected = RemoveUnusedRefactorer(logger)
             case AllSmells.NO_SELF_USE.value:
                 selected = MakeStaticRefactorer(logger)

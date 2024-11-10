@@ -21,7 +21,8 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         :param initial_emission: Initial emission value before refactoring.
         """
         line_number = pylint_smell.get("line")
-        code_type = pylint_smell.get("code")
+        code_type = pylint_smell.get("message-id")
+        print(code_type)
         self.logger.log(
             f"Applying 'Remove Unused Imports' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
         )
