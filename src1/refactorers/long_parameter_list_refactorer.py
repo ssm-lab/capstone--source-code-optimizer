@@ -28,11 +28,26 @@ def get_used_parameters(function_node, params):
     return used_params
 
 
-def create_parameter_object_class(param_names):
+def classify_parameters(params):
     """
-    Create a class definition for encapsulating parameters as attributes.
+    Classifies parameters into 'data' and 'config' groups based on naming conventions
     """
-    class_name = "ParamsObject"
+    data_params = []
+    config_params = []
+
+    for param in params:
+        if param.startswith(('config', 'flag', 'option', 'setting')):
+            config_params.append(param)
+        else:
+            data_params.append(param)
+
+    return data_params, config_params
+
+
+def create_parameter_object_class(param_names, class_name="ParamsObject"):
+    """
+    Creates a class definition for encapsulating parameters as attributes
+    """
     class_def = f"class {class_name}:\n"
     init_method = "    def __init__(self, {}):\n".format(", ".join(param_names))
     init_body = "".join([f"        self.{param} = {param}\n" for param in param_names])
@@ -58,6 +73,7 @@ class LongParameterListRefactorer(BaseRefactorer):
         with open(file_path, 'r') as f:
             tree = ast.parse(f.read())
 
+        # Flag indicating if a refactoring has been made
         modified = False
 
         # Find function definitions at the specific line number
@@ -66,43 +82,55 @@ class LongParameterListRefactorer(BaseRefactorer):
                 params = [arg.arg for arg in node.args.args]
 
                 # Only consider functions with an initial long parameter list
-                if len(params) > 4:
+                if len(params) > 6:
                     # Identify parameters that are actually used in function body
                     used_params = get_used_parameters(node, params)
 
                     # Remove unused parameters
-                    new_args = [arg for arg in node.args.args if arg.arg in used_params]
-                    if len(new_args) != len(node.args.args):  # Check if any parameters were removed
-                        node.args.args[:] = new_args  # Update in place
+                    new_params = [arg for arg in node.args.args if arg.arg in used_params]
+                    if len(new_params) != len(node.args.args):  # Check if any parameters were removed
+                        node.args.args[:] = new_params  # Update in place
                         modified = True
 
                     # Encapsulate remaining parameters if 4 or more are still used
-                    if len(used_params) >= 4:
-
+                    if len(used_params) >= 6:
                         modified = True
                         param_names = list(used_params)
-                        param_object_code = create_parameter_object_class(param_names)
-                        param_object_ast = ast.parse(param_object_code).body[0]
 
-                        # Insert parameter object class at the beginning of the file
-                        tree.body.insert(0, param_object_ast)
+                        # Classify parameters into data and configuration groups
+                        data_params, config_params = classify_parameters(param_names)
 
-                        # Modify function to use a single parameter for the parameter object
-                        node.args.args = [ast.arg(arg="params", annotation=None)]
+                        # Create parameter object classes for each group
+                        if data_params:
+                            data_param_object_code = create_parameter_object_class(data_params, class_name="DataParams")
+                            data_param_object_ast = ast.parse(data_param_object_code).body[0]
+                            tree.body.insert(0, data_param_object_ast)
 
-                        # Update all parameter usages within the function to access attributes of the parameter object
+                        if config_params:
+                            config_param_object_code = create_parameter_object_class(config_params,
+                                                                                     class_name="ConfigParams")
+                            config_param_object_ast = ast.parse(config_param_object_code).body[0]
+                            tree.body.insert(0, config_param_object_ast)
+
+                        # Modify function to use two parameters for the parameter objects
+                        node.args.args = [ast.arg(arg="data_params", annotation=None),
+                                          ast.arg(arg="config_params", annotation=None)]
+
+                        # Update all parameter usages within the function to access attributes of the parameter objects
                         class ParamAttributeUpdater(ast.NodeTransformer):
                             def visit_Name(self, node):
-                                if node.id in param_names and isinstance(node.ctx, ast.Load):
-                                    return ast.Attribute(value=ast.Name(id="params", ctx=ast.Load()), attr=node.id,
+                                if node.id in data_params and isinstance(node.ctx, ast.Load):
+                                    return ast.Attribute(value=ast.Name(id="data_params", ctx=ast.Load()), attr=node.id,
                                                          ctx=node.ctx)
+                                elif node.id in config_params and isinstance(node.ctx, ast.Load):
+                                    return ast.Attribute(value=ast.Name(id="config_params", ctx=ast.Load()),
+                                                         attr=node.id, ctx=node.ctx)
                                 return node
 
                         node.body = [ParamAttributeUpdater().visit(stmt) for stmt in node.body]
 
         if modified:
-            # Write back modified code to file
-            # Using temporary file to retain test contents. To see energy reduction remove temp suffix
+            # Write back modified code to temporary file
             temp_file_path = f"{os.path.basename(file_path).split(".")[0]}_temp.py"
             with open(temp_file_path, "w") as temp_file:
                 temp_file.write(astor.to_source(tree))

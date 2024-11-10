@@ -72,5 +72,5 @@ EXTRA_PYLINT_OPTIONS = [
     "--max-nested-blocks=3",  # Limits maximum nesting of blocks
     "--max-branches=3",  # Limits maximum branches in a function
     "--max-parents=3",  # Limits maximum inheritance levels for a class
-    "--max-args=4" # Limits max parameters for each function signature
+    "--max-args=6"  # Limits max parameters for each function signature
 ]
