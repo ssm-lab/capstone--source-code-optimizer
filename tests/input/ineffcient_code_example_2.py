@@ -1,17 +1,12 @@
-import datetime
-
 
 class DataProcessor:
-    unused_variable = 'unused'
 
     def __init__(self, data):
         self.data = data
         self.processed_data = []
-        self.unused = True
 
     def process_all_data(self):
         results = []
-        unused_variable = 2
         for item in self.data:
             try:
                 result = self.complex_calculation(item, True, False,
@@ -26,7 +21,8 @@ class DataProcessor:
         return self.processed_data
 
     @staticmethod
-    def complex_calculation(item, operation, threshold, max_value):
+    def complex_calculation(item, flag1, flag2, operation, threshold,
+        max_value, option, final_stage):
         if operation == 'multiply':
             result = item * threshold
         elif operation == 'add':
@@ -36,22 +32,23 @@ class DataProcessor:
         return result
 
     @staticmethod
-    def multi_param_calculation(data_params, config_params):
+    def multi_param_calculation(item1, item2, item3, flag1, flag2, flag3, operation, threshold, 
+                                max_value, option, final_stage, min_value):
         value = 0
-        if data_params.operation == 'multiply':
-            value = data_params.item1 * data_params.item2 * data_params.item3
-        elif data_params.operation == 'add':
-            value = data_params.item1 + data_params.item2 + data_params.item3
-        elif config_params.flag1 == 'true':
-            value = data_params.item1
-        elif config_params.flag2 == 'true':
-            value = data_params.item2
-        elif config_params.flag3 == 'true':
-            value = data_params.item3
-        elif data_params.max_value < data_params.threshold:
-            value = data_params.max_value
+        if operation == 'multiply':
+            value = item1 * item2 * item3
+        elif operation == 'add':
+            value = item1 + item2 + item3
+        elif flag1 == 'true':
+            value = item1
+        elif flag2 == 'true':
+            value = item2
+        elif flag3 == 'true':
+            value = item3
+        elif max_value < threshold:
+            value = max_value
         else:
-            value = data_params.min_value
+            value = min_value
         return value
 
 
