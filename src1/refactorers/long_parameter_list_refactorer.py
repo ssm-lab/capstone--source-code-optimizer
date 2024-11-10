@@ -142,7 +142,7 @@ class LongParameterListRefactorer(BaseRefactorer):
                 # If improved, replace the original file with the modified content
                 shutil.move(temp_file_path, file_path)
                 self.logger.log(
-                    f"Refactored list comprehension to generator expression on line {target_line} and saved.\n"
+                    f"Refactored long parameter list into data groups on line {target_line} and saved.\n"
                 )
             else:
                 # Remove the temporary file if no improvement
