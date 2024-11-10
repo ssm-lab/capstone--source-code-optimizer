@@ -35,9 +35,6 @@ class PylintSmell(ExtendedEnum):
     UNUSED_VARIABLE = (
         "W0612" # Pylint code smell for unused variable 
     )
-    UNUSED_ARGUMENT = (
-        "W0613" # Pylint code smell for unused function or method argument
-    )
     UNUSED_CLASS_ATTRIBUTE = (
         "W0615" # Pylint code smell for unused class attribute
     )

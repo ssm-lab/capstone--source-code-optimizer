@@ -1,6 +1,6 @@
 # Import specific refactorer classes
 from refactorers.use_a_generator_refactorer import UseAGeneratorRefactorer
-from refactorers.unused_imports_refactorer import RemoveUnusedImportsRefactorer
+from refactorers.unused_refactorer import RemoveUnusedRefactorer
 from refactorers.long_parameter_list_refactorer import LongParameterListRefactorer
 from refactorers.member_ignoring_method_refactorer import MakeStaticRefactorer
 from refactorers.base_refactorer import BaseRefactorer
@@ -36,8 +36,8 @@ class RefactorerFactory():
         match smell_messageID:
             case AllSmells.USE_A_GENERATOR.value:
                 selected = UseAGeneratorRefactorer(logger)
-            case AllSmells.UNUSED_IMPORT.value:
-                selected = RemoveUnusedImportsRefactorer(logger)
+            case (AllSmells.UNUSED_IMPORT.value, AllSmells.UNUSED_VARIABLE.value, AllSmells.UNUSED_CLASS_ATTRIBUTE.value):
+                selected = RemoveUnusedRefactorer(logger)
             case AllSmells.NO_SELF_USE.value:
                 selected = MakeStaticRefactorer(logger)
             case AllSmells.LONG_PARAMETER_LIST.value:
