@@ -9,7 +9,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
     def __init__(self, logger):
         super().__init__(logger)
 
-    def refactor(self, file_path, pylint_smell, initial_emission):
+    def refactor(self, file_path, pylint_smell, initial_emissions):
         """
         Refactor long message chain
         """

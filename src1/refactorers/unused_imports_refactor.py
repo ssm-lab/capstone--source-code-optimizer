@@ -11,7 +11,7 @@ class RemoveUnusedImportsRefactor(BaseRefactorer):
         """
         super().__init__(logger)
 
-    def refactor(self, file_path, pylint_smell, initial_emission):
+    def refactor(self, file_path: str, pylint_smell: str, initial_emissions: float):
         """
         Refactors unused imports by removing lines where they appear.
         Modifies the specified instance in the file if it results in lower emissions.
@@ -20,7 +20,6 @@ class RemoveUnusedImportsRefactor(BaseRefactorer):
         :param pylint_smell: Dictionary containing details of the Pylint smell, including the line number.
         :param initial_emission: Initial emission value before refactoring.
         """
-        self.initial_emission = initial_emission
         line_number = pylint_smell.get("line")
         self.logger.log(
             f"Applying 'Remove Unused Imports' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
@@ -45,10 +44,10 @@ class RemoveUnusedImportsRefactor(BaseRefactorer):
             temp_file.writelines(modified_lines)
 
         # Measure emissions of the modified code
-        self.measure_energy(temp_file_path)
+        final_emissions = self.measure_energy(temp_file_path)
 
         # Check for improvement in emissions
-        if self.check_energy_improvement():
+        if self.check_energy_improvement(initial_emissions, final_emissions):
             # Replace the original file with the modified content if improved
             shutil.move(temp_file_path, file_path)
             self.logger.log(

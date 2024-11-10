@@ -1,7 +1,7 @@
 # refactorers/use_a_generator_refactor.py
 
 import ast
-import ast  # For converting AST back to source code
+import astor  # For converting AST back to source code
 import shutil
 import os
 from .base_refactorer import BaseRefactorer
@@ -20,18 +20,18 @@ class UseAGeneratorRefactor(BaseRefactorer):
         """
         super().__init__(logger)
 
-    def refactor(self, file_path, pylint_smell, initial_emission):
+    def refactor(self, file_path: str, pylint_smell: str, initial_emissions: float):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
         """
-        line_number = self.pylint_smell["line"]
+        line_number = pylint_smell["line"]
         self.logger.log(
-            f"Applying 'Use a Generator' refactor on '{os.path.basename(self.file_path)}' at line {line_number} for identified code smell."
+            f"Applying 'Use a Generator' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
         )
 
         # Load the source code as a list of lines
-        with open(self.file_path, "r") as file:
+        with open(file_path, "r") as file:
             original_lines = file.readlines()
 
         # Check if the line number is valid within the file
@@ -72,17 +72,17 @@ class UseAGeneratorRefactor(BaseRefactorer):
             modified_lines[line_number - 1] = indentation + modified_line + "\n"
 
             # Temporarily write the modified content to a temporary file
-            temp_file_path = f"{self.file_path}.temp"
+            temp_file_path = f"{file_path}.temp"
             with open(temp_file_path, "w") as temp_file:
                 temp_file.writelines(modified_lines)
 
             # Measure emissions of the modified code
-            self.measure_energy(temp_file_path)
+            final_emission = self.measure_energy(temp_file_path)
 
             # Check for improvement in emissions
-            if self.check_energy_improvement():
+            if self.check_energy_improvement(initial_emissions, final_emission):
                 # If improved, replace the original file with the modified content
-                shutil.move(temp_file_path, self.file_path)
+                shutil.move(temp_file_path, file_path)
                 self.logger.log(
                     f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
                 )

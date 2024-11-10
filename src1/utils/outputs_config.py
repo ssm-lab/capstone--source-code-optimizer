@@ -63,8 +63,6 @@ def copy_file_to_output(source_file_path, new_file_name, logger=None):
     :param source_file_path: The path of the file to be copied.
     :param new_file_name: The desired name for the copied file in the output directory.
     :param logger: Optional logger instance to log messages.
-
-    :return: Path of the copied file in the output directory.
     """
     # Ensure the output directory exists; if not, create it
     if not os.path.exists(OUTPUT_DIR):
@@ -81,5 +79,3 @@ def copy_file_to_output(source_file_path, new_file_name, logger=None):
         logger.log(message)
     else:
         print(message)
-
-    return destination_path

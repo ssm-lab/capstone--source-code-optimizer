@@ -15,7 +15,7 @@ class BaseRefactorer(ABC):
         self.logger = logger  # Store the mandatory logger instance
 
     @abstractmethod
-    def refactor(self, file_path, pylint_smell, initial_emission):
+    def refactor(self, file_path: str, pylint_smell: str, initial_emissions: float):
         """
         Abstract method for refactoring the code smell.
         Each subclass should implement this method.
@@ -26,24 +26,26 @@ class BaseRefactorer(ABC):
         """
         pass
 
-    def measure_energy(self, file_path):
+    def measure_energy(self, file_path: str) -> float:
         """
         Method for measuring the energy after refactoring.
         """
         codecarbon_energy_meter = CodeCarbonEnergyMeter(file_path, self.logger)
         codecarbon_energy_meter.measure_energy()  # measure emissions
-        self.final_emission = codecarbon_energy_meter.emissions  # get emission
+        emissions = codecarbon_energy_meter.emissions  # get emission
 
         # Log the measured emissions
-        self.logger.log(f"Measured emissions for '{os.path.basename(file_path)}': {self.final_emission}")
+        self.logger.log(f"Measured emissions for '{os.path.basename(file_path)}': {emissions}")
 
-    def check_energy_improvement(self):
+        return emissions
+
+    def check_energy_improvement(self, initial_emissions: float, final_emissions: float):
         """
         Checks if the refactoring has reduced energy consumption.
 
         :return: True if the final emission is lower than the initial emission, indicating improvement;
                  False otherwise.
         """
-        improved = self.final_emission and (self.final_emission < self.initial_emission)
-        self.logger.log(f"Initial Emissions: {self.initial_emission} kg CO2. Final Emissions: {self.final_emission} kg CO2.")
+        improved = final_emissions and (final_emissions < initial_emissions)
+        self.logger.log(f"Initial Emissions: {initial_emissions} kg CO2. Final Emissions: {final_emissions} kg CO2.")
         return improved

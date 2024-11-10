@@ -1,9 +1,11 @@
 # Import specific refactorer classes
 from refactorers.use_a_generator_refactor import UseAGeneratorRefactor
 from refactorers.unused_imports_refactor import RemoveUnusedImportsRefactor
+from refactorers.member_ignoring_method_refactorer import MakeStaticRefactor
 from refactorers.base_refactorer import BaseRefactorer
 
 # Import the configuration for all Pylint smells
+from utils.logger import Logger
 from utils.analyzers_config import AllSmells
 
 class RefactorerFactory():
@@ -13,7 +15,7 @@ class RefactorerFactory():
     """
 
     @staticmethod
-    def build_refactorer_class(file_path, smell_messageId, smell_data, initial_emission, logger):
+    def build_refactorer_class(smell_messageID: str, logger: Logger):
         """
         Static method to create and return a refactorer instance based on the provided code smell.
 
@@ -30,12 +32,13 @@ class RefactorerFactory():
         selected = None  # Initialize variable to hold the selected refactorer instance
 
         # Use match statement to select the appropriate refactorer based on smell message ID
-        match smell_messageId:
+        match smell_messageID:
             case AllSmells.USE_A_GENERATOR.value:
-                selected = UseAGeneratorRefactor(file_path, smell_data, initial_emission, logger)
+                selected = UseAGeneratorRefactor(logger)
             case AllSmells.UNUSED_IMPORT.value:
-                x = RemoveUnusedImportsRefactor(logger)
-                selected = x.refactor(file_path, smell_data, initial_emission)
+                selected = RemoveUnusedImportsRefactor(logger)
+            case AllSmells.NO_SELF_USE.value:
+                selected = MakeStaticRefactor(logger)
             case _:
                 selected = None
 

@@ -33,15 +33,15 @@ def main():
 
     # Measure energy with CodeCarbonEnergyMeter
     codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE, logger)
-    codecarbon_energy_meter.measure_energy()  # Measure emissions
-    initial_emission = codecarbon_energy_meter.emissions  # Get initial emission
-    initial_emission_data = (
+    codecarbon_energy_meter.measure_energy()
+    initial_emissions = codecarbon_energy_meter.emissions  # Get initial emission
+    initial_emissions_data = (
         codecarbon_energy_meter.emissions_data
     )  # Get initial emission data
 
     # Save initial emission data
-    save_json_files("initial_emissions_data.txt", initial_emission_data, logger)
-    logger.log(f"Initial Emissions: {initial_emission} kg CO2")
+    save_json_files("initial_emissions_data.txt", initial_emissions_data, logger)
+    logger.log(f"Initial Emissions: {initial_emissions} kg CO2")
     logger.log(
         "#####################################################################################################\n\n"
     )
@@ -60,6 +60,12 @@ def main():
     # Anaylze code smells with PylintAnalyzer
     pylint_analyzer = PylintAnalyzer(TEST_FILE, logger)
     pylint_analyzer.analyze()  # analyze all smells
+
+    # Save code smells
+    save_json_files(
+        "all_pylint_smells.json", pylint_analyzer.smells_data, logger
+    )
+
     pylint_analyzer.configure_smells()  # get all configured smells
 
     # Save code smells
@@ -83,16 +89,12 @@ def main():
     )
 
     # Refactor code smells
-    TEST_FILE_COPY = copy_file_to_output(TEST_FILE, "refactored-test-case.py")
-    emission = initial_emission
+    copy_file_to_output(TEST_FILE, "refactored-test-case.py")
 
     for pylint_smell in pylint_analyzer.smells_data:
-        refactoring_class = RefactorerFactory.build_refactorer_class(
-            TEST_FILE_COPY, pylint_smell["message-id"], pylint_smell, emission, logger
-        )
+        refactoring_class = RefactorerFactory.build_refactorer_class(pylint_smell["message-id"],logger)
         if refactoring_class:
-            refactoring_class.refactor()
-            emission = refactoring_class.final_emission
+            refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)
         else:
             logger.log(
                 f"Refactoring for smell {pylint_smell['symbol']} is not implemented."
@@ -128,12 +130,12 @@ def main():
     )
 
     # The emissions from codecarbon are so inconsistent that this could be a possibility :(
-    if final_emission >= initial_emission:
+    if final_emission >= initial_emissions:
         logger.log(
             "Final emissions are greater than initial emissions; we are going to fail"
         )
     else:
-        logger.log(f"Saved {initial_emission - final_emission} kg CO2")
+        logger.log(f"Saved {initial_emissions - final_emission} kg CO2")
 
 
 if __name__ == "__main__":

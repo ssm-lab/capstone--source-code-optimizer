@@ -4,6 +4,7 @@ import os
 
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSONReporter
+
 from io import StringIO
 
 from utils.logger import Logger
@@ -83,15 +84,12 @@ class PylintAnalyzer(Analyzer):
             elif smell["message-id"] in CustomSmell.list():
                 configured_smells.append(smell)
 
-            if smell == IntermediateSmells.LINE_TOO_LONG.value:
+            if smell["message-id"] == IntermediateSmells.LINE_TOO_LONG.value:
                 self.filter_ternary(smell)
 
         self.smells_data = configured_smells
 
     def filter_for_one_code_smell(self, pylint_results: list[object], code: str):
-        """
-        Filters LINE_TOO_LONG smells to find ternary expression smells
-        """
         filtered_results: list[object] = []
         for error in pylint_results:
             if error["message-id"] == code:
@@ -100,6 +98,9 @@ class PylintAnalyzer(Analyzer):
         return filtered_results
 
     def filter_ternary(self, smell: object):
+        """
+        Filters LINE_TOO_LONG smells to find ternary expression smells
+        """
         root_node = parse_line(self.file_path, smell["line"])
 
         if root_node is None:
@@ -108,6 +109,7 @@ class PylintAnalyzer(Analyzer):
         for node in ast.walk(root_node):
             if isinstance(node, ast.IfExp):  # Ternary expression node
                 smell["message-id"] = CustomSmell.LONG_TERN_EXPR.value
+                smell["message"] = "Ternary expression has too many branches"
                 self.smells_data.append(smell)
                 break
 
@@ -180,6 +182,7 @@ class PylintAnalyzer(Analyzer):
 
         return results
 
+    @staticmethod
     def read_code_from_path(file_path):
         """
         Reads the Python code from a given file path.

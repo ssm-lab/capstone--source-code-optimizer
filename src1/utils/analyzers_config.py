@@ -26,6 +26,7 @@ class PylintSmell(ExtendedEnum):
     INVALID_NAMING_CONVENTIONS = (
         "C0103"  # Pylint code smell for naming conventions violations
     )
+    NO_SELF_USE = "R6301" # Pylint code smell for class methods that don't use any self calls
 
     # unused stuff
     UNUSED_IMPORT = (
@@ -68,6 +69,7 @@ class AllSmells(ExtendedEnum):
 
 # Additional Pylint configuration options for analyzing code
 EXTRA_PYLINT_OPTIONS = [
+    "--enable-all-extensions",
     "--max-line-length=80",  # Sets maximum allowed line length
     "--max-nested-blocks=3",  # Limits maximum nesting of blocks
     "--max-branches=3",  # Limits maximum branches in a function
