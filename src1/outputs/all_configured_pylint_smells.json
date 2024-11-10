@@ -65,6 +65,45 @@
         "type": "warning"
     },
     {
+        "column": 4,
+        "endColumn": 31,
+        "endLine": 36,
+        "line": 36,
+        "message": "Too many arguments (12/4)",
+        "message-id": "R0913",
+        "module": "ineffcient_code_example_2",
+        "obj": "DataProcessor.multi_param_calculation",
+        "path": "/Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/tests/input/ineffcient_code_example_2.py",
+        "symbol": "too-many-arguments",
+        "type": "refactor"
+    },
+    {
+        "column": 43,
+        "endColumn": 49,
+        "endLine": 37,
+        "line": 37,
+        "message": "Unused argument 'option'",
+        "message-id": "W0613",
+        "module": "ineffcient_code_example_2",
+        "obj": "DataProcessor.multi_param_calculation",
+        "path": "/Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/tests/input/ineffcient_code_example_2.py",
+        "symbol": "unused-argument",
+        "type": "warning"
+    },
+    {
+        "column": 51,
+        "endColumn": 62,
+        "endLine": 37,
+        "line": 37,
+        "message": "Unused argument 'final_stage'",
+        "message-id": "W0613",
+        "module": "ineffcient_code_example_2",
+        "obj": "DataProcessor.multi_param_calculation",
+        "path": "/Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/tests/input/ineffcient_code_example_2.py",
+        "symbol": "unused-argument",
+        "type": "warning"
+    },
+    {
         "absolutePath": "/Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/tests/input/ineffcient_code_example_2.py",
         "column": 18,
         "confidence": "UNDEFINED",

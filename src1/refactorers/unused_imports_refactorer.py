@@ -2,7 +2,7 @@ import os
 import shutil
 from refactorers.base_refactorer import BaseRefactorer
 
-class RemoveUnusedImportsRefactor(BaseRefactorer):
+class RemoveUnusedImportsRefactorer(BaseRefactorer):
     def __init__(self, logger):
         """
         Initializes the RemoveUnusedImportsRefactor with the specified logger.

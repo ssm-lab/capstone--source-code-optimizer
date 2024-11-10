@@ -1,43 +1,68 @@
-[2024-11-10 00:31:23] #####################################################################################################
-[2024-11-10 00:31:23]                                     CAPTURE INITIAL EMISSIONS                                        
-[2024-11-10 00:31:23] #####################################################################################################
-[2024-11-10 00:31:23] Starting CodeCarbon energy measurement on ineffcient_code_example_2.py
-[2024-11-10 00:31:26] CodeCarbon measurement completed successfully.
-[2024-11-10 00:31:26] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/initial_emissions_data.txt
-[2024-11-10 00:31:26] Initial Emissions: 2.5662251215085788e-08 kg CO2
-[2024-11-10 00:31:26] #####################################################################################################
+[2024-11-10 02:53:46] #####################################################################################################
+[2024-11-10 02:53:46]                                     CAPTURE INITIAL EMISSIONS                                        
+[2024-11-10 02:53:46] #####################################################################################################
+[2024-11-10 02:53:46] Starting CodeCarbon energy measurement on ineffcient_code_example_2.py
+[2024-11-10 02:53:49] CodeCarbon measurement completed successfully.
+[2024-11-10 02:53:49] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/initial_emissions_data.txt
+[2024-11-10 02:53:49] Initial Emissions: 2.262319945386697e-08 kg CO2
+[2024-11-10 02:53:49] #####################################################################################################
 
 
-[2024-11-10 00:31:26] #####################################################################################################
-[2024-11-10 00:31:26]                                          CAPTURE CODE SMELLS                                         
-[2024-11-10 00:31:26] #####################################################################################################
-[2024-11-10 00:31:26] Running Pylint analysis on ineffcient_code_example_2.py
-[2024-11-10 00:31:27] Pylint analyzer completed successfully.
-[2024-11-10 00:31:27] Running custom parsers:
-[2024-11-10 00:31:27] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/all_pylint_smells.json
-[2024-11-10 00:31:27] Filtering pylint smells
-[2024-11-10 00:31:27] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/all_configured_pylint_smells.json
-[2024-11-10 00:31:27] Refactorable code smells: 6
-[2024-11-10 00:31:27] #####################################################################################################
+[2024-11-10 02:53:49] #####################################################################################################
+[2024-11-10 02:53:49]                                          CAPTURE CODE SMELLS                                         
+[2024-11-10 02:53:49] #####################################################################################################
+[2024-11-10 02:53:49] Running Pylint analysis on ineffcient_code_example_2.py
+[2024-11-10 02:53:49] Pylint analyzer completed successfully.
+[2024-11-10 02:53:49] Running custom parsers:
+[2024-11-10 02:53:49] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/all_pylint_smells.json
+[2024-11-10 02:53:49] Filtering pylint smells
+[2024-11-10 02:53:49] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/all_configured_pylint_smells.json
+[2024-11-10 02:53:49] Refactorable code smells: 9
+[2024-11-10 02:53:49] #####################################################################################################
 
 
-[2024-11-10 00:31:27] #####################################################################################################
-[2024-11-10 00:31:27]                                         REFACTOR CODE SMELLS                                         
-[2024-11-10 00:31:27] #####################################################################################################
-[2024-11-10 00:31:27] calling refactoring for
-[2024-11-10 00:31:27] R0913
-[2024-11-10 00:31:27] Refactoring functions with long parameter lists in /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/tests/input/ineffcient_code_example_2.py
-[2024-11-10 00:31:27] #####################################################################################################
+[2024-11-10 02:53:49] #####################################################################################################
+[2024-11-10 02:53:49]                                         REFACTOR CODE SMELLS                                         
+[2024-11-10 02:53:49] #####################################################################################################
+[2024-11-10 02:53:49] Applying 'Fix Too Many Parameters' refactor on 'ineffcient_code_example_2.py' at line 25 for identified code smell.
+[2024-11-10 02:53:49] Starting CodeCarbon energy measurement on ineffcient_code_example_2_temp.py
+[2024-11-10 02:53:51] CodeCarbon measurement completed successfully.
+[2024-11-10 02:53:51] Measured emissions for 'ineffcient_code_example_2_temp.py': 2.4512068473223318e-08
+[2024-11-10 02:53:51] Initial Emissions: 2.262319945386697e-08 kg CO2. Final Emissions: 2.4512068473223318e-08 kg CO2.
+[2024-11-10 02:53:51] No emission improvement after refactoring. Discarded refactored changes.
+
+[2024-11-10 02:53:51] Refactoring for smell unused-argument is not implemented.
+
+[2024-11-10 02:53:51] Refactoring for smell unused-argument is not implemented.
+
+[2024-11-10 02:53:51] Refactoring for smell unused-argument is not implemented.
+
+[2024-11-10 02:53:51] Refactoring for smell unused-argument is not implemented.
+
+[2024-11-10 02:53:51] Applying 'Fix Too Many Parameters' refactor on 'ineffcient_code_example_2.py' at line 36 for identified code smell.
+[2024-11-10 02:53:51] Starting CodeCarbon energy measurement on ineffcient_code_example_2_temp.py
+[2024-11-10 02:53:51] CodeCarbon measurement completed successfully.
+[2024-11-10 02:53:51] Measured emissions for 'ineffcient_code_example_2_temp.py': 1.3771534919678223e-08
+[2024-11-10 02:53:51] Initial Emissions: 2.262319945386697e-08 kg CO2. Final Emissions: 1.3771534919678223e-08 kg CO2.
+[2024-11-10 02:53:51] Refactored list comprehension to generator expression on line 36 and saved.
+
+[2024-11-10 02:53:51] Refactoring for smell unused-argument is not implemented.
+
+[2024-11-10 02:53:51] Refactoring for smell unused-argument is not implemented.
+
+[2024-11-10 02:53:51] Refactoring for smell long-message-chain is not implemented.
+
+[2024-11-10 02:53:51] #####################################################################################################
 
 
-[2024-11-10 00:31:27] #####################################################################################################
-[2024-11-10 00:31:27]                                     CAPTURE FINAL EMISSIONS                                        
-[2024-11-10 00:31:27] #####################################################################################################
-[2024-11-10 00:31:27] Starting CodeCarbon energy measurement on ineffcient_code_example_2.py
-[2024-11-10 00:31:28] CodeCarbon measurement completed successfully.
-[2024-11-10 00:31:28] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/final_emissions_data.txt
-[2024-11-10 00:31:28] Final Emissions: 2.4893036924510844e-08 kg CO2
-[2024-11-10 00:31:28] #####################################################################################################
+[2024-11-10 02:53:51] #####################################################################################################
+[2024-11-10 02:53:51]                                     CAPTURE FINAL EMISSIONS                                        
+[2024-11-10 02:53:51] #####################################################################################################
+[2024-11-10 02:53:51] Starting CodeCarbon energy measurement on ineffcient_code_example_2.py
+[2024-11-10 02:53:51] CodeCarbon measurement completed successfully.
+[2024-11-10 02:53:51] Output saved to /Users/tanveerbrar/2024-25/4g06/capstone--source-code-optimizer/src1/outputs/final_emissions_data.txt
+[2024-11-10 02:53:51] Final Emissions: 1.3525703072495e-08 kg CO2
+[2024-11-10 02:53:51] #####################################################################################################
 
 
-[2024-11-10 00:31:28] Saved 7.692142905749442e-10 kg CO2
+[2024-11-10 02:53:51] Saved 9.097496381371968e-09 kg CO2

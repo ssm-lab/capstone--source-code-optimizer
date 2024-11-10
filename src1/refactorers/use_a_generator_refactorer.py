@@ -1,4 +1,4 @@
-# refactorers/use_a_generator_refactor.py
+# refactorers/use_a_generator_refactorer.py
 
 import ast
 import astor  # For converting AST back to source code
@@ -7,7 +7,7 @@ import os
 from .base_refactorer import BaseRefactorer
 
 
-class UseAGeneratorRefactor(BaseRefactorer):
+class UseAGeneratorRefactorer(BaseRefactorer):
     def __init__(self, logger):
         """
         Initializes the UseAGeneratorRefactor with a file path, pylint

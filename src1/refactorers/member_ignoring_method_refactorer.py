@@ -7,7 +7,7 @@ from ast import NodeTransformer
 from .base_refactorer import BaseRefactorer
 
 
-class MakeStaticRefactor(BaseRefactorer, NodeTransformer):
+class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
     """
     Refactorer that targets methods that don't use any class attributes and makes them static to improve performance
     """

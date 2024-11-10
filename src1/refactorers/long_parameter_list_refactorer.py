@@ -1,11 +1,14 @@
 import ast
+import os
+import shutil
+
 import astor
 from .base_refactorer import BaseRefactorer
 
 
 def get_used_parameters(function_node, params):
     """
-    Identify parameters that are used within the function body using AST analysis
+    Identifies parameters that are used within the function body using AST analysis
     """
     used_params = set()
     source_code = astor.to_source(function_node)
@@ -38,23 +41,28 @@ def create_parameter_object_class(param_names):
 
 class LongParameterListRefactorer(BaseRefactorer):
     """
-    Refactorer that targets methods that take too many arguments
+    Refactorer that targets methods in source code that take too many parameters
     """
 
     def __init__(self, logger):
         super().__init__(logger)
 
-    def refactor(self, file_path, pylint_smell, initial_emission):
-        self.logger.log(f"Refactoring functions with long parameter lists in {file_path}")
-
+    def refactor(self, file_path, pylint_smell, initial_emissions):
+        """
+        Identifies methods with too many parameters, encapsulating related ones & removing unused ones
+        """
+        target_line = pylint_smell["line"]
+        self.logger.log(
+            f"Applying 'Fix Too Many Parameters' refactor on '{os.path.basename(file_path)}' at line {target_line} for identified code smell."
+        )
         with open(file_path, 'r') as f:
             tree = ast.parse(f.read())
 
         modified = False
 
-        # Use ast.walk() to find all function definitions
+        # Find function definitions at the specific line number
         for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
+            if isinstance(node, ast.FunctionDef) and node.lineno == target_line:
                 params = [arg.arg for arg in node.args.args]
 
                 # Only consider functions with an initial long parameter list
@@ -95,7 +103,22 @@ class LongParameterListRefactorer(BaseRefactorer):
         if modified:
             # Write back modified code to file
             # Using temporary file to retain test contents. To see energy reduction remove temp suffix
-            temp_file_path = f"{file_path}"
+            temp_file_path = f"{os.path.basename(file_path).split(".")[0]}_temp.py"
             with open(temp_file_path, "w") as temp_file:
                 temp_file.write(astor.to_source(tree))
 
+            # Measure emissions of the modified code
+            final_emission = self.measure_energy(temp_file_path)
+
+            if self.check_energy_improvement(initial_emissions, final_emission):
+                # If improved, replace the original file with the modified content
+                shutil.move(temp_file_path, file_path)
+                self.logger.log(
+                    f"Refactored list comprehension to generator expression on line {target_line} and saved.\n"
+                )
+            else:
+                # Remove the temporary file if no improvement
+                os.remove(temp_file_path)
+                self.logger.log(
+                    "No emission improvement after refactoring. Discarded refactored changes.\n"
+                )
