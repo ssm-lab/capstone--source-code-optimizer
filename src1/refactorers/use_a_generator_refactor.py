@@ -20,7 +20,7 @@ class UseAGeneratorRefactor(BaseRefactorer):
         """
         super().__init__(logger)
 
-    def refactor(self, file_path: str, pylint_smell: str, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.

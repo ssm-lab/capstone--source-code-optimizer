@@ -15,7 +15,7 @@ class BaseRefactorer(ABC):
         self.logger = logger  # Store the mandatory logger instance
 
     @abstractmethod
-    def refactor(self, file_path: str, pylint_smell: str, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
         """
         Abstract method for refactoring the code smell.
         Each subclass should implement this method.

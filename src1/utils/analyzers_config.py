@@ -41,8 +41,6 @@ class PylintSmell(ExtendedEnum):
     UNUSED_CLASS_ATTRIBUTE = (
         "W0615" # Pylint code smell for unused class attribute
     )
-
-
     USE_A_GENERATOR = (
         "R1729"  # Pylint code smell for unnecessary list comprehensions inside `any()` or `all()`
     )

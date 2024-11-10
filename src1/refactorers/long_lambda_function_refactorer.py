@@ -9,7 +9,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
     def __init__(self, logger):
         super().__init__(logger)
 
-    def refactor(self, file_path, pylint_smell, initial_emissions):
+    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
         """
         Refactor long lambda functions
         """

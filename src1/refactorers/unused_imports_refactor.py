@@ -11,7 +11,7 @@ class RemoveUnusedImportsRefactor(BaseRefactorer):
         """
         super().__init__(logger)
 
-    def refactor(self, file_path: str, pylint_smell: str, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
         """
         Refactors unused imports by removing lines where they appear.
         Modifies the specified instance in the file if it results in lower emissions.

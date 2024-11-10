@@ -97,7 +97,7 @@ def main():
             refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)
         else:
             logger.log(
-                f"Refactoring for smell {pylint_smell['symbol']} is not implemented."
+                f"Refactoring for smell {pylint_smell['symbol']} is not implemented.\n"
             )
     logger.log(
         "#####################################################################################################\n\n"
