@@ -7,9 +7,9 @@ name = "ecooptimizer"
 version = "0.0.1"
 dependencies = [
   "pylint",
-  "flake8",
-  "radon",
-  "rope"
+  "rope",
+  "astor",
+  "codecarbon"
 ]
 requires-python = ">=3.8"
 authors = [
@@ -24,7 +24,7 @@ description = "A source code eco optimizer"
 readme = "README.md"
 license = {file = "LICENSE"}
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = ["pytest", "mypy", "ruff", "coverage"]
 
 [project.urls]
@@ -33,16 +33,22 @@ Repository = "https://github.com/ssm-lab/capstone--source-code-optimizer"
 "Bug Tracker" = "https://github.com/ssm-lab/capstone--source-code-optimizer/issues"
 
 [tool.pytest.ini_options]
-testpaths = ["test"]
+testpaths = ["tests"]
 
 [tool.ruff]
-line-length = 100
+extend-exclude = ["*tests/input/**/*.py"]
 
 [tool.ruff.lint]
-ignore = ["E402"]
+# 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
+select = ["E4", "E7", "E9", "F", "B"]
 
-[tool.ruff.format]
-quote-style = "single"
-indent-style = "tab"
-docstring-code-format = true
-docstring-code-line-length = 50
+# 2. Avoid enforcing line-length violations (`E501`)
+ignore = ["E501"]
+
+# 3. Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+# 4. Ignore `E402` (import violations) in all `__init__.py` files, and in selected subdirectories.
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+"**/{tests,docs,tools}/*" = ["E402"]
