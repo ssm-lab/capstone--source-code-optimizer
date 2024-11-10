@@ -1,6 +1,7 @@
 # Import specific refactorer classes
 from refactorers.use_a_generator_refactor import UseAGeneratorRefactor
 from refactorers.unused_imports_refactor import RemoveUnusedImportsRefactor
+from refactorers.long_parameter_list_refactorer import LongParameterListRefactorer
 from refactorers.member_ignoring_method_refactorer import MakeStaticRefactor
 from refactorers.base_refactorer import BaseRefactorer
 
@@ -39,6 +40,8 @@ class RefactorerFactory():
                 selected = RemoveUnusedImportsRefactor(logger)
             case AllSmells.NO_SELF_USE.value:
                 selected = MakeStaticRefactor(logger)
+            case AllSmells.LONG_PARAMETER_LIST.value:
+                selected = LongParameterListRefactorer(logger)
             case _:
                 selected = None
 
