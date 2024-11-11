@@ -25,7 +25,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         code_type = pylint_smell.get("message-id")
         print(code_type)
         self.logger.log(
-            f"Applying 'Remove Unused Imports' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
+            f"Applying 'Remove Unused Stuff' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
         )
 
         # Load the source code as a list of lines
@@ -44,13 +44,8 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         # for logging purpose to see what was removed
         if code_type == "W0611":  # UNUSED_IMPORT
             self.logger.log("Removed unused import.")
-
-        elif code_type == "W0612":  # UNUSED_VARIABLE
-            self.logger.log("Removed unused variable.")
-
-        elif code_type == "W0615":  # UNUSED_CLASS_ATTRIBUTE
-            self.logger.log("Removed unused class attribute.")
-
+        elif code_type == "UV001":  # UNUSED_VARIABLE
+            self.logger.log("Removed unused variable or class attribute")
         else:
             self.logger.log("No matching refactor type found for this code smell but line was removed.")
             return
