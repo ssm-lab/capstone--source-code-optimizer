@@ -70,6 +70,13 @@ class RemoveUnusedRefactorer(BaseRefactorer):
                     f"Removed unused stuff on line {line_number} and saved changes.\n"
                 )
                 return
-        self.logger.log(
-            "No emission improvement after refactoring. Discarded refactored changes.\n"
-        )
+            
+            self.logger.log("Tests Fail! Discarded refactored changes")
+
+        else:
+            self.logger.log(
+                "No emission improvement after refactoring. Discarded refactored changes.\n"
+            )
+
+        # Remove the temporary file if no energy improvement or failing tests
+        # os.remove(temp_file_path)

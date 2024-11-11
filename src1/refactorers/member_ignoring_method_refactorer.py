@@ -64,11 +64,16 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
                     f"Refactored 'Member Ignoring Method' to static method on line {self.target_line} and saved.\n"
                 )
                 return
-        # Remove the temporary file if no improvement
+            
+            self.logger.log("Tests Fail! Discarded refactored changes")
+
+        else:
+            self.logger.log(
+                "No emission improvement after refactoring. Discarded refactored changes.\n"
+            )
+
+        # Remove the temporary file if no energy improvement or failing tests
         # os.remove(temp_file_path)
-        self.logger.log(
-            "No emission improvement after refactoring. Discarded refactored changes.\n"
-        )
 
     def visit_FunctionDef(self, node):
         if node.lineno == self.target_line:

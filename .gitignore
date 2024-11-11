@@ -298,3 +298,6 @@ __pycache__/
 .ropeproject
 
 *.egg-info/
+
+# Package files
+src/ecooptimizer/outputs/

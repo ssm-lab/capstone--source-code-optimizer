@@ -93,11 +93,16 @@ class UseAGeneratorRefactorer(BaseRefactorer):
                         f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
                     )
                     return
-            # Remove the temporary file if no improvement
+                
+                self.logger.log("Tests Fail! Discarded refactored changes")
+
+            else:
+                self.logger.log(
+                    "No emission improvement after refactoring. Discarded refactored changes.\n"
+                )
+
+            # Remove the temporary file if no energy improvement or failing tests
             # os.remove(temp_file_path)
-            self.logger.log(
-                "No emission improvement after refactoring. Discarded refactored changes.\n"
-            )
         else:
             self.logger.log(
                 "No applicable list comprehension found on the specified line.\n"

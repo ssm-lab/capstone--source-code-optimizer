@@ -195,8 +195,13 @@ class LongParameterListRefactorer(BaseRefactorer):
                         f"Refactored long parameter list into data groups on line {target_line} and saved.\n"
                     )
                     return
-            # Remove the temporary file if no improvement
+                
+                self.logger.log("Tests Fail! Discarded refactored changes")
+
+            else:
+                self.logger.log(
+                    "No emission improvement after refactoring. Discarded refactored changes.\n"
+                )
+
+            # Remove the temporary file if no energy improvement or failing tests
             # os.remove(temp_file_path)
-            self.logger.log(
-                "No emission improvement after refactoring. Discarded refactored changes.\n"
-            )

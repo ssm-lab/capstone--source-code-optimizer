@@ -86,6 +86,12 @@ def main():
         "#####################################################################################################"
     )
 
+    SOURCE_CODE_OUTPUT = os.path.abspath("src1/outputs/refactored_source")
+    print(SOURCE_CODE_OUTPUT)
+    # Ensure the output directory exists; if not, create it
+    if not os.path.exists(SOURCE_CODE_OUTPUT):
+        os.makedirs(SOURCE_CODE_OUTPUT)
+
     # Refactor code smells
     copy_file_to_output(TEST_FILE, "refactored-test-case.py")
 
