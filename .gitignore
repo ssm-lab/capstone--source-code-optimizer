@@ -301,3 +301,5 @@ __pycache__/
 
 # Package files
 src/ecooptimizer/outputs/
+build/
+tests/temp_dir/

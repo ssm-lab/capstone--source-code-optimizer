@@ -14,7 +14,7 @@ class Logger:
 
         # Ensure the log file directory exists and clear any previous content
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
-        open(self.log_path, 'w').close()  # Open in write mode to clear the file
+        open(self.log_path, 'w+').close()  # Open in write mode to clear the file
 
     def log(self, message):
         """

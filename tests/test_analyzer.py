@@ -1,19 +1,41 @@
-import unittest
-from ..src.ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+import os
+import textwrap
+import pytest
+from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 
+@pytest.fixture(scope="module")
+def source_files(tmp_path_factory):
+    return tmp_path_factory.mktemp("input")
 
-class TestPylintAnalyzer(unittest.TestCase):
-    def test_analyze_method(self):
-        analyzer = PylintAnalyzer("input/ineffcient_code_example_2.py")
-        analyzer.analyze()
-        analyzer.configure_smells()
+@pytest.fixture
+def MIM_code(source_files):
+    mim_code = textwrap.dedent("""\
+    class SomeClass():
+        def __init__(self, string):
+            self.string = string
+    
+        def print_str(self):
+            print(self.string)
+    
+        def say_hello(self, name):
+            print(f"Hello {name}!")
+    """)
+    file = os.path.join(source_files, "mim_code.py")
+    with open(file, "w") as f:
+        f.write(mim_code)
 
-        data = analyzer.smells_data
+    return file
 
-        print(data)
-        # self.assertIsInstance(report, list)  # Check if the output is a list
-        # # Add more assertions based on expected output
+def test_member_ignoring_method(MIM_code, logger):
+    analyzer = PylintAnalyzer(MIM_code, logger)
+    analyzer.analyze()
+    analyzer.configure_smells()
+    
+    smells = analyzer.smells_data
+    
+    assert len(smells) == 1
+    assert smells[0].get("symbol") == "no-self-use"
+    assert smells[0].get("message-id") == "R6301"
+    assert smells[0].get("line") == 8
+    assert smells[0].get("module") == os.path.splitext(os.path.basename(MIM_code))[0]
 
-
-if __name__ == "__main__":
-    unittest.main()

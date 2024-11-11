@@ -1,20 +1,20 @@
 import json
 import ast
 import os
+from io import StringIO
 
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSONReporter
-from io import StringIO
-from utils.logger import Logger
+
 from .base_analyzer import Analyzer
-from utils.analyzers_config import (
+from ..utils.logger import Logger
+from ..utils.ast_parser import parse_line
+from ..utils.analyzers_config import (
     PylintSmell,
     CustomSmell,
     IntermediateSmells,
     EXTRA_PYLINT_OPTIONS,
 )
-from utils.ast_parser import parse_line
-
 
 class PylintAnalyzer(Analyzer):
     def __init__(self, file_path: str, logger: Logger):

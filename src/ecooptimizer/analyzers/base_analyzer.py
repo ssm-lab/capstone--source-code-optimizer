@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import os
-from utils.logger import Logger
+
+from ..utils.logger import Logger
 
 class Analyzer(ABC):
     def __init__(self, file_path: str, logger: Logger):
