@@ -13,7 +13,7 @@ DIRNAME = os.path.dirname(__file__)
 def main():
     # Path to the file to be analyzed
     TEST_FILE = os.path.abspath(
-        os.path.join(DIRNAME, "../tests/input/ineffcient_code_example_2.py")
+        os.path.join(DIRNAME, "../tests/input/car_stuff.py")
     )
 
     # Set up logging
@@ -102,6 +102,8 @@ def main():
     logger.log(
         "#####################################################################################################\n\n"
     )
+
+    return
 
     # Log start of emissions capture
     logger.log(

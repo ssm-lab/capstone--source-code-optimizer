@@ -4,6 +4,7 @@ import shutil
 
 import astor
 from .base_refactorer import BaseRefactorer
+from testing.run_tests import run_tests
 
 
 def get_used_parameters(function_node, params):
@@ -160,7 +161,8 @@ class LongParameterListRefactorer(BaseRefactorer):
 
         if modified:
             # Write back modified code to temporary file
-            temp_file_path = f"{os.path.basename(file_path).split('.')[0]}_temp.py"
+            original_filename = os.path.basename(file_path)
+            temp_file_path = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LPLR_line_{target_line}.py"
             with open(temp_file_path, "w") as temp_file:
                 temp_file.write(astor.to_source(tree))
 
@@ -169,13 +171,15 @@ class LongParameterListRefactorer(BaseRefactorer):
 
             if self.check_energy_improvement(initial_emissions, final_emission):
                 # If improved, replace the original file with the modified content
-                shutil.move(temp_file_path, file_path)
-                self.logger.log(
-                    f"Refactored long parameter list into data groups on line {target_line} and saved.\n"
-                )
-            else:
-                # Remove the temporary file if no improvement
-                os.remove(temp_file_path)
-                self.logger.log(
-                    "No emission improvement after refactoring. Discarded refactored changes.\n"
-                )
+                if run_tests() == 0:
+                    self.logger.log("All test pass! Functionality maintained.")
+                    # shutil.move(temp_file_path, file_path)
+                    self.logger.log(
+                        f"Refactored long parameter list into data groups on line {target_line} and saved.\n"
+                    )
+                    return
+            # Remove the temporary file if no improvement
+            # os.remove(temp_file_path)
+            self.logger.log(
+                "No emission improvement after refactoring. Discarded refactored changes.\n"
+            )

@@ -1,6 +1,7 @@
 import os
 import shutil
 from refactorers.base_refactorer import BaseRefactorer
+from testing.run_tests import run_tests
 
 class RemoveUnusedRefactorer(BaseRefactorer):
     def __init__(self, logger):
@@ -55,21 +56,25 @@ class RemoveUnusedRefactorer(BaseRefactorer):
             return
 
         # Write the modified content to a temporary file
-        temp_file_path = f"{file_path}.temp"
+        original_filename = os.path.basename(file_path)
+        temp_file_path = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_UNSDR_line_{line_number}.py"
+
         with open(temp_file_path, "w") as temp_file:
             temp_file.writelines(modified_lines)
 
         # Measure emissions of the modified code
         final_emissions = self.measure_energy(temp_file_path)
 
-        shutil.move(temp_file_path, file_path)
+        # shutil.move(temp_file_path, file_path)
 
         # check for improvement in emissions (for logging purposes only)
         if self.check_energy_improvement(initial_emissions, final_emissions):
-            self.logger.log(
-                f"Removed unused stuff on line {line_number} and saved changes.\n"
-            )
-        else:
-            self.logger.log(
-                "No emission improvement after refactoring. Discarded refactored changes.\n"
-            )
+            if run_tests() == 0:
+                self.logger.log("All test pass! Functionality maintained.")
+                self.logger.log(
+                    f"Removed unused stuff on line {line_number} and saved changes.\n"
+                )
+                return
+        self.logger.log(
+            "No emission improvement after refactoring. Discarded refactored changes.\n"
+        )

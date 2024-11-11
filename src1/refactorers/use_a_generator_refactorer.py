@@ -4,6 +4,8 @@ import ast
 import astor  # For converting AST back to source code
 import shutil
 import os
+
+from testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 
 
@@ -72,7 +74,9 @@ class UseAGeneratorRefactorer(BaseRefactorer):
             modified_lines[line_number - 1] = indentation + modified_line + "\n"
 
             # Temporarily write the modified content to a temporary file
-            temp_file_path = f"{file_path}.temp"
+            original_filename = os.path.basename(file_path)
+            temp_file_path = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_UGENR_line_{line_number}.py"
+
             with open(temp_file_path, "w") as temp_file:
                 temp_file.writelines(modified_lines)
 
@@ -82,16 +86,18 @@ class UseAGeneratorRefactorer(BaseRefactorer):
             # Check for improvement in emissions
             if self.check_energy_improvement(initial_emissions, final_emission):
                 # If improved, replace the original file with the modified content
-                shutil.move(temp_file_path, file_path)
-                self.logger.log(
-                    f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
-                )
-            else:
-                # Remove the temporary file if no improvement
-                os.remove(temp_file_path)
-                self.logger.log(
-                    "No emission improvement after refactoring. Discarded refactored changes.\n"
-                )
+                if run_tests() == 0:
+                    self.logger.log("All test pass! Functionality maintained.")
+                    # shutil.move(temp_file_path, file_path)
+                    self.logger.log(
+                        f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
+                    )
+                    return
+            # Remove the temporary file if no improvement
+            # os.remove(temp_file_path)
+            self.logger.log(
+                "No emission improvement after refactoring. Discarded refactored changes.\n"
+            )
         else:
             self.logger.log(
                 "No applicable list comprehension found on the specified line.\n"

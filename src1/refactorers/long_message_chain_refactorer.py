@@ -1,6 +1,8 @@
 import os
 import re
 import shutil
+
+from testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 
 
@@ -20,8 +22,11 @@ class LongMessageChainRefactorer(BaseRefactorer):
         # Extract details from pylint_smell
         line_number = pylint_smell["line"]
         original_filename = os.path.basename(file_path)
-        temp_filename = f"{os.path.splitext(original_filename)[0]}_temp.py"
+        temp_filename = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LMCR_line_{line_number}.py"
 
+        self.logger.log(
+            f"Applying 'Separate Statements' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
+        )
         # Read the original file
         with open(file_path, "r") as f:
             lines = f.readlines()
@@ -68,21 +73,22 @@ class LongMessageChainRefactorer(BaseRefactorer):
             temp_file.writelines(lines)
 
         # Log completion
-        self.logger.log(f"Refactored long message chain and saved to {temp_filename}")
-
         # Measure emissions of the modified code
         final_emission = self.measure_energy(temp_file_path)
 
         #Check for improvement in emissions
         if self.check_energy_improvement(initial_emissions, final_emission):
             # If improved, replace the original file with the modified content
-            shutil.move(temp_file_path, file_path)
-            self.logger.log(
-                f"Refactored list comprehension to generator expression on line {pylint_smell["line"]} and saved.\n"
-            )
-        else:
-            # Remove the temporary file if no improvement
-            os.remove(temp_file_path)
-            self.logger.log(
-                "No emission improvement after refactoring. Discarded refactored changes.\n"
-            )
+            if run_tests() == 0:
+                self.logger.log("All test pass! Functionality maintained.")
+                # shutil.move(temp_file_path, file_path)
+                self.logger.log(
+                    f"Refactored long message chain on line {pylint_smell["line"]} and saved.\n"
+                )
+                return
+
+        # Remove the temporary file if no improvement
+        # os.remove(temp_file_path)
+        self.logger.log(
+            "No emission improvement after refactoring. Discarded refactored changes.\n"
+        )
