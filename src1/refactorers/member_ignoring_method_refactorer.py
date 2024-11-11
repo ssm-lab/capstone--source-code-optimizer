@@ -40,7 +40,7 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
         # Convert the modified AST back to source code
         modified_code = astor.to_source(modified_tree)
 
-        temp_file_path = f"{os.path.basename(file_path).split(".")[0]}_temp.py"
+        temp_file_path = f"{os.path.basename(file_path).split('.')[0]}_temp.py"
         with open(temp_file_path, "w") as temp_file:
             temp_file.write(modified_code)
 
@@ -60,7 +60,6 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
             self.logger.log(
                 "No emission improvement after refactoring. Discarded refactored changes.\n"
             )
-        
 
     def visit_FunctionDef(self, node):
         if node.lineno == self.target_line:
@@ -69,7 +68,7 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
             node.decorator_list.append(decorator)
 
             # Step 2: Remove 'self' from the arguments if it exists
-            if node.args.args and node.args.args[0].arg == 'self':
+            if node.args.args and node.args.args[0].arg == "self":
                 node.args.args.pop(0)
         # Add the decorator to the function's decorator list
         return node

@@ -1,5 +1,4 @@
 
-
 class DataProcessor:
 
     def __init__(self, data):
@@ -33,7 +32,7 @@ class DataProcessor:
         return result
 
     @staticmethod
-    def multi_param_calculation(item1, item2, item3, flag1, flag2, flag3, operation, threshold,
+    def multi_param_calculation(item1, item2, item3, flag1, flag2, flag3, operation, threshold, 
                                 max_value, option, final_stage, min_value):
         value = 0
         if operation == 'multiply':
@@ -51,6 +50,7 @@ class DataProcessor:
         else:
             value = min_value
         return value
+
 
 class AdvancedProcessor(DataProcessor):
 

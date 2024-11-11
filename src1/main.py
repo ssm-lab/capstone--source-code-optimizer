@@ -62,9 +62,7 @@ def main():
     pylint_analyzer.analyze()  # analyze all smells
 
     # Save code smells
-    save_json_files(
-        "all_pylint_smells.json", pylint_analyzer.smells_data, logger
-    )
+    save_json_files("all_pylint_smells.json", pylint_analyzer.smells_data, logger)
 
     pylint_analyzer.configure_smells()  # get all configured smells
 
@@ -76,7 +74,7 @@ def main():
     logger.log(
         "#####################################################################################################\n\n"
     )
-    
+
     # Log start of refactoring codes
     logger.log(
         "#####################################################################################################"
@@ -92,7 +90,9 @@ def main():
     copy_file_to_output(TEST_FILE, "refactored-test-case.py")
 
     for pylint_smell in pylint_analyzer.smells_data:
-        refactoring_class = RefactorerFactory.build_refactorer_class(pylint_smell["message-id"],logger)
+        refactoring_class = RefactorerFactory.build_refactorer_class(
+            pylint_smell["message-id"], logger
+        )
         if refactoring_class:
             refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)
         else:

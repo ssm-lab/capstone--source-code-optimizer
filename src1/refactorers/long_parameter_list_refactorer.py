@@ -36,7 +36,7 @@ def classify_parameters(params):
     config_params = []
 
     for param in params:
-        if param.startswith(('config', 'flag', 'option', 'setting')):
+        if param.startswith(("config", "flag", "option", "setting")):
             config_params.append(param)
         else:
             data_params.append(param)
@@ -70,7 +70,7 @@ class LongParameterListRefactorer(BaseRefactorer):
         self.logger.log(
             f"Applying 'Fix Too Many Parameters' refactor on '{os.path.basename(file_path)}' at line {target_line} for identified code smell."
         )
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             tree = ast.parse(f.read())
 
         # Flag indicating if a refactoring has been made
@@ -87,8 +87,12 @@ class LongParameterListRefactorer(BaseRefactorer):
                     used_params = get_used_parameters(node, params)
 
                     # Remove unused parameters
-                    new_params = [arg for arg in node.args.args if arg.arg in used_params]
-                    if len(new_params) != len(node.args.args):  # Check if any parameters were removed
+                    new_params = [
+                        arg for arg in node.args.args if arg.arg in used_params
+                    ]
+                    if len(new_params) != len(
+                        node.args.args
+                    ):  # Check if any parameters were removed
                         node.args.args[:] = new_params  # Update in place
                         modified = True
 
@@ -102,36 +106,61 @@ class LongParameterListRefactorer(BaseRefactorer):
 
                         # Create parameter object classes for each group
                         if data_params:
-                            data_param_object_code = create_parameter_object_class(data_params, class_name="DataParams")
-                            data_param_object_ast = ast.parse(data_param_object_code).body[0]
+                            data_param_object_code = create_parameter_object_class(
+                                data_params, class_name="DataParams"
+                            )
+                            data_param_object_ast = ast.parse(
+                                data_param_object_code
+                            ).body[0]
                             tree.body.insert(0, data_param_object_ast)
 
                         if config_params:
-                            config_param_object_code = create_parameter_object_class(config_params,
-                                                                                     class_name="ConfigParams")
-                            config_param_object_ast = ast.parse(config_param_object_code).body[0]
+                            config_param_object_code = create_parameter_object_class(
+                                config_params, class_name="ConfigParams"
+                            )
+                            config_param_object_ast = ast.parse(
+                                config_param_object_code
+                            ).body[0]
                             tree.body.insert(0, config_param_object_ast)
 
                         # Modify function to use two parameters for the parameter objects
-                        node.args.args = [ast.arg(arg="data_params", annotation=None),
-                                          ast.arg(arg="config_params", annotation=None)]
+                        node.args.args = [
+                            ast.arg(arg="data_params", annotation=None),
+                            ast.arg(arg="config_params", annotation=None),
+                        ]
 
                         # Update all parameter usages within the function to access attributes of the parameter objects
                         class ParamAttributeUpdater(ast.NodeTransformer):
                             def visit_Name(self, node):
-                                if node.id in data_params and isinstance(node.ctx, ast.Load):
-                                    return ast.Attribute(value=ast.Name(id="data_params", ctx=ast.Load()), attr=node.id,
-                                                         ctx=node.ctx)
-                                elif node.id in config_params and isinstance(node.ctx, ast.Load):
-                                    return ast.Attribute(value=ast.Name(id="config_params", ctx=ast.Load()),
-                                                         attr=node.id, ctx=node.ctx)
+                                if node.id in data_params and isinstance(
+                                    node.ctx, ast.Load
+                                ):
+                                    return ast.Attribute(
+                                        value=ast.Name(
+                                            id="data_params", ctx=ast.Load()
+                                        ),
+                                        attr=node.id,
+                                        ctx=node.ctx,
+                                    )
+                                elif node.id in config_params and isinstance(
+                                    node.ctx, ast.Load
+                                ):
+                                    return ast.Attribute(
+                                        value=ast.Name(
+                                            id="config_params", ctx=ast.Load()
+                                        ),
+                                        attr=node.id,
+                                        ctx=node.ctx,
+                                    )
                                 return node
 
-                        node.body = [ParamAttributeUpdater().visit(stmt) for stmt in node.body]
+                        node.body = [
+                            ParamAttributeUpdater().visit(stmt) for stmt in node.body
+                        ]
 
         if modified:
             # Write back modified code to temporary file
-            temp_file_path = f"{os.path.basename(file_path).split(".")[0]}_temp.py"
+            temp_file_path = f"{os.path.basename(file_path).split('.')[0]}_temp.py"
             with open(temp_file_path, "w") as temp_file:
                 temp_file.write(astor.to_source(tree))
 

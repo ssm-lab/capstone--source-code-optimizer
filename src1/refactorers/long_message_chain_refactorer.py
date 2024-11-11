@@ -1,3 +1,6 @@
+import os
+import re
+import shutil
 from .base_refactorer import BaseRefactorer
 
 
@@ -11,7 +14,75 @@ class LongMessageChainRefactorer(BaseRefactorer):
 
     def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
         """
-        Refactor long message chain
+        Refactor long message chains by breaking them into separate statements
+        and writing the refactored code to a new file.
         """
-        # Logic to identify long methods goes here
-        pass
+        # Extract details from pylint_smell
+        line_number = pylint_smell["line"]
+        original_filename = os.path.basename(file_path)
+        temp_filename = f"{os.path.splitext(original_filename)[0]}_temp.py"
+
+        # Read the original file
+        with open(file_path, "r") as f:
+            lines = f.readlines()
+
+        # Identify the line with the long method chain
+        line_with_chain = lines[line_number - 1].rstrip()
+
+        # Extract leading whitespace for correct indentation
+        leading_whitespace = re.match(r"^\s*", line_with_chain).group()
+
+        # Remove the function call wrapper if present (e.g., `print(...)`)
+        chain_content = re.sub(r"^\s*print\((.*)\)\s*$", r"\1", line_with_chain)
+
+        # Split the chain into individual method calls
+        method_calls = re.split(r"\.(?![^()]*\))", chain_content)
+
+        # Refactor if it's a long chain
+        if len(method_calls) > 2:
+            refactored_lines = []
+            base_var = method_calls[0].strip()  # Initial part, e.g., `self.data[0]`
+            refactored_lines.append(f"{leading_whitespace}intermediate_0 = {base_var}")
+
+            # Generate intermediate variables for each method in the chain
+            for i, method in enumerate(method_calls[1:], start=1):
+                if i < len(method_calls) - 1:
+                    refactored_lines.append(
+                        f"{leading_whitespace}intermediate_{i} = intermediate_{i-1}.{method.strip()}"
+                    )
+                else:
+                    # Final result to pass to function
+                    refactored_lines.append(
+                        f"{leading_whitespace}result = intermediate_{i-1}.{method.strip()}"
+                    )
+
+            # Add final function call with result
+            refactored_lines.append(f"{leading_whitespace}print(result)\n")
+
+            # Replace the original line with the refactored lines
+            lines[line_number - 1] = "\n".join(refactored_lines) + "\n"
+
+        temp_file_path = temp_filename
+        # Write the refactored code to a new temporary file
+        with open(temp_filename, "w") as temp_file:
+            temp_file.writelines(lines)
+
+        # Log completion
+        self.logger.log(f"Refactored long message chain and saved to {temp_filename}")
+
+        # Measure emissions of the modified code
+        final_emission = self.measure_energy(temp_file_path)
+
+        #Check for improvement in emissions
+        if self.check_energy_improvement(initial_emissions, final_emission):
+            # If improved, replace the original file with the modified content
+            shutil.move(temp_file_path, file_path)
+            self.logger.log(
+                f"Refactored list comprehension to generator expression on line {self.target_line} and saved.\n"
+            )
+        else:
+            # Remove the temporary file if no improvement
+            os.remove(temp_file_path)
+            self.logger.log(
+                "No emission improvement after refactoring. Discarded refactored changes.\n"
+            )
