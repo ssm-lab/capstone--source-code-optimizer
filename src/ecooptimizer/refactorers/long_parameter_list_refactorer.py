@@ -74,8 +74,6 @@ class LongParameterListRefactorer(BaseRefactorer):
         with open(file_path, "r") as f:
             tree = ast.parse(f.read())
 
-        print(ast.dump(tree, indent=4), file=open("ast.txt", "w"))
-
         # Flag indicating if a refactoring has been made
         modified = False
 
