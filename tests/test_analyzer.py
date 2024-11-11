@@ -3,6 +3,13 @@ import textwrap
 import pytest
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 
+def get_smells(code, logger):
+    analyzer = PylintAnalyzer(code, logger)
+    analyzer.analyze()
+    analyzer.configure_smells()
+
+    return analyzer.smells_data
+
 @pytest.fixture(scope="module")
 def source_files(tmp_path_factory):
     return tmp_path_factory.mktemp("input")
@@ -39,11 +46,7 @@ def MIM_code(source_files):
     return file
 
 def test_long_message_chain(LMC_code, logger):
-    analyzer = PylintAnalyzer(LMC_code, logger)
-    analyzer.analyze()
-    analyzer.configure_smells()
-    
-    smells = analyzer.smells_data
+    smells = get_smells(LMC_code, logger)
     
     assert len(smells) == 1
     assert smells[0].get("symbol") == "long-message-chain"
@@ -52,11 +55,7 @@ def test_long_message_chain(LMC_code, logger):
     assert smells[0].get("module") == os.path.basename(LMC_code)
 
 def test_member_ignoring_method(MIM_code, logger):
-    analyzer = PylintAnalyzer(MIM_code, logger)
-    analyzer.analyze()
-    analyzer.configure_smells()
-    
-    smells = analyzer.smells_data
+    smells = get_smells(MIM_code, logger)
     
     assert len(smells) == 1
     assert smells[0].get("symbol") == "no-self-use"
