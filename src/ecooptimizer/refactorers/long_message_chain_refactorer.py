@@ -22,7 +22,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
         # Extract details from pylint_smell
         line_number = pylint_smell["line"]
         original_filename = os.path.basename(file_path)
-        temp_filename = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LMCR_line_{line_number}.py"
+        temp_filename = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LMCR_line_{line_number}.py"
 
         self.logger.log(
             f"Applying 'Separate Statements' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."

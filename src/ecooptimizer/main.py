@@ -13,7 +13,7 @@ DIRNAME = os.path.dirname(__file__)
 def main():
     # Path to the file to be analyzed
     TEST_FILE = os.path.abspath(
-        os.path.join(DIRNAME, "../tests/input/car_stuff.py")
+        os.path.join(DIRNAME, "../../tests/input/car_stuff.py")
     )
 
     # Set up logging
@@ -86,7 +86,7 @@ def main():
         "#####################################################################################################"
     )
 
-    SOURCE_CODE_OUTPUT = os.path.abspath("src1/outputs/refactored_source")
+    SOURCE_CODE_OUTPUT = os.path.abspath("src/ecooptimizer/outputs/refactored_source")
     print(SOURCE_CODE_OUTPUT)
     # Ensure the output directory exists; if not, create it
     if not os.path.exists(SOURCE_CODE_OUTPUT):

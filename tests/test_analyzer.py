@@ -1,5 +1,5 @@
 import unittest
-from ..src1.analyzers.pylint_analyzer import PylintAnalyzer
+from ..src.ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 
 
 class TestPylintAnalyzer(unittest.TestCase):

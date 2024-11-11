@@ -177,7 +177,7 @@ class LongParameterListRefactorer(BaseRefactorer):
         if modified:
             # Write back modified code to temporary file
             original_filename = os.path.basename(file_path)
-            temp_file_path = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LPLR_line_{target_line}.py"
+            temp_file_path = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LPLR_line_{target_line}.py"
             with open(temp_file_path, "w") as temp_file:
                 temp_file.write(astor.to_source(tree))
 

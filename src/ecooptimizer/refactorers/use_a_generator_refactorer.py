@@ -75,7 +75,7 @@ class UseAGeneratorRefactorer(BaseRefactorer):
 
             # Temporarily write the modified content to a temporary file
             original_filename = os.path.basename(file_path)
-            temp_file_path = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_UGENR_line_{line_number}.py"
+            temp_file_path = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_UGENR_line_{line_number}.py"
 
             with open(temp_file_path, "w") as temp_file:
                 temp_file.writelines(modified_lines)

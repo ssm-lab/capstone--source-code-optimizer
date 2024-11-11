@@ -43,7 +43,7 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
         modified_code = astor.to_source(modified_tree)
 
         original_filename = os.path.basename(file_path)
-        temp_file_path = f"src1/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_MIMR_line_{self.target_line}.py"
+        temp_file_path = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_MIMR_line_{self.target_line}.py"
 
         print(os.path.abspath(temp_file_path))
 
