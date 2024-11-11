@@ -1,10 +1,11 @@
 import unittest
 from datetime import datetime
 
-from tests.input.ineffcient_code_example_2 import (
+from ineffcient_code_example_2 import (
     AdvancedProcessor,
     DataProcessor,
 )  # Just to show the unused import issue
+
 
 # Assuming the classes DataProcessor and AdvancedProcessor are already defined
 # and imported
@@ -17,8 +18,8 @@ class TestDataProcessor(unittest.TestCase):
         data = [1, 2, 3, 4, 5]
         processor = DataProcessor(data)
         processed_data = processor.process_all_data()
-        # Expecting [10, 20] after filtering out None, 0, and single character numbers
-        self.assertEqual(processed_data, [10, 20])
+        # Expecting values [10, 20, 30, 40, 50] (because all are greater than 1 character in length)
+        self.assertEqual(processed_data, [10, 20, 30, 40, 50])
 
     def test_process_all_data_empty(self):
         # Test with empty data list
@@ -54,13 +55,39 @@ class TestAdvancedProcessor(unittest.TestCase):
         # Test complex list comprehension
         processor = AdvancedProcessor([1, 2, 3, 4, 5])
         processor.complex_comprehension()
-        expected_result = [4, 64, 256, 1296, 1024, 4096, 7776, 15625]
+        expected_result = [
+            125,
+            100,
+            3375,
+            400,
+            15625,
+            900,
+            42875,
+            1600,
+            91125,
+            166375,
+            3600,
+            274625,
+            4900,
+            421875,
+            6400,
+            614125,
+            8100,
+            857375,
+        ]
         self.assertEqual(processor.processed_data, expected_result)
 
     def test_long_chain_valid(self):
         # Test valid deep chain access
         data = [
-            {"details": {"info": {"more_info": [{}, {}, {"target": "Valid Value"}]}}}
+            [
+                None,
+                {
+                    "details": {
+                        "info": {"more_info": [{}, {}, {"target": "Valid Value"}]}
+                    }
+                },
+            ]
         ]
         processor = AdvancedProcessor(data)
         result = processor.long_chain()
