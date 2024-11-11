@@ -227,13 +227,13 @@ class PylintAnalyzer(Analyzer):
 
         # Helper function to gather used variables and class attributes
         def gather_usages(node):
-            if isinstance(node, ast.Name):  # variable usage
-                if isinstance(node.ctx, ast.Load):  # 'Load' means accessing the value
-                    used_vars.add(node.id)
-            elif isinstance(node, ast.Attribute):
-                # Only add to used_vars if it's accessed (i.e., part of an expression)
-                if isinstance(node.ctx, ast.Load):  # 'Load' means accessing the attribute
-                    used_vars.add(f'{node.value.id}.{node.attr}')
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):  # Variable usage
+                used_vars.add(node.id)
+            elif isinstance(node, ast.Attribute) and isinstance(node.ctx, ast.Load):  # Attribute usage
+                # Check if the attribute is accessed as `self.attribute`
+                if isinstance(node.value, ast.Name) and node.value.id == "self":
+                    # Only add to used_vars if it’s in the form of `self.attribute`
+                    used_vars.add(f'self.{node.attr}')
 
         # Gather declared and used variables
         for node in ast.walk(tree):
