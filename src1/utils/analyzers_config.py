@@ -48,6 +48,7 @@ class PylintSmell(ExtendedEnum):
 class CustomSmell(ExtendedEnum):
     LONG_TERN_EXPR = "CUST-1"  # Custom code smell for long ternary expressions
     LONG_MESSAGE_CHAIN = "LMC001"  # CUSTOM CODE
+    UNUSED_VAR_OR_ATTRIBUTE = "UV001" # CUSTOM CODE
 
 
 class IntermediateSmells(ExtendedEnum):

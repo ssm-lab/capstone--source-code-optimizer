@@ -40,9 +40,7 @@ class RefactorerFactory:
                 selected = UseAGeneratorRefactorer(logger)
             case AllSmells.UNUSED_IMPORT.value:
                 selected = RemoveUnusedRefactorer(logger)
-            case AllSmells.UNUSED_VARIABLE.value:
-                selected = RemoveUnusedRefactorer(logger)
-            case AllSmells.UNUSED_CLASS_ATTRIBUTE.value:
+            case AllSmells.UNUSED_VAR_OR_ATTRIBUTE.value:
                 selected = RemoveUnusedRefactorer(logger)
             case AllSmells.NO_SELF_USE.value:
                 selected = MakeStaticRefactorer(logger)

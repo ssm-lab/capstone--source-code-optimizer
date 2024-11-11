@@ -4,11 +4,8 @@ import os
 
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSONReporter
-
 from io import StringIO
-
 from utils.logger import Logger
-
 from .base_analyzer import Analyzer
 from utils.analyzers_config import (
     PylintSmell,
@@ -16,7 +13,6 @@ from utils.analyzers_config import (
     IntermediateSmells,
     EXTRA_PYLINT_OPTIONS,
 )
-
 from utils.ast_parser import parse_line
 
 
@@ -67,8 +63,17 @@ class PylintAnalyzer(Analyzer):
             self.file_path,
             os.path.basename(self.file_path),
         )
-        print("THIS IS LMC DATA:", lmc_data)
+        # print("THIS IS LMC DATA:", lmc_data)
         self.smells_data += lmc_data
+        lmc_data = PylintAnalyzer.detect_unused_variables_and_attributes(
+            PylintAnalyzer.read_code_from_path(self.file_path),
+            self.file_path,
+            os.path.basename(self.file_path),
+        )
+        # print("THIS IS LMC DATA FOR UNUSED:", lmc_data)
+        self.smells_data += lmc_data
+        print(self.smells_data)
+
 
     def configure_smells(self):
         """
@@ -181,6 +186,123 @@ class PylintAnalyzer(Analyzer):
                 check_chain(node.func)
 
         return results
+
+    def detect_unused_variables_and_attributes(code, file_path, module_name):
+        """
+        Detects unused variables and class attributes in the given Python code and returns a list of results.
+
+        Args:
+        - code (str): Python source code to be analyzed.
+        - file_path (str): The path to the file being analyzed (for reporting purposes).
+        - module_name (str): The name of the module (for reporting purposes).
+
+        Returns:
+        - List of dictionaries: Each dictionary contains details about the detected unused variable or attribute.
+        """
+        # Parse the code into an Abstract Syntax Tree (AST)
+        tree = ast.parse(code)
+
+        # Store variable and attribute declarations and usage
+        declared_vars = set()
+        used_vars = set()
+        results = []
+        used_lines = set()
+
+        # Helper function to gather declared variables (including class attributes)
+        def gather_declarations(node):
+            # For assignment statements (variables or class attributes)
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name):  # Simple variable
+                        declared_vars.add(target.id)
+                    elif isinstance(target, ast.Attribute):  # Class attribute
+                        declared_vars.add(f'{target.value.id}.{target.attr}')
+
+            # For class attribute assignments (e.g., self.attribute)
+            elif isinstance(node, ast.ClassDef):
+                for class_node in ast.walk(node):
+                    if isinstance(class_node, ast.Assign):
+                        for target in class_node.targets:
+                            if isinstance(target, ast.Name):
+                                declared_vars.add(target.id)
+                            elif isinstance(target, ast.Attribute):
+                                declared_vars.add(f'{target.value.id}.{target.attr}')
+
+        # Helper function to gather used variables and class attributes
+        def gather_usages(node):
+            if isinstance(node, ast.Name):  # variable usage
+                if isinstance(node.ctx, ast.Load):  # 'Load' means accessing the value
+                    used_vars.add(node.id)
+            elif isinstance(node, ast.Attribute):
+                # Only add to used_vars if it's accessed (i.e., part of an expression)
+                if isinstance(node.ctx, ast.Load):  # 'Load' means accessing the attribute
+                    used_vars.add(f'{node.value}.{node.attr}')
+
+        # Gather declared and used variables
+        for node in ast.walk(tree):
+            gather_declarations(node)
+            gather_usages(node)
+
+        # Detect unused variables by finding declared variables not in used variables
+        unused_vars = declared_vars - used_vars
+        # print("Declared Vars: ", declared_vars)
+        # print("Used Vars: ", used_vars)
+        # print("Unused: ", unused_vars)
+
+        for var in unused_vars:
+            print("var again")
+            # Locate the line number for each unused variable or attribute
+            line_no, column_no = None, None
+            for node in ast.walk(tree):
+                print("node: ", node)
+                if isinstance(node, ast.Name) and node.id == var:
+                    line_no = node.lineno
+                    column_no = node.col_offset
+                    print(node.lineno)
+                    result = {
+                        "type": "convention",
+                        "symbol": "unused-variable" if isinstance(node, ast.Name) else "unused-attribute",
+                        "message": f"Unused variable or attribute '{var}'",
+                        "message-id": "UV001",
+                        "confidence": "UNDEFINED",
+                        "module": module_name,
+                        "obj": '',
+                        "line": line_no,
+                        "column": column_no,
+                        "endLine": None,
+                        "endColumn": None,
+                        "path": file_path,
+                        "absolutePath": file_path,  # Assuming file_path is the absolute path
+                    }
+
+                    results.append(result)
+                    break
+                elif isinstance(node, ast.Attribute) and f'{node.value}.{node.attr}' == var:
+                    line_no = node.lineno
+                    column_no = node.col_offset
+                    print(node.lineno)
+                    result = {
+                        "type": "convention",
+                        "symbol": "unused-variable" if isinstance(node, ast.Name) else "unused-attribute",
+                        "message": f"Unused variable or attribute '{var}'",
+                        "message-id": "UV001",
+                        "confidence": "UNDEFINED",
+                        "module": module_name,
+                        "obj": '',
+                        "line": line_no,
+                        "column": column_no,
+                        "endLine": None,
+                        "endColumn": None,
+                        "path": file_path,
+                        "absolutePath": file_path,  # Assuming file_path is the absolute path
+                    }
+
+                    results.append(result)
+                    break            
+
+        return results
+
+
 
     @staticmethod
     def read_code_from_path(file_path):
