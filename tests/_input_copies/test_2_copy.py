@@ -1,3 +1,16 @@
+import datetime # unused import
+
+class Temp:
+
+    def __init__(self) ->None:
+        self.unused_class_attribute = True
+        self.a = 3
+
+    def temp_function(self):
+        unused_var = 3
+        b = 4
+        return self.a + b
+
 # LC: Large Class with too many responsibilities
 class DataProcessor:
     def __init__(self, data):
