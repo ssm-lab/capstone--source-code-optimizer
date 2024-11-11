@@ -78,7 +78,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
             # If improved, replace the original file with the modified content
             shutil.move(temp_file_path, file_path)
             self.logger.log(
-                f"Refactored list comprehension to generator expression on line {self.target_line} and saved.\n"
+                f"Refactored list comprehension to generator expression on line {pylint_smell["line"]} and saved.\n"
             )
         else:
             # Remove the temporary file if no improvement
