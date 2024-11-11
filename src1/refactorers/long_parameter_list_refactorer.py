@@ -45,7 +45,7 @@ def classify_parameters(params):
     return data_params, config_params
 
 
-def create_parameter_object_class(param_names, class_name="ParamsObject"):
+def create_parameter_object_class(param_names: list, class_name="ParamsObject"):
     """
     Creates a class definition for encapsulating parameters as attributes
     """
@@ -73,6 +73,8 @@ class LongParameterListRefactorer(BaseRefactorer):
         )
         with open(file_path, "r") as f:
             tree = ast.parse(f.read())
+
+        print(ast.dump(tree, indent=4), file=open("ast.txt", "w"))
 
         # Flag indicating if a refactoring has been made
         modified = False
@@ -104,6 +106,7 @@ class LongParameterListRefactorer(BaseRefactorer):
 
                         # Classify parameters into data and configuration groups
                         data_params, config_params = classify_parameters(param_names)
+                        data_params.remove("self")
 
                         # Create parameter object classes for each group
                         if data_params:
@@ -126,34 +129,48 @@ class LongParameterListRefactorer(BaseRefactorer):
 
                         # Modify function to use two parameters for the parameter objects
                         node.args.args = [
+                            ast.arg(arg="self", annotation=None),
                             ast.arg(arg="data_params", annotation=None),
                             ast.arg(arg="config_params", annotation=None),
                         ]
 
                         # Update all parameter usages within the function to access attributes of the parameter objects
                         class ParamAttributeUpdater(ast.NodeTransformer):
-                            def visit_Name(self, node):
-                                if node.id in data_params and isinstance(
+                            def visit_Attribute(self, node):
+                                if node.attr in data_params and isinstance(
                                     node.ctx, ast.Load
                                 ):
                                     return ast.Attribute(
                                         value=ast.Name(
-                                            id="data_params", ctx=ast.Load()
+                                            id="self", ctx=ast.Load()
                                         ),
-                                        attr=node.id,
+                                        attr="data_params",
                                         ctx=node.ctx,
                                     )
-                                elif node.id in config_params and isinstance(
+                                elif node.attr in config_params and isinstance(
                                     node.ctx, ast.Load
                                 ):
                                     return ast.Attribute(
                                         value=ast.Name(
-                                            id="config_params", ctx=ast.Load()
+                                            id="self", ctx=ast.Load()
                                         ),
-                                        attr=node.id,
+                                        attr="config_params",
                                         ctx=node.ctx,
                                     )
                                 return node
+                            def visit_Name(self, node):
+                                if node.id in data_params and isinstance(node.ctx, ast.Load):
+                                    return ast.Attribute(
+                                        value=ast.Name(id="data_params", ctx=ast.Load()),
+                                        attr=node.id,
+                                        ctx=ast.Load()
+                                        )
+                                elif node.id in config_params and isinstance(node.ctx, ast.Load):
+                                    return ast.Attribute(
+                                        value=ast.Name(id="config_params", ctx=ast.Load()),
+                                        attr=node.id,
+                                        ctx=ast.Load()
+                                        )
 
                         node.body = [
                             ParamAttributeUpdater().visit(stmt) for stmt in node.body
