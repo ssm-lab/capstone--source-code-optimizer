@@ -1,8 +1,9 @@
-import datetime # unused import
 
-# test case for unused variable and class attribute
+
+
 class Temp:
-    def __init__(self) -> None:
+
+    def __init__(self) ->None:
         self.unused_class_attribute = True
         self.a = 3
 
@@ -19,6 +20,8 @@ class DataProcessor:
         self.processed_data = []
 
     def process_all_data(self):
+        if not self.data:
+            return []
         results = []
         for item in self.data:
             try:
@@ -34,8 +37,7 @@ class DataProcessor:
         return self.processed_data
 
     @staticmethod
-    def complex_calculation(item, flag1, flag2, operation, threshold,
-        max_value, option, final_stage):
+    def complex_calculation(item, operation, threshold, max_value):
         if operation == 'multiply':
             result = item * threshold
         elif operation == 'add':
@@ -45,8 +47,8 @@ class DataProcessor:
         return result
 
     @staticmethod
-    def multi_param_calculation(item1, item2, item3, flag1, flag2, flag3, operation, threshold, 
-                                max_value, option, final_stage, min_value):
+    def multi_param_calculation(item1, item2, item3, flag1, flag2, flag3,
+        operation, threshold, max_value, option, final_stage, min_value):
         value = 0
         if operation == 'multiply':
             value = item1 * item2 * item3

@@ -132,7 +132,7 @@ def main():
     # The emissions from codecarbon are so inconsistent that this could be a possibility :(
     if final_emission >= initial_emissions:
         logger.log(
-            "Final emissions are greater than initial emissions; we are going to fail"
+            "Final emissions are greater than initial emissions. No optimal refactorings found."
         )
     else:
         logger.log(f"Saved {initial_emissions - final_emission} kg CO2")
