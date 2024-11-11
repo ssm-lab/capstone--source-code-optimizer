@@ -63,14 +63,12 @@ class PylintAnalyzer(Analyzer):
             self.file_path,
             os.path.basename(self.file_path),
         )
-        # print("THIS IS LMC DATA:", lmc_data)
         self.smells_data += lmc_data
         lmc_data = PylintAnalyzer.detect_unused_variables_and_attributes(
             PylintAnalyzer.read_code_from_path(self.file_path),
             self.file_path,
             os.path.basename(self.file_path),
         )
-        # print("THIS IS LMC DATA FOR UNUSED:", lmc_data)
         self.smells_data += lmc_data
         print(self.smells_data)
 
@@ -206,7 +204,6 @@ class PylintAnalyzer(Analyzer):
         declared_vars = set()
         used_vars = set()
         results = []
-        used_lines = set()
 
         # Helper function to gather declared variables (including class attributes)
         def gather_declarations(node):
@@ -236,7 +233,7 @@ class PylintAnalyzer(Analyzer):
             elif isinstance(node, ast.Attribute):
                 # Only add to used_vars if it's accessed (i.e., part of an expression)
                 if isinstance(node.ctx, ast.Load):  # 'Load' means accessing the attribute
-                    used_vars.add(f'{node.value}.{node.attr}')
+                    used_vars.add(f'{node.value.id}.{node.attr}')
 
         # Gather declared and used variables
         for node in ast.walk(tree):
@@ -245,60 +242,37 @@ class PylintAnalyzer(Analyzer):
 
         # Detect unused variables by finding declared variables not in used variables
         unused_vars = declared_vars - used_vars
-        # print("Declared Vars: ", declared_vars)
-        # print("Used Vars: ", used_vars)
-        # print("Unused: ", unused_vars)
 
         for var in unused_vars:
-            print("var again")
             # Locate the line number for each unused variable or attribute
             line_no, column_no = None, None
             for node in ast.walk(tree):
-                print("node: ", node)
                 if isinstance(node, ast.Name) and node.id == var:
                     line_no = node.lineno
                     column_no = node.col_offset
-                    print(node.lineno)
-                    result = {
-                        "type": "convention",
-                        "symbol": "unused-variable" if isinstance(node, ast.Name) else "unused-attribute",
-                        "message": f"Unused variable or attribute '{var}'",
-                        "message-id": "UV001",
-                        "confidence": "UNDEFINED",
-                        "module": module_name,
-                        "obj": '',
-                        "line": line_no,
-                        "column": column_no,
-                        "endLine": None,
-                        "endColumn": None,
-                        "path": file_path,
-                        "absolutePath": file_path,  # Assuming file_path is the absolute path
-                    }
-
-                    results.append(result)
                     break
-                elif isinstance(node, ast.Attribute) and f'{node.value}.{node.attr}' == var:
+                elif isinstance(node, ast.Attribute) and f'self.{node.attr}' == var and isinstance(node.value, ast.Name) and node.value.id == "self":
                     line_no = node.lineno
                     column_no = node.col_offset
-                    print(node.lineno)
-                    result = {
-                        "type": "convention",
-                        "symbol": "unused-variable" if isinstance(node, ast.Name) else "unused-attribute",
-                        "message": f"Unused variable or attribute '{var}'",
-                        "message-id": "UV001",
-                        "confidence": "UNDEFINED",
-                        "module": module_name,
-                        "obj": '',
-                        "line": line_no,
-                        "column": column_no,
-                        "endLine": None,
-                        "endColumn": None,
-                        "path": file_path,
-                        "absolutePath": file_path,  # Assuming file_path is the absolute path
-                    }
+                    break     
+                   
+            result = {
+                "type": "convention",
+                "symbol": "unused-variable" if isinstance(node, ast.Name) else "unused-attribute",
+                "message": f"Unused variable or attribute '{var}'",
+                "message-id": "UV001",
+                "confidence": "UNDEFINED",
+                "module": module_name,
+                "obj": '',
+                "line": line_no,
+                "column": column_no,
+                "endLine": None,
+                "endColumn": None,
+                "path": file_path,
+                "absolutePath": file_path,  # Assuming file_path is the absolute path
+            }
 
-                    results.append(result)
-                    break            
+            results.append(result)
 
         return results
 
