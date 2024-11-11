@@ -38,7 +38,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
 
         # remove specified line 
         modified_lines = original_lines[:]
-        del modified_lines[line_number - 1]
+        modified_lines[line_number - 1] = "\n"
 
         # for logging purpose to see what was removed
         if code_type == "W0611":  # UNUSED_IMPORT
@@ -67,7 +67,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         # check for improvement in emissions (for logging purposes only)
         if self.check_energy_improvement(initial_emissions, final_emissions):
             self.logger.log(
-                f"Removed unused import on line {line_number} and saved changes.\n"
+                f"Removed unused stuff on line {line_number} and saved changes.\n"
             )
         else:
             self.logger.log(
