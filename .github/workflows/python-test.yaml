@@ -2,7 +2,7 @@ name: "Run Python Tests"
 
 on:
     pull_request:
-      types: [opened, reopened]
+      types: [opened, reopened, synchronize]
       branches: [dev]
       paths:
         - "src/ecooptimizer/analyzers/**/*.py"
@@ -12,7 +12,7 @@ on:
         - "src/ecooptimizer/testing/**/*.py"
   
 jobs:
-    lint:
+    test:
         runs-on: ubuntu-latest
         env:
             GH_TOKEN: ${{ github.token }}
