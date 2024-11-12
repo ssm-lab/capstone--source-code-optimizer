@@ -13,10 +13,10 @@ def parse_line(file: str, line: int):
     try:
         # Parse the specified line (adjusted for 0-based indexing) into an AST node
         node = ast.parse(file_lines[line - 1].strip())
-    except(SyntaxError) as e:
+    except(SyntaxError) :
         # Return None if there is a syntax error in the specified line
         return None
-    
+
     return node  # Return the parsed AST node for the line
 
 def parse_file(file: str):
@@ -28,5 +28,5 @@ def parse_file(file: str):
     """
     with open(file, "r") as f:
         source = f.read()  # Read the full content of the file
-    
+
     return ast.parse(source)  # Parse the entire content as an AST node

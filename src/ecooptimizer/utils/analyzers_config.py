@@ -1,9 +1,7 @@
 # Any configurations that are done by the analyzers
-from enum import Enum
-from itertools import chain
+from enum import EnumMeta, StrEnum
 
-
-class ExtendedEnum(Enum):
+class ExtendedEnum(StrEnum):
 
     @classmethod
     def list(cls) -> list[str]:
@@ -12,37 +10,18 @@ class ExtendedEnum(Enum):
     def __str__(self):
         return str(self.value)
 
-
 # Enum class for standard Pylint code smells
 class PylintSmell(ExtendedEnum):
     LARGE_CLASS = "R0902"  # Pylint code smell for classes with too many attributes
-    LONG_PARAMETER_LIST = (
-        "R0913"  # Pylint code smell for functions with too many parameters
-    )
+    LONG_PARAMETER_LIST = "R0913"  # Pylint code smell for functions with too many parameters
     LONG_METHOD = "R0915"  # Pylint code smell for methods that are too long
-    COMPLEX_LIST_COMPREHENSION = (
-        "C0200"  # Pylint code smell for complex list comprehensions
-    )
-    INVALID_NAMING_CONVENTIONS = (
-        "C0103"  # Pylint code smell for naming conventions violations
-    )
+    COMPLEX_LIST_COMPREHENSION = "C0200"  # Pylint code smell for complex list comprehensions
+    INVALID_NAMING_CONVENTIONS = "C0103"  # Pylint code smell for naming conventions violations
     NO_SELF_USE = "R6301" # Pylint code smell for class methods that don't use any self calls
-
-    # unused stuff
-    UNUSED_IMPORT = (
-        "W0611" # Pylint code smell for unused imports
-    )
-    UNUSED_VARIABLE = (
-        "W0612" # Pylint code smell for unused variable 
-    )
-    UNUSED_CLASS_ATTRIBUTE = (
-        "W0615" # Pylint code smell for unused class attribute
-    )
-    USE_A_GENERATOR = (
-        "R1729"  # Pylint code smell for unnecessary list comprehensions inside `any()` or `all()`
-    )
-    
-
+    UNUSED_IMPORT = "W0611" # Pylint code smell for unused imports
+    UNUSED_VARIABLE = "W0612" # Pylint code smell for unused variable
+    UNUSED_CLASS_ATTRIBUTE = "W0615" # Pylint code smell for unused class attribute
+    USE_A_GENERATOR = "R1729"  # Pylint code smell for unnecessary list comprehensions inside `any()` or `all()`
 
 # Enum class for custom code smells not detected by Pylint
 class CustomSmell(ExtendedEnum):
@@ -50,18 +29,20 @@ class CustomSmell(ExtendedEnum):
     LONG_MESSAGE_CHAIN = "LMC001"  # CUSTOM CODE
     UNUSED_VAR_OR_ATTRIBUTE = "UV001" # CUSTOM CODE
 
-
 class IntermediateSmells(ExtendedEnum):
     LINE_TOO_LONG = "C0301"  # pylint smell
 
+class CombinedSmellsMeta(EnumMeta):
+    def __new__(metacls, clsname, bases, clsdict):
+        # Add all members from base enums
+        for enum in (PylintSmell, CustomSmell):
+            for member in enum:
+                clsdict[member.name] = member.value
+        return super().__new__(metacls, clsname, bases, clsdict)
 
-# Enum containing all smells
-class AllSmells(ExtendedEnum):
-    _ignore_ = "member cls"
-    cls = vars()
-    for member in chain(list(PylintSmell), list(CustomSmell)):
-        cls[member.name] = member.value
-
+# Define AllSmells, combining all enum members
+class AllSmells(ExtendedEnum, metaclass=CombinedSmellsMeta):
+    pass
 
 # Additional Pylint configuration options for analyzing code
 EXTRA_PYLINT_OPTIONS = [

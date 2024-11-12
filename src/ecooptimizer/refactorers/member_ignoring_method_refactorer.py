@@ -8,6 +8,7 @@ from testing.run_tests import run_tests
 
 from .base_refactorer import BaseRefactorer
 
+from ecooptimizer.data_wrappers.smell import Smell
 
 class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
     """
@@ -18,7 +19,7 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
         super().__init__(logger)
         self.target_line = None
 
-    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
         """
         Perform refactoring
 
@@ -52,6 +53,11 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
 
         # Measure emissions of the modified code
         final_emission = self.measure_energy(temp_file_path)
+
+        if not final_emission:
+            # os.remove(temp_file_path)
+            self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+            return
 
         # Check for improvement in emissions
         if self.check_energy_improvement(initial_emissions, final_emission):

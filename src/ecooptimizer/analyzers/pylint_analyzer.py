@@ -4,17 +4,19 @@ import os
 from io import StringIO
 
 from pylint.lint import Run
-from pylint.reporters.json_reporter import JSONReporter
+from pylint.reporters.json_reporter import JSON2Reporter
 
 from .base_analyzer import Analyzer
-from ..utils.logger import Logger
-from ..utils.ast_parser import parse_line
-from ..utils.analyzers_config import (
+from ecooptimizer.utils.logger import Logger
+from ecooptimizer.utils.ast_parser import parse_line
+from ecooptimizer.utils.analyzers_config import (
     PylintSmell,
     CustomSmell,
     IntermediateSmells,
     EXTRA_PYLINT_OPTIONS,
 )
+
+from ecooptimizer.data_wrappers.smell import Smell
 
 class PylintAnalyzer(Analyzer):
     def __init__(self, file_path: str, logger: Logger):
@@ -41,7 +43,7 @@ class PylintAnalyzer(Analyzer):
 
         # Capture pylint output in a JSON format buffer
         with StringIO() as buffer:
-            reporter = JSONReporter(buffer)
+            reporter = JSON2Reporter(buffer)
             pylint_options = self.build_pylint_options()
 
             try:
@@ -50,7 +52,7 @@ class PylintAnalyzer(Analyzer):
 
                 # Parse the JSON output
                 buffer.seek(0)
-                self.smells_data = json.loads(buffer.getvalue())
+                self.smells_data = json.loads(buffer.getvalue())["messages"]
                 self.logger.log("Pylint analyzer completed successfully.")
             except json.JSONDecodeError as e:
                 self.logger.log(f"Failed to parse JSON output from pylint: {e}")
@@ -58,20 +60,22 @@ class PylintAnalyzer(Analyzer):
                 self.logger.log(f"An error occurred during pylint analysis: {e}")
 
         self.logger.log("Running custom parsers:")
+
         lmc_data = PylintAnalyzer.detect_long_message_chain(
             PylintAnalyzer.read_code_from_path(self.file_path),
             self.file_path,
             os.path.basename(self.file_path),
         )
-        self.smells_data += lmc_data
+        print(type(lmc_data))
+
         lmc_data = PylintAnalyzer.detect_unused_variables_and_attributes(
             PylintAnalyzer.read_code_from_path(self.file_path),
             self.file_path,
             os.path.basename(self.file_path),
         )
-        self.smells_data += lmc_data
-        print(self.smells_data)
+        self.smells_data.extend(lmc_data)
 
+        print(self.smells_data)
 
     def configure_smells(self):
         """
@@ -79,28 +83,28 @@ class PylintAnalyzer(Analyzer):
         """
         self.logger.log("Filtering pylint smells")
 
-        configured_smells: list[object] = []
+        configured_smells: list[Smell] = []
 
         for smell in self.smells_data:
-            if smell["message-id"] in PylintSmell.list():
+            if smell["messageId"] in PylintSmell.list():
                 configured_smells.append(smell)
-            elif smell["message-id"] in CustomSmell.list():
+            elif smell["messageId"] in CustomSmell.list():
                 configured_smells.append(smell)
 
-            if smell["message-id"] == IntermediateSmells.LINE_TOO_LONG.value:
+            if smell["messageId"] == IntermediateSmells.LINE_TOO_LONG.value:
                 self.filter_ternary(smell)
 
         self.smells_data = configured_smells
 
-    def filter_for_one_code_smell(self, pylint_results: list[object], code: str):
-        filtered_results: list[object] = []
+    def filter_for_one_code_smell(self, pylint_results: list[Smell], code: str):
+        filtered_results: list[Smell] = []
         for error in pylint_results:
-            if error["message-id"] == code:
+            if error["messageId"] == code: # type: ignore
                 filtered_results.append(error)
 
         return filtered_results
 
-    def filter_ternary(self, smell: object):
+    def filter_ternary(self, smell: Smell):
         """
         Filters LINE_TOO_LONG smells to find ternary expression smells
         """
@@ -111,12 +115,13 @@ class PylintAnalyzer(Analyzer):
 
         for node in ast.walk(root_node):
             if isinstance(node, ast.IfExp):  # Ternary expression node
-                smell["message-id"] = CustomSmell.LONG_TERN_EXPR.value
+                smell["messageId"] = CustomSmell.LONG_TERN_EXPR.value
                 smell["message"] = "Ternary expression has too many branches"
                 self.smells_data.append(smell)
                 break
 
-    def detect_long_message_chain(code, file_path, module_name, threshold=3):
+    @staticmethod
+    def detect_long_message_chain(code: str, file_path: str, module_name: str, threshold=3):
         """
         Detects long message chains in the given Python code and returns a list of results.
 
@@ -132,7 +137,7 @@ class PylintAnalyzer(Analyzer):
         # Parse the code into an Abstract Syntax Tree (AST)
         tree = ast.parse(code)
 
-        results = []
+        results: list[Smell] = []
         used_lines = set()
 
         # Function to detect long chains
@@ -142,11 +147,11 @@ class PylintAnalyzer(Analyzer):
                 # Create the message for the convention
                 message = f"Method chain too long ({chain_length}/{threshold})"
                 # Add the result in the required format
-                result = {
+                result: Smell = {
                     "type": "convention",
                     "symbol": "long-message-chain",
                     "message": message,
-                    "message-id": "LMC001",
+                    "messageId": "LMC001",
                     "confidence": "UNDEFINED",
                     "module": module_name,
                     "obj": "",
@@ -185,7 +190,8 @@ class PylintAnalyzer(Analyzer):
 
         return results
 
-    def detect_unused_variables_and_attributes(code, file_path, module_name):
+    @staticmethod
+    def detect_unused_variables_and_attributes(code: str, file_path: str, module_name: str):
         """
         Detects unused variables and class attributes in the given Python code and returns a list of results.
 
@@ -203,7 +209,7 @@ class PylintAnalyzer(Analyzer):
         # Store variable and attribute declarations and usage
         declared_vars = set()
         used_vars = set()
-        results = []
+        results: list[Smell] = []
 
         # Helper function to gather declared variables (including class attributes)
         def gather_declarations(node):
@@ -213,7 +219,7 @@ class PylintAnalyzer(Analyzer):
                     if isinstance(target, ast.Name):  # Simple variable
                         declared_vars.add(target.id)
                     elif isinstance(target, ast.Attribute):  # Class attribute
-                        declared_vars.add(f'{target.value.id}.{target.attr}')
+                        declared_vars.add(f'{target.value.id}.{target.attr}') # type: ignore
 
             # For class attribute assignments (e.g., self.attribute)
             elif isinstance(node, ast.ClassDef):
@@ -223,7 +229,7 @@ class PylintAnalyzer(Analyzer):
                             if isinstance(target, ast.Name):
                                 declared_vars.add(target.id)
                             elif isinstance(target, ast.Attribute):
-                                declared_vars.add(f'{target.value.id}.{target.attr}')
+                                declared_vars.add(f'{target.value.id}.{target.attr}') # type: ignore
 
         # Helper function to gather used variables and class attributes
         def gather_usages(node):
@@ -245,7 +251,7 @@ class PylintAnalyzer(Analyzer):
 
         for var in unused_vars:
             # Locate the line number for each unused variable or attribute
-            line_no, column_no = None, None
+            line_no, column_no = 0, 0
             for node in ast.walk(tree):
                 if isinstance(node, ast.Name) and node.id == var:
                     line_no = node.lineno
@@ -254,13 +260,13 @@ class PylintAnalyzer(Analyzer):
                 elif isinstance(node, ast.Attribute) and f'self.{node.attr}' == var and isinstance(node.value, ast.Name) and node.value.id == "self":
                     line_no = node.lineno
                     column_no = node.col_offset
-                    break     
-                   
-            result = {
+                    break
+
+            result: Smell = {
                 "type": "convention",
                 "symbol": "unused-variable" if isinstance(node, ast.Name) else "unused-attribute",
                 "message": f"Unused variable or attribute '{var}'",
-                "message-id": "UV001",
+                "messageId": "UV001",
                 "confidence": "UNDEFINED",
                 "module": module_name,
                 "obj": '',
@@ -279,23 +285,14 @@ class PylintAnalyzer(Analyzer):
 
 
     @staticmethod
-    def read_code_from_path(file_path):
+    def read_code_from_path(file_path: str):
         """
         Reads the Python code from a given file path.
 
-        Args:
-        - file_path (str): The path to the Python file.
-
-        Returns:
-        - str: The content of the file as a string.
+        :param: file_path (str): The path to the Python file.
+        :return: code (str): The content of the file as a string.
         """
-        try:
-            with open(file_path, "r") as file:
+        with open(file_path, "r") as file:
                 code = file.read()
-            return code
-        except FileNotFoundError:
-            print(f"Error: The file at {file_path} was not found.")
-            return None
-        except IOError as e:
-            print(f"Error reading file {file_path}: {e}")
-            return None
+
+        return code

@@ -4,7 +4,6 @@ from refactorers.unused_refactorer import RemoveUnusedRefactorer
 from refactorers.long_parameter_list_refactorer import LongParameterListRefactorer
 from refactorers.member_ignoring_method_refactorer import MakeStaticRefactorer
 from refactorers.long_message_chain_refactorer import LongMessageChainRefactorer
-from refactorers.base_refactorer import BaseRefactorer
 
 # Import the configuration for all Pylint smells
 from utils.logger import Logger
@@ -36,17 +35,17 @@ class RefactorerFactory:
 
         # Use match statement to select the appropriate refactorer based on smell message ID
         match smell_messageID:
-            case AllSmells.USE_A_GENERATOR.value:
+            case AllSmells.USE_A_GENERATOR: # type: ignore
                 selected = UseAGeneratorRefactorer(logger)
-            case AllSmells.UNUSED_IMPORT.value:
+            case AllSmells.UNUSED_IMPORT:
                 selected = RemoveUnusedRefactorer(logger)
-            case AllSmells.UNUSED_VAR_OR_ATTRIBUTE.value:
+            case AllSmells.UNUSED_VAR_OR_ATTRIBUTE:
                 selected = RemoveUnusedRefactorer(logger)
-            case AllSmells.NO_SELF_USE.value:
+            case AllSmells.NO_SELF_USE:
                 selected = MakeStaticRefactorer(logger)
-            case AllSmells.LONG_PARAMETER_LIST.value:
+            case AllSmells.LONG_PARAMETER_LIST:
                 selected = LongParameterListRefactorer(logger)
-            case AllSmells.LONG_MESSAGE_CHAIN.value:
+            case AllSmells.LONG_MESSAGE_CHAIN:
                 selected = LongMessageChainRefactorer(logger)
             case _:
                 selected = None

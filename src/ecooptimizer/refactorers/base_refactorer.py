@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 import os
 from measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
+from ecooptimizer.data_wrappers.smell import Smell
+
 class BaseRefactorer(ABC):
     def __init__(self, logger):
         """
@@ -15,7 +17,7 @@ class BaseRefactorer(ABC):
         self.logger = logger  # Store the mandatory logger instance
 
     @abstractmethod
-    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
         """
         Abstract method for refactoring the code smell.
         Each subclass should implement this method.
@@ -26,13 +28,16 @@ class BaseRefactorer(ABC):
         """
         pass
 
-    def measure_energy(self, file_path: str) -> float:
+    def measure_energy(self, file_path: str):
         """
         Method for measuring the energy after refactoring.
         """
         codecarbon_energy_meter = CodeCarbonEnergyMeter(file_path, self.logger)
         codecarbon_energy_meter.measure_energy()  # measure emissions
         emissions = codecarbon_energy_meter.emissions  # get emission
+
+        if not emissions:
+            return None
 
         # Log the measured emissions
         self.logger.log(f"Measured emissions for '{os.path.basename(file_path)}': {emissions}")

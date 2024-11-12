@@ -3,6 +3,8 @@ import shutil
 from refactorers.base_refactorer import BaseRefactorer
 from testing.run_tests import run_tests
 
+from ecooptimizer.data_wrappers.smell import Smell
+
 class RemoveUnusedRefactorer(BaseRefactorer):
     def __init__(self, logger):
         """
@@ -12,7 +14,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         """
         super().__init__(logger)
 
-    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
         """
         Refactors unused imports, variables and class attributes by removing lines where they appear.
         Modifies the specified instance in the file if it results in lower emissions.
@@ -22,7 +24,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         :param initial_emission: Initial emission value before refactoring.
         """
         line_number = pylint_smell.get("line")
-        code_type = pylint_smell.get("message-id")
+        code_type = pylint_smell.get("messageId")
         print(code_type)
         self.logger.log(
             f"Applying 'Remove Unused Stuff' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
@@ -59,6 +61,11 @@ class RemoveUnusedRefactorer(BaseRefactorer):
 
         # Measure emissions of the modified code
         final_emissions = self.measure_energy(temp_file_path)
+
+        if not final_emissions:
+            # os.remove(temp_file_path)
+            self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+            return
 
         # shutil.move(temp_file_path, file_path)
 

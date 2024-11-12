@@ -5,6 +5,7 @@ import astor  # For converting AST back to source code
 import shutil
 import os
 
+from ecooptimizer.data_wrappers.smell import Smell
 from testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 
@@ -22,7 +23,7 @@ class UseAGeneratorRefactorer(BaseRefactorer):
         """
         super().__init__(logger)
 
-    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
@@ -83,6 +84,11 @@ class UseAGeneratorRefactorer(BaseRefactorer):
             # Measure emissions of the modified code
             final_emission = self.measure_energy(temp_file_path)
 
+            if not final_emission:
+                # os.remove(temp_file_path)
+                self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+                return
+
             # Check for improvement in emissions
             if self.check_energy_improvement(initial_emissions, final_emission):
                 # If improved, replace the original file with the modified content
@@ -93,7 +99,7 @@ class UseAGeneratorRefactorer(BaseRefactorer):
                         f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
                     )
                     return
-                
+
                 self.logger.log("Tests Fail! Discarded refactored changes")
 
             else:

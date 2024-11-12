@@ -36,7 +36,7 @@ class CodeCarbonEnergyMeter(BaseEnergyMeter):
             os.environ['TMPDIR'] = custom_temp_dir  # For Unix-based systems
 
             # TODO: Save to logger so doesn't print to console
-            tracker = EmissionsTracker(output_dir=custom_temp_dir, allow_multiple_runs=True)
+            tracker = EmissionsTracker(output_dir=custom_temp_dir, allow_multiple_runs=True) # type: ignore
             tracker.start()
 
             try:

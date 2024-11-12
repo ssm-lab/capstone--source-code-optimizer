@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 import os
 
-from ..utils.logger import Logger
+from ecooptimizer.utils.logger import Logger
+
+from ecooptimizer.data_wrappers.smell import Smell
 
 class Analyzer(ABC):
     def __init__(self, file_path: str, logger: Logger):
@@ -12,13 +14,13 @@ class Analyzer(ABC):
         :param logger: Logger instance to handle log messages.
         """
         self.file_path = file_path
-        self.smells_data: list[object] = []
+        self.smells_data: list[Smell] = list()
         self.logger = logger  # Use logger instance
 
     def validate_file(self):
         """
         Validates that the specified file path exists and is a file.
-        
+
         :return: Boolean indicating the validity of the file path.
         """
         is_valid = os.path.isfile(self.file_path)

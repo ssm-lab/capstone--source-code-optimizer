@@ -11,14 +11,17 @@ DIRNAME = os.path.dirname(__file__)
 
 
 def main():
+    # Set up logging
+    LOG_FILE = os.path.join(DIRNAME, "outputs/log.txt")
+    logger = Logger(LOG_FILE)
+
     # Path to the file to be analyzed
     TEST_FILE = os.path.abspath(
         os.path.join(DIRNAME, "../../tests/input/car_stuff.py")
     )
 
-    # Set up logging
-    LOG_FILE = os.path.join(DIRNAME, "outputs/log.txt")
-    logger = Logger(LOG_FILE)
+    if not os.path.isfile(TEST_FILE):
+        logger.log(f"Cannot find source code file '{TEST_FILE}'. Exiting...")
 
     # Log start of emissions capture
     logger.log(
@@ -35,6 +38,11 @@ def main():
     codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE, logger)
     codecarbon_energy_meter.measure_energy()
     initial_emissions = codecarbon_energy_meter.emissions  # Get initial emission
+
+    if not initial_emissions:
+        logger.log("Could not retrieve initial emissions. Ending Task.")
+        exit(0)
+
     initial_emissions_data = (
         codecarbon_energy_meter.emissions_data
     )  # Get initial emission data
@@ -97,7 +105,7 @@ def main():
 
     for pylint_smell in pylint_analyzer.smells_data:
         refactoring_class = RefactorerFactory.build_refactorer_class(
-            pylint_smell["message-id"], logger
+            pylint_smell["messageId"], logger
         )
         if refactoring_class:
             refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)

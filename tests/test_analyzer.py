@@ -50,7 +50,7 @@ def test_long_message_chain(LMC_code, logger):
     
     assert len(smells) == 1
     assert smells[0].get("symbol") == "long-message-chain"
-    assert smells[0].get("message-id") == "LMC001"
+    assert smells[0].get("messageId") == "LMC001"
     assert smells[0].get("line") == 2
     assert smells[0].get("module") == os.path.basename(LMC_code)
 
@@ -59,7 +59,7 @@ def test_member_ignoring_method(MIM_code, logger):
     
     assert len(smells) == 1
     assert smells[0].get("symbol") == "no-self-use"
-    assert smells[0].get("message-id") == "R6301"
+    assert smells[0].get("messageId") == "R6301"
     assert smells[0].get("line") == 8
     assert smells[0].get("module") == os.path.splitext(os.path.basename(MIM_code))[0]
 

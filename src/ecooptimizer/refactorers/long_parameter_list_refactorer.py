@@ -45,7 +45,7 @@ def classify_parameters(params):
     return data_params, config_params
 
 
-def create_parameter_object_class(param_names: list, class_name="ParamsObject"):
+def create_parameter_object_class(param_names: list[str], class_name="ParamsObject"):
     """
     Creates a class definition for encapsulating parameters as attributes
     """
@@ -183,6 +183,11 @@ class LongParameterListRefactorer(BaseRefactorer):
 
             # Measure emissions of the modified code
             final_emission = self.measure_energy(temp_file_path)
+
+            if not final_emission:
+                # os.remove(temp_file_path)
+                self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+                return
 
             if self.check_energy_improvement(initial_emissions, final_emission):
                 # If improved, replace the original file with the modified content

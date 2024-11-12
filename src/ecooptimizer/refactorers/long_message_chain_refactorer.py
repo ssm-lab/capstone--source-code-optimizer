@@ -5,6 +5,8 @@ import shutil
 from testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 
+from ecooptimizer.data_wrappers.smell import Smell
+
 
 class LongMessageChainRefactorer(BaseRefactorer):
     """
@@ -14,7 +16,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
     def __init__(self, logger):
         super().__init__(logger)
 
-    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
+    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
         """
         Refactor long message chains by breaking them into separate statements
         and writing the refactored code to a new file.
@@ -35,7 +37,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
         line_with_chain = lines[line_number - 1].rstrip()
 
         # Extract leading whitespace for correct indentation
-        leading_whitespace = re.match(r"^\s*", line_with_chain).group()
+        leading_whitespace = re.match(r"^\s*", line_with_chain).group() # type: ignore
 
         # Remove the function call wrapper if present (e.g., `print(...)`)
         chain_content = re.sub(r"^\s*print\((.*)\)\s*$", r"\1", line_with_chain)
@@ -75,6 +77,11 @@ class LongMessageChainRefactorer(BaseRefactorer):
         # Log completion
         # Measure emissions of the modified code
         final_emission = self.measure_energy(temp_file_path)
+
+        if not final_emission:
+            # os.remove(temp_file_path)
+            self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+            return
 
         #Check for improvement in emissions
         if self.check_energy_improvement(initial_emissions, final_emission):
