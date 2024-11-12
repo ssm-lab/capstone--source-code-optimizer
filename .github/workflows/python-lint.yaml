@@ -38,6 +38,7 @@ jobs:
 
             - name: Run Ruff
               run: |
+                ruff format
                 ruff check --fix --output-format=github .
 
             # Commit the generated PDF back to the repository
@@ -46,5 +47,5 @@ jobs:
               with:
                 author_name: "Github Action"
                 author_email: "action@github.com"
-                message: "Made automatic lint fixes"
+                message: "Made automatic formatting/lint fixes"
             
