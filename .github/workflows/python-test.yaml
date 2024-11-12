@@ -46,7 +46,11 @@ jobs:
             uses: tj-actions/changed-files@v45
             with:
               files: |
-                  **/*.py
+                  src/ecooptimizer/analyzers/**/*.py
+                  src/ecooptimizer/measurements/**/*.py
+                  src/ecooptimizer/refactorers/**/*.py
+                  src/ecooptimizer/utils/**/*.py
+                  src/ecooptimizer/testing/**/*.py
               dir_names: True
 
           - name: Run Pytest
