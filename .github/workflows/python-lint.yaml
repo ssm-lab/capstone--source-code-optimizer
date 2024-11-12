@@ -2,7 +2,7 @@ name: "Make Python Files Pretty"
 
 on:
     pull_request:
-      types: [opened, reopened]
+      types: [opened, reopened, synchronize]
       branches: [dev]
       paths:
         - "src/**/*.py"

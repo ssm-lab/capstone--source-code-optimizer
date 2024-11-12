@@ -12,7 +12,7 @@ on:
         - "src/ecooptimizer/testing/**/*.py"
   
 jobs:
-    lint:
+    test:
         runs-on: ubuntu-latest
         env:
             GH_TOKEN: ${{ github.token }}
