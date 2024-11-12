@@ -66,16 +66,14 @@ class PylintAnalyzer(Analyzer):
             self.file_path,
             os.path.basename(self.file_path),
         )
-        print(type(lmc_data))
+        self.smells_data.extend(lmc_data)
 
-        lmc_data = PylintAnalyzer.detect_unused_variables_and_attributes(
+        uva_data = PylintAnalyzer.detect_unused_variables_and_attributes(
             PylintAnalyzer.read_code_from_path(self.file_path),
             self.file_path,
             os.path.basename(self.file_path),
         )
-        self.smells_data.extend(lmc_data)
-
-        print(self.smells_data)
+        self.smells_data.extend(uva_data)
 
     def configure_smells(self):
         """
@@ -151,7 +149,7 @@ class PylintAnalyzer(Analyzer):
                     "type": "convention",
                     "symbol": "long-message-chain",
                     "message": message,
-                    "messageId": "LMC001",
+                    "messageId": CustomSmell.LONG_MESSAGE_CHAIN,
                     "confidence": "UNDEFINED",
                     "module": module_name,
                     "obj": "",
@@ -266,7 +264,7 @@ class PylintAnalyzer(Analyzer):
                 "type": "convention",
                 "symbol": "unused-variable" if isinstance(node, ast.Name) else "unused-attribute",
                 "message": f"Unused variable or attribute '{var}'",
-                "messageId": "UV001",
+                "messageId": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE,
                 "confidence": "UNDEFINED",
                 "module": module_name,
                 "obj": '',

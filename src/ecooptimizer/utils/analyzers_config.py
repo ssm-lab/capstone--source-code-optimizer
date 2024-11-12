@@ -25,9 +25,9 @@ class PylintSmell(ExtendedEnum):
 
 # Enum class for custom code smells not detected by Pylint
 class CustomSmell(ExtendedEnum):
-    LONG_TERN_EXPR = "CUST-1"  # Custom code smell for long ternary expressions
+    LONG_TERN_EXPR = "LTE001"  # Custom code smell for long ternary expressions
     LONG_MESSAGE_CHAIN = "LMC001"  # CUSTOM CODE
-    UNUSED_VAR_OR_ATTRIBUTE = "UV001" # CUSTOM CODE
+    UNUSED_VAR_OR_ATTRIBUTE = "UVA001" # CUSTOM CODE
 
 class IntermediateSmells(ExtendedEnum):
     LINE_TOO_LONG = "C0301"  # pylint smell

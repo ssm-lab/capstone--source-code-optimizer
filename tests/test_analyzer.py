@@ -32,10 +32,10 @@ def MIM_code(source_files):
     class SomeClass():
         def __init__(self, string):
             self.string = string
-    
+
         def print_str(self):
             print(self.string)
-    
+
         def say_hello(self, name):
             print(f"Hello {name}!")
     """)
@@ -47,7 +47,7 @@ def MIM_code(source_files):
 
 def test_long_message_chain(LMC_code, logger):
     smells = get_smells(LMC_code, logger)
-    
+
     assert len(smells) == 1
     assert smells[0].get("symbol") == "long-message-chain"
     assert smells[0].get("messageId") == "LMC001"
@@ -56,7 +56,7 @@ def test_long_message_chain(LMC_code, logger):
 
 def test_member_ignoring_method(MIM_code, logger):
     smells = get_smells(MIM_code, logger)
-    
+
     assert len(smells) == 1
     assert smells[0].get("symbol") == "no-self-use"
     assert smells[0].get("messageId") == "R6301"
