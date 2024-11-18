@@ -1,9 +1,9 @@
 # Import specific refactorer classes
-from refactorers.use_a_generator_refactorer import UseAGeneratorRefactorer
-from refactorers.unused_refactorer import RemoveUnusedRefactorer
-from refactorers.long_parameter_list_refactorer import LongParameterListRefactorer
-from refactorers.member_ignoring_method_refactorer import MakeStaticRefactorer
-from refactorers.long_message_chain_refactorer import LongMessageChainRefactorer
+from ecooptimizer.refactorers.list_comp_any_all import UseAGeneratorRefactorer
+from ecooptimizer.refactorers.unused import RemoveUnusedRefactorer
+from ecooptimizer.refactorers.long_parameter_list import LongParameterListRefactorer
+from ecooptimizer.refactorers.member_ignoring_method import MakeStaticRefactorer
+from ecooptimizer.refactorers.long_message_chain import LongMessageChainRefactorer
 
 # Import the configuration for all Pylint smells
 from utils.logger import Logger

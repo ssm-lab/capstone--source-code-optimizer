@@ -303,3 +303,6 @@ __pycache__/
 src/ecooptimizer/outputs/
 build/
 tests/temp_dir/
+
+# Coverage
+.coverage
