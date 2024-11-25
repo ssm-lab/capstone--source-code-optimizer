@@ -6,7 +6,7 @@ on:
       branches: [dev]
       paths:
         - "src/**/*.py"
-  
+
 jobs:
     lint:
         runs-on: ubuntu-latest
@@ -26,9 +26,31 @@ jobs:
               with:
                   token: ${{ steps.app-token.outputs.token }}
 
-            - name: Run Ruff
-              uses: astral-sh/ruff-action@v1
+            # Get changed .py files
+            - name: Get changed .py files
+              id: changed-py-files
+              uses: tj-actions/changed-files@v45
               with:
-                args: "check --config pyproject.toml"
-                changed-files: "true"
+                  files: |
+                      **/*.py
+                  files_ignore: |
+                      tests/input
+                      tests/_input_copies
+                  diff_relative: true # Get the list of files relative to the repo root
+
+            - name: Install Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.11"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install ruff
+
+            - name: Run Ruff
+              env:
+                  ALL_CHANGED_FILES: ${{ steps.changed-py-files.outputs.all_changed_files }}
+              run: |
+                  ruff check $ALL_CHANGED_FILES --output-format=github .
             
