@@ -35,7 +35,7 @@ jobs:
                       **/*.py
                   files_ignore: |
                       tests/input/**/*.py
-                      tests/_input_copies/**/.py
+                      tests/_input_copies/**/*.py
                   diff_relative: true # Get the list of files relative to the repo root
 
             - name: Install Python
