@@ -5,11 +5,7 @@ on:
       types: [opened, reopened, synchronize]
       branches: [dev]
       paths:
-        - "src/ecooptimizer/analyzers/**/*.py"
-        - "src/ecooptimizer/measurements/**/*.py"
-        - "src/ecooptimizer/refactorers/**/*.py"
-        - "src/ecooptimizer/utils/**/*.py"
-        - "src/ecooptimizer/testing/**/*.py"
+        - "src/ecooptimizer/**/*.py"
   
 jobs:
     test:
@@ -41,25 +37,25 @@ jobs:
               pip install .
               pip install .'[dev]'
 
-          - name: Get changed modules
-            id: changed-modules
+          - name: Get changed files
+            id: changed-files
             uses: tj-actions/changed-files@v45
             with:
               files: |
-                  src/ecooptimizer/analyzers/**/*.py
-                  src/ecooptimizer/measurements/**/*.py
-                  src/ecooptimizer/refactorers/**/*.py
-                  src/ecooptimizer/utils/**/*.py
-                  src/ecooptimizer/testing/**/*.py
-              dir_names: True
+                  src/ecooptimizer/**/*.py
 
-          - name: Run Pytest
-            if: steps.changed-modules.outputs.any_changed == 'true'
-            env:
-              ALL_CHANGED_MODULES: ${{ steps.changed-modules.outputs.all_changed_files }}
+          - name: Run Tests and Generate Coverage Report
             run: |
-              for module in ${ALL_CHANGED_MODULES}; do
-                folder="$(basename $module)"
-                pytest "tests/$folder/"
+              pytest --cov=src/ecooptimizer --cov-branch --cov-report=xml --cov-report=term-missing
+
+          - name: Check Coverage for Changed Lines
+            run: |
+              git fetch origin ${{ github.base_ref }}
+              diff-cover coverage.xml --compare-branch=origin/${{ github.base_ref }} --fail-under=80
+
+          - name: Check Per-File Coverage
+            run: |
+              for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+                echo "Checking overall coverage for $file"
+                coverage report --include=$file --fail-under=80 || exit 1
               done
-          
