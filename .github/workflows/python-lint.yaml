@@ -29,6 +29,6 @@ jobs:
             - name: Run Ruff
               uses: astral-sh/ruff-action@v1
               with:
-                args: "--config pyproject.toml"
+                args: "check --config pyproject.toml"
                 changed-files: "true"
             
