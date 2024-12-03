@@ -1,20 +1,21 @@
-import os
-import shutil
+import logging
+from pathlib import Path
 from refactorers.base_refactorer import BaseRefactorer
 from testing.run_tests import run_tests
 
-from ecooptimizer.data_wrappers.smell import Smell
+from data_wrappers.smell import Smell
+
 
 class RemoveUnusedRefactorer(BaseRefactorer):
-    def __init__(self, logger):
+    def __init__(self):
         """
         Initializes the RemoveUnusedRefactor with the specified logger.
 
         :param logger: Logger instance to handle log messages.
         """
-        super().__init__(logger)
+        super().__init__()
 
-    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """
         Refactors unused imports, variables and class attributes by removing lines where they appear.
         Modifies the specified instance in the file if it results in lower emissions.
@@ -25,38 +26,38 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         """
         line_number = pylint_smell.get("line")
         code_type = pylint_smell.get("messageId")
-        print(code_type)
-        self.logger.log(
-            f"Applying 'Remove Unused Stuff' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
+        logging.info(
+            f"Applying 'Remove Unused Stuff' refactor on '{file_path.name}' at line {line_number} for identified code smell."
         )
 
         # Load the source code as a list of lines
-        with open(file_path, "r") as file:
+        with file_path.open() as file:
             original_lines = file.readlines()
 
         # Check if the line number is valid within the file
         if not (1 <= line_number <= len(original_lines)):
-            self.logger.log("Specified line number is out of bounds.\n")
+            logging.info("Specified line number is out of bounds.\n")
             return
 
-        # remove specified line 
+        # remove specified line
         modified_lines = original_lines[:]
         modified_lines[line_number - 1] = "\n"
 
         # for logging purpose to see what was removed
         if code_type == "W0611":  # UNUSED_IMPORT
-            self.logger.log("Removed unused import.")
+            logging.info("Removed unused import.")
         elif code_type == "UV001":  # UNUSED_VARIABLE
-            self.logger.log("Removed unused variable or class attribute")
+            logging.info("Removed unused variable or class attribute")
         else:
-            self.logger.log("No matching refactor type found for this code smell but line was removed.")
+            logging.info(
+                "No matching refactor type found for this code smell but line was removed."
+            )
             return
 
         # Write the modified content to a temporary file
-        original_filename = os.path.basename(file_path)
-        temp_file_path = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_UNSDR_line_{line_number}.py"
+        temp_file_path = self.temp_dir / Path(f"{file_path.stem}_UNSDR_line_{line_number}.py")
 
-        with open(temp_file_path, "w") as temp_file:
+        with temp_file_path.open("w") as temp_file:
             temp_file.writelines(modified_lines)
 
         # Measure emissions of the modified code
@@ -64,7 +65,9 @@ class RemoveUnusedRefactorer(BaseRefactorer):
 
         if not final_emissions:
             # os.remove(temp_file_path)
-            self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+            logging.info(
+                f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
+            )
             return
 
         # shutil.move(temp_file_path, file_path)
@@ -72,16 +75,14 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         # check for improvement in emissions (for logging purposes only)
         if self.check_energy_improvement(initial_emissions, final_emissions):
             if run_tests() == 0:
-                self.logger.log("All test pass! Functionality maintained.")
-                self.logger.log(
-                    f"Removed unused stuff on line {line_number} and saved changes.\n"
-                )
+                logging.info("All test pass! Functionality maintained.")
+                logging.info(f"Removed unused stuff on line {line_number} and saved changes.\n")
                 return
-            
-            self.logger.log("Tests Fail! Discarded refactored changes")
+
+            logging.info("Tests Fail! Discarded refactored changes")
 
         else:
-            self.logger.log(
+            logging.info(
                 "No emission improvement after refactoring. Discarded refactored changes.\n"
             )
 

@@ -1,23 +1,25 @@
 # refactorers/base_refactor.py
 
 from abc import ABC, abstractmethod
-import os
+import logging
+from pathlib import Path
 from measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
-from ecooptimizer.data_wrappers.smell import Smell
+from data_wrappers.smell import Smell
+
 
 class BaseRefactorer(ABC):
-    def __init__(self, logger):
+    def __init__(self):
         """
         Base class for refactoring specific code smells.
 
         :param logger: Logger instance to handle log messages.
         """
-        
-        self.logger = logger  # Store the mandatory logger instance
+        self.temp_dir = (Path(__file__) / Path("../../../../outputs/refactored_source")).resolve()
+        self.temp_dir.mkdir(exist_ok=True)
 
     @abstractmethod
-    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """
         Abstract method for refactoring the code smell.
         Each subclass should implement this method.
@@ -28,11 +30,11 @@ class BaseRefactorer(ABC):
         """
         pass
 
-    def measure_energy(self, file_path: str):
+    def measure_energy(self, file_path: Path):
         """
         Method for measuring the energy after refactoring.
         """
-        codecarbon_energy_meter = CodeCarbonEnergyMeter(file_path, self.logger)
+        codecarbon_energy_meter = CodeCarbonEnergyMeter(file_path)
         codecarbon_energy_meter.measure_energy()  # measure emissions
         emissions = codecarbon_energy_meter.emissions  # get emission
 
@@ -40,7 +42,7 @@ class BaseRefactorer(ABC):
             return None
 
         # Log the measured emissions
-        self.logger.log(f"Measured emissions for '{os.path.basename(file_path)}': {emissions}")
+        logging.info(f"Measured emissions for '{file_path.name}': {emissions}")
 
         return emissions
 
@@ -52,5 +54,7 @@ class BaseRefactorer(ABC):
                  False otherwise.
         """
         improved = final_emissions and (final_emissions < initial_emissions)
-        self.logger.log(f"Initial Emissions: {initial_emissions} kg CO2. Final Emissions: {final_emissions} kg CO2.")
+        logging.info(
+            f"Initial Emissions: {initial_emissions} kg CO2. Final Emissions: {final_emissions} kg CO2."
+        )
         return improved

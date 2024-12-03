@@ -300,7 +300,7 @@ __pycache__/
 *.egg-info/
 
 # Package files
-src/ecooptimizer/outputs/
+outputs/
 build/
 tests/temp_dir/
 

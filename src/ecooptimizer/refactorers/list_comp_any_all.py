@@ -1,17 +1,17 @@
 # refactorers/use_a_generator_refactorer.py
 
 import ast
+import logging
+from pathlib import Path
 import astor  # For converting AST back to source code
-import shutil
-import os
 
-from ecooptimizer.data_wrappers.smell import Smell
+from data_wrappers.smell import Smell
 from testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 
 
 class UseAGeneratorRefactorer(BaseRefactorer):
-    def __init__(self, logger):
+    def __init__(self):
         """
         Initializes the UseAGeneratorRefactor with a file path, pylint
         smell, initial emission, and logger.
@@ -21,25 +21,25 @@ class UseAGeneratorRefactorer(BaseRefactorer):
         :param initial_emission: Initial emission value before refactoring.
         :param logger: Logger instance to handle log messages.
         """
-        super().__init__(logger)
+        super().__init__()
 
-    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
         """
         line_number = pylint_smell["line"]
-        self.logger.log(
-            f"Applying 'Use a Generator' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
+        logging.info(
+            f"Applying 'Use a Generator' refactor on '{file_path.name}' at line {line_number} for identified code smell."
         )
 
         # Load the source code as a list of lines
-        with open(file_path, "r") as file:
+        with file_path.open() as file:
             original_lines = file.readlines()
 
         # Check if the line number is valid within the file
         if not (1 <= line_number <= len(original_lines)):
-            self.logger.log("Specified line number is out of bounds.\n")
+            logging.info("Specified line number is out of bounds.\n")
             return
 
         # Target the specific line and remove leading whitespace for parsing
@@ -48,18 +48,14 @@ class UseAGeneratorRefactorer(BaseRefactorer):
         indentation = line[: len(line) - len(stripped_line)]  # Track indentation
 
         # Parse the line as an AST
-        line_ast = ast.parse(
-            stripped_line, mode="exec"
-        )  # Use 'exec' mode for full statements
+        line_ast = ast.parse(stripped_line, mode="exec")  # Use 'exec' mode for full statements
 
         # Look for a list comprehension within the AST of this line
         modified = False
         for node in ast.walk(line_ast):
             if isinstance(node, ast.ListComp):
                 # Convert the list comprehension to a generator expression
-                generator_expr = ast.GeneratorExp(
-                    elt=node.elt, generators=node.generators
-                )
+                generator_expr = ast.GeneratorExp(elt=node.elt, generators=node.generators)
                 ast.copy_location(generator_expr, node)
 
                 # Replace the list comprehension node with the generator expression
@@ -75,10 +71,9 @@ class UseAGeneratorRefactorer(BaseRefactorer):
             modified_lines[line_number - 1] = indentation + modified_line + "\n"
 
             # Temporarily write the modified content to a temporary file
-            original_filename = os.path.basename(file_path)
-            temp_file_path = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_UGENR_line_{line_number}.py"
+            temp_file_path = self.temp_dir / Path(f"{file_path.stem}_UGENR_line_{line_number}.py")
 
-            with open(temp_file_path, "w") as temp_file:
+            with temp_file_path.open("w") as temp_file:
                 temp_file.writelines(modified_lines)
 
             # Measure emissions of the modified code
@@ -86,35 +81,35 @@ class UseAGeneratorRefactorer(BaseRefactorer):
 
             if not final_emission:
                 # os.remove(temp_file_path)
-                self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+                logging.info(
+                    f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
+                )
                 return
 
             # Check for improvement in emissions
             if self.check_energy_improvement(initial_emissions, final_emission):
                 # If improved, replace the original file with the modified content
                 if run_tests() == 0:
-                    self.logger.log("All test pass! Functionality maintained.")
+                    logging.info("All test pass! Functionality maintained.")
                     # shutil.move(temp_file_path, file_path)
-                    self.logger.log(
+                    logging.info(
                         f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
                     )
                     return
 
-                self.logger.log("Tests Fail! Discarded refactored changes")
+                logging.info("Tests Fail! Discarded refactored changes")
 
             else:
-                self.logger.log(
+                logging.info(
                     "No emission improvement after refactoring. Discarded refactored changes.\n"
                 )
 
             # Remove the temporary file if no energy improvement or failing tests
             # os.remove(temp_file_path)
         else:
-            self.logger.log(
-                "No applicable list comprehension found on the specified line.\n"
-            )
+            logging.info("No applicable list comprehension found on the specified line.\n")
 
-    def _replace_node(self, tree, old_node, new_node):
+    def _replace_node(self, tree: ast.Module, old_node: ast.ListComp, new_node: ast.GeneratorExp):
         """
         Helper function to replace an old AST node with a new one within a tree.
 

@@ -1,17 +1,19 @@
 import ast
-import os
-import shutil
+import logging
+from pathlib import Path
 
 import astor
+
+from data_wrappers.smell import Smell
 from .base_refactorer import BaseRefactorer
 from testing.run_tests import run_tests
 
 
-def get_used_parameters(function_node, params):
+def get_used_parameters(function_node: ast.FunctionDef, params: list[str]):
     """
     Identifies parameters that are used within the function body using AST analysis
     """
-    used_params = set()
+    used_params: set[str] = set()
     source_code = astor.to_source(function_node)
 
     # Parse the function's source code into an AST tree
@@ -19,7 +21,7 @@ def get_used_parameters(function_node, params):
 
     # Define a visitor to track parameter usage
     class ParamUsageVisitor(ast.NodeVisitor):
-        def visit_Name(self, node):
+        def visit_Name(self, node):  # noqa: ANN001
             if isinstance(node.ctx, ast.Load) and node.id in params:
                 used_params.add(node.id)
 
@@ -29,12 +31,12 @@ def get_used_parameters(function_node, params):
     return used_params
 
 
-def classify_parameters(params):
+def classify_parameters(params: list[str]):
     """
     Classifies parameters into 'data' and 'config' groups based on naming conventions
     """
-    data_params = []
-    config_params = []
+    data_params: list[str] = []
+    config_params: list[str] = []
 
     for param in params:
         if param.startswith(("config", "flag", "option", "setting")):
@@ -45,7 +47,7 @@ def classify_parameters(params):
     return data_params, config_params
 
 
-def create_parameter_object_class(param_names: list[str], class_name="ParamsObject"):
+def create_parameter_object_class(param_names: list[str], class_name: str = "ParamsObject"):
     """
     Creates a class definition for encapsulating parameters as attributes
     """
@@ -60,18 +62,18 @@ class LongParameterListRefactorer(BaseRefactorer):
     Refactorer that targets methods in source code that take too many parameters
     """
 
-    def __init__(self, logger):
-        super().__init__(logger)
+    def __init__(self):
+        super().__init__()
 
-    def refactor(self, file_path, pylint_smell, initial_emissions):
+    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """
         Identifies methods with too many parameters, encapsulating related ones & removing unused ones
         """
         target_line = pylint_smell["line"]
-        self.logger.log(
-            f"Applying 'Fix Too Many Parameters' refactor on '{os.path.basename(file_path)}' at line {target_line} for identified code smell."
+        logging.info(
+            f"Applying 'Fix Too Many Parameters' refactor on '{file_path.name}' at line {target_line} for identified code smell."
         )
-        with open(file_path, "r") as f:
+        with file_path.open() as f:
             tree = ast.parse(f.read())
 
         # Flag indicating if a refactoring has been made
@@ -88,9 +90,7 @@ class LongParameterListRefactorer(BaseRefactorer):
                     used_params = get_used_parameters(node, params)
 
                     # Remove unused parameters
-                    new_params = [
-                        arg for arg in node.args.args if arg.arg in used_params
-                    ]
+                    new_params = [arg for arg in node.args.args if arg.arg in used_params]
                     if len(new_params) != len(
                         node.args.args
                     ):  # Check if any parameters were removed
@@ -111,18 +111,14 @@ class LongParameterListRefactorer(BaseRefactorer):
                             data_param_object_code = create_parameter_object_class(
                                 data_params, class_name="DataParams"
                             )
-                            data_param_object_ast = ast.parse(
-                                data_param_object_code
-                            ).body[0]
+                            data_param_object_ast = ast.parse(data_param_object_code).body[0]
                             tree.body.insert(0, data_param_object_ast)
 
                         if config_params:
                             config_param_object_code = create_parameter_object_class(
                                 config_params, class_name="ConfigParams"
                             )
-                            config_param_object_ast = ast.parse(
-                                config_param_object_code
-                            ).body[0]
+                            config_param_object_ast = ast.parse(config_param_object_code).body[0]
                             tree.body.insert(0, config_param_object_ast)
 
                         # Modify function to use two parameters for the parameter objects
@@ -134,51 +130,41 @@ class LongParameterListRefactorer(BaseRefactorer):
 
                         # Update all parameter usages within the function to access attributes of the parameter objects
                         class ParamAttributeUpdater(ast.NodeTransformer):
-                            def visit_Attribute(self, node):
-                                if node.attr in data_params and isinstance(
-                                    node.ctx, ast.Load
-                                ):
+                            def visit_Attribute(self, node):  # noqa: ANN001
+                                if node.attr in data_params and isinstance(node.ctx, ast.Load):  # noqa: B023
                                     return ast.Attribute(
-                                        value=ast.Name(
-                                            id="self", ctx=ast.Load()
-                                        ),
+                                        value=ast.Name(id="self", ctx=ast.Load()),
                                         attr="data_params",
                                         ctx=node.ctx,
                                     )
-                                elif node.attr in config_params and isinstance(
-                                    node.ctx, ast.Load
-                                ):
+                                elif node.attr in config_params and isinstance(node.ctx, ast.Load):  # noqa: B023
                                     return ast.Attribute(
-                                        value=ast.Name(
-                                            id="self", ctx=ast.Load()
-                                        ),
+                                        value=ast.Name(id="self", ctx=ast.Load()),
                                         attr="config_params",
                                         ctx=node.ctx,
                                     )
                                 return node
-                            def visit_Name(self, node):
-                                if node.id in data_params and isinstance(node.ctx, ast.Load):
+
+                            def visit_Name(self, node):  # noqa: ANN001
+                                if node.id in data_params and isinstance(node.ctx, ast.Load):  # noqa: B023
                                     return ast.Attribute(
                                         value=ast.Name(id="data_params", ctx=ast.Load()),
                                         attr=node.id,
-                                        ctx=ast.Load()
-                                        )
-                                elif node.id in config_params and isinstance(node.ctx, ast.Load):
+                                        ctx=ast.Load(),
+                                    )
+                                elif node.id in config_params and isinstance(node.ctx, ast.Load):  # noqa: B023
                                     return ast.Attribute(
                                         value=ast.Name(id="config_params", ctx=ast.Load()),
                                         attr=node.id,
-                                        ctx=ast.Load()
-                                        )
+                                        ctx=ast.Load(),
+                                    )
 
-                        node.body = [
-                            ParamAttributeUpdater().visit(stmt) for stmt in node.body
-                        ]
+                        node.body = [ParamAttributeUpdater().visit(stmt) for stmt in node.body]
 
         if modified:
             # Write back modified code to temporary file
-            original_filename = os.path.basename(file_path)
-            temp_file_path = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LPLR_line_{target_line}.py"
-            with open(temp_file_path, "w") as temp_file:
+            temp_file_path = self.temp_dir / Path(f"{file_path.stem}_LPLR_line_{target_line}.py")
+            with temp_file_path.open("w") as temp_file:
                 temp_file.write(astor.to_source(tree))
 
             # Measure emissions of the modified code
@@ -186,23 +172,25 @@ class LongParameterListRefactorer(BaseRefactorer):
 
             if not final_emission:
                 # os.remove(temp_file_path)
-                self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+                logging.info(
+                    f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
+                )
                 return
 
             if self.check_energy_improvement(initial_emissions, final_emission):
                 # If improved, replace the original file with the modified content
                 if run_tests() == 0:
-                    self.logger.log("All test pass! Functionality maintained.")
+                    logging.info("All test pass! Functionality maintained.")
                     # shutil.move(temp_file_path, file_path)
-                    self.logger.log(
+                    logging.info(
                         f"Refactored long parameter list into data groups on line {target_line} and saved.\n"
                     )
                     return
-                
-                self.logger.log("Tests Fail! Discarded refactored changes")
+
+                logging.info("Tests Fail! Discarded refactored changes")
 
             else:
-                self.logger.log(
+                logging.info(
                     "No emission improvement after refactoring. Discarded refactored changes.\n"
                 )
 

@@ -1,12 +1,11 @@
 # Import specific refactorer classes
-from ecooptimizer.refactorers.list_comp_any_all import UseAGeneratorRefactorer
-from ecooptimizer.refactorers.unused import RemoveUnusedRefactorer
-from ecooptimizer.refactorers.long_parameter_list import LongParameterListRefactorer
-from ecooptimizer.refactorers.member_ignoring_method import MakeStaticRefactorer
-from ecooptimizer.refactorers.long_message_chain import LongMessageChainRefactorer
+from refactorers.list_comp_any_all import UseAGeneratorRefactorer
+from refactorers.unused import RemoveUnusedRefactorer
+from refactorers.long_parameter_list import LongParameterListRefactorer
+from refactorers.member_ignoring_method import MakeStaticRefactorer
+from refactorers.long_message_chain import LongMessageChainRefactorer
 
 # Import the configuration for all Pylint smells
-from utils.logger import Logger
 from utils.analyzers_config import AllSmells
 
 
@@ -17,7 +16,7 @@ class RefactorerFactory:
     """
 
     @staticmethod
-    def build_refactorer_class(smell_messageID: str, logger: Logger):
+    def build_refactorer_class(smell_messageID: str):
         """
         Static method to create and return a refactorer instance based on the provided code smell.
 
@@ -35,18 +34,18 @@ class RefactorerFactory:
 
         # Use match statement to select the appropriate refactorer based on smell message ID
         match smell_messageID:
-            case AllSmells.USE_A_GENERATOR: # type: ignore
-                selected = UseAGeneratorRefactorer(logger)
-            case AllSmells.UNUSED_IMPORT:
-                selected = RemoveUnusedRefactorer(logger)
-            case AllSmells.UNUSED_VAR_OR_ATTRIBUTE:
-                selected = RemoveUnusedRefactorer(logger)
-            case AllSmells.NO_SELF_USE:
-                selected = MakeStaticRefactorer(logger)
-            case AllSmells.LONG_PARAMETER_LIST:
-                selected = LongParameterListRefactorer(logger)
-            case AllSmells.LONG_MESSAGE_CHAIN:
-                selected = LongMessageChainRefactorer(logger)
+            case AllSmells.USE_A_GENERATOR:  # type: ignore
+                selected = UseAGeneratorRefactorer()
+            case AllSmells.UNUSED_IMPORT:  # type: ignore
+                selected = RemoveUnusedRefactorer()
+            case AllSmells.UNUSED_VAR_OR_ATTRIBUTE:  # type: ignore
+                selected = RemoveUnusedRefactorer()
+            case AllSmells.NO_SELF_USE:  # type: ignore
+                selected = MakeStaticRefactorer()
+            case AllSmells.LONG_PARAMETER_LIST:  # type: ignore
+                selected = LongParameterListRefactorer()
+            case AllSmells.LONG_MESSAGE_CHAIN:  # type: ignore
+                selected = LongMessageChainRefactorer()
             case _:
                 selected = None
 

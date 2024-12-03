@@ -1,11 +1,11 @@
-import os
+import logging
+from pathlib import Path
 import re
-import shutil
 
 from testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 
-from ecooptimizer.data_wrappers.smell import Smell
+from data_wrappers.smell import Smell
 
 
 class LongMessageChainRefactorer(BaseRefactorer):
@@ -13,31 +13,30 @@ class LongMessageChainRefactorer(BaseRefactorer):
     Refactorer that targets long method chains to improve performance.
     """
 
-    def __init__(self, logger):
-        super().__init__(logger)
+    def __init__(self):
+        super().__init__()
 
-    def refactor(self, file_path: str, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """
         Refactor long message chains by breaking them into separate statements
         and writing the refactored code to a new file.
         """
         # Extract details from pylint_smell
         line_number = pylint_smell["line"]
-        original_filename = os.path.basename(file_path)
-        temp_filename = f"src/ecooptimizer/outputs/refactored_source/{os.path.splitext(original_filename)[0]}_LMCR_line_{line_number}.py"
+        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LMCR_line_{line_number}.py")
 
-        self.logger.log(
-            f"Applying 'Separate Statements' refactor on '{os.path.basename(file_path)}' at line {line_number} for identified code smell."
+        logging.info(
+            f"Applying 'Separate Statements' refactor on '{file_path.name}' at line {line_number} for identified code smell."
         )
         # Read the original file
-        with open(file_path, "r") as f:
+        with file_path.open() as f:
             lines = f.readlines()
 
         # Identify the line with the long method chain
         line_with_chain = lines[line_number - 1].rstrip()
 
         # Extract leading whitespace for correct indentation
-        leading_whitespace = re.match(r"^\s*", line_with_chain).group() # type: ignore
+        leading_whitespace = re.match(r"^\s*", line_with_chain).group()  # type: ignore
 
         # Remove the function call wrapper if present (e.g., `print(...)`)
         chain_content = re.sub(r"^\s*print\((.*)\)\s*$", r"\1", line_with_chain)
@@ -71,7 +70,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
 
         temp_file_path = temp_filename
         # Write the refactored code to a new temporary file
-        with open(temp_filename, "w") as temp_file:
+        with temp_file_path.open("w") as temp_file:
             temp_file.writelines(lines)
 
         # Log completion
@@ -80,24 +79,26 @@ class LongMessageChainRefactorer(BaseRefactorer):
 
         if not final_emission:
             # os.remove(temp_file_path)
-            self.logger.log(f"Could not measure emissions for '{os.path.basename(temp_file_path)}'. Discarded refactoring.")
+            logging.info(
+                f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
+            )
             return
 
-        #Check for improvement in emissions
+        # Check for improvement in emissions
         if self.check_energy_improvement(initial_emissions, final_emission):
             # If improved, replace the original file with the modified content
             if run_tests() == 0:
-                self.logger.log("All test pass! Functionality maintained.")
+                logging.info("All test pass! Functionality maintained.")
                 # shutil.move(temp_file_path, file_path)
-                self.logger.log(
+                logging.info(
                     f"Refactored long message chain on line {pylint_smell["line"]} and saved.\n"
                 )
                 return
-            
-            self.logger.log("Tests Fail! Discarded refactored changes")
+
+            logging.info("Tests Fail! Discarded refactored changes")
 
         else:
-            self.logger.log(
+            logging.info(
                 "No emission improvement after refactoring. Discarded refactored changes.\n"
             )
 

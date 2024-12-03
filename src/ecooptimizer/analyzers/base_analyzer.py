@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
-import os
+import ast
+import logging
+from pathlib import Path
 
-from ecooptimizer.utils.logger import Logger
+from data_wrappers.smell import Smell
 
-from ecooptimizer.data_wrappers.smell import Smell
 
 class Analyzer(ABC):
-    def __init__(self, file_path: str, logger: Logger):
+    def __init__(self, file_path: Path, source_code: ast.Module):
         """
         Base class for analyzers to find code smells of a given file.
 
@@ -14,8 +15,8 @@ class Analyzer(ABC):
         :param logger: Logger instance to handle log messages.
         """
         self.file_path = file_path
+        self.source_code = source_code
         self.smells_data: list[Smell] = list()
-        self.logger = logger  # Use logger instance
 
     def validate_file(self):
         """
@@ -23,10 +24,11 @@ class Analyzer(ABC):
 
         :return: Boolean indicating the validity of the file path.
         """
-        is_valid = os.path.isfile(self.file_path)
-        if not is_valid:
-            self.logger.log(f"File not found: {self.file_path}")
-        return is_valid
+        if not self.file_path.is_file():
+            logging.error(f"File not found: {self.file_path!s}")
+            return False
+
+        return True
 
     @abstractmethod
     def analyze(self):

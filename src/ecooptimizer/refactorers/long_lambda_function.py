@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from .base_refactorer import BaseRefactorer
 
 
@@ -6,10 +8,10 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
     Refactorer that targets long methods to improve readability.
     """
 
-    def __init__(self, logger):
-        super().__init__(logger)
+    def __init__(self):
+        super().__init__()
 
-    def refactor(self, file_path: str, pylint_smell: object, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: object, initial_emissions: float):
         """
         Refactor long lambda functions
         """

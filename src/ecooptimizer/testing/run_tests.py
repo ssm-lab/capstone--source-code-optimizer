@@ -1,10 +1,12 @@
-import os
+from pathlib import Path
 import sys
 import pytest
 
-REFACTOR_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(REFACTOR_DIR))
+REFACTOR_DIR = Path(__file__).absolute().parent
+sys.path.append(str(REFACTOR_DIR))
+
 
 def run_tests():
-    TEST_FILE = os.path.abspath("tests/input/car_stuff_tests.py")
-    return pytest.main([TEST_FILE, "--maxfail=1", "--disable-warnings", "--capture=no"])
+    TEST_FILE = (REFACTOR_DIR / Path("../../../tests/input/car_stuff_tests.py")).resolve()
+    print("test file", TEST_FILE)
+    return pytest.main([str(TEST_FILE), "--maxfail=1", "--disable-warnings", "--capture=no"])

@@ -1,157 +1,158 @@
-import os
+import logging
+from pathlib import Path
 
-from utils.outputs_config import save_json_files, copy_file_to_output
+from utils.ast_parser import parse_file
+from utils.outputs_config import OutputConfig
 
 from measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from analyzers.pylint_analyzer import PylintAnalyzer
 from utils.refactorer_factory import RefactorerFactory
-from utils.logger import Logger
 
-DIRNAME = os.path.dirname(__file__)
+# Path of current directory
+DIRNAME = Path(__file__).parent
+# Path to output folder
+OUTPUT_DIR = (DIRNAME / Path("../../outputs")).resolve()
+# Path to log file
+LOG_FILE = OUTPUT_DIR / Path("log.log")
+# Path to the file to be analyzed
+TEST_FILE = (DIRNAME / Path("../../tests/input/car_stuff.py")).resolve()
 
 
 def main():
-    # Set up logging
-    LOG_FILE = os.path.join(DIRNAME, "outputs/log.txt")
-    logger = Logger(LOG_FILE)
+    output_config = OutputConfig(OUTPUT_DIR)
 
-    # Path to the file to be analyzed
-    TEST_FILE = os.path.abspath(
-        os.path.join(DIRNAME, "../../tests/input/car_stuff.py")
+    # Set up logging
+    logging.basicConfig(
+        filename=LOG_FILE,
+        level=logging.DEBUG,
+        format="[ecooptimizer %(levelname)s @ %(asctime)s] %(message)s",
+        datefmt="%H:%M:%S",
     )
 
-    if not os.path.isfile(TEST_FILE):
-        logger.log(f"Cannot find source code file '{TEST_FILE}'. Exiting...")
+    SOURCE_CODE = parse_file(TEST_FILE)
+
+    if not TEST_FILE.is_file():
+        logging.error(f"Cannot find source code file '{TEST_FILE}'. Exiting...")
 
     # Log start of emissions capture
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
-    logger.log(
+    logging.info(
         "                                    CAPTURE INITIAL EMISSIONS                                        "
     )
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
 
     # Measure energy with CodeCarbonEnergyMeter
-    codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE, logger)
+    codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE)
     codecarbon_energy_meter.measure_energy()
     initial_emissions = codecarbon_energy_meter.emissions  # Get initial emission
 
     if not initial_emissions:
-        logger.log("Could not retrieve initial emissions. Ending Task.")
+        logging.error("Could not retrieve initial emissions. Ending Task.")
         exit(0)
 
-    initial_emissions_data = (
-        codecarbon_energy_meter.emissions_data
-    )  # Get initial emission data
+    initial_emissions_data = codecarbon_energy_meter.emissions_data  # Get initial emission data
 
-    # Save initial emission data
-    save_json_files("initial_emissions_data.txt", initial_emissions_data, logger)
-    logger.log(f"Initial Emissions: {initial_emissions} kg CO2")
-    logger.log(
+    if initial_emissions_data:
+        # Save initial emission data
+        output_config.save_json_files(Path("initial_emissions_data.txt"), initial_emissions_data)
+    else:
+        logging.error("Could not retrieve emissions data. No save file created.")
+
+    logging.info(f"Initial Emissions: {initial_emissions} kg CO2")
+    logging.info(
         "#####################################################################################################\n\n"
     )
 
     # Log start of code smells capture
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
-    logger.log(
+    logging.info(
         "                                         CAPTURE CODE SMELLS                                         "
     )
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
 
     # Anaylze code smells with PylintAnalyzer
-    pylint_analyzer = PylintAnalyzer(TEST_FILE, logger)
+    pylint_analyzer = PylintAnalyzer(TEST_FILE, SOURCE_CODE)
     pylint_analyzer.analyze()  # analyze all smells
 
     # Save code smells
-    save_json_files("all_pylint_smells.json", pylint_analyzer.smells_data, logger)
+    output_config.save_json_files(Path("all_pylint_smells.json"), pylint_analyzer.smells_data)
 
     pylint_analyzer.configure_smells()  # get all configured smells
 
     # Save code smells
-    save_json_files(
-        "all_configured_pylint_smells.json", pylint_analyzer.smells_data, logger
+    output_config.save_json_files(
+        Path("all_configured_pylint_smells.json"), pylint_analyzer.smells_data
     )
-    logger.log(f"Refactorable code smells: {len(pylint_analyzer.smells_data)}")
-    logger.log(
+    logging.info(f"Refactorable code smells: {len(pylint_analyzer.smells_data)}")
+    logging.info(
         "#####################################################################################################\n\n"
     )
 
     # Log start of refactoring codes
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
-    logger.log(
+    logging.info(
         "                                        REFACTOR CODE SMELLS                                         "
     )
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
 
-    SOURCE_CODE_OUTPUT = os.path.abspath("src/ecooptimizer/outputs/refactored_source")
-    print(SOURCE_CODE_OUTPUT)
-    # Ensure the output directory exists; if not, create it
-    if not os.path.exists(SOURCE_CODE_OUTPUT):
-        os.makedirs(SOURCE_CODE_OUTPUT)
-
     # Refactor code smells
-    copy_file_to_output(TEST_FILE, "refactored-test-case.py")
+    output_config.copy_file_to_output(TEST_FILE, "refactored-test-case.py")
 
     for pylint_smell in pylint_analyzer.smells_data:
-        refactoring_class = RefactorerFactory.build_refactorer_class(
-            pylint_smell["messageId"], logger
-        )
+        refactoring_class = RefactorerFactory.build_refactorer_class(pylint_smell["messageId"])
         if refactoring_class:
             refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)
         else:
-            logger.log(
-                f"Refactoring for smell {pylint_smell['symbol']} is not implemented.\n"
-            )
-    logger.log(
+            logging.info(f"Refactoring for smell {pylint_smell['symbol']} is not implemented.\n")
+    logging.info(
         "#####################################################################################################\n\n"
     )
 
     return
 
     # Log start of emissions capture
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
-    logger.log(
+    logging.info(
         "                                    CAPTURE FINAL EMISSIONS                                        "
     )
-    logger.log(
+    logging.info(
         "#####################################################################################################"
     )
 
     # Measure energy with CodeCarbonEnergyMeter
-    codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE, logger)
+    codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE)
     codecarbon_energy_meter.measure_energy()  # Measure emissions
     final_emission = codecarbon_energy_meter.emissions  # Get final emission
-    final_emission_data = (
-        codecarbon_energy_meter.emissions_data
-    )  # Get final emission data
+    final_emission_data = codecarbon_energy_meter.emissions_data  # Get final emission data
 
     # Save final emission data
-    save_json_files("final_emissions_data.txt", final_emission_data, logger)
-    logger.log(f"Final Emissions: {final_emission} kg CO2")
-    logger.log(
+    output_config.save_json_files("final_emissions_data.txt", final_emission_data)
+    logging.info(f"Final Emissions: {final_emission} kg CO2")
+    logging.info(
         "#####################################################################################################\n\n"
     )
 
     # The emissions from codecarbon are so inconsistent that this could be a possibility :(
     if final_emission >= initial_emissions:
-        logger.log(
+        logging.info(
             "Final emissions are greater than initial emissions. No optimal refactorings found."
         )
     else:
-        logger.log(f"Saved {initial_emissions - final_emission} kg CO2")
+        logging.info(f"Saved {initial_emissions - final_emission} kg CO2")
 
 
 if __name__ == "__main__":
