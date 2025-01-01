@@ -58,7 +58,7 @@
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
 October 11th, 2024 & 0 & Created initial revision of SRS\\
-January 1st, 2025 & 0.1 & Fixed link references to tables and figures and added preambles to those sections\\
+January 1st, 2025 & 0.1 & Fixed link references to tables and figures and added preambles to those sections, move glossary section\\
 \bottomrule
 \end{tabularx}
 
@@ -85,6 +85,151 @@ achieved after applying the refactorings. Benchmarks will compare the energy con
 and refactored code, to achieve a measurable percentage reduction in energy consumption. The user's 
 ability to make informed choices about whether to apply refactorings will also be evaluated through 
 user feedback.
+
+\section{Naming Conventions and Terminology}
+\subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
+involved in the Project}
+
+% --- TERMS PRESENT IN THE STAKEHOLDER SECTION ---
+\paragraph*{supervisor}
+A member of faculty from McMaster University responsible for overseeing a project being worked on by students taking the SFWRENG 4G06 Capstone course.
+
+\paragraph*{large-scale applications}
+Applications that manage high volumes of data, users, or transactions, typically requiring scalable architectures.
+
+\paragraph*{cloud-hosted applications}
+Software applications deployed and run on remote cloud servers, accessible over the internet.
+
+\paragraph*{environmental footprint}
+The total impact an activity or product has on the environment, measured by metrics like carbon emissions and resource consumption.
+
+\paragraph*{refactoring}
+The process of restructuring existing code without changing its external behaviour to improve readability, performance, or maintainability.
+
+\paragraph*{mobile environment}
+A software environment specifically designed for mobile devices, such as smartphones or tablets, which have limited resources.
+
+\paragraph*{embedded environment}
+A software environment where applications run on specialized hardware with constrained resources, often without traditional operating systems.
+
+\paragraph*{SaaS}
+Software as a Service (SaaS) refers to cloud-based software applications delivered to users via the internet on a subscription basis.
+
+\paragraph*{backend}
+The part of a software system that handles server-side logic, database interactions, and application functionality not directly visible to users.
+
+\paragraph*{software developer}
+A professional who designs, writes, and maintains software applications or systems.
+
+\paragraph*{data analyst}
+A professional who processes and analyzes large sets of data to help organizations make informed decisions.
+
+\paragraph*{tech company}
+A company focused on technology products and services, including software, hardware, and IT services.
+
+\paragraph*{freelance}
+Self-employed individuals who offer specialized services, such as software development, without long-term commitments to any employer.
+
+\paragraph*{usability testing}
+A method of evaluating how easy and user-friendly a software application or product is by observing real users interacting with it.
+
+% --- TERMS PRESENT IN THE OPERATIONAL AND ENVIRONMENTAL REQUIREMENTS SECTION ---
+\paragraph*{Python Code}
+Refers to the original Python code given by the end user to refactor.
+
+\paragraph*{Refactored Code}
+Refers to the Python code that had refactorings made to it.
+
+\paragraph*{library}
+A collection of pre-written code that developers can reuse in their projects to add specific functionalities.
+
+\paragraph*{Git}
+\label{term:git}
+A distributed version control system that allows multiple developers to track changes in source code, collaborate, and manage project history efficiently.
+
+\paragraph*{GitHub}
+\label{term:GitH}
+A web-based platform used for version control and collaboration on code through \hyperref[term:git]{Git} repositories.
+
+\paragraph*{Actions}
+A \hyperref[term:GitH]{GitHub} feature that automates tasks such as testing, deployment, and continuous integration via custom workflows.
+
+\paragraph*{workflow}
+A sequence of automated steps or actions that define a process, often for continuous integration, deployment, or testing.
+
+\paragraph*{Visual Studio Code}
+\label{term:VSC}
+A free, open-source code editor developed by Microsoft, known for its versatility and wide range of extensions.
+
+\paragraph*{VS Code}
+An abbreviation of \hyperref[term:VSC]{Visual Studio Code}
+
+\paragraph*{Visual Studio Code (VS Code) marketplace}
+An online platform where users can discover, install, and manage extensions that enhance the functionality of \hyperref[term:VSC]{Visual Studio Code}.
+
+\paragraph*{JSON}
+\label{term:JSON}
+\hyperref[term:JS]{JavaScript} Object Notation, a lightweight data format used to store and exchange information between systems.
+
+\paragraph*{XML}
+\label{term:XML}
+Extensible Markup Language, a data format used to encode documents in a way that is both human-readable and machine-readable.
+
+\paragraph*{package manager}
+A tool that automates the process of installing, updating, and managing software packages or libraries in a project.
+
+\paragraph*{PIP}
+A package manager for \hyperref[term:python]{Python} that simplifies the installation and management of Python libraries.
+
+% --- TERMS PRESENT IN WAITING ROOM SECTION ---
+\paragraph*{IDE}
+Integrated Development Environment, a software application providing tools like a code editor, debugger, and compiler to facilitate development.
+
+\paragraph*{progress indicators}
+Visual or textual cues, such as loading bars or percentages, that inform users about the status of ongoing processes.
+
+\paragraph*{plugin}
+A software component that adds specific features or functionalities to an existing software system.
+
+\paragraph*{configuration file}
+A file used to define settings or preferences for a software application, often stored in a human-readable format like \hyperref[term:JSON]{JSON} or \hyperref[term:XML]{XML}.
+
+\paragraph*{dashboard}
+A user interface that provides an overview of key information and metrics, typically presented in graphs, charts, and tables.
+
+\paragraph*{sync}
+The process of ensuring that data is consistent across multiple systems or devices by automatically updating changes in real-time.
+
+\paragraph*{programming language}
+\label{term:progl}
+A formal language used to write software programs by providing instructions that a computer can execute.
+
+\paragraph*{Python}
+\label{term:python}
+A \hyperref[term:progl]{programming language} known for its simplicity and versatility, widely used in web development, data science, and automation.
+
+\paragraph*{Java}
+A \hyperref[term:progl]{programming language} known for its portability and scalability, commonly used for enterprise-level applications.
+
+\paragraph*{C/C++}
+A \hyperref[term:progl]{programming language} family used for system programming, game development, and applications requiring high performance.
+
+\paragraph*{C\#}
+A \hyperref[term:progl]{programming language} developed by Microsoft, primarily used for developing applications on the .NET platform.
+
+\paragraph*{JavaScript}
+\label{term:JS}
+A \hyperref[term:progl]{programming language} used primarily for adding interactivity to web pages and building dynamic web applications.
+
+\paragraph*{TypeScript}
+A \hyperref[term:progl]{programming language} that builds on JavaScript by adding static typing, improving code reliability and scalability.
+
+\paragraph*{Go}
+A \hyperref[term:progl]{programming language} created by Google, designed for simplicity and efficiency in building scalable applications.
+
+\paragraph*{Rust}
+A \hyperref[term:progl]{programming language} focused on safety, performance, and concurrency, often used in system programming.
+
 
 \section{Stakeholders}
 
@@ -372,7 +517,6 @@ A \hyperref[term:progl]{programming language} created by Google, designed for si
 
 \paragraph*{Rust}
 A \hyperref[term:progl]{programming language} focused on safety, performance, and concurrency, often used in system programming.
-
 
 
 \section{Relevant Facts And Assumptions}
