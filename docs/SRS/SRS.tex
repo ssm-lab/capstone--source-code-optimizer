@@ -24,6 +24,7 @@
     filecolor=magenta,      % color of file links
     urlcolor=cyan           % color of external links
 }
+\usepackage{float}
 
 \newcommand{\lips}{\textit{Insert your content here.}}
 
@@ -57,6 +58,7 @@
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
 October 11th, 2024 & 0 & Created initial revision of SRS\\
+January 1st, 2025 & 0.1 & Fixed link references to tables and figures and added preambles to those sections\\
 \bottomrule
 \end{tabularx}
 
@@ -391,6 +393,8 @@ The following are some business rules established between the team.
 It is assumed for this system that users will be seeking to refactor Python code and will make use of Visual Studio Code.
 
 \section{The Scope of the Work}
+This section defines the boundaries and objectives of the work, focusing on the tasks and components required to develop and deliver the refactoring library. It provides a clear view of how the system operates within its context and breaks the work into logical partitions to facilitate development and implementation.
+
 \subsection{The Current Situation}
 
   The current software development landscape often prioritizes functionality and performance over energy efficiency. Many existing Python codebases are not optimized for energy consumption, leading to unnecessary power usage and increased carbon footprint. The following aspects characterize the current situation:
@@ -412,25 +416,39 @@ It is assumed for this system that users will be seeking to refactor Python code
   \end{enumerate}  
 
 \subsection{The Context of the Work}
+The purpose of this subsection is to illustrate the flow of inputs, outputs, and interactions between the refactoring library and its external systems, such as developers, energy measurement tools, and machine learning frameworks. \hyperref[img:work-context]{Figure 1} highlights the connections between the system's components and external elements, ensuring a comprehensive understanding of its operational environment.
 
-\includegraphics[scale=0.5]{../Images/WorkContextModel.png}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{../Images/WorkContextModel.png}
+  \caption{Work Context Diagram}
+  \label{img:work-context}
+\end{figure}
 
+\newpage
 \subsection{Work Partitioning}
+In this subsection, the work needed to complete this system is divided into distinct activities, such as identifying code smells, applying refactorings, and measuring energy efficiency. As seen in \hyperref[tab:work-part]{Table 1}, each partition outlines its purpose, dependencies, and deliverables to provide a structured overview of the project's tasks.
 
-\setlength\extrarowheight{5mm}
-\begin{tabularx}{\textwidth}{|c|X|l|p{1.5in}|}
-  \toprule \textbf{Event \#} & \textbf{Event Name} & \textbf{Input} & \textbf{Output(s)} \\
-  \midrule
-  1 & Users submit Python code & Python Code & Refactored Code \\
-  2 & Energy Analysis of code & Python Code & Total Energy Consumed \\
-  3 & RI Model produces refactoring & Python Code & Correct Refactoring \\
-  4 & Testing and Validation of refactored code & Refactored Code & Test Results \\
-  5 & Reporting Performance metrics of new code & Refactored Code & Performance Reports \\
-  6 & Viewing Energy consumption reports & Refactored Code & Energy Consumption Statistics \\
-  \bottomrule
-\end{tabularx}
+\begin{table}[H]
+  \centering
+  \setlength\extrarowheight{5mm} 
+  \begin{tabularx}{\textwidth}{|c|X|l|p{1.5in}|} 
+    \toprule \textbf{Event \#} & \textbf{Event Name} & \textbf{Input} & \textbf{Output(s)} \\ 
+    \midrule 
+    1 & Users submit Python code & Python Code & Refactored Code\\
+    2 & Energy Analysis of code & Python Code & Total Energy Consumed \\
+    3 & RI Model produces refactoring & Python Code & Correct Refactoring \\
+    4 & Testing and Validation of refactored code & Refactored Code & Test Results \\
+    5 & Reporting Performance metrics of new code & Refactored Code & Performance Reports \\
+    6 & Viewing Energy consumption reports & Refactored Code & Energy Consumption Statistics \\
+    \bottomrule 
+  \end{tabularx}
+  \caption{Work Partitioning of System}
+  \label{tab:work-part}
+\end{table}
 
 \subsection{Specifying a Business Use Case (BUC)}
+Each event listed in \hyperref[tab:work-part]{Table 1} is expanded into an individual business use case which describes how the system handles specific scenarios.
 
 \begin{enumerate}[label={\bf BUC \arabic*:}, wide=0pt, font=\itshape]
   \item {\bf Code Submission} \\[2mm]
@@ -520,14 +538,33 @@ It is assumed for this system that users will be seeking to refactor Python code
 \end{enumerate}
 
 \section{Business Data Model and Data Dictionary}
+
+This section describes the structure and organization of the data that flows through the refactoring library. It explains how the system's components interact with data entities, ensuring a consistent and well-defined understanding of the information processed by the system.
+
 \subsection{Business Data Model}
-\includegraphics[width=\textwidth]{../Images/business-data-model.png}
+The following diagram (\hyperref[img:bdata-model]{Figure 2}) illustrates the relationships between key components of the system as well as their interactions with external components.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{../Images/business-data-model.png}
+  \caption{Business Data Model of System}
+  \label{img:bdata-model}
+\end{figure}
+
 \subsection{Data Dictionary}
+\hyperref[tab:data-dict]{Table 2} shown below defines each component in the system, including its attributes, type, and purpose. It ensures clarity and consistency in data handling and serves as a reference for development and testing.
 
 % \renewcommand{\arraystretch}{1}
-\begin{longtable}{|p{3.5cm}|p{9cm}|p{2cm}|}
-  \toprule \textbf{Name} & \textbf{Content} & \textbf{Type} \\
+\begin{longtable}[H]{|p{3.5cm}|p{9cm}|p{2cm}|}
+  \toprule 
+  \textbf{Name} & \textbf{Content} & \textbf{Type} \\
   \midrule
+  \endhead
+  \bottomrule
+  \caption{Data Dictionary for the System} 
+  \label{tab:data-dict}
+  \endlastfoot
+  
   EcoOptimizer & CentralCtrl + RefactoringCtrl + TestingCtrl + Reinforcement Learning Model & package \\ \hline
   GitHub Actions & External tool for automated customizable workflows & External Service Provider \\ \hline
   VS Code extension & A plugin containing the EcoOptimizer package delivered through Visual Studio Code Marketplace & External Service Provider \\ \hline
@@ -547,30 +584,49 @@ It is assumed for this system that users will be seeking to refactor Python code
   getSmells() & returns all the smells detected in the source code & method \\ \hline
   refactor(smell) & refactors the source code based on the given code smell & method \\ \hline
   checkFunctionality() & checks that the original functionality of the code is maintained & method \\
-  \bottomrule
 \end{longtable}
 
 \section{The Scope of the Product}
+This section outlines the boundaries and functionality of the refactoring library, detailing what the system will and will not deliver. It focuses on the internal components of the library, their interactions, and how they collectively address the project's objectives.
+
 \subsection{Product Boundary}
-\includegraphics[width=0.8\textwidth]{../Images/UseCaseDiagram.png}
+This subsection includes a diagram (\hyperref[img:prod-bound]{Figure 3}) showing the system's boundary, identifying its internal components and their interactions. It clarifies what falls within the scope of the product and what lies outside its responsibility.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{../Images/UseCaseDiagram.png}
+  \caption{Product Boundary Diagram of System}
+  \label{img:prod-bound}
+\end{figure}
+
 \subsection{Product Use Case Table}
+The following \hyperref[tab:puc]{table} summarizes the primary use cases of the refactoring library, such as identifying code smells, measuring energy consumption, and applying refactorings. Each use case briefly describes the interaction between the user and the system.
 
 \setlength\extrarowheight{2mm}
-\begin{tabularx}{\textwidth}{|c|
-  >{\raggedright\arraybackslash}X|p{1.2in}|
-  >{\raggedright\arraybackslash}X|}
-  \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} \\
-  \midrule
-  1 & Receive Code for Refactoring & User & Original Python Code (in) \\ 
-  2 & Analyze Energy Consumption of Original Code & Energy Consumption Tool & Original Code (in), Energy Consumption Report (out) \\ 
-  3 & Refactor Code & Reinforcement Learning Model & Code Segment (in), Previous Energy Saving Patterns (out) \\ 
-  4 & Test Refactored Code Functionality & Testing Service & Refactored Code (in), Test Results (out) \\ 
-  5 & Generate Performance Metrics of Refactored Code & Energy Consumption Tool & Refactored Code (in), Energy Consumption Report (out) \\ 
-  6 & Show Results & User & Refactored Code, Performance Metrics (out) \\
-  \bottomrule
-\end{tabularx}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{|c|
+    >{\raggedright\arraybackslash}X|
+    >{\raggedright\arraybackslash}p{1.2in}|
+    >{\raggedright\arraybackslash}X|}
+    \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} \\
+    \midrule
+    1 & Receive Code for Refactoring & User & Original Python Code (in) \\ 
+    2 & Analyze Energy Consumption of Original Code & Energy Consumption Tool & Original Code (in), Energy Consumption Report (out) \\ 
+    3 & Refactor Code & Reinforcement Learning Model & Code Segment (in), Previous Energy Saving Patterns (out) \\ 
+    4 & Test Refactored Code Functionality & Testing Service & Refactored Code (in), Test Results (out) \\ 
+    5 & Generate Performance Metrics of Refactored Code & Energy Consumption Tool & Refactored Code (in), Energy Consumption Report (out) \\ 
+    6 & Show Results & User & Refactored Code, Performance Metrics (out) \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Product Use Case Table of System}
+  \label{tab:puc}
+\end{table}
 
 \subsection{Individual Product Use Cases (PUC's)}
+This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, providing a detailed description of each. It explains how the system components work together to fulfill each use case, emphasizing expected functionality and outcomes for users.
+
 \setlength{\parindent}{0pt}
 \begin{enumerate}[label={\bf PUC \arabic*:}, wide=0pt, font=\itshape]
 \item {\bf Receive Code for Refactoring} \\[2mm]
