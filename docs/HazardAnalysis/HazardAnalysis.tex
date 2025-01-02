@@ -385,9 +385,16 @@ The web client offers a user interface that allows users to interact with the re
     \begin{itemize}[wide=0pt]
         \item Lack of synchronization or conflict resolution mechanisms for parallel refactoring
     \end{itemize}
-    & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-13 & HZ \showmycounter \\ \hline 
-    
-     \bottomrule
+    & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-13 & HZ \showmycounter \\ \hline
+
+    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
+    \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \item Reinforcement Learning: Loss of training data generated during the session can reduce the model's ability to improve optimization recommendations over time. \end{itemize} &
+    \begin{itemize}[wide=0pt] \item Hardware failure, power outage or insufficient system resources \item Unhandled software exceptions or errors during the tool's usage \item Prolonged measurement operations that exceed system capacity \end{itemize} &
+    \begin{itemize}[wide=0pt] \item Implement a checkpointing mechanism to periodically save intermediate refactoring states \item Enable a recovery workflow to reload saved checkpoints and resume from the last recorded state  \end{itemize} &
+    SCR-1, SCR-4, SCR-14 &
+    HZ-\showmycounter \\ \hline
+
+    \bottomrule
     \end{longtable}
 
 
@@ -405,7 +412,7 @@ The web client offers a user interface that allows users to interact with the re
     \item \emph{The system shall log all energy consumption measurements with timestamps and indicate which processes were measured to aid in future analysis and troubleshooting.}\\
     {\bf Rationale:} Detailed logging with timestamps and process attribution ensures accurate energy data and helps identify delays or misattributions.\\
     {\bf Fit Criterion:} 100\% of energy analysis logs must include timestamps and process-level breakdowns of all measured processes.\\
-    {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3\\
+    {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3, HZ-19\\
     {\bf Priority:} High
 
     \item \emph{The system shall ensure that all refactored code has comprehensive test coverage and passes performance metrics such as energy efficiency, speed, and memory usage.}\\
@@ -423,7 +430,7 @@ The web client offers a user interface that allows users to interact with the re
     \item \emph{The system shall ensure version control for each refactoring, allowing changes to be reverted in case of errors.}\\
     {\bf Rationale:} Version control helps prevent loss of code or data and allows developers to revert refactorings if necessary.\\
     {\bf Fit Criterion:} 100\% of changes shall be recorded, allowing full reversion with no data loss.\\
-    {\bf Associated Hazards:} HZ-8\\
+    {\bf Associated Hazards:} HZ-8, HZ-19\\
     {\bf Priority:} High
 
     \item \emph{The system shall detect and exempt external library dependencies from refactorings to avoid compatibility issues.}\\
@@ -477,6 +484,12 @@ The web client offers a user interface that allows users to interact with the re
     \item \emph{The system shall implement synchronization mechanisms to prevent conflicts during concurrent refactorings, ensuring that refactoring operations do not interfere with each other.}\\
     {\bf Rationale:} Without synchronization, concurrent refactorings could lead to code instability, unintended behavior, or data corruption.\\
     {\bf Associated Hazards:} HZ-18\\
+    {\bf Priority:} High
+
+    \item \emph{The system shall implement a checkpointing mechanism to periodically save the state of the optimization process, including the refactoring progress, energy measurement data, and reinforcement learning model state, and provide recovery options in case of a system shutdown or failure.}\\
+    {\bf Rationale:} Periodic checkpointing makes sure that progress is not lost during unexpected system failures, allowing users to resume optimization in such cases. This prevents delays and loss of critical learning data.\\
+    {\bf Fit Criterion:} The system must save progress at least every 30 seconds during optimization and allow recovery with no more than 1\% data loss in 100\% of failure scenarios.\\
+    {\bf Associated Hazards:} HZ-19\\
     {\bf Priority:} High
 
 \end{enumerate}
