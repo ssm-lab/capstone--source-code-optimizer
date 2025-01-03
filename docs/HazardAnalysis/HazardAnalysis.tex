@@ -185,8 +185,6 @@ The web client offers a user interface that allows users to interact with the re
     \item The tool assumes limited concurrent usage during energy measurement operation as simultaneous execution of resource-intensive processes could impact energy consumption metrics.
 \end{itemize}
 
-\section{Failure Mode and Effect Analysis}
-
 \newgeometry{margin=1.5cm}
 
 \begin{landscape}
@@ -204,8 +202,7 @@ The web client offers a user interface that allows users to interact with the re
     \toprule \multicolumn{1}{|c}{\textbf{Component}} & \multicolumn{1}{c}{\textbf{Failure Modes}} & \multicolumn{1}{c}{\textbf{Effects of Failure}} & \multicolumn{1}{c}{\textbf{Causes of Failure}} & \multicolumn{1}{c}{\textbf{Recommended Action}} & \multicolumn{1}{c}{\textbf{SR}} & \multicolumn{1}{c|}{\textbf{Ref}}\\\hline
     \endhead
     \hline
-    \multicolumn{7}{|r|}{\textit{Table continues on next page}}\\
-    \bottomrule
+    \multicolumn{7}{|r|}{\textit{Table continues on next page}}\\\hline
     \endfoot
     \bottomrule
     \endlastfoot
@@ -231,7 +228,7 @@ The web client offers a user interface that allows users to interact with the re
         \item Provide users with an estimated time for completion so they are aware of ongoing measurements if energy measurement exceeds a set time. 
     \end{itemize} & SCR-1, SCR-10 & HZ \showmycounter \\
     
-    \multicolumn{1}{|c|}{\multirow{15}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & The energy measure module does not provide any data at all & Refactoring fails due to no energy metrics available for validation of changes & \begin{itemize}[wide=0pt]
+    \multicolumn{1}{|c|}{\multirow{13}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & The energy measure module does not provide any data at all & Refactoring fails due to no energy metrics available for validation of changes & \begin{itemize}[wide=0pt]
         \item The system does not have the necessary administrative or system-level permissions to access energy-related data, especially in cloud environments
         \item The energy measurement process might be too slow, resulting in timeouts or delays that cause no metrics to be reported within the expected time frame.
     \end{itemize} & \begin{itemize}[wide=0pt]
@@ -239,6 +236,8 @@ The web client offers a user interface that allows users to interact with the re
         \item Increase the allowed time frame for measurements to complete
         \item Implement a functionality in the system that allows that prompts the user with a request to pause the refactoring process and restart at the same point when the system is less busy
     \end{itemize} & SCR-1, SCR-3, SCR-10 & HZ \showmycounter \\ \cline{2-7}
+
+    \hline
 
     \multicolumn{1}{|c|}{\multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Testing}}}} & Test not able to run due to refactoring &
     \begin{itemize}[wide=0pt]
@@ -324,7 +323,7 @@ The web client offers a user interface that allows users to interact with the re
     & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-6 & HZ \showmycounter \\ \hline 
 
     
-    \multicolumn{1}{|c|}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning}}} & Model overfitting & Less effective when applied to unseen or more diverse codebases resulting in suboptimal and/or incorrect refactorings for new projects. & \begin{itemize}[wide=0pt]
+    \multicolumn{1}{|c|}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning  }}} & Model overfitting & Less effective when applied to unseen or more diverse codebases resulting in suboptimal and/or incorrect refactorings for new projects. & \begin{itemize}[wide=0pt]
         \item Over-training model on similar datasets
     \end{itemize} & Use a diverse and representative dataset for training the model & SCR-7 & HZ \showmycounter \\ \cline{2-7}
 
@@ -360,7 +359,8 @@ The web client offers a user interface that allows users to interact with the re
     & Require human approval for significant refactorings or apply thresholds to reject low-confidence suggestions from the model. & SCR-9 & HZ \showmycounter \\ \cline{2-7}\hline
 
 
-    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning \& Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & \begin{itemize}
+    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning \& Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & 
+    \begin{itemize}[wide=0pt]
         \item Incorrect energy measurements leading to suboptimal or erroneous refactoring decisions.
         \item Energy inefficiencies or functional degradation in the refactored code
     \end{itemize} & Incorrect measurements of energy usage was validated and used by Reinforcement Learning Model which created incorrect refactorings. & Introduce validation mechanisms for energy data before using it for refactoring decisions. & SCR-1 & HZ \showmycounter \\ \cline{2-7}
@@ -387,15 +387,13 @@ The web client offers a user interface that allows users to interact with the re
     \end{itemize}
     & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-13 & HZ \showmycounter \\ \hline
 
-    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
+    \multicolumn{1}{|c|}{\multirow{11}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
     \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \item Reinforcement Learning: Loss of training data generated during the session can reduce the model's ability to improve optimization recommendations over time. \end{itemize} &
     \begin{itemize}[wide=0pt] \item Hardware failure, power outage or insufficient system resources \item Unhandled software exceptions or errors during the tool's usage \item Prolonged measurement operations that exceed system capacity \end{itemize} &
     \begin{itemize}[wide=0pt] \item Implement a checkpointing mechanism to periodically save intermediate refactoring states \item Enable a recovery workflow to reload saved checkpoints and resume from the last recorded state  \end{itemize} &
     SCR-1, SCR-4, SCR-14 &
     HZ-\showmycounter \\ \hline
-
-    \bottomrule
-    \end{longtable}
+\end{longtable}
 
 
 \end{landscape}
