@@ -60,6 +60,7 @@
 \midrule
 25 October 2024 & All & Created initial revision of Hazard Analysis\\
 29 December 2024 & Tanveer Brar & Updated critical assumptions based on peer review feedback\\
+January 2nd, 2025 & Sevhena Walker & Added Symbolic Constants\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -405,77 +406,105 @@ The web client offers a user interface that allows users to interact with the re
 
 \section{Safety and Security Requirements}
 
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{|l|c|}
+        \toprule \textbf{Symbol} & \textbf{Value} \\
+        \midrule
+        LOG\_THRESH & 100\% \\
+        REFACTOR\_TEST\_THRESH & 100\% \\
+        REFACTOR\_SECURE\_THRESH & 100\% \\
+        REFACTOR\_EFFECT\_THRESH & 95\% \\
+        PERFORM\_TOL & 5\% \\
+        RUNS\_THRESH & 100\% \\
+        EDIT\_THRESH & 100\% \\
+        DETECT\_ACC & 100\% \\
+        MEM\_ALERT\_THRESH & 100\% \\
+        RISK\_REFACTOR\_THRESH & 100\% \\
+        ENERGY\_DELAYS & 100\% \\
+        ENERGY\_VALID\_THRESH & 100\% \\
+        TEST\_TRIAGE\_THRESH & 100\% \\
+        SAVE\_TIME & 30 sec \\
+        MAX\_DATA\_LOSS & 1\% \\
+        FAIL\_SCENARIO\_THRESH & 100\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Symbolic Constants}
+    \label{tab:sym}
+\end{table}
+
 \begin{enumerate}[label=SCR \arabic*., wide=0pt, leftmargin=*]
 
     \item \emph{The system shall log all energy consumption measurements with timestamps and indicate which processes were measured to aid in future analysis and troubleshooting.}\\
     {\bf Rationale:} Detailed logging with timestamps and process attribution ensures accurate energy data and helps identify delays or misattributions.\\
-    {\bf Fit Criterion:} 100\% of energy analysis logs must include timestamps and process-level breakdowns of all measured processes.\\
+    {\bf Fit Criterion:} \texttt{LOG\_THRESH} of energy analysis logs must include timestamps and process-level breakdowns of all measured processes.\\
     {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3, HZ-19\\
     {\bf Priority:} High
 
     \item \emph{The system shall ensure that all refactored code has comprehensive test coverage and passes performance metrics such as energy efficiency, speed, and memory usage.}\\
     {\bf Rationale:} Proper test coverage and performance checks prevent faulty code from being introduced and ensure refactorings improve or maintain performance.\\
-    {\bf Fit Criterion:} 100\% of refactorings must pass tests covering all code paths, and performance must remain within a 5\% tolerance across energy, speed, and memory metrics.\\
+    {\bf Fit Criterion:} \texttt{REFACTOR\_TEST\_THRESH} of refactorings must pass tests covering all code paths, and performance must remain within \texttt{PERFORM\_TOL} across energy, speed, and memory metrics.\\
     {\bf Associated Hazards:} HZ-4, HZ-5, HZ-6, HZ-9\\
     {\bf Priority:} High
 
     \item \emph{The system shall check for necessary system-level permissions to access energy consumption data and alert users if permissions are missing.}\\
     {\bf Rationale:} Lack of access may lead to failure in energy data retrieval, which can hinder the accuracy of analysis.\\
-    {\bf Fit Criterion:} 100\% of runs shall check for and request permissions if required, and alert the user in case of failures.\\
+    {\bf Fit Criterion:} \texttt{RUNS\_THRESH} of runs shall check for and request permissions if required, and alert the user in case of failures.\\
     {\bf Associated Hazards:} HZ-3\\
     {\bf Priority:} High
 
     \item \emph{The system shall ensure version control for each refactoring, allowing changes to be reverted in case of errors.}\\
     {\bf Rationale:} Version control helps prevent loss of code or data and allows developers to revert refactorings if necessary.\\
-    {\bf Fit Criterion:} 100\% of changes shall be recorded, allowing full reversion with no data loss.\\
+    {\bf Fit Criterion:} \texttt{EDIT\_THRESH} of changes shall be recorded, allowing full reversion with no data loss.\\
     {\bf Associated Hazards:} HZ-8, HZ-19\\
     {\bf Priority:} High
 
     \item \emph{The system shall detect and exempt external library dependencies from refactorings to avoid compatibility issues.}\\
     {\bf Rationale:} Modifying external dependencies could lead to system instability or incompatibility with other tools or frameworks.\\
-    {\bf Fit Criterion:} 100\% detection accuracy for external library code during refactoring.\\
+    {\bf Fit Criterion:} \texttt{DETECT\_ACC} detection accuracy for external library code during refactoring.\\
     {\bf Associated Hazards:} HZ-10\\
     {\bf Priority:} Medium
 
     \item \emph{The system shall not refactor or alter code containing sensitive information (noted by user), ensuring security is maintained.}\\
     {\bf Associated Rationale:} Refactoring sensitive code may introduce vulnerabilities and compromise security.\\
-    {\bf Fit Criterion:} 100\% of refactorings must pass a security check to avoid tampering with sensitive information.\\
+    {\bf Fit Criterion:} \texttt{REFACTOR\_SECURE\_THRESH} of refactorings must pass a security check to avoid tampering with sensitive information.\\
     {\bf Associated Hazards:} HZ-11\\
     {\bf Priority:} High
 
     \item \emph{The reinforcement learning model shall be trained on diverse datasets and periodically audited to avoid bias and prevent degradation.}\\
     {\bf Rationale:} Overfitting or model degradation can lead to suboptimal or biased refactorings, impacting the system's effectiveness.\\
-    {\bf Fit Criterion:} 95\% of refactorings should be equally effective across different types of projects, and model audits should occur at least quarterly.\\
+    {\bf Fit Criterion:} \texttt{REFACTOR\_EFFECT\_THRESH} of refactorings should be equally effective across different types of projects, and model audits should occur at least quarterly.\\
     {\bf Associated Hazards:} HZ-12, HZ-13, HZ-14\\
     {\bf Priority:} Medium
 
     \item \emph{The system shall implement memory leak detection during refactoring and alert users if any issues are detected.}\\
     {\bf Rationale:} Memory leaks may cause system crashes and reduce performance.\\
-    {\bf Fit Criterion:} 100\% of memory leak incidents should trigger an error alert and resolution process.\\
+    {\bf Fit Criterion:} \texttt{MEM\_ALERT\_THRESH} of memory leak incidents should trigger an error alert and resolution process.\\
     {\bf Associated Hazards:} HZ-7\\
     {\bf Priority:} Medium
 
     \item \emph{The system shall require user approval for high-impact refactorings or those with low confidence, providing visibility and oversight for critical changes.}\\
     {\bf Rationale:} Automated decisions could introduce errors without human oversight, and users should be aware of significant changes.\\
-    {\bf Fit Criterion:} 100\% of high-risk or low-confidence refactorings must require user approval before proceeding.\\
+    {\bf Fit Criterion:} \texttt{RISK\_REFACTOR\_THRESH} of high-risk or low-confidence refactorings must require user approval before proceeding.\\
     {\bf Associated Hazards:} HZ-15\\
     {\bf Priority:} High
 
     \item \emph{The system shall alert users to any delays or failures in reporting energy consumption, ensuring transparency in reporting.}\\
     {\bf Rationale:} Users need to be aware of any issues in energy reporting to troubleshoot and resolve potential problems.\\
-    {\bf Fit Criterion:} 100\% of energy measurement delays or failures must trigger a user alert.\\
+    {\bf Fit Criterion:} \texttt{ENERGY\_DELAYS} of energy measurement delays or failures must trigger a user alert.\\
     {\bf Associated Hazards:} HZ-2, HZ-3\\
     {\bf Priority:} High
 
     \item \emph{The system shall validate energy measurement data before using it for refactoring decisions.}\\
     {\bf Rationale:} Incorrect energy measurements can lead to suboptimal or erroneous refactoring decisions, affecting code efficiency and functionality.\\
-    {\bf Fit Criterion:} 100\% of energy measurement data shall be validated before use in refactoring, and invalid data shall be flagged and not used for optimization.\\
+    {\bf Fit Criterion:} \texttt{ENERGY\_VALID\_THRESH} of energy measurement data shall be validated before use in refactoring, and invalid data shall be flagged and not used for optimization.\\
     {\bf Associated Hazards:} HZ-16\\
     {\bf Priority:} High
-    
+
     \item \emph{The system shall ensure that failed test cases are excluded or flagged before being used in training the reinforcement learning model.}\\
     {\bf Rationale:} If test failures are used in training, the learning model may develop inaccurate or ineffective strategies, reducing its overall performance.\\
-    {\bf Fit Criterion:} 100\% of failed test cases shall be identified and excluded or flagged for further analysis during model training.\\
+    {\bf Fit Criterion:} \texttt{TEST\_TRIAGE\_THRESH} of failed test cases shall be identified and excluded or flagged for further analysis during model training.\\
     {\bf Associated Hazards:} HZ-17\\
     {\bf Priority:} High
 
@@ -485,8 +514,8 @@ The web client offers a user interface that allows users to interact with the re
     {\bf Priority:} High
 
     \item \emph{The system shall implement a checkpointing mechanism to periodically save the state of the optimization process, including the refactoring progress, energy measurement data, and reinforcement learning model state, and provide recovery options in case of a system shutdown or failure.}\\
-    {\bf Rationale:} Periodic checkpointing makes sure that progress is not lost during unexpected system failures, allowing users to resume optimization in such cases. This prevents delays and loss of critical learning data.\\
-    {\bf Fit Criterion:} The system must save progress at least every 30 seconds during optimization and allow recovery with no more than 1\% data loss in 100\% of failure scenarios.\\
+    {\bf Rationale:} Periodic checkpointing ensures progress is not lost during unexpected system failures, allowing users to resume optimization.\\
+    {\bf Fit Criterion:} The system must save progress at least every \texttt{SAVE\_TIME} during optimization and allow recovery with no more than \texttt{MAX\_DATA\_LOSS} in \texttt{FAIL\_SCENARIO\_THRESH} of failure scenarios.\\
     {\bf Associated Hazards:} HZ-19\\
     {\bf Priority:} High
 
@@ -495,20 +524,31 @@ The web client offers a user interface that allows users to interact with the re
 \section{Roadmap}
 
 Requirements that will be implemented during the capstone timeline:
-\begin{itemize}
-    \item SCR 1
-    \item SCR 2
-    \item SCR 3
-    \item SCR 4
-    \item SCR 5
-    \item SCR 6
-    \item SCR 9
-    \item SCR 10
-    \item SCR 11
-    \item SCR 12
-    \item SCR 13
-\end{itemize}
 
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{0.3\textwidth} p{0.3\textwidth} p{0.3\textwidth}}
+    \begin{itemize}[wide=0pt]
+        \item SCR 1
+        \item SCR 2
+        \item SCR 3
+        \item SCR 4
+    \end{itemize} &
+    \begin{itemize}[wide=0pt]
+        \item SCR 5
+        \item SCR 6
+        \item SCR 9
+        \item SCR 10
+    \end{itemize} &
+    \begin{itemize}[wide=0pt]
+        \item SCR 11
+        \item SCR 12
+        \item SCR 13
+    \end{itemize} \\
+\end{tabular}
+
+\medskip
+
+\noindent
 Requirements implemented in the future:
 \begin{itemize}
     \item SCR 7: This will be audited on a regular basis which will be a future implementation.
