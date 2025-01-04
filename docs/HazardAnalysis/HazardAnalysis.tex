@@ -60,7 +60,7 @@
 \midrule
 25 October 2024 & All & Created initial revision of Hazard Analysis\\
 29 December 2024 & Tanveer Brar & Updated critical assumptions based on peer review feedback\\
-January 3rd, 2025 & Sevhena Walker & Added Symbolic Constants, clarified boundaries of system, expanded recommended actions for HZ-13\\
+January 3rd, 2025 & Sevhena Walker & Added Symbolic Constants, clarified boundaries of system, expanded recommended actions for HZ-13, adjusted failure mode for HZ-15 \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -357,7 +357,7 @@ The web client offers a user interface that allows users to interact with the re
     & SCR-7 & HZ \showmycounter \\ \cline{2-7}
 
     
-    & Over-reliance on pre-trained models. The reinforcement learning model is overly trusted, even when it generates suboptimal or erroneous refactorings. & 
+    & Model generates suboptimal or erroneous refactorings. & 
     \begin{itemize}[wide=0pt]
         \item Incorrect or harmful refactorings are applied without proper oversight, leading to system instability.
     \end{itemize} &
