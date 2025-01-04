@@ -54,13 +54,13 @@
 
 \begin{table}[hp]
 \caption{Revision History} \label{TblRevisionHistory}
-\begin{tabularx}{\textwidth}{llX}
+\begin{tabularx}{\textwidth}{ll>{\raggedright\arraybackslash}X}
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 25 October 2024 & All & Created initial revision of Hazard Analysis\\
 29 December 2024 & Tanveer Brar & Updated critical assumptions based on peer review feedback\\
-January 2nd, 2025 & Sevhena Walker & Added Symbolic Constants\\
+January 3rd, 2025 & Sevhena Walker & Added Symbolic Constants, clarified boundaries of system, expanded recommended actions for HZ-13\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -198,7 +198,14 @@ The web client offers a user interface that allows users to interact with the re
     \renewcommand{\arraystretch}{1.5}
     \setlength\LTleft{0pt}
     \setlength\LTright{0pt}
-    \begin{longtable}{|p{0.6cm}|p{4cm}p{4cm}p{4cm}p{4cm}p{1.5cm}p{1.5cm}|}
+    \begin{longtable}{|
+        >{\centering\arraybackslash}p{0.6cm}|
+        >{\raggedright\arraybackslash}p{4cm}
+        >{\raggedright\arraybackslash}p{4cm}
+        >{\raggedright\arraybackslash}p{4cm}
+        >{\raggedright\arraybackslash}p{4.7cm}
+        >{\centering\arraybackslash}p{1.3cm}
+        >{\centering\arraybackslash}p{1cm}|}
     \caption{FMEA Table}\\\hline
     \toprule \multicolumn{1}{|c}{\textbf{Component}} & \multicolumn{1}{c}{\textbf{Failure Modes}} & \multicolumn{1}{c}{\textbf{Effects of Failure}} & \multicolumn{1}{c}{\textbf{Causes of Failure}} & \multicolumn{1}{c}{\textbf{Recommended Action}} & \multicolumn{1}{c}{\textbf{SR}} & \multicolumn{1}{c|}{\textbf{Ref}}\\\hline
     \endhead
@@ -240,7 +247,7 @@ The web client offers a user interface that allows users to interact with the re
 
     \hline
 
-    \multicolumn{1}{|c|}{\multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Testing}}}} & Test not able to run due to refactoring &
+    \multicolumn{1}{|c|}{\multirow{11}{*}{\rotatebox[origin=c]{90}{\textbf{Testing}}}} & Test not able to run due to refactoring &
     \begin{itemize}[wide=0pt]
         \item Testing coverage not met
         \item Unable to test business logic of user code
@@ -251,9 +258,9 @@ The web client offers a user interface that allows users to interact with the re
         \item Use AST as a base for testing
         \item Ensure that any refactorings that involve variable, class or function name changes are disabled on default and require explicit enabling from the user
     \end{itemize}
-    & SCR-2 & HZ \showmycounter \\ 
+    & SCR-2 & HZ \showmycounter \\ \cline{2-7}
     
-    \multicolumn{1}{|c|}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\textbf{Testing}}}} & Provided test suite misses critical scenarios& 
+    & Provided test suite misses critical scenarios& 
     \begin{itemize}[wide=0pt]
         \item The refactored code could fail in production under specific conditions, leading to potential downtime or incorrect behaviour.
     \end{itemize} &
@@ -264,7 +271,7 @@ The web client offers a user interface that allows users to interact with the re
     
     \hline
 
-    \multicolumn{1}{|c|}{\multirow{18}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & Incorrect refactorings suggestions were given & 
+    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & Incorrect refactorings suggestions were given & 
     \begin{itemize}[wide=0pt]
         \item Refactored code increases the energy consumption instead of reducing it.
         \item Functionality of refactored code is not consistent from that of the original code.
@@ -293,19 +300,19 @@ The web client offers a user interface that allows users to interact with the re
     \begin{itemize}[wide=0pt]
         \item  Faulty version control strategy
     \end{itemize}
-    & Implement a robust version control system that follows a granular commit system tracking each change with precision & SCR-4 & HZ \showmycounter \\
+    & Implement a robust version control system that follows a granular commit system tracking each change with precision & SCR-4 & HZ \showmycounter \\ \cline{2-7}
     
     
-    \multicolumn{1}{|c|}{\multirow{18}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & The refactoring improves energy efficiency but degrades other performance metrics like speed or memory usage & 
+    & The refactoring improves energy efficiency but degrades other performance metrics like speed or memory usage & 
     \begin{itemize}[wide=0pt]
         \item The software becomes slower or uses more memory, which could counteract the benefits of energy optimization.
     \end{itemize} &
     \begin{itemize}[wide=0pt]
         \item Poor trade-offs made by the refactoring algorithm between energy efficiency and other performance factors.
     \end{itemize}
-    & Implement multifactor optimization, balancing energy efficiency with other performance metrics. If this is not possible inform the user of potential degradation when suggesting at-risk refactorings. & SCR-2 & HZ \showmycounter \\ \cline{2-7}
+    & Implement multifactor optimization, balancing energy efficiency with other performance metrics. If this is not possible inform the user of potential degradation when suggesting at-risk refactorings. & SCR-2 & HZ \showmycounter \\
 
-    & The refactoring tool modifies code that relies on external libraries, causing incompatibility with these libraries. & 
+    \multicolumn{1}{|c|}{\multirow{13}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}}& The refactoring tool modifies code that relies on external libraries, causing incompatibility with these libraries. & 
     \begin{itemize}[wide=0pt]
         \item Code fails to execute or produces unexpected behaviour due to altered interactions with third-party libraries.
     \end{itemize} &
@@ -324,20 +331,20 @@ The web client offers a user interface that allows users to interact with the re
     & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-6 & HZ \showmycounter \\ \hline 
 
     
-    \multicolumn{1}{|c|}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning  }}} & Model overfitting & Less effective when applied to unseen or more diverse codebases resulting in suboptimal and/or incorrect refactorings for new projects. & \begin{itemize}[wide=0pt]
+    \multicolumn{1}{|c|}{\rotatebox[origin=c]{90}{\parbox{4cm}{\begin{center}\textbf{Reinforcement} \\ \textbf{Learning}\end{center}}}} & Model overfitting & Less effective when applied to unseen or more diverse codebases resulting in suboptimal and/or incorrect refactorings for new projects. & \begin{itemize}[wide=0pt]
         \item Over-training model on similar datasets
     \end{itemize} & Use a diverse and representative dataset for training the model & SCR-7 & HZ \showmycounter \\ \cline{2-7}
 
     
-    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning}}}} & Bias in recommendations & Model starts favouring certain types of refactorings or ignoring others that could be more efficient for different scenarios. & \begin{itemize}[wide=0pt]
+    \multicolumn{1}{|c|}{\multirow{22}{*}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning}}}} & Bias in recommendations & Model starts favouring certain types of refactorings or ignoring others that could be more efficient for different scenarios. & \begin{itemize}[wide=0pt]
         \item Imbalanced reward function
         \item Not enough exploration actions done by the model
         \item Unrealistic straining data simulations used
     \end{itemize} &
     \begin{itemize}[wide=0pt]
-        \item Regularly audit the model for bias
-        \item Ensure the training data is balanced across different types of refactorings and code patterns.
-        \item Regularly retrain the model
+        \item The model should be regularly audited for bias. The audit should determine that the model chooses the most efficient refactoring \& is constantly proposing new solutions to learn from.
+        \item Ensure that the model's training data is not biased towards any particular refactoring and/or code pattern. There should an equal (or near equal as possible) emphasis put on each separate category of data.
+        \item Regularly retrain the model.
     \end{itemize}
     & SCR-7 & HZ \showmycounter \\ \cline{2-7}
 
@@ -388,7 +395,7 @@ The web client offers a user interface that allows users to interact with the re
     \end{itemize}
     & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-13 & HZ \showmycounter \\ \hline
 
-    \multicolumn{1}{|c|}{\multirow{11}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
+    \multicolumn{1}{|c|}{\multirow{12}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
     \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \item Reinforcement Learning: Loss of training data generated during the session can reduce the model's ability to improve optimization recommendations over time. \end{itemize} &
     \begin{itemize}[wide=0pt] \item Hardware failure, power outage or insufficient system resources \item Unhandled software exceptions or errors during the tool's usage \item Prolonged measurement operations that exceed system capacity \end{itemize} &
     \begin{itemize}[wide=0pt] \item Implement a checkpointing mechanism to periodically save intermediate refactoring states \item Enable a recovery workflow to reload saved checkpoints and resume from the last recorded state  \end{itemize} &
