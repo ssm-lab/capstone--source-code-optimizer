@@ -35,6 +35,7 @@ class CustomSmell(ExtendedEnum):
     LONG_TERN_EXPR = "LTE001"  # Custom code smell for long ternary expressions
     LONG_MESSAGE_CHAIN = "LMC001"  # CUSTOM CODE
     UNUSED_VAR_OR_ATTRIBUTE = "UVA001"  # CUSTOM CODE
+    LONG_ELEMENT_CHAIN = "LEC001"  # Custom code smell for long element chains (e.g dict["level1"]["level2"]["level3"]... )
 
 
 class IntermediateSmells(ExtendedEnum):

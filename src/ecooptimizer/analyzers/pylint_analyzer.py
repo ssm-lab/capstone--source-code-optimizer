@@ -66,6 +66,9 @@ class PylintAnalyzer(Analyzer):
         uva_data = self.detect_unused_variables_and_attributes()
         self.smells_data.extend(uva_data)
 
+        lec_data = self.detect_long_element_chain()
+        self.smells_data.extend(lec_data)
+
     def configure_smells(self):
         """
         Filters the report data to retrieve only the smells with message IDs specified in the config.
@@ -181,11 +184,6 @@ class PylintAnalyzer(Analyzer):
         """
         Detects unused variables and class attributes in the given Python code and returns a list of results.
 
-        Args:
-        - code (str): Python source code to be analyzed.
-        - file_path (str): The path to the file being analyzed (for reporting purposes).
-        - module_name (str): The name of the module (for reporting purposes).
-
         Returns:
         - List of dictionaries: Each dictionary contains details about the detected unused variable or attribute.
         """
@@ -272,5 +270,55 @@ class PylintAnalyzer(Analyzer):
             }
 
             results.append(result)
+
+        return results
+
+    def detect_long_element_chain(self, threshold: int = 3):
+        """
+        Detects long element chains in the given Python code and returns a list of results.
+
+        Returns:
+        - List of dictionaries: Each dictionary contains details about the detected long chain.
+        """
+        # Parse the code into an Abstract Syntax Tree (AST)
+        results: list[Smell] = []
+        used_lines = set()
+
+        # Function to calculate the length of a dictionary chain
+        def check_chain(node: ast.Subscript, chain_length: int = 0):
+            current = node
+            while isinstance(current, ast.Subscript):
+                chain_length += 1
+                current = current.value
+
+            if chain_length >= threshold:
+                # Create the message for the convention
+                message = f"Dictionary chain too long ({chain_length}/{threshold})"
+
+                result: Smell = {
+                    "absolutePath": str(self.file_path),
+                    "column": node.col_offset,
+                    "confidence": "UNDEFINED",
+                    "endColumn": None,
+                    "endLine": None,
+                    "line": node.lineno,
+                    "message": message,
+                    "messageId": CustomSmell.LONG_ELEMENT_CHAIN,
+                    "module": self.file_path.name,
+                    "obj": "",
+                    "path": str(self.file_path),
+                    "symbol": "long-element-chain",
+                    "type": "convention",
+                }
+
+                if node.lineno in used_lines:
+                    return
+                used_lines.add(node.lineno)
+                results.append(result)
+
+        # Walk through the AST
+        for node in ast.walk(self.source_code):
+            if isinstance(node, ast.Subscript):
+                check_chain(node)
 
         return results

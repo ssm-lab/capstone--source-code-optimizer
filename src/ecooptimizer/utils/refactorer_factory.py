@@ -5,6 +5,9 @@ from ..refactorers.long_parameter_list import LongParameterListRefactorer
 from ..refactorers.member_ignoring_method import MakeStaticRefactorer
 from ..refactorers.long_message_chain import LongMessageChainRefactorer
 
+from ..refactorers.long_element_chain import LongElementChainRefactorer
+
+
 # Import the configuration for all Pylint smells
 from ..utils.analyzers_config import AllSmells
 
@@ -46,6 +49,8 @@ class RefactorerFactory:
                 selected = LongParameterListRefactorer()
             case AllSmells.LONG_MESSAGE_CHAIN:  # type: ignore
                 selected = LongMessageChainRefactorer()
+            case AllSmells.LONG_ELEMENT_CHAIN:  # type: ignore
+                selected = LongElementChainRefactorer()
             case _:
                 selected = None
 

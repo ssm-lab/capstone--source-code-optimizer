@@ -61,6 +61,36 @@ def is_all_string(attributes):
     # Code Smell: List Comprehension in an All Statement
     return all(isinstance(attribute, str) for attribute in attributes)
 
+def access_nested_dict():
+    nested_dict1 = {
+        "level1": {
+            "level2": {
+                "level3": {
+                    "key": "value"
+                }
+            }
+        }
+    }
+
+    nested_dict2 = {
+        "level1": {
+            "level2": {
+                "level3": {
+                    "key": "value",
+                    "key2": "value2"
+                },
+                "level3a": {
+                    "key": "value"
+                }
+            }
+        }
+    }
+    print(nested_dict1["level1"]["level2"]["level3"]["key"])
+    print(nested_dict2["level1"]["level2"]["level3"]["key2"])
+    print(nested_dict2["level1"]["level2"]["level3"]["key"])
+    print(nested_dict2["level1"]["level2"]["level3a"]["key"])
+    print(nested_dict1["level1"]["level2"]["level3"]["key"])
+
 # Main loop: Arbitrary use of the classes and demonstrating code smells
 if __name__ == "__main__":
     car1 = Car(make="Toyota", model="Camry", year=2020, color="Blue", fuel_type="Gas", mileage=25000, transmission="Automatic", price=20000)
