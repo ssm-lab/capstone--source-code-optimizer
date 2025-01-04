@@ -53,7 +53,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 November 4th, 2024 & 0.0 & Created initial revision of VnV Plan\\
-January 3rd, 2025 & 0.1 & Modified template for static tests\\
+January 3rd, 2025 & 0.1 & Modified template for static tests, clarified test-SRT-3\\
 \bottomrule
 \end{tabularx}
 
@@ -1183,7 +1183,7 @@ The following subsection tests cover all Security requirements listed in the SRS
       \item Attempt to access the internal tools directly from an external environment, ensuring that all external attempts are blocked.
       \item Verify that the tool’s communication is contained within internal environments and restricted to authorized system components.
     \end{itemize}
-    \textbf{Roles and Responsibilities:} The development team will conduct the code review and testing, ensuring secure access protocols. \\[2mm]
+    \textbf{Roles and Responsibilities:} The development team will conduct the code review and testing, ensuring secure access protocols. \\[2mm] \\
     \textbf{Tools and Resources:} Access to the codebase, network configuration files, and security audit tools \\[2mm]
     \textbf{Acceptance Criteria:} No public or external API endpoints exist for the internal tools, and only the refactoring tool can access the energy consumption and reinforcement learning models.
   
@@ -1194,7 +1194,7 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{Process:}
     \begin{itemize}
       \item Review the codebase and database configurations to verify the implementation of access controls and data security measures.
-      \item Confirm that the tool’s security settings prevent any unauthorized external modifications, maintaining data integrity across all storage layers.
+      \item Confirm that the tool’s security settings prevent any unauthorized external modifications, maintaining data integrity across all storage layers. Unauthorized external sources include any external network or API requests to the system. Data integrity need also be maintained through verification by the system that any refactored files were not modified further by a third party during the refactoring process.  
       \item Document any vulnerabilities found and evaluate with the development team to ensure improvements are made where necessary.
     \end{itemize}
     \textbf{Roles and Responsibilities:} The development team will conduct the code review while the project supervisor will oversee the test results and approve any necessary security enhancements. \\[2mm]
@@ -1255,8 +1255,6 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{Output/Result:} The tool detects, blocks, and logs all simulated malware activities without any compromise to data integrity or tool functionality. \\[2mm]
     \textbf{How test will be performed:} The tester will deploy the tool in a secure, isolated test environment and initiate simulated malware attacks using Atomic Red Team. Each simulation will mimic various malware behaviours, including attempts to access or modify data and disrupt the refactoring process. The tester will observe and document the tool's responses to each simulated attack, verifying that it blocks unauthorized actions, maintains data integrity, and logs the events for traceability.
 \end{enumerate}
-
-\newpage
 
 \noindent
 \colorrule
