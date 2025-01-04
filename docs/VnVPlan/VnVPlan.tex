@@ -53,6 +53,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 November 4th, 2024 & 0.0 & Created initial revision of VnV Plan\\
+January 3rd, 2025 & 0.1 & Modified template for static tests\\
 \bottomrule
 \end{tabularx}
 
@@ -911,9 +912,9 @@ The following subsection tests cover all Usability \& Humanity requirements list
     \textbf{How test will be performed:} The tester will start with the installation instructions provided in the user guide and follow the link to the YouTube installation tutorial. They will watch the video and proceed with each installation step as demonstrated. Throughout the process, the tester will note the clarity and pacing of the instructions, any gaps between the video and the actual steps, and if the video effectively guides them to a successful installation. 
 
   \item \textbf{High-Contrast Theme Accessibility Check} \\[2mm]
+    \textbf{Type:} Non-Functional, Static Analysis \\
     \textbf{Objective:} Evaluate the high-contrast themes in the refactoring tool for compliance with accessibility standards to ensure usability for visually impaired users. \\
     \textbf{Scope:} Focus on UI components that utilize high-contrast themes, including text, buttons, and backgrounds. \\
-    \textbf{Methodology:} Static Analysis \\
     \textbf{Process:} 
     \begin{itemize}
       \item Identify all colour codes used in the system and categorize them by their role in the UI (i.e. background, foreground text, buttons, etc.).
@@ -1027,10 +1028,10 @@ The following subsection tests cover all Performance requirements listed in the 
     \textbf{How test will be performed:} The tester will load a sample code file into the tool that contains code smells. Upon initiating the refactoring, the tester will observe the tool’s response to any failed attempts, verifying that it logs the error. The tool should then attempt alternative refactorings without restarting the process. The tester will document the clarity of the error message, the relevance of alternative suggestions, and confirm that the tool remains functional, supporting uninterrupted refactoring of other code smells.
   
 
-    \item \textbf{Maintainability and Adaptability of the Tool} \\[2mm]
+  \item \textbf{Maintainability and Adaptability of the Tool} \\[2mm]
+    \textbf{Type:} Non-Functional, Code walkthrough, Static Analysis \\
     \textbf{Objective:} Ensure that the tool’s codebase is structured to support future updates for new Python versions and evolving coding standards, minimizing the effort required for maintenance. \\[2mm]
     \textbf{Scope:} This test applies to the tool’s code structure, documentation quality, and modularity to facilitate adaptability and maintainability over time. \\[2mm]
-    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Conduct a code walkthrough to evaluate the modular structure of the codebase, verifying that components are organized to allow independent updates.
@@ -1057,9 +1058,9 @@ The following subsection tests cover all Operational and Environmental requireme
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-OPE-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Emissions Standards Compliance} \\[2mm]
+    \textbf{Type:} Non-Functional, Documentation walkthrough, Static Analysis \\  
     \textbf{Objective:} Ensure that the tool’s emissions metrics and reports align with widely used standards (e.g., GRI 305, GHG, ISO 14064) to support users in environmental compliance and sustainability tracking. \\[2mm]
     \textbf{Scope:} This test applies to the tool's metrics and reporting components, including data format and labelling in the emissions report. \\[2mm]
-    \textbf{Methodology:} Static analysis and documentation walkthrough \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Review emissions metrics in the tool’s documentation and compare them with requirements from GRI 305, GHG, and ISO 14064 standards.
@@ -1114,9 +1115,9 @@ The following subsection tests cover all Maintenance and Support requirements li
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-MS-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Extensibility for New Code Smells and Refactorings} \\[2mm]
+    \textbf{Type:} Non-Functional, Code walkthrough \\  
     \textbf{Objective:} Confirm that the tool’s architecture allows for the addition of new code smell detections and refactoring techniques with minimal code changes and disruption to existing functionality. \\[2mm]
     \textbf{Scope:} This test applies to the tool’s extensibility, including modularity of code structure, ease of integration for new detection methods, and support for customization. \\[2mm]
-    \textbf{Methodology:} Code walkthrough \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Conduct a code walkthrough focusing on the modularity and structure of the code smell detection and refactoring components.
@@ -1128,10 +1129,10 @@ The following subsection tests cover all Maintenance and Support requirements li
     \textbf{Acceptance Criteria:} New code smells and refactoring functions can be added within the existing modular structure, requiring minimal changes. The new function does not impact the performance or functionality of existing features.
 
 
-    \item \textbf{Maintainable and Adaptable Codebase} \\[2mm]
+  \item \textbf{Maintainable and Adaptable Codebase} \\[2mm]
+  \textbf{Type:} Non-Functional, Documentation walkthrough, Static Analysis \\
     \textbf{Objective:} Ensure that the codebase is modular, well-documented, and maintainable, supporting future updates and adaptations for new Python versions and standards. \\[2mm]
     \textbf{Scope:} This test covers the maintainability of the codebase, including structure, documentation, and modularity of key components. \\[2mm]
-    \textbf{Methodology:} Static analysis and documentation walkthrough \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Review the codebase to verify the modular organization and clear separation of concerns between components.
@@ -1172,9 +1173,9 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{How test will be performed:} The tester will first attempt to submit code and access refactored reports without logging in, verifying that access is denied. The tester will then log in using valid company credentials and repeat the actions to confirm access is granted only after successful authentication.
   
   \item \textbf{Internal-Only Communication with Energy and Reinforcement Learning Tools} \\[2mm]
+    \textbf{Type:} Non-Functional, Code walkthrough, Static Analysis \\  
     \textbf{Objective:} Ensure that the refactoring tool communicates exclusively with the internal energy consumption tool and reinforcement learning model, without exposing any public API endpoints. \\[2mm]
     \textbf{Scope:} This test applies to all network and API interactions between the refactoring tool and internal services, ensuring no direct access is available to users or external applications. \\[2mm]
-    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Conduct a code walkthrough of the network and API components, focusing on the access control configurations for the energy consumption tool and reinforcement learning model.
@@ -1186,10 +1187,10 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{Tools and Resources:} Access to the codebase, network configuration files, and security audit tools \\[2mm]
     \textbf{Acceptance Criteria:} No public or external API endpoints exist for the internal tools, and only the refactoring tool can access the energy consumption and reinforcement learning models.
   
-    \item \textbf{Preventing Unauthorized Changes to Refactored Code and Reports} \\[2mm]
+  \item \textbf{Preventing Unauthorized Changes to Refactored Code and Reports} \\[2mm]
+    \textbf{Type:} Non-Functional, Code walkthrough, Static Analysis \\
     \textbf{Objective:} Ensure the tool’s refactored code and energy reports are protected from any unauthorized external modifications, maintaining data integrity and user trust. \\[2mm]
     \textbf{Scope:} This test applies to the data security of refactored code and energy report storage layers, verifying that access is restricted to authorized users and processes only. \\[2mm]
-    \textbf{Methodology:} Static analysis and code walkthrough \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Review the codebase and database configurations to verify the implementation of access controls and data security measures.
@@ -1208,9 +1209,9 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{How test will be performed:} The tester will begin the refactoring process, and the tool should present a notice explaining data collection, storage, and processing practices, in compliance with PIPEDA. The user must provide explicit consent before proceeding. The tester will confirm that no data collection occurs until consent is granted.
   
   \item \textbf{Confidential Handling of User Data in Compliance with PIPEDA} \\[2mm]
+    \textbf{Type:} Non-Functional, Code walkthrough, Static Analysis \\  
     \textbf{Objective:} Ensure that all user-submitted data, energy reports, and refactored code are treated as confidential, encrypted during storage and transmission, and managed according to PIPEDA. \\[2mm]
     \textbf{Scope:} This test applies to the tool’s data handling practices, specifically the encryption protocols for transmission and storage, and data modification options for user compliance requests. \\[2mm]
-    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Review the encryption settings in the codebase to confirm that all data related to user submissions, energy reports, and refactored code is encrypted during transmission and storage.
@@ -1222,9 +1223,9 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{Acceptance Criteria:} All user data is encrypted during storage and transmission, and users have a reliable method for requesting data modifications as per PIPEDA specifications.
 
   \item \textbf{Audit Logs for User Actions} \\[2mm]
+    \textbf{Type:} Non-Functional, Code walkthrough, Static Analysis \\
     \textbf{Objective:} Ensure the tool maintains tamper-proof logs of key user actions, including code submissions, login events, and access to refactored code and reports, to ensure accountability and traceability. \\[2mm]
     \textbf{Scope:} This test applies to the logging mechanisms for user actions, focusing on the security and tamper-proof nature of logs. \\[2mm]
-    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Review the logging mechanisms within the codebase to confirm that events such as logins, code submissions, and report accesses are properly recorded with timestamps and user identifiers.
@@ -1235,9 +1236,9 @@ The following subsection tests cover all Security requirements listed in the SRS
     \textbf{Acceptance Criteria:} Logs are tamper-proof, recording all critical user actions with integrity, and resistant to unauthorized modifications.
 
   \item \textbf{Audit Logs for Refactoring Processes} \\[2mm]
+    \textbf{Type:} Non-Functional, Code walkthrough, Static Analysis \\
     \textbf{Objective:} Ensure that the tool maintains a secure, tamper-proof log of all refactoring processes, including pattern analysis, energy analysis, and report generation, for accountability in refactoring events. \\[2mm]
     \textbf{Scope:} This test covers the logging of refactoring events, ensuring logs are complete and tamper-proof for future auditing needs. \\[2mm]
-    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Review the codebase to confirm that each refactoring event (e.g., pattern analysis, energy analysis, report generation) is logged with details such as timestamps and event descriptions.
@@ -1306,9 +1307,9 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-CPL-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Compliance with PIPEDA and CASL} \\[2mm]
+    \textbf{Type:} Non-Functional, Documentation walkthrough, Static Analysis \\
     \textbf{Objective:} Ensure the tool’s data collection, usage, storage, and communication practices are fully compliant with the Personal Information Protection and Electronic Documents Act (PIPEDA) and Canada’s Anti-Spam Legislation (CASL), to avoid legal penalties and enhance user trust. \\[2mm]
     \textbf{Scope:} This test applies to all processes related to data handling, storage, and user communication to verify compliance with PIPEDA and CASL. \\[2mm]
-    \textbf{Methodology:} Documentation walkthrough and static analysis \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Review the tool’s data handling and storage protocols to confirm compliance with PIPEDA, particularly focusing on secure storage, data usage transparency, and privacy rights.
@@ -1321,9 +1322,9 @@ The following subsection tests cover all Compliance requirements listed in the S
     \textbf{Acceptance Criteria:} The tool complies with all PIPEDA and CASL requirements, with secure data handling, user consent options, and compliant communication practices.
 
 \item \textbf{Compliance with ISO 9001 and SSADM Standards} \\[2mm]
+  \textbf{Type:} Non-Functional, Code walkthrough, Code walkthrough \\
     \textbf{Objective:} Ensure the tool’s quality management and software development processes align with ISO 9001 for quality management and SSADM (Structured Systems Analysis and Design Method) standards for software development, building stakeholder trust and market acceptance. \\[2mm]
     \textbf{Scope:} This test covers the tool’s adherence to ISO 9001 quality management practices and SSADM methodologies for software development processes. \\[2mm]
-    \textbf{Methodology:} Documentation walkthrough and code walkthrough \\[2mm]
     \textbf{Process:}
     \begin{itemize}
       \item Conduct a review of the tool’s quality management procedures to verify alignment with ISO 9001 standards, including documentation, testing, and feedback mechanisms.
