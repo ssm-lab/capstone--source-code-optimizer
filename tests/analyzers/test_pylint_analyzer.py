@@ -76,28 +76,97 @@ def test_member_ignoring_method(MIM_code: Path):
     assert smells[0].get("module") == MIM_code.stem
 
 
-def test_long_lambda_detection():
-    DIRNAME = Path(__file__).parent
-    sample_code_path = (DIRNAME / Path("../tests/input/inefficient_code_example_4.py")).resolve()
+@pytest.fixture
+def long_lambda_code(source_files: Path):
+    mim_code = textwrap.dedent(
+        """\
+    class OrderProcessor:
+    def __init__(self, orders):
+        self.orders = orders
 
-    # Read the sample code
-    with sample_code_path.open("r") as f:
-        source_code = f.read()
+    def process_orders(self):
+        # Long lambda functions for sorting, filtering, and mapping orders
+        sorted_orders = sorted(
+            self.orders,
+            # LONG LAMBDA FUNCTION
+            key=lambda x: x.get("priority", 0)
+            + (10 if x.get("vip", False) else 0)
+            + (5 if x.get("urgent", False) else 0),
+        )
 
-    # Parse the source code into an AST
-    parsed_code = ast.parse(source_code)
+        filtered_orders = list(
+            filter(
+                # LONG LAMBDA FUNCTION
+                lambda x: x.get("status", "").lower() in ["pending", "confirmed"]
+                and len(x.get("notes", "")) > 50
+                and x.get("department", "").lower() == "sales",
+                sorted_orders,
+            )
+        )
 
-    # Create an instance of the PylintAnalyzer
-    analyzer = PylintAnalyzer(file_path=sample_code_path, source_code=parsed_code)
+        processed_orders = list(
+            map(
+                # LONG LAMBDA FUNCTION
+                lambda x: {
+                    "id": x["id"],
+                    "priority": (
+                        x["priority"] * 2 if x.get("rush", False) else x["priority"]
+                    ),
+                    "status": "processed",
+                    "remarks": f"Order from {x.get('client', 'unknown')} processed with priority {x['priority']}.",
+                },
+                filtered_orders,
+            )
+        )
 
-    # Run the analyzer
-    analyzer.analyze()
+        return processed_orders
+
+
+if __name__ == "__main__":
+    orders = [
+        {
+            "id": 1,
+            "priority": 5,
+            "vip": True,
+            "status": "pending",
+            "notes": "Important order.",
+            "department": "sales",
+        },
+        {
+            "id": 2,
+            "priority": 2,
+            "vip": False,
+            "status": "confirmed",
+            "notes": "Rush delivery requested.",
+            "department": "support",
+        },
+        {
+            "id": 3,
+            "priority": 1,
+            "vip": False,
+            "status": "shipped",
+            "notes": "Standard order.",
+            "department": "sales",
+        },
+    ]
+    processor = OrderProcessor(orders)
+    print(processor.process_orders())
+
+    """
+    )
+    file = source_files / Path("mim_code.py")
+    with file.open("w") as f:
+        f.write(mim_code)
+
+    return file
+
+
+def test_long_lambda_detection(long_lambda_code: Path):
+    smells = get_smells(long_lambda_code)
 
     # Filter for long lambda smells
     long_lambda_smells = [
-        smell
-        for smell in analyzer.smells_data
-        if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
+        smell for smell in smells if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
     ]
 
     # Assert the expected number of long lambda functions

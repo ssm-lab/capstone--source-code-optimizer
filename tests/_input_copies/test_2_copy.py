@@ -1,8 +1,9 @@
-import datetime # unused import
+import datetime  # unused import
+
 
 class Temp:
 
-    def __init__(self) ->None:
+    def __init__(self) -> None:
         self.unused_class_attribute = True
         self.a = 3
 
@@ -10,6 +11,7 @@ class Temp:
         unused_var = 3
         b = 4
         return self.a + b
+
 
 # LC: Large Class with too many responsibilities
 class DataProcessor:
@@ -45,7 +47,7 @@ class DataProcessor:
     # LBCL: Long Base Class List
 
 
-class AdvancedProcessor(DataProcessor, object, dict, list, set, tuple):
+class AdvancedProcessor(DataProcessor):
     pass
 
     # LTCE: Long Ternary Conditional Expression
