@@ -4,8 +4,8 @@ from pathlib import Path
 
 import astor
 
-from data_wrappers.smell import Smell
-from .base_refactorer import BaseRefactorer
+from ecooptimizer.data_wrappers.smell import Smell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 from testing.run_tests import run_tests
 
 

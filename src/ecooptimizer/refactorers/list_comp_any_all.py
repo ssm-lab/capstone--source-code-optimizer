@@ -5,9 +5,9 @@ import logging
 from pathlib import Path
 import astor  # For converting AST back to source code
 
-from data_wrappers.smell import Smell
+from ecooptimizer.data_wrappers.smell import Smell
 from testing.run_tests import run_tests
-from .base_refactorer import BaseRefactorer
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 
 
 class UseAGeneratorRefactorer(BaseRefactorer):

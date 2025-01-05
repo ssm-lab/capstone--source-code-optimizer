@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from .base_refactorer import BaseRefactorer
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 
 
 class LongLambdaFunctionRefactorer(BaseRefactorer):
