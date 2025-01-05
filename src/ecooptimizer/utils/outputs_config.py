@@ -4,6 +4,7 @@ import logging
 import shutil
 
 from pathlib import Path
+from typing import Any
 
 
 class OutputConfig:
@@ -29,7 +30,7 @@ class OutputConfig:
         message = message if len(message) > 0 else f"Output saved to {file_path!s}"
         logging.info(message)
 
-    def save_json_files(self, filename: Path, data: dict | list):
+    def save_json_files(self, filename: Path, data: dict[Any, Any] | list[Any]):
         """
         Saves JSON data to a file in the output folder.
 

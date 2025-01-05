@@ -1,5 +1,5 @@
 # Any configurations that are done by the analyzers
-from enum import Enum, EnumMeta
+from enum import EnumMeta, Enum
 
 
 class ExtendedEnum(Enum):
@@ -9,6 +9,9 @@ class ExtendedEnum(Enum):
 
     def __str__(self):
         return str(self.value)
+
+    def __eq__(self, value: object) -> bool:
+        return str(self.value) == value
 
 
 # Enum class for standard Pylint code smells
