@@ -6,8 +6,8 @@ from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 from ecooptimizer.utils.analyzers_config import CustomSmell
 
 
-def get_smells(code):
-    analyzer = PylintAnalyzer(code, ast.parse(code))
+def get_smells(code: Path):
+    analyzer = PylintAnalyzer(code, ast.parse(code.read_text()))
     analyzer.analyze()
     analyzer.configure_smells()
 

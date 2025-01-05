@@ -3,9 +3,9 @@
 from abc import ABC, abstractmethod
 import logging
 from pathlib import Path
-from measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
+from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
-from data_wrappers.smell import Smell
+from ecooptimizer.data_wrappers.smell import Smell
 
 
 class BaseRefactorer(ABC):
@@ -15,7 +15,9 @@ class BaseRefactorer(ABC):
 
         :param logger: Logger instance to handle log messages.
         """
-        self.temp_dir = (Path(__file__) / Path("../../../../outputs/refactored_source")).resolve()
+        self.temp_dir = (
+            Path(__file__) / Path("../../../../../../outputs/refactored_source")
+        ).resolve()
         self.temp_dir.mkdir(exist_ok=True)
 
     @abstractmethod
@@ -58,3 +60,6 @@ class BaseRefactorer(ABC):
             f"Initial Emissions: {initial_emissions} kg CO2. Final Emissions: {final_emissions} kg CO2."
         )
         return improved
+
+
+print(__file__)

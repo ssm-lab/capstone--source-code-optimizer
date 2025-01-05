@@ -1,12 +1,12 @@
 import logging
 from pathlib import Path
 
-from utils.ast_parser import parse_file
-from utils.outputs_config import OutputConfig
+from ecooptimizer.utils.ast_parser import parse_file
+from ecooptimizer.utils.outputs_config import OutputConfig
 
-from measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
-from analyzers.pylint_analyzer import PylintAnalyzer
-from utils.refactorer_factory import RefactorerFactory
+from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
+from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+from ecooptimizer.utils.refactorer_factory import RefactorerFactory
 
 # Path of current directory
 DIRNAME = Path(__file__).parent
