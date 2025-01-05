@@ -1483,10 +1483,29 @@ In this section, we capture various ideas for implementing the project requireme
     \item \textbf{Integration with Existing Tools via Pre-Commit Hooks:} 
     Integrate the refactoring tool with popular tools like PyLint or Black by setting up pre-commit hooks to run the refactoring library before committing.
     \item \textbf{Energy Usage Dashboard Using JavaScript and Flask:} 
-    Build a simple dashboard that displays energy consumption metrics for code refactorings over time.
+    Build a simple dashboard to track and display energy consumption metrics for code refactorings over time. 
+    \begin{itemize}
+        \item \textbf{Data Sources:} The dashboard will utilize data provided by the CodeCarbon library, including:
+        \begin{itemize}
+            \item \textit{Energy Usage (kWh):} Measured by CodeCarbon for each refactoring session.
+            \item \textit{Refactoring Metadata:} Information such as the type of code smell addressed, refactored lines of code, and energy savings.
+            \item \textit{Time-Based Logs:} Timestamped entries to track trends over time.
+        \end{itemize}
+        \item \textbf{Insights Provided:} The dashboard will display:
+        \begin{itemize}
+            \item Total energy consumption for all refactoring processes.
+            \item Energy savings percentage for individual refactorings.
+            \item Trends in energy consumption over time.
+            \item Comparative metrics across projects or refactoring types.
+        \end{itemize}
+        \item \textbf{Implementation Details:} 
+        \begin{itemize}
+            \item \textit{Backend:} Flask to handle API requests and process CodeCarbon data.
+            \item \textit{Frontend:} JavaScript (e.g., Chart.js or D3.js) to create interactive graphs.
+            \item \textit{Data Storage:} SQLite to store historical metrics for trend analysis.
+        \end{itemize}
+    \end{itemize}
 \end{itemize}
-
-
 
 \newpage{}
 \section*{Appendix --- Reflection}
@@ -1663,7 +1682,7 @@ Taking online courses tailored to JavaScript or TypeScript for extension develop
 ~\newpage
 
 \bibliographystyle {plainnat}
-\bibliography{../../refs/References}
+% \bibliography{../../refs/References}
 
 \end{document}
 
