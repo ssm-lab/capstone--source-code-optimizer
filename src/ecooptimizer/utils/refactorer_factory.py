@@ -4,7 +4,6 @@ from ..refactorers.unused import RemoveUnusedRefactorer
 from ..refactorers.long_parameter_list import LongParameterListRefactorer
 from ..refactorers.member_ignoring_method import MakeStaticRefactorer
 from ..refactorers.long_message_chain import LongMessageChainRefactorer
-
 from ..refactorers.long_element_chain import LongElementChainRefactorer
 
 
