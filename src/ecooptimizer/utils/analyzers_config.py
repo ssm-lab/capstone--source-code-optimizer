@@ -1,14 +1,17 @@
 # Any configurations that are done by the analyzers
-from enum import EnumMeta, StrEnum
+from enum import EnumMeta, Enum
 
 
-class ExtendedEnum(StrEnum):
+class ExtendedEnum(Enum):
     @classmethod
     def list(cls) -> list[str]:
         return [c.value for c in cls]
 
     def __str__(self):
         return str(self.value)
+
+    def __eq__(self, value: object) -> bool:
+        return str(self.value) == value
 
 
 # Enum class for standard Pylint code smells
