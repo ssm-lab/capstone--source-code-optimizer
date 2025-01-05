@@ -726,9 +726,9 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
     {\bf Rationale:} Refactored code must remain functional and error-free to ensure maintainability and usability.\\
     {\bf Fit Criterion:} The output code is syntactically correct and adheres to Python standards, validated by an automatic linter.\\
     {\bf Priority:} High
-    \item \emph{The tool must implement an algorithm to choose the most optimal refactoring based on measured energy consumption.}\\[2mm]
-    {\bf Rationale:} There may be multiple ways to refactor code, but the most energy-efficient one should be chosen.\\
-    {\bf Fit Criterion:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.\\
+    \item \emph{The tool must implement an algorithm to choose the most optimal refactoring based on energy consumption, measured using CodeCarbon.}\\[2mm]
+    {\bf Rationale:} There may be multiple ways to refactor code, but the most energy-efficient one should be chosen to minimize power usage. Energy consumption will be measured in terms of power usage (e.g., kilowatt-hours) by leveraging the CodeCarbon library.\\
+    {\bf Fit Criterion:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest measured energy consumption, as reported by CodeCarbon, for the given code smell.\\
     {\bf Priority:} Medium
     \item \emph{The tool must require Python version 3.10 to run but must be capable of analyzing and refactoring Python code written for versions 3.8 and newer.}\\[2mm]
     {\bf Rationale:} The tool leverages features available in Python 3.10 for its operation while ensuring compatibility with analyzing codebases written in Python 3.8 and 3.9, which are the most widely adopted recent major versions in use.\\
