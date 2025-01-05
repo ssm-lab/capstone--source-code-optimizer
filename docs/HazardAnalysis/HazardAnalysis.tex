@@ -491,9 +491,9 @@ The web client offers a user interface that allows users to interact with the re
     {\bf Associated Hazards:} HZ-7\\
     {\bf Priority:} Medium
 
-    \item \emph{The system shall require user approval for high-impact refactorings or those with low confidence, providing visibility and oversight for critical changes.}\\
+    \item \emph{The system shall require user approval for high-impact refactorings (those modifying more than 50 lines of code) or low-confidence refactorings (based on a ranked list of code smells), providing visibility and oversight for critical changes.}\\
     {\bf Rationale:} Automated decisions could introduce errors without human oversight, and users should be aware of significant changes.\\
-    {\bf Fit Criterion:} \texttt{RISK\_REFACTOR\_THRESH} of high-risk or low-confidence refactorings must require user approval before proceeding.\\
+    {\bf Fit Criterion:} \texttt{RISK\_REFACTOR\_THRESH} of refactorings exceeding 50 lines or flagged as low-confidence by the ranked smell list must require user approval before proceeding.\\
     {\bf Associated Hazards:} HZ-15\\
     {\bf Priority:} High
 
