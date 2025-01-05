@@ -91,7 +91,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
                 logging.info("All test pass! Functionality maintained.")
                 # shutil.move(temp_file_path, file_path)
                 logging.info(
-                    f"Refactored long message chain on line {pylint_smell["line"]} and saved.\n"
+                    f'Refactored long message chain on line {pylint_smell["line"]} and saved.\n'
                 )
                 return
 
