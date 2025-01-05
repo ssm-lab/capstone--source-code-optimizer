@@ -1,8 +1,8 @@
 # Any configurations that are done by the analyzers
-from enum import EnumMeta, StrEnum
+from enum import Enum, EnumMeta
 
 
-class ExtendedEnum(StrEnum):
+class ExtendedEnum(Enum):
     @classmethod
     def list(cls) -> list[str]:
         return [c.value for c in cls]
@@ -32,6 +32,7 @@ class CustomSmell(ExtendedEnum):
     LONG_TERN_EXPR = "LTE001"  # Custom code smell for long ternary expressions
     LONG_MESSAGE_CHAIN = "LMC001"  # CUSTOM CODE
     UNUSED_VAR_OR_ATTRIBUTE = "UVA001"  # CUSTOM CODE
+    LONG_LAMBDA_EXPR = "LLE001"  # CUSTOM CODE
 
 
 class IntermediateSmells(ExtendedEnum):

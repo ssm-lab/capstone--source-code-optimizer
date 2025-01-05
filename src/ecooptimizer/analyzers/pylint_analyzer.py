@@ -82,6 +82,7 @@ class PylintAnalyzer(Analyzer):
 
             if smell["messageId"] == IntermediateSmells.LINE_TOO_LONG.value:
                 self.filter_ternary(smell)
+                self.filter_long_lambda(smell)
 
         self.smells_data = configured_smells
 
@@ -108,6 +109,30 @@ class PylintAnalyzer(Analyzer):
                 smell["message"] = "Ternary expression has too many branches"
                 self.smells_data.append(smell)
                 break
+
+    def filter_long_lambda(self, smell: Smell, max_length: int = 100):
+        """
+        Filters LINE_TOO_LONG smells to find long lambda functions.
+        Args:
+        - smell: The Smell object representing a LINE_TOO_LONG error.
+        - max_length: The maximum allowed line length for lambda functions.
+                    Note this is dependent on pylint flagging "line too long"
+                    so by pylint the min is 100 to sucessfully detect
+        """
+        root_node = parse_line(self.file_path, smell["line"])
+
+        if root_node is None:
+            return
+
+        for node in ast.walk(root_node):
+            if isinstance(node, ast.Lambda):  # Lambda function node
+                # Check the length of the line containing the lambda
+                line_length = len(smell.get("message", ""))
+                if line_length > max_length:
+                    smell["messageId"] = CustomSmell.LONG_LAMBDA_EXPR.value
+                    smell["message"] = f"Lambda function too long ({line_length}/{max_length})"
+                    self.smells_data.append(smell)
+                    break
 
     def detect_long_message_chain(self, threshold: int = 3):
         """

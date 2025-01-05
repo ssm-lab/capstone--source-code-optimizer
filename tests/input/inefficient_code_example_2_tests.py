@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 
-from ineffcient_code_example_2 import (
+from inefficient_code_example_2 import (
     AdvancedProcessor,
     DataProcessor,
 )  # Just to show the unused import issue
@@ -29,23 +29,17 @@ class TestDataProcessor(unittest.TestCase):
 
     def test_complex_calculation_multiply(self):
         # Test multiplication operation
-        result = DataProcessor.complex_calculation(
-            5, True, False, "multiply", 10, 20, None, "end"
-        )
+        result = DataProcessor.complex_calculation(True, "multiply", 10, 20)
         self.assertEqual(result, 50)  # 5 * 10
 
     def test_complex_calculation_add(self):
         # Test addition operation
-        result = DataProcessor.complex_calculation(
-            5, True, False, "add", 10, 20, None, "end"
-        )
+        result = DataProcessor.complex_calculation(True, "add", 20, 5)
         self.assertEqual(result, 25)  # 5 + 20
 
     def test_complex_calculation_default(self):
         # Test default operation
-        result = DataProcessor.complex_calculation(
-            5, True, False, "unknown", 10, 20, None, "end"
-        )
+        result = DataProcessor.complex_calculation(True, "unknown", 10, 20)
         self.assertEqual(result, 5)  # Default value is item itself
 
 
