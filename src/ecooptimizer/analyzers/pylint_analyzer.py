@@ -63,6 +63,9 @@ class PylintAnalyzer(Analyzer):
         lmc_data = self.detect_long_message_chain()
         self.smells_data.extend(lmc_data)
 
+        llf_data = self.detect_long_lambda_expression()
+        self.smells_data.extend(llf_data)
+
         uva_data = self.detect_unused_variables_and_attributes()
         self.smells_data.extend(uva_data)
 
@@ -82,7 +85,6 @@ class PylintAnalyzer(Analyzer):
 
             if smell["messageId"] == IntermediateSmells.LINE_TOO_LONG.value:
                 self.filter_ternary(smell)
-                self.filter_long_lambda(smell)
 
         self.smells_data = configured_smells
 
@@ -109,30 +111,6 @@ class PylintAnalyzer(Analyzer):
                 smell["message"] = "Ternary expression has too many branches"
                 self.smells_data.append(smell)
                 break
-
-    def filter_long_lambda(self, smell: Smell, max_length: int = 100):
-        """
-        Filters LINE_TOO_LONG smells to find long lambda functions.
-        Args:
-        - smell: The Smell object representing a LINE_TOO_LONG error.
-        - max_length: The maximum allowed line length for lambda functions.
-                    Note this is dependent on pylint flagging "line too long"
-                    so by pylint the min is 100 to sucessfully detect
-        """
-        root_node = parse_line(self.file_path, smell["line"])
-
-        if root_node is None:
-            return
-
-        for node in ast.walk(root_node):
-            if isinstance(node, ast.Lambda):  # Lambda function node
-                # Check the length of the line containing the lambda
-                line_length = len(smell.get("message", ""))
-                if line_length > max_length:
-                    smell["messageId"] = CustomSmell.LONG_LAMBDA_EXPR.value
-                    smell["message"] = f"Lambda function too long ({line_length}/{max_length})"
-                    self.smells_data.append(smell)
-                    break
 
     def detect_long_message_chain(self, threshold: int = 3):
         """
@@ -199,6 +177,101 @@ class PylintAnalyzer(Analyzer):
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
                 # Call check_chain to detect long chains
                 check_chain(node.func)
+
+        return results
+
+    def detect_long_lambda_expression(self, threshold_length: int = 100, threshold_count: int = 3):
+        """
+        Detects lambda functions that are too long, either by the number of expressions or the total length in characters.
+        Returns a list of results.
+
+        Args:
+        - threshold_length (int): The maximum number of characters allowed in the lambda expression.
+        - threshold_count (int): The maximum number of expressions allowed inside the lambda function.
+
+        Returns:
+        - List of dictionaries: Each dictionary contains details about the detected long lambda.
+        """
+        results: list[Smell] = []
+        used_lines = set()
+
+        # Function to check the length of lambda expressions
+        def check_lambda(node: ast.Lambda):
+            # Count the number of expressions in the lambda body
+            if isinstance(node.body, list):
+                lambda_length = len(node.body)
+            else:
+                lambda_length = 1  # Single expression if it's not a list
+            print("this is length", lambda_length)
+            # Check if the lambda expression exceeds the threshold based on the number of expressions
+            if lambda_length >= threshold_count:
+                message = (
+                    f"Lambda function too long ({lambda_length}/{threshold_count} expressions)"
+                )
+                result: Smell = {
+                    "absolutePath": str(self.file_path),
+                    "column": node.col_offset,
+                    "confidence": "UNDEFINED",
+                    "endColumn": None,
+                    "endLine": None,
+                    "line": node.lineno,
+                    "message": message,
+                    "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
+                    "module": self.file_path.name,
+                    "obj": "",
+                    "path": str(self.file_path),
+                    "symbol": "long-lambda-expr",
+                    "type": "convention",
+                }
+
+                if node.lineno in used_lines:
+                    return
+                used_lines.add(node.lineno)
+                results.append(result)
+
+            # Convert the lambda function to a string and check its total length in characters
+            lambda_code = get_lambda_code(node)
+            print(lambda_code)
+            print("this is length of char: ", len(lambda_code))
+            if len(lambda_code) > threshold_length:
+                message = f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
+                result: Smell = {
+                    "absolutePath": str(self.file_path),
+                    "column": node.col_offset,
+                    "confidence": "UNDEFINED",
+                    "endColumn": None,
+                    "endLine": None,
+                    "line": node.lineno,
+                    "message": message,
+                    "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
+                    "module": self.file_path.name,
+                    "obj": "",
+                    "path": str(self.file_path),
+                    "symbol": "long-lambda-expr",
+                    "type": "convention",
+                }
+
+                if node.lineno in used_lines:
+                    return
+                used_lines.add(node.lineno)
+                results.append(result)
+
+        # Helper function to get the string representation of the lambda expression
+        def get_lambda_code(lambda_node: ast.Lambda) -> str:
+            # Reconstruct the lambda arguments and body as a string
+            args = ", ".join(arg.arg for arg in lambda_node.args.args)
+
+            # Convert the body to a string by using ast's built-in functionality
+            body = ast.unparse(lambda_node.body)
+
+            # Combine to form the lambda expression
+            return f"lambda {args}: {body}"
+
+        # Walk through the AST to find lambda expressions
+        for node in ast.walk(self.source_code):
+            if isinstance(node, ast.Lambda):
+                print("found a lambda")
+                check_lambda(node)
 
         return results
 
