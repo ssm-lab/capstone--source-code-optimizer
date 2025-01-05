@@ -4,9 +4,9 @@ from pathlib import Path
 
 import astor
 
-from ecooptimizer.data_wrappers.smell import Smell
-from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
-from testing.run_tests import run_tests
+from ..data_wrappers.smell import Smell
+from .base_refactorer import BaseRefactorer
+from ..testing.run_tests import run_tests
 
 
 def get_used_parameters(function_node: ast.FunctionDef, params: list[str]):

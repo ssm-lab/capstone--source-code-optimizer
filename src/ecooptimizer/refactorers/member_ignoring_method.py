@@ -4,11 +4,11 @@ import astor
 import ast
 from ast import NodeTransformer
 
-from testing.run_tests import run_tests
+from ..testing.run_tests import run_tests
 
-from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from .base_refactorer import BaseRefactorer
 
-from ecooptimizer.data_wrappers.smell import Smell
+from ..data_wrappers.smell import Smell
 
 
 class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
