@@ -6,7 +6,7 @@ from ast import NodeTransformer
 
 from ..testing.run_tests import run_tests
 
-from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from .base_refactorer import BaseRefactorer
 
 from ..data_wrappers.smell import Smell
 
