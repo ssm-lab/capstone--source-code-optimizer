@@ -730,9 +730,9 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
     {\bf Rationale:} There may be multiple ways to refactor code, but the most energy-efficient one should be chosen.\\
     {\bf Fit Criterion:} The algorithm evaluates multiple refactoring options and selects the one that results in the lowest energy consumption for the given code smell.\\
     {\bf Priority:} Medium
-    \item \emph{The tool must be compatible with various Python versions and common libraries.}\\[2mm]
-    {\bf Rationale:} The tool should be flexible enough to be used across different Python environments.\\
-    {\bf Fit Criterion:} The tool operates correctly with the latest two major versions of Python (e.g., Python 3.8 and 3.9) and commonly used libraries.\\
+    \item \emph{The tool must require Python version 3.10 to run but must be capable of analyzing and refactoring Python code written for versions 3.8 and newer.}\\[2mm]
+    {\bf Rationale:} The tool leverages features available in Python 3.10 for its operation while ensuring compatibility with analyzing codebases written in Python 3.8 and 3.9, which are the most widely adopted recent major versions in use.\\
+    {\bf Fit Criterion:} The tool operates correctly in a Python 3.10 environment and successfully analyzes and refactors code written for Python versions 3.8, 3.9, and newer.\\
     {\bf Priority:} Medium
     \item \emph{The tool must generate comprehensive reports on detected smells, refactorings applied, energy consumption measurements, and testing results.}\\[2mm]
     {\bf Rationale:} Developers need clear reports to understand the impact of the refactorings and to track changes effectively.\\
