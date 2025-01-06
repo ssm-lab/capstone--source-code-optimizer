@@ -58,13 +58,49 @@
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
 October 11th, 2024 & 0 & Created initial revision of SRS\\
-January 1st, 2025 & 0.1 & Fixed link references to tables and figures and added preambles to those sections, move glossary section\\
+January 6th, 2025 & 0.1 & Fixed link references to tables and figures and added preambles to those sections, move glossary section, added symbolic constants\\
 \bottomrule
 \end{tabularx}
 
 ~\\
 
 ~\newpage
+
+\section*{Symbolic Constants}
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|c|}
+    \toprule \textbf{Name} & \textbf{Value} \\
+    \midrule
+    ENERGY\_SAVE & 5\% \\
+    SMELL\_COVERAGE & 80\% \\
+    TEST\_FUNCTION\_THRESH & 100\% \\
+    REFACTOR\_EFFICACY\_THRESH & 95\% \\
+    REFACTOR\_REVERT\_LIMIT & 5 commits \\
+    CRITICAL\_ENERGY\_SAVE\_THRESH & 10\% \\
+    MIN\_USER\_CONFIDENCE & 70\% \\
+    MAX\_TASK\_CLICKS & 3 clicks \\
+    MIN\_USER\_EOU & 80\% \\
+    SMALL\_FILE\_TIME & 5 sec \\
+    LARGE\_FILE\_TIME & 30 sec \\
+    REFACTOR\_TIME & 10 sec \\
+    DETECTION\_ACC & 90\% \\
+    LARGE\_CODE\_BASE\_TIME & 2 min \\
+    NEW\_REFACTOR\_TIME & 7 days \\
+    COMPREHENSION\_TIME & 2 days \\
+    ROLLBACK\_TIME & 1h \\
+    MIN\_CODE\_COVERAGE & 80\% \\
+    OS\_PERF\_DIFF\_LIMIT & 5\% \\
+    \bottomrule
+  \end{tabular}
+  \caption{Table of Symbolic Constants}
+  \label{tab:syms}
+\end{table}
+
+~\\
+
+~\newpage
+
 \pagenumbering{arabic}
 
 \section{Purpose of the Project}
@@ -331,7 +367,7 @@ Due to the nature of this project as a capstone requirement, there are currently
     {\bf Priority:} High
     \item \emph{The refactored code must result in measurable energy savings.}\\[2mm]
     {\bf Rationale:} The project's primary objective is to improve the code's energy efficiency. Refactorings should lead to a noticeable reduction in energy consumption.\\
-    {\bf Fit Criterion:} The system must show at least a 5\% reduction in energy consumption, as measured by tools like \texttt{PyJoules}, for most of the refactored code.\\
+    {\bf Fit Criterion:} The system must show at least a ENERGY\_SAVE reduction in energy consumption, as measured by tools like \texttt{PyJoules}, for most of the refactored code.\\
     {\bf Priority:} High
     \item \emph{The refactored code must be provided to the user upon completion of the refactoring process.}\\[2mm]
     {\bf Rationale:} Developers need access to the refactored code to utilize it in their projects immediately after the refactoring process.\\
@@ -426,7 +462,7 @@ The purpose of this subsection is to illustrate the flow of inputs, outputs, and
 
 \newpage
 \subsection{Work Partitioning}
-In this subsection, the work needed to complete this system is divided into distinct activities, such as identifying code smells, applying refactorings, and measuring energy efficiency. As seen in \hyperref[tab:work-part]{Table 1}, each partition outlines its purpose, dependencies, and deliverables to provide a structured overview of the project's tasks.
+In this subsection, the work needed to complete this system is divided into distinct activities, such as identifying code smells, applying refactorings, and measuring energy efficiency. As seen in \hyperref[tab:work-part]{Table 2}, each partition outlines its purpose, dependencies, and deliverables to provide a structured overview of the project's tasks.
 
 \begin{table}[H]
   \centering
@@ -447,7 +483,7 @@ In this subsection, the work needed to complete this system is divided into dist
 \end{table}
 
 \subsection{Specifying a Business Use Case (BUC)}
-Each event listed in \hyperref[tab:work-part]{Table 1} is expanded into an individual business use case which describes how the system handles specific scenarios.
+Each event listed in \hyperref[tab:work-part]{Table 2} is expanded into an individual business use case which describes how the system handles specific scenarios.
 
 \begin{enumerate}[label={\bf BUC \arabic*:}, wide=0pt, font=\itshape]
   \item {\bf Code Submission} \\[2mm]
@@ -551,7 +587,7 @@ The following diagram (\hyperref[img:bdata-model]{Figure 2}) illustrates the rel
 \end{figure}
 
 \subsection{Data Dictionary}
-\hyperref[tab:data-dict]{Table 2} shown below defines each component in the system, including its attributes, type, and purpose. It ensures clarity and consistency in data handling and serves as a reference for development and testing.
+\hyperref[tab:data-dict]{Table 3} shown below defines each component in the system, including its attributes, type, and purpose. It ensures clarity and consistency in data handling and serves as a reference for development and testing.
 
 % \renewcommand{\arraystretch}{1}
 \begin{longtable}[H]{|p{3.5cm}|p{9cm}|p{2cm}|}
@@ -624,7 +660,7 @@ The following \hyperref[tab:puc]{table} summarizes the primary use cases of the 
 \end{table}
 
 \subsection{Individual Product Use Cases (PUC's)}
-This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, providing a detailed description of each. It explains how the system components work together to fulfill each use case, emphasizing expected functionality and outcomes for users.
+This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 4}, providing a detailed description of each. It explains how the system components work together to fulfill each use case, emphasizing expected functionality and outcomes for users.
 
 \setlength{\parindent}{0pt}
 \begin{enumerate}[label={\bf PUC \arabic*:}, wide=0pt, font=\itshape]
@@ -708,11 +744,11 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
     {\bf Priority:} High
     \item \emph{The system must identify specific code smells that can be targeted for energy saving.}\\[2mm]
     {\bf Rationale:} Energy inefficiencies are often related to well-known code smells, so identifying them is the first step in improving efficiency.\\
-    {\bf Fit Criterion:} The tool should detect and report at least 80\% of the following code smells: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).\\
+    {\bf Fit Criterion:} The tool should be meet the SMELL\_COVERAGE for the detection and reporting of the following smells: Large Class (LC), Long Parameter List (LPL), Long Method (LM), Long Message Chain (LMC), Long Scope Chaining (LSC), Long Base Class List (LBCL), Useless Exception Handling (UEH), Long Lambda Function (LLF), Complex List Comprehension (CLC), Long Element Chain (LEC), Long Ternary Conditional Expression (LTCE).\\
     {\bf Priority:} High
     \item \emph{The system shall maintain the original functionality of the Python code after refactoring.}\\[2mm]
     {\bf Rationale:} Ensuring that the refactored code preserves the original behaviour is critical to avoid regressions or unexpected issues in the software.\\
-    {\bf Fit Criterion:} The system runs the original test suite against the refactored code and passes 100\% of the tests.\\
+    {\bf Fit Criterion:} The system runs the original test suite against the refactored code and the amount of test to pass should meet the TEST\_FUNCTION\_THRESH.\\
     {\bf Priority:} High
     \item \emph{The system must allow users to input their original test suite as a required argument.}\\[2mm]
     {\bf Rationale:} Verifying that the refactored code preserves functionality requires the use of the original test suite.\\
@@ -748,11 +784,11 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
     {\bf Priority:} Medium
     \item \emph{The system shall integrate with GitHub and provide an automated refactoring process that is triggered when code is pushed to a repository.}\\[2mm]
     {\bf Rationale:} Automated refactoring integrated into CI/CD pipelines ensures that energy-efficient code is maintained across all stages of development, reducing the burden on developers.\\
-    {\bf Fit Criterion:} The refactoring process must be triggered automatically on GitHub commits, with at least 95\% of refactorings improving energy efficiency without introducing any functional errors.\\
+    {\bf Fit Criterion:} The refactoring process must be triggered automatically on GitHub commits, with the number of refactorings improving energy efficiency without introducing any functional errors meeting the REFACTOR\_EFFICACY\_THRESH.\\
     {\bf Priority:} Medium
     \item \emph{The system shall allow developers to undo any refactorings applied, restoring the code to its previous state.}\\[2mm]
     {\bf Rationale:} Developers may want to revert changes if they do not align with specific project goals or introduce performance bottlenecks unrelated to energy consumption.\\
-    {\bf Fit Criterion:} The system must provide an option to revert any refactoring applied within the last 5 commits, restoring both code and energy consumption metrics to their original state.\\
+    {\bf Fit Criterion:} The system must provide an option to revert any refactoring commits applied within the REFACTOR\_REVERT\_LIMIT, restoring both code and energy consumption metrics to their original state.\\
     {\bf Priority:} Medium
 \end{enumerate}
 
@@ -778,22 +814,22 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
     {\bf Priority:} Low
     \item \emph{The GitHub Action shall highlight significant energy savings with visual alerts in pull requests (PRs).}\\[2mm]
     {\bf Rationale:} Visual alerts in PRs inform developers of the energy savings achieved, encouraging the adoption of energy-efficient practices.\\
-    {\bf Fit Criterion:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed a predefined threshold (e.g., 10\%).\\
+    {\bf Fit Criterion:} The GitHub Action must display a success icon or green label in the PR summary if energy savings exceed the CRITICAL\_ENERGY\_SAVE\_THRESH.\\
     {\bf Priority:} Low
 \end{enumerate}
 \subsection{Style Requirements}
 \begin{enumerate}[label=LFR-ST \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The tool shall convey a professional and authoritative appearance to instill confidence in developers.}\\[2mm]
     {\bf Rationale:} A professional appearance helps build trust and encourages developers to use the tool confidently for energy-efficient refactoring.\\
-    {\bf Fit Criterion:} After their first encounter with the tool, at least 60\% of representative developers should feel that it is a trustworthy and reliable solution for energy-efficient refactoring.\\
+    {\bf Fit Criterion:} After their first encounter with the tool, the amount of representative developers that feel that it is a trustworthy and reliable solution for energy-efficient refactoring should be above the MIN\_USER\_CONFIDENCE.\\
     {\bf Priority:} High
     \item \emph{The IDE plugin interface shall promote a calm and focused atmosphere, enhancing the developer's ability to concentrate on code improvements.}\\[2mm]
     {\bf Rationale:} A calm environment reduces distractions and improves productivity, allowing developers to focus on their work effectively.\\
-    {\bf Fit Criterion:} Developers should report feeling less distracted and more productive while using the tool, with 70\% indicating a positive change in their coding environment.\\
+    {\bf Fit Criterion:} Developers should report feeling less distracted and more productive while using the tool, with the amount of developers indicating a positive change in their coding environment meeting the MIN\_USER\_CONFIDENCE.\\
     {\bf Priority:} Medium
     \item \emph{The tool design shall be visually appealing and modern, aligning with contemporary software development tools.}\\[2mm]
     {\bf Rationale:} A modern design improves user experience and satisfaction, making the tool more enjoyable to use.\\
-    {\bf Fit Criterion:} At least 75\% of users should express satisfaction with the tool's visual design and layout after their initial interaction.\\
+    {\bf Fit Criterion:} The number of users that express satisfaction with the tool's visual design and layout after their initial interaction should meet the MIN\_USER\_CONFIDENCE.\\
     {\bf Priority:} Medium
 \end{enumerate}
 
@@ -802,11 +838,11 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
 \begin{enumerate}[label=UHR-EOU \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The tool shall have an intuitive user interface that simplifies navigation and functionality.}\\[2mm]
     {\bf Rationale:} A simple, intuitive interface allows users to access the tool's key features quickly, improving usability and reducing the learning curve.\\
-    {\bf Fit Criterion:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) within three clicks or less.\\
+    {\bf Fit Criterion:} Users should be able to complete key tasks (e.g., parsing code, configuring settings) MAX\_TASK\_CLICKS limit.\\
     {\bf Priority:} High
     \item \emph{The tool shall provide clear and concise prompts for user input.}\\[2mm]
     {\bf Rationale:} Clear instructions help users understand what inputs are required, minimizing confusion and errors during the process.\\
-    {\bf Fit Criterion:} At least 90\% of test users should report that prompts are straightforward and guide them effectively through the process.\\
+    {\bf Fit Criterion:} The amount of test users that report that prompts are straightforward and guide them effectively through the process should meet the MIN\_USER\_EOU.\\
     {\bf Priority:} High
 \end{enumerate}
 
@@ -826,7 +862,7 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
 \begin{enumerate}[label=UHR-LRN \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The tool shall provide context-sensitive help that offers assistance based on the current user actions.}\\[2mm]
     {\bf Rationale:} Context-sensitive help ensures that users can receive timely and relevant assistance, reducing confusion and improving usability.\\
-    {\bf Fit Criterion:} Help resources should be accessible within 1-3 clicks.\\
+    {\bf Fit Criterion:} Help resources should be accessible within MAX\_TASK\_CLICKS limit.\\
     {\bf Priority:} High
     \item \emph{The tool shall have an available YouTube video demonstrating installation.}\\[2mm]
     {\bf Rationale:} Video tutorials provide visual learning resources that can make the installation process more accessible to users.\\
@@ -838,7 +874,7 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
 \begin{enumerate}[label=UHR-UPL \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The tool shall communicate errors and issues politely and constructively.}\\[2mm]
     {\bf Rationale:} Polite and constructive error messages reduce frustration and enhance the user experience, making the tool more approachable.\\
-    {\bf Fit Criterion:} User feedback should reflect that at least 80\% of users perceive error messages as helpful and courteous, rather than frustrating or vague.\\
+    {\bf Fit Criterion:} User feedback should reflect that at least the MIN\_USER\_EOU of users perceive error messages as helpful and courteous, rather than frustrating or vague.\\
     {\bf Priority:} Medium
 \end{enumerate}
 
@@ -850,7 +886,7 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
     {\bf Priority:} Low
     \item \emph{The tool shall offer audio cues for important actions and alerts to assist users with use and navigation.}\\[2mm]
     {\bf Rationale:} Audio cues help users with visual impairments or cognitive difficulties to stay informed about important events or actions.\\
-    {\bf Fit Criterion:} At least 70\% of users should report that the audio cues enhance their understanding of important notifications or actions.\\
+    {\bf Fit Criterion:} The MIN\_USER\_EOU of users should report that the audio cues enhance their understanding of important notifications or actions.\\
     {\bf Priority:} Low
 \end{enumerate}
 
@@ -859,11 +895,11 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
 \begin{enumerate}[label=PR-SL \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The tool shall analyze and detect code smells in the input code within a reasonable time frame.}\\[2mm]
     {\bf Rationale:} Fast analysis ensures that developers do not experience significant delays while reviewing code.\\
-    {\bf Fit Criterion:} The tool should complete the analysis for files up to 1,000 lines of code in under 5 seconds, and for files up to 10,000 lines in under 30 seconds.\\
+    {\bf Fit Criterion:} The tool should complete the analysis for files up to 1,000 lines of code in under SMALL\_FILE\_TIME, and for files up to 10,000 lines in under LARGE\_FILE\_TIME.\\
     {\bf Priority:} High
     \item \emph{The refactoring process shall be executed efficiently without noticeable delays.}\\[2mm]
     {\bf Rationale:} Fast refactoring ensures a smooth workflow for developers, preventing frustration during development.\\
-    {\bf Fit Criterion:} The tool should refactor the code and generate output in under 10 seconds for small to medium-sized files (up to 5,000 lines).\\
+    {\bf Fit Criterion:} The tool should refactor the code and generate output in under REFACTOR\_TIME for small to medium-sized files (up to 5,000 lines).\\
     {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Safety-Critical Requirements}
@@ -881,7 +917,7 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
     {\bf Priority:} High
     \item \emph{The tool shall reliably identify code smells with minimal false positives and negatives.}\\[2mm]
     {\bf Rationale:} High detection accuracy ensures that developers are not misled by incorrect or missed suggestions.\\
-    {\bf Fit Criterion:} Detection accuracy should exceed 90\% when validated against a set of known cases.\\
+    {\bf Fit Criterion:} Detection accuracy should exceed DETECTION\_ACC when validated against a set of known cases.\\
     {\bf Priority:} Medium
     \item \emph{The tool shall produce valid refactored Python code as output or indicate that no possible refactorings were found.}\\[2mm]
     {\bf Rationale:} Ensuring that the tool produces valid output is essential for maintaining code quality.\\
@@ -905,7 +941,7 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 3}, 
 \begin{enumerate}[label=PR-CR \arabic*., wide=0pt, leftmargin=*]
     \item \emph{The tool shall efficiently manage large codebases.}\\[2mm]
     {\bf Rationale:} Efficient handling of large projects ensures that the tool remains usable for teams working with extensive codebases.\\
-    {\bf Fit Criterion:} The tool must process projects with up to 100,000 lines of code within 2 minutes, maintaining performance standards.\\
+    {\bf Fit Criterion:} The tool must process projects with up to 100,000 lines of code within LARGE\_CODE\_BASE\_TIME, maintaining performance standards.\\
     {\bf Priority:} High
 \end{enumerate}
 
@@ -992,22 +1028,22 @@ The following are defined as maintainability requirements:
 \begin{enumerate}[label=MS-MNT \arabic*., wide=0pt, leftmargin=*]
   \item \emph{The tool must allow new refactoring techniques to be added within one week of identification.}\\
   {\bf Rationale:} Rapid integration of new techniques ensures the tool remains up-to-date with evolving best practices in energy-efficient coding.\\
-  {\bf Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within seven days.\\
+  {\bf Fit Criteria:} Developers can integrate new refactoring methods into the tool, and they are fully operational within NEW\_REFACTOR\_TIME.\\
   {\bf Priority:} Medium
 
   \item \emph{The tool must be maintainable by developers who are not the original creators.}\\
   {\bf Rationale:} Ensuring that new developers can easily understand and modify the system reduces dependency on original developers and facilitates long-term maintenance.\\
-  {\bf Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within two days.\\
+  {\bf Fit Criteria:} Comprehensive documentation is available, including setup guides and code comments, allowing new developers to understand and modify the system within COMPREHENSION\_TIME.\\
   {\bf Priority:} High
 
   \item \emph{The tool must allow for easy rollback of updates in case of errors.}\\
   {\bf Rationale:} Quick rollback capabilities minimize downtime and user disruption in case an update introduces issues.\\
-  {\bf Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within one hour.\\
+  {\bf Fit Criteria:} Any update can be reverted with minimal effort, ensuring the system returns to a stable state within ROLLBACK\_TIME.\\
   {\bf Priority:} Medium
 
   \item \emph{The tool must provide automated testing for all refactoring functions.}\\
   {\bf Rationale:} Automated testing ensures that changes do not introduce new bugs, maintaining the reliability and stability of the tool.\\
-  {\bf Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring 80\% code coverage.\\
+  {\bf Fit Criteria:} All refactoring methods have associated unit tests that run automatically with each code change, ensuring code coverage meets MIN\_CODE\_COVERAGE.\\
   {\bf Priority:} High
 
   \item \emph{Each version of the library must maintain compatibility with the current releases of external libraries during its development phase.}\\
@@ -1065,7 +1101,7 @@ The following are defined as maintainability requirements:
 
   \item \emph{The system must offer consistent performance (e.g., refactoring speed, energy consumption measurements) regardless of the underlying operating system.}\\
   {\bf Rationale:} Having the system be OS dependent would invalidate the point of being compatible with multiple OSes and conflict with requirement MS-AD 6.\\
-  {\bf Fit Criteria:} Performance metrics, such as time taken for refactoring and energy measurements, must not vary by more than 5\% across different operating systems during testing.\\
+  {\bf Fit Criteria:} Performance metrics, such as time taken for refactoring and energy measurements, must not vary by more than OS\_PERF\_DIFF\_LIMIT across different operating systems during testing.\\
   {\bf Priority:} Low
 
 \end{enumerate}
