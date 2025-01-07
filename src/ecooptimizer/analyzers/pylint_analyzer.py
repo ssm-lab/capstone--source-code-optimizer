@@ -303,7 +303,7 @@ class PylintAnalyzer(Analyzer):
                     "endLine": None,
                     "line": node.lineno,
                     "message": message,
-                    "messageId": CustomSmell.LONG_ELEMENT_CHAIN,
+                    "messageId": CustomSmell.LONG_ELEMENT_CHAIN.value,
                     "module": self.file_path.name,
                     "obj": "",
                     "path": str(self.file_path),
