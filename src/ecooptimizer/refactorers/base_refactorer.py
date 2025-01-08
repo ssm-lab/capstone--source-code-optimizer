@@ -16,7 +16,8 @@ class BaseRefactorer(ABC):
         :param logger: Logger instance to handle log messages.
         """
         self.temp_dir = (
-            Path(__file__) / Path("../../../../../../outputs/refactored_source")
+            Path(__file__) / Path("../../../../outputs/refactored_source")
+            #Path(__file__) / Path("../../../../../../outputs/refactored_source")
         ).resolve()
         self.temp_dir.mkdir(exist_ok=True)
 
