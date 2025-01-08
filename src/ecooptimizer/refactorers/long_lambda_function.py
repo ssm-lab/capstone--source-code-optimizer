@@ -1,7 +1,6 @@
 import logging
 from pathlib import Path
 import re
-from typing import Dict
 from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 from ecooptimizer.data_wrappers.smell import Smell
 
@@ -43,9 +42,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
         """
         # Extract details from pylint_smell
         line_number = pylint_smell["line"]
-        temp_filename = self.temp_dir / Path(
-            f"{file_path.stem}_LLFR_line_{line_number}.py"
-        )
+        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LLFR_line_{line_number}.py")
 
         logging.info(
             f"Applying 'Lambda to Function' refactor on '{file_path.name}' at line {line_number} for identified code smell."
@@ -58,9 +55,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
         # Capture the entire logical line containing the lambda
         current_line = line_number - 1
         lambda_lines = [lines[current_line].rstrip()]
-        while (
-            not lambda_lines[-1].strip().endswith(")")
-        ):  # Continue until the block ends
+        while not lambda_lines[-1].strip().endswith(")"):  # Continue until the block ends
             current_line += 1
             lambda_lines.append(lines[current_line].rstrip())
         full_lambda_line = " ".join(lambda_lines).strip()
@@ -104,9 +99,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
 
         # Determine the appropriate scope for the new function
         block_indentation = re.match(r"^\s*", lines[block_start]).group()  # type: ignore
-        adjusted_function_def = function_def.replace(
-            leading_whitespace, block_indentation, 1
-        )
+        adjusted_function_def = function_def.replace(leading_whitespace, block_indentation, 1)
 
         # Replace the lambda usage with the function call
         replacement_indentation = re.match(r"^\s*", lambda_lines[0]).group()  # type: ignore
@@ -124,9 +117,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
         refactored_line = re.sub(r"\s+", "", refactored_line)
 
         # Insert newline after commas and follow with leading whitespace
-        refactored_line = re.sub(
-            r",(?![^,]*$)", f",\n{leading_whitespace}", refactored_line
-        )
+        refactored_line = re.sub(r",(?![^,]*$)", f",\n{leading_whitespace}", refactored_line)
         refactored_line = re.sub(r"\)$", "", refactored_line)  # remove bracket
         refactored_line = f"{leading_whitespace}{refactored_line}"
 

@@ -107,9 +107,7 @@ def test_long_lambda_detection(long_lambda_code: Path):
 
     # Filter for long lambda smells
     long_lambda_smells = [
-        smell
-        for smell in smells
-        if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
+        smell for smell in smells if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
     ]
 
     # Assert the expected number of long lambda functions
@@ -121,14 +119,12 @@ def test_long_lambda_detection(long_lambda_code: Path):
     assert detected_lines == expected_lines
 
 
-def test_long_lambda_refactoring(long_lambda_code: Path, tmp_path: Path):
+def test_long_lambda_refactoring(long_lambda_code: Path):
     smells = get_smells(long_lambda_code)
 
     # Filter for long lambda smells
     long_lambda_smells = [
-        smell
-        for smell in smells
-        if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
+        smell for smell in smells if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
     ]
 
     # Instantiate the refactorer
