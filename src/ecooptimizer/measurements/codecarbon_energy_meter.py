@@ -4,10 +4,10 @@ from pathlib import Path
 import sys
 import subprocess
 import pandas as pd
-
-from codecarbon import EmissionsTracker
-from ecooptimizer.measurements.base_energy_meter import BaseEnergyMeter
 from tempfile import TemporaryDirectory
+from codecarbon import EmissionsTracker
+
+from .base_energy_meter import BaseEnergyMeter
 
 
 class CodeCarbonEnergyMeter(BaseEnergyMeter):

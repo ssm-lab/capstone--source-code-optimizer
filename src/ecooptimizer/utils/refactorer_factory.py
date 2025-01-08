@@ -1,12 +1,14 @@
 # Import specific refactorer classes
-from ecooptimizer.refactorers.list_comp_any_all import UseAGeneratorRefactorer
-from ecooptimizer.refactorers.unused import RemoveUnusedRefactorer
-from ecooptimizer.refactorers.long_parameter_list import LongParameterListRefactorer
-from ecooptimizer.refactorers.member_ignoring_method import MakeStaticRefactorer
-from ecooptimizer.refactorers.long_message_chain import LongMessageChainRefactorer
+from ..refactorers.list_comp_any_all import UseAGeneratorRefactorer
+from ..refactorers.unused import RemoveUnusedRefactorer
+from ..refactorers.long_parameter_list import LongParameterListRefactorer
+from ..refactorers.member_ignoring_method import MakeStaticRefactorer
+from ..refactorers.long_message_chain import LongMessageChainRefactorer
+from ..refactorers.long_element_chain import LongElementChainRefactorer
+
 
 # Import the configuration for all Pylint smells
-from ecooptimizer.utils.analyzers_config import AllSmells
+from ..utils.analyzers_config import AllSmells
 
 
 class RefactorerFactory:
@@ -46,6 +48,8 @@ class RefactorerFactory:
                 selected = LongParameterListRefactorer()
             case AllSmells.LONG_MESSAGE_CHAIN:  # type: ignore
                 selected = LongMessageChainRefactorer()
+            case AllSmells.LONG_ELEMENT_CHAIN:  # type: ignore
+                selected = LongElementChainRefactorer()
             case _:
                 selected = None
 

@@ -3,7 +3,7 @@ import ast
 import logging
 from pathlib import Path
 
-from ecooptimizer.data_wrappers.smell import Smell
+from ..data_wrappers.smell import Smell
 
 
 class Analyzer(ABC):
