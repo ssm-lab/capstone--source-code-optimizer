@@ -1,236 +1,255 @@
 import logging
 from pathlib import Path
 import re
+import ast
 from enum import Enum
+from typing import Any
 
-from testing.run_tests import run_tests
+
+from ..testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
-from data_wrappers.smell import Smell
+from ..data_wrappers.smell import Smell
 
 
 class RefactoringStrategy(Enum):
     INTERMEDIATE_VARS = "intermediate_vars"
-    DESTRUCTURING = "destructuring"
-    METHOD_EXTRACTION = "method_extraction"
-    CACHE_RESULT = "cache_result"
+    FLATTEN_DICT = "flatten_dict"
 
 
 class LongElementChainRefactorer(BaseRefactorer):
-    """
-    Enhanced refactorer that implements multiple strategies for optimizing element chains:
-    1. Intermediate Variables: Break chain into separate assignments
-    2. Destructuring: Use Python's destructuring assignment
-    3. Method Extraction: Create a dedicated method for frequently used chains
-    4. Result Caching: Cache results for repeated access patterns
-    """
-
     def __init__(self):
         super().__init__()
         self._cache: dict[str, str] = {}
         self._seen_patterns: dict[str, int] = {}
+        self._reference_map: dict[str, list[tuple[int, str]]] = {}
 
-    def _get_leading_context(self, lines: list[str], line_number: int) -> tuple[str, int]:
-        """Get indentation and context from surrounding lines."""
-        target_line = lines[line_number - 1]
-        leading_whitespace = re.match(r"^\s*", target_line).group()
+    def flatten_dict(self, d: dict[str, Any], parent_key: str = ""):
+        """Recursively flatten a nested dictionary."""
+        items = []
+        for k, v in d.items():
+            new_key = f"{parent_key}_{k}" if parent_key else k
+            if isinstance(v, dict):
+                items.extend(self.flatten_dict(v, new_key).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
 
-        # Analyze surrounding lines for pattern frequency
-        context_range = 10  # Look 10 lines before and after
-        pattern_count = 0
+    def extract_dict_literal(self, node: ast.AST):
+        """Convert AST dict literal to Python dict."""
+        if isinstance(node, ast.Dict):
+            return {
+                self.extract_dict_literal(k)
+                if isinstance(k, ast.AST)
+                else k: self.extract_dict_literal(v) if isinstance(v, ast.AST) else v
+                for k, v in zip(node.keys, node.values)
+            }
+        elif isinstance(node, ast.Constant):
+            return node.value
+        elif isinstance(node, ast.Name):
+            return node.id
+        return node
 
-        start = max(0, line_number - context_range)
-        end = min(len(lines), line_number + context_range)
+    def find_dict_assignments(self, tree: ast.AST):
+        """Find and extract dictionary assignments from AST."""
+        dict_assignments = {}
 
-        for i in range(start, end):
-            if i == line_number - 1:
-                continue
-            if target_line.strip() in lines[i]:
-                pattern_count += 1
+        class DictVisitor(ast.NodeVisitor):
+            def visit_Assign(self_, node: ast.Assign):
+                if (
+                    isinstance(node.value, ast.Dict)
+                    and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                ):
+                    dict_name = node.targets[0].id
+                    dict_value = self.extract_dict_literal(node.value)
+                    dict_assignments[dict_name] = dict_value
+                self_.generic_visit(node)
 
-        return leading_whitespace, pattern_count
+        DictVisitor().visit(tree)
+        return dict_assignments
 
-    def _apply_intermediate_vars(
-        self, base_var: str, access_ops: list[str], leading_whitespace: str, original_line: str
-    ) -> list[str]:
-        """Strategy 1: Break chain into intermediate variables."""
-        refactored_lines = []
-        current_var = base_var
+    def collect_dict_references(self, tree: ast.AST) -> None:
+        """Collect all dictionary access patterns."""
 
-        # Extract the original operation (e.g., print, assign, etc.)
-        chain_expr = f"{base_var}{''.join(access_ops)}"
-        operation_prefix = original_line[: original_line.index(chain_expr)].rstrip()
-        operation_suffix = original_line[
-            original_line.index(chain_expr) + len(chain_expr) :
-        ].rstrip()
+        class ChainVisitor(ast.NodeVisitor):
+            def visit_Subscript(self_, node: ast.Subscript):
+                chain = []
+                current = node
+                parent_map = {}
+                while isinstance(current, ast.Subscript):
+                    if isinstance(current.slice, ast.Constant):
+                        chain.append(current.slice.value)
+                    current = current.value
 
-        # Add intermediate assignments
-        for i, op in enumerate(access_ops[:-1]):
-            next_var = f"intermediate_{i}"
-            refactored_lines.append(f"{leading_whitespace}{next_var} = {current_var}{op}")
-            current_var = next_var
+                if isinstance(current, ast.Name):
+                    base_var = current.id
+                    # Only store the pattern if we're at a leaf node (not part of another subscript)
+                    parent = parent_map.get(node)
+                    if not isinstance(parent, ast.Subscript):
+                        if chain:
+                            # Use single and double quotes in case user uses either
+                            joined_double = "][".join(f'"{k}"' for k in reversed(chain))
+                            access_pattern_double = f"{base_var}[{joined_double}]"
 
-        # Add final line with same operation and indentation as original
-        final_access = f"{current_var}{access_ops[-1]}"
-        final_line = f"{operation_prefix}{final_access}{operation_suffix}"
-        refactored_lines.append(final_line)
+                            flattened_key = "_".join(str(k) for k in reversed(chain))
+                            flattened_reference = f'{base_var}["{flattened_key}"]'
 
-        return refactored_lines
+                            if access_pattern_double not in self._reference_map:
+                                self._reference_map[access_pattern_double] = []
 
-    def _apply_destructuring(
-        self, base_var: str, access_ops: list[str], leading_whitespace: str, original_line: str
-    ) -> list[str]:
-        """Strategy 2: Use Python destructuring assignment."""
-        # Extract the original operation
-        chain_expr = f"{base_var}{''.join(access_ops)}"
-        operation_prefix = original_line[: original_line.index(chain_expr)].rstrip()
-        operation_suffix = original_line[
-            original_line.index(chain_expr) + len(chain_expr) :
-        ].rstrip()
+                            self._reference_map[access_pattern_double].append(
+                                (node.lineno, flattened_reference)
+                            )
 
-        keys = [op.strip("[]").strip("'\"") for op in access_ops]
+                for child in ast.iter_child_nodes(node):
+                    parent_map[child] = node
+                self_.generic_visit(node)
 
-        if all(key.isdigit() for key in keys):  # List destructuring
-            unpacking_vars = [f"_{i}" for i in range(len(keys) - 1)]
-            target_var = "result"
-            unpacking = f"{', '.join(unpacking_vars)}, {target_var}"
-            return [
-                f"{leading_whitespace}{unpacking} = {base_var}",
-                f"{operation_prefix}{target_var}{operation_suffix}",
-            ]
-        else:  # Dictionary destructuring
-            target_key = keys[-1]
-            return [
-                f"{leading_whitespace}result = {base_var}.get('{target_key}', None)",
-                f"{operation_prefix}result{operation_suffix}",
-            ]
+        ChainVisitor().visit(tree)
 
-    def _apply_method_extraction(
-        self,
-        base_var: str,
-        access_ops: list[str],
-        leading_whitespace: str,
-        original_line: str,
-        pattern_count: int,
-    ) -> list[str]:
-        """Strategy 3: Extract repeated patterns into methods."""
-        if pattern_count < 2:
-            return [original_line]
+    def analyze_dict_usage(self, dict_name: str) -> RefactoringStrategy:
+        """
+        Analyze the usage of a dictionary and decide whether to flatten it or use intermediate variables.
+        """
+        repeated_patterns = {}
 
-        method_name = (
-            f"get_{base_var}_{'_'.join(op.strip('[]').strip('\"\'') for op in access_ops)}"
-        )
+        # Get all patterns that start with this dictionary name
+        dict_patterns = {k: v for k, v in self._reference_map.items() if k.startswith(dict_name)}
 
-        # Extract the original operation
-        chain_expr = f"{base_var}{''.join(access_ops)}"
-        operation_prefix = original_line[: original_line.index(chain_expr)].rstrip()
-        operation_suffix = original_line[
-            original_line.index(chain_expr) + len(chain_expr) :
-        ].rstrip()
+        # Count occurrences of each access pattern
+        for pattern, occurrences in dict_patterns.items():
+            if len(occurrences) > 1:
+                repeated_patterns[pattern] = len(occurrences)
 
-        # Generate method definition
-        method_def = [
-            f"\n{leading_whitespace}def {method_name}(data):",
-            f"{leading_whitespace}    try:",
-            f"{leading_whitespace}        return data{(''.join(access_ops))}",
-            f"{leading_whitespace}    except (KeyError, IndexError):",
-            f"{leading_whitespace}        return None",
-        ]
-
-        # Replace original line with method call, maintaining original operation
-        new_line = f"{operation_prefix}{method_name}({base_var}){operation_suffix}"
-
-        return [*method_def, f"\n{leading_whitespace}{new_line}"]
-
-    def _apply_caching(
-        self, base_var: str, access_ops: list[str], leading_whitespace: str, original_line: str
-    ) -> list[str]:
-        """Strategy 4: Cache results for repeated access."""
-        # Extract the original operation
-        chain_expr = f"{base_var}{''.join(access_ops)}"
-        operation_prefix = original_line[: original_line.index(chain_expr)].rstrip()
-        operation_suffix = original_line[
-            original_line.index(chain_expr) + len(chain_expr) :
-        ].rstrip()
-
-        cache_key = f"{base_var}{''.join(access_ops)}"
-        # cache_var = f"_cached_{base_var}_{len(access_ops)}"
-
-        return [
-            f"{leading_whitespace}if '{cache_key}' not in self._cache:",
-            f"{leading_whitespace}    self._cache['{cache_key}'] = {cache_key}",
-            f"{operation_prefix}self._cache['{cache_key}']{operation_suffix}",
-        ]
-
-    def _determine_best_strategy(
-        self, pattern_count: int, access_ops: list[str]
-    ) -> RefactoringStrategy:
-        """Determine the best refactoring strategy based on context."""
-        if pattern_count > 2:
-            return RefactoringStrategy.METHOD_EXTRACTION
-        elif len(access_ops) > 3:
+        # If any pattern is repeated, use intermediate variables
+        if repeated_patterns:
             return RefactoringStrategy.INTERMEDIATE_VARS
-        elif all(op.strip("[]").strip("'\"").isdigit() for op in access_ops):
-            return RefactoringStrategy.DESTRUCTURING
-        else:
-            return RefactoringStrategy.CACHE_RESULT
+
+        # Otherwise flatten the dictionary
+        return RefactoringStrategy.FLATTEN_DICT
+
+    def generate_flattened_access(self, base_var: str, access_chain: list[str]) -> str:
+        """Generate flattened dictionary key."""
+        joined = "_".join(k.strip("'\"") for k in access_chain)
+        return f"{base_var}_{joined}"
+
+    def apply_intermediate_vars(
+        self, base_var: str, access_chain: list[str], indent: str, lines: list[str]
+    ) -> tuple[list[str], list[str]]:
+        """
+        Generate intermediate variable lines for repeated dictionary access and update references.
+        """
+        intermediate_lines = []
+        updated_lines = []
+        current_var = base_var
+        for i, key in enumerate(access_chain):
+            intermediate_var = f"{base_var}_{'_'.join(access_chain[:i+1])}"
+            intermediate_line = f"{indent}{intermediate_var} = {current_var}['{key}']"
+            intermediate_lines.append(intermediate_line)
+            current_var = intermediate_var
+
+        # Replace all instances of the full access chain with the final intermediate variable
+        full_access = f"{base_var}['" + "']['".join(access_chain) + "']"
+        final_var = current_var
+        for line in lines:
+            updated_lines.append(line.replace(full_access, final_var))
+
+        return intermediate_lines, updated_lines
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
-        """
-        Refactor long element chains using the most appropriate strategy based on context.
-        """
-        line_number = pylint_smell["line"]
-        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
-
-        logging.info(f"Analyzing element chain on '{file_path.name}' at line {line_number}")
-
+        """Refactor long element chains using the most appropriate strategy."""
         try:
-            # Read and analyze the file
+            line_number = pylint_smell["line"]
+            temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
+
             with file_path.open() as f:
-                lines = f.readlines()
+                content = f.read()
+                lines = content.splitlines(keepends=True)
+                tree = ast.parse(content)
 
-            target_line = lines[line_number - 1].rstrip()
-            leading_whitespace, pattern_count = self._get_leading_context(lines, line_number)
+            # Find dictionary assignments and collect references
+            dict_assignments = self.find_dict_assignments(tree)
+            self._reference_map.clear()
+            self.collect_dict_references(tree)
 
-            # Parse the element chain
-            chain_pattern = r"(\w+)(\[[^\]]+\])+"
-            match = re.search(chain_pattern, target_line)
+            # Analyze each dictionary and choose strategies
+            dict_strategies = {}
+            for name, _ in dict_assignments.items():
+                strategy = self.analyze_dict_usage(name)
+                dict_strategies[name] = strategy
+                logging.info(f"Chose {strategy.value} strategy for {name})")
 
-            if not match or len(re.findall(r"\[", target_line)) <= 2:
-                logging.info("No valid long element chain found. Skipping refactor.")
-                return
+            new_lines = lines.copy()
+            processed_patterns = set()
 
-            base_var = match.group(1)
-            access_ops = re.findall(r"\[[^\]]+\]", match.group(0))
+            # Apply strategies
+            for name, strategy in dict_strategies.items():
+                if strategy == RefactoringStrategy.FLATTEN_DICT:
+                    # Flatten dictionary
+                    flat_dict = self.flatten_dict(dict_assignments[name])
+                    dict_def = f"{name} = {flat_dict!r}\n"
 
-            # Choose and apply the best strategy
-            strategy = self._determine_best_strategy(pattern_count, access_ops)
-            logging.info(f"Applying {strategy.value} strategy")
+                    # Update all references to this dictionary
+                    for pattern, occurrences in self._reference_map.items():
+                        if pattern.startswith(name) and pattern not in processed_patterns:
+                            for line_num, flattened_reference in occurrences:
+                                if line_num - 1 < len(new_lines):
+                                    line = new_lines[line_num - 1]
+                                    new_lines[line_num - 1] = line.replace(
+                                        pattern, flattened_reference
+                                    )
+                            processed_patterns.add(pattern)
 
-            if strategy == RefactoringStrategy.INTERMEDIATE_VARS:
-                refactored_lines = self._apply_intermediate_vars(
-                    base_var, access_ops, leading_whitespace, target_line
-                )
-            elif strategy == RefactoringStrategy.DESTRUCTURING:
-                refactored_lines = self._apply_destructuring(
-                    base_var, access_ops, leading_whitespace, target_line
-                )
-            elif strategy == RefactoringStrategy.METHOD_EXTRACTION:
-                refactored_lines = self._apply_method_extraction(
-                    base_var, access_ops, leading_whitespace, target_line, pattern_count
-                )
-            else:  # CACHE_RESULT
-                refactored_lines = self._apply_caching(
-                    base_var, access_ops, leading_whitespace, target_line
-                )
+                    # Update dictionary definition
+                    for i, line in enumerate(lines):
+                        if re.match(rf"\s*{name}\s*=", line):
+                            new_lines[i] = " " * (len(line) - len(line.lstrip())) + dict_def
 
-            # Replace the original line with refactored code
-            lines[line_number - 1 : line_number] = [line + "\n" for line in refactored_lines]
+                            # Remove the following lines of the original nested dictionary
+                            j = i + 1
+                            while j < len(new_lines) and (
+                                new_lines[j].strip().startswith('"')
+                                or new_lines[j].strip().startswith("}")
+                            ):
+                                new_lines[j] = ""  # Mark for removal
+                                j += 1
+                            break
 
-            # Write to temporary file
-            with temp_filename.open("w") as temp_file:
-                temp_file.writelines(lines)
+                else:  # INTERMEDIATE_VARS
+                    # Process each access pattern
+                    for pattern, occurrences in self._reference_map.items():
+                        if pattern.startswith(name) and pattern not in processed_patterns:
+                            base_var = pattern.split("[")[0]
+                            access_chain = re.findall(r"\[(.*?)\]", pattern)
 
-            # Measure new emissions
+                            if len(occurrences) > 1:
+                                first_occurrence = min(occ[0] for occ in occurrences)
+                                indent = " " * (
+                                    len(lines[first_occurrence - 1])
+                                    - len(lines[first_occurrence - 1].lstrip())
+                                )
+                                refactored = self.apply_intermediate_vars(
+                                    base_var, access_chain, indent, lines[: first_occurrence - 1]
+                                )
+
+                                # Insert intermediate variables
+                                for i, ref_line in enumerate(refactored[:-1]):
+                                    new_lines.insert(first_occurrence - 1 + i, f"{ref_line}\n")
+
+                                # Update all occurrences to use the final intermediate variable
+                                final_var = f"intermediate_{base_var}_{len(access_chain)-2}"
+                                for line_num, _ in occurrences:
+                                    line = new_lines[line_num - 1]
+                                    new_lines[line_num - 1] = line.replace(pattern, final_var)
+
+                            processed_patterns.add(pattern)
+
+            temp_file_path = temp_filename
+            # Write the refactored code to a new temporary file
+            with temp_file_path.open("w") as temp_file:
+                temp_file.writelines(new_lines)
+
+            # Measure new emissions and verify improvement
             final_emission = self.measure_energy(temp_filename)
 
             if not final_emission:
@@ -239,12 +258,10 @@ class LongElementChainRefactorer(BaseRefactorer):
                 )
                 return
 
-            # Verify improvement and test passing
             if self.check_energy_improvement(initial_emissions, final_emission):
                 if run_tests() == 0:
                     logging.info(
-                        f"Successfully refactored using {strategy.value} strategy. "
-                        f"Energy improvement confirmed and tests passing."
+                        "Successfully refactored code. Energy improvement confirmed and tests passing."
                     )
                     return
                 logging.info("Tests failed! Discarding refactored changes.")
