@@ -17,6 +17,12 @@ class RefactoringStrategy(Enum):
 
 
 class LongElementChainRefactorer(BaseRefactorer):
+    """
+    Only implements flatten dictionary stratrgy becasuse every other strategy didnt save significant amount of
+    energy after flattening was done.
+    Strategries considered: intermediate variables, caching
+    """
+
     def __init__(self):
         super().__init__()
         self._cache: dict[str, str] = {}
