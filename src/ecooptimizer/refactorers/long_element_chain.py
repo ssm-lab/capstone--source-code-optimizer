@@ -12,7 +12,6 @@ from ..data_wrappers.smell import Smell
 
 
 class RefactoringStrategy(Enum):
-    INTERMEDIATE_VARS = "intermediate_vars"
     FLATTEN_DICT = "flatten_dict"
 
 
@@ -117,29 +116,6 @@ class LongElementChainRefactorer(BaseRefactorer):
         """Generate flattened dictionary key."""
         joined = "_".join(k.strip("'\"") for k in access_chain)
         return f"{base_var}_{joined}"
-
-    def apply_intermediate_vars(
-        self, base_var: str, access_chain: list[str], indent: str, lines: list[str]
-    ) -> tuple[list[str], list[str]]:
-        """
-        Generate intermediate variable lines for repeated dictionary access and update references.
-        """
-        intermediate_lines = []
-        updated_lines = []
-        current_var = base_var
-        for i, key in enumerate(access_chain):
-            intermediate_var = f"{base_var}_{'_'.join(access_chain[:i+1])}"
-            intermediate_line = f"{indent}{intermediate_var} = {current_var}['{key}']"
-            intermediate_lines.append(intermediate_line)
-            current_var = intermediate_var
-
-        # Replace all instances of the full access chain with the final intermediate variable
-        full_access = f"{base_var}['" + "']['".join(access_chain) + "']"
-        final_var = current_var
-        for line in lines:
-            updated_lines.append(line.replace(full_access, final_var))
-
-        return intermediate_lines, updated_lines
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """Refactor long element chains using the most appropriate strategy."""
