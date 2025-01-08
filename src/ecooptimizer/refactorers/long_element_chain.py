@@ -2,17 +2,11 @@ import logging
 from pathlib import Path
 import re
 import ast
-from enum import Enum
 from typing import Any
-
 
 from ..testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 from ..data_wrappers.smell import Smell
-
-
-class RefactoringStrategy(Enum):
-    FLATTEN_DICT = "flatten_dict"
 
 
 class LongElementChainRefactorer(BaseRefactorer):
@@ -136,10 +130,7 @@ class LongElementChainRefactorer(BaseRefactorer):
             new_lines = lines.copy()
             processed_patterns = set()
 
-            # Apply strategies
             for name, value in dict_assignments.items():
-                # if strategy == RefactoringStrategy.FLATTEN_DICT:
-                # Flatten dictionary
                 flat_dict = self.flatten_dict(value)
                 dict_def = f"{name} = {flat_dict!r}\n"
 
