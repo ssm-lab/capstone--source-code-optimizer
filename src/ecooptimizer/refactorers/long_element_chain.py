@@ -70,12 +70,12 @@ class LongElementChainRefactorer(BaseRefactorer):
 
     def collect_dict_references(self, tree: ast.AST) -> None:
         """Collect all dictionary access patterns."""
+        parent_map = {}
 
         class ChainVisitor(ast.NodeVisitor):
             def visit_Subscript(self_, node: ast.Subscript):
                 chain = []
                 current = node
-                parent_map = {}
                 while isinstance(current, ast.Subscript):
                     if isinstance(current.slice, ast.Constant):
                         chain.append(current.slice.value)
@@ -106,27 +106,6 @@ class LongElementChainRefactorer(BaseRefactorer):
                 self_.generic_visit(node)
 
         ChainVisitor().visit(tree)
-
-    def analyze_dict_usage(self, dict_name: str) -> RefactoringStrategy:
-        """
-        Analyze the usage of a dictionary and decide whether to flatten it or use intermediate variables.
-        """
-        repeated_patterns = {}
-
-        # Get all patterns that start with this dictionary name
-        dict_patterns = {k: v for k, v in self._reference_map.items() if k.startswith(dict_name)}
-
-        # Count occurrences of each access pattern
-        for pattern, occurrences in dict_patterns.items():
-            if len(occurrences) > 1:
-                repeated_patterns[pattern] = len(occurrences)
-
-        # If any pattern is repeated, use intermediate variables
-        if repeated_patterns:
-            return RefactoringStrategy.INTERMEDIATE_VARS
-
-        # Otherwise flatten the dictionary
-        return RefactoringStrategy.FLATTEN_DICT
 
     def generate_flattened_access(self, base_var: str, access_chain: list[str]) -> str:
         """Generate flattened dictionary key."""
@@ -172,77 +151,39 @@ class LongElementChainRefactorer(BaseRefactorer):
             self._reference_map.clear()
             self.collect_dict_references(tree)
 
-            # Analyze each dictionary and choose strategies
-            dict_strategies = {}
-            for name, _ in dict_assignments.items():
-                strategy = self.analyze_dict_usage(name)
-                dict_strategies[name] = strategy
-                logging.info(f"Chose {strategy.value} strategy for {name})")
-
             new_lines = lines.copy()
             processed_patterns = set()
 
             # Apply strategies
-            for name, strategy in dict_strategies.items():
-                if strategy == RefactoringStrategy.FLATTEN_DICT:
-                    # Flatten dictionary
-                    flat_dict = self.flatten_dict(dict_assignments[name])
-                    dict_def = f"{name} = {flat_dict!r}\n"
+            for name, value in dict_assignments.items():
+                # if strategy == RefactoringStrategy.FLATTEN_DICT:
+                # Flatten dictionary
+                flat_dict = self.flatten_dict(value)
+                dict_def = f"{name} = {flat_dict!r}\n"
 
-                    # Update all references to this dictionary
-                    for pattern, occurrences in self._reference_map.items():
-                        if pattern.startswith(name) and pattern not in processed_patterns:
-                            for line_num, flattened_reference in occurrences:
-                                if line_num - 1 < len(new_lines):
-                                    line = new_lines[line_num - 1]
-                                    new_lines[line_num - 1] = line.replace(
-                                        pattern, flattened_reference
-                                    )
-                            processed_patterns.add(pattern)
+                # Update all references to this dictionary
+                for pattern, occurrences in self._reference_map.items():
+                    if pattern.startswith(name) and pattern not in processed_patterns:
+                        for line_num, flattened_reference in occurrences:
+                            if line_num - 1 < len(new_lines):
+                                line = new_lines[line_num - 1]
+                                new_lines[line_num - 1] = line.replace(pattern, flattened_reference)
+                        processed_patterns.add(pattern)
 
-                    # Update dictionary definition
-                    for i, line in enumerate(lines):
-                        if re.match(rf"\s*{name}\s*=", line):
-                            new_lines[i] = " " * (len(line) - len(line.lstrip())) + dict_def
+                # Update dictionary definition
+                for i, line in enumerate(lines):
+                    if re.match(rf"\s*{name}\s*=", line):
+                        new_lines[i] = " " * (len(line) - len(line.lstrip())) + dict_def
 
-                            # Remove the following lines of the original nested dictionary
-                            j = i + 1
-                            while j < len(new_lines) and (
-                                new_lines[j].strip().startswith('"')
-                                or new_lines[j].strip().startswith("}")
-                            ):
-                                new_lines[j] = ""  # Mark for removal
-                                j += 1
-                            break
-
-                else:  # INTERMEDIATE_VARS
-                    # Process each access pattern
-                    for pattern, occurrences in self._reference_map.items():
-                        if pattern.startswith(name) and pattern not in processed_patterns:
-                            base_var = pattern.split("[")[0]
-                            access_chain = re.findall(r"\[(.*?)\]", pattern)
-
-                            if len(occurrences) > 1:
-                                first_occurrence = min(occ[0] for occ in occurrences)
-                                indent = " " * (
-                                    len(lines[first_occurrence - 1])
-                                    - len(lines[first_occurrence - 1].lstrip())
-                                )
-                                refactored = self.apply_intermediate_vars(
-                                    base_var, access_chain, indent, lines[: first_occurrence - 1]
-                                )
-
-                                # Insert intermediate variables
-                                for i, ref_line in enumerate(refactored[:-1]):
-                                    new_lines.insert(first_occurrence - 1 + i, f"{ref_line}\n")
-
-                                # Update all occurrences to use the final intermediate variable
-                                final_var = f"intermediate_{base_var}_{len(access_chain)-2}"
-                                for line_num, _ in occurrences:
-                                    line = new_lines[line_num - 1]
-                                    new_lines[line_num - 1] = line.replace(pattern, final_var)
-
-                            processed_patterns.add(pattern)
+                        # Remove the following lines of the original nested dictionary
+                        j = i + 1
+                        while j < len(new_lines) and (
+                            new_lines[j].strip().startswith('"')
+                            or new_lines[j].strip().startswith("}")
+                        ):
+                            new_lines[j] = ""  # Mark for removal
+                            j += 1
+                        break
 
             temp_file_path = temp_filename
             # Write the refactored code to a new temporary file
