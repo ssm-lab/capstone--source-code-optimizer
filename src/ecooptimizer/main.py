@@ -1,3 +1,4 @@
+import ast
 import logging
 from pathlib import Path
 
@@ -10,13 +11,12 @@ from .utils.refactorer_factory import RefactorerFactory
 
 # Path of current directory
 DIRNAME = Path(__file__).parent
-print("hello: ", DIRNAME)
 # Path to output folder
 OUTPUT_DIR = (DIRNAME / Path("../../outputs")).resolve()
 # Path to log file
 LOG_FILE = OUTPUT_DIR / Path("log.log")
 # Path to the file to be analyzed
-TEST_FILE = (DIRNAME / Path("../../tests/input/car_stuff.py")).resolve()
+TEST_FILE = (DIRNAME / Path("../../tests/input/string_concat_examples.py")).resolve()
 
 
 def main():
@@ -26,12 +26,13 @@ def main():
     logging.basicConfig(
         filename=LOG_FILE,
         filemode="w",
-        level=logging.DEBUG,
+        level=logging.INFO,
         format="[ecooptimizer %(levelname)s @ %(asctime)s] %(message)s",
         datefmt="%H:%M:%S",
     )
 
     SOURCE_CODE = parse_file(TEST_FILE)
+    output_config.save_file(Path("source_ast.txt"), ast.dump(SOURCE_CODE, indent=2), "w")
 
     if not TEST_FILE.is_file():
         logging.error(f"Cannot find source code file '{TEST_FILE}'. Exiting...")

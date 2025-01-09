@@ -15,8 +15,8 @@ from ..utils.analyzers_config import (
     IntermediateSmells,
     EXTRA_PYLINT_OPTIONS,
 )
-
 from ..data_wrappers.smell import Smell
+from .custom_checkers.str_concat_in_loop import StringConcatInLoopChecker
 
 
 class PylintAnalyzer(Analyzer):
@@ -71,6 +71,9 @@ class PylintAnalyzer(Analyzer):
 
         lec_data = self.detect_long_element_chain()
         self.smells_data.extend(lec_data)
+
+        scl_checker = StringConcatInLoopChecker(self.file_path)
+        self.smells_data.extend(scl_checker.smells)
 
     def configure_smells(self):
         """

@@ -29,7 +29,5 @@ def parse_file(file: Path):
     :param file: Path to the file to parse.
     :return: AST node of the entire file contents.
     """
-    with file.open() as f:
-        source = f.read()  # Read the full content of the file
 
-    return ast.parse(source)  # Parse the entire content as an AST node
+    return ast.parse(file.read_text())  # Parse the entire content as an AST node

@@ -1,5 +1,6 @@
 from typing import TypedDict
 
+
 class Smell(TypedDict):
     """
     Represents a code smell detected in a source file, including its location, type, and related metadata.
@@ -19,6 +20,7 @@ class Smell(TypedDict):
         symbol (str): The symbol or code construct (e.g., variable, method) involved in the smell.
         type (str): The type or category of the smell (e.g., "complexity", "duplication").
     """
+
     absolutePath: str
     column: int
     confidence: str
