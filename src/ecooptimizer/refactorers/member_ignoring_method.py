@@ -79,7 +79,7 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
             )
 
         # Remove the temporary file if no energy improvement or failing tests
-        # os.remove(temp_file_path)
+        temp_file_path.unlink()
 
     def visit_FunctionDef(self, node):  # noqa: ANN001
         if node.lineno == self.target_line:
