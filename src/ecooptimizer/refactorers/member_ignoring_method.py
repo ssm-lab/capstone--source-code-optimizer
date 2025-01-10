@@ -4,10 +4,7 @@ import astor
 import ast
 from ast import NodeTransformer
 
-from ..testing.run_tests import run_tests
-
 from .base_refactorer import BaseRefactorer
-
 from ..data_wrappers.smell import Smell
 
 
@@ -46,40 +43,16 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
 
         temp_file_path = self.temp_dir / Path(f"{file_path.stem}_MIMR_line_{self.target_line}.py")
 
-        with temp_file_path.open("w") as temp_file:
-            temp_file.write(modified_code)
+        temp_file_path.write_text(modified_code)
 
-        # Measure emissions of the modified code
-        final_emission = self.measure_energy(temp_file_path)
-
-        if not final_emission:
-            # os.remove(temp_file_path)
-            logging.info(
-                f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
-            )
-            return
-
-        # Check for improvement in emissions
-        if self.check_energy_improvement(initial_emissions, final_emission):
-            # If improved, replace the original file with the modified content
-
-            if run_tests() == 0:
-                logging.info("All test pass! Functionality maintained.")
-                # shutil.move(temp_file_path, file_path)
-                logging.info(
-                    f"Refactored 'Member Ignoring Method' to static method on line {self.target_line} and saved.\n"
-                )
-                return
-
-            logging.info("Tests Fail! Discarded refactored changes")
-
-        else:
-            logging.info(
-                "No emission improvement after refactoring. Discarded refactored changes.\n"
-            )
-
-        # Remove the temporary file if no energy improvement or failing tests
-        temp_file_path.unlink()
+        self.validate_refactoring(
+            temp_file_path,
+            file_path,
+            initial_emissions,
+            "Member Ignoring Method",
+            "Static Method",
+            pylint_smell["line"],
+        )
 
     def visit_FunctionDef(self, node):  # noqa: ANN001
         if node.lineno == self.target_line:

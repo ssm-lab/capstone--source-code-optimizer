@@ -7,7 +7,6 @@ from astroid import nodes
 
 from .base_refactorer import BaseRefactorer
 from ..data_wrappers.smell import Smell
-from ..testing.run_tests import run_tests
 
 
 class UseListAccumulationRefactorer(BaseRefactorer):
@@ -51,37 +50,14 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.write(modified_code)
 
-        # Measure emissions of the modified code
-        final_emission = self.measure_energy(temp_file_path)
-
-        if not final_emission:
-            # os.remove(temp_file_path)
-            logging.info(
-                f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring.\n"
-            )
-            return
-
-        # Check for improvement in emissions
-        if self.check_energy_improvement(initial_emissions, final_emission):
-            # If improved, replace the original file with the modified content
-
-            if run_tests() == 0:
-                logging.info("All test pass! Functionality maintained.")
-                # shutil.move(temp_file_path, file_path)
-                logging.info(
-                    f"Refactored 'String Concatenation in Loop' to 'List Accumulation and Join' on line {self.target_line} and saved.\n"
-                )
-                return
-
-            logging.info("Tests Fail! Discarded refactored changes\n")
-
-        else:
-            logging.info(
-                "No emission improvement after refactoring. Discarded refactored changes.\n"
-            )
-
-        # Remove the temporary file if no energy improvement or failing tests
-        temp_file_path.unlink()
+        self.validate_refactoring(
+            temp_file_path,
+            file_path,
+            initial_emissions,
+            "String Concatenation in Loop",
+            "List Accumulation and Join",
+            pylint_smell["line"],
+        )
 
     def visit(self, node: nodes.NodeNG):
         if isinstance(node, nodes.Assign) and node.lineno == self.target_line:
