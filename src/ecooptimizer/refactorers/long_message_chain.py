@@ -13,8 +13,8 @@ class LongMessageChainRefactorer(BaseRefactorer):
     Refactorer that targets long method chains to improve performance.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir: Path):
+        super().__init__(output_dir)
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """

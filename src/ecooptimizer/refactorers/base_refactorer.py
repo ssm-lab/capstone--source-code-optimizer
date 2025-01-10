@@ -9,15 +9,13 @@ from ..data_wrappers.smell import Smell
 
 
 class BaseRefactorer(ABC):
-    def __init__(self):
+    def __init__(self, output_dir: Path):
         """
         Base class for refactoring specific code smells.
 
         :param logger: Logger instance to handle log messages.
         """
-        self.temp_dir = (
-            Path(__file__).parent / Path("../../../outputs/refactored_source")
-        ).resolve()
+        self.temp_dir = (output_dir / "refactored_source").resolve()
         self.temp_dir.mkdir(exist_ok=True)
 
     @abstractmethod

@@ -62,8 +62,8 @@ class LongParameterListRefactorer(BaseRefactorer):
     Refactorer that targets methods in source code that take too many parameters
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir: Path):
+        super().__init__(output_dir)
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """

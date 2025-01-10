@@ -119,7 +119,7 @@ def test_long_lambda_detection(long_lambda_code: Path):
     assert detected_lines == expected_lines
 
 
-def test_long_lambda_refactoring(long_lambda_code: Path):
+def test_long_lambda_refactoring(long_lambda_code: Path, output_dir):
     smells = get_smells(long_lambda_code)
 
     # Filter for long lambda smells
@@ -128,7 +128,7 @@ def test_long_lambda_refactoring(long_lambda_code: Path):
     ]
 
     # Instantiate the refactorer
-    refactorer = LongLambdaFunctionRefactorer()
+    refactorer = LongLambdaFunctionRefactorer(output_dir)
 
     # Measure initial emissions (mocked or replace with actual implementation)
     initial_emissions = 100.0  # Mock value, replace with actual measurement

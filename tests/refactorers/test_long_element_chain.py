@@ -21,8 +21,8 @@ def source_files(tmp_path_factory):
 
 
 @pytest.fixture
-def refactorer():
-    return LongElementChainRefactorer()
+def refactorer(output_dir):
+    return LongElementChainRefactorer(output_dir)
 
 
 @pytest.fixture

@@ -16,8 +16,8 @@ class LongElementChainRefactorer(BaseRefactorer):
     Strategries considered: intermediate variables, caching
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir: Path):
+        super().__init__(output_dir)
         self._cache: dict[str, str] = {}
         self._seen_patterns: dict[str, int] = {}
         self._reference_map: dict[str, list[tuple[int, str]]] = {}

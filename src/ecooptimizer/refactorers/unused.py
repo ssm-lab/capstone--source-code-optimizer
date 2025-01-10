@@ -8,13 +8,13 @@ from ..testing.run_tests import run_tests
 
 
 class RemoveUnusedRefactorer(BaseRefactorer):
-    def __init__(self):
+    def __init__(self, output_dir: Path):
         """
         Initializes the RemoveUnusedRefactor with the specified logger.
 
         :param logger: Logger instance to handle log messages.
         """
-        super().__init__()
+        super().__init__(output_dir)
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """

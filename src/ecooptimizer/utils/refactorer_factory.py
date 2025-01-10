@@ -1,4 +1,5 @@
 # Import specific refactorer classes
+from pathlib import Path
 from ..refactorers.list_comp_any_all import UseAGeneratorRefactorer
 from ..refactorers.unused import RemoveUnusedRefactorer
 from ..refactorers.long_parameter_list import LongParameterListRefactorer
@@ -19,7 +20,7 @@ class RefactorerFactory:
     """
 
     @staticmethod
-    def build_refactorer_class(smell_messageID: str):
+    def build_refactorer_class(smell_messageID: str, output_dir: Path):
         """
         Static method to create and return a refactorer instance based on the provided code smell.
 
@@ -38,21 +39,21 @@ class RefactorerFactory:
         # Use match statement to select the appropriate refactorer based on smell message ID
         match smell_messageID:
             case AllSmells.USE_A_GENERATOR:  # type: ignore
-                selected = UseAGeneratorRefactorer()
+                selected = UseAGeneratorRefactorer(output_dir)
             case AllSmells.UNUSED_IMPORT:  # type: ignore
-                selected = RemoveUnusedRefactorer()
+                selected = RemoveUnusedRefactorer(output_dir)
             case AllSmells.UNUSED_VAR_OR_ATTRIBUTE:  # type: ignore
-                selected = RemoveUnusedRefactorer()
+                selected = RemoveUnusedRefactorer(output_dir)
             case AllSmells.NO_SELF_USE:  # type: ignore
-                selected = MakeStaticRefactorer()
+                selected = MakeStaticRefactorer(output_dir)
             case AllSmells.LONG_PARAMETER_LIST:  # type: ignore
-                selected = LongParameterListRefactorer()
+                selected = LongParameterListRefactorer(output_dir)
             case AllSmells.LONG_MESSAGE_CHAIN:  # type: ignore
-                selected = LongMessageChainRefactorer()
+                selected = LongMessageChainRefactorer(output_dir)
             case AllSmells.LONG_ELEMENT_CHAIN:  # type: ignore
-                selected = LongElementChainRefactorer()
+                selected = LongElementChainRefactorer(output_dir)
             case AllSmells.STR_CONCAT_IN_LOOP:  # type: ignore
-                selected = UseListAccumulationRefactorer()
+                selected = UseListAccumulationRefactorer(output_dir)
             case _:
                 selected = None
 

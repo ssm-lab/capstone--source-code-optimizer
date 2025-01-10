@@ -16,8 +16,8 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
     Refactorer that targets methods that don't use any class attributes and makes them static to improve performance
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir: Path):
+        super().__init__(output_dir)
         self.target_line = None
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):

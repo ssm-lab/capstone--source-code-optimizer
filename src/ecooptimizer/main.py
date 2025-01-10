@@ -114,7 +114,9 @@ def main():
     output_config.copy_file_to_output(TEST_FILE, "refactored-test-case.py")
 
     for pylint_smell in pylint_analyzer.smells_data:
-        refactoring_class = RefactorerFactory.build_refactorer_class(pylint_smell["messageId"])
+        refactoring_class = RefactorerFactory.build_refactorer_class(
+            pylint_smell["messageId"], OUTPUT_DIR
+        )
         if refactoring_class:
             refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)
         else:

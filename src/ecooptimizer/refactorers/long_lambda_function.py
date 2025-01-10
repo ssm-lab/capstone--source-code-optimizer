@@ -10,8 +10,8 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
     Refactorer that targets long lambda functions by converting them into normal functions.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir: Path):
+        super().__init__(output_dir)
 
     @staticmethod
     def truncate_at_top_level_comma(body: str) -> str:
@@ -35,7 +35,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
 
         return "".join(truncated_body).strip()
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):  # noqa: ARG002
         """
         Refactor long lambda functions by converting them into normal functions
         and writing the refactored code to a new file.

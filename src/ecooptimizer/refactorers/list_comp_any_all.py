@@ -11,7 +11,7 @@ from .base_refactorer import BaseRefactorer
 
 
 class UseAGeneratorRefactorer(BaseRefactorer):
-    def __init__(self):
+    def __init__(self, output_dir: Path):
         """
         Initializes the UseAGeneratorRefactor with a file path, pylint
         smell, initial emission, and logger.
@@ -21,7 +21,7 @@ class UseAGeneratorRefactorer(BaseRefactorer):
         :param initial_emission: Initial emission value before refactoring.
         :param logger: Logger instance to handle log messages.
         """
-        super().__init__()
+        super().__init__(output_dir)
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """
