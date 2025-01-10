@@ -46,7 +46,7 @@ class StringConcatInLoopChecker:
                     "obj": "",
                     "path": str(self.filename),
                     "symbol": "string-concat-in-loop",
-                    "type": "convention",
+                    "type": "refactor",
                 }
             )
 
@@ -58,7 +58,7 @@ class StringConcatInLoopChecker:
             logging.debug("in loop")
             self.in_loop_counter += 1
             self.current_loops.append(node)
-            print(f"node body {node.body}")
+            logging.debug(f"node body {node.body}")
             for stmt in node.body:
                 self._visit(stmt)
 
@@ -136,13 +136,13 @@ class StringConcatInLoopChecker:
         logging.debug("checking that is valid concat")
 
         def is_same_variable(var1: nodes.NodeNG, var2: nodes.NodeNG):
-            print(f"node 1: {var1}, node 2: {var2}")
+            logging.debug(f"node 1: {var1}, node 2: {var2}")
             if isinstance(var1, nodes.Name) and isinstance(var2, nodes.AssignName):
                 return var1.name == var2.name
             if isinstance(var1, nodes.Attribute) and isinstance(var2, nodes.AssignAttr):
                 return var1.as_string() == var2.as_string()
             if isinstance(var1, nodes.Subscript) and isinstance(var2, nodes.Subscript):
-                print(f"subscript value: {var1.value.as_string()}, slice {var1.slice}")
+                logging.debug(f"subscript value: {var1.value.as_string()}, slice {var1.slice}")
                 if isinstance(var1.slice, nodes.Const) and isinstance(var2.slice, nodes.Const):
                     return var1.as_string() == var2.as_string()
             if isinstance(var1, nodes.BinOp) and var1.op == "+":

@@ -15,8 +15,8 @@ class UseListAccumulationRefactorer(BaseRefactorer):
     Refactorer that targets string concatenations inside loops
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir: Path):
+        super().__init__(output_dir)
         self.target_line = 0
         self.target_node: nodes.NodeNG | None = None
         self.assign_var = ""
@@ -57,7 +57,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         if not final_emission:
             # os.remove(temp_file_path)
             logging.info(
-                f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
+                f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring.\n"
             )
             return
 
@@ -73,7 +73,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
                 )
                 return
 
-            logging.info("Tests Fail! Discarded refactored changes")
+            logging.info("Tests Fail! Discarded refactored changes\n")
 
         else:
             logging.info(
@@ -81,7 +81,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
             )
 
         # Remove the temporary file if no energy improvement or failing tests
-        # os.remove(temp_file_path)
+        temp_file_path.unlink()
 
     def visit(self, node: nodes.NodeNG):
         if isinstance(node, nodes.Assign) and node.lineno == self.target_line:
@@ -102,8 +102,8 @@ class UseListAccumulationRefactorer(BaseRefactorer):
 
         logging.debug("Finding last assignment node")
         # Traverse the scope node and find assignments within the valid range
-        for node in scope.nodes_of_class(nodes.AugAssign, nodes.Assign):
-            logging.debug(f"node: {node}")
+        for node in scope.nodes_of_class((nodes.AugAssign, nodes.Assign)):
+            logging.debug(f"node: {node.as_string()}")
 
             if isinstance(node, nodes.Assign):
                 for target in node.targets:
@@ -150,10 +150,11 @@ class UseListAccumulationRefactorer(BaseRefactorer):
 
         for node in self.concat_node.node_ancestors():
             if isinstance(node, (nodes.For, nodes.While)) and not passed_inner_loop:
+                logging.debug(f"Passed inner loop: {node.as_string()}")
                 passed_inner_loop = True
                 self.outer_loop = node
             elif isinstance(node, (nodes.For, nodes.While)) and passed_inner_loop:
-                logging.debug("checking loop scope")
+                logging.debug(f"checking loop scope: {node.as_string()}")
                 self.find_last_assignment(node)
                 if not self.last_assign_node:
                     self.outer_loop = node
@@ -161,7 +162,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
                     self.scope_node = node
                     break
             elif isinstance(node, (nodes.Module, nodes.FunctionDef, nodes.AsyncFunctionDef)):
-                logging.debug("checking big dog scope")
+                logging.debug(f"checking big dog scope: {node.as_string()}")
                 self.find_last_assignment(node)
                 self.scope_node = node
                 break
@@ -206,31 +207,30 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         join_lno: int = self.outer_loop.end_lineno  # type: ignore
 
         source_line = code_file_lines[list_lno]
-        leading_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
+        outer_scope_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
 
-        code_file_lines.insert(list_lno, leading_whitespace + list_line)
+        code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
         concat_lno += 1
         join_lno += 1
 
         if isinstance(concat_line, list):
             source_line = code_file_lines[concat_lno]
-            leading_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
+            concat_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
 
             code_file_lines.pop(concat_lno)
-            code_file_lines.insert(concat_lno, leading_whitespace + concat_line[1])
-            code_file_lines.insert(concat_lno, leading_whitespace + concat_line[0])
+            code_file_lines.insert(concat_lno, concat_whitespace + concat_line[1])
+            code_file_lines.insert(concat_lno, concat_whitespace + concat_line[0])
             join_lno += 1
         else:
             source_line = code_file_lines[concat_lno]
-            leading_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
+            concat_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
 
             code_file_lines.pop(concat_lno)
-            code_file_lines.insert(concat_lno, leading_whitespace + concat_line)
+            code_file_lines.insert(concat_lno, concat_whitespace + concat_line)
 
         source_line = code_file_lines[join_lno]
-        leading_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
 
-        code_file_lines.insert(join_lno, leading_whitespace + join_line)
+        code_file_lines.insert(join_lno, outer_scope_whitespace + join_line)
 
         logging.debug("New Nodes added")
 
