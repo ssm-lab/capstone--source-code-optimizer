@@ -13,7 +13,9 @@ from .string_concat_examples import (
     greet_user_with_percent,
     describe_city_with_format,
     person_description_with_percent,
-    values_with_format
+    values_with_format,
+    middle_var_concat,
+    end_var_concat
 )
 
 def test_concat_with_for_loop_simple_attr():
@@ -74,3 +76,11 @@ def test_values_with_format():
 def test_simple_variable_concat():
     result = simple_variable_concat("foo", "bar")
     assert result == ("foobar" * 2)
+
+def test_end_var_concat():
+    result = end_var_concat()
+    assert result == ("210")
+
+def test_middle_var_concat():
+    result = middle_var_concat()
+    assert result == ("210012")

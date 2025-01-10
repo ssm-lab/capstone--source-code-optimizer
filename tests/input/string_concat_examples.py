@@ -92,8 +92,34 @@ def values_with_format(x, y):
     return result
 
 # Simple variable concatenation (edge case for completeness)
-def simple_variable_concat(a, b):
+def simple_variable_concat(a: str, b: str):
     result = Demo().test
     for i in range(2):
         result += a + b
     return result
+
+def middle_var_concat():
+    result = ''
+    for i in range(3):
+        result = str(i) + result + str(i)
+    return result
+
+def end_var_concat():
+    result = ''
+    for i in range(3):
+        result = str(i) + result
+    return result
+
+def concat_referenced_in_loop():
+    result = ""
+    for i in range(3):
+        result += "Complex" + str(i * i) + "End"  # Expression inside concatenation
+        print(result)
+    return result
+
+def concat_not_in_loop():
+    name = "Bob"
+    name += "Ross"
+    return name
+
+simple_variable_concat("Hello", " World ")
