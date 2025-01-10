@@ -31,6 +31,7 @@ def concat_with_while_loop_variable_append():
 def nested_loop_string_concat():
     result = ""
     for i in range(2):
+        result = str(i)
         for j in range(3):
             result += f"({i},{j})"  # Nested loop concatenation
     return result

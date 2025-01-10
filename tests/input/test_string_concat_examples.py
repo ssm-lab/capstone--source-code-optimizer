@@ -36,7 +36,7 @@ def test_concat_with_while_loop_variable_append():
 
 def test_nested_loop_string_concat():
     result = nested_loop_string_concat()
-    expected = ''.join(f"({i},{j})" for i in range(2) for j in range(3))
+    expected = "1(1,0)(1,1)(1,2)"
     assert result == expected
 
 def test_string_concat_with_condition():
