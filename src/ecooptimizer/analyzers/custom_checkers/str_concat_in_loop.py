@@ -16,6 +16,8 @@ class StringConcatInLoopChecker:
         self.filename = filename
         self.smells: list[Smell] = []
         self.in_loop_counter = 0
+        self.current_loops: list[nodes.NodeNG] = []
+        self.referenced = False
 
         logging.debug("Starting string concat checker")
 
@@ -50,33 +52,59 @@ class StringConcatInLoopChecker:
 
     def _visit(self, node: nodes.NodeNG):
         logging.debug(f"visiting node {type(node)}")
+        logging.debug(f"loops: {self.in_loop_counter}")
 
         if isinstance(node, (nodes.For, nodes.While)):
             logging.debug("in loop")
             self.in_loop_counter += 1
+            self.current_loops.append(node)
             print(f"node body {node.body}")
             for stmt in node.body:
                 self._visit(stmt)
 
             self.in_loop_counter -= 1
+            self.current_loops.pop()
 
         elif self.in_loop_counter > 0 and isinstance(node, nodes.Assign):
             target = None
             value = None
             logging.debug("in Assign")
+            logging.debug(node.as_string())
+            logging.debug(f"loops: {self.in_loop_counter}")
 
             if len(node.targets) == 1:
                 target = node.targets[0]
                 value = node.value
 
             if target and isinstance(value, nodes.BinOp) and value.op == "+":
-                if self._is_string_type(node) and self._is_concatenating_with_self(value, target):
+                logging.debug("Checking conditions")
+                if (
+                    self._is_string_type(node)
+                    and self._is_concatenating_with_self(value, target)
+                    and self._is_not_referenced(node)
+                ):
                     logging.debug(f"Found a smell {node}")
                     self._create_smell(node)
 
         else:
             for child in node.get_children():
                 self._visit(child)
+
+    def _is_not_referenced(self, node: nodes.Assign):
+        logging.debug("Checking if referenced")
+        loop_source_str = self.current_loops[-1].as_string()
+        loop_source_str = loop_source_str.replace(node.as_string(), "", 1)
+        lines = loop_source_str.splitlines()
+        logging.debug(lines)
+        for line in lines:
+            if (
+                line.find(node.targets[0].as_string()) != -1
+                and re.search(rf"\b{re.escape(node.targets[0].as_string())}\b\s*=", line) is None
+            ):
+                logging.debug(node.targets[0].as_string())
+                logging.debug("matched")
+                return False
+        return True
 
     def _is_string_type(self, node: nodes.Assign):
         logging.debug("checking if string")
@@ -96,6 +124,10 @@ class StringConcatInLoopChecker:
                 inferred.repr_name(), astroid.util.UninferableBase
             ) and self._has_str_interpolation(node.value):
                 return True
+            elif isinstance(
+                inferred.repr_name(), astroid.util.UninferableBase
+            ) and self._has_str_vars(node.value):
+                return True
 
         return False
 
@@ -108,17 +140,11 @@ class StringConcatInLoopChecker:
             if isinstance(var1, nodes.Name) and isinstance(var2, nodes.AssignName):
                 return var1.name == var2.name
             if isinstance(var1, nodes.Attribute) and isinstance(var2, nodes.AssignAttr):
-                return (
-                    var1.attrname == var2.attrname
-                    and var1.expr.as_string() == var2.expr.as_string()
-                )
+                return var1.as_string() == var2.as_string()
             if isinstance(var1, nodes.Subscript) and isinstance(var2, nodes.Subscript):
                 print(f"subscript value: {var1.value.as_string()}, slice {var1.slice}")
                 if isinstance(var1.slice, nodes.Const) and isinstance(var2.slice, nodes.Const):
-                    return (
-                        var1.value.as_string() == var2.value.as_string()
-                        and var1.slice.value == var2.slice.value
-                    )
+                    return var1.as_string() == var2.as_string()
             if isinstance(var1, nodes.BinOp) and var1.op == "+":
                 return is_same_variable(var1.left, target) or is_same_variable(var1.right, target)
             return False
@@ -147,6 +173,32 @@ class StringConcatInLoopChecker:
                 return True
 
         return False
+
+    def _has_str_vars(self, node: nodes.NodeNG):
+        logging.debug("Checking if has string variables")
+        binops = self._find_all_binops(node)
+        for binop in binops:
+            inferred_types = binop.left.infer()
+
+            for inferred in inferred_types:
+                logging.debug(f"inferred type '{type(inferred.repr_name())}'")
+
+                if inferred.repr_name() == "str":
+                    return True
+
+        return False
+
+    def _find_all_binops(self, node: nodes.NodeNG):
+        binops: list[nodes.BinOp] = []
+        for child in node.get_children():
+            if isinstance(child, astroid.BinOp):
+                binops.append(child)
+                # Recursively search within the current BinOp
+                binops.extend(self._find_all_binops(child))
+            else:
+                # Continue searching in non-BinOp children
+                binops.extend(self._find_all_binops(child))
+        return binops
 
     def _transform_augassign_to_assign(self, code_file: str):
         """
