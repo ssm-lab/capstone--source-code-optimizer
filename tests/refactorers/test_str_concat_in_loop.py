@@ -170,6 +170,10 @@ def test_scl_refactoring_no_energy_improvement(
     refactorer = UseListAccumulationRefactorer(output_dir)
 
     mocker.patch.object(refactorer, "measure_energy", return_value=7)
+    mocker.patch(
+        "ecooptimizer.refactorers.str_concat_in_loop.run_tests",
+        return_value=0,
+    )
 
     initial_emissions = 5
 
@@ -202,6 +206,10 @@ def test_scl_refactoring_with_energy_improvement(
     refactorer = UseListAccumulationRefactorer(output_dir)
 
     mocker.patch.object(refactorer, "measure_energy", return_value=5)
+    mocker.patch(
+        "ecooptimizer.refactorers.str_concat_in_loop.run_tests",
+        return_value=0,
+    )
 
     initial_emissions = 10
 
