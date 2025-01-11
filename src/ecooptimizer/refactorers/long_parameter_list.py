@@ -20,7 +20,7 @@ class LongParameterListRefactorer(BaseRefactorer):
         Refactors function/method with more than 6 parameters by encapsulating those with related names and removing those that are unused
         """
         # maximum limit on number of parameters beyond which the code smell is configured to be detected(see analyzers_config.py)
-        maxParamLimit = 6
+        max_param_limit = 6
 
         with file_path.open() as f:
             tree = ast.parse(f.read())
@@ -30,40 +30,44 @@ class LongParameterListRefactorer(BaseRefactorer):
         logging.info(
             f"Applying 'Fix Too Many Parameters' refactor on '{file_path.name}' at line {target_line} for identified code smell."
         )
-
         # use target_line to find function definition at the specific line for given code smell object
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.lineno == target_line:
-                params = [arg.arg for arg in node.args.args]
+                params = [arg.arg for arg in node.args.args if arg.arg != "self"]
+                default_value_params = self.parameter_analyzer.get_parameters_with_default_value(
+                    node.args.defaults, params
+                )  # params that have default value assigned in function definition, stored as a dict of param name to default value
 
                 if (
-                    len(params) > maxParamLimit
+                    len(params) > max_param_limit
                 ):  # max limit beyond which the code smell is configured to be detected
                     # need to identify used parameters so unused ones can be removed
                     used_params = self.parameter_analyzer.get_used_parameters(node, params)
-                    if len(used_params) > maxParamLimit:
+                    if len(used_params) > max_param_limit:
                         # classify used params into data and config types and store the results in a dictionary, if number of used params is beyond the configured limit
-                        classifiedParams = self.parameter_analyzer.classify_parameters(used_params)
+                        classified_params = self.parameter_analyzer.classify_parameters(used_params)
 
+                        # add class defitions for data and config encapsulations to the tree
                         class_nodes = self.parameter_encapsulator.encapsulate_parameters(
-                            classifiedParams
+                            classified_params, default_value_params
                         )
                         for class_node in class_nodes:
                             tree.body.insert(0, class_node)
 
+                        # update function signature, body and calls corresponding to new params
                         updated_function = self.function_updater.update_function_signature(
-                            node, classifiedParams
+                            node, classified_params
                         )
                         updated_function = self.function_updater.update_parameter_usages(
-                            updated_function, classifiedParams
+                            node, classified_params
                         )
                         updated_tree = self.function_updater.update_function_calls(
-                            tree, node.name, classifiedParams
+                            tree, node.name, classified_params
                         )
                     else:
-                        # just remove the unused params if used parameters are within the maxParamLimit
+                        # just remove the unused params if used parameters are within the max param list
                         updated_function = self.function_updater.remove_unused_params(
-                            node, used_params
+                            node, used_params, default_value_params
                         )
 
                     # update the tree by replacing the old function with the updated one
@@ -125,6 +129,21 @@ class ParameterAnalyzer:
         return used_params
 
     @staticmethod
+    def get_parameters_with_default_value(default_values: list[ast.Constant], params: list[str]):
+        """
+        Given list of default values for params and params, creates a dictionary mapping param names to default values
+        """
+        default_params_len = len(default_values)
+        params_len = len(params)
+        # default params are always defined towards the end of param list, so offest is needed to access param names
+        offset = params_len - default_params_len
+
+        defaultsDict = dict()
+        for i in range(0, default_params_len):
+            defaultsDict[params[offset + i]] = default_values[i].value
+        return defaultsDict
+
+    @staticmethod
     def classify_parameters(params: list[str]) -> dict:
         """
         Classifies parameters into 'data' and 'config' groups based on naming conventions
@@ -149,32 +168,46 @@ class ParameterAnalyzer:
 class ParameterEncapsulator:
     @staticmethod
     def create_parameter_object_class(
-        param_names: list[str], class_name: str = "ParamsObject"
+        param_names: list[str], default_value_params: dict, class_name: str = "ParamsObject"
     ) -> str:
         """
         Creates a class definition for encapsulating related parameters
         """
+        # class_def = f"class {class_name}:\n"
+        # init_method = "    def __init__(self, {}):\n".format(", ".join(param_names))
+        # init_body = "".join([f"        self.{param} = {param}\n" for param in param_names])
+        # return class_def + init_method + init_body
         class_def = f"class {class_name}:\n"
-        init_method = "    def __init__(self, {}):\n".format(", ".join(param_names))
-        init_body = "".join([f"        self.{param} = {param}\n" for param in param_names])
-        return class_def + init_method + init_body
+        init_params = []
+        init_body = []
+        for param in param_names:
+            if param in default_value_params:  # Include default value in the constructor
+                init_params.append(f"{param}={default_value_params[param]}")
+            else:
+                init_params.append(param)
+            init_body.append(f"        self.{param} = {param}\n")
 
-    def encapsulate_parameters(self, params: dict) -> list[ast.ClassDef]:
+        init_method = "    def __init__(self, {}):\n".format(", ".join(init_params))
+        return class_def + init_method + "".join(init_body)
+
+    def encapsulate_parameters(
+        self, classified_params: dict, default_value_params: dict
+    ) -> list[ast.ClassDef]:
         """
         Injects parameter object classes into the AST tree
         """
-        data_params, config_params = params["data"], params["config"]
+        data_params, config_params = classified_params["data"], classified_params["config"]
         class_nodes = []
 
         if data_params:
             data_param_object_code = self.create_parameter_object_class(
-                data_params, class_name="DataParams"
+                data_params, default_value_params, class_name="DataParams"
             )
             class_nodes.append(ast.parse(data_param_object_code).body[0])
 
         if config_params:
             config_param_object_code = self.create_parameter_object_class(
-                config_params, class_name="ConfigParams"
+                config_params, default_value_params, class_name="ConfigParams"
             )
             class_nodes.append(ast.parse(config_param_object_code).body[0])
 
@@ -183,13 +216,47 @@ class ParameterEncapsulator:
 
 class FunctionCallUpdater:
     @staticmethod
+    def get_method_type(func_node: ast.FunctionDef):
+        # Check decorators
+        for decorator in func_node.decorator_list:
+            if isinstance(decorator, ast.Name) and decorator.id == "staticmethod":
+                return "static method"
+            if isinstance(decorator, ast.Name) and decorator.id == "classmethod":
+                return "class method"
+
+        # Check first argument
+        if func_node.args.args:
+            first_arg = func_node.args.args[0].arg
+            if first_arg == "self":
+                return "instance method"
+            elif first_arg == "cls":
+                return "class method"
+
+        return "unknown method type"
+
+    @staticmethod
     def remove_unused_params(
-        function_node: ast.FunctionDef, used_params: set[str]
+        function_node: ast.FunctionDef, used_params: set[str], default_value_params: dict
     ) -> ast.FunctionDef:
         """
         Removes unused parameters from the function signature.
         """
-        function_node.args.args = [arg for arg in function_node.args.args if arg.arg in used_params]
+        if FunctionCallUpdater.get_method_type(function_node) == "instance method":
+            updated_node_args = [ast.arg(arg="self", annotation=None)]
+        elif FunctionCallUpdater.get_method_type(function_node) == "class method":
+            updated_node_args = [ast.arg(arg="cls", annotation=None)]
+        else:
+            updated_node_args = []
+
+        updated_node_defaults = []
+        for arg in function_node.args.args:
+            if arg.arg in used_params:
+                updated_node_args.append(arg)
+                if arg.arg in default_value_params.keys():
+                    updated_node_defaults.append(default_value_params[arg.arg])
+
+        function_node.args.args = updated_node_args
+        function_node.args.defaults = updated_node_defaults
         return function_node
 
     @staticmethod
@@ -198,18 +265,12 @@ class FunctionCallUpdater:
         Updates the function signature to use encapsulated parameter objects.
         """
         data_params, config_params = params["data"], params["config"]
-
-        # function_node.args.args = [ast.arg(arg="self", annotation=None)]
-        # if data_params:
-        #     function_node.args.args.append(ast.arg(arg="data_params", annotation=None))
-        # if config_params:
-        #     function_node.args.args.append(ast.arg(arg="config_params", annotation=None))
-
         function_node.args.args = [
             ast.arg(arg="self", annotation=None),
             *(ast.arg(arg="data_params", annotation=None) for _ in [1] if data_params),
             *(ast.arg(arg="config_params", annotation=None) for _ in [1] if config_params),
         ]
+        function_node.args.defaults = []
 
         return function_node
 
@@ -276,21 +337,27 @@ class FunctionCallUpdater:
                 config_dict = {key: args[i] for i, key in enumerate(config_params) if i < len(args)}
                 config_dict.update({key: keywords[key] for key in config_params if key in keywords})
 
-                # create AST nodes for new arguments
-                data_node = ast.Call(
-                    func=ast.Name(id="DataParams", ctx=ast.Load()),
-                    args=[data_dict[key] for key in data_params if key in data_dict],
-                    keywords=[],
-                )
+                updated_node_args = []
 
-                config_node = ast.Call(
-                    func=ast.Name(id="ConfigParams", ctx=ast.Load()),
-                    args=[config_dict[key] for key in config_params if key in config_dict],
-                    keywords=[],
-                )
+                # create AST nodes for new arguments
+                if data_params:
+                    data_node = ast.Call(
+                        func=ast.Name(id="DataParams", ctx=ast.Load()),
+                        args=[data_dict[key] for key in data_params if key in data_dict],
+                        keywords=[],
+                    )
+                    updated_node_args.append(data_node)
+
+                if config_params:
+                    config_node = ast.Call(
+                        func=ast.Name(id="ConfigParams", ctx=ast.Load()),
+                        args=[config_dict[key] for key in config_params if key in config_dict],
+                        keywords=[],
+                    )
+                    updated_node_args.append(config_node)
 
                 # replace original arguments with new encapsulated arguments
-                node.args = [data_node, config_node]
+                node.args = updated_node_args
                 node.keywords = []
                 return node
 
