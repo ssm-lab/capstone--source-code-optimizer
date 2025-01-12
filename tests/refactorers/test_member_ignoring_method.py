@@ -24,6 +24,9 @@ def MIM_code(source_files: Path):
 
         def say_hello(self, name):
             print(f"Hello {name}!")
+
+    some_class = SomeClass("random")
+    some_class.say_hello()
     """
     )
     file = source_files / Path("mim_code.py")
@@ -66,7 +69,7 @@ def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path, mocker):
 
     mocker.patch.object(refactorer, "measure_energy", return_value=5.0)
     mocker.patch(
-        "ecooptimizer.refactorers.member_ignoring_method.run_tests",
+        "ecooptimizer.refactorers.base_refactorer.run_tests",
         return_value=0,
     )
 

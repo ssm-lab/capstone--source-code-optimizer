@@ -101,3 +101,5 @@ if __name__ == "__main__":
     # Testing with another vehicle object
     car2 = Vehicle(make="Honda", model="Civic", year=2018, color="Red", fuel_type="Gas", mileage=30000, transmission="Manual", price=15000)
     process_vehicle(car2)
+
+    car1.unused_method()

@@ -8,7 +8,7 @@ from .base_refactorer import BaseRefactorer
 from ..data_wrappers.smell import Smell
 
 
-class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
+class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
     """
     Refactorer that targets methods that don't use any class attributes and makes them static to improve performance
     """
@@ -16,6 +16,8 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
     def __init__(self, output_dir: Path):
         super().__init__(output_dir)
         self.target_line = None
+        self.mim_method_class = ""
+        self.mim_method = ""
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """
@@ -29,11 +31,10 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
         logging.info(
             f"Applying 'Make Method Static' refactor on '{file_path.name}' at line {self.target_line} for identified code smell."
         )
-        with file_path.open() as f:
-            code = f.read()
-
         # Parse the code into an AST
-        tree = ast.parse(code)
+        source_code = file_path.read_text()
+        logging.debug(source_code)
+        tree = ast.parse(source_code, file_path)
 
         # Apply the transformation
         modified_tree = self.visit(tree)
@@ -54,14 +55,56 @@ class MakeStaticRefactorer(BaseRefactorer, NodeTransformer):
             pylint_smell["line"],
         )
 
-    def visit_FunctionDef(self, node):  # noqa: ANN001
+    def visit_FunctionDef(self, node: ast.FunctionDef):
+        logging.debug(f"visiting FunctionDef {node.name} line {node.lineno}")
         if node.lineno == self.target_line:
+            logging.debug("Modifying FunctionDef")
+            self.mim_method = node.name
             # Step 1: Add the decorator
             decorator = ast.Name(id="staticmethod", ctx=ast.Load())
-            node.decorator_list.append(decorator)
+            decorator_list = node.decorator_list
+            decorator_list.append(decorator)
 
+            new_args = node.args.args
             # Step 2: Remove 'self' from the arguments if it exists
-            if node.args.args and node.args.args[0].arg == "self":
-                node.args.args.pop(0)
-        # Add the decorator to the function's decorator list
+            if new_args and new_args[0].arg == "self":
+                new_args.pop(0)
+
+            arguments = ast.arguments(
+                posonlyargs=node.args.posonlyargs,
+                args=new_args,
+                vararg=node.args.vararg,
+                kwonlyargs=node.args.kwonlyargs,
+                kw_defaults=node.args.kw_defaults,
+                kwarg=node.args.kwarg,
+                defaults=node.args.defaults,
+            )
+            return ast.FunctionDef(
+                name=node.name,
+                args=arguments,
+                body=node.body,
+                returns=node.returns,
+                decorator_list=decorator_list,
+            )
+        return node
+
+    def visit_ClassDef(self, node: ast.ClassDef):
+        logging.debug(f"start line: {node.lineno}, end line: {node.end_lineno}")
+        if node.lineno < self.target_line and node.end_lineno > self.target_line:  # type: ignore
+            logging.debug("Getting class name")
+            self.mim_method_class = node.name
+            self.generic_visit(node)
+        return node
+
+    def visit_Call(self, node: ast.Call):
+        logging.debug("visiting Call")
+        if isinstance(node.func, ast.Attribute) and node.func.attr == self.mim_method:
+            if isinstance(node.func.value, ast.Name):
+                logging.debug("Modifying Call")
+                attr = ast.Attribute(
+                    value=ast.Name(id=self.mim_method_class, ctx=ast.Load()),
+                    attr=node.func.attr,
+                    ctx=ast.Load(),
+                )
+                return ast.Call(func=attr, args=node.args, keywords=node.keywords)
         return node
