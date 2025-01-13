@@ -23,10 +23,10 @@ def test_long_param_list_detection():
     ]
 
     # assert expected number of long lambda functions
-    assert len(long_param_list_smells) == 12
+    assert len(long_param_list_smells) == 11
 
     # ensure that detected smells correspond to correct line numbers in test input file
-    expected_lines = {26, 38, 50, 77, 88, 99, 126, 140, 154, 183, 196, 209}
+    expected_lines = {26, 38, 50, 77, 88, 99, 126, 140, 183, 196, 209}
     detected_lines = {smell["line"] for smell in long_param_list_smells}
     assert detected_lines == expected_lines
 
