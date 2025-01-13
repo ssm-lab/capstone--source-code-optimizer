@@ -442,7 +442,7 @@ class PylintAnalyzer(Analyzer):
 
                 for subnode in ast.walk(node):
                     if isinstance(subnode, (ast.Assign, ast.AugAssign)):
-                        targets = [target.id for target in getattr(subnode, "targets", []) if isinstance(target, ast.Name)]
+                        # targets = [target.id for target in getattr(subnode, "targets", []) if isinstance(target, ast.Name)]
                         modified_lines.add(subnode.lineno)
 
                 for subnode in ast.walk(node):

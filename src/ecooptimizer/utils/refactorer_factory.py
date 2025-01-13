@@ -7,7 +7,7 @@ from ..refactorers.member_ignoring_method import MakeStaticRefactorer
 from ..refactorers.long_message_chain import LongMessageChainRefactorer
 from ..refactorers.long_element_chain import LongElementChainRefactorer
 from ..refactorers.str_concat_in_loop import UseListAccumulationRefactorer
-
+from ..refactorers.repeated_calls import CacheRepeatedCallsRefactorer
 
 # Import the configuration for all Pylint smells
 from ..utils.analyzers_config import AllSmells
@@ -54,6 +54,8 @@ class RefactorerFactory:
                 selected = LongElementChainRefactorer(output_dir)
             case AllSmells.STR_CONCAT_IN_LOOP:  # type: ignore
                 selected = UseListAccumulationRefactorer(output_dir)
+            case "CRC001":
+                selected = CacheRepeatedCallsRefactorer(output_dir)
             case _:
                 selected = None
 
