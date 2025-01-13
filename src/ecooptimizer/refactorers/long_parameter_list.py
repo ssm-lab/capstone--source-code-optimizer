@@ -244,12 +244,13 @@ class FunctionCallUpdater:
         Removes unused parameters from the function signature.
         """
         method_type = FunctionCallUpdater.get_method_type(function_node)
-        if method_type == "instance method":
-            updated_node_args = [ast.arg(arg="self", annotation=None)]
-        elif method_type == "class method":
-            updated_node_args = [ast.arg(arg="cls", annotation=None)]
-        else:
-            updated_node_args = []
+        updated_node_args = (
+            [ast.arg(arg="self", annotation=None)]
+            if method_type == "instance method"
+            else [ast.arg(arg="cls", annotation=None)]
+            if method_type == "class method"
+            else []
+        )
 
         updated_node_defaults = []
         for arg in function_node.args.args:
@@ -268,11 +269,23 @@ class FunctionCallUpdater:
         Updates the function signature to use encapsulated parameter objects.
         """
         data_params, config_params = params["data"], params["config"]
-        function_node.args.args = [
-            ast.arg(arg="self", annotation=None),
-            *(ast.arg(arg="data_params", annotation=None) for _ in [1] if data_params),
-            *(ast.arg(arg="config_params", annotation=None) for _ in [1] if config_params),
+
+        method_type = FunctionCallUpdater.get_method_type(function_node)
+        updated_node_args = (
+            [ast.arg(arg="self", annotation=None)]
+            if method_type == "instance method"
+            else [ast.arg(arg="cls", annotation=None)]
+            if method_type == "class method"
+            else []
+        )
+
+        updated_node_args += [
+            ast.arg(arg="data_params", annotation=None) for _ in [data_params] if data_params
+        ] + [
+            ast.arg(arg="config_params", annotation=None) for _ in [config_params] if config_params
         ]
+
+        function_node.args.args = updated_node_args
         function_node.args.defaults = []
 
         return function_node

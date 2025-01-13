@@ -247,6 +247,6 @@ reset_system()
 calculate_discount(price=100, discount_rate=0.1, minimum_purchase=50, maximum_discount=20)
 apply_coupon("SAVE10", "2025-12-31", 10, minimum_order=2)
 create_user_report(1, "johndoe", "johndoe@example.com", {"theme": "dark"}, "UTC", "en", True, True)
-create_partial_report(2, "janedoe", "janedoe@example.com", {"theme": "light"}, "PST", "en", notifications=alse)
+create_partial_report(2, "janedoe", "janedoe@example.com", {"theme": "light"}, "PST", "en", notifications=False)
 create_minimal_report(3, "janedoe", "janedoe@example.com", {"theme": "blue"}, timezone="PST")
 
