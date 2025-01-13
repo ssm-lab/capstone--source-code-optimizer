@@ -38,6 +38,7 @@ class CustomSmell(ExtendedEnum):
     LONG_ELEMENT_CHAIN = "LEC001"  # Custom code smell for long element chains (e.g dict["level1"]["level2"]["level3"]... )
     LONG_LAMBDA_EXPR = "LLE001"  # CUSTOM CODE
     STR_CONCAT_IN_LOOP = "SCL001"
+    CACHE_REPEATED_CALLS = "CRC001"
 
 
 class IntermediateSmells(ExtendedEnum):
