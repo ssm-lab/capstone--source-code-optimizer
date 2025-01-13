@@ -26,7 +26,7 @@ def test_long_param_list_detection():
     assert len(long_param_list_smells) == 12
 
     # ensure that detected smells correspond to correct line numbers in test input file
-    expected_lines = {24, 35, 46, 74, 85, 96, 123, 137, 151, 180, 193, 206}
+    expected_lines = {26, 38, 50, 77, 88, 99, 126, 140, 154, 183, 196, 209}
     detected_lines = {smell["line"] for smell in long_param_list_smells}
     assert detected_lines == expected_lines
 
@@ -43,11 +43,10 @@ def test_long_parameter_refactoring():
     initial_emission = 100.0
 
     for smell in long_param_list_smells:
-        if smell["line"] == 96:
-            refactorer.refactor(TEST_INPUT_FILE, smell, initial_emission)
+        refactorer.refactor(TEST_INPUT_FILE, smell, initial_emission)
 
-            refactored_file = refactorer.temp_dir / Path(
-                f"{TEST_INPUT_FILE.stem}_LPLR_line_{smell['line']}.py"
-            )
+        refactored_file = refactorer.temp_dir / Path(
+            f"{TEST_INPUT_FILE.stem}_LPLR_line_{smell['line']}.py"
+        )
 
-            assert refactored_file.exists()
+        assert refactored_file.exists()

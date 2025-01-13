@@ -54,16 +54,18 @@ class LongParameterListRefactorer(BaseRefactorer):
                         for class_node in class_nodes:
                             tree.body.insert(0, class_node)
 
-                        # update function signature, body and calls corresponding to new params
+                        # first update calls to this function(this needs to use existing params)
+                        updated_tree = self.function_updater.update_function_calls(
+                            tree, node, classified_params
+                        )
+                        # then update function signature and parameter usages with function body)
                         updated_function = self.function_updater.update_function_signature(
                             node, classified_params
                         )
                         updated_function = self.function_updater.update_parameter_usages(
                             node, classified_params
                         )
-                        updated_tree = self.function_updater.update_function_calls(
-                            tree, node.name, classified_params
-                        )
+
                     else:
                         # just remove the unused params if used parameters are within the max param list
                         updated_function = self.function_updater.remove_unused_params(
@@ -241,9 +243,10 @@ class FunctionCallUpdater:
         """
         Removes unused parameters from the function signature.
         """
-        if FunctionCallUpdater.get_method_type(function_node) == "instance method":
+        method_type = FunctionCallUpdater.get_method_type(function_node)
+        if method_type == "instance method":
             updated_node_args = [ast.arg(arg="self", annotation=None)]
-        elif FunctionCallUpdater.get_method_type(function_node) == "class method":
+        elif method_type == "class method":
             updated_node_args = [ast.arg(arg="cls", annotation=None)]
         else:
             updated_node_args = []
@@ -301,7 +304,47 @@ class FunctionCallUpdater:
         return function_node
 
     @staticmethod
-    def update_function_calls(tree: ast.Module, function_name: str, params: dict) -> ast.Module:
+    def get_enclosing_class_name(tree: ast.Module, init_node: ast.FunctionDef) -> str | None:
+        """
+        Finds the class name enclosing the given __init__ function node. This will be the class that is instantiaeted by the init method.
+
+        :param tree: AST tree
+        :param init_node: __init__ function node
+        :return: name of the enclosing class, or None if not found
+        """
+        # Stack to track parent nodes
+        parent_stack = []
+
+        class ClassNameVisitor(ast.NodeVisitor):
+            def visit_ClassDef(self, node: ast.ClassDef):
+                # Push the class onto the stack
+                parent_stack.append(node)
+                self.generic_visit(node)
+                # Pop the class after visiting its children
+                parent_stack.pop()
+
+            def visit_FunctionDef(self, node: ast.FunctionDef):
+                # If this is the target __init__ function, get the enclosing class
+                if node is init_node:
+                    # Find the nearest enclosing class from the stack
+                    for parent in reversed(parent_stack):
+                        if isinstance(parent, ast.ClassDef):
+                            raise StopIteration(parent.name)  # Return the class name
+                self.generic_visit(node)
+
+        # Traverse the AST with the visitor
+        try:
+            ClassNameVisitor().visit(tree)
+        except StopIteration as e:
+            return e.value
+
+        # If no enclosing class is found
+        return None
+
+    @staticmethod
+    def update_function_calls(
+        tree: ast.Module, function_node: ast.FunctionDef, params: dict
+    ) -> ast.Module:
         """
         Updates all calls to a given function in the provided AST tree to reflect new encapsulated parameters.
 
@@ -312,57 +355,99 @@ class FunctionCallUpdater:
         """
 
         class FunctionCallTransformer(ast.NodeTransformer):
-            def __init__(self, function_name: str, params: dict):
-                self.function_name = function_name
+            def __init__(
+                self,
+                function_node: ast.FunctionDef,
+                params: dict,
+                is_constructor: bool = False,
+                class_name: str = "",
+            ):
+                self.function_node = function_node
                 self.params = params
+                self.is_constructor = is_constructor
+                self.class_name = class_name
 
             def visit_Call(self, node: ast.Call):
+                # node.func is a ast.Name if it is a function call, and ast.Attribute if it is a a method class
                 if isinstance(node.func, ast.Name):
                     node_name = node.func.id
                 elif isinstance(node.func, ast.Attribute):
                     node_name = node.func.attr
-                if node_name == self.function_name:
+
+                if self.is_constructor and node_name == self.class_name:
+                    return self.transform_call(node)
+                elif node_name == self.function_node.name:
                     return self.transform_call(node)
                 return node
 
+            def create_ast_call(
+                self,
+                function_name: str,
+                param_list: dict,
+                args_map: list[ast.expr],
+                keywords_map: list[ast.keyword],
+            ):
+                """
+                Creates a AST for function call
+                """
+
+                return (
+                    ast.Call(
+                        func=ast.Name(id=function_name, ctx=ast.Load()),
+                        args=[args_map[key] for key in param_list if key in args_map],
+                        keywords=[
+                            ast.keyword(arg=key, value=keywords_map[key])
+                            for key in param_list
+                            if key in keywords_map
+                        ],
+                    )
+                    if param_list
+                    else None
+                )
+
             def transform_call(self, node: ast.Call):
+                # original and classified params from function node
+                params = [arg.arg for arg in self.function_node.args.args if arg.arg != "self"]
                 data_params, config_params = self.params["data"], self.params["config"]
 
-                args = node.args
-                keywords = {kw.arg: kw.value for kw in node.keywords}
+                # positional and keyword args passed in function call
+                args, keywords = node.args, node.keywords
 
-                # extract values for data and config params from positional and keyword arguments
-                data_dict = {key: args[i] for i, key in enumerate(data_params) if i < len(args)}
-                data_dict.update({key: keywords[key] for key in data_params if key in keywords})
-                config_dict = {key: args[i] for i, key in enumerate(config_params) if i < len(args)}
-                config_dict.update({key: keywords[key] for key in config_params if key in keywords})
+                data_args = {
+                    param: args[i]
+                    for i, param in enumerate(params)
+                    if i < len(args) and param in data_params
+                }
+                config_args = {
+                    param: args[i]
+                    for i, param in enumerate(params)
+                    if i < len(args) and param in config_params
+                }
+
+                data_keywords = {kw.arg: kw.value for kw in keywords if kw.arg in data_params}
+                config_keywords = {kw.arg: kw.value for kw in keywords if kw.arg in config_params}
 
                 updated_node_args = []
-
-                # create AST nodes for new arguments
-                if data_params:
-                    data_node = ast.Call(
-                        func=ast.Name(id="DataParams", ctx=ast.Load()),
-                        args=[data_dict[key] for key in data_params if key in data_dict],
-                        keywords=[],
-                    )
+                if data_node := self.create_ast_call(
+                    "DataParams", data_params, data_args, data_keywords
+                ):
                     updated_node_args.append(data_node)
-
-                if config_params:
-                    config_node = ast.Call(
-                        func=ast.Name(id="ConfigParams", ctx=ast.Load()),
-                        args=[config_dict[key] for key in config_params if key in config_dict],
-                        keywords=[],
-                    )
+                if config_node := self.create_ast_call(
+                    "ConfigParams", config_params, config_args, config_keywords
+                ):
                     updated_node_args.append(config_node)
 
-                # replace original arguments with new encapsulated arguments
-                node.args = updated_node_args
-                node.keywords = []
+                # update function call node. note that keyword arguments are updated within encapsulated param objects above
+                node.args, node.keywords = updated_node_args, []
                 return node
 
-        # apply the transformer to update all function calls
-        transformer = FunctionCallTransformer(function_name, params)
+        # apply the transformer to update all function calls to given function node
+        if function_node.name == "__init__":
+            # if function is a class initialization, then we need to fetch class name
+            class_name = FunctionCallUpdater.get_enclosing_class_name(tree, function_node)
+            transformer = FunctionCallTransformer(function_node, params, True, class_name)
+        else:
+            transformer = FunctionCallTransformer(function_node, params)
         updated_tree = transformer.visit(tree)
 
         return updated_tree
