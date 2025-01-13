@@ -16,7 +16,7 @@ OUTPUT_DIR = (DIRNAME / Path("../../outputs")).resolve()
 # Path to log file
 LOG_FILE = OUTPUT_DIR / Path("log.log")
 # Path to the file to be analyzed
-TEST_FILE = (DIRNAME / Path("../../tests/input/repeated_calls_examples.py")).resolve()
+TEST_FILE = (DIRNAME / Path("../../tests/input/string_concat_examples.py")).resolve()
 
 
 def main():
