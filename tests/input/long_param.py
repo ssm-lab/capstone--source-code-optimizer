@@ -1,101 +1,252 @@
-class OrderProcessor:
-    def __init__(self, database_config, api_keys, logger, retry_policy, cache_settings, timezone, locale):
-        self.database_config = database_config
-        self.api_keys = api_keys
-        self.logger = logger
-        self.retry_policy = retry_policy
-        self.cache_settings = cache_settings
-        self.timezone = timezone
-        self.locale = locale
+################################################ Constructors ###############################################################
+class UserDataProcessor1:
+    # 1. 0 parameters
+    def __init__(self):
+        self.config = {}
+        self.data = []
 
-    def process_order(self, order_id, customer_info, payment_info, order_items, delivery_info, config, tax_rate, discount_policy):
-        # Unpacking data parameters
-        customer_name, address, phone, email = customer_info
-        payment_method, total_amount, currency = payment_info
-        items, quantities, prices, category_tags = order_items
-        delivery_address, delivery_date, special_instructions = delivery_info
+class UserDataProcessor2:
+    # 2. 4 parameters (no unused)
+    def __init__(self, user_id, username, email, app_config):
+        self.user_id = user_id
+        self.username = username
+        self.email = email
+        self.app_config = app_config
 
-        # Configurations
-        priority_order, allow_partial, gift_wrap = config
+class UserDataProcessor3:
+    # 3. 4 parameters (1 unused)
+    def __init__(self, user_id, username, email, theme="light"):
+        self.user_id = user_id
+        self.username = username
+        self.email = email
+        # theme is unused
 
-        final_total = total_amount * (1 + tax_rate) - discount_policy.get('flat_discount', 0)
+class UserDataProcessor4:
+    # 4. 8 parameters (no unused)
+    def __init__(self, user_id, username, email, preferences, timezone_config, language, notification_settings, is_active):
+        self.user_id = user_id
+        self.username = username
+        self.email = email
+        self.preferences = preferences
+        self.timezone_config = timezone_config
+        self.language = language
+        self.notification_settings = notification_settings
+        self.is_active = is_active
 
-        return (
-            f"Processed order {order_id} for {customer_name} (Email: {email}).\n"
-            f"Items: {items}\n"
-            f"Final Total: {final_total} {currency}\n"
-            f"Delivery: {delivery_address} on {delivery_date}\n"
-            f"Priority: {priority_order}, Partial Allowed: {allow_partial}, Gift Wrap: {gift_wrap}\n"
-            f"Special Instructions: {special_instructions}"
-        )
+class UserDataProcessor5:
+    # 5. 8 parameters (1 unused)
+    def __init__(self, user_id, username, email, preferences, timezone_config, region, notification_settings, theme="light"):
+        self.user_id = user_id
+        self.username = username
+        self.email = email
+        self.preferences = preferences
+        self.timezone_config = timezone_config
+        self.region = region
+        self.notification_settings = notification_settings
+        # theme is unused
 
-    def calculate_shipping(self, package_info, shipping_info, config, surcharge_rate, delivery_speed, insurance_options, tax_config):
-        # Unpacking data parameters
-        weight, dimensions, package_type = package_info
-        destination, origin, country_code = shipping_info
+class UserDataProcessor6:
+    # 6. 8 parameters (4 unused)
+    def __init__(self, user_id, username, email, preferences, timezone_config, backup_config=None, display_theme=None, active_status=None):
+        self.user_id = user_id
+        self.username = username
+        self.email = email
+        self.preferences = preferences
+        # timezone_config, backup_config, display_theme, active_status are unused
 
-        # Configurations
-        shipping_method, insurance, fragile, tracking = config
+    ################################################ Instance Methods ###############################################################
+    # 1. 0 parameters
+    def clear_data(self):
+        self.data = []
 
-        surcharge = weight * surcharge_rate if package_type == 'heavy' else 0
-        tax_rate = tax_config
-        return (
-            f"Shipping from {origin} ({country_code}) to {destination}.\n"
-            f"Weight: {weight}kg, Dimensions: {dimensions}, Method: {shipping_method}, Speed: {delivery_speed}.\n"
-            f"Insurance: {insurance}, Fragile: {fragile}, Tracking: {tracking}.\n"
-            f"Surcharge: ${surcharge}, Options: {insurance_options}.\n"
-            f"Tax rate: ${tax_rate}"
-        )
+    # 2. 4 parameters (no unused)
+    def update_settings(self, display_mode, alert_settings, language_preference, timezone_config):
+        self.settings["display_mode"] = display_mode
+        self.settings["alert_settings"] = alert_settings
+        self.settings["language_preference"] = language_preference
+        self.settings["timezone"] = timezone_config
 
-    def generate_invoice(self, invoice_id, customer_info, order_details, financials, payment_terms, billing_address, support_contact):
-        # Unpacking data parameters
-        customer_name, email, loyalty_id = customer_info
-        items, quantities, prices, shipping_fee, discount_code = order_details
-        tax_rate, discount, total_amount, currency = financials
+    # 3. 4 parameters (1 unused)
+    def update_profile(self, username, email, timezone_config, bio=None):
+        self.username = username
+        self.email = email
+        self.settings["timezone"] = timezone_config
+        # bio is unused
 
-        tax_amount = total_amount * tax_rate
-        discounted_total = total_amount - discount
+    # 4. 8 parameters (no unused)
+    def bulk_update(self, username, email, preferences, timezone_config, region, notification_settings, theme="light", is_active=None):
+        self.username = username
+        self.email = email
+        self.preferences = preferences
+        self.settings["timezone"] = timezone_config
+        self.settings["region"] = region
+        self.settings["notifications"] = notification_settings
+        self.settings["theme"] = theme
+        self.settings["is_active"] = is_active
 
-        return (
-            f"Invoice {invoice_id} for {customer_name} (Email: {email}, Loyalty ID: {loyalty_id}).\n"
-            f"Items: {items}, Quantities: {quantities}, Prices: {prices}.\n"
-            f"Shipping Fee: ${shipping_fee}, Tax: ${tax_amount}, Discount: ${discount}.\n"
-            f"Final Total: {discounted_total} {currency}.\n"
-            f"Payment Terms: {payment_terms}, Billing Address: {billing_address}.\n"
-            f"Support Contact: {support_contact}"
-        )
+    # 5. 8 parameters (1 unused)
+    def bulk_update_partial(self, username, email, preferences, timezone_config, region, notification_settings, theme, active_status=None):
+        self.username = username
+        self.email = email
+        self.preferences = preferences
+        self.settings["timezone"] = timezone_config
+        self.settings["region"] = region
+        self.settings["notifications"] = notification_settings
+        self.settings["theme"] = theme
+        # active_status is unused
 
-# Example usage:
+    # 6. 7 parameters (3 unused)
+    def partial_update(self, username, email, preferences, timezone_config, backup_config=None, display_theme=None, active_status=None):
+        self.username = username
+        self.email = email
+        self.preferences = preferences
+        self.settings["timezone"] = timezone_config
+        # backup_config, display_theme, active_status are unused
 
-processor = OrderProcessor(
-    database_config={"host": "localhost", "port": 3306},
-    api_keys={"payment": "abc123", "shipping": "xyz789"},
-    logger="order_logger",
-    retry_policy={"max_retries": 3, "delay": 5},
-    cache_settings={"enabled": True, "ttl": 3600},
-    timezone="UTC",
-    locale="en-US"
-)
+################################################ Static Methods ###############################################################
 
-# Processing orders
-order1 = processor.process_order(
-    101,
-    ("Alice Smith", "123 Elm St", "555-1234", "alice@example.com"),
-    ("Credit Card", 299.99, "USD"),
-    (["Laptop", "Mouse"], [1, 1], [999.99, 29.99], ["electronics", "accessories"]),
-    ("123 Elm St", "2025-01-15", "Leave at front door"),
-    (True, False, True),
-    tax_rate=0.07,
-    discount_policy={"flat_discount": 50}
-)
+    # 1. 0 parameters
+    @staticmethod
+    def reset_global_settings():
+        return {"theme": "default", "language": "en", "notifications": True}
 
-# Generating invoices
-invoice1 = processor.generate_invoice(
-    201,
-    ("Alice Smith", "alice@example.com", "LOY12345"),
-    (["Laptop", "Mouse"], [1, 1], [999.99, 29.99], 20.0, "DISC2025"),
-    (0.07, 50.0, 1099.98, "USD"),
-    payment_terms="Due upon receipt",
-    billing_address="123 Elm St",
-    support_contact="support@example.com"
-)
+    # 2. 4 parameters (no unused)
+    @staticmethod
+    def validate_user_input(username, email, password, age):
+        return all([username, email, password, age >= 18])
+
+    # 3. 4 parameters (2 unused)
+    @staticmethod
+    def hash_password(password, salt, encryption="SHA256", retries=1000):
+        # encryption and retries are unused
+        return f"hashed({password} + {salt})"
+
+    # 4. 8 parameters (no unused)
+    @staticmethod
+    def generate_report(username, email, preferences, timezone_config, region, notification_settings, theme, is_active):
+        return {
+            "username": username,
+            "email": email,
+            "preferences": preferences,
+            "timezone": timezone_config,
+            "region": region,
+            "notifications": notification_settings,
+            "theme": theme,
+            "is_active": is_active,
+        }
+
+    # 5. 8 parameters (1 unused)
+    @staticmethod
+    def generate_report_partial(username, email, preferences, timezone_config, region, notification_settings, theme, active_status=None):
+        return {
+            "username": username,
+            "email": email,
+            "preferences": preferences,
+            "timezone": timezone_config,
+            "region": region,
+            "notifications": notification_settings,
+            "active status": active_status,
+        }
+        # theme is unused
+
+    # 6. 8 parameters (3 unused)
+    # @staticmethod
+    # def minimal_report(username, email, preferences, timezone_config, backup, region="Global", display_mode=None, status=None):
+    #     return {
+    #         "username": username,
+    #         "email": email,
+    #         "preferences": preferences,
+    #         "timezone": timezone_config,
+    #         "region": region
+    #     }
+    #     # backup, display_mode, status are unused
+
+
+################################################ Standalone Functions ###############################################################
+
+# 1. 0 parameters
+def reset_system():
+    return "System reset completed"
+
+# 2. 4 parameters (no unused)
+def calculate_discount(price, discount_rate, minimum_purchase, maximum_discount):
+    if price >= minimum_purchase:
+        return min(price * discount_rate, maximum_discount)
+    return 0
+
+# 3. 4 parameters (1 unused)
+def apply_coupon(coupon_code, expiry_date, discount_rate, minimum_order=None):
+    return f"Coupon {coupon_code} applied with {discount_rate}% off until {expiry_date}"
+    # minimum_order is unused
+
+# 4. 8 parameters (no unused)
+def create_user_report(user_id, username, email, preferences, timezone_config, language, notification_settings, is_active):
+    return {
+        "user_id": user_id,
+        "username": username,
+        "email": email,
+        "preferences": preferences,
+        "timezone": timezone_config,
+        "language": language,
+        "notifications": notification_settings,
+        "is_active": is_active,
+    }
+
+# 5. 8 parameters (1 unused)
+def create_partial_report(user_id, username, email, preferences, timezone_config, language, notification_settings, active_status=None):
+    return {
+        "user_id": user_id,
+        "username": username,
+        "email": email,
+        "preferences": preferences,
+        "timezone": timezone_config,
+        "language": language,
+        "notifications": notification_settings,
+    }
+    # active_status is unused
+
+# 6. 8 parameters (3 unused)
+def create_minimal_report(user_id, username, email, preferences, timezone_config, backup_config=None, alert_settings=None, active_status=None):
+    return {
+        "user_id": user_id,
+        "username": username,
+        "email": email,
+        "preferences": preferences,
+        "timezone": timezone_config,
+    }
+    # backup_config, alert_settings, active_status are unused
+
+################################################ Calls ###############################################################
+
+# Constructor calls
+user1 = UserDataProcessor1()
+user2 = UserDataProcessor2(1, "johndoe", "johndoe@example.com", app_config={"theme": "dark"})
+user3 = UserDataProcessor3(1, "janedoe", email="janedoe@example.com")
+user4 = UserDataProcessor4(2, "johndoe", "johndoe@example.com", {"theme": "dark"}, "UTC", language="en", notification_settings=False, is_active=True)
+user5 = UserDataProcessor5(2, "janedoe", "janedoe@example.com", {"theme": "light"}, "UTC", region="en", notification_settings=False)
+user6 = UserDataProcessor6(3, "janedoe", "janedoe@example.com", {"theme": "blue"}, timezone_config="PST")
+
+# Instance method calls
+user6.clear_data()
+user6.update_settings("dark_mode", True, "en", timezone_config="UTC")
+user6.update_profile(username="janedoe", email="janedoe@example.com", timezone_config="PST")
+user6.bulk_update("johndoe", "johndoe@example.com", {"theme": "dark"}, "UTC", "en", True, "dark", is_active=True)
+user6.bulk_update_partial("janedoe", "janedoe@example.com", {"theme": "light"}, "PST", "en", False, "light", active_status="offline")
+user6.partial_update("janedoe", "janedoe@example.com", preferences={"theme": "blue"}, timezone_config="PST")
+
+# Static method calls
+UserDataProcessor6.reset_global_settings()
+UserDataProcessor6.validate_user_input("johndoe", "johndoe@example.com", password="password123", age=25)
+UserDataProcessor6.hash_password("password123", "salt123", retries=200)
+UserDataProcessor6.generate_report("johndoe", "johndoe@example.com", {"theme": "dark"}, "UTC", "en", True, "dark", True)
+UserDataProcessor6.generate_report_partial("janedoe", "janedoe@example.com", {"theme": "light"}, "PST", "en", False, theme="green", active_status="online")
+# UserDataProcessor6.minimal_report("janedoe", "janedoe@example.com", {"theme": "blue"}, "PST", False, "Canada")
+
+# Standalone function calls
+reset_system()
+calculate_discount(price=100, discount_rate=0.1, minimum_purchase=50, maximum_discount=20)
+apply_coupon("SAVE10", "2025-12-31", 10, minimum_order=2)
+create_user_report(1, "johndoe", "johndoe@example.com", {"theme": "dark"}, "UTC", "en", True, True)
+create_partial_report(2, "janedoe", "janedoe@example.com", {"theme": "light"}, "PST", "en", notification_settings=False)
+create_minimal_report(3, "janedoe", "janedoe@example.com", {"theme": "blue"}, timezone_config="PST")
+

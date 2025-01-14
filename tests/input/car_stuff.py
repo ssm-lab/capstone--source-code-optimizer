@@ -12,7 +12,7 @@ class Vehicle:
         self.mileage = mileage
         self.transmission = transmission
         self.price = price
-        self.owner = None  # Unused class attribute
+        self.owner = None  # Unused class attribute, used in constructor
 
     def display_info(self):
         # Code Smell: Long Message Chain
@@ -34,7 +34,7 @@ class Car(Vehicle):
     def __init__(self, make, model, year, color, fuel_type, mileage, transmission, price, sunroof=False):
         super().__init__(make, model, year, color, fuel_type, mileage, transmission, price)
         self.sunroof = sunroof
-        self.engine_size = 2.0  # Unused variable
+        self.engine_size = 2.0  # Unused variable in class
 
     def add_sunroof(self):
         # Code Smell: Long Parameter List
