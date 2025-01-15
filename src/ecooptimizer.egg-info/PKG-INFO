@@ -1,0 +1,91 @@
+Metadata-Version: 2.1
+Name: ecooptimizer
+Version: 0.0.1
+Summary: A source code eco optimizer
+Author: Sevhena Walker, Mya Hussain, Nivetha Kuruparan, Ayushi Amin, Tanveer Brar
+License: Copyright (c) 2024-2025 Ayushi Amin, Mya Hussain, Nivetha Kuruparan, Sevhena Walker, Tanveer Brar
+        
+        Permission is hereby granted, on a case-by-case basis, to specific individuals or organizations ("Licensee") to use and access the software and associated documentation files (the "Software") strictly for evaluation or development purposes. This permission is non-transferable, non-exclusive, and does not grant the Licensee any rights to modify, merge, publish, distribute, sublicense, sell, or otherwise exploit the Software in any manner without explicit prior written consent from the copyright holder.
+        
+        Any unauthorized use, modification, distribution, or sale of the Software is strictly prohibited and may result in legal action.
+        
+        The Software is provided "AS IS," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non-infringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Software or the use or other dealings in the Software.
+        
+        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+        
+Project-URL: Documentation, https://readthedocs.org
+Project-URL: Repository, https://github.com/ssm-lab/capstone--source-code-optimizer
+Project-URL: Bug Tracker, https://github.com/ssm-lab/capstone--source-code-optimizer/issues
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pylint
+Requires-Dist: rope
+Requires-Dist: astor
+Requires-Dist: codecarbon
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: coverage; extra == "dev"
+Requires-Dist: pyright; extra == "dev"
+Requires-Dist: pre-commit; extra == "dev"
+
+# Source Code Energy Optimizer
+
+**Developer Names**: Sevhena Walker, Mya Hussain, Ayushi Amin, Tanveer Brar, Nivetha Kuruparan
+**Supervisor**: Dr. David Istvan
+
+Date of project start: September 16th 2024
+
+**Project Overview**: The goal of this project is to develop tools to improve the energy efficiency of engineered software through refactoring without altering the intent of the source code.
+
+---
+
+### **Key Features**
+
+1. **Refactoring Library**  
+   - Provides automated refactoring tools aimed at optimising code for energy efficiency while preserving its functional behaviour.  
+   - Analyses code to identify energy-intensive patterns and recommends or applies energy-saving transformations.  
+   - Ensures refactored code remains maintainable and efficient across different platforms.
+
+2. **Python-Specific Refactoring Optimization**  
+   - Tailors energy-efficient refactoring strategies based on the specific characteristics of Python.  
+   - Provides guidelines and transformations to minimise energy consumption while maintaining code compatibility.  
+   - Adapts to the unique performance and energy model of Python.
+
+3. **Reinforcement Learning for Refactoring Preferences**  
+   - Utilises reinforcement learning to adapt refactoring strategies based on past performance data.  
+   - Continuously improves the refactoring process by learning which transformations lead to the greatest energy savings.  
+   - Continuously improves the refactoring process by learning which transformations lead to most technically sustainable (readable) code.
+
+4. **DevOps GitHub Integration**  
+   - Integrates with GitHub to automatically trigger energy-efficient refactoring as part of the CI/CD pipeline.  
+   - Provides version control, ensuring that refactoring changes can be tracked, tested, and validated before deployment.  
+   - Implements an automated feedback loop that records energy consumption data and feeds it back into the library's reinforcement learning model.
+   - Automates testing of source code within the DevOps workflow to ensure that behaviour is maintained.
+
+**Nice-to-Have Features:**
+
+1. **Library Plugin**  
+   - Offers a plugin extension for popular IDEs and platforms, allowing developers to easily incorporate the refactoring library into their existing workflows.  
+   - Provides real-time suggestions and refactoring options within the development environment, enhancing usability and accessibility.  
+   - Synchronizes plugin with website allowing developers to view measurements taken in a visual manner (i.e. graphs, tables).
+
+2. **Human-in-the-Loop Reinforcement Learning**  
+   - Involves human feedback in the reinforcement learning process to guide the system's refactoring decisions based on developer expertise and preferences.  
+   - Balances automated refactoring with human oversight to ensure that complex refactoring decisions align with the project's goals and constraints.
+
+
+The folders and files for this project are as follows:
+
+docs - Documentation for the project
+
+refs - Reference material used for the project, including papers
+
+src - Source code
+
+test - Test cases
+
+etc.

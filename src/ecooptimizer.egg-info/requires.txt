@@ -1,0 +1,13 @@
+pylint
+rope
+astor
+codecarbon
+
+[dev]
+pytest
+pytest-cov
+mypy
+ruff
+coverage
+pyright
+pre-commit
