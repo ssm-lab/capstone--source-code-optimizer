@@ -44,7 +44,7 @@ class LongElementChainRefactorer(BaseRefactorer):
             return node.id
         return node
 
-    def find_dict_assignments(self, tree: ast.AST):
+    def find_dict_assignments(self, tree: ast.AST, name: str):
         """Find and extract dictionary assignments from AST."""
         dict_assignments = {}
 
@@ -54,6 +54,7 @@ class LongElementChainRefactorer(BaseRefactorer):
                     isinstance(node.value, ast.Dict)
                     and len(node.targets) == 1
                     and isinstance(node.targets[0], ast.Name)
+                    and node.targets[0].id == name
                 ):
                     dict_name = node.targets[0].id
                     dict_value = self.extract_dict_literal(node.value)
@@ -61,6 +62,7 @@ class LongElementChainRefactorer(BaseRefactorer):
                 self_.generic_visit(node)
 
         DictVisitor().visit(tree)
+
         return dict_assignments
 
     def collect_dict_references(self, tree: ast.AST) -> None:
@@ -117,8 +119,21 @@ class LongElementChainRefactorer(BaseRefactorer):
             lines = content.splitlines(keepends=True)
             tree = ast.parse(content)
 
+        dict_name = ""
+        # Traverse the AST
+        for node in ast.walk(tree):
+            if isinstance(
+                node, ast.Subscript
+            ):  # Check if the node is a Subscript (e.g., dictionary access)
+                if hasattr(node, "lineno") and node.lineno == line_number:  # Check line number
+                    if isinstance(
+                        node.value, ast.Name
+                    ):  # Ensure the value being accessed is a variable (dictionary)
+                        dict_name = node.value.id  # Extract the name of the dictionary
+
         # Find dictionary assignments and collect references
-        dict_assignments = self.find_dict_assignments(tree)
+        dict_assignments = self.find_dict_assignments(tree, dict_name)
+
         self._reference_map.clear()
         self.collect_dict_references(tree)
 
