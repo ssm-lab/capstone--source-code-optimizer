@@ -8,7 +8,7 @@ def detect_long_lambda_expression(
     """
     Detects lambda functions that are too long, either by the number of expressions or the total length in characters.
 
-    Args:
+    Parameters:
         file_path (Path): The file path to analyze.
         tree (ast.AST): The Abstract Syntax Tree (AST) of the source code.
         threshold_length (int): The maximum number of characters allowed in the lambda expression.
@@ -31,7 +31,7 @@ def detect_long_lambda_expression(
         # Check if the lambda expression exceeds the threshold based on the number of expressions
         if lambda_length >= threshold_count:
             message = f"Lambda function too long ({lambda_length}/{threshold_count} expressions)"
-            result = {
+            smell = {
                 "absolutePath": str(file_path),
                 "column": node.col_offset,
                 "confidence": "UNDEFINED",
@@ -50,7 +50,7 @@ def detect_long_lambda_expression(
             if node.lineno in used_lines:
                 return
             used_lines.add(node.lineno)
-            results.append(result)
+            results.append(smell)
 
         # Convert the lambda function to a string and check its total length in characters
         lambda_code = get_lambda_code(node)
