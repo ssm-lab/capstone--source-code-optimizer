@@ -1,4 +1,7 @@
+from ast import AST
 from enum import Enum
+from pathlib import Path
+from typing import Callable
 
 # Individual AST Analyzers
 from ..analyzers.ast_analyzers.detect_repeated_calls import detect_repeated_calls
@@ -91,7 +94,7 @@ class SmellConfig:
         ]
 
     @staticmethod
-    def list_ast_smell_methods() -> list[str]:
+    def list_ast_smell_methods() -> list[Callable[[Path, AST], list[dict[str, object]]]]:
         """Returns a list of function names (methods) for all AST smells."""
         return [
             config["analyzer_method"]
