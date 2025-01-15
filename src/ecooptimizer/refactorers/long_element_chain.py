@@ -1,10 +1,8 @@
-import logging
 from pathlib import Path
 import re
 import ast
 from typing import Any
 
-from ..testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
 from ..data_wrappers.smell import Smell
 
@@ -18,8 +16,6 @@ class LongElementChainRefactorer(BaseRefactorer):
 
     def __init__(self, output_dir: Path):
         super().__init__(output_dir)
-        self._cache: dict[str, str] = {}
-        self._seen_patterns: dict[str, int] = {}
         self._reference_map: dict[str, list[tuple[int, str]]] = {}
 
     def flatten_dict(self, d: dict[str, Any], parent_key: str = ""):
@@ -113,75 +109,59 @@ class LongElementChainRefactorer(BaseRefactorer):
 
     def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
         """Refactor long element chains using the most appropriate strategy."""
-        try:
-            line_number = pylint_smell["line"]
-            temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
+        line_number = pylint_smell["line"]
+        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
 
-            with file_path.open() as f:
-                content = f.read()
-                lines = content.splitlines(keepends=True)
-                tree = ast.parse(content)
+        with file_path.open() as f:
+            content = f.read()
+            lines = content.splitlines(keepends=True)
+            tree = ast.parse(content)
 
-            # Find dictionary assignments and collect references
-            dict_assignments = self.find_dict_assignments(tree)
-            self._reference_map.clear()
-            self.collect_dict_references(tree)
+        # Find dictionary assignments and collect references
+        dict_assignments = self.find_dict_assignments(tree)
+        self._reference_map.clear()
+        self.collect_dict_references(tree)
 
-            new_lines = lines.copy()
-            processed_patterns = set()
+        new_lines = lines.copy()
+        processed_patterns = set()
 
-            for name, value in dict_assignments.items():
-                flat_dict = self.flatten_dict(value)
-                dict_def = f"{name} = {flat_dict!r}\n"
+        for name, value in dict_assignments.items():
+            flat_dict = self.flatten_dict(value)
+            dict_def = f"{name} = {flat_dict!r}\n"
 
-                # Update all references to this dictionary
-                for pattern, occurrences in self._reference_map.items():
-                    if pattern.startswith(name) and pattern not in processed_patterns:
-                        for line_num, flattened_reference in occurrences:
-                            if line_num - 1 < len(new_lines):
-                                line = new_lines[line_num - 1]
-                                new_lines[line_num - 1] = line.replace(pattern, flattened_reference)
-                        processed_patterns.add(pattern)
+            # Update all references to this dictionary
+            for pattern, occurrences in self._reference_map.items():
+                if pattern.startswith(name) and pattern not in processed_patterns:
+                    for line_num, flattened_reference in occurrences:
+                        if line_num - 1 < len(new_lines):
+                            line = new_lines[line_num - 1]
+                            new_lines[line_num - 1] = line.replace(pattern, flattened_reference)
+                    processed_patterns.add(pattern)
 
-                # Update dictionary definition
-                for i, line in enumerate(lines):
-                    if re.match(rf"\s*{name}\s*=", line):
-                        new_lines[i] = " " * (len(line) - len(line.lstrip())) + dict_def
+            # Update dictionary definition
+            for i, line in enumerate(lines):
+                if re.match(rf"\s*{name}\s*=", line):
+                    new_lines[i] = " " * (len(line) - len(line.lstrip())) + dict_def
 
-                        # Remove the following lines of the original nested dictionary
-                        j = i + 1
-                        while j < len(new_lines) and (
-                            new_lines[j].strip().startswith('"')
-                            or new_lines[j].strip().startswith("}")
-                        ):
-                            new_lines[j] = ""  # Mark for removal
-                            j += 1
-                        break
+                    # Remove the following lines of the original nested dictionary
+                    j = i + 1
+                    while j < len(new_lines) and (
+                        new_lines[j].strip().startswith('"') or new_lines[j].strip().startswith("}")
+                    ):
+                        new_lines[j] = ""  # Mark for removal
+                        j += 1
+                    break
 
-            temp_file_path = temp_filename
-            # Write the refactored code to a new temporary file
-            with temp_file_path.open("w") as temp_file:
-                temp_file.writelines(new_lines)
+        temp_file_path = temp_filename
+        # Write the refactored code to a new temporary file
+        with temp_file_path.open("w") as temp_file:
+            temp_file.writelines(new_lines)
 
-            # Measure new emissions and verify improvement
-            final_emission = self.measure_energy(temp_filename)
-
-            if not final_emission:
-                logging.info(
-                    f"Could not measure emissions for '{temp_filename.name}'. Discarding refactor."
-                )
-                return
-
-            if self.check_energy_improvement(initial_emissions, final_emission):
-                if run_tests() == 0:
-                    logging.info(
-                        "Successfully refactored code. Energy improvement confirmed and tests passing."
-                    )
-                    return
-                logging.info("Tests failed! Discarding refactored changes.")
-            else:
-                logging.info("No emission improvement. Discarding refactored changes.")
-
-        except Exception as e:
-            logging.error(f"Error during refactoring: {e!s}")
-            return
+        self.validate_refactoring(
+            temp_file_path,
+            file_path,
+            initial_emissions,
+            "Long Element Chains",
+            "Flattened Dictionary",
+            pylint_smell["line"],
+        )
