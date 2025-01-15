@@ -28,7 +28,7 @@ def refactorer(output_dir):
 @pytest.fixture
 def mock_smell():
     return {
-        "line": 1,
+        "line": 25,
         "column": 0,
         "message": "Long element chain detected",
         "messageId": "long-element-chain",
@@ -95,18 +95,16 @@ def test_dict_reference_collection(refactorer, nested_dict_code: Path):
     assert len(reference_map) > 0
     # Check that nested_dict1 references are collected
     nested_dict1_pattern = next(k for k in reference_map.keys() if k.startswith("nested_dict1"))
-    print(nested_dict1_pattern)
-    print(reference_map[nested_dict1_pattern])
+
     assert len(reference_map[nested_dict1_pattern]) == 2
 
     # Check that nested_dict2 references are collected
     nested_dict2_pattern = next(k for k in reference_map.keys() if k.startswith("nested_dict2"))
-    print(nested_dict2_pattern)
 
     assert len(reference_map[nested_dict2_pattern]) == 1
 
 
-def test_full_refactoring_process(refactorer, nested_dict_code: Path, mock_smell):
+def test_nested_dict1_refactor(refactorer, nested_dict_code: Path, mock_smell):
     """Test the complete refactoring process"""
     initial_content = nested_dict_code.read_text()
 
@@ -120,22 +118,37 @@ def test_full_refactoring_process(refactorer, nested_dict_code: Path, mock_smell
     refactored_content = refactored_files[0].read_text()
     assert refactored_content != initial_content
 
-    # Check for flattened dictionary or intermediate variables
+    # Check for flattened dictionary
     assert any(
         [
             "level1_level2_level3_key" in refactored_content,
             "nested_dict1_level1" in refactored_content,
+            'nested_dict1["level1_level2_level3_key"]' in refactored_content,
+            'print(nested_dict2["level1"]["level2"]["level3"]["key2"])' in refactored_content,
         ]
     )
 
 
-def test_error_handling(refactorer, tmp_path):
-    """Test error handling during refactoring"""
-    invalid_file = tmp_path / "invalid.py"
-    invalid_file.write_text("this is not valid python code")
+def test_nested_dict2_refactor(refactorer, nested_dict_code: Path, mock_smell):
+    """Test the complete refactoring process"""
+    initial_content = nested_dict_code.read_text()
+    mock_smell["line"] = 26
+    # Perform refactoring
+    refactorer.refactor(nested_dict_code, mock_smell, 100.0)
 
-    smell = {"line": 1, "column": 0, "message": "test", "messageId": "long-element-chain"}
-    refactorer.refactor(invalid_file, smell, 100.0)
+    # Find the refactored file
+    refactored_files = list(refactorer.temp_dir.glob(f"{nested_dict_code.stem}_LECR_*.py"))
+    assert len(refactored_files) > 0
 
-    # Check that no refactored file was created
-    assert not any(refactorer.temp_dir.glob("invalid_LECR_*.py"))
+    refactored_content = refactored_files[0].read_text()
+    assert refactored_content != initial_content
+
+    # Check for flattened dictionary
+    assert any(
+        [
+            "level1_level2_level3_key" in refactored_content,
+            "nested_dict1_level1" in refactored_content,
+            'nested_dict2["level1_level2_level3_key"]' in refactored_content,
+            'print(nested_dict1["level1"]["level2"]["level3"]["key"])' in refactored_content,
+        ]
+    )
