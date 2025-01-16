@@ -192,7 +192,7 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mM}:] Measurements Module
 \end{description}
 
 
@@ -217,7 +217,7 @@ actually be implemented.
 \midrule
 
 \multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
+& Measurements Module\\
 & ?\\
 \bottomrule
 
@@ -303,6 +303,14 @@ to be implemented.
   % Changes in these modules are more likely to be motivated by a desire to
   % improve performance than by externally imposed changes.
 \item[Implemented By:] --
+\end{description}
+
+\subsection{Measurements Module}
+
+\begin{description}
+\item[Secrets:] How to measure energy consumption and carbon emissions of a given Python program using the CodeCarbon library, including managing temporary directories for storing output, executing the program, and processing the emissions data from a CSV file.
+\item[Services:] Provides functionality for measuring the energy consumption and carbon emissions of a provided code file. This module handles execution, tracking, and data extraction, ensuring that the emissions data is available for further analysis.
+\item[Implemented By:] CodeCarbonEnergyMeter
 \end{description}
 
 \subsubsection{Etc.}
