@@ -320,7 +320,19 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Pylint Analyzer Module}
+
+\begin{description}
+\item[Secrets:] The internal design and execution of static code analysis using Pylint and AST parsing, including custom detection and structuring of smells. These details are hidden from external modules.
+\item[Services:] The module provides the following services:
+  \begin{itemize}
+    \item Executes Pylint analysis on Python source code files.
+    \item Performs AST-based custom checks for specific code smells.
+    \item Filters and structures the analysis results into a standardized format for further processing.
+  \end{itemize}
+\item[Implemented By:] \texttt{EcoOptimizer}
+\end{description}
+
 
 \section{Traceability Matrix} \label{SecTM}
 
