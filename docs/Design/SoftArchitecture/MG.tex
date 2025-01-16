@@ -178,9 +178,9 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucPlatform}:] Transitioning from VS Code to another IDE. The plugin is tightly integrated with VS Code's API, making such a change complex.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucCoreLogic}:] Fundamental changes to the core logic of code smell detection. The current architecture is designed around widely accepted principles of software quality.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucPluginType}:] Changing from a plugin-based architecture to a standalone application. This would require rethinking the entire deployment and user interaction model.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
