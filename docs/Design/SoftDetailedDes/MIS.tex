@@ -227,6 +227,7 @@ The following table is taken directly from the Module Guide document for this pr
   explicitly.  Even if they are implemented, they are not exported; they only
   have local scope.}
 
+
 \section{MIS of LongElementChainRefactorer}
 
 \subsection{Module}
@@ -332,7 +333,11 @@ The MeasurementsModule is a module designed to measure and track the carbon emis
 
 \subsection{Uses}
 
-This module is used to monitor and track the carbon emissions of Python scripts, providing insights into the environmental impact of code execution. It is particularly useful for developers aiming to minimize the carbon footprint of their software projects and to incorporate energy-efficiency considerations into their development process.
+\begin{itemize}
+    \item Uses \texttt{CodeCarbon} library for track energy consumption
+    \item Uses \texttt{TemporaryDirectory} to store temporary files
+    \item Inherits from \texttt{BaseEnergyMeter}
+\end{itemize}
 
 \subsection{Syntax}
 
