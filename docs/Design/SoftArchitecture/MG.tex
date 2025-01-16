@@ -192,7 +192,7 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
 \end{description}
 
 
@@ -209,7 +209,7 @@ actually be implemented.
 \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
 & ?\\
 & ?\\
-& ?\\
+& LongElementChainRefactorer Module\\
 & ?\\
 & ?\\
 & ?\\ 
@@ -276,6 +276,21 @@ to be implemented.
   hardware-hiding module and the software decision module. The programs in this
   module will need to change if there are changes in the SRS.
 \item[Implemented By:] --
+\end{description}
+
+\subsubsection{Long Element Chain Module (\mref{mLEC})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to parse a given code file to its AST representation, traverse the 
+    AST tree to identify dictionary assignments, analyze the structure of nested dictionaries,
+     and flatten them. Additionally, it identifies all access calls associated with these dictionaries
+      in the source code and determines how to update them to reflect the new flattened structure.
+    \item[Services:] Detects nested dictionaries in the source code using AST parsing, simplifies their 
+    structure by flattening them, and updates all associated access calls throughout the file. This improves 
+    code readability, reduces complexity, and ensures correctness while maintaining the program's intended behavior.
+    \item[Implemented By:] EcoOptimizer
 \end{description}
 
 \subsubsection{Input Format Module (\mref{mInput})}

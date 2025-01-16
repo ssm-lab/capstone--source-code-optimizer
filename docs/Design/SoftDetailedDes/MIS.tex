@@ -227,7 +227,104 @@ The following table is taken directly from the Module Guide document for this pr
   explicitly.  Even if they are implemented, they are not exported; they only
   have local scope.}
 
+
+\section{MIS of LongElementChainRefactorer}
+
+\subsection{Module}
+
+LongElementChainRefactorer is a module that refactors long element chains, specifically focusing on flattening nested dictionaries to improve readability, maintainability, and energy efficiency. The module uses a recursive flattening strategy while caching previously seen patterns for optimization.
+
+\subsection{Uses}
+
+\begin{itemize}
+    \item Uses \texttt{Smell} interface for data access
+    \item Inherits from \texttt{BaseRefactorer}
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{|p{3cm}|p{5cm}|p{2cm}|p{3cm}|}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\
+\hline
+\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: float} & None & Logging exceptions \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \textbf{\_reference\_map}: Maps element chain references to their line numbers and corresponding values.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item \textbf{File system}: Used to read, write, and store temporary and refactored files.
+  \item \textbf{Logger}: Logs information during the refactoring process.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Input files are valid Python scripts.
+  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
+  \item Refactored code must pass the provided test suite.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
+\begin{itemize}
+\item \textbf{Transition}: Initializes the refactorer with the specified output directory and sets up internal caching structures.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{Transition}:
+    \begin{itemize}
+      \item Reads the file at \texttt{file\_path}.
+      \item Identifies nested dictionary chains for flattening.
+      \item Refactors the identified chain by flattening the dictionary and replacing its occurrences.
+      \item Writes the refactored code to a temporary file.
+\end{itemize}
+  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
+  \item \textbf{Exception}: Logs exceptions during file operations or refactoring.
+\end{itemize}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+    \item \textbf{\_flatten\_dict(d: dict[str, Any], parent\_key: str = "")} \\
+    Recursively flattens a nested dictionary by combining keys with underscores.
+
+    \item \textbf{\_extract\_dict\_literal(node: ast.AST)} \\
+    Converts an Abstract Syntax Tree (AST) dictionary literal into a Python dictionary.
+
+    \item \textbf{\_find\_dict\_assignments(tree: ast.AST, name: str)} \\
+    Extracts dictionary assignments given the name of the dictionary from the AST and returns them as a dictionary.
+
+    \item \textbf{\_collect\_dict\_references(tree: ast.AST)} \\
+    Identifies and stores all dictionary access patterns in the `\_reference\_map`.
+
+    \item \textbf{\_generate\_flattened\_access(base\_var: str, access\_chain: list[str])} \\
+    Generates a flattened dictionary key string by combining elements of an access chain with underscores.
+\end{itemize}
+  
 \newpage
+
 
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
