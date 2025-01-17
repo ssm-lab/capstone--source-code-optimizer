@@ -1411,6 +1411,380 @@ None
   \item \texttt{\_find\_insert\_line(parent\_node)}: Determines the line to insert the cached variable.
 \end{itemize}
 
+\section{MIS of Plugin Initiator}
+
+\subsection{Module}
+\texttt{Plugin Initiator} is a module that initializes the VS Code plugin and registers commands for VS Code Plugin.
+
+\subsection{Uses}
+\begin{itemize}
+    \item \texttt{Smell Detector} to register the command for detecting code smells.
+    \item \texttt{Smell Refactorer} to register the command for refactoring user's selected code smell.
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None\\
+\noindent \textbf{Exported Access Programs:}
+None
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+    \item \textbf{VS CODE API}: Used to register commands.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item The plugin is correctly loaded in VS Code.
+\item Source Code Optimizer executable is reachable and operational.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{activate()}
+\begin{itemize}
+\item \textbf{Transition}: Activates the plugin and registers commands.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Backend Communicator}
+
+\subsection{Module}
+\texttt{BackendCommunicator} handles all communication between the plugin and the backend service. It sends requests for analysis or refactoring and receives results.
+
+\subsection{Uses}
+Source Code Optimizer executable for energy measurement, smell detection and refactoring of applications.
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\noindent \textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{sendRequest} & \texttt{requestType: string, data: any} & Promise & Communication Error \\
+  \bottomrule
+\end{tabularx}
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \textbf{NETWORK}: Used for communicating with Source Code Optimizer.
+\item \textbf{LOGGER}: Logs any communication errors.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item Source Code Optimizer executable is reachable and operational.
+\item Python file with no syntax errors is present in the VS Code editor.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{sendRequest(requestType: string, data: any)}
+\begin{itemize}
+\item \textbf{Transition}: Sends the provided request to Source Code Optimizer and receives a response.
+\item \textbf{Output}: A promise that resolves with Source Code Optimizer's response.
+\item \textbf{Exception}: Logs any errors encountered during communication.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Smell Detector}
+
+\subsection{Module}
+\texttt{Smell Detector} analyzes the active file for code smells and interacts with Source Code Optimizer for detection.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{Backend Communicator} for communicating with Source Code Optimizer for smell detection.
+\item \texttt{File Highlighter} for highlighting detected smells in the editor.
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{detect} & None & None & Active file not found \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \textbf{EDITOR}: Used to access the active file.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item There is an active Python file with no syntax error in the editor.
+\item Source Code Optimizer correctly identifies smells.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{detect()}
+\begin{itemize}
+\item \textbf{Transition}: Reads the active file, sends it to Source Code Optimizer for analysis, and highlights detected smells in the editor.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: Throws an error if no active file is found.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Smell Refactorer}
+
+\subsection{Module}
+\texttt{Smell Refactorer} applies a refactoring to a detected smell.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{Backend Communicator} for sending the smell data to Source Code Optimizer for refactoring.
+\item \texttt{Refactor Manager} for managing refactoring workflows.
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{refactor} & {smell: Smell} & None & Invalid input \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \textbf{EDITOR}: Used to apply refactored changes.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item The smell data is valid and correctly identifies a refactorable issue.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{refactor(smell: Smell)}
+\begin{itemize}
+\item \textbf{Transition}: Sends the smell data to the backend for refactoring and applies the changes in the editor.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: Logs errors for invalid inputs or failed refactoring.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of File Highlighter}
+
+\subsection{Module}
+\texttt{File Highlighter} is a module that manages highlighting of code regions in the VS Code editor.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{Smell Detector} for marking detected smells in the editor.
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\noindent \textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{highlight} & \texttt{range: range[]} & None & None \\ \hline
+  \texttt{clear} & \texttt{None} & None & None \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{highlightedRanges}: Stores the currently highlighted regions in the editor.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \textbf{EDITOR}: Used to apply and clear highlights.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item The VS Code editor is active and accessible.
+\item Python file with no syntax errors is currently open in the editor.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{highlight(ranges: Range[])}
+\begin{itemize}
+\item \textbf{Transition}: Adds highlights to the specified ranges in the editor.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\texttt{clear()}
+\begin{itemize}
+\item \textbf{Transition}: Removes all highlights from the editor.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Hover Manager}
+
+\subsection{Module}
+\texttt{Hover Manager} manages hover effects to display contextual information.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{File Highlighter} for providing contextual information about highlighted smells.
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{showHover} & \texttt{position: Position} & None & None \\ \hline
+  \texttt{clearHover} & \texttt{None} & None & None \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{currentHover}: Stores the currently displayed hover information.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \textbf{EDITOR}: Used to display hover effects.
+\end{itemize}
+
+\subsubsection{Assumptions}
+None
+
+\subsubsection{Access Routine Semantics}
+\texttt{showHover(position: Position)}
+\begin{itemize}
+\item \textbf{Transition}: Displays hover information at the specified position.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\texttt{clearHover()}
+\begin{itemize}
+\item \textbf{Transition}: Clears any active hover information.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Refactor Manager}
+
+\subsection{Module}
+\texttt{Refactor Manager} manages the process of applying refactorings to detected smells.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{Smell Refactorer} for sending smell data to the backend for refactoring.
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{applyRefactor} & \texttt{refactor: Refactor} & None & Validation error \\ \hline
+  \texttt{previewRefactor} & \texttt{refactor: Refactor} & None & None \\ \hline
+  \texttt{undoRefactor} & None & None & None \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{appliedRefactors}: Stores a history of applied refactors.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \textbf{EDITOR}: Used to apply and preview refactors.
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item The refactoring data is valid and corresponds to detected smells.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{applyRefactor(refactor: Refactor)}
+\begin{itemize}
+\item \textbf{Transition}: Applies the provided refactor to the active editor.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: Logs validation errors if the refactor cannot be applied.
+\end{itemize}
+
+\texttt{previewRefactor(refactor: Refactor)}
+\begin{itemize}
+\item \textbf{Transition}: Displays a preview of the refactor in the editor.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\texttt{undoRefactor()}
+\begin{itemize}
+\item \textbf{Transition}: Reverts the most recently applied refactor.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
 
