@@ -169,7 +169,10 @@ original functionality.
 
 \subsection{Uses}
 
-Simplify complex method chaining to improve decrease code CO2 emissions.
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+\end{itemize}
 
 \subsection{Syntax}
 
@@ -183,7 +186,7 @@ None
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\
+\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & LongMessageChainRefactorer & None \\
 \hline
 \texttt{remove\_unmatched\_brackets} & \texttt{input\_string: str} & \texttt{str} & None \\
 \hline
@@ -198,10 +201,7 @@ None
 \subsubsection{State Variables}
 
 \begin{itemize}
-  \item \textbf{output\_dir}: Directory where refactored files are stored.
-
   \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
-  
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -225,7 +225,7 @@ None
 \paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
 \begin{itemize}
 \item \textbf{Transition}: Initializes the refactorer with the specified output directory.
-\item \textbf{Output}: None.
+\item \textbf{Output}: LongMessageChainRefactorer.
 \item \textbf{Exception}: None.
 \end{itemize}
 
@@ -291,8 +291,6 @@ None
 \subsubsection{State Variables}
 
 \begin{itemize}
-  \item \textbf{output\_dir}: Directory where refactored files are stored.
-
   \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
 \end{itemize}
 
