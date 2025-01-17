@@ -249,7 +249,7 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum \label{mLPL}:] LongParameterListRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
-\item [\refstepcounter{mnum} \mthemnum \label{mExe}:] Extension Initiator Module
+\item [\refstepcounter{mnum} \mthemnum \label{mExe}:] Plugin Initiator Module
 \item [\refstepcounter{mnum} \mthemnum \label{mBac}:] Backend Communicator Module
 \item [\refstepcounter{mnum} \mthemnum \label{mDet}:] Smell Detector Module
 \item [\refstepcounter{mnum} \mthemnum \label{mRef}:] Smell Refactorer  Module
@@ -277,7 +277,7 @@ actually be implemented.
 & UseAGeneratorRefactorer Module\\
 & LongElementChainRefactorer Module\\
 & LongParameterListRefactorer Module\\
-& ExtensionInitiator Module\\
+& PluginInitiator Module\\
 & BackendCommunicator Module\\ 
 & SmellDetector Module\\
 & FileHighlighter Module\\
@@ -408,6 +408,55 @@ This system has no hardware components.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
+\subsubsection{Plugin Initiator Module (\mref{mExe})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to initialize the plugin, set up the environment for interaction, and handle configurations for plugin commands.
+    \item[Services:] Initializes and manages the plugin's setup, enabling its functionality without exposing the underlying initialization logic.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{Backend Communicator(\mref{mBac})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to establish communication between the plugin and Source Code Optimizer, handle requests, and process responses.
+    \item[Services:] Provides an interface for sending requests to and receiving responses from Source Code Optimizer. Abstracts the communication details from modules within the plugin.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{Smell Detector(\mref{mDet})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to analyze Python code in active VS Code editor by accessing Source Code Optimizer endpoint.
+    \item[Services:] Detects code smells in Python scripts using Source Code Optimizer and provides structured data for further processing based on received output.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{File Highlighter Module(\mref{mHig})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to identify code regions requiring attention and how to highlight those regions in the file.
+    \item[Services:] Highlights areas in files that contain code smells and can be refactored, assisting developers in identifying problem areas quickly.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{Hover Manager Module(\mref{mHov})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to detect hover events, retrieve relevant information dynamically, and present tooltips based on hovered elements.
+    \item[Services:] Manages hover interactions and displays contextual information for elements within the user interface.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
 
 \subsection{Software Decision Module}
 
@@ -449,7 +498,7 @@ This system has no hardware components.
 \item[Implemented By:] EcoOptimizer
 \end{description}
 
-\subsubsection{Measurements Module}
+\subsubsection{Measurements Module (\mref{mM})}
 
 \begin{description}
 \item[Secrets:] How to measure energy consumption and carbon emissions of a given Python program using the CodeCarbon library, including managing temporary directories for storing output, executing the program, and processing the emissions data from a CSV file.
@@ -480,7 +529,25 @@ This system has no hardware components.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
+\subsubsection{Smell Refactorer Module (\mref{mRef})}
 
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to utilize Source Code Optimizer endpoint for refactoring specific code smells, and how to sanitize received output.
+    \item[Services:] Refactors code smells in Python scripts using Source Code Optimizer and determines if received output is valid format.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{Refactor Manager Module (\mref{mMan})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to manage the sequence of refactorings, coordinate the application of refactoring techniques, validate results after each step and revert at any stage.
+    \item[Services:] Decides if refactored result of Python code should be updated in the code editor window. Determines if refactoring should be reverted if needed by user.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 

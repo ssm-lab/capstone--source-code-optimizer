@@ -1411,10 +1411,10 @@ None
   \item \texttt{\_find\_insert\_line(parent\_node)}: Determines the line to insert the cached variable.
 \end{itemize}
 
-\section{MIS of Extension Initiator}
+\section{MIS of Plugin Initiator}
 
 \subsection{Module}
-\texttt{Extension Initiator} is a module that initializes the extension and registers commands for VS Code Plugin.
+\texttt{Plugin Initiator} is a module that initializes the VS Code plugin and registers commands for VS Code Plugin.
 
 \subsection{Uses}
 \begin{itemize}
@@ -1441,14 +1441,14 @@ None
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item The extension is correctly loaded in VS Code.
+\item The plugin is correctly loaded in VS Code.
 \item Source Code Optimizer executable is reachable and operational.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 \texttt{activate()}
 \begin{itemize}
-\item \textbf{Transition}: Activates the extension and registers commands.
+\item \textbf{Transition}: Activates the plugin and registers commands.
 \item \textbf{Output}: None.
 \item \textbf{Exception}: None.
 \end{itemize}
@@ -1459,7 +1459,7 @@ None
 \section{MIS of Backend Communicator}
 
 \subsection{Module}
-\texttt{BackendCommunicator} handles all communication between the extension and the backend service. It sends requests for analysis or refactoring and receives results.
+\texttt{BackendCommunicator} handles all communication between the plugin and the backend service. It sends requests for analysis or refactoring and receives results.
 
 \subsection{Uses}
 Source Code Optimizer executable for energy measurement, smell detection and refactoring of applications.
