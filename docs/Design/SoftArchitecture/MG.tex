@@ -46,8 +46,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 17th, 2025 & 0.1 & Initial draft\\
 \bottomrule
 \end{tabularx}
 
@@ -74,7 +73,11 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  VS & Visual Studio\\
+  API & Application Programing Interface\\
+  IDE & Integrated Development Environment\\
+  AST & Abstract Syntax Tree\\
+  CSV & Comma-Separated Values\\
   \bottomrule
 \end{tabular}\\
 
@@ -235,27 +238,26 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLMC}:] LongMessageChainRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLLF}:] LongLambdaFunctionRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mM}:] Measurements Module
-\item [\refstepcounter{mnum} \mthemnum \label{mSmell}:] Smell Module
-\item [\refstepcounter{mnum} \mthemnum \label{mBR}:] BaseRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mMIMR}:] MakeStaticRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mSCLR}:] UseListAccumulationRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mUGENR}:] UseAGeneratorRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mCRC}:] CacheRepeatedCallsRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLPL}:] LongParameterListRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
-\item [\refstepcounter{mnum} \mthemnum \label{mExe}:] Plugin Initiator Module
-\item [\refstepcounter{mnum} \mthemnum \label{mBac}:] Backend Communicator Module
-\item [\refstepcounter{mnum} \mthemnum \label{mDet}:] Smell Detector Module
-\item [\refstepcounter{mnum} \mthemnum \label{mRef}:] Smell Refactorer  Module
-\item [\refstepcounter{mnum} \mthemnum \label{mHig}:] File Highlighter Module
-\item [\refstepcounter{mnum} \mthemnum \label{mHov}:] Hover Manager Module
-\item [\refstepcounter{mnum} \mthemnum \label{mMan}:] Refactor Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSmell}:] Smell Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mBR}:] BaseRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mMIMR}:] MakeStaticRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSCLR}:] UseListAccumulationRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mUGENR}:] UseAGeneratorRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCRC}:] CacheRepeatedCallsRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLPL}:] LongParameterListRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLMC}:] LongMessageChainRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLLF}:] LongLambdaFunctionRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mExe}:] Plugin Initiator Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mBac}:] Backend Communicator Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mDet}:] Smell Detector Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mHig}:] File Highlighter Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mHov}:] Hover Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mMeasure}:] Measurements Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mRef}:] Smell Refactorer  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mMan}:] Refactor Manager Module
 \end{description}
 
 
@@ -271,12 +273,14 @@ actually be implemented.
 
 \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
 & BaseRefactorer Module\\
-& CacheRepeatedCallsRefactorer Module\\
 & MakeStaticRefactorer Module\\
 & UseListAccumulationRefactorer Module\\
 & UseAGeneratorRefactorer Module\\
+& CacheRepeatedCallsRefactorer Module\\
 & LongElementChainRefactorer Module\\
 & LongParameterListRefactorer Module\\
+& LongMessageChainRefactorer Module\\
+& LongLambdaFunctionRefactorer Module\\ 
 & PluginInitiator Module\\
 & BackendCommunicator Module\\ 
 & SmellDetector Module\\
@@ -284,9 +288,10 @@ actually be implemented.
 & HoverManager Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Pylint Analyzer Module\\
+
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
+& PylintAnalyzer Module\\
 & Testing Functionality Module\\
-& Measurements Module\\
 & SmellRefactorer Module\\
 & RefactorManager Module\\
 \bottomrule
@@ -408,6 +413,32 @@ This system has no hardware components.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
+\subsubsection{Long Message Chain Refactorer (\mref{mLMC})}
+
+
+\begin{description}
+    \item[Secrets:] Understanding the syntax and structure of Python code to identify/classify long message chains, including both f-strings and non-f-string chains. This involves parsing the target file, extracting method calls from identified long chains, and systematically breaking them into separate statements while preserving the original functionality and indentation. Additionally, it ensures unmatched brackets are corrected during refactoring.
+    
+    \item[Services:] Detects long message chains in Python source code and refactors them by splitting the chain into intermediate variables and a final result. This improves code readability and maintainability while retaining the original program behavior. 
+
+    \item[Implemented By:] EcoOptimizer
+    \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long message chains in Python code.
+   
+\end{description}
+
+\subsubsection{Long Lambda Function Refactorer (\mref{mLLF})}
+
+
+\begin{description} 
+  \item[Secrets:] Understanding the syntax and structure of Python code to identify long lambda functions. This includes parsing the target file to locate lambda expressions, extracting their arguments and bodies, and converting them into standard Python function definitions. The module ensures proper handling of nested structures (e.g., parentheses, brackets, and braces) within the lambda body, and truncates overly complex expressions at the first top-level comma for readability.
+
+  \item[Services:] Detects components of long lambda functions in Python source code and refactors them by converting the lambda expression into a standalone function with a unique name. This improves code readability, debugging, and maintainability. The module inserts the newly defined function in the appropriate scope, updates the original lambda usage with a function call, and validates the refactored code by maintaining its functionality and measuring energy efficiency improvements.
+
+  \item[Implemented By:] EcoOptimizer
+  
+  \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long lambda functions in Python code.
+\end{description}
+
 \subsubsection{Plugin Initiator Module (\mref{mExe})}
 
 % [Record, Library, Abstract Object, or Abstract Data Type]
@@ -460,45 +491,7 @@ This system has no hardware components.
 
 \subsection{Software Decision Module}
 
-\subsubsection{Long Message Chain Refactorer (\mref{mLMC})}
-
-
-\begin{description}
-    \item[Secrets:] Understanding the syntax and structure of Python code to identify/classify long message chains, including both f-strings and non-f-string chains. This involves parsing the target file, extracting method calls from identified long chains, and systematically breaking them into separate statements while preserving the original functionality and indentation. Additionally, it ensures unmatched brackets are corrected during refactoring.
-    
-    \item[Services:] Detects long message chains in Python source code and refactors them by splitting the chain into intermediate variables and a final result. This improves code readability and maintainability while retaining the original program behavior. 
-
-    \item[Implemented By:] EcoOptimizer
-    \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long message chains in Python code.
-   
-\end{description}
-
-\subsubsection{Long Lambda Function Refactorer (\mref{mLLF})}
-
-
-\begin{description} 
-  \item[Secrets:] Understanding the syntax and structure of Python code to identify long lambda functions. This includes parsing the target file to locate lambda expressions, extracting their arguments and bodies, and converting them into standard Python function definitions. The module ensures proper handling of nested structures (e.g., parentheses, brackets, and braces) within the lambda body, and truncates overly complex expressions at the first top-level comma for readability.
-
-  \item[Services:] Detects components of long lambda functions in Python source code and refactors them by converting the lambda expression into a standalone function with a unique name. This improves code readability, debugging, and maintainability. The module inserts the newly defined function in the appropriate scope, updates the original lambda usage with a function call, and validates the refactored code by maintaining its functionality and measuring energy efficiency improvements.
-
-  \item[Implemented By:] EcoOptimizer
-  
-  \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long lambda functions in Python code.
-\end{description}
-
-
-\begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Measurements Module (\mref{mM})}
+\subsubsection{Measurements Module (\mref{mMeasure})}
 
 \begin{description}
 \item[Secrets:] How to measure energy consumption and carbon emissions of a given Python program using the CodeCarbon library, including managing temporary directories for storing output, executing the program, and processing the emissions data from a CSV file.
@@ -557,26 +550,159 @@ requirements and between the modules and the anticipated changes.
 % the table should use mref, the requirements should be named, use something
 % like fref
 \begin{table}[H]
-\centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Req.} & \textbf{Modules}\\
-\midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
-\bottomrule
-\end{tabular}
-\caption{Trace Between Requirements and Modules}
-\label{TblRT}
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule
+    \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    FR1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    FR2 & \mref{mSmell}, \mref{mPyA}\\
+    FR3 & \mref{mTest}\\
+    FR4 & \mref{mTest}\\
+    FR5 & \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}\\
+    FR6 & \mref{mTest}\\
+    FR7 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA},\\
+    FR8 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    FR9 & To be removed\\
+    FR10 & Not implemented in code\\
+    FR11 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    FR12 & To be removed\\
+    FR13 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Functional Requirements and Modules}
+  \label{tab:fr-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Look and Feel
+    LFR-AP 1-4 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    LFR-AP 5 & To be removed\\ 
+    LFR-ST 1-3 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Look \& Feel Requirements and Modules}
+  \label{tab:LFR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Usability and Humanity
+    UHR-PS1 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-PS1 2 & Not implemented in code\\ 
+    UHR-LRN 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-LRN 2 & Not implemented in code\\ 
+    UHR-ACS 1-2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-EOU 1-2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-UPL 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Usability \& Humanity Requirements and Modules}
+  \label{tab:UHR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Performance
+    PR-SL 1 & \mref{mPyA}\\
+    PR-SL 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    PR-CR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
+    PR-SCR 1 \mref{mTest}& \\ 
+    PR-PAR 1 & \mref{mTest}\\ 
+    PR-PAR 2 & \mref{mPyA}\\ 
+    PR-PAR 3 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\ 
+    PR-RFT 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
+    PR-RFT 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    PR-SER 1 & \mref{mBR}\\ 
+    PR-LR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Performance Requirements and Modules}
+  \label{tab:PR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Operational and Environmental
+    OER-EP 1 & N/A\\
+    OER-EP 2 & N/A\\
+    OER-WE 1 & \mref{mMeasure}\\
+    OER-IAS 1 & To be removed\\
+    OER-IAS 2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    OER-IAS 3 & To be removed\\
+    OER-PR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    OER-RL 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    OER-RL 2 & N/A\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Operational \& Environmental Requirements and Modules}
+  \label{tab:OPE-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Maintenance and Support
+    MS-MNT 1 & \mref{mBR}\\
+    MS-MNT 2 & Not implemented in code\\
+    MS-MNT 3 & None \\
+    MS-MNT 4 & N/A\\
+    MS-MNT 5 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    MS-SP 1 & Not implemented in code\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Maintenance \& Support Requirements and Modules}
+  \label{tab:MS-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Security
+    SR-AR 1 & To be removed\\
+    SR-AR 2 & \mref{mMeasure}\\
+    SR-IR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    SR-PR 1 & N/A\\
+    SR-PR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    SR-AUR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    SR-AUR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    SR-IM 1 & N/A\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Security Requirements and Modules}
+  \label{tab:SR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Cultural
+    CULT 1-3 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    CL-LR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    CL-SCR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Cultural and Compliance Requirements and Modules}
+  \label{tab:CUL-COMP-mod}
 \end{table}
 
 \begin{table}[H]
@@ -585,11 +711,11 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
   \toprule
   \textbf{AC} & \textbf{Modules}\\
   \midrule
-  \acref{acUserInterface} & \mref{mExe}, \mref{mHig} , \mref{mHov}, \mref{mMan} \\ \hline
-  \acref{acVSCodePlugin} & \mref{mExe} , \mref{mRef}, \mref{mMan} \\ \hline
-  \acref{acRefactorers} & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLPL} \\ \hline
-  \acref{acSmell} & \mref{mDet}, \mref{mPyA} \\ \hline
-  \acref{acAnalyzer} & \mref{mM}, \mref{mPyA}, \mref{mDet} \\ \hline
+  \acref{acUserInterface} & \mref{mExe}, \mref{mHig} , \mref{mHov}, \mref{mMan} \\
+  \acref{acVSCodePlugin} & \mref{mExe} , \mref{mRef}, \mref{mMan} \\
+  \acref{acRefactorers} & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLPL} \\
+  \acref{acSmell} & \mref{mDet}, \mref{mPyA} \\
+  \acref{acAnalyzer} & \mref{mMeasure}, \mref{mPyA}, \mref{mDet} \\
   \acref{acTesting} & \mref{mTest}  \\ 
   \bottomrule
   \end{tabular}
