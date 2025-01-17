@@ -244,6 +244,7 @@ actually be implemented.
 \item [\refstepcounter{mnum} \mthemnum \label{mUGENR}:] UseAGeneratorRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mCRC}:] CacheRepeatedCallsRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
+\item [\refstepcounter{mnum} \mthemnum \label{mLPL}:] LongParameterListRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
 \end{description}
@@ -268,7 +269,7 @@ actually be implemented.
 & UseAGeneratorRefactorer Module\\
 & ?\\
 & LongElementChainRefactorer Module\\
-& ?\\
+& LongParameterListRefactorer Module\\
 & ?\\
 & ?\\ 
 & ?\\
@@ -388,6 +389,17 @@ This system has no hardware components.
     code readability, reduces complexity, and ensures correctness while maintaining the program's intended behavior.
     \item[Implemented By:] EcoOptimizer
 \end{description}
+
+\subsubsection{Long Parameter List Module (\mref{mLPL})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to parse a given code file to its AST representation, traverse the AST tree to identify functions or methods with long parameter lists, and encapsulate related parameters into objects or structures. Additionally, it identifies all function or method calls associated with these functions and updates their arguments to align with the refactored signature.
+    \item[Services:] Detects long parameter lists in functions or methods using AST parsing, simplifies their structure by grouping related parameters into objects or structures, and updates all associated function or method calls throughout the file. This improves code readability, reduces complexity, and ensures correctness while maintaining the program’s intended behavior.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
 
 \subsection{Software Decision Module}
 
@@ -548,7 +560,7 @@ All code and corresponding documentation was aimed to be completed before Jan 6t
   Long Message Chain                  & Mya Hussain              & Jan 6, 2025     \\ \hline
   Member Ignoring Method              & Sevhena Walker             & Jan 6, 2025     \\ \hline
   Repeated Calls                      & Nivetha Kuruparan               & Jan 6, 2025     \\ \hline
-  String Concatenation in Loop        & Team Member 8              & Jan 6, 2025     \\ \hline
+  String Concatenation in Loop        & Sevhena Walker              & Jan 6, 2025     \\ \hline
   Long Parameter List                 & Tanveer Brar              & Jan 6, 2025     \\ \hline
   Smell                               & All             & Jan 31, 2025    \\ \hline
   Analyzers                           & All            & Jan 31, 2025      \\ \hline
