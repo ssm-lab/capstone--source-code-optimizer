@@ -46,8 +46,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 17th, 2025 & 0.1 & Initial draft\\
 \bottomrule
 \end{tabularx}
 
@@ -74,7 +73,11 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  VS & Visual Studio\\
+  API & Application Programing Interface\\
+  IDE & Integrated Development Environment\\
+  AST & Abstract Syntax Tree\\
+  CSV & Comma-Separated Values\\
   \bottomrule
 \end{tabular}\\
 
@@ -235,20 +238,19 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLMC}:] LongMessageChainRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLLF}:] LongLambdaFunctionRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mM}:] Measurements Module
-\item [\refstepcounter{mnum} \mthemnum \label{mSmell}:] Smell Module
-\item [\refstepcounter{mnum} \mthemnum \label{mBR}:] BaseRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mMIMR}:] MakeStaticRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mSCLR}:] UseListAccumulationRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mUGENR}:] UseAGeneratorRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mCRC}:] CacheRepeatedCallsRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mLPL}:] LongParameterListRefactorer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
-\item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSmell}:] Smell Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mBR}:] BaseRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mMIMR}:] MakeStaticRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSCLR}:] UseListAccumulationRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mUGENR}:] UseAGeneratorRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCRC}:] CacheRepeatedCallsRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLPL}:] LongParameterListRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLMC}:] LongMessageChainRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLLF}:] LongLambdaFunctionRefactorer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mMeasure}:] Measurements Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
 \end{description}
 
 
@@ -264,25 +266,20 @@ actually be implemented.
 
 \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
 & BaseRefactorer Module\\
-& CacheRepeatedCallsRefactorer Module\\
 & MakeStaticRefactorer Module\\
 & UseListAccumulationRefactorer Module\\
-& ?\\
 & UseAGeneratorRefactorer Module\\
-& ?\\
+& CacheRepeatedCallsRefactorer Module\\
 & LongElementChainRefactorer Module\\
 & LongParameterListRefactorer Module\\
-& ?\\
-& ?\\ 
-& ?\\
+& LongMessageChainRefactorer Module\\
+& LongLambdaFunctionRefactorer Module\\ 
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& Measurements Module\\
-& ?\\
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Pylint Analyzer Module\\
+
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
+& PylintAnalyzer Module\\
 & Testing Functionality Module\\
-& Measurements Module\\
 \bottomrule
 
 \end{tabular}
@@ -402,9 +399,6 @@ This system has no hardware components.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
-
-\subsection{Software Decision Module}
-
 \subsubsection{Long Message Chain Refactorer (\mref{mLMC})}
 
 
@@ -431,28 +425,15 @@ This system has no hardware components.
   \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long lambda functions in Python code.
 \end{description}
 
+\subsection{Software Decision Module}
 
-\begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
-\end{description}
-
-\subsection{Measurements Module}
+\subsubsection{Measurements Module (\mref{mMeasure})}
 
 \begin{description}
 \item[Secrets:] How to measure energy consumption and carbon emissions of a given Python program using the CodeCarbon library, including managing temporary directories for storing output, executing the program, and processing the emissions data from a CSV file.
 \item[Services:] Provides functionality for measuring the energy consumption and carbon emissions of a provided code file. This module handles execution, tracking, and data extraction, ensuring that the emissions data is available for further analysis.
 \item[Implemented By:] CodeCarbonEnergyMeter
 \end{description}
-
-\subsubsection{Etc.}
-\subsubsection{Pylint Analyzer Module}
 
 \subsubsection{Pylint Analyzer Module (\mref{mPyA})}
 
