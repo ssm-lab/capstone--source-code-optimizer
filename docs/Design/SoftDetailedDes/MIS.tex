@@ -649,10 +649,35 @@ graduate attribute of Problem Analysis and Design.
   or a proxy (e.g. your peers, stakeholders, potential users)? For those that
   were not, why, and where did they come from?}
 
+  The decision to modularize the refactorers into specific "smell-focused" 
+  components was largely inspired by a conversation with our supervisor, 
+  who is also our primary stakeholder. During one of our discussions, our 
+  supervisor suggested that the problem at hand had the potential to 
+  evolve into a graduate-level reinforcement learning project. This 
+  idea of managing multiple refactoring strategies and selecting the 
+  best one based on certain conditions led to the insight that 
+  organizing the refactorers by the specific types of code smells 
+  they address would make the system more extensible. By focusing 
+  each component on a particular code smell, we could later build 
+  upon the design and possibly incorporate machine learning or 
+  reinforcement learning strategies to optimize refactorer selection. 
+  This modular approach would allow for easier integration of additional 
+  strategies in the future, making the tool scalable as the project evolves.
+
+
+  Another important design decision influenced by our supervisor was the 
+  idea to validate the refactored code using a test suite. Our supervisor 
+  emphasized that in a real-world application, validating the integrity 
+  of the refactored code with a comprehensive test suite was a crucial step. 
+
+  Both of these design decisions were informed by valuable input from our 
+  supervisor, ensuring that the project stayed grounded in real-world 
+  applicability and allowed for future enhancements and improvements.
 
 
   \item \textit{While creating the design doc, what parts of your other documents (e.g.
   requirements, hazard analysis, etc), it any, needed to be changed, and why?}
+  \textbf{CAN SOMEONE DO THIS ONE PLS}
 
 
   \item \textit {What are the limitations of your solution?  Put another way, given unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)}
