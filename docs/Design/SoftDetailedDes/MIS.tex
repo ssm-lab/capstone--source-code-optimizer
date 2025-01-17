@@ -1121,6 +1121,8 @@ None
   \item \texttt{\_find\_insert\_line(parent\_node)}: Determines the line to insert the cached variable.
 \end{itemize}
 
+\newpage
+
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
 
@@ -1176,8 +1178,8 @@ graduate attribute of Problem Analysis and Design.
 
   \item \textit{While creating the design doc, what parts of your other documents (e.g.
   requirements, hazard analysis, etc), it any, needed to be changed, and why?}
-  \textbf{CAN SOMEONE DO THIS ONE PLS}
-
+  
+  While creating the design document, several components of the project were revised to improve clarity and focus. Specifically, the list of code smells targeted by the refactoring library was refined by adding new smells that align more closely with our sustainability goals and removing others deemed less impactful. This required updates to the requirements document to ensure it accurately reflected the new scope of supported refactorings. Additionally, the decision was made to remove the metric reporting functionality due to its complexity and limited time, which led to corresponding modifications in both the requirements document and the VnV plan, where this feature had previously been considered for validation. Moreover, the reinforcement learning model, initially intended to optimise refactoring decisions, was excluded from the project due to time constraints and implementation challenges. This necessitated updates to the hazard analysis document to remove risks associated with this component and to better align the analysis with the reduced project scope. These changes ensure consistency and maintain a realistic and achievable project timeline. 
 
   \item \textit {What are the limitations of your solution?  Put another way, given unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)}
 
@@ -1248,7 +1250,7 @@ graduate attribute of Problem Analysis and Design.
 
 \end{enumerate}
 
-\subsubsection*{Mya Hussain Reflection}
+\subsubsection*{Mya Hussain}
 
 \begin{enumerate}
   \item \textit{What went well while writing this deliverable? }
@@ -1271,14 +1273,16 @@ graduate attribute of Problem Analysis and Design.
     
 \end{enumerate}
 
-\subsubsection*{Someone else Reflection}
+\subsubsection*{Sevhena Walker}
 
 \begin{enumerate}
   \item \textit{What went well while writing this deliverable? }
 
-    
+  Our team already had a pretty solid idea of how we wanted to break up our system, as well as the key components that should be involved, even before we started working on the MG and MIS documents. We had already coded a decent portion of the system and, in doing so, had explored and tested various design approaches and options. This hands-on experience gave us a strong foundation and a practical understanding of what worked and what didn’t, which significantly influenced our final design choices. For example, we had already determined that the refactorers would be structured as individual classes inheriting from a common base class, which simplified documenting shared functionality in the MIS.
 
   \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+  
+  One of the biggest pain points was turning our informal design ideas and code into well-defined, modular components with clear inputs, outputs, and semantics. We had to carefully review the existing code to make sure the documentation matched its behaviour while keeping things flexible for future changes. We also ran into some inconsistencies that required minor refactoring to clean up our interfaces. Another tricky part was finding the right balance between providing enough detail and keeping the documentation readable without going too deep into implementation. We tackled these problems by reviewing everything multiple times, getting feedback, and simplifying where we could to make things clearer.
 
     
 \end{enumerate}
