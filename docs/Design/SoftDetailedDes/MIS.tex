@@ -1611,5 +1611,25 @@ graduate attribute of Problem Analysis and Design.
   
 \end{enumerate}
 
+\subsection*{Tanveer Brar}
+
+\begin{enumerate}
+  \item \textit{What went well while writing this deliverable? }
+  The best part about writing this deliverable was getting the chance to design the user interface before having implemented it. The Source Code Optimizer has already been designed
+  and implemented as a result of the POC assignment in November. We had not implemented the VS Code Plugin for it yet, so getting the chance to actually think about its 
+  design was very rewarding(especially since most academic projects I have done before either involved no design component or very minimal for a small program). Each modules has clear 
+  responsibilities, which helped me anticipate all needed requirements for this plugin through a logical framework(POC implementation was a lot of trial and error).
+  The other good thing were the built in labels for anticipated changes and modules, which helped me easily write down the traceability matrix.
+  
+  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+  One of the biggest challenges that I faced was identifying the correct module for each anticipated change in the traceability matrix. My team mate had worked on the anticipated
+  changes, Some of these changes had overlapping responsibilities across modules, so I carefully reviewd the module responsibilities over again to be able to point out the modules for 
+  each change. It needed a lot of cross referencing the module guide and anticipated changes to make sure nothing was missde. 
+  Also, when determining module dependencies in the "Uses" section for each module's decomposition, I was not fully sure about which modules should depend on which for the VS Code Plugin.
+  This is because there can be multiple possible ways, for example the Plugin Initializer or Smell Detector being able to directly call Source Code Optimizer. While resolving this, I realized that 
+  while there is no one perfect mapping of dependencies, the goal should be to be as modular as possible and apply the seperation of concerns principle. This is why, for example, the Backend Communicator 
+  is the only module in the design that communicates with Source Code Optimizer.
+\end{enumerate}
+
 
 \end{document}
