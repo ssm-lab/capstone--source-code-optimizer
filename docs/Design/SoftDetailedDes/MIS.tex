@@ -168,7 +168,11 @@ LongParameterListRefactorer is a module that identifies and refactors functions 
 
 \subsection{Uses}
 
-Simplify function or method signature by (1) removing unused parameters (2) encapsulating related parameter groups into class instances. Update function body and corresponding function calls to match the refactored signature. Improve code maintainability and potentially reduce energy consumption associated with analyzing and maintaining long parameter lists.
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
+\end{itemize}
 
 \subsection{Syntax}
 
