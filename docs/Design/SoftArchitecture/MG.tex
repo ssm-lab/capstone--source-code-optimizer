@@ -192,7 +192,8 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mLMC}:] LongMessageChainRefactorer Module
+\item [\refstepcounter{mnum} \mthemnum \label{mLLF}:] LongLambdaFunctionRefactorer Module
 \end{description}
 
 
@@ -293,6 +294,33 @@ to be implemented.
 
 
 \subsection{Software Decision Module}
+
+\subsubsection{Long Message Chain Refactorer (\mref{mLMC})}
+
+
+\begin{description}
+    \item[Secrets:] Understanding the syntax and structure of Python code to identify/classify long message chains, including both f-strings and non-f-string chains. This involves parsing the target file, extracting method calls from identified long chains, and systematically breaking them into separate statements while preserving the original functionality and indentation. Additionally, it ensures unmatched brackets are corrected during refactoring.
+    
+    \item[Services:] Detects long message chains in Python source code and refactors them by splitting the chain into intermediate variables and a final result. This improves code readability and maintainability while retaining the original program behavior. 
+
+    \item[Implemented By:] EcoOptimizer
+    \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long message chains in Python code.
+   
+\end{description}
+
+\subsubsection{Long Lambda Function Refactorer (\mref{mLLF})}
+
+
+\begin{description} 
+  \item[Secrets:] Understanding the syntax and structure of Python code to identify long lambda functions. This includes parsing the target file to locate lambda expressions, extracting their arguments and bodies, and converting them into standard Python function definitions. The module ensures proper handling of nested structures (e.g., parentheses, brackets, and braces) within the lambda body, and truncates overly complex expressions at the first top-level comma for readability.
+
+  \item[Services:] Detects components of long lambda functions in Python source code and refactors them by converting the lambda expression into a standalone function with a unique name. This improves code readability, debugging, and maintainability. The module inserts the newly defined function in the appropriate scope, updates the original lambda usage with a function call, and validates the refactored code by maintaining its functionality and measuring energy efficiency improvements.
+
+  \item[Implemented By:] EcoOptimizer
+  
+  \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long lambda functions in Python code.
+\end{description}
+
 
 \begin{description}
 \item[Secrets:] The design decision based on mathematical theorems, physical
