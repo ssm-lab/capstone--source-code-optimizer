@@ -191,12 +191,15 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
+\item [\refstepcounter{mnum} \mthemnum \label{mSmell}:] Smell Module
+\item [\refstepcounter{mnum} \mthemnum \label{mBR}:] BaseRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mMIMR}:] MakeStaticRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mSCLR}:] UseListAccumulationRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mUGENR}:] UseAGeneratorRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mCRC}:] CacheRepeatedCallsRefactorer Module
 \item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
+\item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
+\item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
 \end{description}
 
 
@@ -207,10 +210,12 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & None \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & CacheRepeatedCallsRefactorer Module\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
+& BaseRefactorer Module\\
+& CacheRepeatedCallsRefactorer Module\\
 & MakeStaticRefactorer Module\\
 & UseListAccumulationRefactorer Module\\
 & ?\\
@@ -223,9 +228,9 @@ actually be implemented.
 & ?\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & Pylint Analyzer Module\\
+& Testing Functionality Module\\
+& Measurements Module\\
 \bottomrule
 
 \end{tabular}
@@ -262,46 +267,29 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Modules}
 
-\begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
-  system. This module provides the interface between the hardware and the
-  software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
-\end{description}
+This system has no hardware components.
 
 \subsection{Behaviour-Hiding Module}
 
-\subsubsection{Long Element Chain Module (\mref{mLEC})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
+\subsubsection{Smell Module (\mref{mSmell})}
 
 \begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, traverse the 
-    AST tree to identify dictionary assignments, analyze the structure of nested dictionaries,
-     and flatten them. Additionally, it identifies all access calls associated with these dictionaries
-      in the source code and determines how to update them to reflect the new flattened structure.
-    \item[Services:] Detects nested dictionaries in the source code using AST parsing, simplifies their 
-    structure by flattening them, and updates all associated access calls throughout the file. This improves 
-    code readability, reduces complexity, and ensures correctness while maintaining the program's intended behavior.
-    \item[Implemented By:] EcoOptimizer
+\item[Secrets:] Data structure of a code smell.
+\item[Services:] Provides an interface for other modules to access information of a smell object.
+\item[Implemented By:] EcoOptimizer
+\item[Type of Module:] Abstract Data Type
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{Base Refactorer Module (\mref{mBR})}
 
 % [Record, Library, Abstract Object, or Abstract Data Type]
 
 \begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
+    \item[Secrets:] None
+    \item[Services:] Offers an interface for other refactoring modules to implement.
+    \item[Implemented By:] EcoOptimizer
 \end{description}
 
 \subsubsection{MakeStaticRefactorer Module (\mref{mMIMR})}
@@ -323,16 +311,6 @@ to be implemented.
 \item[Implemented By:] EcoOptimizer
 \end{description}
 
-\subsubsection{Smell Module (\mref{mSmell})}
-
-\begin{description}
-\item[Secrets:] Data structure of a code smell.
-\item[Services:] Provides an interface for other modules to access information of a smell object.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
-\end{description}
-
 \subsubsection{UseAGeneratorRefactorer Module (\mref{mUGENR})}
 \begin{description}
     \item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
@@ -347,8 +325,20 @@ to be implemented.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Long Element Chain Module (\mref{mLEC})}
 
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] How to parse a given code file to its AST representation, traverse the 
+    AST tree to identify dictionary assignments, analyze the structure of nested dictionaries,
+     and flatten them. Additionally, it identifies all access calls associated with these dictionaries
+      in the source code and determines how to update them to reflect the new flattened structure.
+    \item[Services:] Detects nested dictionaries in the source code using AST parsing, simplifies their 
+    structure by flattening them, and updates all associated access calls throughout the file. This improves 
+    code readability, reduces complexity, and ensures correctness while maintaining the program's intended behavior.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
 
 \subsection{Software Decision Module}
 
@@ -363,7 +353,7 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Pylint Analyzer Module}
+\subsubsection{Pylint Analyzer Module (\mref{mPyA})}
 
 \begin{description}
 \item[Secrets:] The internal design and execution of static code analysis using Pylint and AST parsing, including custom detection and structuring of smells. These details are hidden from external modules.
@@ -374,6 +364,16 @@ to be implemented.
     \item Filters and structures the analysis results into a standardized format for further processing.
   \end{itemize}
 \item[Implemented By:] \texttt{EcoOptimizer}
+\end{description}
+
+\subsubsection{Testing Functionality Module (\mref{mTest})}
+
+% [Record, Library, Abstract Object, or Abstract Data Type]
+
+\begin{description}
+    \item[Secrets:] Runs testing suites in a subprocess.
+    \item[Services:] Checks whether the functionality of a given source code has changed.
+    \item[Implemented By:] EcoOptimizer
 \end{description}
 
 
