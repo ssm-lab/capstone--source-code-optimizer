@@ -467,26 +467,159 @@ requirements and between the modules and the anticipated changes.
 % the table should use mref, the requirements should be named, use something
 % like fref
 \begin{table}[H]
-\centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Req.} & \textbf{Modules}\\
-\midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
-\bottomrule
-\end{tabular}
-\caption{Trace Between Requirements and Modules}
-\label{TblRT}
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule
+    \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    FR1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    FR2 & \mref{mSmell}, \mref{mPyA}\\
+    FR3 & \mref{mTest}\\
+    FR4 & \mref{mTest}\\
+    FR5 & \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}\\
+    FR6 & \mref{mTest}\\
+    FR7 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA},\\
+    FR8 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    FR9 & To be removed\\
+    FR10 & Not implemented in code\\
+    FR11 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    FR12 & To be removed\\
+    FR13 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Functional Requirements and Modules}
+  \label{tab:fr-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Look and Feel
+    LFR-AP 1-4 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    LFR-AP 5 & To be removed\\ 
+    LFR-ST 1-3 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Look \& Feel Requirements and Modules}
+  \label{tab:LFR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Usability and Humanity
+    UHR-PS1 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-PS1 2 & Not implemented in code\\ 
+    UHR-LRN 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-LRN 2 & Not implemented in code\\ 
+    UHR-ACS 1-2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-EOU 1-2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    UHR-UPL 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Usability \& Humanity Requirements and Modules}
+  \label{tab:UHR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Performance
+    PR-SL 1 & \mref{mPyA}\\
+    PR-SL 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    PR-CR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
+    PR-SCR 1 \mref{mTest}& \\ 
+    PR-PAR 1 & \mref{mTest}\\ 
+    PR-PAR 2 & \mref{mPyA}\\ 
+    PR-PAR 3 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\ 
+    PR-RFT 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
+    PR-RFT 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    PR-SER 1 & \mref{mBR}\\ 
+    PR-LR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Performance Requirements and Modules}
+  \label{tab:PR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Operational and Environmental
+    OER-EP 1 & N/A\\
+    OER-EP 2 & N/A\\
+    OER-WE 1 & \mref{mMeasure}\\
+    OER-IAS 1 & To be removed\\
+    OER-IAS 2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    OER-IAS 3 & To be removed\\
+    OER-PR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    OER-RL 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    OER-RL 2 & N/A\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Operational \& Environmental Requirements and Modules}
+  \label{tab:OPE-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Maintenance and Support
+    MS-MNT 1 \mref{mBR}\\
+    MS-MNT 2 & Not implemented in code\\
+    MS-MNT 3 & None \\
+    MS-MNT 4 & N/A\\
+    MS-MNT 5 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    MS-SP 1 & Not implemented in code\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Maintenance \& Support Requirements and Modules}
+  \label{tab:MS-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Security
+    SR-AR 1 & To be removed\\
+    SR-AR 2 & \mref{mMeasure}\\
+    SR-IR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
+    SR-PR 1 & N/A\\
+    SR-PR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    SR-AUR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    SR-AUR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    SR-IM 1 & N/A\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Security Requirements and Modules}
+  \label{tab:SR-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    % Cultural
+    CULT 1-3 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
+    CL-LR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
+    CL-SCR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Cultural and Compliance Requirements and Modules}
+  \label{tab:CUL-COMP-mod}
 \end{table}
 
 \begin{table}[H]
