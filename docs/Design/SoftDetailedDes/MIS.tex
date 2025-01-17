@@ -153,7 +153,203 @@ The following table is taken directly from the Module Guide document for this pr
 \end{table}
 
 \newpage
+
 ~\newpage
+
+\section{MIS of LongMessageChainRefactorer}
+
+\subsection{Module}
+
+LongMessageChainRefactorer is a module that identifies and refactors 
+long message chains in Python code to improve readability, maintainability,
+and performance. It specifically handles long chains by breaking them into 
+separate statements, ensuring proper refactoring while maintaining the 
+original functionality.
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{|p{4cm}|p{5cm}|p{4cm}|p{3cm}|}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & LongMessageChainRefactorer & None \\
+\hline
+\texttt{remove\_unmatched\_brackets} & \texttt{input\_string: str} & \texttt{str} & None \\
+\hline
+\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: float} & None & Logging exceptions \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item \textbf{File system}: Used to read, write, and store temporary and refactored files.
+
+  \item \textbf{Logger}: Logs information during refactoring.
+  
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Input files are valid Python scripts.
+  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
+  \item Refactored code must pass the provided test suite.
+\end{itemize}
+\subsubsection{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
+\begin{itemize}
+\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
+\item \textbf{Output}: LongMessageChainRefactorer.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{remove\_unmatched\_brackets(input\_string: str)}}
+\begin{itemize}
+\item \textbf{Transition}: Removes unmatched parentheses from the input string.
+\item \textbf{Output}: Returns the string with unmatched parentheses removed.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{Transition}:
+    \begin{itemize}
+    \item Reads the file at \texttt{file\_path}.
+    \item Identifies the line with a long message chain.
+    \item Refactors the chain by breaking it into separate statements.
+    \item Writes the refactored code to a temporary file.
+    \item Evaluates the refactored code’s energy efficiency and functionality.
+    \end{itemize}
+  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
+  \item \textbf{Exception}: Logs exceptions during file operations or refactoring process.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+~\newpage
+
+\section{MIS of LongLambdaFunctionRefactorer}
+
+\subsection{Module}
+LongLambdaFunctionRefactorer is a module that refactors 
+long lambda functions in Python code by converting them into normal functions. 
+This improves code readability, maintainability, and performance, while reducing potential energy consumption.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{|p{4cm}|p{5cm}|p{4cm}|p{3cm}|}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & LongLambdaFunctionRefactorer & None \\
+\hline
+\texttt{truncate\_at\_top\_level\_comma} & \texttt{body: str} & \texttt{str} & None \\
+\hline
+\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: float} & None & Logging exceptions \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{itemize}
+  \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+  \item \textbf{File system}: Used to read, write, and store temporary and refactored files.
+
+  \item \textbf{Logger}: Logs information during refactoring.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Input files are valid Python scripts.
+  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
+  \item Refactored code must pass the provided test suite.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
+\begin{itemize}
+\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
+\item \textbf{Output}: LongLambdaFunctionRefactorer.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{truncate\_at\_top\_level\_comma(body: str)}}
+\begin{itemize}
+\item \textbf{Transition}: Truncates the lambda body at the first top-level comma, ignoring commas within nested parentheses, brackets, or braces.
+\item \textbf{Output}: Returns the truncated lambda body as a string.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{Transition}:
+    \begin{itemize}
+    \item Reads the file at \texttt{file\_path}.
+    \item Identifies the line with a long lambda function.
+    \item Refactors the lambda into a normal function.
+    \item Writes the refactored code to a temporary file.
+    \end{itemize}
+  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
+  \item \textbf{Exception}: Logs exceptions during file operations or the refactoring process.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+~\newpage
+
+
+
+
+
 
 \section{MIS of LongParameterListRefactorer} \label{Module} \wss{Use labels for
   cross-referencing}
