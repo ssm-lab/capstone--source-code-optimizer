@@ -580,27 +580,21 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \end{table}
 
 \begin{table}[H]
-\centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{AC} & \textbf{Modules}\\
-\midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
-\bottomrule
-\end{tabular}
-\caption{Trace Between Anticipated Changes and Modules}
-\label{TblACT}
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+  \toprule
+  \textbf{AC} & \textbf{Modules}\\
+  \midrule
+  \acref{acUserInterface} & \mref{mExe}, \mref{mHig} , \mref{mHov}, \mref{mMan} \\ \hline
+  \acref{acVSCodePlugin} & \mref{mExe} , \mref{mRef}, \mref{mMan} \\ \hline
+  \acref{acRefactorers} & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLPL} \\ \hline
+  \acref{acSmell} & \mref{mDet}, \mref{mPyA} \\ \hline
+  \acref{acAnalyzer} & \mref{mM}, \mref{mPyA}, \mref{mDet} \\ \hline
+  \acref{acTesting} & \mref{mTest}  \\ 
+  \bottomrule
+  \end{tabular}
+  \caption{Trace Between Anticipated Changes and Modules}
+  \label{TblACT}
 \end{table}
 
 \section{Use Hierarchy Between Modules} \label{SecUse}
