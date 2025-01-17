@@ -734,7 +734,12 @@ implementation of B.  Figure \ref{FigUH} illustrates the use relation between
 the modules. It can be seen that the graph is a directed acyclic graph
 (DAG). Each level of the hierarchy offers a testable and usable subset of the
 system, and modules in the higher level of the hierarchy are essentially simpler
-because they use modules from the lower levels.
+because they use modules from the lower levels.Furthermore, figure \ref{FigUH_Plugin} 
+illustrates the use relation between the modules of the VS Code Plugin, vis-a-vis the Source Code 
+Optimizer displayed in  figure \ref{FigUH}. In this figure for the plugin, the modules at the lowest 
+level are the ones closest to the user, and going up in the module indicates moving towards
+the backend of the project, which is the Source Code Optimizer. It is a layered architecture
+where each module serves a separate concern.
 
 \wss{The uses relation is not a data flow diagram.  In the code there will often
 be an import statement in module A when it directly uses module B.  Module B
@@ -747,42 +752,63 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{../../Images/use_hierarchy_modules.png}
+\includegraphics[width=\textwidth]{../../Images/sco_use_diagram.png}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
 
-%\section*{References}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{../../Images/plugin_use_diagram.png}
+  \caption{Use hierarchy among modules}
+  \label{FigUH_Plugin}
+  \end{figure}
+
+%\section*{References} 
 
 \section{User Interfaces}
+
+The project is exposed to the user through the VS Code Plugin, which can be installed 
+in any developer's local VS Code Editor. Figure \ref{fig3} highlights the intial interface that 
+the user accesses when installating and enabling the plugin. Commands of the plugin are 
+available through various routes, one of them is the Command Palette as show in figure \ref{fig4}.
+
+Commands are searchable and can be applied. Figure \ref{fig5} showcases the application of the 
+"Eco: Refactor Plugin: Detect Smells" command, which at the end highlights all lines containing 
+code smells with yellow lines. On hover, information is available about the specific code smell.
+The user also has the option to select or place their cursor on a specific line that they want 
+to refactor, and run the "Eco: Refactor Plugin: Refactor Smell" command in order to refactor that 
+specific line of code. Figure \ref{fig6} provides a visual of this command in progress, with updates
+being provided in bottom right corner.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../../Images/VSPlugin.png}
   \caption{VS Code Plugin Setup}
-  \label{FigUH}
+  \label{fig3}
   \end{figure}
   
   \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../../Images/VSPluginCommands.png}
   \caption{VS Code Plugin Commands}
-  \label{FigUH}
+  \label{fig4}
   \end{figure}
   
   \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../../Images/VSPluginDetectMode.png}
   \caption{VS Code Code Analysis Interaction}
-  \label{FigUH}
+  \label{fig5}
   \end{figure}
   
   \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../../Images/VSPluginRefactorMode.png}
   \caption{VS Code Code Refactoring Interaction(in progress for selected line)}
-  \label{FigUH}
+  \label{fig6}
   \end{figure}
+
 
 \wss{Design of user interface for software and hardware.  Attach an appendix if
 needed. Drawings, Sketches, Figma}
