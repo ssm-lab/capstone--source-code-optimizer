@@ -670,6 +670,57 @@ graduate attribute of Problem Analysis and Design.
   design?  From all the potential options, why did you select the documented design?
   (LO\_Explores)}
 
+  We considered incorporating a machine learning aspect into the project, 
+  specifically using reinforcement learning (RL) to manage the refactoring 
+  process. The idea was to treat the selection and application of 
+  refactoring strategies as a decision-making process, where an agent 
+  could learn the best strategies over time based on rewards and outcomes.
+
+  In this approach, the agent would represent the system that applies 
+  different refactoring techniques to the code. The environment would 
+  be the code itself, with various code smells and inefficiencies that 
+  the agent needs to address. The actions the agent would take would 
+  involve selecting and applying one of the predefined refactoring 
+  strategies (like long lambda function or long parameter list). The reward 
+  would be the resulting decrease in energy consumption (i.e., reduction 
+  in CO2 emissions), measured after the code is refactored and executed. 
+  The agent would receive a positive reward for actions that successfully 
+  lead to more energy-efficient code and a negative reward for actions 
+  that increase energy consumption. Over time, the agent would learn to 
+  prioritize and apply the most effective refactoring techniques based 
+  on the rewards it receives.
+
+  
+  While this machine learning solution seemed promising, there were a 
+  few trade-offs to consider. First, implementing reinforcement 
+  learning would significantly increase the complexity of the project. 
+  It would require training data, fine-tuning the agent’s learning parameters, 
+  and ensuring that the agent’s actions actually lead to measurable 
+  improvements in CO2 efficiency. Additionally, RL would require 
+  ongoing iteration to improve its performance, which could be time-consuming 
+  and resource-intensive, especially given the limited time available 
+  for the project.
+
+
+  Another concern was that reinforcement learning, while powerful, 
+  might not always be the most effective or efficient solution for 
+  this kind of task. The selection of refactoring strategies is not 
+  necessarily a highly complex decision-making process that requires 
+  learning over time. Since we already have a set of predefined 
+  strategies, a more direct, rule-based approach was more appropriate. 
+  We could achieve the same results without the need for training the 
+  agent or dealing with the unpredictability of machine learning models.
+
+
+  Given these trade-offs, we opted to stick with the more straightforward 
+  approach of selecting and applying refactoring strategies based on 
+  predefined rules. This decision was driven by the need for a practical 
+  and efficient solution within the given project constraints. While 
+  reinforcement learning could be an interesting exploration for future 
+  versions of the tool, the current design provides a reliable and 
+  manageable way to achieve the desired results without adding 
+  unnecessary complexity.
+
 
 \end{enumerate}
 
@@ -693,7 +744,6 @@ graduate attribute of Problem Analysis and Design.
   To resolve this, I focused on framing the document as an opportunity to validate 
   and formalize our design decisions, which helped shift the mindset from simply 
   checking off tasks to reaffirming the thought process behind our choices.
-  
     
 \end{enumerate}
 
