@@ -76,12 +76,11 @@ See SRS Documentation at \wss{give url}
 
 \section{Introduction}
 
-The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+The following document details the Module Interface Specifications (MIS) for the Source Code Optimizer project. The Source Code Optimizer is a software tool designed to analyze, refactor, and optimize Python source code to improve energy efficiency, maintainability, and performance. This tool incorporates a combination of static code analysis using Pylint, abstract syntax tree (AST) parsing, and custom refactoring techniques to detect and address various code smells in Python programs.
 
-Complementary documents include the System Requirement Specifications
-and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+The application allows developers to identify inefficient coding patterns, refactor them into optimized alternatives, and validate the results through built-in testing mechanisms. Key features include support for custom smell detection, energy profiling, and modular refactorers tailored to specific code smells, such as long method chains or inefficient list comprehensions. By automating parts of the optimization process, the Source Code Optimizer helps developers have the option of choosing to reduce emissions and produce more efficient software.
+
+Complementary documents include the System Requirement Specifications (SRS) and Module Guide (MG). The full documentation and implementation can be found at: \url{https://github.com/ssm-lab/capstone--source-code-optimizer}
 
 \section{Notation}
 
@@ -227,6 +226,334 @@ The following table is taken directly from the Module Guide document for this pr
   explicitly.  Even if they are implemented, they are not exported; they only
   have local scope.}
 
+\newpage
+
+\section{MIS of Base Refactorer} \label{mis:baseR}
+
+\texttt{BaseRefactorer}
+
+\subsection{Module}
+
+The interface that all refactorers of this system will inherit from.
+
+\subsection{Uses}
+
+None
+
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}:
+
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\\hline
+  \midrule
+  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\\hline
+  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: dict, initial\_emissions: float} & None & None \\
+  \hline
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+  \item \texttt{temp\_dir: Path}: Directory path for storing refactored files.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item \texttt{output\_dir} exists or can be created, and write permissions are available.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
+\begin{itemize}
+  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
+  \item \textbf{output}: None.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: dict, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{transition}: Abstract method. No transition defined.
+  \item \textbf{output}: None.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None.
+
+\newpage
+
+\section{MIS of Smell Data Type} \label{mis:smell}
+\texttt{Smell}
+
+\subsection{Module}
+Contains data related to a code smell.
+
+\subsection{Uses}
+None
+
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}: None
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+  \item \texttt{absolutePath: str}: Absolute path to the source file containing the smell.
+  \item \texttt{column: int}: Starting column in the source file where the smell is detected.
+  \item \texttt{confidence: str}: Confidence level for the smell detection.
+  \item \texttt{endColumn: int | None}: Ending column for the smell location, if applicable.
+  \item \texttt{endLine: int | None}: Ending line number for the smell location, if applicable.
+  \item \texttt{occurences: dict}: Contains positional data related to where the smell is located in a code file.
+  \item \texttt{message: str}: Descriptive message explaining the smell.
+  \item \texttt{messageId: str}: Unique identifier for the specific message or warning.
+  \item \texttt{module: str}: Module or component name containing the smell.
+  \item \texttt{obj: str}: Specific object associated with the smell.
+  \item \texttt{path: str}: Relative path to the source file from the project root.
+  \item \texttt{symbol: str}: Symbol or code construct involved in the smell.
+  \item \texttt{type: str}: Type or category of the smell.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item All values provided to the fields of \texttt{Smell} conform to the expected data types and constraints.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\paragraph{\texttt{Smell()}}
+\begin{itemize}
+  \item \textbf{transition}: Creates a dictionary-like structure with the defined attributes representing a code smell.
+  \item \textbf{output}: Returns a \texttt{Smell} instance.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None.
+  
+
+\newpage
+
+\section{MIS of Use List Accumulation Refactorer} \label{mis:ListAccum}
+
+\texttt{UseListAccumulationRefactorer}
+
+\subsection{Module}
+
+The \texttt{UseListAccumulationRefactorer} module identifies and refactors 
+string concatenations in loops in Python code to improve the performance and energy efficiency of the software. It specifically handles these concatenations by, instead, adding the string for each iteration to a list that is then converted to a string using Python's \texttt{join()} function, ensuring proper refactoring while maintaining the original functionality.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
+\end{itemize}
+  
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}:
+  
+\begin{tabularx}{\linewidth}{|
+    l|
+    >{\raggedright\arraybackslash}X|
+    l|
+    l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\
+  \hline
+  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: Real} & None & \texttt{TypeError}, \texttt{IOError} \\
+  \hline
+  \texttt{visit} & \texttt{node: nodes.NodeNG} & None & None \\
+  \hline
+  \texttt{find\_last\_assignment} & \texttt{scope: nodes.NodeNG} & None & \texttt{TypeError} \\
+  \hline
+  \texttt{find\_scope} & None & None & \texttt{TypeError} \\
+  \hline
+  \texttt{add\_node\_to\_body} & \texttt{code\_file: str} & \texttt{str} & \texttt{TypeError} \\
+  \bottomrule
+\end{tabularx}
+  
+\subsection{Semantics}
+  
+\subsubsection{State Variables}
+\begin{itemize}
+  \item \texttt{target\_line: int}: Line number where refactoring is applied.
+  \item \texttt{target\_node: ASTnode}: Node representing the concatenation variable.
+  \item \texttt{assign\_var: str}: Name of the variable the \texttt{target\_node} represents.
+  \item \texttt{last\_assign\_node: ASTnode}: Last initialization/assignment of the \texttt{assign\_var} prior to the start of the loop.
+  \item \texttt{concat\_node: ASTnode}: Node where concatenation occurs.
+  \item \texttt{scope\_node: ASTnode}: Scope where refactoring is inserted.
+  \item \texttt{outer\_loop: ASTnode}: Outermost loop before the start of the concatenation.
+\end{itemize}
+  
+\subsubsection{Environment Variables}
+None
+  
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item The input file contains valid Python syntax.
+  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
+\end{itemize}
+  
+\subsubsection{Access Routine Semantics}
+  
+\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
+\begin{itemize}
+  \item \textbf{transition}: Initializes the refactorer with \texttt{output\_dir} and sets default state variables.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: None
+\end{itemize}
+  
+\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{transition}: Parses \texttt{file\_path}, identifies string concatenations in loops, modifies code for list accumulation, and writes refactored code to a file.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\end{itemize}
+
+\paragraph{\texttt{find\_last\_assignment(self, scope: nodes.NodeNG)}}
+\begin{itemize}
+  \item \textbf{transition}: Identifies the last assignment of \texttt{assign\_var} within the given \texttt{scope}.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: Raises \texttt{TypeError} if given scope is null.
+\end{itemize}
+
+\paragraph{\texttt{find\_scope(self)}}
+\begin{itemize}
+  \item \textbf{transition}: Finds the scope for refactoring based on AST node ancestry.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: Raises \texttt{TypeError} if \texttt{concat\_node} is not set.
+\end{itemize}
+
+\paragraph{\texttt{add\_node\_to\_body(self, code\_file: str)}}
+\begin{itemize}
+  \item \textbf{transition}: Inserts list accumulation and join statements into \texttt{code\_file}.
+  \item \textbf{output}: Returns the modified source code as a string.
+  \item \textbf{exception}: Raises \texttt{TypeError} if \texttt{target\_node} or \texttt{outer\_loop} is not set.
+\end{itemize}
+
+\subsubsection{Local Functions}
+Functions for internal AST parsing, node manipulation, and validation are defined within the class but are not exported.
+  
+\newpage
+
+\section{MIS of Make Method Static Refactorer} \label{mis:MakeStatic}
+
+\texttt{MakeStaticRefactorer}
+
+\subsection{Module}
+
+The \texttt{MakeStaticRefactorer} module identifies and refactors 
+class methods that don't make use of their instance attributes to improve the readability, performance and energy efficiency of the software. It specifically handles these methods by turning them into static functions and ensuring any calls to this method use the proper calling syntax. This ensures proper refactoring while maintaining the original functionality.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
+\end{itemize}
+  
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}:
+  
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\
+  \hline
+  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
+  \hline
+  \texttt{visit\_FunctionDef} & \texttt{node: FunctionDef} & \texttt{FunctionDef} & None \\
+  \hline
+  \texttt{visit\_ClassDef} & \texttt{node: ClassDef} & \texttt{ClassDef} & None \\
+  \hline
+  \texttt{visit\_Call} & \texttt{node: Call} & \texttt{Call} & None \\
+  \bottomrule
+\end{tabularx}
+  
+\subsection{Semantics}
+  
+\subsubsection{State Variables}
+\begin{itemize}
+  \item \texttt{target\_line: int}: Line number where refactoring is applied.
+  \item \texttt{mim\_method\_class: str}: Class name containing the method to refactor.
+  \item \texttt{mim\_method: str}: Method name to refactor.
+\end{itemize}
+  
+\subsubsection{Environment Variables}
+None
+  
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item The input file contains valid Python syntax.
+  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
+\end{itemize}
+  
+\subsubsection{Access Routine Semantics}
+  
+\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
+\begin{itemize}
+  \item \textbf{transition}: Initializes the refactorer with \texttt{output\_dir} and sets default state variables.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: None.
+\end{itemize}
+  
+\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{transition}: Parses \texttt{file\_path}, identifies the target function, modifies it to be static, and validates refactoring.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\end{itemize}
+
+\paragraph{\texttt{visit\_FunctionDef(self, node: ast.FunctionDef)}}
+\begin{itemize}
+  \item \textbf{transition}: Adds the \texttt{staticmethod} decorator to the target method and removes the \texttt{self} parameter if present.
+  \item \textbf{output}: Returns the modified \texttt{FunctionDef} node.
+  \item \textbf{exception}: None
+\end{itemize}
+
+\paragraph{\texttt{visit\_ClassDef(self, node: ast.ClassDef)}}
+\begin{itemize}
+  \item \textbf{transition}: Identifies the class containing the target method.
+  \item \textbf{output}: Returns the modified \texttt{ClassDef} node.
+  \item \textbf{exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{visit\_Call(self, node: ast.Call)}}
+\begin{itemize}
+  \item \textbf{transition}: Updates method call references to use the class name instead of \texttt{self}.
+  \item \textbf{output}: Returns the modified \texttt{Call} node.
+  \item \textbf{exception}: None.
+\end{itemize}
+
+\subsubsection{Local Functions}
+Functions for internal AST parsing, node transformation, and validation are defined within the class but are not exported.
+  
+\newpage  
 
 \section{MIS of LongElementChainRefactorer}
 
@@ -379,23 +706,23 @@ The \texttt{PylintAnalyzer} module performs static code analysis on Python files
 
 \subsection{Semantics}
 
-\subsubsection*{State Variables}
+\subsubsection{State Variables}
 \begin{itemize}
   \item \texttt{file\_path: Path}: The path to the Python file being analyzed.
   \item \texttt{source\_code: ast.Module}: The parsed abstract syntax tree of the source file.
   \item \texttt{smells\_data: list[dict]}: A list of detected code smells, represented as dictionaries.
 \end{itemize}
 
-\subsubsection*{Environment Variables}
+\subsubsection{Environment Variables}
 None
 
-\subsubsection*{Assumptions}
+\subsubsection{Assumptions}
 \begin{itemize}
   \item The input file is valid Python code and can be parsed into an AST.
   \item Configuration settings, such as extra Pylint options and custom smell definitions, are valid.
 \end{itemize}
 
-\subsubsection*{Access Routine Semantics}
+\subsubsection{Access Routine Semantics}
 
 \paragraph{\texttt{\_\_init\_\_(self, file\_path: Path, source\_code: ast.Module)}}
 \begin{itemize}
@@ -460,12 +787,80 @@ None
   \item \textbf{exception:} None.
 \end{itemize}
 
-\subsubsection*{Local Functions}
+\subsubsection{Local Functions}
 \begin{itemize}
   \item \texttt{parse\_line(file\_path: Path, line: int)}: Parses a specific line of code into an AST node.
   \item \texttt{get\_lambda\_code(lambda\_node: ast.Lambda)}: Returns the string representation of a lambda expression.
 \end{itemize}
 
+
+\newpage
+
+\section{MIS of Testing Functionality}
+
+\texttt{TestRunner}
+
+\subsection{Module}
+
+Responsible for validating that any refactorings made to the source code do not modify it's original functionality.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Uses Python's subprocess library
+\end{itemize}
+
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}:
+
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+\hline
+Name & In & Out & Exceptions \\
+\hline
+\texttt{\_\_init\_\_} & \texttt{run\_command: str, project\_path: Path} & None & None \\
+\hline
+\texttt{retained\_functionality} & None & \texttt{bool} & \texttt{CalledProcessError} \\
+\hline
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+  \item \texttt{project\_path: Path}: Path to the source code directory.
+  \item \texttt{run\_command: str}: Command used to run the tests.
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item The provided \texttt{run\_command} is a valid shell command.
+  \item \texttt{project\_path} is a valid path working source code directory.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(self, run\_command: str, project\_path: Path)}}
+\begin{itemize}
+  \item \textbf{transition}: Initializes the test runner with the given \texttt{run\_command} and \texttt{project\_path}.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{retained\_functionality(self)}}
+\begin{itemize}
+  \item \textbf{transition}: Runs the specified test command in the given project path. Logs success or failure, including standard output and error streams.
+  \item \textbf{output}: Returns \texttt{True} if the tests passed; otherwise, returns \texttt{False}.
+  \item \textbf{exception}: Raises a \texttt{CalledProcessError} if an eror occurs while running the tests in a subprocess.
+\end{itemize}
+
+\subsubsection{Local Functions}
+None.
 
 \newpage
 
@@ -508,22 +903,22 @@ unnecessary list comprehensions in Python code by converting them to generator e
 
 \subsection{Semantics}
 
-\subsubsection*{State Variables}
+\subsubsection{State Variables}
 \begin{itemize}
   \item \texttt{temp\_dir: Path}: Directory path for storing refactored files.
   \item \texttt{output\_dir: Path}: Directory path for saving final refactored code.
 \end{itemize}
 
-\subsubsection*{Environment Variables}
+\subsubsection{Environment Variables}
 None
 
-\subsubsection*{Assumptions}
+\subsubsection{Assumptions}
 \begin{itemize}
   \item The input file contains valid Python syntax.
   \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
 \end{itemize}
 
-\subsubsection*{Access Routine Semantics}
+\subsubsection{Access Routine Semantics}
 
 \paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
 \begin{itemize}
@@ -546,7 +941,7 @@ None
   \item \textbf{exception}: None.
 \end{itemize}
 
-\subsubsection*{Local Functions}
+\subsubsection{Local Functions}
 Functions for internal AST parsing, node manipulation, and validation are defined within the class but are not exported.
 
 \newpage
@@ -583,22 +978,22 @@ The \texttt{CacheRepeatedCallsRefactorer} module identifies repeated function ca
 
 \subsection{Semantics}
 
-\subsubsection*{State Variables}
+\subsubsection{State Variables}
 \begin{itemize}
   \item \texttt{cached\_var\_name: str}: Name of the temporary variable used for caching.
   \item \texttt{target\_line: int}: Line number where refactoring is applied.
 \end{itemize}
 
-\subsubsection*{Environment Variables}
+\subsubsection{Environment Variables}
 None
 
-\subsubsection*{Assumptions}
+\subsubsection{Assumptions}
 \begin{itemize}
   \item The input file contains valid Python syntax.
   \item \texttt{pylint\_smell} provides valid occurrences of repeated calls with line numbers and call strings.
 \end{itemize}
 
-\subsubsection*{Access Routine Semantics}
+\subsubsection{Access Routine Semantics}
 
 \paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
 \begin{itemize}
@@ -614,7 +1009,7 @@ None
   \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
 \end{itemize}
 
-\subsubsection*{Local Functions}
+\subsubsection{Local Functions}
 \begin{itemize}
   \item \texttt{\_get\_indentation(lines, line\_number)}: Determines the indentation of a specific line.
   \item \texttt{\_replace\_call\_in\_line(line, call\_string, cached\_var\_name)}: Replaces repeated calls with the cached variable.
