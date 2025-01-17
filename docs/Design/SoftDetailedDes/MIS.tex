@@ -325,6 +325,302 @@ None
   
 \newpage
 
+\section{MIS of Pylint Analyzer} \label{mis:PylintAnalyzer}
+
+\texttt{PylintAnalyzer}
+
+\subsection{Module}
+
+The \texttt{PylintAnalyzer} module performs static code analysis on Python files using Pylint, with additional custom checks for detecting specific code smells. It outputs detected smells in a structured format for further processing.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Uses Python's \texttt{pylint} library for code analysis
+  \item Uses \texttt{ast} module for parsing and analyzing abstract syntax trees
+  \item Uses \texttt{astor} library for converting AST nodes back to source code
+  \item Integrates with custom checkers, including \texttt{StringConcatInLoopChecker}
+  \item Accesses configuration settings from \texttt{analyzers\_config}
+\end{itemize}
+
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}:\\
+{\footnotesize
+\begin{tabularx}{\linewidth}{|
+    l|
+    >{\raggedright\arraybackslash}X|
+    l|
+    l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{\_\_init\_\_} & \texttt{file\_path: Path, source\_code: ast.Module} & None & None \\
+  \hline
+  \texttt{build\_pylint\_options} & None & \texttt{list[str]} & None \\
+  \hline
+  \texttt{analyze} & None & None & \texttt{JSONDecodeError}, \texttt{Exception} \\
+  \hline
+  \texttt{configure\_smells} & None & None & None \\
+  \hline
+  \texttt{filter\_for\_one\_code\_smell} & \texttt{pylint\_results: list[Smell], code: str} & \texttt{list[Smell]} & None \\
+  \hline
+  \texttt{detect\_long\_message\_chain} & \texttt{threshold: int = 3} & \texttt{list[Smell]} & None \\
+  \hline
+  \texttt{detect\_long\_lambda\_expression} & \texttt{threshold\_length: int = 100, threshold\_count: int = 3} & \texttt{list[Smell]} & None \\
+  \hline
+  \texttt{detect\_long\_element\_chain} & \texttt{threshold: int = 3} & \texttt{list[Smell]} & None \\
+  \hline
+  \texttt{detect\_repeated\_calls} & \texttt{threshold: int = 2} & \texttt{list[Smell]} & None \\
+  \bottomrule
+\end{tabularx}
+}
+
+\subsection{Semantics}
+
+\subsubsection*{State Variables}
+\begin{itemize}
+  \item \texttt{file\_path: Path}: The path to the Python file being analyzed.
+  \item \texttt{source\_code: ast.Module}: The parsed abstract syntax tree of the source file.
+  \item \texttt{smells\_data: list[dict]}: A list of detected code smells, represented as dictionaries.
+\end{itemize}
+
+\subsubsection*{Environment Variables}
+None
+
+\subsubsection*{Assumptions}
+\begin{itemize}
+  \item The input file is valid Python code and can be parsed into an AST.
+  \item Configuration settings, such as extra Pylint options and custom smell definitions, are valid.
+\end{itemize}
+
+\subsubsection*{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(self, file\_path: Path, source\_code: ast.Module)}}
+\begin{itemize}
+  \item \textbf{transition}: Initializes the analyzer with the provided file path and AST of the source code.
+  \item \textbf{output}: None.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{build\_pylint\_options(self)}}
+\begin{itemize}
+  \item \textbf{transition}: Constructs the list of Pylint options based on the file path and configuration settings.
+  \item \textbf{output}: Returns a list of strings representing Pylint options.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{analyze(self)}}
+\begin{itemize}
+  \item \textbf{transition}: Executes Pylint analysis and custom checks, populating \texttt{smells\_data} with detected smells.
+  \item \textbf{output}: None.
+  \item \textbf{exception:} Raises \texttt{JSONDecodeError} if Pylint's output cannot be parsed. Raises \texttt{Exception} for other runtime errors.
+\end{itemize}
+
+\paragraph{\texttt{configure\_smells(self)}}
+\begin{itemize}
+  \item \textbf{transition}: Filters \texttt{smells\_data} to include only configured smells.
+  \item \textbf{output}: None.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{filter\_for\_one\_code\_smell(self, pylint\_results: list[Smell], code: str)}}
+\begin{itemize}
+  \item \textbf{transition}: Filters the given Pylint results for a specific code smell identified by \texttt{code}.
+  \item \textbf{output}: Returns a list of smells matching the specified code.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{detect\_long\_message\_chain(self, threshold: int = 3)}}
+\begin{itemize}
+  \item \textbf{transition}: Identifies method chains exceeding the specified \texttt{threshold}.
+  \item \textbf{output}: Returns a list of smells for long method chains.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{detect\_long\_lambda\_expression(self, threshold\_length: int = 100, threshold\_count: int = 3)}}
+\begin{itemize}
+  \item \textbf{transition}: Detects lambda expressions exceeding length or expression count thresholds.
+  \item \textbf{output}: Returns a list of smells for long lambda expressions.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{detect\_long\_element\_chain(self, threshold: int = 3)}}
+\begin{itemize}
+  \item \textbf{transition}: Detects dictionary access chains exceeding the specified \texttt{threshold}.
+  \item \textbf{output}: Returns a list of smells for long dictionary chains.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{detect\_repeated\_calls(self, threshold: int = 2)}}
+\begin{itemize}
+  \item \textbf{transition}: Identifies repeated function calls exceeding the \texttt{threshold}.
+  \item \textbf{output}: Returns a list of smells for repeated function calls.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\subsubsection*{Local Functions}
+\begin{itemize}
+  \item \texttt{parse\_line(file\_path: Path, line: int)}: Parses a specific line of code into an AST node.
+  \item \texttt{get\_lambda\_code(lambda\_node: ast.Lambda)}: Returns the string representation of a lambda expression.
+\end{itemize}
+
+
+\newpage
+
+\section{MIS of Use A Generator Refactorer} \label{mis:UseGen}
+
+\texttt{UseAGeneratorRefactorer}
+
+\subsection{Module}
+
+The \texttt{UseAGeneratorRefactorer} module identifies and refactors 
+unnecessary list comprehensions in Python code by converting them to generator expressions. This refactoring improves energy efficiency while maintaining the original functionality.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+  \item Uses Python's \texttt{ast} module for parsing and manipulating abstract syntax trees
+\end{itemize}
+
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}:\\
+\begin{tabularx}{\linewidth}{|
+    l|
+    >{\raggedright\arraybackslash}X|
+    l|
+    l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\
+  \hline
+  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: float} & None & \texttt{IOError}, \texttt{TypeError} \\
+  \hline
+  \texttt{\_replace\_node} & \texttt{tree: ast.Module, old\_node: ast.ListComp, new\_node: ast.GeneratorExp} & None & None \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection*{State Variables}
+\begin{itemize}
+  \item \texttt{temp\_dir: Path}: Directory path for storing refactored files.
+  \item \texttt{output\_dir: Path}: Directory path for saving final refactored code.
+\end{itemize}
+
+\subsubsection*{Environment Variables}
+None
+
+\subsubsection*{Assumptions}
+\begin{itemize}
+  \item The input file contains valid Python syntax.
+  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
+\end{itemize}
+
+\subsubsection*{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
+\begin{itemize}
+  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
+  \item \textbf{output}: None.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{transition}: Parses \texttt{file\_path}, identifies unnecessary list comprehensions, modifies the code to use generator expressions, and validates refactoring.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\end{itemize}
+
+\paragraph{\texttt{\_replace\_node(self, tree: ast.Module, old\_node: ast.ListComp, new\_node: ast.GeneratorExp)}}
+\begin{itemize}
+  \item \textbf{transition}: Replaces an \texttt{old\_node} in the AST with a \texttt{new\_node}.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: None.
+\end{itemize}
+
+\subsubsection*{Local Functions}
+Functions for internal AST parsing, node manipulation, and validation are defined within the class but are not exported.
+
+\newpage
+
+\section{MIS of Cache Repeated Calls Refactorer} \label{mis:CacheCalls}
+
+\texttt{CacheRepeatedCallsRefactorer}
+
+\subsection{Module}
+
+The \texttt{CacheRepeatedCallsRefactorer} module identifies repeated function calls in Python code and refactors them by caching the result of the first call to a temporary variable. This refactoring improves performance and energy efficiency while preserving the original functionality.
+
+\subsection{Uses}
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+  \item Uses Python's \texttt{ast} module for parsing and manipulating abstract syntax trees
+\end{itemize}
+
+\subsection{Syntax}
+\noindent
+\textbf{Exported Constants}: None
+
+\noindent
+\textbf{Exported Access Programs}:\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \toprule Name & In & Out & Exceptions \\
+  \midrule
+  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\
+  \hline
+  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: float} & None & \texttt{IOError}, \texttt{TypeError} \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection*{State Variables}
+\begin{itemize}
+  \item \texttt{cached\_var\_name: str}: Name of the temporary variable used for caching.
+  \item \texttt{target\_line: int}: Line number where refactoring is applied.
+\end{itemize}
+
+\subsubsection*{Environment Variables}
+None
+
+\subsubsection*{Assumptions}
+\begin{itemize}
+  \item The input file contains valid Python syntax.
+  \item \texttt{pylint\_smell} provides valid occurrences of repeated calls with line numbers and call strings.
+\end{itemize}
+
+\subsubsection*{Access Routine Semantics}
+
+\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
+\begin{itemize}
+  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
+  \item \textbf{output}: None.
+  \item \textbf{exception:} None.
+\end{itemize}
+
+\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+  \item \textbf{transition}: Parses \texttt{file\_path}, identifies repeated function calls, inserts a cached variable for the first call, updates subsequent calls to use the cached variable, and validates refactoring.
+  \item \textbf{output}: None.
+  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\end{itemize}
+
+\subsubsection*{Local Functions}
+\begin{itemize}
+  \item \texttt{\_get\_indentation(lines, line\_number)}: Determines the indentation of a specific line.
+  \item \texttt{\_replace\_call\_in\_line(line, call\_string, cached\_var\_name)}: Replaces repeated calls with the cached variable.
+  \item \texttt{\_find\_valid\_parent(tree)}: Identifies the valid parent node containing all occurrences of the repeated call.
+  \item \texttt{\_find\_insert\_line(parent\_node)}: Determines the line to insert the cached variable.
+\end{itemize}
 
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
