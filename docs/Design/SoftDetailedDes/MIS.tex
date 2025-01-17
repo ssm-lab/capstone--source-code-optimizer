@@ -1442,7 +1442,7 @@ None
 \subsubsection{Assumptions}
 \begin{itemize}
 \item The extension is correctly loaded in VS Code.
-\item Ecooptimizer executable is reachable and operational.
+\item Source Code Optimizer executable is reachable and operational.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
@@ -1462,7 +1462,7 @@ None
 \texttt{BackendCommunicator} handles all communication between the extension and the backend service. It sends requests for analysis or refactoring and receives results.
 
 \subsection{Uses}
-Ecooptimizer executable for energy measurement, smell detection and refactoring of applications.
+Source Code Optimizer executable for energy measurement, smell detection and refactoring of applications.
 
 \subsection{Syntax}
 
@@ -1484,21 +1484,21 @@ None
 
 \subsubsection{Environment Variables}
 \begin{itemize}
-\item \textbf{NETWORK}: Used for communicating with Ecooptimizer.
+\item \textbf{NETWORK}: Used for communicating with Source Code Optimizer.
 \item \textbf{LOGGER}: Logs any communication errors.
 \end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item Ecooptimizer executable is reachable and operational.
+\item Source Code Optimizer executable is reachable and operational.
 \item Python file with no syntax errors is present in the VS Code editor.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 \texttt{sendRequest(requestType: string, data: any)}
 \begin{itemize}
-\item \textbf{Transition}: Sends the provided request to Ecooptimizer and receives a response.
-\item \textbf{Output}: A promise that resolves with the Ecooptimizer's response.
+\item \textbf{Transition}: Sends the provided request to Source Code Optimizer and receives a response.
+\item \textbf{Output}: A promise that resolves with Source Code Optimizer's response.
 \item \textbf{Exception}: Logs any errors encountered during communication.
 \end{itemize}
 
@@ -1508,11 +1508,11 @@ None
 \section{MIS of Smell Detector}
 
 \subsection{Module}
-\texttt{Smell Detector} analyzes the active file for code smells and interacts with Ecootimizer for detection.
+\texttt{Smell Detector} analyzes the active file for code smells and interacts with Source Code Optimizer for detection.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{Backend Communicator} for communicating with  Ecootimizer for smell detection.
+\item \texttt{Backend Communicator} for communicating with Source Code Optimizer for smell detection.
 \item \texttt{File Highlighter} for highlighting detected smells in the editor.
 \end{itemize}
 
@@ -1541,13 +1541,13 @@ None
 \subsubsection{Assumptions}
 \begin{itemize}
 \item There is an active Python file with no syntax error in the editor.
-\item Ecooptimizer correctly identifies smells.
+\item Source Code Optimizer correctly identifies smells.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 \texttt{detect()}
 \begin{itemize}
-\item \textbf{Transition}: Reads the active file, sends it to Ecooptimizer for analysis, and highlights detected smells in the editor.
+\item \textbf{Transition}: Reads the active file, sends it to Source Code Optimizer for analysis, and highlights detected smells in the editor.
 \item \textbf{Output}: None.
 \item \textbf{Exception}: Throws an error if no active file is found.
 \end{itemize}
@@ -1562,7 +1562,7 @@ None
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{Backend Communicator} for sending the smell data to Ecooptimizer for refactoring.
+\item \texttt{Backend Communicator} for sending the smell data to Source Code Optimizer for refactoring.
 \item \texttt{Refactor Manager} for managing refactoring workflows.
 \end{itemize}
 
