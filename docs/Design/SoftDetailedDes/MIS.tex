@@ -351,6 +351,100 @@ None
 
 
 
+\section{MIS of LongParameterListRefactorer} \label{Module} \wss{Use labels for
+  cross-referencing}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+LongParameterListRefactorer is a module that identifies and refactors functions or methods with long parameter lists(detected beyond configured threshold) in Python code. The refactoring aims to improve code readability, maintainability, and energy efficiency by encapsulating related parameters into objects and removing unused ones.
+
+\subsection{Uses}
+
+\begin{itemize}
+  \item Uses \texttt{Smell} interface for data access
+  \item Inherits from \texttt{BaseRefactorer}
+  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+None
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{|p{3cm}|p{5cm}|p{2cm}|p{3cm}|}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & None & None \\
+\hline
+\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: float} & None & Logging exceptions \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+\begin{itemize}
+\item \textbf{File system}: Used for reading, writing, and storing temporary and refactored files.
+\item \textbf{Logger}: Logs details of the refactoring process.
+\end{itemize}
+
+\subsubsection{Assumptions}
+
+\begin{itemize}
+  \item Input files are valid Python scripts.
+  \item Smells identified by \texttt{pylint\_smell} include valid line numbers.
+  \item Refactored code must pass the provided test suite.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\paragraph{\texttt{init(output\_dir: Path)}}
+\begin{itemize}
+\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
+\item \textbf{Output}: None.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: float)}}
+\begin{itemize}
+\item \textbf{Transition}:
+\begin{enumerate}
+\item Reads the file at \texttt{file\_path} and locates the target function using \texttt{pylint\_smell}.
+\item Analyzes function body to remove unused parameters. Updates the function signature and references in the code accordingly.
+\item If number of used parameters also exceeds the maximum configured limit, encapsulates related parameters into classes. Updates the function signature and references in the code accordingly.
+\item Writes the refactored code to a temporary file.
+\end{enumerate}
+\item \textbf{Output}: None.Refactored file is saved if improvements are validated. 
+\item \textbf{Exception}: Logs exceptions during file operations or the refactoring process.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{enumerate}
+\item \texttt{get\_used\_parameters(function\_node: ast.FunctionDef, params: list[str]) -> set[str]}: Identifies parameters used within the function body.
+\item \texttt{get\_parameters\_with\_default\_value(default\_values: list[ast.Constant], params: list[str]) -> dict}: Maps parameter names to their default values.
+\item \texttt{classify\_parameters(params: list[str]) -> dict}: Classifies parameters into \texttt{data} and \texttt{config} groups based on naming conventions.
+\item \texttt{create\_parameter\_object\_class(param\_names: list[str], default\_value\_params: dict, class\_name: str) -> str}: Generates class definitions for encapsulating parameters.
+\item \texttt{update\_function\_signature(function\_node: ast.FunctionDef, params: dict) -> ast.FunctionDef}: Updates function signatures to use encapsulated parameter objects.
+\item \texttt{update\_parameter\_usages(function\_node: ast.FunctionDef, params: dict) -> ast.FunctionDef}: Replaces parameter usages within the function body with attributes of encapsulated objects.
+\item \texttt{update\_function\_calls(tree: ast.Module, function\_node: ast.FunctionDef, params: dict) -> ast.Module}: Updates all calls to the refactored function.
+\end{enumerate}
+
 \section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
   cross-referencing}
 
