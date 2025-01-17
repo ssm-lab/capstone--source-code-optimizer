@@ -2,7 +2,7 @@
 
 \usepackage{amsmath, mathtools}
 
-\usepackage[round]{natbib}
+% \usepackage[round]{natbib}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -53,8 +53,7 @@ urlcolor=cyan          % color of external links
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 17th, 2025 & 0.1 & Initial Draft\\
 \bottomrule
 \end{tabularx}
 
@@ -95,6 +94,7 @@ The following table summarizes the primitive data types used by \progname.
     \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
     \midrule
     optional & ? & denotes a variable as optional\\
+    any type & Any & any data type is acceptable\\
     character & char & a single symbol or digit\\
     String & str & a sequence of characters\\
     integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
@@ -135,35 +135,43 @@ described by giving their type signature followed by their specification.
 The following table is taken directly from the Module Guide document for this project.
 
 \begin{table}[h!]
-\centering
-\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Level 1} & \textbf{Level 2}\\
-\midrule
-
-{Hardware-Hiding} & ~ \\
-\midrule
-
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
-\midrule
-
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
-\bottomrule
-
-\end{tabular}
-\caption{Module Hierarchy}
-\label{TblMH}
+  \centering
+  \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
+    \toprule
+    \textbf{Level 1} & \textbf{Level 2}\\
+    \midrule
+    
+    {Hardware-Hiding Module} & None \\
+    \midrule
+    
+    \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
+    & BaseRefactorer Module\\
+    & MakeStaticRefactorer Module\\
+    & UseListAccumulationRefactorer Module\\
+    & UseAGeneratorRefactorer Module\\
+    & CacheRepeatedCallsRefactorer Module\\
+    & LongElementChainRefactorer Module\\
+    & LongParameterListRefactorer Module\\
+    & LongMessageChainRefactorer Module\\
+    & LongLambdaFunctionRefactorer Module\\ 
+    & PluginInitiator Module\\
+    & BackendCommunicator Module\\ 
+    & SmellDetector Module\\
+    & FileHighlighter Module\\
+    & HoverManager Module\\
+    \midrule
+    
+    
+    \multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
+    & PylintAnalyzer Module\\
+    & Testing Functionality Module\\
+    & SmellRefactorer Module\\
+    & RefactorManager Module\\
+    \bottomrule
+  \end{tabular}
+  \caption{Module Hierarchy}
+  \label{TblMH}
 \end{table}
-
-\newpage
 
 ~\newpage
 
@@ -1369,10 +1377,11 @@ Source Code Optimizer executable for energy measurement, smell detection and ref
 
 \noindent \textbf{Exported Access Programs:}\\
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \toprule Name & In & Out & Exceptions \\
-  \midrule
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
   \texttt{sendRequest} & \texttt{requestType: string, data: any} & Promise & Communication Error \\
-  \bottomrule
+  \hline
 \end{tabularx}
 
 
@@ -1394,7 +1403,7 @@ None
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
-\texttt{sendRequest(requestType: string, data: any)}
+\texttt{sendRequest(requestType: str, data: Any)}
 \begin{itemize}
 \item \textbf{Transition}: Sends the provided request to Source Code Optimizer and receives a response.
 \item \textbf{Output}: A promise that resolves with Source Code Optimizer's response.
@@ -1421,10 +1430,11 @@ None
 
 \textbf{Exported Access Programs:}\\
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \toprule Name & In & Out & Exceptions \\
-  \midrule
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+  \hline
   \texttt{detect} & None & None & Active file not found \\
-  \bottomrule
+  \hline
 \end{tabularx}
 
 \subsection{Semantics}
@@ -1471,10 +1481,11 @@ None
 
 \textbf{Exported Access Programs:}\\
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \toprule Name & In & Out & Exceptions \\
-  \midrule
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf\\
+  \hline
   \texttt{refactor} & {smell: Smell} & None & Invalid input \\
-  \bottomrule
+  \hline
 \end{tabularx}
 
 \subsection{Semantics}
@@ -1519,11 +1530,12 @@ None
 
 \noindent \textbf{Exported Access Programs:}\\
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \toprule Name & In & Out & Exceptions \\
-  \midrule
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf \\
+  \hline
   \texttt{highlight} & \texttt{range: range[]} & None & None \\ \hline
   \texttt{clear} & \texttt{None} & None & None \\
-  \bottomrule
+  \hline
 \end{tabularx}
 
 \subsection{Semantics}
@@ -1578,11 +1590,12 @@ None
 
 \textbf{Exported Access Programs:}\\
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \toprule Name & In & Out & Exceptions \\
-  \midrule
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf \\
+  \hline
   \texttt{showHover} & \texttt{position: Position} & None & None \\ \hline
   \texttt{clearHover} & \texttt{None} & None & None \\
-  \bottomrule
+  \hline
 \end{tabularx}
 
 \subsection{Semantics}
@@ -1684,8 +1697,8 @@ None
 \subsubsection{Local Functions}
 None
 
-\bibliographystyle {plainnat}
-\bibliography {../../../refs/References}
+% \bibliographystyle {plainnat}
+% \bibliography {../../../refs/References}
 
 \newpage
 
