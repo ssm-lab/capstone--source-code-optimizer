@@ -2,7 +2,7 @@
 
 \usepackage{amsmath, mathtools}
 
-% \usepackage[round]{natbib}
+\usepackage[round]{natbib}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -53,7 +53,8 @@ urlcolor=cyan          % color of external links
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-January 17th, 2025 & 0.1 & Initial Draft\\
+Date 1 & 1.0 & Notes\\
+Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
@@ -61,7 +62,7 @@ January 17th, 2025 & 0.1 & Initial Draft\\
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/SRS/SRS.pdf}{SRS} Documentation.
+See SRS Documentation at \wss{give url}
 
 \wss{Also add any additional symbols, abbreviations or acronyms}
 
@@ -75,52 +76,41 @@ See \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/d
 
 \section{Introduction}
 
-The following document details the Module Interface Specifications (MIS) for the Source Code Optimizer project. The Source Code Optimizer is a software tool designed to analyze, refactor, and optimize Python source code to improve energy efficiency, maintainability, and performance. This tool incorporates a combination of static code analysis using Pylint, abstract syntax tree (AST) parsing, and custom refactoring techniques to detect and address various code smells in Python programs.
+The following document details the Module Interface Specifications for
+\wss{Fill in your project name and description}
 
-The application allows developers to identify inefficient coding patterns, refactor them into optimized alternatives, and validate the results through built-in testing mechanisms. Key features include support for custom smell detection, energy profiling, and modular refactorers tailored to specific code smells, such as long method chains or inefficient list comprehensions. By automating parts of the optimization process, the Source Code Optimizer helps developers have the option of choosing to reduce emissions and produce more efficient software.
-
-Complementary documents include the System Requirement Specifications (SRS) and Module Guide (MG). The full documentation and implementation can be found at: \url{https://github.com/ssm-lab/capstone--source-code-optimizer}
+Complementary documents include the System Requirement Specifications
+and Module Guide.  The full documentation and implementation can be
+found at \url{...}.  \wss{provide the url for your repo}
 
 \section{Notation}
 
+\wss{You should describe your notation.  You can use what is below as
+  a starting point.}
+
+The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
+with the addition that template modules have been adapted from
+\cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
+\citet{HoffmanAndStrooper1995}.  For instance, the symbol := is used for a
+multiple assignment statement and conditional rules follow the form $(c_1
+\Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
+
 The following table summarizes the primitive data types used by \progname. 
 
-\begin{table}
-  \centering
-  \renewcommand{\arraystretch}{1.2}
-  \noindent 
-  \begin{tabular}{l l p{7.5cm}} 
-    \toprule 
-    \textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
-    \midrule
-    optional & ? & denotes a variable as optional\\
-    any type & Any & any data type is acceptable\\
-    character & char & a single symbol or digit\\
-    String & str & a sequence of characters\\
-    integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
-    natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
-    real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
-    boolean & $\mathbb{B}$ & True or False\\
-    code smell & Smell & a collection of data representing a code smell\\
-    path & Path & Data object representing a path in a filesystem\\
-    list & list[T] & a collection of objects of type T\\
-    set & set[T] & a collection of \textit{unique} objects of type T\\
-    dictionary & dict & data structure containing multiple key-value pairs\\
-    AST Node & AST & AST node representing any AST node\\
-    AST Constant & Constant & AST node representing a constant\\
-    AST Function Definition & FuncDef & AST node representing a function definition\\
-    AST Module & Module & AST node representing a Module\\
-    AST Class Definition & ClassDef & ast node representing a class definition\\
-    AST Call & Call & ast node representing a function call\\
-    AST Lambda & Lambda & ast node representing a lambda function\\
-    AST List Comprehension & ListComp & ast node representing a list comprehension\\
-    AST Generator Expression & GenExp & ast node representing a generator expression\\
-    current instance & self & a reference to the current instance of a module\\
-    \bottomrule
-  \end{tabular}
-  \label{tab:mis-notation}
-  \caption{MIS Notation}
-\end{table}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\noindent 
+\begin{tabular}{l l p{7.5cm}} 
+\toprule 
+\textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
+\midrule
+character & char & a single symbol or digit\\
+integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
+natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
+real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+\bottomrule
+\end{tabular} 
+\end{center}
 
 \noindent
 The specification of \progname \ uses some derived data types: sequences, strings, and
@@ -135,1186 +125,107 @@ described by giving their type signature followed by their specification.
 The following table is taken directly from the Module Guide document for this project.
 
 \begin{table}[h!]
-  \centering
-  \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-    \toprule
-    \textbf{Level 1} & \textbf{Level 2}\\
-    \midrule
-    
-    {Hardware-Hiding Module} & None \\
-    \midrule
-    
-    \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
-    & BaseRefactorer Module\\
-    & MakeStaticRefactorer Module\\
-    & UseListAccumulationRefactorer Module\\
-    & UseAGeneratorRefactorer Module\\
-    & CacheRepeatedCallsRefactorer Module\\
-    & LongElementChainRefactorer Module\\
-    & LongParameterListRefactorer Module\\
-    & LongMessageChainRefactorer Module\\
-    & LongLambdaFunctionRefactorer Module\\ 
-    & PluginInitiator Module\\
-    & BackendCommunicator Module\\ 
-    & SmellDetector Module\\
-    & FileHighlighter Module\\
-    & HoverManager Module\\
-    \midrule
-    
-    
-    \multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
-    & PylintAnalyzer Module\\
-    & Testing Functionality Module\\
-    & SmellRefactorer Module\\
-    & RefactorManager Module\\
-    \bottomrule
-  \end{tabular}
-  \caption{Module Hierarchy}
-  \label{TblMH}
+\centering
+\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
+\toprule
+\textbf{Level 1} & \textbf{Level 2}\\
+\midrule
+
+{Hardware-Hiding} & ~ \\
+\midrule
+
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
+& Output Format\\
+& Output Verification\\
+& Temperature ODEs\\
+& Energy Equations\\ 
+& Control Module\\
+& Specification Parameters Module\\
+\midrule
+
+\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
+& ODE Solver\\
+& Plotting\\
+\bottomrule
+
+\end{tabular}
+\caption{Module Hierarchy}
+\label{TblMH}
 \end{table}
 
+\newpage
 ~\newpage
 
-\section{MIS of Smell Data Type} \label{mis:smell}
-\texttt{Smell}
+\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
+  cross-referencing}
 
-\subsection{Module}
-Contains data related to a code smell.
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
 
-\subsection{Uses}
-None
-
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}: None
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{absolutePath: str}: Absolute path to the source file containing the smell.
-  \item \texttt{column: int}: Starting column in the source file where the smell is detected.
-  \item \texttt{confidence: str}: Confidence level for the smell detection.
-  \item \texttt{endColumn?: int}: Ending column for the smell location, if applicable.
-  \item \texttt{endLine?: int}: Ending line number for the smell location, if applicable.
-  \item \texttt{occurences: dict}: Contains positional data related to where the smell is located in a code file.
-  \item \texttt{message: str}: Descriptive message explaining the smell.
-  \item \texttt{messageId: str}: Unique identifier for the specific message or warning.
-  \item \texttt{module: str}: Module or component name containing the smell.
-  \item \texttt{obj: str}: Specific object associated with the smell.
-  \item \texttt{path: str}: Relative path to the source file from the project root.
-  \item \texttt{symbol: str}: Symbol or code construct involved in the smell.
-  \item \texttt{type: str}: Type or category of the smell.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-None
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item All values provided to the fields of \texttt{Smell} conform to the expected data types and constraints.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{Smell()}}
-\begin{itemize}
-  \item \textbf{transition}: Creates a dictionary-like structure with the defined attributes representing a code smell.
-  \item \textbf{output}: Returns a \texttt{Smell} instance.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None.
-  
-
-\newpage
-
-\section{MIS of Base Refactorer} \label{mis:baseR}
-
-\texttt{BaseRefactorer}
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
 
 \subsection{Module}
 
-The interface that all refactorers of this system will inherit from.
+\wss{Short name for the module}
 
 \subsection{Uses}
 
-None
-
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:
-
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
-  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\\hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: dict, initial\_emissions: $\mathbb{R}$} & None & None \\
-  \hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{temp\_dir: Path}: Directory path for storing refactored files.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-None
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item \texttt{output\_dir} exists or can be created, and write permissions are available.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
-  \item \textbf{output}: \texttt{self}
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: dict, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{transition}: Abstract method. No transition defined.
-  \item \textbf{output}: None.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None.
-
-\newpage
-
-
-\section{MIS of Long Message Chain Refactorer} \label{mis:LMC}
-
-\texttt{LongMessageChainRefactorer}
-
-\subsection{Module}
-
-LongMessageChainRefactorer is a module that identifies and refactors long message chains in Python code to improve readability, maintainability, and performance. It specifically handles long chains by breaking them into separate statements, ensuring proper refactoring while maintaining the original functionality.
-
-\subsection{Uses}
-
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-None
 
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|p{1in}|p{1in}|}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
+\wss{accessProg} & - & - & - \\
 \hline
-\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-\hline
-\end{tabularx}
-\end{center}
-
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\begin{itemize}
-  \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-
-\begin{itemize}
-  \item \textbf{File system}: Used to read, write, and store temporary and refactored files.
-
-  \item \textbf{Logger}: Logs information during refactoring.
-  
-\end{itemize}
-
-\subsubsection{Assumptions}
-
-\begin{itemize}
-  \item Input files are valid Python scripts.
-  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
-  \item Refactored code must pass the provided test suite.
-\end{itemize}
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
-\begin{itemize}
-\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
-\item \textbf{Output}: \texttt{self}.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{Transition}:
-    \begin{itemize}
-    \item Reads the file at \texttt{file\_path}.
-    \item Identifies the line with a long message chain.
-    \item Refactors the chain by breaking it into separate statements.
-    \item Writes the refactored code to a temporary file.
-    \item Evaluates the refactored code’s energy efficiency and functionality.
-    \end{itemize}
-  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
-  \item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\paragraph{\texttt{remove\_unmatched\_brackets(input\_string: str)}}
-\begin{itemize}
-\item \textbf{Transition}: Removes unmatched parentheses from the input string.
-\item \textbf{Output}: Returns the string with unmatched parentheses removed.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-~\newpage
-
-\section{MIS of Long Lambda Function Refactorer} \label{mis:LLF}
-
-\texttt{LongLambdaFunctionRefactorer}
-
-\subsection{Module}
-LongLambdaFunctionRefactorer is a module that refactors 
-long lambda functions in Python code by converting them into normal functions. 
-This improves code readability, maintainability, and performance, while reducing potential energy consumption.
-
-\subsection{Uses}
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-\end{itemize}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|p{1in}|p{1in}|}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-\hline
-\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-\hline
-\end{tabularx}
+\end{tabular}
 \end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 
-\begin{itemize}
-  \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
-\end{itemize}
+\wss{Not all modules will have state variables.  State variables give the module
+  a memory.}
 
 \subsubsection{Environment Variables}
 
-\begin{itemize}
-  \item \textbf{File system}: Used to read, write, and store temporary and refactored files.
-
-  \item \textbf{Logger}: Logs information during refactoring.
-\end{itemize}
+\wss{This section is not necessary for all modules.  Its purpose is to capture
+  when the module has external interaction with the environment, such as for a
+  device driver, screen interface, keyboard, file, etc.}
 
 \subsubsection{Assumptions}
 
-\begin{itemize}
-  \item Input files are valid Python scripts.
-  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
-  \item Refactored code must pass the provided test suite.
-\end{itemize}
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
 
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
+\noindent \wss{accessProg}():
 \begin{itemize}
-\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
-\item \textbf{Output}: \texttt{self}.
-\item \textbf{Exception}: None.
+\item transition: \wss{if appropriate} 
+\item output: \wss{if appropriate} 
+\item exception: \wss{if appropriate} 
 \end{itemize}
 
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{Transition}:
-    \begin{itemize}
-    \item Reads the file at \texttt{file\_path}.
-    \item Identifies the line with a long lambda function.
-    \item Refactors the lambda into a normal function.
-    \item Writes the refactored code to a temporary file.
-    \end{itemize}
-  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
-  \item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
+\wss{A module without environment variables or state variables is unlikely to
+  have a state transition.  In this case a state transition can only occur if
+  the module is changing the state of another module.}
 
-\subsubsection{Local Functions}
-\paragraph{\texttt{truncate\_at\_top\_level\_comma(body: str)}}
-\begin{itemize}
-\item \textbf{Transition}: Truncates the lambda body at the first top-level comma, ignoring commas within nested parentheses, brackets, or braces.
-\item \textbf{Output}: Returns the truncated lambda body as a string.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-~\newpage
-
-\section{MIS of Long Parameter List Refactorer} \label{Module} 
-
-\texttt{LongParameterListRefactorer}
-
-\subsection{Module}
-
-LongParameterListRefactorer is a module that identifies and refactors functions or methods with long parameter lists(detected beyond configured threshold) in Python code. The refactoring aims to improve code readability, maintainability, and energy efficiency by encapsulating related parameters into objects and removing unused ones.
-
-\subsection{Uses}
-
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
-\end{itemize}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-\hline
-\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-\hline
-\end{tabularx}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-None
-
-\subsubsection{Environment Variables}
-
-\begin{itemize}
-\item \textbf{File system}: Used for reading, writing, and storing temporary and refactored files.
-\item \textbf{Logger}: Logs details of the refactoring process.
-\end{itemize}
-
-\subsubsection{Assumptions}
-
-\begin{itemize}
-  \item Input files are valid Python scripts.
-  \item Smells identified by \texttt{pylint\_smell} include valid line numbers.
-  \item Refactored code must pass the provided test suite.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
-\begin{itemize}
-\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
-\item \textbf{Output}: \texttt{self}.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-\item \textbf{Transition}:
-\begin{enumerate}
-\item Reads the file at \texttt{file\_path} and locates the target function using \texttt{pylint\_smell}.
-\item Analyzes function body to remove unused parameters. Updates the function signature and references in the code accordingly.
-\item If number of used parameters also exceeds the maximum configured limit, encapsulates related parameters into classes. Updates the function signature and references in the code accordingly.
-\item Writes the refactored code to a temporary file.
-\end{enumerate}
-\item \textbf{Output}: None.Refactored file is saved if improvements are validated. 
-\item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
+\wss{Modules rarely have both a transition and an output.  In most cases you
+  will have one or the other.}
 
 \subsubsection{Local Functions}
 
-\begin{enumerate}
-\item \texttt{get\_used\_parameters(function\_node: FuncDef, params: list[str]) -> set[str]}: Identifies parameters used within the function body.
-\item \texttt{get\_parameters\_with\_default\_value(default\_values: list[Constant], params: list[str]) -> dict}: Maps parameter names to their default values.
-\item \texttt{classify\_parameters(params: list[str]) -> dict}: Classifies parameters into \texttt{data} and \texttt{config} groups based on naming conventions.
-\item \texttt{create\_parameter\_object\_class(param\_names: list[str], default\_value\_params: dict, class\_name: str) -> str}: Generates class definitions for encapsulating parameters.
-\item \texttt{update\_function\_signature(function\_node: FuncDef, params: dict) -> FuncDef}: Updates function signatures to use encapsulated parameter objects.
-\item \texttt{update\_parameter\_usages(function\_node: FuncDef, params: dict) -> FuncDef}: Replaces parameter usages within the function body with attributes of encapsulated objects.
-\item \texttt{update\_function\_calls(tree: Module, function\_node: FuncDef, params: dict) -> Module}: Updates all calls to the refactored function.
-\end{enumerate}
-
-\section{MIS of Use List Accumulation Refactorer} \label{mis:ListAccum}
-
-\texttt{UseListAccumulationRefactorer}
-
-\subsection{Module}
-
-The \texttt{UseListAccumulationRefactorer} module identifies and refactors 
-string concatenations in loops in Python code to improve the performance and energy efficiency of the software. It specifically handles these concatenations by, instead, adding the string for each iteration to a list that is then converted to a string using Python's \texttt{join()} function, ensuring proper refactoring while maintaining the original functionality.
-
-\subsection{Uses}
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
-\end{itemize}
-  
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:
-  
-\begin{tabularx}{\linewidth}{|
-    l|
-    >{\raggedright\arraybackslash}X|
-    l|
-    l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-  \hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: Real} & None & \texttt{TypeError}, \texttt{IOError} \\
-  \hline
-\end{tabularx}
-  
-\subsection{Semantics}
-  
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{target\_line: int}: Line number where refactoring is applied.
-  \item \texttt{target\_node: ASTnode}: Node representing the concatenation variable.
-  \item \texttt{assign\_var: str}: Name of the variable the \texttt{target\_node} represents.
-  \item \texttt{last\_assign\_node: ASTnode}: Last initialization/assignment of the \texttt{assign\_var} prior to the start of the loop.
-  \item \texttt{concat\_node: ASTnode}: Node where concatenation occurs.
-  \item \texttt{scope\_node: ASTnode}: Scope where refactoring is inserted.
-  \item \texttt{outer\_loop: ASTnode}: Outermost loop before the start of the concatenation.
-\end{itemize}
-  
-\subsubsection{Environment Variables}
-None
-  
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
-\end{itemize}
-  
-\subsubsection{Access Routine Semantics}
-  
-\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the refactorer with \texttt{output\_dir} and sets default state variables.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception}: None
-\end{itemize}
-  
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies string concatenations in loops, modifies code for list accumulation, and writes refactored code to a file.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\paragraph{\texttt{find\_last\_assignment(self, scope: ASTnode)}}
-\begin{itemize}
-  \item \textbf{transition}: Identifies the last assignment of \texttt{assign\_var} within the given \texttt{scope}.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{TypeError} if given scope is null.
-\end{itemize}
-
-\paragraph{\texttt{find\_scope()}}
-\begin{itemize}
-  \item \textbf{transition}: Finds the scope for refactoring based on AST node ancestry.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{TypeError} if \texttt{concat\_node} is not set.
-\end{itemize}
-
-\paragraph{\texttt{add\_node\_to\_body(self, code\_file: str)}}
-\begin{itemize}
-  \item \textbf{transition}: Inserts list accumulation and join statements into \texttt{code\_file}.
-  \item \textbf{output}: Returns the modified source code as a string.
-  \item \textbf{exception}: Raises \texttt{TypeError} if \texttt{target\_node} or \texttt{outer\_loop} is not set.
-\end{itemize}
-  
-\newpage
-
-\section{MIS of Make Method Static Refactorer} \label{mis:MakeStatic}
-
-\texttt{MakeStaticRefactorer}
-
-\subsection{Module}
-
-The \texttt{MakeStaticRefactorer} module identifies and refactors 
-class methods that don't make use of their instance attributes to improve the readability, performance and energy efficiency of the software. It specifically handles these methods by turning them into static functions and ensuring any calls to this method use the proper calling syntax. This ensures proper refactoring while maintaining the original functionality.
-
-\subsection{Uses}
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
-\end{itemize}
-  
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:
-  
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-  \hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-  \hline
-\end{tabularx}
-  
-\subsection{Semantics}
-  
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{target\_line: int}: Line number where refactoring is applied.
-  \item \texttt{mim\_method\_class: str}: Class name containing the method to refactor.
-  \item \texttt{mim\_method: str}: Method name to refactor.
-\end{itemize}
-  
-\subsubsection{Environment Variables}
-None
-  
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
-\end{itemize}
-  
-\subsubsection{Access Routine Semantics}
-  
-\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the refactorer with \texttt{output\_dir} and sets default state variables.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception}: None.
-\end{itemize}
-  
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies the target function, modifies it to be static, and validates refactoring.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\paragraph{\texttt{visit\_FunctionDef(self, node: FuncDef)}}
-\begin{itemize}
-  \item \textbf{transition}: Adds the \texttt{staticmethod} decorator to the target method and removes the \texttt{self} parameter if present.
-  \item \textbf{output}: Returns the modified \texttt{FunctionDef} node.
-  \item \textbf{exception}: None
-\end{itemize}
-
-\paragraph{\texttt{visit\_ClassDef(self, node: ClassDef)}}
-\begin{itemize}
-  \item \textbf{transition}: Identifies the class containing the target method.
-  \item \textbf{output}: Returns the modified \texttt{ClassDef} node.
-  \item \textbf{exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{visit\_Call(self, node: Call)}}
-\begin{itemize}
-  \item \textbf{transition}: Updates method call references to use the class name instead of \texttt{self}.
-  \item \textbf{output}: Returns the modified \texttt{Call} node.
-  \item \textbf{exception}: None.
-\end{itemize}
-  
-\newpage  
-
-\section{MIS of Long Element Chain Refactorer} \label{mis:lec}
-
-\texttt{LongElementChainRefactorer}
-
-\subsection{Module}
-
-LongElementChainRefactorer is a module that refactors long element chains, specifically focusing on flattening nested dictionaries to improve readability, maintainability, and energy efficiency. The module uses a recursive flattening strategy while caching previously seen patterns for optimization.
-
-\subsection{Uses}
-
-\begin{itemize}
-    \item Uses \texttt{Smell} interface for data access
-    \item Inherits from \texttt{BaseRefactorer}
-\end{itemize}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-\hline
-\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-\hline
-\end{tabularx}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\begin{itemize}
-  \item \textbf{\_reference\_map}: Maps element chain references to their line numbers and corresponding values.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-
-\begin{itemize}
-  \item \textbf{File system}: Used to read, write, and store temporary and refactored files.
-  \item \textbf{Logger}: Logs information during the refactoring process.
-\end{itemize}
-
-\subsubsection{Assumptions}
-
-\begin{itemize}
-  \item Input files are valid Python scripts.
-  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
-  \item Refactored code must pass the provided test suite.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(output\_dir: Path)}}
-\begin{itemize}
-\item \textbf{Transition}: Initializes the refactorer with the specified output directory and sets up internal caching structures.
-\item \textbf{Output}: \texttt{self}.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{Transition}:
-    \begin{itemize}
-      \item Reads the file at \texttt{file\_path}.
-      \item Identifies nested dictionary chains for flattening.
-      \item Refactors the identified chain by flattening the dictionary and replacing its occurrences.
-      \item Writes the refactored code to a temporary file.
-\end{itemize}
-  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
-  \item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\begin{itemize}
-    \item \textbf{\_flatten\_dict(d: dict[str, Any], parent\_key?: str)} \\
-    Recursively flattens a nested dictionary by combining keys with underscores.
-
-    \item \textbf{\_extract\_dict\_literal(node: ASTnode)} \\
-    Converts an Abstract Syntax Tree (AST) dictionary literal into a Python dictionary.
-
-    \item \textbf{\_find\_dict\_assignments(tree: ASTnode, name: str)} \\
-    Extracts dictionary assignments given the name of the dictionary from the AST and returns them as a dictionary.
-
-    \item \textbf{\_collect\_dict\_references(tree: ASTnode)} \\
-    Identifies and stores all dictionary access patterns in the `\_reference\_map`.
-
-    \item \textbf{\_generate\_flattened\_access(base\_var: str, access\_chain: list[str])} \\
-    Generates a flattened dictionary key string by combining elements of an access chain with underscores.
-\end{itemize}
-
-
-
-\section{MIS of Measurements Module} \label{mis:measure}
-
-\texttt{Measurements}
-
-\subsection{Module}
-
-The MeasurementsModule is a module designed to measure and track the carbon emissions generated by executing Python scripts. By leveraging the CodeCarbon library, it allows developers to assess the environmental impact of their code execution. The module runs a specified Python file, tracks the associated carbon emissions during the execution, and logs the results for further analysis. It provides functionality for measuring, logging, and extracting emissions data in a structured manner to help improve energy efficiency in software development.
-
-\subsection{Uses}
-
-\begin{itemize}
-    \item Uses \texttt{CodeCarbon} library for track energy consumption
-    \item Uses \texttt{TemporaryDirectory} to store temporary files
-    \item Inherits from \texttt{BaseEnergyMeter}
-\end{itemize}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-None
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-\hline
-\texttt{measure\_energy} & \texttt{None} & None & CalledProcessError and FileReading exceptions \\
-\hline
-\end{tabularx}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\begin{itemize}
-    \item \textbf{Emissions\_data}: Stores the emissions data extracted from the CSV file generated by CodeCarbon. It is populated after the energy measurement process completes successfully. The value is either a dictionary containing the last row of emissions data or \texttt{None} if no data was extracted due to an error.
-
-\end{itemize}
-
-\subsubsection{Environment Variables}
-
-\begin{itemize}
-  \item \textbf{TEMP}: Sets the temporary directory location for Windows systems. Used during the CodeCarbon energy measurement process.
-  \item \textbf{TMPDIR}: Sets the temporary directory location for Unix-based systems. Used during the CodeCarbon energy measurement process.
-  \item \textbf{Logger}: A logging mechanism that logs various events during the energy measurement process, including errors, completion of measurements, and other key actions.
-\end{itemize}
-
-\subsubsection{Assumptions}
-
-\begin{itemize}
-  \item The file at \texttt{file\_path} is a valid Python script.
-  \item The CodeCarbon tool is properly installed and configured.
-  \item The \texttt{EmissionsTracker} can successfully execute the Python script specified by \texttt{file\_path}.
-  \item The emissions data is captured in a CSV format and can be extracted correctly.
-  \item The temporary directories are correctly set up and accessible during execution.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-\paragraph{\texttt{\_\_init\_\_(file\_path: Path)}}
-\begin{itemize}
-  \item \textbf{Transition}: Initializes the \texttt{CodeCarbonEnergyMeter} with the specified file path and logger. It sets up the necessary internal state for energy measurement and prepares the environment.
-  \item \textbf{Output}: \texttt{self}.
-  \item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{measure\_energy()}}
-\begin{itemize}
-  \item \textbf{Transition}:
-    \begin{itemize}
-      \item Logs the start of the energy measurement process.
-      \item Creates a temporary directory to store custom data.
-      \item Initializes the \texttt{EmissionsTracker} from CodeCarbon.
-      \item Runs the script specified by \texttt{file\_path} and captures the output.
-      \item Stops the tracker after execution and stores the emissions data.
-      \item If available, it extracts the emissions data from the generated CSV file.
-    \end{itemize}
-  \item \textbf{Output}: 
-    \begin{itemize}
-        \item Logs the results of the energy measurement process.
-        \item Stores the emissions data in \texttt{self.emissions\_data}.
-    \end{itemize}
-   \item \textbf{Exception}: 
-      \begin{itemize}
-        \item Logs an error if the file cannot be executed or if the emissions file is not created.
-        \item If the emissions data cannot be extracted from the CSV file, logs the issue.
-      \end{itemize}
- \end{itemize}
-
-\subsubsection{Local Functions}
-\paragraph{\texttt{\_extract\_emissions\_csv(csv\_file\_path: Path)}}
-    
-    Extracts emissions data from a CSV file generated by CodeCarbon.
-    \begin{itemize}
-        \item \textbf{Input}: \texttt{csv\_file\_path} - The path to the CSV file containing emissions data.
-        \item \textbf{Output}: Returns the last row of emissions data as a dictionary, or \texttt{None} if an error occurs.
-    \end{itemize}
-
-  
-  
-\newpage
-
-\section{MIS of Pylint Analyzer} \label{mis:PylintAnalyzer}
-
-\texttt{PylintAnalyzer}
-
-\subsection{Module}
-
-The \texttt{PylintAnalyzer} module performs static code analysis on Python files using Pylint, with additional custom checks for detecting specific code smells. It outputs detected smells in a structured format for further processing.
-
-\subsection{Uses}
-\begin{itemize}
-  \item Uses Python's \texttt{pylint} library for code analysis
-  \item Uses \texttt{ast} module for parsing and analyzing abstract syntax trees
-  \item Uses \texttt{astor} library for converting AST nodes back to source code
-  \item Integrates with custom checkers, including \texttt{StringConcatInLoopChecker}
-  \item Accesses configuration settings from \texttt{analyzers\_config}
-\end{itemize}
-
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:\\
-{\footnotesize
-\begin{tabularx}{\linewidth}{|
-    l|
-    >{\raggedright\arraybackslash}X|
-    l|
-    l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
-  \texttt{\_\_init\_\_} & \texttt{file\_path: Path, source\_code: Module} & \texttt{self} & None \\
-  \hline
-  \texttt{build\_pylint\_options} & None & \texttt{list[str]} & None \\
-  \hline
-  \texttt{analyze} & None & None & \texttt{JSONDecodeError}, \texttt{Exception} \\
-  \hline
-  \texttt{configure\_smells} & None & None & None \\
-  \hline
-  \texttt{filter\_for\_one\_code\_smell} & \texttt{pylint\_results: list[Smell], code: str} & \texttt{list[Smell]} & None \\
-  \hline
-\end{tabularx}
-}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{file\_path: Path}: The path to the Python file being analyzed.
-  \item \texttt{source\_code: Module}: The parsed abstract syntax tree of the source file.
-  \item \texttt{smells\_data: list[dict]}: A list of detected code smells, represented as dictionaries.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-None
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item The input file is valid Python code and can be parsed into an AST.
-  \item Configuration settings, such as extra Pylint options and custom smell definitions, are valid.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(self, file\_path: Path, source\_code: Module)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the analyzer with the provided file path and AST of the source code.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{build\_pylint\_options()}}
-\begin{itemize}
-  \item \textbf{transition}: Constructs the list of Pylint options based on the file path and configuration settings.
-  \item \textbf{output}: Returns a list of strings representing Pylint options.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{analyze()}}
-\begin{itemize}
-  \item \textbf{transition}: Executes Pylint analysis and custom checks, populating \texttt{smells\_data} with detected smells.
-  \item \textbf{output}: None.
-  \item \textbf{exception:} Raises \texttt{JSONDecodeError} if Pylint's output cannot be parsed. Raises \texttt{Exception} for other runtime errors.
-\end{itemize}
-
-\paragraph{\texttt{configure\_smells()}}
-\begin{itemize}
-  \item \textbf{transition}: Filters \texttt{smells\_data} to include only configured smells.
-  \item \textbf{output}: None.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{filter\_for\_one\_code\_smell(self, pylint\_results: list[Smell], code: str)}}
-\begin{itemize}
-  \item \textbf{transition}: Filters the given Pylint results for a specific code smell identified by \texttt{code}.
-  \item \textbf{output}: Returns a list of smells matching the specified code.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\paragraph{\texttt{detect\_long\_message\_chain(self, threshold?: int)}}
-\begin{itemize}
-  \item \textbf{transition}: Identifies method chains exceeding the specified \texttt{threshold}.
-  \item \textbf{output}: Returns a list of smells for long method chains.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{detect\_long\_lambda\_expression(self, threshold\_length?: int, threshold\_count?: int)}}
-\begin{itemize}
-  \item \textbf{transition}: Detects lambda expressions exceeding length or expression count thresholds.
-  \item \textbf{output}: Returns a list of smells for long lambda expressions.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{detect\_long\_element\_chain(self, threshold?: int)}}
-\begin{itemize}
-  \item \textbf{transition}: Detects dictionary access chains exceeding the specified \texttt{threshold}.
-  \item \textbf{output}: Returns a list of smells for long dictionary chains.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{detect\_repeated\_calls(self, threshold?: int)}}
-\begin{itemize}
-  \item \textbf{transition}: Identifies repeated function calls exceeding the \texttt{threshold}.
-  \item \textbf{output}: Returns a list of smells for repeated function calls.
-  \item \textbf{exception:} None.
-\end{itemize}
-\begin{itemize}
-  \item \texttt{parse\_line(file\_path: Path, line: int)}: Parses a specific line of code into an AST node.
-  \item \texttt{get\_lambda\_code(lambda\_node: Lambda)}: Returns the string representation of a lambda expression.
-\end{itemize}
-
-
-\newpage
-
-\section{MIS of Testing Functionality} \label{mis:test}
-
-\texttt{TestRunner}
-
-\subsection{Module}
-
-Responsible for validating that any refactorings made to the source code do not modify it's original functionality.
-
-\subsection{Uses}
-\begin{itemize}
-  \item Uses Python's subprocess library
-\end{itemize}
-
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:
-
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{\_\_init\_\_} & \texttt{run\_command: str, project\_path: Path} & \texttt{self} & None \\
-\hline
-\texttt{retained\_functionality} & None & $\mathbb{B}$ & \texttt{CalledProcessError} \\
-\hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{project\_path: Path}: Path to the source code directory.
-  \item \texttt{run\_command: str}: Command used to run the tests.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-None
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item The provided \texttt{run\_command} is a valid shell command.
-  \item \texttt{project\_path} is a valid path working source code directory.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(self, run\_command: str, project\_path: Path)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the test runner with the given \texttt{run\_command} and \texttt{project\_path}.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{retained\_functionality()}}
-\begin{itemize}
-  \item \textbf{transition}: Runs the specified test command in the given project path. Logs success or failure, including standard output and error streams.
-  \item \textbf{output}: Returns \texttt{True} if the tests passed; otherwise, returns \texttt{False}.
-  \item \textbf{exception}: Raises a \texttt{CalledProcessError} if an eror occurs while running the tests in a subprocess.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None.
-
-\newpage
-
-\section{MIS of Use A Generator Refactorer} \label{mis:UseGen}
-
-\texttt{UseAGeneratorRefactorer}
-
-\subsection{Module}
-
-The \texttt{UseAGeneratorRefactorer} module identifies and refactors 
-unnecessary list comprehensions in Python code by converting them to generator expressions. This refactoring improves energy efficiency while maintaining the original functionality.
-
-\subsection{Uses}
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Uses Python's \texttt{ast} module for parsing and manipulating abstract syntax trees
-\end{itemize}
-
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:\\
-\begin{tabularx}{\linewidth}{|
-    l|
-    >{\raggedright\arraybackslash}X|
-    l|
-    l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
-  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-  \hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{IOError}, \texttt{TypeError} \\
-  \hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{temp\_dir: Path}: Directory path for storing refactored files.
-  \item \texttt{output\_dir: Path}: Directory path for saving final refactored code.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-None
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies unnecessary list comprehensions, modifies the code to use generator expressions, and validates refactoring.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\paragraph{\texttt{\_replace\_node(self, tree: Module, old\_node: ListComp, new\_node: GeneratorExp)}}
-\begin{itemize}
-  \item \textbf{transition}: Replaces an \texttt{old\_node} in the AST with a \texttt{new\_node}.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: None.
-\end{itemize}
-
-\newpage
-
-\section{MIS of Cache Repeated Calls Refactorer} \label{mis:CacheCalls}
-
-\texttt{CacheRepeatedCallsRefactorer}
-
-\subsection{Module}
-
-The \texttt{CacheRepeatedCallsRefactorer} module identifies repeated function calls in Python code and refactors them by caching the result of the first call to a temporary variable. This refactoring improves performance and energy efficiency while preserving the original functionality.
-
-\subsection{Uses}
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Uses Python's \texttt{ast} module for parsing and manipulating abstract syntax trees
-\end{itemize}
-
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
-  \texttt{\_\_init\_\_} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-  \hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{IOError}, \texttt{TypeError} \\
-  \hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{cached\_var\_name: str}: Name of the temporary variable used for caching.
-  \item \texttt{target\_line: int}: Line number where refactoring is applied.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-None
-
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides valid occurrences of repeated calls with line numbers and call strings.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-
-\paragraph{\texttt{\_\_init\_\_(self, output\_dir: Path)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception:} None.
-\end{itemize}
-
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies repeated function calls, inserts a cached variable for the first call, updates subsequent calls to use the cached variable, and validates refactoring.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\begin{itemize}
-  \item \texttt{\_get\_indentation(lines, line\_number)}: Determines the indentation of a specific line.
-  \item \texttt{\_replace\_call\_in\_line(line, call\_string, cached\_var\_name)}: Replaces repeated calls with the cached variable.
-  \item \texttt{\_find\_valid\_parent(tree)}: Identifies the valid parent node containing all occurrences of the repeated call.
-  \item \texttt{\_find\_insert\_line(parent\_node)}: Determines the line to insert the cached variable.
-\end{itemize}
+\wss{As appropriate} \wss{These functions are for the purpose of specification.
+  They are not necessarily something that is going to be implemented
+  explicitly.  Even if they are implemented, they are not exported; they only
+  have local scope.}
 
 \newpage
 
@@ -1323,387 +234,13 @@ None
 
 \newpage
 
-\section{MIS of Plugin Initiator}
+\section{Appendix} \label{Appendix}
 
-\subsection{Module}
-\texttt{Plugin Initiator} is a module that initializes the VS Code plugin and registers commands for VS Code Plugin.
+\wss{Extra information if required}
 
-\subsection{Uses}
-\begin{itemize}
-    \item \texttt{Smell Detector} to register the command for detecting code smells.
-    \item \texttt{Smell Refactorer} to register the command for refactoring user's selected code smell.
-\end{itemize}
+\newpage{}
 
-\subsection{Syntax}
-
-\textbf{Exported Constants:} None\\
-\noindent \textbf{Exported Access Programs:}
-None
-
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-None
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-    \item \textbf{VS CODE API}: Used to register commands.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-\item The plugin is correctly loaded in VS Code.
-\item Source Code Optimizer executable is reachable and operational.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-\texttt{activate()}
-\begin{itemize}
-\item \textbf{Transition}: Activates the plugin and registers commands.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None
-
-\section{MIS of Backend Communicator}
-
-\subsection{Module}
-\texttt{BackendCommunicator} handles all communication between the plugin and the backend service. It sends requests for analysis or refactoring and receives results.
-
-\subsection{Uses}
-Source Code Optimizer executable for energy measurement, smell detection and refactoring of applications.
-
-\subsection{Syntax}
-
-\textbf{Exported Constants:} None
-
-\noindent \textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  \texttt{sendRequest} & \texttt{requestType: string, data: any} & Promise & Communication Error \\
-  \hline
-\end{tabularx}
-
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-None
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-\item \textbf{NETWORK}: Used for communicating with Source Code Optimizer.
-\item \textbf{LOGGER}: Logs any communication errors.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-\item Source Code Optimizer executable is reachable and operational.
-\item Python file with no syntax errors is present in the VS Code editor.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-\texttt{sendRequest(requestType: str, data: Any)}
-\begin{itemize}
-\item \textbf{Transition}: Sends the provided request to Source Code Optimizer and receives a response.
-\item \textbf{Output}: A promise that resolves with Source Code Optimizer's response.
-\item \textbf{Exception}: Logs any errors encountered during communication.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None
-
-\section{MIS of Smell Detector}
-
-\subsection{Module}
-\texttt{Smell Detector} analyzes the active file for code smells and interacts with Source Code Optimizer for detection.
-
-\subsection{Uses}
-\begin{itemize}
-\item \texttt{Backend Communicator} for communicating with Source Code Optimizer for smell detection.
-\item \texttt{File Highlighter} for highlighting detected smells in the editor.
-\end{itemize}
-
-\subsection{Syntax}
-
-\textbf{Exported Constants:} None
-
-\textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  \texttt{detect} & None & None & Active file not found \\
-  \hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-None
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-\item \textbf{EDITOR}: Used to access the active file.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-\item There is an active Python file with no syntax error in the editor.
-\item Source Code Optimizer correctly identifies smells.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-\texttt{detect()}
-\begin{itemize}
-\item \textbf{Transition}: Reads the active file, sends it to Source Code Optimizer for analysis, and highlights detected smells in the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: Throws an error if no active file is found.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None
-
-\section{MIS of Smell Refactorer}
-
-\subsection{Module}
-\texttt{Smell Refactorer} applies a refactoring to a detected smell.
-
-\subsection{Uses}
-\begin{itemize}
-\item \texttt{Backend Communicator} for sending the smell data to Source Code Optimizer for refactoring.
-\item \texttt{Refactor Manager} for managing refactoring workflows.
-\end{itemize}
-
-\subsection{Syntax}
-
-\textbf{Exported Constants:} None
-
-\textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf\\
-  \hline
-  \texttt{refactor} & {smell: Smell} & None & Invalid input \\
-  \hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-None
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-\item \textbf{EDITOR}: Used to apply refactored changes.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-\item The smell data is valid and correctly identifies a refactorable issue.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-\texttt{refactor(smell: Smell)}
-\begin{itemize}
-\item \textbf{Transition}: Sends the smell data to the backend for refactoring and applies the changes in the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: Logs errors for invalid inputs or failed refactoring.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None
-
-\section{MIS of File Highlighter}
-
-\subsection{Module}
-\texttt{File Highlighter} is a module that manages highlighting of code regions in the VS Code editor.
-
-\subsection{Uses}
-None
-
-\subsection{Syntax}
-
-\textbf{Exported Constants:} None
-
-\noindent \textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf \\
-  \hline
-  \texttt{highlight} & \texttt{range: range[]} & None & None \\ \hline
-  \texttt{clear} & \texttt{None} & None & None \\
-  \hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-\item \texttt{highlightedRanges}: Stores the currently highlighted regions in the editor.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-\item \textbf{EDITOR}: Used to apply and clear highlights.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-\item The VS Code editor is active and accessible.
-\item Python file with no syntax errors is currently open in the editor.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-\texttt{highlight(ranges: Range[])}
-\begin{itemize}
-\item \textbf{Transition}: Adds highlights to the specified ranges in the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\texttt{clear()}
-\begin{itemize}
-\item \textbf{Transition}: Removes all highlights from the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None
-
-\section{MIS of Hover Manager}
-
-\subsection{Module}
-\texttt{Hover Manager} manages hover effects to display contextual information.
-
-\subsection{Uses}
-\begin{itemize}
-\item \texttt{File Highlighter} for providing contextual information about highlighted smells.
-\end{itemize}
-
-\subsection{Syntax}
-
-\textbf{Exported Constants:} None
-
-\textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf \\
-  \hline
-  \texttt{showHover} & \texttt{position: Position} & None & None \\ \hline
-  \texttt{clearHover} & \texttt{None} & None & None \\
-  \hline
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-\item \texttt{currentHover}: Stores the currently displayed hover information.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-\item \textbf{EDITOR}: Used to display hover effects.
-\end{itemize}
-
-\subsubsection{Assumptions}
-None
-
-\subsubsection{Access Routine Semantics}
-\texttt{showHover(position: Position)}
-\begin{itemize}
-\item \textbf{Transition}: Displays hover information at the specified position.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\texttt{clearHover()}
-\begin{itemize}
-\item \textbf{Transition}: Clears any active hover information.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None
-
-\section{MIS of Refactor Manager}
-
-\subsection{Module}
-\texttt{Refactor Manager} manages the process of applying refactorings to detected smells.
-
-\subsection{Uses}
-None
-
-\subsection{Syntax}
-
-\textbf{Exported Constants:} None
-
-\textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \toprule Name & In & Out & Exceptions \\
-  \midrule
-  \texttt{applyRefactor} & \texttt{refactor: Refactor} & None & Validation error \\ \hline
-  \texttt{previewRefactor} & \texttt{refactor: Refactor} & None & None \\ \hline
-  \texttt{undoRefactor} & None & None & None \\
-  \bottomrule
-\end{tabularx}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-\begin{itemize}
-\item \texttt{appliedRefactors}: Stores a history of applied refactors.
-\end{itemize}
-
-\subsubsection{Environment Variables}
-\begin{itemize}
-\item \textbf{EDITOR}: Used to apply and preview refactors.
-\end{itemize}
-
-\subsubsection{Assumptions}
-\begin{itemize}
-\item The refactoring data is valid and corresponds to detected smells.
-\end{itemize}
-
-\subsubsection{Access Routine Semantics}
-\texttt{applyRefactor(refactor: Refactor)}
-\begin{itemize}
-\item \textbf{Transition}: Applies the provided refactor to the active editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: Logs validation errors if the refactor cannot be applied.
-\end{itemize}
-
-\texttt{previewRefactor(refactor: Refactor)}
-\begin{itemize}
-\item \textbf{Transition}: Displays a preview of the refactor in the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\texttt{undoRefactor()}
-\begin{itemize}
-\item \textbf{Transition}: Reverts the most recently applied refactor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\subsubsection{Local Functions}
-None
-
-% \bibliographystyle {plainnat}
-% \bibliography {../../../refs/References}
-
-\newpage
-
-\section{Appendix --- Reflection}
+\section*{Appendix --- Reflection}
 
 \wss{Not required for CAS 741 projects}
 
@@ -1712,202 +249,21 @@ graduate attribute of Problem Analysis and Design.
 
 \input{../../Reflection.tex}
 
-\subsubsection*{Group Reflection}
-
 \begin{enumerate}
-  \item \textit{Which of your design decisions stemmed from speaking to your client(s)
+  \item What went well while writing this deliverable? 
+  \item What pain points did you experience during this deliverable, and how
+    did you resolve them?
+  \item Which of your design decisions stemmed from speaking to your client(s)
   or a proxy (e.g. your peers, stakeholders, potential users)? For those that
-  were not, why, and where did they come from?}
-
-  The decision to modularize the refactorers into specific "smell-focused" 
-  components was largely inspired by a conversation with our supervisor, 
-  who is also our primary stakeholder. During one of our discussions, our 
-  supervisor suggested that the problem at hand had the potential to 
-  evolve into a graduate-level reinforcement learning project. This 
-  idea of managing multiple refactoring strategies and selecting the 
-  best one based on certain conditions led to the insight that 
-  organizing the refactorers by the specific types of code smells 
-  they address would make the system more extensible. By focusing 
-  each component on a particular code smell, we could later build 
-  upon the design and possibly incorporate machine learning or 
-  reinforcement learning strategies to optimize refactorer selection. 
-  This modular approach would allow for easier integration of additional 
-  strategies in the future, making the tool scalable as the project evolves.
-
-
-  Another important design decision influenced by our supervisor was the 
-  idea to validate the refactored code using a test suite. Our supervisor 
-  emphasized that in a real-world application, validating the integrity 
-  of the refactored code with a comprehensive test suite was a crucial step. 
-
-  Both of these design decisions were informed by valuable input from our 
-  supervisor, ensuring that the project stayed grounded in real-world 
-  applicability and allowed for future enhancements and improvements.
-
-
-  \item \textit{While creating the design doc, what parts of your other documents (e.g.
-  requirements, hazard analysis, etc), it any, needed to be changed, and why?}
-  
-  While creating the design document, several components of the project were revised to improve clarity and focus. Specifically, the list of code smells targeted by the refactoring library was refined by adding new smells that align more closely with our sustainability goals and removing others deemed less impactful. This required updates to the requirements document to ensure it accurately reflected the new scope of supported refactorings. Additionally, the decision was made to remove the metric reporting functionality due to its complexity and limited time, which led to corresponding modifications in both the requirements document and the VnV plan, where this feature had previously been considered for validation. Moreover, the reinforcement learning model, initially intended to optimise refactoring decisions, was excluded from the project due to time constraints and implementation challenges. This necessitated updates to the hazard analysis document to remove risks associated with this component and to better align the analysis with the reduced project scope. These changes ensure consistency and maintain a realistic and achievable project timeline. 
-
-  \item \textit {What are the limitations of your solution?  Put another way, given unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)}
-
-  The energy measurement library we selected, Codecarbon, proved to be less reliable 
-  than anticipated, which affects the accuracy of some of our results. Ideally, 
-  we would replace it with a more dependable resource. However, due to time 
-  constraints and the inherent complexity of measuring CO2 emissions from code, 
-  this isn’t feasible within the scope of this project. For now, we are assuming 
-  Codecarbon’s reliability. In a real-world implementation, we would prioritize 
-  using a more robust energy measurement system.
-
-  \item \textit {Give a brief overview of other design solutions you considered.  What
+  were not, why, and where did they come from?
+  \item While creating the design doc, what parts of your other documents (e.g.
+  requirements, hazard analysis, etc), it any, needed to be changed, and why?
+  \item What are the limitations of your solution?  Put another way, given
+  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
+  \item Give a brief overview of other design solutions you considered.  What
   are the benefits and tradeoffs of those other designs compared with the chosen
   design?  From all the potential options, why did you select the documented design?
-  (LO\_Explores)}
-
-  We considered incorporating a machine learning aspect into the project, 
-  specifically using reinforcement learning (RL) to manage the refactoring 
-  process. The idea was to treat the selection and application of 
-  refactoring strategies as a decision-making process, where an agent 
-  could learn the best strategies over time based on rewards and outcomes.
-
-  In this approach, the agent would represent the system that applies 
-  different refactoring techniques to the code. The environment would 
-  be the code itself, with various code smells and inefficiencies that 
-  the agent needs to address. The actions the agent would take would 
-  involve selecting and applying one of the predefined refactoring 
-  strategies (like long lambda function or long parameter list). The reward 
-  would be the resulting decrease in energy consumption (i.e., reduction 
-  in CO2 emissions), measured after the code is refactored and executed. 
-  The agent would receive a positive reward for actions that successfully 
-  lead to more energy-efficient code and a negative reward for actions 
-  that increase energy consumption. Over time, the agent would learn to 
-  prioritize and apply the most effective refactoring techniques based 
-  on the rewards it receives.
-
-
-  While this machine learning solution seemed promising, there were a 
-  few trade-offs to consider. First, implementing reinforcement 
-  learning would significantly increase the complexity of the project. 
-  It would require training data, fine-tuning the agent's learning parameters, 
-  and ensuring that the agent's actions actually lead to measurable 
-  improvements in CO2 efficiency. Additionally, RL would require 
-  ongoing iteration to improve its performance, which could be time-consuming 
-  and resource-intensive, especially given the limited time available 
-  for the project.
-
-
-  Another concern was that reinforcement learning, while powerful, 
-  might not always be the most effective or efficient solution for 
-  this kind of task. The selection of refactoring strategies is not 
-  necessarily a highly complex decision-making process that requires 
-  learning over time. Since we already have a set of predefined 
-  strategies, a more direct, rule-based approach was more appropriate. 
-  We could achieve the same results without the need for training the 
-  agent or dealing with the unpredictability of machine learning models.
-
-
-  Given these trade-offs, we opted to stick with the more straightforward 
-  approach of selecting and applying refactoring strategies based on 
-  predefined rules. This decision was driven by the need for a practical 
-  and efficient solution within the given project constraints. While 
-  reinforcement learning could be an interesting exploration for future 
-  versions of the tool, the current design provides a reliable and 
-  manageable way to achieve the desired results without adding 
-  unnecessary complexity.
-
-
-\end{enumerate}
-
-\subsubsection*{Mya Hussain}
-
-\begin{enumerate}
-  \item \textit{What went well while writing this deliverable? }
-  
-  Writing the deliverable helped to clearly decompose the system into manageable modules.
-  This ensured no functionality was missed in the implementation process and that all 
-  components connected in a way that made sense. 
-
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-
-  It was strange that we had already coded the project before completing this deliverable.
-  It acted as more of a sanity check that our design decisions made sense rather than 
-  an actual blueprint of what to do. This made this deliverable easier to write as 
-  the code was already present but also made the work feel unnecessarily redundant i.e boring to do.
-  It often felt like I was documenting things that were already clear or implemented. 
-  This repetition made the process less engaging and, at times, a bit tedious. 
-  To resolve this, I focused on framing the document as an opportunity to validate 
-  and formalize our design decisions, which helped shift the mindset from simply 
-  checking off tasks to reaffirming the thought process behind our choices.
-    
-\end{enumerate}
-
-\subsubsection*{Sevhena Walker}
-
-\begin{enumerate}
-  \item \textit{What went well while writing this deliverable? }
-
-  Our team already had a pretty solid idea of how we wanted to break up our system, as well as the key components that should be involved, even before we started working on the MG and MIS documents. We had already coded a decent portion of the system and, in doing so, had explored and tested various design approaches and options. This hands-on experience gave us a strong foundation and a practical understanding of what worked and what didn’t, which significantly influenced our final design choices. For example, we had already determined that the refactorers would be structured as individual classes inheriting from a common base class, which simplified documenting shared functionality in the MIS.
-
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-  
-  One of the biggest pain points was turning our informal design ideas and code into well-defined, modular components with clear inputs, outputs, and semantics. We had to carefully review the existing code to make sure the documentation matched its behaviour while keeping things flexible for future changes. We also ran into some inconsistencies that required minor refactoring to clean up our interfaces. Another tricky part was finding the right balance between providing enough detail and keeping the documentation readable without going too deep into implementation. We tackled these problems by reviewing everything multiple times, getting feedback, and simplifying where we could to make things clearer.
-
-\end{enumerate}
-
-\subsection*{Nivetha Kuruparan}
-
-\begin{enumerate}
-  \item \textit{What went well while writing this deliverable? }
-  Planning out the different modules early on was incredibly helpful for me. It allowed me to clearly identify how various parts of the system interact and what functionality could be combined or separated. This structured approach not only helped in designing the system but also made it easier to focus on what each module should accomplish, ensuring no major functionality was overlooked.
-
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-    It was challenging for me to think through each module thoroughly and ensure that every input, output, and state variable was captured accurately. This required going through the implementation multiple times and considering edge cases that might not have been obvious at first. Breaking the process into smaller, more manageable tasks and carefully reviewing each module helped resolve this challenge.
-
-    
-\end{enumerate}
-
-\subsection*{Ayushi Amin}
-
-\begin{enumerate}
-  \item \textit{What went well while writing this deliverable? }
-  Honestly, once I got into it, things flowed pretty smoothly. Breaking everything down into 
-  smaller sections helped a ton. It made the whole thing feel less intimidating. I also felt like 
-  I had a good understanding of how the modules all connected, which made it easier to explain things.
-  We all had our own parts to work on based on the modules we have and were going to create so it was easier to 
-  work on something I was familiar with. Also, talking it through with my teammates about some of the trickier 
-  parts really helped me feel more confident about what I was writing. We all did code reviews and helped eachother out on
-  parts we didn't quite get or thought we got. Overall, it felt pretty satisfying to see it all come together.
-  
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-  I think the hardest part of this was visualizing extra dependencies and functions I would need to create to make my 
-  module work. We had coded out a portion of it but it did not include everything. I had to make sure I was not missing 
-  anything important. It felt like I was stuck in this loop of overthinking every little detail. To get past it, I took a 
-  break and came back with a fresh perspective, which helped a bit. I also hit up one of my teammates to talk through the 
-  parts I was struggling with. They gave me some ideas and helped me confirm I was on the right track since some of the 
-  modules I did were similar to theirs so we were able to collaborate easily. After that, things did not feel as stressful, 
-  and I was able to wrap it up.
-  
-\end{enumerate}
-
-\subsection*{Tanveer Brar}
-
-\begin{enumerate}
-  \item \textit{What went well while writing this deliverable? }
-  The best part about writing this deliverable was getting the chance to design the user interface before having implemented it. The Source Code Optimizer has already been designed
-  and implemented as a result of the POC assignment in November. We had not implemented the VS Code Plugin for it yet, so getting the chance to actually think about its 
-  design was very rewarding(especially since most academic projects I have done before either involved no design component or very minimal for a small program). Each modules has clear 
-  responsibilities, which helped me anticipate all needed requirements for this plugin through a logical framework(POC implementation was a lot of trial and error).
-  The other good thing were the built in labels for anticipated changes and modules, which helped me easily write down the traceability matrix.
-  
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-  One of the biggest challenges that I faced was identifying the correct module for each anticipated change in the traceability matrix. My team mate had worked on the anticipated
-  changes, Some of these changes had overlapping responsibilities across modules, so I carefully reviewd the module responsibilities over again to be able to point out the modules for 
-  each change. It needed a lot of cross referencing the module guide and anticipated changes to make sure nothing was missde. 
-  Also, when determining module dependencies in the "Uses" section for each module's decomposition, I was not fully sure about which modules should depend on which for the VS Code Plugin.
-  This is because there can be multiple possible ways, for example the Plugin Initializer or Smell Detector being able to directly call Source Code Optimizer. While resolving this, I realized that 
-  while there is no one perfect mapping of dependencies, the goal should be to be as modular as possible and apply the seperation of concerns principle. This is why, for example, the Backend Communicator 
-  is the only module in the design that communicates with Source Code Optimizer.
+  (LO\_Explores)
 \end{enumerate}
 
 
