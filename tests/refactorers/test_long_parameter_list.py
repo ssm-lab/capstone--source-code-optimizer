@@ -31,19 +31,17 @@ def test_long_param_list_detection():
     assert detected_lines == expected_lines
 
 
-def test_long_parameter_refactoring():
+def test_long_parameter_refactoring(output_dir):
     smells = get_smells(TEST_INPUT_FILE)
 
     long_param_list_smells = [
         smell for smell in smells if smell["messageId"] == PylintSmell.LONG_PARAMETER_LIST.value
     ]
 
-    refactorer = LongParameterListRefactorer()
-
-    initial_emission = 100.0
+    refactorer = LongParameterListRefactorer(output_dir)
 
     for smell in long_param_list_smells:
-        refactorer.refactor(TEST_INPUT_FILE, smell, initial_emission)
+        refactorer.refactor(TEST_INPUT_FILE, smell)
 
         refactored_file = refactorer.temp_dir / Path(
             f"{TEST_INPUT_FILE.stem}_LPLR_line_{smell['line']}.py"

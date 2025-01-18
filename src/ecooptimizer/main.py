@@ -1,6 +1,8 @@
 import ast
 import logging
 from pathlib import Path
+import shutil
+from tempfile import TemporaryDirectory
 
 from .utils.ast_parser import parse_file
 from .utils.outputs_config import OutputConfig
@@ -8,6 +10,7 @@ from .utils.outputs_config import OutputConfig
 from .measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from .analyzers.pylint_analyzer import PylintAnalyzer
 from .utils.refactorer_factory import RefactorerFactory
+from .testing.test_runner import TestRunner
 
 # Path of current directory
 DIRNAME = Path(__file__).parent
@@ -16,7 +19,9 @@ OUTPUT_DIR = (DIRNAME / Path("../../outputs")).resolve()
 # Path to log file
 LOG_FILE = OUTPUT_DIR / Path("log.log")
 # Path to the file to be analyzed
-TEST_FILE = (DIRNAME / Path("../../tests/input/string_concat_examples.py")).resolve()
+SOURCE = (DIRNAME / Path("../../tests/input/sample_project/car_stuff.py")).resolve()
+TEST_DIR = (DIRNAME / Path("../../tests/input/sample_project")).resolve()
+TEST_FILE = TEST_DIR / "test_car_stuff.py"
 
 
 def main():
@@ -31,11 +36,18 @@ def main():
         datefmt="%H:%M:%S",
     )
 
-    SOURCE_CODE = parse_file(TEST_FILE)
+    SOURCE_CODE = parse_file(SOURCE)
     output_config.save_file(Path("source_ast.txt"), ast.dump(SOURCE_CODE, indent=2), "w")
 
-    if not TEST_FILE.is_file():
-        logging.error(f"Cannot find source code file '{TEST_FILE}'. Exiting...")
+    if not SOURCE.is_file():
+        logging.error(f"Cannot find source code file '{SOURCE}'. Exiting...")
+        exit(1)
+
+    # Check that tests pass originally
+    test_runner = TestRunner("pytest", TEST_DIR)
+    if not test_runner.retained_functionality():
+        logging.error("Provided test suite fails with original source code.")
+        exit(1)
 
     # Log start of emissions capture
     logging.info(
@@ -49,7 +61,7 @@ def main():
     )
 
     # Measure energy with CodeCarbonEnergyMeter
-    codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE)
+    codecarbon_energy_meter = CodeCarbonEnergyMeter(SOURCE)
     codecarbon_energy_meter.measure_energy()
     initial_emissions = codecarbon_energy_meter.emissions  # Get initial emission
 
@@ -82,7 +94,7 @@ def main():
     )
 
     # Anaylze code smells with PylintAnalyzer
-    pylint_analyzer = PylintAnalyzer(TEST_FILE, SOURCE_CODE)
+    pylint_analyzer = PylintAnalyzer(SOURCE, SOURCE_CODE)
     pylint_analyzer.analyze()  # analyze all smells
 
     # Save code smells
@@ -110,20 +122,36 @@ def main():
         "#####################################################################################################"
     )
 
-    # Refactor code smells
-    output_config.copy_file_to_output(TEST_FILE, "refactored-test-case.py")
+    with TemporaryDirectory() as temp_dir:
+        project_copy = Path(temp_dir) / SOURCE.parent.name
 
-    for pylint_smell in pylint_analyzer.smells_data:
-        refactoring_class = RefactorerFactory.build_refactorer_class(
-            pylint_smell["messageId"], OUTPUT_DIR
+        source_copy = project_copy / SOURCE.name
+
+        shutil.copytree(SOURCE.parent, project_copy)
+
+        # Refactor code smells
+        backup_copy = output_config.copy_file_to_output(source_copy, "refactored-test-case.py")
+
+        for pylint_smell in pylint_analyzer.smells_data:
+            refactoring_class = RefactorerFactory.build_refactorer_class(
+                pylint_smell["messageId"], OUTPUT_DIR
+            )
+            if refactoring_class:
+                refactoring_class.refactor(source_copy, pylint_smell)
+
+                if not TestRunner("pytest", Path(temp_dir)).retained_functionality():
+                    logging.info("Functionality not maintained. Discarding refactoring.\n")
+            else:
+                logging.info(
+                    f"Refactoring for smell {pylint_smell['symbol']} is not implemented.\n"
+                )
+
+            # Revert temp
+            shutil.copy(backup_copy, source_copy)
+
+        logging.info(
+            "#####################################################################################################\n\n"
         )
-        if refactoring_class:
-            refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)
-        else:
-            logging.info(f"Refactoring for smell {pylint_smell['symbol']} is not implemented.\n")
-    logging.info(
-        "#####################################################################################################\n\n"
-    )
 
     return
 
@@ -139,7 +167,7 @@ def main():
     )
 
     # Measure energy with CodeCarbonEnergyMeter
-    codecarbon_energy_meter = CodeCarbonEnergyMeter(TEST_FILE)
+    codecarbon_energy_meter = CodeCarbonEnergyMeter(SOURCE)
     codecarbon_energy_meter.measure_energy()  # Measure emissions
     final_emission = codecarbon_energy_meter.emissions  # Get final emission
     final_emission_data = codecarbon_energy_meter.emissions_data  # Get final emission data

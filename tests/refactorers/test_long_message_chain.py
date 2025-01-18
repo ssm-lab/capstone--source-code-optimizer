@@ -49,7 +49,7 @@ def long_message_chain_code(source_files: Path):
             condition = all([isinstance(attribute, str) for attribute in [self.make, self.model, self.year, self.color]])
             if condition:
                 return self.price * 0.9  # Apply a 10% discount if all attributes are strings (totally arbitrary condition)
-            
+
             return self.price
 
         def unused_method(self):
@@ -80,7 +80,7 @@ def long_message_chain_code(source_files: Path):
         vehicle.display_info()
         price_after_discount = vehicle.calculate_price()
         print(f"Price after discount: {price_after_discount}")
-        
+
         vehicle.unused_method()  # Calls a method that doesn't actually use the class attributes
 
     def is_all_string(attributes):
@@ -167,12 +167,9 @@ def test_long_message_chain_refactoring(long_message_chain_code: Path, output_di
     # Instantiate the refactorer
     refactorer = LongMessageChainRefactorer(output_dir)
 
-    # Measure initial emissions (mocked or replace with actual implementation)
-    initial_emissions = 100.0  # Mock value, replace with actual measurement
-
     # Apply refactoring to each smell
     for smell in long_msg_chain_smells:
-        refactorer.refactor(long_message_chain_code, smell, initial_emissions)
+        refactorer.refactor(long_message_chain_code, smell)
 
     for smell in long_msg_chain_smells:
         # Verify the refactored file exists and contains expected changes

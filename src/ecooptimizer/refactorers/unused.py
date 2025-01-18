@@ -4,8 +4,6 @@ from pathlib import Path
 from ..refactorers.base_refactorer import BaseRefactorer
 from ..data_wrappers.smell import Smell
 
-from ..testing.run_tests import run_tests
-
 
 class RemoveUnusedRefactorer(BaseRefactorer):
     def __init__(self, output_dir: Path):
@@ -16,7 +14,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         """
         super().__init__(output_dir)
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """
         Refactors unused imports, variables and class attributes by removing lines where they appear.
         Modifies the specified instance in the file if it results in lower emissions.
@@ -61,31 +59,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.writelines(modified_lines)
 
-        # Measure emissions of the modified code
-        final_emissions = self.measure_energy(temp_file_path)
+        with file_path.open("w") as f:
+            f.writelines(modified_lines)
 
-        if not final_emissions:
-            # os.remove(temp_file_path)
-            logging.info(
-                f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
-            )
-            return
-
-        # shutil.move(temp_file_path, file_path)
-
-        # check for improvement in emissions (for logging purposes only)
-        if self.check_energy_improvement(initial_emissions, final_emissions):
-            if run_tests() == 0:
-                logging.info("All test pass! Functionality maintained.")
-                logging.info(f"Removed unused stuff on line {line_number} and saved changes.\n")
-                return
-
-            logging.info("Tests Fail! Discarded refactored changes")
-
-        else:
-            logging.info(
-                "No emission improvement after refactoring. Discarded refactored changes.\n"
-            )
-
-        # Remove the temporary file if no energy improvement or failing tests
-        # os.remove(temp_file_path)
+        logging.info(f"Refactoring completed and saved to: {temp_file_path}")

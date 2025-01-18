@@ -35,7 +35,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
 
         return "".join(truncated_body).strip()
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):  # noqa: ARG002
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """
         Refactor long lambda functions by converting them into normal functions
         and writing the refactored code to a new file.
@@ -129,32 +129,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
         with temp_filename.open("w") as temp_file:
             temp_file.writelines(lines)
 
+        with file_path.open("w") as f:
+            f.writelines(lines)
+
         logging.info(f"Refactoring completed and saved to: {temp_filename}")
-
-        # # Measure emissions of the modified code
-        # final_emission = self.measure_energy(temp_file_path)
-
-        # if not final_emission:
-        #     logging.info(
-        #         f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
-        #     )
-        #     return
-
-        # # Check for improvement in emissions
-        # if self.check_energy_improvement(initial_emissions, final_emission):
-        #     # If improved, replace the original file with the modified content
-        #     if run_tests() == 0:
-        #         logging.info("All test pass! Functionality maintained.")
-        #         logging.info(
-        #             f'Refactored long lambda function on line {pylint_smell["line"]} and saved.\n'
-        #         )
-        #         return
-
-        #     logging.info("Tests Fail! Discarded refactored changes")
-        # else:
-        #     logging.info(
-        #         "No emission improvement after refactoring. Discarded refactored changes.\n"
-        #     )
-
-        # # Remove the temporary file if no energy improvement or failing tests
-        # temp_file_path.unlink(missing_ok=True)

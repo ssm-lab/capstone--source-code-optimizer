@@ -154,47 +154,7 @@ def test_str_concat_in_loop_detection(get_smells):
     assert detected_lines == expected_lines
 
 
-def test_scl_refactoring_no_energy_improvement(
-    get_smells,
-    str_concat_loop_code: Path,
-    output_dir,
-    mocker,
-):
-    smells = get_smells
-
-    # Filter for scl smells
-    str_concat_smells = [
-        smell for smell in smells if smell["messageId"] == CustomSmell.STR_CONCAT_IN_LOOP.value
-    ]
-
-    refactorer = UseListAccumulationRefactorer(output_dir)
-
-    mocker.patch.object(refactorer, "measure_energy", return_value=7)
-    mocker.patch(
-        "ecooptimizer.refactorers.base_refactorer.run_tests",
-        return_value=0,
-    )
-
-    initial_emissions = 5
-
-    # Apply refactoring to each smell
-    for smell in str_concat_smells:
-        refactorer.refactor(str_concat_loop_code, smell, initial_emissions)
-
-    for smell in str_concat_smells:
-        # Verify the refactored file exists and contains expected changes
-        refactored_file = refactorer.temp_dir / Path(
-            f"{str_concat_loop_code.stem}_SCLR_line_{smell['line']}.py"
-        )
-        assert not refactored_file.exists()
-
-
-def test_scl_refactoring_with_energy_improvement(
-    get_smells,
-    str_concat_loop_code: Path,
-    output_dir: Path,
-    mocker,
-):
+def test_scl_refactoring(get_smells, str_concat_loop_code: Path, output_dir: Path):
     smells = get_smells
 
     # Filter for scl smells
@@ -205,17 +165,9 @@ def test_scl_refactoring_with_energy_improvement(
     # Instantiate the refactorer
     refactorer = UseListAccumulationRefactorer(output_dir)
 
-    mocker.patch.object(refactorer, "measure_energy", return_value=5)
-    mocker.patch(
-        "ecooptimizer.refactorers.base_refactorer.run_tests",
-        return_value=0,
-    )
-
-    initial_emissions = 10
-
     # Apply refactoring to each smell
     for smell in str_concat_smells:
-        refactorer.refactor(str_concat_loop_code, smell, initial_emissions)
+        refactorer.refactor(str_concat_loop_code, smell)
 
     for smell in str_concat_smells:
         # Verify the refactored file exists and contains expected changes

@@ -1,4 +1,5 @@
 import ast
+import logging
 from pathlib import Path
 
 from .base_refactorer import BaseRefactorer
@@ -12,14 +13,13 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         super().__init__(output_dir)
         self.target_line = None
 
-    def refactor(self, file_path: Path, pylint_smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell):  # noqa: ANN001
         """
         Refactor the repeated function call smell and save to a new file.
         """
         self.input_file = file_path
         self.smell = pylint_smell
 
-         
         self.cached_var_name = "cached_" + self.smell["occurrences"][0]["call_string"].split("(")[0]
 
         print(f"Reading file: {self.input_file}")
@@ -52,7 +52,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
             original_line = lines[adjusted_line_index]
             call_string = occurrence["call_string"].strip()
             print(f"Processing occurrence at line {occurrence['line']}: {original_line.strip()}")
-            updated_line = self._replace_call_in_line(original_line, call_string, self.cached_var_name)
+            updated_line = self._replace_call_in_line(
+                original_line, call_string, self.cached_var_name
+            )
             if updated_line != original_line:
                 print(f"Updated line {occurrence['line']}: {updated_line.strip()}")
                 lines[adjusted_line_index] = updated_line
@@ -63,16 +65,12 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as refactored_file:
             refactored_file.writelines(lines)
 
-        self.validate_refactoring(
-            temp_file_path,
-            file_path,
-            initial_emissions,
-            "Repeated Calls",
-            "Cache Repeated Calls",
-             pylint_smell["occurrences"][0]["line"],
-        )
+        with file_path.open("w") as f:
+            f.writelines(lines)
 
-    def _get_indentation(self, lines, line_number):
+        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
+
+    def _get_indentation(self, lines: list[str], line_number: int):
         """
         Determine the indentation level of a given line.
 
@@ -81,9 +79,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         :return: The indentation string.
         """
         line = lines[line_number - 1]
-        return line[:len(line) - len(line.lstrip())]
+        return line[: len(line) - len(line.lstrip())]
 
-    def _replace_call_in_line(self, line, call_string, cached_var_name):
+    def _replace_call_in_line(self, line: str, call_string: str, cached_var_name: str):
         """
         Replace the repeated call in a line with the cached variable.
 
@@ -96,7 +94,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         updated_line = line.replace(call_string, cached_var_name)
         return updated_line
 
-    def _find_valid_parent(self, tree):
+    def _find_valid_parent(self, tree: ast.Module):
         """
         Find the valid parent node that contains all occurrences of the repeated call.
 
@@ -106,7 +104,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         candidate_parent = None
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.Module)):
-                if all(self._line_in_node_body(node, occ["line"]) for occ in self.smell["occurrences"]):
+                if all(
+                    self._line_in_node_body(node, occ["line"]) for occ in self.smell["occurrences"]
+                ):
                     candidate_parent = node
         if candidate_parent:
             print(
@@ -115,7 +115,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
             )
         return candidate_parent
 
-    def _find_insert_line(self, parent_node):
+    def _find_insert_line(self, parent_node: ast.FunctionDef | ast.ClassDef | ast.Module):
         """
         Find the line to insert the cached variable assignment.
 
@@ -126,7 +126,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
             return 1  # Top of the module
         return parent_node.body[0].lineno  # Beginning of the parent node's body
 
-    def _line_in_node_body(self, node, line):
+    def _line_in_node_body(self, node: ast.FunctionDef | ast.ClassDef | ast.Module, line: int):
         """
         Check if a line is within the body of a given AST node.
 
@@ -138,6 +138,8 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
             return False
 
         for child in node.body:
-            if hasattr(child, "lineno") and child.lineno <= line <= getattr(child, "end_lineno", child.lineno):
+            if hasattr(child, "lineno") and child.lineno <= line <= getattr(
+                child, "end_lineno", child.lineno
+            ):
                 return True
         return False

@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 import re
 import ast
@@ -109,7 +110,7 @@ class LongElementChainRefactorer(BaseRefactorer):
         joined = "_".join(k.strip("'\"") for k in access_chain)
         return f"{base_var}_{joined}"
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """Refactor long element chains using the most appropriate strategy."""
         line_number = pylint_smell["line"]
         temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
@@ -172,11 +173,7 @@ class LongElementChainRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.writelines(new_lines)
 
-        self.validate_refactoring(
-            temp_file_path,
-            file_path,
-            initial_emissions,
-            "Long Element Chains",
-            "Flattened Dictionary",
-            pylint_smell["line"],
-        )
+        with file_path.open("w") as f:
+            f.writelines(new_lines)
+
+        logging.info(f"Refactoring completed and saved to: {temp_file_path}")

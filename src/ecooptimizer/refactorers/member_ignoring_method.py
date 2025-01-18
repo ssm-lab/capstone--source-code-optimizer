@@ -19,7 +19,7 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         self.mim_method_class = ""
         self.mim_method = ""
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """
         Perform refactoring
 
@@ -45,15 +45,9 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         temp_file_path = self.temp_dir / Path(f"{file_path.stem}_MIMR_line_{self.target_line}.py")
 
         temp_file_path.write_text(modified_code)
+        file_path.write_text(modified_code)
 
-        self.validate_refactoring(
-            temp_file_path,
-            file_path,
-            initial_emissions,
-            "Member Ignoring Method",
-            "Static Method",
-            pylint_smell["line"],
-        )
+        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 
     def visit_FunctionDef(self, node: ast.FunctionDef):
         logging.debug(f"visiting FunctionDef {node.name} line {node.lineno}")

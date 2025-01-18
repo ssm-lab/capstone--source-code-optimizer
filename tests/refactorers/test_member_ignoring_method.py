@@ -58,7 +58,7 @@ def test_member_ignoring_method_detection(get_smells, MIM_code: Path):
     assert mim_smells[0].get("module") == MIM_code.stem
 
 
-def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path, mocker):
+def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path):
     smells = get_smells
 
     # Filter for long lambda smells
@@ -67,17 +67,9 @@ def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path, mocker):
     # Instantiate the refactorer
     refactorer = MakeStaticRefactorer(output_dir)
 
-    mocker.patch.object(refactorer, "measure_energy", return_value=5.0)
-    mocker.patch(
-        "ecooptimizer.refactorers.base_refactorer.run_tests",
-        return_value=0,
-    )
-
-    initial_emissions = 100.0  # Mock value
-
     # Apply refactoring to each smell
     for smell in mim_smells:
-        refactorer.refactor(MIM_code, smell, initial_emissions)
+        refactorer.refactor(MIM_code, smell)
 
         # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(

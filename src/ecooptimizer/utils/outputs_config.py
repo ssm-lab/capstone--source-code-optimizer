@@ -50,6 +50,7 @@ class OutputConfig:
 
         :param source_file_path: The path of the file to be copied.
         :param new_file_name: The desired name for the copied file in the output directory.
+        :returns destination_path
         """
         # Define the destination path with the new file name
         destination_path = self.out_folder / new_file_name
@@ -58,3 +59,5 @@ class OutputConfig:
         shutil.copy(source_file_path, destination_path)
 
         logging.info(f"File copied to {destination_path!s}")
+
+        return destination_path

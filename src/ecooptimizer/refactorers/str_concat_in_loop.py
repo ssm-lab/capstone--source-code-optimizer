@@ -24,7 +24,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         self.scope_node: nodes.NodeNG | None = None
         self.outer_loop: nodes.For | nodes.While | None = None
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """
         Refactor string concatenations in loops to use list accumulation and join
 
@@ -47,17 +47,10 @@ class UseListAccumulationRefactorer(BaseRefactorer):
 
         temp_file_path = self.temp_dir / Path(f"{file_path.stem}_SCLR_line_{self.target_line}.py")
 
-        with temp_file_path.open("w") as temp_file:
-            temp_file.write(modified_code)
+        temp_file_path.write_text(modified_code)
+        file_path.write_text(modified_code)
 
-        self.validate_refactoring(
-            temp_file_path,
-            file_path,
-            initial_emissions,
-            "String Concatenation in Loop",
-            "List Accumulation and Join",
-            pylint_smell["line"],
-        )
+        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 
     def visit(self, node: nodes.NodeNG):
         if isinstance(node, nodes.Assign) and node.lineno == self.target_line:

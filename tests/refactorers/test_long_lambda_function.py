@@ -130,12 +130,9 @@ def test_long_lambda_refactoring(long_lambda_code: Path, output_dir):
     # Instantiate the refactorer
     refactorer = LongLambdaFunctionRefactorer(output_dir)
 
-    # Measure initial emissions (mocked or replace with actual implementation)
-    initial_emissions = 100.0  # Mock value, replace with actual measurement
-
     # Apply refactoring to each smell
     for smell in long_lambda_smells:
-        refactorer.refactor(long_lambda_code, smell, initial_emissions)
+        refactorer.refactor(long_lambda_code, smell)
 
     for smell in long_lambda_smells:
         # Verify the refactored file exists and contains expected changes

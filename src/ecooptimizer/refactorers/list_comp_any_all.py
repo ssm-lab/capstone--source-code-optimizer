@@ -6,7 +6,7 @@ from pathlib import Path
 import astor  # For converting AST back to source code
 
 from ..data_wrappers.smell import Smell
-from ..testing.run_tests import run_tests
+
 from .base_refactorer import BaseRefactorer
 
 
@@ -23,7 +23,7 @@ class UseAGeneratorRefactorer(BaseRefactorer):
         """
         super().__init__(output_dir)
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
@@ -76,38 +76,10 @@ class UseAGeneratorRefactorer(BaseRefactorer):
             with temp_file_path.open("w") as temp_file:
                 temp_file.writelines(modified_lines)
 
-            # Measure emissions of the modified code
-            final_emission = self.measure_energy(temp_file_path)
+            with file_path.open("w") as f:
+                f.writelines(modified_lines)
 
-            if not final_emission:
-                # os.remove(temp_file_path)
-                logging.info(
-                    f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
-                )
-                return
-
-            # Check for improvement in emissions
-            if self.check_energy_improvement(initial_emissions, final_emission):
-                # If improved, replace the original file with the modified content
-                if run_tests() == 0:
-                    logging.info("All test pass! Functionality maintained.")
-                    # shutil.move(temp_file_path, file_path)
-                    logging.info(
-                        f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
-                    )
-                    return
-
-                logging.info("Tests Fail! Discarded refactored changes")
-
-            else:
-                logging.info(
-                    "No emission improvement after refactoring. Discarded refactored changes.\n"
-                )
-
-            # Remove the temporary file if no energy improvement or failing tests
-            # os.remove(temp_file_path)
-        else:
-            logging.info("No applicable list comprehension found on the specified line.\n")
+            logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 
     def _replace_node(self, tree: ast.Module, old_node: ast.ListComp, new_node: ast.GeneratorExp):
         """

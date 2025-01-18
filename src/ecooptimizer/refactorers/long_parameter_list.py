@@ -5,17 +5,16 @@ from pathlib import Path
 
 from ..data_wrappers.smell import Smell
 from .base_refactorer import BaseRefactorer
-from ..testing.run_tests import run_tests
 
 
 class LongParameterListRefactorer(BaseRefactorer):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir: Path):
+        super().__init__(output_dir)
         self.parameter_analyzer = ParameterAnalyzer()
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """
         Refactors function/method with more than 6 parameters by encapsulating those with related names and removing those that are unused
         """
@@ -80,31 +79,13 @@ class LongParameterListRefactorer(BaseRefactorer):
                     updated_tree = tree
 
         temp_file_path = self.temp_dir / Path(f"{file_path.stem}_LPLR_line_{target_line}.py")
+
+        modified_source = astor.to_source(updated_tree)
         with temp_file_path.open("w") as temp_file:
-            temp_file.write(astor.to_source(updated_tree))
+            temp_file.write(modified_source)
 
-            # Measure emissions of the modified code
-            final_emission = self.measure_energy(temp_file_path)
-
-            if not final_emission:
-                logging.info(
-                    f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
-                )
-                return
-
-            if self.check_energy_improvement(initial_emissions, final_emission):
-                if run_tests() == 0:
-                    logging.info("All tests pass! Refactoring applied.")
-                    logging.info(
-                        f"Refactored long parameter list into data groups on line {target_line} and saved.\n"
-                    )
-                    return
-                else:
-                    logging.info("Tests Fail! Discarded refactored changes")
-            else:
-                logging.info(
-                    "No emission improvement after refactoring. Discarded refactored changes.\n"
-                )
+        with file_path.open("w") as f:
+            f.write(modified_source)
 
 
 class ParameterAnalyzer:

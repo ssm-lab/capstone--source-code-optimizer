@@ -1,12 +1,11 @@
 import ast
 from pathlib import Path
-import py_compile
 import textwrap
 import pytest
 
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
-from ecooptimizer.refactorers.repeated_calls import CacheRepeatedCallsRefactorer
-from ecooptimizer.utils.analyzers_config import PylintSmell
+# from ecooptimizer.refactorers.repeated_calls import CacheRepeatedCallsRefactorer
+
 
 @pytest.fixture
 def crc_code(source_files: Path):
@@ -56,38 +55,30 @@ def test_cached_repeated_calls_detection(get_smells, crc_code: Path):
     assert crc_smells[0]["module"] == crc_code.stem
 
 
-def test_cached_repeated_calls_refactoring(get_smells, crc_code: Path, output_dir: Path, mocker):
-    smells = get_smells
+# def test_cached_repeated_calls_refactoring(get_smells, crc_code: Path, output_dir: Path):
+#     smells = get_smells
 
-    # Filter for cached repeated calls smells
-    crc_smells = [smell for smell in smells if smell["messageId"] == "CRC001"]
+#     # Filter for cached repeated calls smells
+#     crc_smells = [smell for smell in smells if smell["messageId"] == "CRC001"]
 
-    # Instantiate the refactorer
-    refactorer = CacheRepeatedCallsRefactorer(output_dir)
+#     # Instantiate the refactorer
+#     refactorer = CacheRepeatedCallsRefactorer(output_dir)
 
-    mocker.patch.object(refactorer, "measure_energy", return_value=5.0)
-    mocker.patch(
-        "ecooptimizer.refactorers.base_refactorer.run_tests",
-        return_value=0,
-    )
+#     # for smell in crc_smells:
+#     #     refactorer.refactor(crc_code, smell)
+#     #     # Apply refactoring to the detected smell
+#     #     refactored_file = refactorer.temp_dir / Path(
+#     #             f"{crc_code.stem}_crc_line_{crc_smells[0]['occurrences'][0]['line']}.py"
+#     #         )
 
-    initial_emissions = 100.0  # Mock value
+#     #     assert refactored_file.exists()
 
-    # for smell in crc_smells:
-    #     refactorer.refactor(crc_code, smell, initial_emissions)
-    #     # Apply refactoring to the detected smell
-    #     refactored_file = refactorer.temp_dir / Path(
-    #             f"{crc_code.stem}_crc_line_{crc_smells[0]['occurrences'][0]['line']}.py"
-    #         )
+#     #     # Check that the refactored file compiles
+#     #     py_compile.compile(str(refactored_file), doraise=True)
 
-    #     assert refactored_file.exists()
+#     #     refactored_lines = refactored_file.read_text().splitlines()
 
-    #     # Check that the refactored file compiles
-    #     py_compile.compile(str(refactored_file), doraise=True)
-
-    #     refactored_lines = refactored_file.read_text().splitlines()
-
-    #     # Verify the cached variable and replaced calls
-    #     assert any("cached_demo_compute = demo.compute()" in line for line in refactored_lines)
-    #     assert "result1 = cached_demo_compute" in refactored_lines
-    #     assert "result2 = cached_demo_compute" in refactored_lines
+#     #     # Verify the cached variable and replaced calls
+#     #     assert any("cached_demo_compute = demo.compute()" in line for line in refactored_lines)
+#     #     assert "result1 = cached_demo_compute" in refactored_lines
+#     #     assert "result2 = cached_demo_compute" in refactored_lines
