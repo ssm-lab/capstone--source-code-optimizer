@@ -46,7 +46,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-January 17th, 2025 & 0.1 & Initial draft\\
+Date 1 & 1.0 & Notes\\
+Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
@@ -73,11 +74,7 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  VS & Visual Studio\\
-  API & Application Programing Interface\\
-  IDE & Integrated Development Environment\\
-  AST & Abstract Syntax Tree\\
-  CSV & Comma-Separated Values\\
+  \wss{etc.} & \wss{...}\\
   \bottomrule
 \end{tabular}\\
 
@@ -160,56 +157,12 @@ adapted here is called design for
 change.
 
 \begin{description}
-  \item[\refstepcounter{acnum} \actheacnum \label{acUserInterface}:] The user interface of the plugin. Enhancements may be required to improve usability or accommodate new features. Specific anticipated changes include:
-      \begin{itemize}
-          \item \textbf{Refactoring Suggestions Display}: Updates to how refactoring suggestions are presented, such as side-by-side views of original and refactored code.
-          \item \textbf{Theme Support}: Adding compatibility with various VS Code themes, including light and dark modes.
-          \item \textbf{Visual Indicators}: Implementing color-coded indicators to highlight the impact of energy savings for each refactoring suggestion.
-          \item \textbf{Interactive Elements}: Introducing interactive components like tooltips or progress indicators to guide users during the refactoring process.
-          \item \textbf{Customization Options}: Allowing users to configure UI elements, such as adjusting the sensitivity of code smell detection or selecting preferred refactoring styles.
-      \end{itemize}
-  
-  \item[\refstepcounter{acnum} \actheacnum \label{acVSCodePlugin}:] The VS Code plugin's
-    functionality. Future versions may expand to support more complex refactorings
-    or additional code smells that users can address with minimal setup. Changes
-    may involve adding more customizable user settings.
-    
-  \item[\refstepcounter{acnum} \actheacnum \label{acRefactorers}:] The refactorers responsible
-    for detecting and fixing specific code smells. As more code smells are identified
-    and refactoring techniques are developed, new modules may be added or existing
-    ones may evolve. For example:
-    \begin{itemize}
-      \item \textbf{Base Refactorer} \label{acBaseRefactorer}: Updates to the base refactorer module to
-      support new refactoring patterns or improved algorithms.
-      \item \textbf{Complex List Comprehension} \label{acComplexListComprehension}: Adding or modifying
-      the logic for simplifying complex list comprehensions.
-      \item \textbf{Long Element Chain} \label{acLongElementChain}: Refining the logic to handle longer
-      chains of elements and optimize their readability and performance.
-      \item \textbf{Long Lambda Function} \label{acLongLambdaFunction}: Improvements to better handle
-      long lambda functions, making them more efficient and readable.
-      \item \textbf{Long Message Chain} \label{acLongMessageChain}: Extending the module's ability
-      to identify and refactor long message chains.
-      \item \textbf{Member Ignoring Method} \label{acMemberIgnoringMethod}: Enhancements to the
-      module for detecting methods that ignore members, optimizing the code structure.
-      \item \textbf{Repeated Calls} \label{acRepeatedCalls}: Optimizing detection and handling
-      of repeated function calls to improve performance.
-      \item \textbf{String Concatenation in Loop} \label{acStringConcatenationInLoop}: Adjusting
-      the refactorer's logic to improve handling of string concatenation within loops.
-      \item \textbf{Long Parameter List} \label{acLongParameterList}: Future extensions to handle
-      complex parameter lists in a more structured manner, perhaps allowing for simplifications.
-    \end{itemize}
-    
-  \item[\refstepcounter{acnum} \actheacnum \label{acSmell}:] The core logic
-    for identifying specific code smells. As the system evolves, new code smells may be added to the system’s detection capabilities, necessitating changes to this module.
-  
-  \item[\refstepcounter{acnum} \actheacnum \label{acAnalyzer}:] The analyzers used to
-    gather metrics and assess code quality.
-  
-  \item[\refstepcounter{acnum} \actheacnum \label{acTesting}:] The testing module
-    responsible for ensuring the correct functionality of the refactorers. As new
-    features and code smells are added, this module may need updates to test these
-    changes thoroughly.
-\end{description}  
+\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
+  hardware on which the software is running.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+  initial input data.
+\item ...
+\end{description}
 
 \wss{Anticipated changes relate to changes that would be made in requirements,
 design or implementation choices.  They are not related to changes that are made
@@ -225,9 +178,9 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-  \item[\refstepcounter{ucnum} \uctheucnum \label{ucPlatform}:] Transitioning from VS Code to another IDE. The plugin is tightly integrated with VS Code's API, making such a change complex.
-  \item[\refstepcounter{ucnum} \uctheucnum \label{ucCoreLogic}:] Fundamental changes to the core logic of code smell detection. The current architecture is designed around widely accepted principles of software quality.
-  \item[\refstepcounter{ucnum} \uctheucnum \label{ucPluginType}:] Changing from a plugin-based architecture to a standalone application. This would require rethinking the entire deployment and user interaction model.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
+  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
+\item ...
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -238,26 +191,8 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-  \item [\refstepcounter{mnum} \mthemnum \label{mSmell}:] Smell Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mBR}:] BaseRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mMIMR}:] MakeStaticRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mSCLR}:] UseListAccumulationRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mUGENR}:] UseAGeneratorRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mCRC}:] CacheRepeatedCallsRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mLEC}:] LongElementChainRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mLPL}:] LongParameterListRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mLMC}:] LongMessageChainRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mLLF}:] LongLambdaFunctionRefactorer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mExe}:] Plugin Initiator Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mBac}:] Backend Communicator Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mDet}:] Smell Detector Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mHig}:] File Highlighter Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mHov}:] Hover Manager Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mMeasure}:] Measurements Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mTest}:] Testing Functionality Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mRef}:] Smell Refactorer  Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mMan}:] Refactor Manager Module
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
+\item ...
 \end{description}
 
 
@@ -268,32 +203,22 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & None \\
+{Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
-& BaseRefactorer Module\\
-& MakeStaticRefactorer Module\\
-& UseListAccumulationRefactorer Module\\
-& UseAGeneratorRefactorer Module\\
-& CacheRepeatedCallsRefactorer Module\\
-& LongElementChainRefactorer Module\\
-& LongParameterListRefactorer Module\\
-& LongMessageChainRefactorer Module\\
-& LongLambdaFunctionRefactorer Module\\ 
-& PluginInitiator Module\\
-& BackendCommunicator Module\\ 
-& SmellDetector Module\\
-& FileHighlighter Module\\
-& HoverManager Module\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
+& ?\\
+& ?\\
+& ?\\
+& ?\\
+& ?\\
+& ?\\ 
+& ?\\
 \midrule
 
-
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
-& PylintAnalyzer Module\\
-& Testing Functionality Module\\
-& SmellRefactorer Module\\
-& RefactorManager Module\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
+& ?\\
+& ?\\
 \bottomrule
 
 \end{tabular}
@@ -330,217 +255,57 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules}
+\subsection{Hardware Hiding Modules (\mref{mHH})}
 
-This system has no hardware components.
+\begin{description}
+\item[Secrets:]The data structure and algorithm used to implement the virtual
+  hardware.
+\item[Services:]Serves as a virtual hardware used by the rest of the
+  system. This module provides the interface between the hardware and the
+  software. So, the system can use it to display outputs or to accept inputs.
+\item[Implemented By:] OS
+\end{description}
 
 \subsection{Behaviour-Hiding Module}
 
-\subsubsection{Smell Module (\mref{mSmell})}
+\begin{description}
+\item[Secrets:]The contents of the required behaviours.
+\item[Services:]Includes programs that provide externally visible behaviour of
+  the system as specified in the software requirements specification (SRS)
+  documents. This module serves as a communication layer between the
+  hardware-hiding module and the software decision module. The programs in this
+  module will need to change if there are changes in the SRS.
+\item[Implemented By:] --
+\end{description}
+
+\subsubsection{Input Format Module (\mref{mInput})}
 
 \begin{description}
-\item[Secrets:] Data structure of a code smell.
-\item[Services:] Provides an interface for other modules to access information of a smell object.
-\item[Implemented By:] EcoOptimizer
-\item[Type of Module:] Abstract Data Type
+\item[Secrets:]The format and structure of the input data.
+\item[Services:]Converts the input data into the data structure used by the
+  input parameters module.
+\item[Implemented By:] [Your Program Name Here]
+\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+  [Information to include for leaf modules in the decomposition by secrets tree.]
 \end{description}
 
-\subsubsection{Base Refactorer Module (\mref{mBR})}
+\subsubsection{Etc.}
 
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] None
-    \item[Services:] Offers an interface for other refactoring modules to implement.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{MakeStaticRefactorer Module (\mref{mMIMR})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-\begin{description}
-\item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
-\item[Services:] Refactors the \textit{\textbf{Member Ignoring Method (MIM)}} smell in a provided code file to improve energy efficiency.
-\item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{UseListAccumulationRefactorer Module (\mref{mSCLR})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-\item[Secrets:] How to parse a given code file into its AST representation, how to traverse the AST tree, how to find the initializing variable of the string concatenation, how to find the scope of the concatenation, how to modify the given code file in plain text and write it back to an output file.
-\item[Services:] Refactors the \textbf{\textit{String Concatenation Inside Loop (SCL)}} smell in a provided code file to improve energy efficiency.
-\item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{UseAGeneratorRefactorer Module (\mref{mUGENR})}
-\begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
-    \item[Services:] Refactors the \textit{List Comprehension Instead of a Generator} smell in a provided code file to improve energy efficiency.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{CacheRepeatedCallsRefactorer Module (\mref{mCRC})}
-\begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
-    \item[Services:] Refactors the \textit{Repeated Function Calls} smell in a provided code file to improve energy efficiency and performance.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Long Element Chain Module (\mref{mLEC})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, traverse the 
-    AST tree to identify dictionary assignments, analyze the structure of nested dictionaries,
-     and flatten them. Additionally, it identifies all access calls associated with these dictionaries
-      in the source code and determines how to update them to reflect the new flattened structure.
-    \item[Services:] Detects nested dictionaries in the source code using AST parsing, simplifies their 
-    structure by flattening them, and updates all associated access calls throughout the file. This improves 
-    code readability, reduces complexity, and ensures correctness while maintaining the program's intended behavior.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Long Parameter List Module (\mref{mLPL})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, traverse the AST tree to identify functions or methods with long parameter lists, and encapsulate related parameters into objects or structures. Additionally, it identifies all function or method calls associated with these functions and updates their arguments to align with the refactored signature.
-    \item[Services:] Detects long parameter lists in functions or methods using AST parsing, simplifies their structure by grouping related parameters into objects or structures, and updates all associated function or method calls throughout the file. This improves code readability, reduces complexity, and ensures correctness while maintaining the program’s intended behavior.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Long Message Chain Refactorer (\mref{mLMC})}
-
-
-\begin{description}
-    \item[Secrets:] Understanding the syntax and structure of Python code to identify/classify long message chains, including both f-strings and non-f-string chains. This involves parsing the target file, extracting method calls from identified long chains, and systematically breaking them into separate statements while preserving the original functionality and indentation. Additionally, it ensures unmatched brackets are corrected during refactoring.
-    
-    \item[Services:] Detects long message chains in Python source code and refactors them by splitting the chain into intermediate variables and a final result. This improves code readability and maintainability while retaining the original program behavior. 
-
-    \item[Implemented By:] EcoOptimizer
-    \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long message chains in Python code.
-   
-\end{description}
-
-\subsubsection{Long Lambda Function Refactorer (\mref{mLLF})}
-
-
-\begin{description} 
-  \item[Secrets:] Understanding the syntax and structure of Python code to identify long lambda functions. This includes parsing the target file to locate lambda expressions, extracting their arguments and bodies, and converting them into standard Python function definitions. The module ensures proper handling of nested structures (e.g., parentheses, brackets, and braces) within the lambda body, and truncates overly complex expressions at the first top-level comma for readability.
-
-  \item[Services:] Detects components of long lambda functions in Python source code and refactors them by converting the lambda expression into a standalone function with a unique name. This improves code readability, debugging, and maintainability. The module inserts the newly defined function in the appropriate scope, updates the original lambda usage with a function call, and validates the refactored code by maintaining its functionality and measuring energy efficiency improvements.
-
-  \item[Implemented By:] EcoOptimizer
-  
-  \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long lambda functions in Python code.
-\end{description}
-
-\subsubsection{Plugin Initiator Module (\mref{mExe})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to initialize the plugin, set up the environment for interaction, and handle configurations for plugin commands.
-    \item[Services:] Initializes and manages the plugin's setup, enabling its functionality without exposing the underlying initialization logic.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Backend Communicator (\mref{mBac})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to establish communication between the plugin and Source Code Optimizer, handle requests, and process responses.
-    \item[Services:] Provides an interface for sending requests to and receiving responses from Source Code Optimizer. Abstracts the communication details from modules within the plugin.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Smell Detector (\mref{mDet})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to analyze Python code in active VS Code editor by accessing Source Code Optimizer endpoint.
-    \item[Services:] Detects code smells in Python scripts using Source Code Optimizer and provides structured data for further processing based on received output.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{File Highlighter Module (\mref{mHig})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to identify code regions requiring attention and how to highlight those regions in the file.
-    \item[Services:] Highlights areas in files that contain code smells and can be refactored, assisting developers in identifying problem areas quickly.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Hover Manager Module (\mref{mHov})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to detect hover events, retrieve relevant information dynamically, and present tooltips based on hovered elements.
-    \item[Services:] Manages hover interactions and displays contextual information for elements within the user interface.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
 
 \subsection{Software Decision Module}
 
-\subsubsection{Measurements Module (\mref{mMeasure})}
-
 \begin{description}
-\item[Secrets:] How to measure energy consumption and carbon emissions of a given Python program using the CodeCarbon library, including managing temporary directories for storing output, executing the program, and processing the emissions data from a CSV file.
-\item[Services:] Provides functionality for measuring the energy consumption and carbon emissions of a provided code file. This module handles execution, tracking, and data extraction, ensuring that the emissions data is available for further analysis.
-\item[Implemented By:] CodeCarbonEnergyMeter
+\item[Secrets:] The design decision based on mathematical theorems, physical
+  facts, or programming considerations. The secrets of this module are
+  \emph{not} described in the SRS.
+\item[Services:] Includes data structure and algorithms used in the system that
+  do not provide direct interaction with the user. 
+  % Changes in these modules are more likely to be motivated by a desire to
+  % improve performance than by externally imposed changes.
+\item[Implemented By:] --
 \end{description}
 
-\subsubsection{Pylint Analyzer Module (\mref{mPyA})}
-
-\begin{description}
-\item[Secrets:] The internal design and execution of static code analysis using Pylint and AST parsing, including custom detection and structuring of smells. These details are hidden from external modules.
-\item[Services:] The module provides the following services:
-  \begin{itemize}
-    \item Executes Pylint analysis on Python source code files.
-    \item Performs AST-based custom checks for specific code smells.
-    \item Filters and structures the analysis results into a standardized format for further processing.
-  \end{itemize}
-\item[Implemented By:] \texttt{EcoOptimizer}
-\end{description}
-
-\subsubsection{Testing Functionality Module (\mref{mTest})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] Runs testing suites in a subprocess.
-    \item[Services:] Checks whether the functionality of a given source code has changed.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Smell Refactorer Module (\mref{mRef})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to utilize Source Code Optimizer endpoint for refactoring specific code smells, and how to sanitize received output.
-    \item[Services:] Refactors code smells in Python scripts using Source Code Optimizer and determines if received output is valid format.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
-
-\subsubsection{Refactor Manager Module (\mref{mMan})}
-
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
-\begin{description}
-    \item[Secrets:] How to manage the sequence of refactorings, coordinate the application of refactoring techniques, validate results after each step and revert at any stage.
-    \item[Services:] Decides if refactored result of Python code should be updated in the code editor window. Determines if refactoring should be reverted if needed by user.
-    \item[Implemented By:] EcoOptimizer
-\end{description}
+\subsubsection{Etc.}
 
 \section{Traceability Matrix} \label{SecTM}
 
@@ -550,177 +315,50 @@ requirements and between the modules and the anticipated changes.
 % the table should use mref, the requirements should be named, use something
 % like fref
 \begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule
-    \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    FR1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    FR2 & \mref{mSmell}, \mref{mPyA}\\
-    FR3 & \mref{mTest}\\
-    FR4 & \mref{mTest}\\
-    FR5 & \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}\\
-    FR6 & \mref{mTest}\\
-    FR7 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA},\\
-    FR8 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    FR9 & To be removed\\
-    FR10 & Not implemented in code\\
-    FR11 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
-    FR12 & To be removed\\
-    FR13 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Functional Requirements and Modules}
-  \label{tab:fr-mod}
+\centering
+\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\toprule
+\textbf{Req.} & \textbf{Modules}\\
+\midrule
+R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
+R2 & \mref{mInput}, \mref{mParams}\\
+R3 & \mref{mVerify}\\
+R4 & \mref{mOutput}, \mref{mControl}\\
+R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
+R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
+R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
+R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
+R9 & \mref{mVerifyOut}\\
+R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
+R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+\bottomrule
+\end{tabular}
+\caption{Trace Between Requirements and Modules}
+\label{TblRT}
 \end{table}
 
 \begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    % Look and Feel
-    LFR-AP 1-4 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
-    LFR-AP 5 & To be removed\\ 
-    LFR-ST 1-3 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Look \& Feel Requirements and Modules}
-  \label{tab:LFR-mod}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    % Usability and Humanity
-    UHR-PS1 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
-    UHR-PS1 2 & Not implemented in code\\ 
-    UHR-LRN 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
-    UHR-LRN 2 & Not implemented in code\\ 
-    UHR-ACS 1-2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
-    UHR-EOU 1-2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
-    UHR-UPL 1 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\ 
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Usability \& Humanity Requirements and Modules}
-  \label{tab:UHR-mod}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    % Performance
-    PR-SL 1 & \mref{mPyA}\\
-    PR-SL 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
-    PR-CR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
-    PR-SCR 1 \mref{mTest}& \\ 
-    PR-PAR 1 & \mref{mTest}\\ 
-    PR-PAR 2 & \mref{mPyA}\\ 
-    PR-PAR 3 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\ 
-    PR-RFT 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
-    PR-RFT 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
-    PR-SER 1 & \mref{mBR}\\ 
-    PR-LR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Performance Requirements and Modules}
-  \label{tab:PR-mod}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    % Operational and Environmental
-    OER-EP 1 & N/A\\
-    OER-EP 2 & N/A\\
-    OER-WE 1 & \mref{mMeasure}\\
-    OER-IAS 1 & To be removed\\
-    OER-IAS 2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
-    OER-IAS 3 & To be removed\\
-    OER-PR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    OER-RL 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    OER-RL 2 & N/A\\
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Operational \& Environmental Requirements and Modules}
-  \label{tab:OPE-mod}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    % Maintenance and Support
-    MS-MNT 1 & \mref{mBR}\\
-    MS-MNT 2 & Not implemented in code\\
-    MS-MNT 3 & None \\
-    MS-MNT 4 & N/A\\
-    MS-MNT 5 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    MS-SP 1 & Not implemented in code\\
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Maintenance \& Support Requirements and Modules}
-  \label{tab:MS-mod}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    % Security
-    SR-AR 1 & To be removed\\
-    SR-AR 2 & \mref{mMeasure}\\
-    SR-IR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
-    SR-PR 1 & N/A\\
-    SR-PR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    SR-AUR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    SR-AUR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    SR-IM 1 & N/A\\
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Security Requirements and Modules}
-  \label{tab:SR-mod}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-    \toprule \textbf{Req.} & \textbf{Modules}\\
-    \midrule
-    % Cultural
-    CULT 1-3 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
-    CL-LR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\
-    CL-SCR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mTest}\\ 
-    \bottomrule
-  \end{tabular}
-  \caption{Trace Between Cultural and Compliance Requirements and Modules}
-  \label{tab:CUL-COMP-mod}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-  \toprule
-  \textbf{AC} & \textbf{Modules}\\
-  \midrule
-  \acref{acUserInterface} & \mref{mExe}, \mref{mHig} , \mref{mHov}, \mref{mMan} \\
-  \acref{acVSCodePlugin} & \mref{mExe} , \mref{mRef}, \mref{mMan} \\
-  \acref{acRefactorers} & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLPL} \\
-  \acref{acSmell} & \mref{mDet}, \mref{mPyA} \\
-  \acref{acAnalyzer} & \mref{mMeasure}, \mref{mPyA}, \mref{mDet} \\
-  \acref{acTesting} & \mref{mTest}  \\ 
-  \bottomrule
-  \end{tabular}
-  \caption{Trace Between Anticipated Changes and Modules}
-  \label{TblACT}
+\centering
+\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\toprule
+\textbf{AC} & \textbf{Modules}\\
+\midrule
+\acref{acHardware} & \mref{mHH}\\
+\acref{acInput} & \mref{mInput}\\
+\acref{acParams} & \mref{mParams}\\
+\acref{acVerify} & \mref{mVerify}\\
+\acref{acOutput} & \mref{mOutput}\\
+\acref{acVerifyOut} & \mref{mVerifyOut}\\
+\acref{acODEs} & \mref{mODEs}\\
+\acref{acEnergy} & \mref{mEnergy}\\
+\acref{acControl} & \mref{mControl}\\
+\acref{acSeqDS} & \mref{mSeqDS}\\
+\acref{acSolver} & \mref{mSolver}\\
+\acref{acPlot} & \mref{mPlot}\\
+\bottomrule
+\end{tabular}
+\caption{Trace Between Anticipated Changes and Modules}
+\label{TblACT}
 \end{table}
 
 \section{Use Hierarchy Between Modules} \label{SecUse}
@@ -734,12 +372,7 @@ implementation of B.  Figure \ref{FigUH} illustrates the use relation between
 the modules. It can be seen that the graph is a directed acyclic graph
 (DAG). Each level of the hierarchy offers a testable and usable subset of the
 system, and modules in the higher level of the hierarchy are essentially simpler
-because they use modules from the lower levels.Furthermore, figure \ref{FigUH_Plugin} 
-illustrates the use relation between the modules of the VS Code Plugin, vis-a-vis the Source Code 
-Optimizer displayed in  figure \ref{FigUH}. In this figure for the plugin, the modules at the lowest 
-level are the ones closest to the user, and going up in the module indicates moving towards
-the backend of the project, which is the Source Code Optimizer. It is a layered architecture
-where each module serves a separate concern.
+because they use modules from the lower levels.
 
 \wss{The uses relation is not a data flow diagram.  In the code there will often
 be an import statement in module A when it directly uses module B.  Module B
@@ -752,63 +385,14 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{../../Images/sco_use_diagram.png}
+%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
 \caption{Use hierarchy among modules}
 \label{FigUH}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{../../Images/plugin_use_diagram.png}
-  \caption{Use hierarchy among modules}
-  \label{FigUH_Plugin}
-  \end{figure}
-
-%\section*{References} 
+%\section*{References}
 
 \section{User Interfaces}
-
-The project is exposed to the user through the VS Code Plugin, which can be installed 
-in any developer's local VS Code Editor. Figure \ref{fig3} highlights the intial interface that 
-the user accesses when installating and enabling the plugin. Commands of the plugin are 
-available through various routes, one of them is the Command Palette as show in figure \ref{fig4}.
-
-Commands are searchable and can be applied. Figure \ref{fig5} showcases the application of the 
-"Eco: Refactor Plugin: Detect Smells" command, which at the end highlights all lines containing 
-code smells with yellow lines. On hover, information is available about the specific code smell.
-The user also has the option to select or place their cursor on a specific line that they want 
-to refactor, and run the "Eco: Refactor Plugin: Refactor Smell" command in order to refactor that 
-specific line of code. Figure \ref{fig6} provides a visual of this command in progress, with updates
-being provided in bottom right corner.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{../../Images/VSPlugin.png}
-  \caption{VS Code Plugin Setup}
-  \label{fig3}
-  \end{figure}
-  
-  \begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{../../Images/VSPluginCommands.png}
-  \caption{VS Code Plugin Commands}
-  \label{fig4}
-  \end{figure}
-  
-  \begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{../../Images/VSPluginDetectMode.png}
-  \caption{VS Code Code Analysis Interaction}
-  \label{fig5}
-  \end{figure}
-  
-  \begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{../../Images/VSPluginRefactorMode.png}
-  \caption{VS Code Code Refactoring Interaction(in progress for selected line)}
-  \label{fig6}
-  \end{figure}
-
 
 \wss{Design of user interface for software and hardware.  Attach an appendix if
 needed. Drawings, Sketches, Figma}
@@ -819,30 +403,9 @@ needed. Drawings, Sketches, Figma}
 
 \section{Timeline}
 
-All code and corresponding documentation was aimed to be completed before Jan 6th our Demo date for our supervisor.
+\wss{Schedule of tasks and who is responsible}
 
-\begin{table}[h!]
-  \centering
-  \caption{Timeline}
-  \begin{tabular}{|l|l|l|}
-  \hline
-  \textbf{Module Name} & \textbf{Team Member}        & \textbf{Due Date} \\ \hline
-  Base Refactorer                     & Sevhena Walker              & Jan 6, 2025    \\ \hline
-  Complex List Comprehension          & Nivetha Kuruparan              & Jan 6, 2025    \\ \hline
-  Long Element Chain                  & Ayushi Amin              & Jan 6, 2025     \\ \hline
-  Long Lambda Function                & Mya Hussain              & Jan 6, 2025     \\ \hline
-  Long Message Chain                  & Mya Hussain              & Jan 6, 2025     \\ \hline
-  Member Ignoring Method              & Sevhena Walker             & Jan 6, 2025     \\ \hline
-  Repeated Calls                      & Nivetha Kuruparan               & Jan 6, 2025     \\ \hline
-  String Concatenation in Loop        & Sevhena Walker              & Jan 6, 2025     \\ \hline
-  Long Parameter List                 & Tanveer Brar              & Jan 6, 2025     \\ \hline
-  Smell                               & All             & Jan 31, 2025    \\ \hline
-  Analyzers                           & All            & Jan 31, 2025      \\ \hline
-  Measurements                        & All          & Jan 31, 2025      \\ \hline
-  Testing Functionality               & All           & Jan 31, 2025      \\ \hline
-  \end{tabular}
-  \end{table}
-  
+\wss{You can point to GitHub if this information is included there}
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
