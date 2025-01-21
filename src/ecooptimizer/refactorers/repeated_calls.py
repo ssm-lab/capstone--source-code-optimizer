@@ -19,7 +19,6 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         self.input_file = file_path
         self.smell = pylint_smell
 
-         
         self.cached_var_name = "cached_" + self.smell["occurrences"][0]["call_string"].split("(")[0]
 
         print(f"Reading file: {self.input_file}")
@@ -52,7 +51,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
             original_line = lines[adjusted_line_index]
             call_string = occurrence["call_string"].strip()
             print(f"Processing occurrence at line {occurrence['line']}: {original_line.strip()}")
-            updated_line = self._replace_call_in_line(original_line, call_string, self.cached_var_name)
+            updated_line = self._replace_call_in_line(
+                original_line, call_string, self.cached_var_name
+            )
             if updated_line != original_line:
                 print(f"Updated line {occurrence['line']}: {updated_line.strip()}")
                 lines[adjusted_line_index] = updated_line
@@ -69,7 +70,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
             initial_emissions,
             "Repeated Calls",
             "Cache Repeated Calls",
-             pylint_smell["occurrences"][0]["line"],
+            pylint_smell["occurrences"][0]["line"],
         )
 
     def _get_indentation(self, lines, line_number):
@@ -81,7 +82,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         :return: The indentation string.
         """
         line = lines[line_number - 1]
-        return line[:len(line) - len(line.lstrip())]
+        return line[: len(line) - len(line.lstrip())]
 
     def _replace_call_in_line(self, line, call_string, cached_var_name):
         """
@@ -106,7 +107,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         candidate_parent = None
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.Module)):
-                if all(self._line_in_node_body(node, occ["line"]) for occ in self.smell["occurrences"]):
+                if all(
+                    self._line_in_node_body(node, occ["line"]) for occ in self.smell["occurrences"]
+                ):
                     candidate_parent = node
         if candidate_parent:
             print(
@@ -138,6 +141,8 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
             return False
 
         for child in node.body:
-            if hasattr(child, "lineno") and child.lineno <= line <= getattr(child, "end_lineno", child.lineno):
+            if hasattr(child, "lineno") and child.lineno <= line <= getattr(
+                child, "end_lineno", child.lineno
+            ):
                 return True
         return False

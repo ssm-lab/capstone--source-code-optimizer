@@ -1,4 +1,3 @@
-
 import logging
 import os
 import tempfile
@@ -21,7 +20,7 @@ class SCOptimizer:
 
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         self.outputs_dir.mkdir(parents=True, exist_ok=True)
-        
+
         self.setup_logging()
         self.output_config = OutputConfig(self.outputs_dir)
 
@@ -59,7 +58,9 @@ class SCOptimizer:
         return smells_data
 
     def refactor_smell(self, file_path: Path, smell: Dict[str, Any]) -> Dict[str, Any]:
-        logging.info(f"Starting refactoring for file: {file_path} and smell symbol: {smell['symbol']} at line {smell['line']}")
+        logging.info(
+            f"Starting refactoring for file: {file_path} and smell symbol: {smell['symbol']} at line {smell['line']}"
+        )
 
         if not file_path.is_file():
             logging.error(f"File {file_path} does not exist.")
@@ -82,7 +83,6 @@ class SCOptimizer:
             logging.error(f"No refactorer implemented for smell {smell['symbol']}.")
             raise NotImplementedError(f"No refactorer implemented for smell {smell['symbol']}.")
 
-    
         refactorer.refactor(file_path, smell, initial_emissions)
 
         target_line = smell["line"]
@@ -154,4 +154,3 @@ if __name__ == "__main__":
         smell = json.loads(args.smell)
         result = optimizer.refactor_smell(file_path, smell)
         print(json.dumps(result))
-

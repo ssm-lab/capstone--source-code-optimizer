@@ -42,9 +42,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
         indexes_to_remove.update(stack)
 
         # Build the result string without unmatched brackets
-        result = "".join(
-            char for i, char in enumerate(input_string) if i not in indexes_to_remove
-        )
+        result = "".join(char for i, char in enumerate(input_string) if i not in indexes_to_remove)
 
         return result
 
@@ -55,9 +53,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
         """
         # Extract details from pylint_smell
         line_number = pylint_smell["line"]
-        temp_filename = self.temp_dir / Path(
-            f"{file_path.stem}_LMCR_line_{line_number}.py"
-        )
+        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LMCR_line_{line_number}.py")
 
         logging.info(
             f"Applying 'Separate Statements' refactor on '{file_path.name}' at line {line_number} for identified code smell."
@@ -87,9 +83,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
                 method_calls = re.split(r"\.(?![^()]*\))", remaining_chain.strip())
 
                 # Handle the first method call directly on the f-string or as intermediate_0
-                refactored_lines.append(
-                    f"{leading_whitespace}intermediate_0 = {f_string_content}"
-                )
+                refactored_lines.append(f"{leading_whitespace}intermediate_0 = {f_string_content}")
                 counter = 0
                 # Handle remaining method calls
                 for i, method in enumerate(method_calls, start=1):
@@ -123,9 +117,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
             if len(method_calls) > 2:
                 refactored_lines = []
                 base_var = method_calls[0].strip()
-                refactored_lines.append(
-                    f"{leading_whitespace}intermediate_0 = {base_var}"
-                )
+                refactored_lines.append(f"{leading_whitespace}intermediate_0 = {base_var}")
 
                 for i, method in enumerate(method_calls[1:], start=1):
                     if i < len(method_calls) - 1:

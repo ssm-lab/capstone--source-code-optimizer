@@ -428,7 +428,7 @@ class PylintAnalyzer(Analyzer):
                 check_chain(node)
 
         return results
-    
+
     def detect_repeated_calls(self, threshold=2):
         results = []
         messageId = "CRC001"
@@ -456,7 +456,7 @@ class PylintAnalyzer(Analyzer):
                             line in modified_lines
                             for start_line, end_line in zip(
                                 [occ.lineno for occ in occurrences[:-1]],
-                                [occ.lineno for occ in occurrences[1:]]
+                                [occ.lineno for occ in occurrences[1:]],
                             )
                             for line in range(start_line + 1, end_line)
                         )
@@ -468,7 +468,7 @@ class PylintAnalyzer(Analyzer):
                             "type": "performance",
                             "symbol": "cached-repeated-calls",
                             "message": f"Repeated function call detected ({len(occurrences)}/{threshold}). "
-                                    f"Consider caching the result: {call_string}",
+                            f"Consider caching the result: {call_string}",
                             "messageId": messageId,
                             "confidence": "HIGH" if len(occurrences) > threshold else "MEDIUM",
                             "occurrences": [
@@ -484,4 +484,3 @@ class PylintAnalyzer(Analyzer):
                         results.append(smell)
 
         return results
-

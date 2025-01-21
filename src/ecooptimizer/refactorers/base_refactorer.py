@@ -6,7 +6,6 @@ from pathlib import Path
 
 from ecooptimizer.testing.run_tests import run_tests
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
-from ecooptimizer.data_wrappers.smell import Smell
 
 
 class BaseRefactorer(ABC):
@@ -97,4 +96,3 @@ class BaseRefactorer(ABC):
             f"Initial Emissions: {initial_emissions} kg CO2. Final Emissions: {final_emissions} kg CO2."
         )
         return improved
-

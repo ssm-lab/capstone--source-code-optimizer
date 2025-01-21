@@ -2,10 +2,11 @@ import logging
 import os
 import tempfile
 from pathlib import Path
-from typing import dict, Any
+from typing import Dict, Any
 from enum import Enum
 import argparse
 import json
+from ecooptimizer.data_wrappers.smell import Smell
 from ecooptimizer.utils.ast_parser import parse_file
 from ecooptimizer.utils.outputs_config import OutputConfig
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
@@ -63,14 +64,20 @@ class SCOptimizer:
         )
         logging.info("Logging initialized for Source Code Optimizer. Writing logs to: %s", log_file)
 
-    def detect_smells(self, file_path: Path) -> dict[str, Any]:
-        """Detect code smells in a given file."""
+    def detect_smells(self, file_path: Path) -> list[Smell]:
+        """
+        Detect code smells in a given file.
+
+        Args:
+            file_path (Path): Path to the Python file to analyze.
+
+        Returns:
+            List[Smell]: A list of detected smells.
+        """
         logging.info(f"Starting smell detection for file: {file_path}")
         if not file_path.is_file():
             logging.error(f"File {file_path} does not exist.")
             raise FileNotFoundError(f"File {file_path} does not exist.")
-
-        logging.info("LOGGGGINGG")
 
         source_code = parse_file(file_path)
         analyzer = PylintAnalyzer(file_path, source_code)
@@ -167,9 +174,9 @@ if __name__ == "__main__":
 
     if args.action == "detect":
         smells = optimizer.detect_smells(file_path)
-        logging.info("***")
         logging.info(smells)
-        print(json.dumps(smells, default=custom_serializer, indent=4))
+        print(smells)
+        # print(json.dumps(smells, default=custom_serializer, indent=4))
 
     elif args.action == "refactor":
         if not args.smell:
