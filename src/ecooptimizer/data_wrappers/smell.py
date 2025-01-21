@@ -1,4 +1,8 @@
-from typing import TypedDict
+from typing import Any, TypedDict
+
+from ..utils.analyzers_config import CustomSmell, PylintSmell
+
+from .occurence import BasicOccurence, CRCAddInfo, CRCOccurence, SCLAddInfo
 
 
 class Smell(TypedDict):
@@ -21,16 +25,58 @@ class Smell(TypedDict):
         type (str): The type or category of the smell (e.g., "complexity", "duplication").
     """
 
-    absolutePath: str
-    column: int
     confidence: str
-    endColumn: int | None
-    endLine: int | None
-    line: int
     message: str
-    messageId: str
+    messageId: CustomSmell | PylintSmell
     module: str
-    obj: str
+    obj: str | None
     path: str
     symbol: str
     type: str
+    occurences: list[Any]
+    additionalInfo: Any
+
+
+class CRCSmell(Smell):
+    occurences: list[CRCOccurence]
+    additionalInfo: CRCAddInfo
+
+
+class SCLSmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: SCLAddInfo
+
+
+class LECSmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: None
+
+
+class LLESmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: None
+
+
+class LMCSmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: None
+
+
+class LPLSmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: None
+
+
+class UVASmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: None
+
+
+class MIMSmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: None
+
+
+class UGESmell(Smell):
+    occurences: list[BasicOccurence]
+    additionalInfo: None

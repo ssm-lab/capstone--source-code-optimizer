@@ -2,7 +2,6 @@
 from pathlib import Path
 from ..refactorers.list_comp_any_all import UseAGeneratorRefactorer
 from ..refactorers.unused import RemoveUnusedRefactorer
-from ..refactorers.long_parameter_list import LongParameterListRefactorer
 from ..refactorers.member_ignoring_method import MakeStaticRefactorer
 from ..refactorers.long_message_chain import LongMessageChainRefactorer
 from ..refactorers.long_element_chain import LongElementChainRefactorer
@@ -46,8 +45,8 @@ class RefactorerFactory:
                 selected = RemoveUnusedRefactorer(output_dir)
             case AllSmells.NO_SELF_USE:  # type: ignore
                 selected = MakeStaticRefactorer(output_dir)
-            case AllSmells.LONG_PARAMETER_LIST:  # type: ignore
-                selected = LongParameterListRefactorer(output_dir)
+            # case AllSmells.LONG_PARAMETER_LIST:  # type: ignore
+            #     selected = LongParameterListRefactorer(output_dir)
             case AllSmells.LONG_MESSAGE_CHAIN:  # type: ignore
                 selected = LongMessageChainRefactorer(output_dir)
             case AllSmells.LONG_ELEMENT_CHAIN:  # type: ignore

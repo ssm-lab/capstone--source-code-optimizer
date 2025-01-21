@@ -20,7 +20,7 @@ class BaseRefactorer(ABC):
         self.temp_dir.mkdir(exist_ok=True)
 
     @abstractmethod
-    def refactor(self, file_path: Path, pylint_smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):  # type: ignore
         """
         Abstract method for refactoring the code smell.
         Each subclass should implement this method.

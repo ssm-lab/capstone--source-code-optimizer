@@ -111,6 +111,17 @@ def end_var_concat():
         result = str(i) + result
     return result
 
+def super_complex():
+    result = ''
+    log = ''
+    for i in range(5):
+        result += "Iteration: " + str(i)
+        for j in range(3):
+            result += "Nested: " + str(j)  # Contributing to `result`
+        log += "Log entry for i=" + str(i)
+        if i == 2:
+            result = ""  # Resetting `result`
+
 def concat_referenced_in_loop():
     result = ""
     for i in range(3):

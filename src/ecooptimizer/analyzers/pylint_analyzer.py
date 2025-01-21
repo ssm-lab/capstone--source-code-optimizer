@@ -10,14 +10,13 @@ from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
 from .base_analyzer import Analyzer
-from ..utils.ast_parser import parse_line
 from ..utils.analyzers_config import (
     PylintSmell,
     CustomSmell,
-    IntermediateSmells,
     EXTRA_PYLINT_OPTIONS,
 )
-from ..data_wrappers.smell import Smell
+from ..data_wrappers.smell import LECSmell, LLESmell, LMCSmell, Smell, CRCSmell, UVASmell
+
 from .custom_checkers.str_concat_in_loop import StringConcatInLoopChecker
 
 
@@ -94,8 +93,8 @@ class PylintAnalyzer(Analyzer):
             elif smell["messageId"] in CustomSmell.list():
                 configured_smells.append(smell)
 
-            if smell["messageId"] == IntermediateSmells.LINE_TOO_LONG.value:
-                self.filter_ternary(smell)
+            # if smell["messageId"] == IntermediateSmells.LINE_TOO_LONG.value:
+            #     self.filter_ternary(smell)
 
         self.smells_data = configured_smells
 
@@ -107,21 +106,21 @@ class PylintAnalyzer(Analyzer):
 
         return filtered_results
 
-    def filter_ternary(self, smell: Smell):
-        """
-        Filters LINE_TOO_LONG smells to find ternary expression smells
-        """
-        root_node = parse_line(self.file_path, smell["line"])
+    # def filter_ternary(self, smell: Smell):
+    #     """
+    #     Filters LINE_TOO_LONG smells to find ternary expression smells
+    #     """
+    #     root_node = parse_line(self.file_path, smell["line"])
 
-        if root_node is None:
-            return
+    #     if root_node is None:
+    #         return
 
-        for node in ast.walk(root_node):
-            if isinstance(node, ast.IfExp):  # Ternary expression node
-                smell["messageId"] = CustomSmell.LONG_TERN_EXPR.value
-                smell["message"] = "Ternary expression has too many branches"
-                self.smells_data.append(smell)
-                break
+    #     for node in ast.walk(root_node):
+    #         if isinstance(node, ast.IfExp):  # Ternary expression node
+    #             smell["messageId"] = CustomSmell.LONG_TERN_EXPR.value
+    #             smell["message"] = "Ternary expression has too many branches"
+    #             self.smells_data.append(smell)
+    #             break
 
     def detect_long_message_chain(self, threshold: int = 3):
         """
@@ -137,7 +136,7 @@ class PylintAnalyzer(Analyzer):
         - List of dictionaries: Each dictionary contains details about the detected long chain.
         """
         # Parse the code into an Abstract Syntax Tree (AST)
-        results: list[Smell] = []
+        results: list[LMCSmell] = []
         used_lines = set()
 
         # Function to detect long chains
@@ -148,20 +147,24 @@ class PylintAnalyzer(Analyzer):
                 message = f"Method chain too long ({chain_length}/{threshold})"
                 # Add the result in the required format
 
-                result: Smell = {
-                    "absolutePath": str(self.file_path),
-                    "column": node.col_offset,
-                    "confidence": "UNDEFINED",
-                    "endColumn": None,
-                    "endLine": None,
-                    "line": node.lineno,
-                    "message": message,
-                    "messageId": CustomSmell.LONG_MESSAGE_CHAIN.value,
-                    "module": self.file_path.name,
-                    "obj": "",
+                result: LMCSmell = {
                     "path": str(self.file_path),
-                    "symbol": "long-message-chain",
+                    "module": self.file_path.stem,
+                    "obj": None,
                     "type": "convention",
+                    "symbol": "",
+                    "message": message,
+                    "messageId": CustomSmell.LONG_MESSAGE_CHAIN,
+                    "confidence": "UNDEFINED",
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
+                    "additionalInfo": None,
                 }
 
                 if node.lineno in used_lines:
@@ -203,7 +206,7 @@ class PylintAnalyzer(Analyzer):
         Returns:
         - List of dictionaries: Each dictionary contains details about the detected long lambda.
         """
-        results: list[Smell] = []
+        results: list[LLESmell] = []
         used_lines = set()
 
         # Function to check the length of lambda expressions
@@ -219,20 +222,25 @@ class PylintAnalyzer(Analyzer):
                 message = (
                     f"Lambda function too long ({lambda_length}/{threshold_count} expressions)"
                 )
-                result: Smell = {
-                    "absolutePath": str(self.file_path),
-                    "column": node.col_offset,
-                    "confidence": "UNDEFINED",
-                    "endColumn": None,
-                    "endLine": None,
-                    "line": node.lineno,
-                    "message": message,
-                    "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
-                    "module": self.file_path.name,
-                    "obj": "",
+
+                result: LLESmell = {
                     "path": str(self.file_path),
-                    "symbol": "long-lambda-expr",
+                    "module": self.file_path.stem,
+                    "obj": None,
                     "type": "convention",
+                    "symbol": "long-lambda-expr",
+                    "message": message,
+                    "messageId": CustomSmell.LONG_LAMBDA_EXPR,
+                    "confidence": "UNDEFINED",
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
+                    "additionalInfo": None,
                 }
 
                 if node.lineno in used_lines:
@@ -246,20 +254,24 @@ class PylintAnalyzer(Analyzer):
             print("this is length of char: ", len(lambda_code))
             if len(lambda_code) > threshold_length:
                 message = f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
-                result: Smell = {
-                    "absolutePath": str(self.file_path),
-                    "column": node.col_offset,
-                    "confidence": "UNDEFINED",
-                    "endColumn": None,
-                    "endLine": None,
-                    "line": node.lineno,
-                    "message": message,
-                    "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
-                    "module": self.file_path.name,
-                    "obj": "",
+                result: LLESmell = {
                     "path": str(self.file_path),
-                    "symbol": "long-lambda-expr",
+                    "module": self.file_path.stem,
+                    "obj": None,
                     "type": "convention",
+                    "symbol": "long-lambda-expr",
+                    "message": message,
+                    "messageId": CustomSmell.LONG_LAMBDA_EXPR,
+                    "confidence": "UNDEFINED",
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
+                    "additionalInfo": None,
                 }
 
                 if node.lineno in used_lines:
@@ -296,7 +308,7 @@ class PylintAnalyzer(Analyzer):
         # Store variable and attribute declarations and usage
         declared_vars = set()
         used_vars = set()
-        results: list[Smell] = []
+        results: list[UVASmell] = []
 
         # Helper function to gather declared variables (including class attributes)
         def gather_declarations(node: ast.AST):
@@ -340,13 +352,12 @@ class PylintAnalyzer(Analyzer):
 
         for var in unused_vars:
             # Locate the line number for each unused variable or attribute
-            line_no, column_no = 0, 0
+            var_node = None
             symbol = ""
             for node in ast.walk(self.source_code):
                 if isinstance(node, ast.Name) and node.id == var:
-                    line_no = node.lineno
-                    column_no = node.col_offset
                     symbol = "unused-variable"
+                    var_node = node
                     break
                 elif (
                     isinstance(node, ast.Attribute)
@@ -354,28 +365,32 @@ class PylintAnalyzer(Analyzer):
                     and isinstance(node.value, ast.Name)
                     and node.value.id == "self"
                 ):
-                    line_no = node.lineno
-                    column_no = node.col_offset
                     symbol = "unused-attribute"
+                    var_node = node
                     break
 
-            result: Smell = {
-                "absolutePath": str(self.file_path),
-                "column": column_no,
-                "confidence": "UNDEFINED",
-                "endColumn": None,
-                "endLine": None,
-                "line": line_no,
-                "message": f"Unused variable or attribute '{var}'",
-                "messageId": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE.value,
-                "module": self.file_path.name,
-                "obj": "",
-                "path": str(self.file_path),
-                "symbol": symbol,
-                "type": "convention",
-            }
+            if var_node:
+                result: UVASmell = {
+                    "path": str(self.file_path),
+                    "module": self.file_path.stem,
+                    "obj": None,
+                    "type": "convention",
+                    "symbol": symbol,
+                    "message": f"Unused variable or attribute '{var}'",
+                    "messageId": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE,
+                    "confidence": "UNDEFINED",
+                    "occurences": [
+                        {
+                            "line": var_node.lineno,
+                            "endLine": var_node.end_lineno,
+                            "column": var_node.col_offset,
+                            "endColumn": var_node.end_col_offset,
+                        }
+                    ],
+                    "additionalInfo": None,
+                }
 
-            results.append(result)
+                results.append(result)
 
         return results
 
@@ -387,7 +402,7 @@ class PylintAnalyzer(Analyzer):
         - List of dictionaries: Each dictionary contains details about the detected long chain.
         """
         # Parse the code into an Abstract Syntax Tree (AST)
-        results: list[Smell] = []
+        results: list[LECSmell] = []
         used_lines = set()
 
         # Function to calculate the length of a dictionary chain
@@ -401,20 +416,24 @@ class PylintAnalyzer(Analyzer):
                 # Create the message for the convention
                 message = f"Dictionary chain too long ({chain_length}/{threshold})"
 
-                result: Smell = {
-                    "absolutePath": str(self.file_path),
-                    "column": node.col_offset,
-                    "confidence": "UNDEFINED",
-                    "endColumn": None,
-                    "endLine": None,
-                    "line": node.lineno,
-                    "message": message,
-                    "messageId": CustomSmell.LONG_ELEMENT_CHAIN.value,
-                    "module": self.file_path.name,
-                    "obj": "",
+                result: LECSmell = {
                     "path": str(self.file_path),
-                    "symbol": "long-element-chain",
+                    "module": self.file_path.stem,
+                    "obj": None,
                     "type": "convention",
+                    "symbol": "long-element-chain",
+                    "message": message,
+                    "messageId": CustomSmell.LONG_ELEMENT_CHAIN,
+                    "confidence": "UNDEFINED",
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
+                    "additionalInfo": None,
                 }
 
                 if node.lineno in used_lines:
@@ -428,16 +447,15 @@ class PylintAnalyzer(Analyzer):
                 check_chain(node)
 
         return results
-    
-    def detect_repeated_calls(self, threshold=2):
-        results = []
-        messageId = "CRC001"
+
+    def detect_repeated_calls(self, threshold: int = 2):
+        results: list[CRCSmell] = []
 
         tree = self.source_code
 
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.For, ast.While)):
-                call_counts = defaultdict(list)
+                call_counts: dict[str, list[ast.Call]] = defaultdict(list)
                 modified_lines = set()
 
                 for subnode in ast.walk(node):
@@ -456,7 +474,7 @@ class PylintAnalyzer(Analyzer):
                             line in modified_lines
                             for start_line, end_line in zip(
                                 [occ.lineno for occ in occurrences[:-1]],
-                                [occ.lineno for occ in occurrences[1:]]
+                                [occ.lineno for occ in occurrences[1:]],
                             )
                             for line in range(start_line + 1, end_line)
                         )
@@ -464,24 +482,30 @@ class PylintAnalyzer(Analyzer):
                         if skip_due_to_modification:
                             continue
 
-                        smell = {
+                        smell: CRCSmell = {
+                            "path": str(self.file_path),
+                            "module": self.file_path.stem,
+                            "obj": None,
                             "type": "performance",
                             "symbol": "cached-repeated-calls",
                             "message": f"Repeated function call detected ({len(occurrences)}/{threshold}). "
-                                    f"Consider caching the result: {call_string}",
-                            "messageId": messageId,
+                            f"Consider caching the result: {call_string}",
+                            "messageId": CustomSmell.CACHE_REPEATED_CALLS,
                             "confidence": "HIGH" if len(occurrences) > threshold else "MEDIUM",
-                            "occurrences": [
+                            "occurences": [
                                 {
                                     "line": occ.lineno,
+                                    "endLine": occ.end_lineno,
                                     "column": occ.col_offset,
+                                    "endColumn": occ.end_col_offset,
                                     "call_string": call_string,
                                 }
                                 for occ in occurrences
                             ],
-                            "repetitions": len(occurrences),
+                            "additionalInfo": {
+                                "repetitions": len(occurrences),
+                            },
                         }
                         results.append(smell)
 
         return results
-

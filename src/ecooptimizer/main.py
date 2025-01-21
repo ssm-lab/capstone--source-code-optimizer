@@ -115,7 +115,7 @@ def main():
 
     for pylint_smell in pylint_analyzer.smells_data:
         refactoring_class = RefactorerFactory.build_refactorer_class(
-            pylint_smell["messageId"], OUTPUT_DIR
+            pylint_smell["messageId"].value, OUTPUT_DIR
         )
         if refactoring_class:
             refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)

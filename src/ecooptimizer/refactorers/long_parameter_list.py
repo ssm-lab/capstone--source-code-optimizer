@@ -3,7 +3,7 @@ import astor
 import logging
 from pathlib import Path
 
-from ..data_wrappers.smell import Smell
+from ..data_wrappers.smell import LPLSmell
 from .base_refactorer import BaseRefactorer
 from ..testing.run_tests import run_tests
 
@@ -15,7 +15,7 @@ class LongParameterListRefactorer(BaseRefactorer):
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
 
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
+    def refactor(self, file_path: Path, pylint_smell: LPLSmell, initial_emissions: float):
         """
         Refactors function/method with more than 6 parameters by encapsulating those with related names and removing those that are unused
         """
@@ -26,7 +26,7 @@ class LongParameterListRefactorer(BaseRefactorer):
             tree = ast.parse(f.read())
 
         # find the line number of target function indicated by the code smell object
-        target_line = pylint_smell["line"]
+        target_line = pylint_smell["occurences"][0]["line"]
         logging.info(
             f"Applying 'Fix Too Many Parameters' refactor on '{file_path.name}' at line {target_line} for identified code smell."
         )

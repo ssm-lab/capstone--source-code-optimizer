@@ -16,7 +16,7 @@ class Analyzer(ABC):
         """
         self.file_path = file_path
         self.source_code = source_code
-        self.smells_data: list[Smell] = list()
+        self.smells_data: list[Smell] = list()  # type: ignore
 
     def validate_file(self):
         """

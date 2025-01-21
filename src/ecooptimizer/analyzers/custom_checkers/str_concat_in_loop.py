@@ -7,15 +7,18 @@ import logging
 import astroid.util
 
 from ...utils.analyzers_config import CustomSmell
-from ...data_wrappers.smell import Smell
+from ...data_wrappers.occurence import BasicOccurence
+from ...data_wrappers.smell import SCLSmell
 
 
 class StringConcatInLoopChecker:
     def __init__(self, filename: Path):
         super().__init__()
         self.filename = filename
-        self.smells: list[Smell] = []
+        self.smells: list[SCLSmell] = []
         self.in_loop_counter = 0
+        # self.current_semlls = { var_name : ( index of smell, index of loop )}
+        self.current_smells: dict[str, tuple[int, int]] = {}
         self.current_loops: list[nodes.NodeNG] = []
         self.referenced = False
 
@@ -30,25 +33,32 @@ class StringConcatInLoopChecker:
         for child in node.get_children():
             self._visit(child)
 
-    def _create_smell(self, node: nodes.Assign | nodes.AugAssign):
+    def _create_smell(self, node: nodes.Assign):
         if node.lineno and node.col_offset:
             self.smells.append(
                 {
-                    "absolutePath": str(self.filename),
-                    "column": node.col_offset,
-                    "confidence": "UNDEFINED",
-                    "endColumn": None,
-                    "endLine": None,
-                    "line": node.lineno,
-                    "message": "String concatenation inside loop detected",
-                    "messageId": CustomSmell.STR_CONCAT_IN_LOOP.value,
-                    "module": self.filename.name,
-                    "obj": "",
                     "path": str(self.filename),
-                    "symbol": "string-concat-in-loop",
-                    "type": "refactor",
+                    "module": self.filename.name,
+                    "obj": None,
+                    "type": "performance",
+                    "symbol": "",
+                    "message": "String concatenation inside loop detected",
+                    "messageId": CustomSmell.STR_CONCAT_IN_LOOP,
+                    "confidence": "UNDEFINED",
+                    "occurences": [self._create_smell_occ(node)],
+                    "additionalInfo": {
+                        "outerLoopLine": self.current_smells[node.targets[0].as_string()][1],
+                    },
                 }
             )
+
+    def _create_smell_occ(self, node: nodes.Assign | nodes.AugAssign) -> BasicOccurence:
+        return {
+            "line": node.fromlineno,
+            "endLine": node.tolineno,
+            "column": node.col_offset,  # type: ignore
+            "endColumn": node.end_col_offset,
+        }
 
     def _visit(self, node: nodes.NodeNG):
         logging.debug(f"visiting node {type(node)}")
@@ -63,6 +73,12 @@ class StringConcatInLoopChecker:
                 self._visit(stmt)
 
             self.in_loop_counter -= 1
+
+            self.current_smells = {
+                key: val
+                for key, val in self.current_smells.items()
+                if val[1] != self.in_loop_counter
+            }
             self.current_loops.pop()
 
         elif self.in_loop_counter > 0 and isinstance(node, nodes.Assign):
@@ -72,20 +88,34 @@ class StringConcatInLoopChecker:
             logging.debug(node.as_string())
             logging.debug(f"loops: {self.in_loop_counter}")
 
-            if len(node.targets) == 1:
-                target = node.targets[0]
-                value = node.value
+            if len(node.targets) == 1 > 1:
+                return
+
+            target = node.targets[0]
+            value = node.value
 
             if target and isinstance(value, nodes.BinOp) and value.op == "+":
                 logging.debug("Checking conditions")
                 if (
-                    self._is_string_type(node)
+                    target.as_string() not in self.current_smells
+                    and self._is_string_type(node)
                     and self._is_concatenating_with_self(value, target)
                     and self._is_not_referenced(node)
                 ):
                     logging.debug(f"Found a smell {node}")
+                    self.current_smells[target.as_string()] = (
+                        len(self.smells),
+                        self.in_loop_counter - 1,
+                    )
                     self._create_smell(node)
-
+                elif target.as_string() in self.current_smells and self._is_concatenating_with_self(
+                    value, target
+                ):
+                    smell_id = self.current_smells[target.as_string()][0]
+                    logging.debug(
+                        f"Related to smell at line {self.smells[smell_id]['occurences'][0]['line']}"
+                    )
+                    self.smells[smell_id]["occurences"].append(self._create_smell_occ(node))
         else:
             for child in node.get_children():
                 self._visit(child)
