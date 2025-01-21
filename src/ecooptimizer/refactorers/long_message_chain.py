@@ -1,9 +1,9 @@
 import logging
 from pathlib import Path
 import re
-from ..testing.run_tests import run_tests
-from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import Smell
+from ecooptimizer.testing.run_tests import run_tests
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_wrappers.smell import Smell
 
 
 class LongMessageChainRefactorer(BaseRefactorer):

@@ -3,8 +3,8 @@ import re
 import ast
 from typing import Any
 
-from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import Smell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_wrappers.smell import Smell
 
 
 class LongElementChainRefactorer(BaseRefactorer):

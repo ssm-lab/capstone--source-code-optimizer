@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 import logging
 from pathlib import Path
 
-from ..testing.run_tests import run_tests
-from ..measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
-from ..data_wrappers.smell import Smell
+from ecooptimizer.testing.run_tests import run_tests
+from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
+from ecooptimizer.data_wrappers.smell import Smell
 
 
 class BaseRefactorer(ABC):
@@ -98,5 +98,3 @@ class BaseRefactorer(ABC):
         )
         return improved
 
-
-print(__file__)

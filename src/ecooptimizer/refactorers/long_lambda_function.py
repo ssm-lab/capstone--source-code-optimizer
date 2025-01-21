@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 import re
-from .base_refactorer import BaseRefactorer
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 from ecooptimizer.data_wrappers.smell import Smell
 
 

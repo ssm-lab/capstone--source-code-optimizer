@@ -4,8 +4,8 @@ import astor
 import ast
 from ast import NodeTransformer
 
-from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import Smell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_wrappers.smell import Smell
 
 
 class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):

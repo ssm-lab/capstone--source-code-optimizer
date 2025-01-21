@@ -6,8 +6,8 @@ import logging
 
 import astroid.util
 
-from ...utils.analyzers_config import CustomSmell
-from ...data_wrappers.smell import Smell
+from ecooptimizer.utils.analyzers_config import CustomSmell
+from ecooptimizer.data_wrappers.smell import Smell
 
 
 class StringConcatInLoopChecker:

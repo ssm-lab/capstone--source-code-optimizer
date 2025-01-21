@@ -1,13 +1,13 @@
 # Import specific refactorer classes
 from pathlib import Path
-from ..refactorers.list_comp_any_all import UseAGeneratorRefactorer
-from ..refactorers.unused import RemoveUnusedRefactorer
-from ..refactorers.long_parameter_list import LongParameterListRefactorer
-from ..refactorers.member_ignoring_method import MakeStaticRefactorer
-from ..refactorers.long_message_chain import LongMessageChainRefactorer
-from ..refactorers.long_element_chain import LongElementChainRefactorer
-from ..refactorers.str_concat_in_loop import UseListAccumulationRefactorer
-from ..refactorers.repeated_calls import CacheRepeatedCallsRefactorer
+from ecooptimizer.refactorers.list_comp_any_all import UseAGeneratorRefactorer
+from ecooptimizer.refactorers.unused import RemoveUnusedRefactorer
+from ecooptimizer.refactorers.long_parameter_list import LongParameterListRefactorer
+from ecooptimizer.refactorers.member_ignoring_method import MakeStaticRefactorer
+from ecooptimizer.refactorers.long_message_chain import LongMessageChainRefactorer
+from ecooptimizer.refactorers.long_element_chain import LongElementChainRefactorer
+from ecooptimizer.refactorers.str_concat_in_loop import UseListAccumulationRefactorer
+from ecooptimizer.refactorers.repeated_calls import CacheRepeatedCallsRefactorer
 
 # Import the configuration for all Pylint smells
 from ..utils.analyzers_config import AllSmells
@@ -25,9 +25,8 @@ class RefactorerFactory:
         Static method to create and return a refactorer instance based on the provided code smell.
 
         Parameters:
-        - file_path (str): The path of the file to be refactored.
-        - smell_messageId (str): The unique identifier (message ID) of the detected code smell.
-        - smell_data (dict): Additional data related to the smell, passed to the refactorer.
+        - smell_messageID (str): The unique identifier (message ID) of the detected code smell.
+        - output_dir (Path): The directory where refactored files will be saved.
 
         Returns:
         - BaseRefactorer: An instance of a specific refactorer class if one exists for the smell;

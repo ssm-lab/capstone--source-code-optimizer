@@ -3,14 +3,14 @@ import astor
 import logging
 from pathlib import Path
 
-from ..data_wrappers.smell import Smell
-from .base_refactorer import BaseRefactorer
-from ..testing.run_tests import run_tests
+from ecooptimizer.data_wrappers.smell import Smell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.testing.run_tests import run_tests
 
 
 class LongParameterListRefactorer(BaseRefactorer):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, output_dir):
+        super().__init__(output_dir)
         self.parameter_analyzer = ParameterAnalyzer()
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()

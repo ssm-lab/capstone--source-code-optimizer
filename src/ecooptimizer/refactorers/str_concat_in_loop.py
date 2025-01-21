@@ -5,8 +5,8 @@ from pathlib import Path
 import astroid
 from astroid import nodes
 
-from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import Smell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_wrappers.smell import Smell
 
 
 class UseListAccumulationRefactorer(BaseRefactorer):

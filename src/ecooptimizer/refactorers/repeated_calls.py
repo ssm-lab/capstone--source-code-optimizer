@@ -1,7 +1,7 @@
 import ast
 from pathlib import Path
 
-from .base_refactorer import BaseRefactorer
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 
 
 class CacheRepeatedCallsRefactorer(BaseRefactorer):

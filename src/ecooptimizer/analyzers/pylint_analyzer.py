@@ -9,9 +9,9 @@ import astor
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
-from .base_analyzer import Analyzer
-from ..utils.ast_parser import parse_line
-from ..utils.analyzers_config import (
+from ecooptimizer.analyzers.base_analyzer import Analyzer
+from ecooptimizer.utils.ast_parser import parse_line
+from ecooptimizer.utils.analyzers_config import (
     PylintSmell,
     CustomSmell,
     IntermediateSmells,

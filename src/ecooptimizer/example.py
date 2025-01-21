@@ -1,9 +1,9 @@
-
 import logging
 import os
 import tempfile
 from pathlib import Path
-from typing import Dict, Any
+from typing import dict, Any
+from enum import Enum
 import argparse
 import json
 from ecooptimizer.utils.ast_parser import parse_file
@@ -11,6 +11,31 @@ from ecooptimizer.utils.outputs_config import OutputConfig
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 from ecooptimizer.utils.refactorer_factory import RefactorerFactory
+
+# Custom serializer for Python
+# def custom_serializer(obj: Any) -> Any:
+#     """
+#     Custom serializer for Python objects to ensure JSON compatibility.
+#     """
+#     if isinstance(obj, Enum):
+#         return obj.value  # Convert Enum to its value (string or integer)
+#     if hasattr(obj, "__dict__"):
+#         return obj.__dict__  # Convert objects with __dict__ to dictionaries
+#     if isinstance(obj, set):
+#         return list(obj)  # Convert sets to lists
+#     return str(obj)  # Fallback: Convert to string
+
+
+def custom_serializer(obj: Any):
+    if isinstance(obj, Enum):
+        return obj.value
+    if isinstance(obj, (set, frozenset)):
+        return list(obj)
+    if hasattr(obj, "__dict__"):
+        return obj.__dict__
+    if obj is None:
+        return None
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
 
 class SCOptimizer:
@@ -21,7 +46,7 @@ class SCOptimizer:
 
         self.logs_dir.mkdir(parents=True, exist_ok=True)
         self.outputs_dir.mkdir(parents=True, exist_ok=True)
-        
+
         self.setup_logging()
         self.output_config = OutputConfig(self.outputs_dir)
 
@@ -36,11 +61,9 @@ class SCOptimizer:
             datefmt="%H:%M:%S",
             format="%(asctime)s [%(levelname)s] %(message)s",
         )
-        print("****")
-        print(log_file)
         logging.info("Logging initialized for Source Code Optimizer. Writing logs to: %s", log_file)
 
-    def detect_smells(self, file_path: Path) -> Dict[str, Any]:
+    def detect_smells(self, file_path: Path) -> dict[str, Any]:
         """Detect code smells in a given file."""
         logging.info(f"Starting smell detection for file: {file_path}")
         if not file_path.is_file():
@@ -58,8 +81,10 @@ class SCOptimizer:
         logging.info(f"Detected {len(smells_data)} code smells.")
         return smells_data
 
-    def refactor_smell(self, file_path: Path, smell: Dict[str, Any]) -> Dict[str, Any]:
-        logging.info(f"Starting refactoring for file: {file_path} and smell symbol: {smell['symbol']} at line {smell['line']}")
+    def refactor_smell(self, file_path: Path, smell: Dict[str, Any]) -> dict[str, Any]:
+        logging.info(
+            f"Starting refactoring for file: {file_path} and smell symbol: {smell['symbol']} at line {smell['line']}"
+        )
 
         if not file_path.is_file():
             logging.error(f"File {file_path} does not exist.")
@@ -82,7 +107,6 @@ class SCOptimizer:
             logging.error(f"No refactorer implemented for smell {smell['symbol']}.")
             raise NotImplementedError(f"No refactorer implemented for smell {smell['symbol']}.")
 
-    
         refactorer.refactor(file_path, smell, initial_emissions)
 
         target_line = smell["line"]
@@ -106,7 +130,7 @@ class SCOptimizer:
         updated_smells = self.detect_smells(updated_path)
 
         # Read refactored code
-        with open(updated_path) as file:
+        with Path.open(updated_path) as file:
             refactored_code = file.read()
 
         result = {
@@ -143,15 +167,16 @@ if __name__ == "__main__":
 
     if args.action == "detect":
         smells = optimizer.detect_smells(file_path)
-        print(smells)
-        print("***")
-        print(json.dumps(smells))
+        logging.info("***")
+        logging.info(smells)
+        print(json.dumps(smells, default=custom_serializer, indent=4))
 
     elif args.action == "refactor":
         if not args.smell:
             logging.error("--smell argument is required for 'refactor' action.")
             raise ValueError("--smell argument is required for 'refactor' action.")
         smell = json.loads(args.smell)
+        logging.info("JSON LOADS")
+        logging.info(smell)
         result = optimizer.refactor_smell(file_path, smell)
-        print(json.dumps(result))
-
+        print(json.dumps(result, default=custom_serializer, indent=4))
