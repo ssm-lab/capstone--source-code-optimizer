@@ -47,7 +47,10 @@ class StringConcatInLoopChecker:
                     "confidence": "UNDEFINED",
                     "occurences": [self._create_smell_occ(node)],
                     "additionalInfo": {
-                        "outerLoopLine": self.current_smells[node.targets[0].as_string()][1],
+                        "innerLoopLine": self.current_loops[
+                            self.current_smells[node.targets[0].as_string()][1]
+                        ].lineno,  # type: ignore
+                        "concatTarget": node.targets[0].as_string(),
                     },
                 }
             )

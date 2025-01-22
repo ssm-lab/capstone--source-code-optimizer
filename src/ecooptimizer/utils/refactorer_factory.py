@@ -9,7 +9,7 @@ from ..refactorers.str_concat_in_loop import UseListAccumulationRefactorer
 from ..refactorers.repeated_calls import CacheRepeatedCallsRefactorer
 
 # Import the configuration for all Pylint smells
-from ..utils.analyzers_config import AllSmells
+from ..utils.analyzers_config import AllSmells, CustomSmell, PylintSmell
 
 
 class RefactorerFactory:
@@ -19,7 +19,7 @@ class RefactorerFactory:
     """
 
     @staticmethod
-    def build_refactorer_class(smell_messageID: str, output_dir: Path):
+    def build_refactorer_class(smell_messageID: CustomSmell | PylintSmell, output_dir: Path):
         """
         Static method to create and return a refactorer instance based on the provided code smell.
 
@@ -53,7 +53,7 @@ class RefactorerFactory:
                 selected = LongElementChainRefactorer(output_dir)
             case AllSmells.STR_CONCAT_IN_LOOP:  # type: ignore
                 selected = UseListAccumulationRefactorer(output_dir)
-            case "CRC001":
+            case AllSmells.CACHE_REPEATED_CALLS:  # type: ignore
                 selected = CacheRepeatedCallsRefactorer(output_dir)
             case _:
                 selected = None

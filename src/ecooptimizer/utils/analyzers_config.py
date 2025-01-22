@@ -7,8 +7,8 @@ class ExtendedEnum(Enum):
     def list(cls) -> list[str]:
         return [c.value for c in cls]
 
-    def __str__(self):
-        return str(self.value)
+    # def __str__(self):
+    #     return str(self.value)
 
     def __eq__(self, value: object) -> bool:
         return str(self.value) == value

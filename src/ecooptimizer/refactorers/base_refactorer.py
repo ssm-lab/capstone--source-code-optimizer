@@ -67,7 +67,7 @@ class BaseRefactorer(ABC):
             )
 
         # Remove the temporary file if no energy improvement or failing tests
-        temp_file_path.unlink()
+        # temp_file_path.unlink()
 
     def measure_energy(self, file_path: Path):
         """

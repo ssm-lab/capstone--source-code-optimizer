@@ -20,4 +20,5 @@ class CRCAddInfo(BasicAddInfo):
 
 
 class SCLAddInfo(BasicAddInfo):
-    outerLoopLine: int
+    innerLoopLine: int
+    concatTarget: str
