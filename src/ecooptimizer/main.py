@@ -19,9 +19,9 @@ OUTPUT_DIR = (DIRNAME / Path("../../outputs")).resolve()
 # Path to log file
 LOG_FILE = OUTPUT_DIR / Path("log.log")
 # Path to the file to be analyzed
-SOURCE = (DIRNAME / Path("../../tests/input/sample_project/car_stuff.py")).resolve()
-TEST_DIR = (DIRNAME / Path("../../tests/input/sample_project")).resolve()
-TEST_FILE = TEST_DIR / "test_car_stuff.py"
+SAMPLE_PROJ_DIR = (DIRNAME / Path("../../tests/input/project_string_concat")).resolve()
+SOURCE = SAMPLE_PROJ_DIR / "main.py"
+TEST_FILE = SAMPLE_PROJ_DIR / "test_main.py"
 
 
 def main():
@@ -44,7 +44,7 @@ def main():
         exit(1)
 
     # Check that tests pass originally
-    test_runner = TestRunner("pytest", TEST_DIR)
+    test_runner = TestRunner("pytest", SAMPLE_PROJ_DIR)
     if not test_runner.retained_functionality():
         logging.error("Provided test suite fails with original source code.")
         exit(1)

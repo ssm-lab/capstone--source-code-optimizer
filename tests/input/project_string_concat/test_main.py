@@ -1,5 +1,5 @@
 import pytest
-from .string_concat_examples import (
+from .main import (
     concat_with_for_loop_simple,
     complex_expression_concat,
     concat_with_for_loop_simple_attr,
