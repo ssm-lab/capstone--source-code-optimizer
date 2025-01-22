@@ -175,8 +175,8 @@ if __name__ == "__main__":
     if args.action == "detect":
         smells = optimizer.detect_smells(file_path)
         logging.info(smells)
-        print(smells)
-        # print(json.dumps(smells, default=custom_serializer, indent=4))
+        # print(smells)
+        print(json.dumps(smells, default=custom_serializer, indent=4))
 
     elif args.action == "refactor":
         if not args.smell:
