@@ -1,60 +1,56 @@
+import ast  # noqa: INP001
+import logging
 from pathlib import Path
 import re
-import astroid
-from astroid import nodes
-import logging
+from astroid import nodes, util, parse
 
-import astroid.util
-
-from ...utils.analyzers_config import CustomSmell
 from ...data_wrappers.custom_fields import BasicOccurence
 from ...data_wrappers.smell import SCLSmell
+from ...utils.analyzers_config import CustomSmell
 
 
-class StringConcatInLoopChecker:
-    def __init__(self, filename: Path):
-        super().__init__()
-        self.filename = filename
-        self.smells: list[SCLSmell] = []
-        self.in_loop_counter = 0
-        # self.current_semlls = { var_name : ( index of smell, index of loop )}
-        self.current_smells: dict[str, tuple[int, int]] = {}
-        self.current_loops: list[nodes.NodeNG] = []
+def detect_string_concat_in_loop(file_path: Path, tree: ast.Module):  # noqa: ARG001
+    """
+    Detects string concatenation inside loops within a Python AST tree.
 
-        logging.debug("Starting string concat checker")
+    Parameters:
+        file_path (Path): The file path to analyze.
+        tree (nodes.Module): The parsed AST tree of the Python code.
 
-        self.check_string_concatenation()
+    Returns:
+        list[dict]: A list of dictionaries containing details about detected string concatenation smells.
+    """
+    smells: list[SCLSmell] = []
+    in_loop_counter = 0
+    current_loops: list[nodes.NodeNG] = []
+    # current_semlls = { var_name : ( index of smell, index of loop )}
+    current_smells: dict[str, tuple[int, int]] = {}
 
-    def check_string_concatenation(self):
-        logging.debug("Parsing astroid node")
-        node = astroid.parse(self._transform_augassign_to_assign(self.filename.read_text()))
-        logging.debug("Start iterating through nodes")
-        for child in node.get_children():
-            self._visit(child)
+    def create_smell(node: nodes.Assign):
+        nonlocal current_loops, current_smells
 
-    def _create_smell(self, node: nodes.Assign):
         if node.lineno and node.col_offset:
-            self.smells.append(
+            smells.append(
                 {
-                    "path": str(self.filename),
-                    "module": self.filename.name,
+                    "path": str(file_path),
+                    "module": file_path.name,
                     "obj": None,
                     "type": "performance",
                     "symbol": "",
                     "message": "String concatenation inside loop detected",
                     "messageId": CustomSmell.STR_CONCAT_IN_LOOP,
                     "confidence": "UNDEFINED",
-                    "occurences": [self._create_smell_occ(node)],
+                    "occurences": [create_smell_occ(node)],
                     "additionalInfo": {
-                        "innerLoopLine": self.current_loops[
-                            self.current_smells[node.targets[0].as_string()][1]
+                        "innerLoopLine": current_loops[
+                            current_smells[node.targets[0].as_string()][1]
                         ].lineno,  # type: ignore
                         "concatTarget": node.targets[0].as_string(),
                     },
                 }
             )
 
-    def _create_smell_occ(self, node: nodes.Assign | nodes.AugAssign) -> BasicOccurence:
+    def create_smell_occ(node: nodes.Assign | nodes.AugAssign) -> BasicOccurence:
         return {
             "line": node.lineno,
             "endLine": node.end_lineno,
@@ -62,33 +58,33 @@ class StringConcatInLoopChecker:
             "endColumn": node.end_col_offset,
         }
 
-    def _visit(self, node: nodes.NodeNG):
+    def visit(node: nodes.NodeNG):
+        nonlocal smells, in_loop_counter, current_loops, current_smells
+
         logging.debug(f"visiting node {type(node)}")
-        logging.debug(f"loops: {self.in_loop_counter}")
+        logging.debug(f"loops: {in_loop_counter}")
 
         if isinstance(node, (nodes.For, nodes.While)):
             logging.debug("in loop")
-            self.in_loop_counter += 1
-            self.current_loops.append(node)
+            in_loop_counter += 1
+            current_loops.append(node)
             logging.debug(f"node body {node.body}")
             for stmt in node.body:
-                self._visit(stmt)
+                visit(stmt)
 
-            self.in_loop_counter -= 1
+            in_loop_counter -= 1
 
-            self.current_smells = {
-                key: val
-                for key, val in self.current_smells.items()
-                if val[1] != self.in_loop_counter
+            current_smells = {
+                key: val for key, val in current_smells.items() if val[1] != in_loop_counter
             }
-            self.current_loops.pop()
+            current_loops.pop()
 
-        elif self.in_loop_counter > 0 and isinstance(node, nodes.Assign):
+        elif in_loop_counter > 0 and isinstance(node, nodes.Assign):
             target = None
             value = None
             logging.debug("in Assign")
             logging.debug(node.as_string())
-            logging.debug(f"loops: {self.in_loop_counter}")
+            logging.debug(f"loops: {in_loop_counter}")
 
             if len(node.targets) == 1 > 1:
                 return
@@ -99,32 +95,34 @@ class StringConcatInLoopChecker:
             if target and isinstance(value, nodes.BinOp) and value.op == "+":
                 logging.debug("Checking conditions")
                 if (
-                    target.as_string() not in self.current_smells
-                    and self._is_string_type(node)
-                    and self._is_concatenating_with_self(value, target)
-                    and self._is_not_referenced(node)
+                    target.as_string() not in current_smells
+                    and is_string_type(node)
+                    and is_concatenating_with_self(value, target)
+                    and is_not_referenced(node)
                 ):
                     logging.debug(f"Found a smell {node}")
-                    self.current_smells[target.as_string()] = (
-                        len(self.smells),
-                        self.in_loop_counter - 1,
+                    current_smells[target.as_string()] = (
+                        len(smells),
+                        in_loop_counter - 1,
                     )
-                    self._create_smell(node)
-                elif target.as_string() in self.current_smells and self._is_concatenating_with_self(
+                    create_smell(node)
+                elif target.as_string() in current_smells and is_concatenating_with_self(
                     value, target
                 ):
-                    smell_id = self.current_smells[target.as_string()][0]
+                    smell_id = current_smells[target.as_string()][0]
                     logging.debug(
-                        f"Related to smell at line {self.smells[smell_id]['occurences'][0]['line']}"
+                        f"Related to smell at line {smells[smell_id]['occurences'][0]['line']}"
                     )
-                    self.smells[smell_id]["occurences"].append(self._create_smell_occ(node))
+                    smells[smell_id]["occurences"].append(create_smell_occ(node))
         else:
             for child in node.get_children():
-                self._visit(child)
+                visit(child)
 
-    def _is_not_referenced(self, node: nodes.Assign):
+    def is_not_referenced(node: nodes.Assign):
+        nonlocal current_loops
+
         logging.debug("Checking if referenced")
-        loop_source_str = self.current_loops[-1].as_string()
+        loop_source_str = current_loops[-1].as_string()
         loop_source_str = loop_source_str.replace(node.as_string(), "", 1)
         lines = loop_source_str.splitlines()
         logging.debug(lines)
@@ -138,7 +136,7 @@ class StringConcatInLoopChecker:
                 return False
         return True
 
-    def _is_string_type(self, node: nodes.Assign):
+    def is_string_type(node: nodes.Assign):
         logging.debug("checking if string")
 
         inferred_types = node.targets[0].infer()
@@ -148,22 +146,22 @@ class StringConcatInLoopChecker:
 
             if inferred.repr_name() == "str":
                 return True
-            elif isinstance(
-                inferred.repr_name(), astroid.util.UninferableBase
-            ) and self._has_str_format(node.value):
+            elif isinstance(inferred.repr_name(), util.UninferableBase) and has_str_format(
+                node.value
+            ):
                 return True
-            elif isinstance(
-                inferred.repr_name(), astroid.util.UninferableBase
-            ) and self._has_str_interpolation(node.value):
+            elif isinstance(inferred.repr_name(), util.UninferableBase) and has_str_interpolation(
+                node.value
+            ):
                 return True
-            elif isinstance(
-                inferred.repr_name(), astroid.util.UninferableBase
-            ) and self._has_str_vars(node.value):
+            elif isinstance(inferred.repr_name(), util.UninferableBase) and has_str_vars(
+                node.value
+            ):
                 return True
 
         return False
 
-    def _is_concatenating_with_self(self, binop_node: nodes.BinOp, target: nodes.NodeNG):
+    def is_concatenating_with_self(binop_node: nodes.BinOp, target: nodes.NodeNG):
         """Check if the BinOp node includes the target variable being added."""
         logging.debug("checking that is valid concat")
 
@@ -184,7 +182,7 @@ class StringConcatInLoopChecker:
         left, right = binop_node.left, binop_node.right
         return is_same_variable(left, target) or is_same_variable(right, target)
 
-    def _has_str_format(self, node: nodes.NodeNG):
+    def has_str_format(node: nodes.NodeNG):
         logging.debug("Checking for str format")
         if isinstance(node, nodes.BinOp) and node.op == "+":
             str_repr = node.as_string()
@@ -195,7 +193,7 @@ class StringConcatInLoopChecker:
 
         return False
 
-    def _has_str_interpolation(self, node: nodes.NodeNG):
+    def has_str_interpolation(node: nodes.NodeNG):
         logging.debug("Checking for str interpolation")
         if isinstance(node, nodes.BinOp) and node.op == "+":
             str_repr = node.as_string()
@@ -206,9 +204,9 @@ class StringConcatInLoopChecker:
 
         return False
 
-    def _has_str_vars(self, node: nodes.NodeNG):
+    def has_str_vars(node: nodes.NodeNG):
         logging.debug("Checking if has string variables")
-        binops = self._find_all_binops(node)
+        binops = find_all_binops(node)
         for binop in binops:
             inferred_types = binop.left.infer()
 
@@ -220,19 +218,19 @@ class StringConcatInLoopChecker:
 
         return False
 
-    def _find_all_binops(self, node: nodes.NodeNG):
+    def find_all_binops(node: nodes.NodeNG):
         binops: list[nodes.BinOp] = []
         for child in node.get_children():
-            if isinstance(child, astroid.BinOp):
+            if isinstance(child, nodes.BinOp):
                 binops.append(child)
                 # Recursively search within the current BinOp
-                binops.extend(self._find_all_binops(child))
+                binops.extend(find_all_binops(child))
             else:
                 # Continue searching in non-BinOp children
-                binops.extend(self._find_all_binops(child))
+                binops.extend(find_all_binops(child))
         return binops
 
-    def _transform_augassign_to_assign(self, code_file: str):
+    def transform_augassign_to_assign(code_file: str):
         """
         Changes all AugAssign occurences to Assign in a code file.
 
@@ -254,3 +252,10 @@ class StringConcatInLoopChecker:
 
         logging.debug("\n".join(str_code))
         return "\n".join(str_code)
+
+    # Start traversal
+    tree_node = parse(transform_augassign_to_assign(file_path.read_text()))
+    for child in tree_node.get_children():
+        visit(child)
+
+    return smells
