@@ -1,30 +1,16 @@
 import logging
-import os
-import tempfile
 from pathlib import Path
 from typing import Dict, Any
 from enum import Enum
-import argparse
 import json
+import sys
 from ecooptimizer.data_wrappers.smell import Smell
 from ecooptimizer.utils.ast_parser import parse_file
-from ecooptimizer.utils.outputs_config import OutputConfig
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 from ecooptimizer.utils.refactorer_factory import RefactorerFactory
 
-# Custom serializer for Python
-# def custom_serializer(obj: Any) -> Any:
-#     """
-#     Custom serializer for Python objects to ensure JSON compatibility.
-#     """
-#     if isinstance(obj, Enum):
-#         return obj.value  # Convert Enum to its value (string or integer)
-#     if hasattr(obj, "__dict__"):
-#         return obj.__dict__  # Convert objects with __dict__ to dictionaries
-#     if isinstance(obj, set):
-#         return list(obj)  # Convert sets to lists
-#     return str(obj)  # Fallback: Convert to string
+outputs_dir = Path("/Users/tanveerbrar/Desktop").resolve()
 
 
 def custom_serializer(obj: Any):
@@ -39,151 +25,125 @@ def custom_serializer(obj: Any):
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
 
-class SCOptimizer:
-    def __init__(self, base_dir: Path):
-        self.base_dir = base_dir
-        self.logs_dir = base_dir / "logs"
-        self.outputs_dir = base_dir / "outputs"
+def detect_smells(file_path: Path) -> list[Smell]:
+    """
+    Detect code smells in a given file.
 
-        self.logs_dir.mkdir(parents=True, exist_ok=True)
-        self.outputs_dir.mkdir(parents=True, exist_ok=True)
+    Args:
+        file_path (Path): Path to the Python file to analyze.
 
-        self.setup_logging()
-        self.output_config = OutputConfig(self.outputs_dir)
+    Returns:
+        List[Smell]: A list of detected smells.
+    """
+    logging.info(f"Starting smell detection for file: {file_path}")
+    if not file_path.is_file():
+        logging.error(f"File {file_path} does not exist.")
+        raise FileNotFoundError(f"File {file_path} does not exist.")
 
-    def setup_logging(self):
-        """
-        Configures logging to write logs to the logs directory.
-        """
-        log_file = self.logs_dir / "scoptimizer.log"
-        logging.basicConfig(
-            filename=log_file,
-            level=logging.INFO,
-            datefmt="%H:%M:%S",
-            format="%(asctime)s [%(levelname)s] %(message)s",
-        )
-        logging.info("Logging initialized for Source Code Optimizer. Writing logs to: %s", log_file)
+    source_code = parse_file(file_path)
+    analyzer = PylintAnalyzer(file_path, source_code)
+    analyzer.analyze()
+    analyzer.configure_smells()
 
-    def detect_smells(self, file_path: Path) -> list[Smell]:
-        """
-        Detect code smells in a given file.
+    smells_data: list[Smell] = analyzer.smells_data
+    logging.info(f"Detected {len(smells_data)} code smells.")
+    return smells_data
 
-        Args:
-            file_path (Path): Path to the Python file to analyze.
 
-        Returns:
-            List[Smell]: A list of detected smells.
-        """
-        logging.info(f"Starting smell detection for file: {file_path}")
-        if not file_path.is_file():
-            logging.error(f"File {file_path} does not exist.")
-            raise FileNotFoundError(f"File {file_path} does not exist.")
+def refactor_smell(file_path: Path, smell: Dict[str, Any]) -> dict[str, Any]:
+    logging.info(
+        f"Starting refactoring for file: {file_path} and smell symbol: {smell['symbol']} at line {smell['line']}"
+    )
 
-        source_code = parse_file(file_path)
-        analyzer = PylintAnalyzer(file_path, source_code)
-        analyzer.analyze()
-        analyzer.configure_smells()
+    if not file_path.is_file():
+        logging.error(f"File {file_path} does not exist.")
+        raise FileNotFoundError(f"File {file_path} does not exist.")
 
-        smells_data = analyzer.smells_data
-        logging.info(f"Detected {len(smells_data)} code smells.")
-        return smells_data
+    # Measure initial energy
+    energy_meter = CodeCarbonEnergyMeter(file_path)
+    energy_meter.measure_energy()
+    initial_emissions = energy_meter.emissions
 
-    def refactor_smell(self, file_path: Path, smell: Dict[str, Any]) -> dict[str, Any]:
-        logging.info(
-            f"Starting refactoring for file: {file_path} and smell symbol: {smell['symbol']} at line {smell['line']}"
-        )
+    if not initial_emissions:
+        logging.error("Could not retrieve initial emissions.")
+        raise RuntimeError("Could not retrieve initial emissions.")
 
-        if not file_path.is_file():
-            logging.error(f"File {file_path} does not exist.")
-            raise FileNotFoundError(f"File {file_path} does not exist.")
+    logging.info(f"Initial emissions: {initial_emissions}")
 
-        # Measure initial energy
-        energy_meter = CodeCarbonEnergyMeter(file_path)
-        energy_meter.measure_energy()
-        initial_emissions = energy_meter.emissions
+    # Refactor the code smell
+    refactorer = RefactorerFactory.build_refactorer_class(smell["messageId"], outputs_dir)
+    if not refactorer:
+        logging.error(f"No refactorer implemented for smell {smell['symbol']}.")
+        raise NotImplementedError(f"No refactorer implemented for smell {smell['symbol']}.")
 
-        if not initial_emissions:
-            logging.error("Could not retrieve initial emissions.")
-            raise RuntimeError("Could not retrieve initial emissions.")
+    refactorer.refactor(file_path, smell, initial_emissions)
 
-        logging.info(f"Initial emissions: {initial_emissions}")
+    target_line = smell["line"]
+    updated_path = outputs_dir / f"{file_path.stem}_LPLR_line_{target_line}.py"
+    logging.info(f"Refactoring completed. Updated file: {updated_path}")
 
-        # Refactor the code smell
-        refactorer = RefactorerFactory.build_refactorer_class(smell["messageId"], self.outputs_dir)
-        if not refactorer:
-            logging.error(f"No refactorer implemented for smell {smell['symbol']}.")
-            raise NotImplementedError(f"No refactorer implemented for smell {smell['symbol']}.")
+    # Measure final energy
+    energy_meter.measure_energy()
+    final_emissions = energy_meter.emissions
 
-        refactorer.refactor(file_path, smell, initial_emissions)
+    if not final_emissions:
+        logging.error("Could not retrieve final emissions.")
+        raise RuntimeError("Could not retrieve final emissions.")
 
-        target_line = smell["line"]
-        updated_path = self.outputs_dir / f"{file_path.stem}_LPLR_line_{target_line}.py"
-        logging.info(f"Refactoring completed. Updated file: {updated_path}")
+    logging.info(f"Final emissions: {final_emissions}")
 
-        # Measure final energy
-        energy_meter.measure_energy()
-        final_emissions = energy_meter.emissions
+    energy_difference = initial_emissions - final_emissions
+    logging.info(f"Energy difference: {energy_difference}")
 
-        if not final_emissions:
-            logging.error("Could not retrieve final emissions.")
-            raise RuntimeError("Could not retrieve final emissions.")
+    # Detect remaining smells
+    updated_smells = detect_smells(updated_path)
 
-        logging.info(f"Final emissions: {final_emissions}")
+    # Read refactored code
+    with Path.open(updated_path) as file:
+        refactored_code = file.read()
 
-        energy_difference = initial_emissions - final_emissions
-        logging.info(f"Energy difference: {energy_difference}")
+    return refactored_code, energy_difference, updated_smells
 
-        # Detect remaining smells
-        updated_smells = self.detect_smells(updated_path)
+    return
 
-        # Read refactored code
-        with Path.open(updated_path) as file:
-            refactored_code = file.read()
 
-        result = {
-            "refactored_code": refactored_code,
-            "energy_difference": energy_difference,
-            "updated_smells": updated_smells,
-        }
+def main():
+    if len(sys.argv) < 3:
+        print(json.dumps({"error": "Missing required arguments: action and file_path"}))
+        return
 
-        return result
+    action = sys.argv[1]
+    file = sys.argv[2]
+    file_path = Path(file).resolve()
+
+    try:
+        if action == "detect":
+            smells = detect_smells(file_path)
+            print(json.dumps({"smells": smells}, default=custom_serializer))
+        elif action == "refactor":
+            smell_input = sys.stdin.read()
+            smell_data = json.loads(smell_input)
+            smell = smell_data.get("smell")
+
+            if not smell:
+                print(json.dumps({"error": "Missing smell object for refactor"}))
+                return
+
+            refactored_code, energy_difference, updated_smells = refactor_smell(file_path, smell)
+            print(
+                json.dumps(
+                    {
+                        "refactored_code": refactored_code,
+                        "energy_difference": energy_difference,
+                        "updated_smells": updated_smells,
+                    }
+                )
+            )
+        else:
+            print(json.dumps({"error": f"Invalid action: {action}"}))
+    except Exception as e:
+        print(json.dumps({"error": str(e)}))
 
 
 if __name__ == "__main__":
-    default_temp_dir = Path(tempfile.gettempdir()) / "scoptimizer"
-    LOG_DIR = os.getenv("LOG_DIR", str(default_temp_dir))
-    base_dir = Path(LOG_DIR)
-    optimizer = SCOptimizer(base_dir)
-
-    parser = argparse.ArgumentParser(description="Source Code Optimizer CLI Tool")
-    parser.add_argument(
-        "action",
-        choices=["detect", "refactor"],
-        help="Action to perform: detect smells or refactor a smell.",
-    )
-    parser.add_argument("file", type=str, help="Path to the Python file to process.")
-    parser.add_argument(
-        "--smell",
-        type=str,
-        required=False,
-        help="JSON string of the smell to refactor (required for 'refactor' action).",
-    )
-
-    args = parser.parse_args()
-    file_path = Path(args.file).resolve()
-
-    if args.action == "detect":
-        smells = optimizer.detect_smells(file_path)
-        logging.info(smells)
-        # print(smells)
-        print(json.dumps(smells, default=custom_serializer, indent=4))
-
-    elif args.action == "refactor":
-        if not args.smell:
-            logging.error("--smell argument is required for 'refactor' action.")
-            raise ValueError("--smell argument is required for 'refactor' action.")
-        smell = json.loads(args.smell)
-        logging.info("JSON LOADS")
-        logging.info(smell)
-        result = optimizer.refactor_smell(file_path, smell)
-        print(json.dumps(result, default=custom_serializer, indent=4))
+    main()

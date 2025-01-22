@@ -1,4 +1,5 @@
-from typing import TypedDict, Optional, List, Dict, Any
+from typing import TypedDict, Optional, List
+
 
 class Occurrence(TypedDict):
     """
@@ -7,8 +8,9 @@ class Occurrence(TypedDict):
     Attributes:
     - line: The line number of the function call
     - column: The column offset where the function call starts
-    - call_string: The exact function call string 
+    - call_string: The exact function call string
     """
+
     line: int
     column: int
     call_string: str
@@ -32,9 +34,10 @@ class Smell(TypedDict):
         path (str): The relative path to the source file from the project root.
         symbol (str): The symbol or code construct (e.g., variable, method) involved in the smell.
         type (str): The type or category of the smell (e.g., "complexity", "duplication").
-        repetitions(int): (Optional) The number of repeated occurrences (for repeated calls). 
+        repetitions(int): (Optional) The number of repeated occurrences (for repeated calls).
         occurrences(Optional[List[Occurrence]]): (Optional) A list of dictionaries describing detailed occurrences (for repeated calls).
     """
+
     absolutePath: str
     column: int
     confidence: str
