@@ -152,7 +152,7 @@ def test_long_message_chain_detection(long_message_chain_code: Path):
 
     # Verify that the detected smells correspond to the correct lines in the sample code
     expected_lines = {19, 47}
-    detected_lines = {smell["line"] for smell in long_message_smells}
+    detected_lines = {smell["occurences"][0]["line"] for smell in long_message_smells}
     assert detected_lines == expected_lines
 
 
@@ -174,7 +174,7 @@ def test_long_message_chain_refactoring(long_message_chain_code: Path, output_di
     for smell in long_msg_chain_smells:
         # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(
-            f"{long_message_chain_code.stem}_LMCR_line_{smell['line']}.py"
+            f"{long_message_chain_code.stem}_LMCR_line_{smell['occurences'][0]['line']}.py"
         )
         assert refactored_file.exists()
 

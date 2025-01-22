@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 import astor  # For converting AST back to source code
 
-from ..data_wrappers.smell import Smell
+from ..data_wrappers.smell import UGESmell
 
 from .base_refactorer import BaseRefactorer
 
@@ -23,12 +23,12 @@ class UseAGeneratorRefactorer(BaseRefactorer):
         """
         super().__init__(output_dir)
 
-    def refactor(self, file_path: Path, pylint_smell: Smell):
+    def refactor(self, file_path: Path, pylint_smell: UGESmell):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
         """
-        line_number = pylint_smell["line"]
+        line_number = pylint_smell["occurences"][0]["line"]
         logging.info(
             f"Applying 'Use a Generator' refactor on '{file_path.name}' at line {line_number} for identified code smell."
         )

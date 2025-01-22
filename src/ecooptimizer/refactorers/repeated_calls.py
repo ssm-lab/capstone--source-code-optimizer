@@ -2,6 +2,8 @@ import ast
 import logging
 from pathlib import Path
 
+from ecooptimizer.data_wrappers.smell import CRCSmell
+
 from .base_refactorer import BaseRefactorer
 
 
@@ -13,14 +15,14 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         super().__init__(output_dir)
         self.target_line = None
 
-    def refactor(self, file_path: Path, pylint_smell):  # noqa: ANN001
+    def refactor(self, file_path: Path, pylint_smell: CRCSmell):
         """
         Refactor the repeated function call smell and save to a new file.
         """
         self.input_file = file_path
         self.smell = pylint_smell
 
-        self.cached_var_name = "cached_" + self.smell["occurrences"][0]["call_string"].split("(")[0]
+        self.cached_var_name = "cached_" + self.smell["occurences"][0]["call_string"].split("(")[0]
 
         print(f"Reading file: {self.input_file}")
         with self.input_file.open("r") as file:
@@ -39,7 +41,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         # Determine the insertion point for the cached variable
         insert_line = self._find_insert_line(parent_node)
         indent = self._get_indentation(lines, insert_line)
-        cached_assignment = f"{indent}{self.cached_var_name} = {self.smell['occurrences'][0]['call_string'].strip()}\n"
+        cached_assignment = f"{indent}{self.cached_var_name} = {self.smell['occurences'][0]['call_string'].strip()}\n"
         print(f"Inserting cached variable at line {insert_line}: {cached_assignment.strip()}")
 
         # Insert the cached variable into the source lines
@@ -47,7 +49,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         line_shift = 1  # Track the shift in line numbers caused by the insertion
 
         # Replace calls with the cached variable in the affected lines
-        for occurrence in self.smell["occurrences"]:
+        for occurrence in self.smell["occurences"]:
             adjusted_line_index = occurrence["line"] - 1 + line_shift
             original_line = lines[adjusted_line_index]
             call_string = occurrence["call_string"].strip()
@@ -96,7 +98,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
 
     def _find_valid_parent(self, tree: ast.Module):
         """
-        Find the valid parent node that contains all occurrences of the repeated call.
+        Find the valid parent node that contains all occurences of the repeated call.
 
         :param tree: The root AST tree.
         :return: The valid parent node, or None if not found.
@@ -105,7 +107,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.Module)):
                 if all(
-                    self._line_in_node_body(node, occ["line"]) for occ in self.smell["occurrences"]
+                    self._line_in_node_body(node, occ["line"]) for occ in self.smell["occurences"]
                 ):
                     candidate_parent = node
         if candidate_parent:
@@ -119,7 +121,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         """
         Find the line to insert the cached variable assignment.
 
-        :param parent_node: The parent node containing the occurrences.
+        :param parent_node: The parent node containing the occurences.
         :return: The line number where the cached variable should be inserted.
         """
         if isinstance(parent_node, ast.Module):

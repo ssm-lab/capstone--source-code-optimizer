@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 import re
 from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import Smell
+from ..data_wrappers.smell import LMCSmell
 
 
 class LongMessageChainRefactorer(BaseRefactorer):
@@ -45,13 +45,13 @@ class LongMessageChainRefactorer(BaseRefactorer):
 
         return result
 
-    def refactor(self, file_path: Path, pylint_smell: Smell):
+    def refactor(self, file_path: Path, pylint_smell: LMCSmell):
         """
         Refactor long message chains by breaking them into separate statements
         and writing the refactored code to a new file.
         """
         # Extract details from pylint_smell
-        line_number = pylint_smell["line"]
+        line_number = pylint_smell["occurences"][0]["line"]
         temp_filename = self.temp_dir / Path(f"{file_path.stem}_LMCR_line_{line_number}.py")
 
         logging.info(

@@ -25,7 +25,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "mypy", "ruff", "coverage", "pyright", "pre-commit", "pytest-mock"]
+dev = ["pytest", "pytest-cov", "pytest-mock", "ruff", "coverage", "pyright", "pre-commit"]
 
 [project.urls]
 Documentation = "https://readthedocs.org"

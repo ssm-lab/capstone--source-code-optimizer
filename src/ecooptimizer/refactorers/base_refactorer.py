@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 from ..measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
+from ..data_wrappers.smell import Smell
 
 
 class BaseRefactorer(ABC):
@@ -18,7 +19,7 @@ class BaseRefactorer(ABC):
         self.temp_dir.mkdir(exist_ok=True)
 
     @abstractmethod
-    def refactor(self, file_path: Path, pylint_smell):  # noqa: ANN001
+    def refactor(self, file_path: Path, pylint_smell: Smell):
         """
         Abstract method for refactoring the code smell.
         Each subclass should implement this method.

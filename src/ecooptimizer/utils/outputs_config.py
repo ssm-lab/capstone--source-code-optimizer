@@ -1,10 +1,18 @@
 # utils/output_config.py
+from enum import Enum
 import json
 import logging
 import shutil
 
 from pathlib import Path
 from typing import Any
+
+
+class EnumEncoder(json.JSONEncoder):
+    def default(self, o):  # noqa: ANN001
+        if isinstance(o, Enum):
+            return o.value  # Serialize using the Enum's value
+        return super().default(o)
 
 
 class OutputConfig:
@@ -40,7 +48,7 @@ class OutputConfig:
         file_path = self.out_folder / filename
 
         # Write JSON data to the specified file
-        file_path.write_text(json.dumps(data, sort_keys=True, indent=4))
+        file_path.write_text(json.dumps(data, cls=EnumEncoder, sort_keys=True, indent=4))
 
         logging.info(f"Output saved to {file_path!s}")
 
