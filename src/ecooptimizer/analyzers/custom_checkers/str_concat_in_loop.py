@@ -7,7 +7,7 @@ import logging
 import astroid.util
 
 from ...utils.analyzers_config import CustomSmell
-from ...data_wrappers.occurence import BasicOccurence
+from ...data_wrappers.custom_fields import BasicOccurence
 from ...data_wrappers.smell import SCLSmell
 
 
@@ -57,8 +57,8 @@ class StringConcatInLoopChecker:
 
     def _create_smell_occ(self, node: nodes.Assign | nodes.AugAssign) -> BasicOccurence:
         return {
-            "line": node.fromlineno,
-            "endLine": node.tolineno,
+            "line": node.lineno,
+            "endLine": node.end_lineno,
             "column": node.col_offset,  # type: ignore
             "endColumn": node.end_col_offset,
         }

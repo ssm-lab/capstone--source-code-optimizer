@@ -132,7 +132,7 @@ def test_str_concat_in_loop_detection(get_smells):
     print(str_concat_loop_smells)
 
     # Assert the expected number of smells
-    assert len(str_concat_loop_smells) == 13
+    assert len(str_concat_loop_smells) == 11
 
     # Verify that the detected smells correspond to the correct lines in the sample code
     expected_lines = {
@@ -141,16 +141,14 @@ def test_str_concat_in_loop_detection(get_smells):
         21,
         30,
         37,
-        39,
         45,
-        46,
         53,
         60,
         67,
         73,
         79,
     }  # Update based on actual line numbers of long lambdas
-    detected_lines = {smell["line"] for smell in str_concat_loop_smells}
+    detected_lines = {smell["occurences"][0]["line"] for smell in str_concat_loop_smells}
     assert detected_lines == expected_lines
 
 
@@ -180,11 +178,10 @@ def test_scl_refactoring_no_energy_improvement(
     # Apply refactoring to each smell
     for smell in str_concat_smells:
         refactorer.refactor(str_concat_loop_code, smell, initial_emissions)
+        refactorer.reset()
 
-    for smell in str_concat_smells:
-        # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(
-            f"{str_concat_loop_code.stem}_SCLR_line_{smell['line']}.py"
+            f"{str_concat_loop_code.stem}_SCLR_line_{smell['occurences'][0]['line']}.py"
         )
         assert not refactored_file.exists()
 
@@ -216,11 +213,12 @@ def test_scl_refactoring_with_energy_improvement(
     # Apply refactoring to each smell
     for smell in str_concat_smells:
         refactorer.refactor(str_concat_loop_code, smell, initial_emissions)
+        refactorer.reset()
 
     for smell in str_concat_smells:
         # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(
-            f"{str_concat_loop_code.stem}_SCLR_line_{smell['line']}.py"
+            f"{str_concat_loop_code.stem}_SCLR_line_{smell['occurences'][0]['line']}.py"
         )
         assert refactored_file.exists()
 
@@ -232,4 +230,4 @@ def test_scl_refactoring_with_energy_improvement(
         if file.stem.startswith("str_concat_loop_code_SCLR_line"):
             num_files += 1
 
-    assert num_files == 13
+    assert num_files == 11

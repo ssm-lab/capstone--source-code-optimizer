@@ -20,8 +20,12 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         self.assign_var = ""
         self.last_assign_node: nodes.Assign | nodes.AugAssign = None  # type: ignore
         self.concat_nodes: list[nodes.Assign | nodes.AugAssign] = []
+        self.reassignments: list[nodes.Assign] = []
         self.outer_loop_line: int = 0
         self.outer_loop: nodes.For | nodes.While = None  # type: ignore
+
+    def reset(self):
+        self.__init__(self.temp_dir.parent)
 
     def refactor(self, file_path: Path, pylint_smell: SCLSmell, initial_emissions: float):
         """
@@ -32,14 +36,17 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         :param initial_emission: inital carbon emission prior to refactoring
         """
         self.target_lines = [occ["line"] for occ in pylint_smell["occurences"]]
-        logging.debug(f"target_lines: {self.target_lines}")
+
         self.assign_var = pylint_smell["additionalInfo"]["concatTarget"]
-        logging.debug(f"assign_var: {self.assign_var}")
+
         self.outer_loop_line = pylint_smell["additionalInfo"]["innerLoopLine"]
-        logging.debug(f"outer line: {self.outer_loop_line}")
+
         logging.info(
             f"Applying 'Use List Accumulation' refactor on '{file_path.name}' at line {self.target_lines[0]} for identified code smell."
         )
+        logging.debug(f"target_lines: {self.target_lines}")
+        logging.debug(f"assign_var: {self.assign_var}")
+        logging.debug(f"outer line: {self.outer_loop_line}")
 
         # Parse the code into an AST
         source_code = file_path.read_text()
@@ -47,11 +54,21 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         for node in tree.get_children():
             self.visit(node)
 
+        self.find_reassignments()
         self.find_scope()
 
-        self.concat_nodes.sort(key=lambda node: node.lineno, reverse=True)  # type: ignore
+        temp_concat_nodes = [("concat", node) for node in self.concat_nodes]
+        temp_reassignments = [("reassign", node) for node in self.reassignments]
 
-        modified_code = self.add_node_to_body(source_code)
+        combined_nodes = temp_concat_nodes + temp_reassignments
+
+        combined_nodes = sorted(
+            combined_nodes,
+            key=lambda x: x[1].lineno,  # type: ignore
+            reverse=True,
+        )
+
+        modified_code = self.add_node_to_body(source_code, combined_nodes)
 
         temp_file_path = self.temp_dir / Path(
             f"{file_path.stem}_SCLR_line_{self.target_lines[0]}.py"
@@ -81,6 +98,14 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         else:
             for child in node.get_children():
                 self.visit(child)
+
+    def find_reassignments(self):
+        for node in self.outer_loop.nodes_of_class(nodes.Assign):
+            for target in node.targets:
+                if target.as_string() == self.assign_var and node.lineno not in self.target_lines:
+                    self.reassignments.append(node)
+
+        logging.debug(f"reassignments: {self.reassignments}")
 
     def find_last_assignment(self, scope_node: nodes.NodeNG):
         """Find the last assignment of the target variable within a given scope node."""
@@ -174,7 +199,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
 
         return f"temp_{custom_component}"
 
-    def add_node_to_body(self, code_file: str):
+    def add_node_to_body(self, code_file: str, nodes_to_change: list[tuple]):  # type: ignore
         """
         Add a new AST node
         """
@@ -214,6 +239,9 @@ class UseListAccumulationRefactorer(BaseRefactorer):
                     rf"\s*[+]*\s*\b{re.escape(self.assign_var)}\b\s*[+]*\s*",
                     concat_node.value.as_string(),
                 )
+
+                logging.debug(f"Parts: {parts}")
+
                 if len(parts[0]) == 0:
                     concat_line = f"{list_name}.append({parts[1]})"
                 elif len(parts[1]) == 0:
@@ -225,25 +253,41 @@ class UseListAccumulationRefactorer(BaseRefactorer):
                     ]
             return concat_line
 
-        # -------------  REFACTOR CONCATS  ----------------------------
-
-        for concat in self.concat_nodes:
-            new_concat = get_new_concat_line(concat)
-            concat_lno = concat.lineno - 1  # type: ignore
-
-            if isinstance(new_concat, list):
-                source_line = code_file_lines[concat_lno]
-                concat_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
-
-                code_file_lines.pop(concat_lno)
-                code_file_lines.insert(concat_lno, concat_whitespace + new_concat[1])
-                code_file_lines.insert(concat_lno, concat_whitespace + new_concat[0])
+        def get_new_reassign_line(reassign_node: nodes.Assign):
+            if reassign_node.value.as_string() in ["''", "str()"]:
+                return f"{list_name}.clear()"
             else:
-                source_line = code_file_lines[concat_lno]
-                concat_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
+                return f"{list_name} = [{reassign_node.value.as_string()}]"
 
-                code_file_lines.pop(concat_lno)
-                code_file_lines.insert(concat_lno, concat_whitespace + new_concat)
+        # -------------  REFACTOR CONCATS and REASSIGNS  ----------------------------
+
+        for node in nodes_to_change:
+            if node[0] == "concat":
+                new_concat = get_new_concat_line(node[1])
+                concat_lno = node[1].lineno - 1
+
+                if isinstance(new_concat, list):
+                    source_line = code_file_lines[concat_lno]
+                    concat_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
+
+                    code_file_lines.pop(concat_lno)
+                    code_file_lines.insert(concat_lno, concat_whitespace + new_concat[1])
+                    code_file_lines.insert(concat_lno, concat_whitespace + new_concat[0])
+                else:
+                    source_line = code_file_lines[concat_lno]
+                    concat_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
+
+                    code_file_lines.pop(concat_lno)
+                    code_file_lines.insert(concat_lno, concat_whitespace + new_concat)
+            else:
+                new_reassign = get_new_reassign_line(node[1])
+                reassign_lno = node[1].lineno - 1
+
+                source_line = code_file_lines[reassign_lno]
+                reassign_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
+
+                code_file_lines.pop(reassign_lno)
+                code_file_lines.insert(reassign_lno, reassign_whitespace + new_reassign)
 
         # -------------  INITIALIZE TARGET VAR AS A LIST  -------------
         if not self.last_assign_node or self.last_assign_is_referenced(
@@ -273,6 +317,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
             list_line = f"{list_name} = [{self.assign_var}]"
 
             code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
+
         elif self.last_assign_node.value.as_string() in ["''", "str()"]:
             logging.debug("Overwriting assign with list")
             list_lno: int = self.last_assign_node.lineno - 1  # type: ignore
@@ -284,6 +329,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
 
             code_file_lines.pop(list_lno)
             code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
+
         else:
             logging.debug(f"last assign value: {self.last_assign_node.value.as_string()}")
             list_lno: int = self.last_assign_node.lineno - 1  # type: ignore

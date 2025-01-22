@@ -2,7 +2,7 @@ from typing import Any, TypedDict
 
 from ..utils.analyzers_config import CustomSmell, PylintSmell
 
-from .occurence import BasicOccurence, CRCAddInfo, CRCOccurence, SCLAddInfo
+from .custom_fields import BasicOccurence, CRCAddInfo, CRCOccurence, SCLAddInfo
 
 
 class Smell(TypedDict):
