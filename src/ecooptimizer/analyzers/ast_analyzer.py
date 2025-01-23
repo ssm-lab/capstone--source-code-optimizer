@@ -1,31 +1,26 @@
-import ast
+from typing import Callable, Any
 from pathlib import Path
-from typing import Callable
+import ast
 
-from .base_analyzer import Analyzer
+from ..data_wrappers.smell import Smell
 
 
-class ASTAnalyzer(Analyzer):
-    def __init__(
+class ASTAnalyzer:
+    def analyze(
         self,
         file_path: Path,
-        extra_ast_options: list[Callable[[Path, ast.AST], list[dict[str, object]]]],
-    ):
-        """
-        Analyzers to find code smells using Pylint for a given file.
-        :param extra_pylint_options: Options to be passed into pylint.
-        """
-        super().__init__(file_path)
-        self.ast_options = extra_ast_options
+        extra_options: list[tuple[Callable[[Path, ast.AST], list[Smell]], dict[str, Any]]],
+    ) -> list[Smell]:
+        smells_data: list[Smell] = []
 
-        with self.file_path.open("r") as file:
-            self.source_code = file.read()
+        with file_path.open("r") as file:
+            source_code = file.read()
 
-        self.tree = ast.parse(self.source_code)
+        tree = ast.parse(source_code)
 
-    def analyze(self):
-        """
-        Detect smells using AST analysis.
-        """
-        for detector in self.ast_options:
-            self.smells_data.extend(detector(self.file_path, self.tree))
+        for detector, params in extra_options:
+            if callable(detector):
+                result = detector(file_path, tree, **params)
+                smells_data.extend(result)
+
+        return smells_data
