@@ -1,20 +1,16 @@
 from abc import ABC, abstractmethod
+import ast
 from pathlib import Path
+from typing import Callable, Union
+
+from ..data_wrappers.smell import Smell
 
 
 class Analyzer(ABC):
-    def __init__(self, file_path: Path):
-        """
-        Base class for analyzers to find code smells of a given file.
-        :param file_path: Path to the file to be analyzed.
-        """
-        self.file_path = file_path
-        self.smells_data = list()
-
     @abstractmethod
-    def analyze(self):
-        """
-        Abstract method to analyze the code smells of the specified file.
-        Must be implemented by subclasses.
-        """
+    def analyze(
+        self,
+        file_path: Path,
+        extra_options: Union[list[str], tuple[Callable[[Path, ast.AST], list[Smell]]]],
+    ) -> list[Smell]:
         pass
