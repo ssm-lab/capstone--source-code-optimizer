@@ -1,28 +1,73 @@
 import logging
 from pathlib import Path
-from typing import Dict, Any
-from enum import Enum
-import json
-import sys
+from typing import Dict, List, Optional
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 from ecooptimizer.data_wrappers.smell import Smell
 from ecooptimizer.utils.ast_parser import parse_file
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 from ecooptimizer.utils.refactorer_factory import RefactorerFactory
+import uvicorn
 
 outputs_dir = Path("/Users/tanveerbrar/Desktop").resolve()
+app = FastAPI()
 
 
-def custom_serializer(obj: Any):
-    if isinstance(obj, Enum):
-        return obj.value
-    if isinstance(obj, (set, frozenset)):
-        return list(obj)
-    if hasattr(obj, "__dict__"):
-        return obj.__dict__
-    if obj is None:
-        return None
-    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+class OccurrenceModel(BaseModel):
+    line: int
+    column: int
+    call_string: str
+
+
+class SmellModel(BaseModel):
+    absolutePath: Optional[str] = None
+    column: Optional[int] = None
+    confidence: str
+    endColumn: Optional[int] = None
+    endLine: Optional[int] = None
+    line: Optional[int] = None
+    message: str
+    messageId: str
+    module: Optional[str] = None
+    obj: Optional[str] = None
+    path: Optional[str] = None
+    symbol: str
+    type: str
+    repetitions: Optional[int] = None
+    occurrences: Optional[List[OccurrenceModel]] = None
+
+
+class RefactorRqModel(BaseModel):
+    file_path: str
+    smell: SmellModel
+
+
+app = FastAPI()
+
+
+@app.get("/smells", response_model=List[SmellModel])
+def get_smells(file_path: str):
+    try:
+        smells = detect_smells(Path(file_path))
+        return smells
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="File not found")
+
+
+@app.post("/refactor")
+def refactor(request: RefactorRqModel, response_model=Dict[str, object]):
+    try:
+        refactored_code, energy_difference, updated_smells = refactor_smell(
+            Path(request.file_path), request.smell
+        )
+        return {
+            "refactoredCode": refactored_code,
+            "energyDifference": energy_difference,
+            "updatedSmells": updated_smells,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 def detect_smells(file_path: Path) -> list[Smell]:
@@ -50,9 +95,9 @@ def detect_smells(file_path: Path) -> list[Smell]:
     return smells_data
 
 
-def refactor_smell(file_path: Path, smell: Dict[str, Any]) -> dict[str, Any]:
+def refactor_smell(file_path: Path, smell: SmellModel) -> tuple[str, float, List[Smell]]:
     logging.info(
-        f"Starting refactoring for file: {file_path} and smell symbol: {smell['symbol']} at line {smell['line']}"
+        f"Starting refactoring for file: {file_path} and smell symbol: {smell.symbol} at line {smell.line}"
     )
 
     if not file_path.is_file():
@@ -71,15 +116,15 @@ def refactor_smell(file_path: Path, smell: Dict[str, Any]) -> dict[str, Any]:
     logging.info(f"Initial emissions: {initial_emissions}")
 
     # Refactor the code smell
-    refactorer = RefactorerFactory.build_refactorer_class(smell["messageId"], outputs_dir)
+    refactorer = RefactorerFactory.build_refactorer_class(smell.messageId, outputs_dir)
     if not refactorer:
-        logging.error(f"No refactorer implemented for smell {smell['symbol']}.")
-        raise NotImplementedError(f"No refactorer implemented for smell {smell['symbol']}.")
+        logging.error(f"No refactorer implemented for smell {smell.symbol}.")
+        raise NotImplementedError(f"No refactorer implemented for smell {smell.symbol}.")
 
-    refactorer.refactor(file_path, smell, initial_emissions)
+    refactorer.refactor(file_path, smell.dict(), initial_emissions)
 
-    target_line = smell["line"]
-    updated_path = outputs_dir / f"{file_path.stem}_LPLR_line_{target_line}.py"
+    target_line = smell.line
+    updated_path = outputs_dir / f"refactored_source/{file_path.stem}_LPLR_line_{target_line}.py"
     logging.info(f"Refactoring completed. Updated file: {updated_path}")
 
     # Measure final energy
@@ -104,46 +149,6 @@ def refactor_smell(file_path: Path, smell: Dict[str, Any]) -> dict[str, Any]:
 
     return refactored_code, energy_difference, updated_smells
 
-    return
-
-
-def main():
-    if len(sys.argv) < 3:
-        print(json.dumps({"error": "Missing required arguments: action and file_path"}))
-        return
-
-    action = sys.argv[1]
-    file = sys.argv[2]
-    file_path = Path(file).resolve()
-
-    try:
-        if action == "detect":
-            smells = detect_smells(file_path)
-            print(json.dumps({"smells": smells}, default=custom_serializer))
-        elif action == "refactor":
-            smell_input = sys.stdin.read()
-            smell_data = json.loads(smell_input)
-            smell = smell_data.get("smell")
-
-            if not smell:
-                print(json.dumps({"error": "Missing smell object for refactor"}))
-                return
-
-            refactored_code, energy_difference, updated_smells = refactor_smell(file_path, smell)
-            print(
-                json.dumps(
-                    {
-                        "refactored_code": refactored_code,
-                        "energy_difference": energy_difference,
-                        "updated_smells": updated_smells,
-                    }
-                )
-            )
-        else:
-            print(json.dumps({"error": f"Invalid action: {action}"}))
-    except Exception as e:
-        print(json.dumps({"error": str(e)}))
-
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run(app, host="127.0.0.1", port=8000)

@@ -41,8 +41,8 @@ class Smell(TypedDict):
     absolutePath: str
     column: int
     confidence: str
-    endColumn: int | None
-    endLine: int | None
+    endColumn: Optional[int]
+    endLine: Optional[int]
     line: int
     message: str
     messageId: str
