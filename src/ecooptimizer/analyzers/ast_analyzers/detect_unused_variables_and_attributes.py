@@ -1,26 +1,34 @@
 import ast
 from pathlib import Path
 
+from ...data_wrappers.smell import Smell
 
-def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST):
+
+def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> list[Smell]:
     """
-    Detects unused variables and class attributes in the given Python code and returns a list of results.
+    Detects unused variables and class attributes in the given Python code.
 
-    Parameters:
+    Args:
         file_path (Path): The file path to analyze.
         tree (ast.AST): The Abstract Syntax Tree (AST) of the source code.
 
     Returns:
-        list[dict]: A list of dictionaries containing details about detected performance smells.
+        list[Smell]: A list of Smell objects containing details about detected unused variables or attributes.
     """
     # Store variable and attribute declarations and usage
-    results = []
+    results: list[Smell] = []
     messageId = "UVA001"
     declared_vars = set()
     used_vars = set()
 
     # Helper function to gather declared variables (including class attributes)
     def gather_declarations(node: ast.AST):
+        """
+        Identifies declared variables or class attributes.
+
+        Args:
+            node (ast.AST): The AST node to analyze.
+        """
         # For assignment statements (variables or class attributes)
         if isinstance(node, ast.Assign):
             for target in node.targets:
@@ -41,6 +49,12 @@ def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST):
 
     # Helper function to gather used variables and class attributes
     def gather_usages(node: ast.AST):
+        """
+        Identifies variables or class attributes that are used.
+
+        Args:
+            node (ast.AST): The AST node to analyze.
+        """
         if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):  # Variable usage
             used_vars.add(node.id)
         elif isinstance(node, ast.Attribute) and isinstance(node.ctx, ast.Load):  # Attribute usage
@@ -78,22 +92,24 @@ def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST):
                 symbol = "unused-attribute"
                 break
 
-        smell = {
-            "absolutePath": str(tree),
-            "column": column_no,
-            "confidence": "UNDEFINED",
-            "endColumn": None,
-            "endLine": None,
-            "line": line_no,
-            "message": f"Unused variable or attribute '{var}'",
-            "messageId": messageId,
-            "module": file_path.name,
-            "obj": "",
-            "path": str(file_path),
-            "symbol": symbol,
-            "type": "convention",
-        }
+        # Create a Smell object for the unused variable or attribute
+        smell = Smell(
+            absolutePath=str(file_path),
+            column=column_no,
+            confidence="UNDEFINED",
+            endColumn=None,
+            endLine=None,
+            line=line_no,
+            message=f"Unused variable or attribute '{var}'",
+            messageId=messageId,
+            module=file_path.name,
+            obj="",
+            path=str(file_path),
+            symbol=symbol,
+            type="convention",
+        )
 
         results.append(smell)
 
+    # Return the list of detected Smell objects
     return results
