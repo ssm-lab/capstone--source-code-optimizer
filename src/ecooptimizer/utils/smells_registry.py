@@ -32,7 +32,7 @@ SMELL_REGISTRY: dict[str, SmellRegistry] = {
     },
     "no-self-use": {
         "id": "R6301",
-        "enabled": True,
+        "enabled": False,
         "analyzer_method": "pylint",
         "analyzer_options": {},
         "refactorer": MakeStaticRefactorer,

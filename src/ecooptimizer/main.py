@@ -2,11 +2,12 @@ import ast
 import logging
 from pathlib import Path
 
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
+
 from .utils.ast_parser import parse_file
 from .utils.outputs_config import OutputConfig
 
 from .measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
-from .analyzers.pylint_analyzer import PylintAnalyzer
 from .utils.refactorer_factory import RefactorerFactory
 
 # Path of current directory
@@ -81,20 +82,12 @@ def main():
         "#####################################################################################################"
     )
 
-    # Anaylze code smells with PylintAnalyzer
-    pylint_analyzer = PylintAnalyzer(TEST_FILE, SOURCE_CODE)
-    pylint_analyzer.analyze()  # analyze all smells
+    analyzer_controller = AnalyzerController()
+    smells_data = analyzer_controller.run_analysis(TEST_FILE)
 
     # Save code smells
-    output_config.save_json_files(Path("all_pylint_smells.json"), pylint_analyzer.smells_data)
-
-    pylint_analyzer.configure_smells()  # get all configured smells
-
-    # Save code smells
-    output_config.save_json_files(
-        Path("all_configured_pylint_smells.json"), pylint_analyzer.smells_data
-    )
-    logging.info(f"Refactorable code smells: {len(pylint_analyzer.smells_data)}")
+    output_config.save_json_files(Path("all_configured_pylint_smells.json"), smells_data)
+    logging.info(f"Refactorable code smells: {len(smells_data)}")
     logging.info(
         "#####################################################################################################\n\n"
     )
@@ -113,14 +106,12 @@ def main():
     # Refactor code smells
     output_config.copy_file_to_output(TEST_FILE, "refactored-test-case.py")
 
-    for pylint_smell in pylint_analyzer.smells_data:
-        refactoring_class = RefactorerFactory.build_refactorer_class(
-            pylint_smell["messageId"], OUTPUT_DIR
-        )
+    for smell in smells_data:
+        refactoring_class = RefactorerFactory.build_refactorer_class(smell["messageId"], OUTPUT_DIR)
         if refactoring_class:
-            refactoring_class.refactor(TEST_FILE, pylint_smell, initial_emissions)
+            refactoring_class.refactor(TEST_FILE, smell, initial_emissions)
         else:
-            logging.info(f"Refactoring for smell {pylint_smell['symbol']} is not implemented.\n")
+            logging.info(f"Refactoring for smell {smell['symbol']} is not implemented.\n")
     logging.info(
         "#####################################################################################################\n\n"
     )
