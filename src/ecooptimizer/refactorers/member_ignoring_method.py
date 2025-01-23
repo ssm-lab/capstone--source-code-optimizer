@@ -19,7 +19,7 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         self.mim_method_class = ""
         self.mim_method = ""
 
-    def refactor(self, file_path: Path, pylint_smell: MIMSmell):
+    def refactor(self, file_path: Path, pylint_smell: MIMSmell, overwrite: bool = True):
         """
         Perform refactoring
 
@@ -27,7 +27,7 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         :param pylint_smell: pylint code for smell
         :param initial_emission: inital carbon emission prior to refactoring
         """
-        self.target_line = pylint_smell["occurences"][0]["line"]
+        self.target_line = pylint_smell["occurences"]["line"]
         logging.info(
             f"Applying 'Make Method Static' refactor on '{file_path.name}' at line {self.target_line} for identified code smell."
         )
@@ -45,7 +45,8 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         temp_file_path = self.temp_dir / Path(f"{file_path.stem}_MIMR_line_{self.target_line}.py")
 
         temp_file_path.write_text(modified_code)
-        file_path.write_text(modified_code)
+        if overwrite:
+            file_path.write_text(modified_code)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 

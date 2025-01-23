@@ -123,11 +123,11 @@ def main():
     )
 
     with TemporaryDirectory() as temp_dir:
-        project_copy = Path(temp_dir) / SOURCE.parent.name
+        project_copy = Path(temp_dir) / SAMPLE_PROJ_DIR.name
 
         source_copy = project_copy / SOURCE.name
 
-        shutil.copytree(SOURCE.parent, project_copy)
+        shutil.copytree(SAMPLE_PROJ_DIR, project_copy)
 
         # Refactor code smells
         backup_copy = output_config.copy_file_to_output(source_copy, "refactored-test-case.py")

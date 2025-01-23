@@ -45,13 +45,13 @@ class LongMessageChainRefactorer(BaseRefactorer):
 
         return result
 
-    def refactor(self, file_path: Path, pylint_smell: LMCSmell):
+    def refactor(self, file_path: Path, pylint_smell: LMCSmell, overwrite: bool = True):
         """
         Refactor long message chains by breaking them into separate statements
         and writing the refactored code to a new file.
         """
         # Extract details from pylint_smell
-        line_number = pylint_smell["occurences"][0]["line"]
+        line_number = pylint_smell["occurences"]["line"]
         temp_filename = self.temp_dir / Path(f"{file_path.stem}_LMCR_line_{line_number}.py")
 
         logging.info(
@@ -135,7 +135,8 @@ class LongMessageChainRefactorer(BaseRefactorer):
         with temp_filename.open("w") as f:
             f.writelines(lines)
 
-        with file_path.open("w") as f:
-            f.writelines(lines)
+        if overwrite:
+            with file_path.open("w") as f:
+                f.writelines(lines)
 
         logging.info(f"Refactored temp file saved to {temp_filename}")

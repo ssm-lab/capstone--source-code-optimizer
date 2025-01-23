@@ -14,7 +14,7 @@ class LongParameterListRefactorer(BaseRefactorer):
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
 
-    def refactor(self, file_path: Path, pylint_smell: LPLSmell):
+    def refactor(self, file_path: Path, pylint_smell: LPLSmell, overwrite: bool = True):
         """
         Refactors function/method with more than 6 parameters by encapsulating those with related names and removing those that are unused
         """
@@ -25,7 +25,7 @@ class LongParameterListRefactorer(BaseRefactorer):
             tree = ast.parse(f.read())
 
         # find the line number of target function indicated by the code smell object
-        target_line = pylint_smell["occurences"][0]["line"]
+        target_line = pylint_smell["occurences"]["line"]
         logging.info(
             f"Applying 'Fix Too Many Parameters' refactor on '{file_path.name}' at line {target_line} for identified code smell."
         )
@@ -84,8 +84,9 @@ class LongParameterListRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.write(modified_source)
 
-        with file_path.open("w") as f:
-            f.write(modified_source)
+        if overwrite:
+            with file_path.open("w") as f:
+                f.write(modified_source)
 
 
 class ParameterAnalyzer:

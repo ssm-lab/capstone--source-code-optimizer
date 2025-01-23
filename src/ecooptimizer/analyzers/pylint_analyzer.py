@@ -32,6 +32,29 @@ class PylintAnalyzer(Analyzer):
         """
         return [str(self.file_path), *EXTRA_PYLINT_OPTIONS]
 
+    def build_smells(self, pylint_smells: dict):  # type: ignore
+        """Casts inital list of pylint smells to the proper Smell configuration."""
+        for smell in pylint_smells:
+            self.smells_data.append(
+                {
+                    "confidence": smell["confidence"],
+                    "message": smell["message"],
+                    "messageId": smell["messageId"],
+                    "module": smell["module"],
+                    "obj": smell["obj"],
+                    "path": smell["absolutePath"],
+                    "symbol": smell["symbol"],
+                    "type": smell["type"],
+                    "occurences": {
+                        "line": smell["line"],
+                        "endLine": smell["endLine"],
+                        "column": smell["column"],
+                        "endColumn": smell["endColumn"],
+                    },
+                    "additionalInfo": None,
+                }
+            )
+
     def analyze(self):
         """
         Executes pylint on the specified file and captures the output in JSON format.
@@ -52,7 +75,7 @@ class PylintAnalyzer(Analyzer):
 
                 # Parse the JSON output
                 buffer.seek(0)
-                self.smells_data = json.loads(buffer.getvalue())["messages"]
+                self.build_smells(json.loads(buffer.getvalue())["messages"])
                 logging.info("Pylint analyzer completed successfully.")
             except json.JSONDecodeError as e:
                 logging.error(f"Failed to parse JSON output from pylint: {e}")
@@ -156,14 +179,12 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_MESSAGE_CHAIN,
                     "confidence": "UNDEFINED",
-                    "occurences": [
-                        {
-                            "line": node.lineno,
-                            "endLine": node.end_lineno,
-                            "column": node.col_offset,
-                            "endColumn": node.end_col_offset,
-                        }
-                    ],
+                    "occurences": {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    },
                     "additionalInfo": None,
                 }
 
@@ -232,14 +253,12 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_LAMBDA_EXPR,
                     "confidence": "UNDEFINED",
-                    "occurences": [
-                        {
-                            "line": node.lineno,
-                            "endLine": node.end_lineno,
-                            "column": node.col_offset,
-                            "endColumn": node.end_col_offset,
-                        }
-                    ],
+                    "occurences": {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    },
                     "additionalInfo": None,
                 }
 
@@ -263,14 +282,12 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_LAMBDA_EXPR,
                     "confidence": "UNDEFINED",
-                    "occurences": [
-                        {
-                            "line": node.lineno,
-                            "endLine": node.end_lineno,
-                            "column": node.col_offset,
-                            "endColumn": node.end_col_offset,
-                        }
-                    ],
+                    "occurences": {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    },
                     "additionalInfo": None,
                 }
 
@@ -379,14 +396,12 @@ class PylintAnalyzer(Analyzer):
                     "message": f"Unused variable or attribute '{var}'",
                     "messageId": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE,
                     "confidence": "UNDEFINED",
-                    "occurences": [
-                        {
-                            "line": var_node.lineno,
-                            "endLine": var_node.end_lineno,
-                            "column": var_node.col_offset,
-                            "endColumn": var_node.end_col_offset,
-                        }
-                    ],
+                    "occurences": {
+                        "line": var_node.lineno,
+                        "endLine": var_node.end_lineno,
+                        "column": var_node.col_offset,
+                        "endColumn": var_node.end_col_offset,
+                    },
                     "additionalInfo": None,
                 }
 
@@ -425,14 +440,12 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_ELEMENT_CHAIN,
                     "confidence": "UNDEFINED",
-                    "occurences": [
-                        {
-                            "line": node.lineno,
-                            "endLine": node.end_lineno,
-                            "column": node.col_offset,
-                            "endColumn": node.end_col_offset,
-                        }
-                    ],
+                    "occurences": {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    },
                     "additionalInfo": None,
                 }
 

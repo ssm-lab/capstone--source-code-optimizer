@@ -15,7 +15,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         super().__init__(output_dir)
         self.target_line = None
 
-    def refactor(self, file_path: Path, pylint_smell: CRCSmell):
+    def refactor(self, file_path: Path, pylint_smell: CRCSmell, overwrite: bool = True):
         """
         Refactor the repeated function call smell and save to a new file.
         """
@@ -67,8 +67,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as refactored_file:
             refactored_file.writelines(lines)
 
-        with file_path.open("w") as f:
-            f.writelines(lines)
+        if overwrite:
+            with file_path.open("w") as f:
+                f.writelines(lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 

@@ -35,13 +35,13 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
 
         return "".join(truncated_body).strip()
 
-    def refactor(self, file_path: Path, pylint_smell: LLESmell):
+    def refactor(self, file_path: Path, pylint_smell: LLESmell, overwrite: bool = True):
         """
         Refactor long lambda functions by converting them into normal functions
         and writing the refactored code to a new file.
         """
         # Extract details from pylint_smell
-        line_number = pylint_smell["occurences"][0]["line"]
+        line_number = pylint_smell["occurences"]["line"]
         temp_filename = self.temp_dir / Path(f"{file_path.stem}_LLFR_line_{line_number}.py")
 
         logging.info(
@@ -129,7 +129,8 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
         with temp_filename.open("w") as temp_file:
             temp_file.writelines(lines)
 
-        with file_path.open("w") as f:
-            f.writelines(lines)
+        if overwrite:
+            with file_path.open("w") as f:
+                f.writelines(lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_filename}")

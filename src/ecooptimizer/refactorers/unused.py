@@ -14,7 +14,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         """
         super().__init__(output_dir)
 
-    def refactor(self, file_path: Path, pylint_smell: UVASmell):
+    def refactor(self, file_path: Path, pylint_smell: UVASmell, overwrite: bool = True):
         """
         Refactors unused imports, variables and class attributes by removing lines where they appear.
         Modifies the specified instance in the file if it results in lower emissions.
@@ -23,7 +23,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         :param pylint_smell: Dictionary containing details of the Pylint smell, including the line number.
         :param initial_emission: Initial emission value before refactoring.
         """
-        line_number = pylint_smell["occurences"][0]["line"]
+        line_number = pylint_smell["occurences"]["line"]
         code_type = pylint_smell["messageId"]
         logging.info(
             f"Applying 'Remove Unused Stuff' refactor on '{file_path.name}' at line {line_number} for identified code smell."
@@ -59,7 +59,8 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.writelines(modified_lines)
 
-        with file_path.open("w") as f:
-            f.writelines(modified_lines)
+        if overwrite:
+            with file_path.open("w") as f:
+                f.writelines(modified_lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

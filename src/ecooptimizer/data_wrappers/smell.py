@@ -30,7 +30,7 @@ class Smell(TypedDict):
     path: str
     symbol: str
     type: str
-    occurences: list[Any]
+    occurences: Any
     additionalInfo: Any
 
 
@@ -45,35 +45,35 @@ class SCLSmell(Smell):
 
 
 class LECSmell(Smell):
-    occurences: list[BasicOccurence]
+    occurences: BasicOccurence
     additionalInfo: None
 
 
 class LLESmell(Smell):
-    occurences: list[BasicOccurence]
+    occurences: BasicOccurence
     additionalInfo: None
 
 
 class LMCSmell(Smell):
-    occurences: list[BasicOccurence]
+    occurences: BasicOccurence
     additionalInfo: None
 
 
 class LPLSmell(Smell):
-    occurences: list[BasicOccurence]
+    occurences: BasicOccurence
     additionalInfo: None
 
 
 class UVASmell(Smell):
-    occurences: list[BasicOccurence]
+    occurences: BasicOccurence
     additionalInfo: None
 
 
 class MIMSmell(Smell):
-    occurences: list[BasicOccurence]
+    occurences: BasicOccurence
     additionalInfo: None
 
 
 class UGESmell(Smell):
-    occurences: list[BasicOccurence]
+    occurences: BasicOccurence
     additionalInfo: None

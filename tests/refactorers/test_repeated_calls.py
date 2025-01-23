@@ -4,6 +4,8 @@ import textwrap
 import pytest
 
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+from ecooptimizer.data_wrappers.smell import CRCSmell
+from ecooptimizer.utils.analyzers_config import CustomSmell
 # from ecooptimizer.refactorers.repeated_calls import CacheRepeatedCallsRefactorer
 
 
@@ -45,13 +47,13 @@ def test_cached_repeated_calls_detection(get_smells, crc_code: Path):
     smells = get_smells
 
     # Filter for cached repeated calls smells
-    crc_smells = [smell for smell in smells if smell["messageId"] == "CRC001"]
+    crc_smells: list[CRCSmell] = [smell for smell in smells if smell["messageId"] == "CRC001"]
 
     assert len(crc_smells) == 1
-    assert crc_smells[0].get("symbol") == "cached-repeated-calls"
-    assert crc_smells[0].get("messageId") == "CRC001"
-    assert crc_smells[0]["occurrences"][0]["line"] == 11
-    assert crc_smells[0]["occurrences"][1]["line"] == 12
+    assert crc_smells[0]["symbol"] == "cached-repeated-calls"
+    assert crc_smells[0]["messageId"] == CustomSmell.CACHE_REPEATED_CALLS.value
+    assert crc_smells[0]["occurences"][0]["line"] == 11
+    assert crc_smells[0]["occurences"][1]["line"] == 12
     assert crc_smells[0]["module"] == crc_code.stem
 
 
@@ -65,7 +67,7 @@ def test_cached_repeated_calls_detection(get_smells, crc_code: Path):
 #     refactorer = CacheRepeatedCallsRefactorer(output_dir)
 
 #     # for smell in crc_smells:
-#     #     refactorer.refactor(crc_code, smell)
+#     #     refactorer.refactor(crc_code, smell, overwrite=False)
 #     #     # Apply refactoring to the detected smell
 #     #     refactored_file = refactorer.temp_dir / Path(
 #     #             f"{crc_code.stem}_crc_line_{crc_smells[0]['occurrences'][0]['line']}.py"

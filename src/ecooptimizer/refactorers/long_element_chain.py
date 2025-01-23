@@ -110,9 +110,9 @@ class LongElementChainRefactorer(BaseRefactorer):
         joined = "_".join(k.strip("'\"") for k in access_chain)
         return f"{base_var}_{joined}"
 
-    def refactor(self, file_path: Path, pylint_smell: LECSmell):
+    def refactor(self, file_path: Path, pylint_smell: LECSmell, overwrite: bool = True):
         """Refactor long element chains using the most appropriate strategy."""
-        line_number = pylint_smell["occurences"][0]["line"]
+        line_number = pylint_smell["occurences"]["line"]
         temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
 
         with file_path.open() as f:
@@ -173,7 +173,8 @@ class LongElementChainRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.writelines(new_lines)
 
-        with file_path.open("w") as f:
-            f.writelines(new_lines)
+        if overwrite:
+            with file_path.open("w") as f:
+                f.writelines(new_lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

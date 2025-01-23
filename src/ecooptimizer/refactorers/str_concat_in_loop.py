@@ -27,7 +27,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
     def reset(self):
         self.__init__(self.temp_dir.parent)
 
-    def refactor(self, file_path: Path, pylint_smell: SCLSmell):
+    def refactor(self, file_path: Path, pylint_smell: SCLSmell, overwrite: bool = True):
         """
         Refactor string concatenations in loops to use list accumulation and join
 
@@ -45,14 +45,20 @@ class UseListAccumulationRefactorer(BaseRefactorer):
             f"Applying 'Use List Accumulation' refactor on '{file_path.name}' at line {self.target_lines[0]} for identified code smell."
         )
         logging.debug(f"target_lines: {self.target_lines}")
+        print(f"target_lines: {self.target_lines}")
         logging.debug(f"assign_var: {self.assign_var}")
         logging.debug(f"outer line: {self.outer_loop_line}")
+        print(f"outer line: {self.outer_loop_line}")
 
         # Parse the code into an AST
         source_code = file_path.read_text()
         tree = astroid.parse(source_code)
         for node in tree.get_children():
             self.visit(node)
+
+        if not self.outer_loop or len(self.concat_nodes) != len(self.target_lines):
+            logging.error("Missing inner loop or concat nodes.")
+            raise Exception("Missing inner loop or concat nodes.")
 
         self.find_reassignments()
         self.find_scope()
@@ -75,7 +81,8 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         )
 
         temp_file_path.write_text(modified_code)
-        file_path.write_text(modified_code)
+        if overwrite:
+            file_path.write_text(modified_code)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 

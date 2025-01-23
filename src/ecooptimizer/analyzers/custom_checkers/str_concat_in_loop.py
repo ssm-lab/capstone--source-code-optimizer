@@ -40,7 +40,7 @@ class StringConcatInLoopChecker:
                     "module": self.filename.name,
                     "obj": None,
                     "type": "performance",
-                    "symbol": "",
+                    "symbol": "str-concat-loop",
                     "message": "String concatenation inside loop detected",
                     "messageId": CustomSmell.STR_CONCAT_IN_LOOP,
                     "confidence": "UNDEFINED",

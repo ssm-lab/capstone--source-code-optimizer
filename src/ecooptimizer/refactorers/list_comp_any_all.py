@@ -23,12 +23,12 @@ class UseAGeneratorRefactorer(BaseRefactorer):
         """
         super().__init__(output_dir)
 
-    def refactor(self, file_path: Path, pylint_smell: UGESmell):
+    def refactor(self, file_path: Path, pylint_smell: UGESmell, overwrite: bool = True):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
         """
-        line_number = pylint_smell["occurences"][0]["line"]
+        line_number = pylint_smell["occurences"]["line"]
         logging.info(
             f"Applying 'Use a Generator' refactor on '{file_path.name}' at line {line_number} for identified code smell."
         )
@@ -76,8 +76,9 @@ class UseAGeneratorRefactorer(BaseRefactorer):
             with temp_file_path.open("w") as temp_file:
                 temp_file.writelines(modified_lines)
 
-            with file_path.open("w") as f:
-                f.writelines(modified_lines)
+            if overwrite:
+                with file_path.open("w") as f:
+                    f.writelines(modified_lines)
 
             logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 

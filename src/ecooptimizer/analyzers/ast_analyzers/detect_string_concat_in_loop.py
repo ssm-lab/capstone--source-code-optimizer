@@ -36,7 +36,7 @@ def detect_string_concat_in_loop(file_path: Path, tree: ast.Module):  # noqa: AR
                     "module": file_path.name,
                     "obj": None,
                     "type": "performance",
-                    "symbol": "",
+                    "symbol": "str-concat-loop",
                     "message": "String concatenation inside loop detected",
                     "messageId": CustomSmell.STR_CONCAT_IN_LOOP,
                     "confidence": "UNDEFINED",
