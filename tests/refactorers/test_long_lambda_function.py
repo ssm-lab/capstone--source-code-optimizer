@@ -116,7 +116,7 @@ def test_long_lambda_detection(long_lambda_code: Path):
 
     # Verify that the detected smells correspond to the correct lines in the sample code
     expected_lines = {10, 16, 26}  # Update based on actual line numbers of long lambdas
-    detected_lines = {smell["occurences"]["line"] for smell in long_lambda_smells}
+    detected_lines = {smell["occurences"][0]["line"] for smell in long_lambda_smells}
     assert detected_lines == expected_lines
 
 
@@ -138,7 +138,7 @@ def test_long_lambda_refactoring(long_lambda_code: Path, output_dir):
     for smell in long_lambda_smells:
         # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(
-            f"{long_lambda_code.stem}_LLFR_line_{smell['occurences']['line']}.py"
+            f"{long_lambda_code.stem}_LLFR_line_{smell['occurences'][0]['line']}.py"
         )
         assert refactored_file.exists()
 

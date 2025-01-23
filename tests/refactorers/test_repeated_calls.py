@@ -44,7 +44,7 @@ def get_smells(crc_code):
 
 
 def test_cached_repeated_calls_detection(get_smells, crc_code: Path):
-    smells = get_smells
+    smells: list[CRCSmell] = get_smells
 
     # Filter for cached repeated calls smells
     crc_smells: list[CRCSmell] = [smell for smell in smells if smell["messageId"] == "CRC001"]
@@ -58,7 +58,7 @@ def test_cached_repeated_calls_detection(get_smells, crc_code: Path):
 
 
 # def test_cached_repeated_calls_refactoring(get_smells, crc_code: Path, output_dir: Path):
-#     smells = get_smells
+#     smells: list[CRCSmell] = get_smells
 
 #     # Filter for cached repeated calls smells
 #     crc_smells = [smell for smell in smells if smell["messageId"] == "CRC001"]

@@ -61,8 +61,8 @@ def main():
     )
 
     # Measure energy with CodeCarbonEnergyMeter
-    codecarbon_energy_meter = CodeCarbonEnergyMeter(SOURCE)
-    codecarbon_energy_meter.measure_energy()
+    codecarbon_energy_meter = CodeCarbonEnergyMeter()
+    codecarbon_energy_meter.measure_energy(SOURCE)
     initial_emissions = codecarbon_energy_meter.emissions  # Get initial emission
 
     if not initial_emissions:
@@ -133,18 +133,43 @@ def main():
         backup_copy = output_config.copy_file_to_output(source_copy, "refactored-test-case.py")
 
         for pylint_smell in pylint_analyzer.smells_data:
+            print(
+                f"Refactoring {pylint_smell['symbol']} at line {pylint_smell['occurences'][0]['line']}..."
+            )
             refactoring_class = RefactorerFactory.build_refactorer_class(
                 pylint_smell["messageId"], OUTPUT_DIR
             )
             if refactoring_class:
                 refactoring_class.refactor(source_copy, pylint_smell)
 
-                if not TestRunner("pytest", Path(temp_dir)).retained_functionality():
-                    logging.info("Functionality not maintained. Discarding refactoring.\n")
+                codecarbon_energy_meter.measure_energy(source_copy)
+                final_emissions = codecarbon_energy_meter.emissions
+
+                if not final_emissions:
+                    logging.error("Could not retrieve final emissions. Discarding refactoring.")
+                    print("Refactoring Failed.\n")
+
+                elif final_emissions >= initial_emissions:
+                    logging.info("No measured energy savings. Discarding refactoring.\n")
+                    print("Refactoring Failed.\n")
+
+                else:
+                    logging.info("Energy saved!")
+                    logging.info(
+                        f"Initial emissions: {initial_emissions} | Final emissions: {final_emissions}"
+                    )
+
+                    if not TestRunner("pytest", Path(temp_dir)).retained_functionality():
+                        logging.info("Functionality not maintained. Discarding refactoring.\n")
+                        print("Refactoring Failed.\n")
+                    else:
+                        logging.info("Functionality maintained! Retaining refactored file.\n")
+                        print("Refactoring Succesful!\n")
             else:
                 logging.info(
                     f"Refactoring for smell {pylint_smell['symbol']} is not implemented.\n"
                 )
+                print("Refactoring Failed.\n")
 
             # Revert temp
             shutil.copy(backup_copy, source_copy)

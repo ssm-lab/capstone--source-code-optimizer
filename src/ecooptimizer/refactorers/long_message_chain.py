@@ -51,7 +51,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
         and writing the refactored code to a new file.
         """
         # Extract details from pylint_smell
-        line_number = pylint_smell["occurences"]["line"]
+        line_number = pylint_smell["occurences"][0]["line"]
         temp_filename = self.temp_dir / Path(f"{file_path.stem}_LMCR_line_{line_number}.py")
 
         logging.info(

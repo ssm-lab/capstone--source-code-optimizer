@@ -128,7 +128,7 @@ def get_smells(str_concat_loop_code) -> list[SCLSmell]:
 
 
 def test_str_concat_in_loop_detection(get_smells):
-    smells = get_smells
+    smells: list[SCLSmell] = get_smells
 
     # Assert the expected number of smells
     assert len(smells) == 11
@@ -152,7 +152,7 @@ def test_str_concat_in_loop_detection(get_smells):
 
 
 def test_scl_refactoring(get_smells, str_concat_loop_code: Path, output_dir: Path):
-    smells = get_smells
+    smells: list[SCLSmell] = get_smells
 
     # Instantiate the refactorer
     refactorer = UseListAccumulationRefactorer(output_dir)

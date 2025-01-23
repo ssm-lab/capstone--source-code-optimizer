@@ -45,12 +45,14 @@ class PylintAnalyzer(Analyzer):
                     "path": smell["absolutePath"],
                     "symbol": smell["symbol"],
                     "type": smell["type"],
-                    "occurences": {
-                        "line": smell["line"],
-                        "endLine": smell["endLine"],
-                        "column": smell["column"],
-                        "endColumn": smell["endColumn"],
-                    },
+                    "occurences": [
+                        {
+                            "line": smell["line"],
+                            "endLine": smell["endLine"],
+                            "column": smell["column"],
+                            "endColumn": smell["endColumn"],
+                        }
+                    ],
                     "additionalInfo": None,
                 }
             )
@@ -179,12 +181,14 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_MESSAGE_CHAIN,
                     "confidence": "UNDEFINED",
-                    "occurences": {
-                        "line": node.lineno,
-                        "endLine": node.end_lineno,
-                        "column": node.col_offset,
-                        "endColumn": node.end_col_offset,
-                    },
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
                     "additionalInfo": None,
                 }
 
@@ -253,12 +257,14 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_LAMBDA_EXPR,
                     "confidence": "UNDEFINED",
-                    "occurences": {
-                        "line": node.lineno,
-                        "endLine": node.end_lineno,
-                        "column": node.col_offset,
-                        "endColumn": node.end_col_offset,
-                    },
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
                     "additionalInfo": None,
                 }
 
@@ -282,12 +288,14 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_LAMBDA_EXPR,
                     "confidence": "UNDEFINED",
-                    "occurences": {
-                        "line": node.lineno,
-                        "endLine": node.end_lineno,
-                        "column": node.col_offset,
-                        "endColumn": node.end_col_offset,
-                    },
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
                     "additionalInfo": None,
                 }
 
@@ -396,12 +404,14 @@ class PylintAnalyzer(Analyzer):
                     "message": f"Unused variable or attribute '{var}'",
                     "messageId": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE,
                     "confidence": "UNDEFINED",
-                    "occurences": {
-                        "line": var_node.lineno,
-                        "endLine": var_node.end_lineno,
-                        "column": var_node.col_offset,
-                        "endColumn": var_node.end_col_offset,
-                    },
+                    "occurences": [
+                        {
+                            "line": var_node.lineno,
+                            "endLine": var_node.end_lineno,
+                            "column": var_node.col_offset,
+                            "endColumn": var_node.end_col_offset,
+                        }
+                    ],
                     "additionalInfo": None,
                 }
 
@@ -440,12 +450,14 @@ class PylintAnalyzer(Analyzer):
                     "message": message,
                     "messageId": CustomSmell.LONG_ELEMENT_CHAIN,
                     "confidence": "UNDEFINED",
-                    "occurences": {
-                        "line": node.lineno,
-                        "endLine": node.end_lineno,
-                        "column": node.col_offset,
-                        "endColumn": node.end_col_offset,
-                    },
+                    "occurences": [
+                        {
+                            "line": node.lineno,
+                            "endLine": node.end_lineno,
+                            "column": node.col_offset,
+                            "endColumn": node.end_col_offset,
+                        }
+                    ],
                     "additionalInfo": None,
                 }
 

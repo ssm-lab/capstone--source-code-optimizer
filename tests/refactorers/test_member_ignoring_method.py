@@ -51,19 +51,19 @@ def get_smells(MIM_code) -> list[MIMSmell]:
 
 
 def test_member_ignoring_method_detection(get_smells, MIM_code: Path):
-    smells = get_smells
+    smells: list[MIMSmell] = get_smells
 
     # Filter for long lambda smells
 
     assert len(smells) == 1
     assert smells[0]["symbol"] == "no-self-use"
     assert smells[0]["messageId"] == "R6301"
-    assert smells[0]["occurences"]["line"] == 9
+    assert smells[0]["occurences"][0]["line"] == 9
     assert smells[0]["module"] == MIM_code.stem
 
 
 def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path):
-    smells = get_smells
+    smells: list[MIMSmell] = get_smells
 
     # Instantiate the refactorer
     refactorer = MakeStaticRefactorer(output_dir)
@@ -74,7 +74,7 @@ def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path):
 
         # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(
-            f"{MIM_code.stem}_MIMR_line_{smell['occurences']['line']}.py"
+            f"{MIM_code.stem}_MIMR_line_{smell['occurences'][0]['line']}.py"
         )
 
         refactored_lines = refactored_file.read_text().splitlines()
@@ -84,6 +84,6 @@ def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path):
         # Check that the refactored file compiles
         py_compile.compile(str(refactored_file), doraise=True)
 
-        method_line = smell["occurences"]["line"] - 1
+        method_line = smell["occurences"][0]["line"] - 1
         assert refactored_lines[method_line].find("@staticmethod") != -1
         assert re.search(r"(\s*\bself\b\s*)", refactored_lines[method_line + 1]) is None

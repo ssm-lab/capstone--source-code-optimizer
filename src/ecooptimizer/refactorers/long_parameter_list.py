@@ -25,7 +25,7 @@ class LongParameterListRefactorer(BaseRefactorer):
             tree = ast.parse(f.read())
 
         # find the line number of target function indicated by the code smell object
-        target_line = pylint_smell["occurences"]["line"]
+        target_line = pylint_smell["occurences"][0]["line"]
         logging.info(
             f"Applying 'Fix Too Many Parameters' refactor on '{file_path.name}' at line {target_line} for identified code smell."
         )

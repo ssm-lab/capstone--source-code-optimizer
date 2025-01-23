@@ -23,7 +23,7 @@ class RemoveUnusedRefactorer(BaseRefactorer):
         :param pylint_smell: Dictionary containing details of the Pylint smell, including the line number.
         :param initial_emission: Initial emission value before refactoring.
         """
-        line_number = pylint_smell["occurences"]["line"]
+        line_number = pylint_smell["occurences"][0]["line"]
         code_type = pylint_smell["messageId"]
         logging.info(
             f"Applying 'Remove Unused Stuff' refactor on '{file_path.name}' at line {line_number} for identified code smell."

@@ -112,7 +112,7 @@ class LongElementChainRefactorer(BaseRefactorer):
 
     def refactor(self, file_path: Path, pylint_smell: LECSmell, overwrite: bool = True):
         """Refactor long element chains using the most appropriate strategy."""
-        line_number = pylint_smell["occurences"]["line"]
+        line_number = pylint_smell["occurences"][0]["line"]
         temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
 
         with file_path.open() as f:
