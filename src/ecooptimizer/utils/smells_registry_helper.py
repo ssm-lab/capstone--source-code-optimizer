@@ -43,7 +43,7 @@ def generate_pylint_options(filtered_smells: dict[str, SmellRegistry]) -> list[s
 
 def generate_ast_options(
     filtered_smells: dict[str, SmellRegistry],
-) -> list[Callable[[Path, ast.AST], list[Smell]]]:
+) -> list[tuple[Callable[[Path, ast.AST], list[Smell]], dict[str, Any]]]:
     ast_options = []
     for smell in filtered_smells.values():
         method = smell["analyzer_method"]
@@ -51,16 +51,3 @@ def generate_ast_options(
         ast_options.append((method, options))
 
     return ast_options
-
-
-def prepare_smell_analysis(smell_registry: dict[str, SmellRegistry]) -> dict[str, Any]:
-    pylint_smells = filter_smells_by_method(smell_registry, "pylint")
-    ast_smells = filter_smells_by_method(smell_registry, "ast")
-
-    pylint_options = generate_pylint_options(pylint_smells)
-    ast_analyzer_methods = generate_ast_options(ast_smells)
-
-    return {
-        "pylint_options": pylint_options,
-        "ast_options": ast_analyzer_methods,
-    }

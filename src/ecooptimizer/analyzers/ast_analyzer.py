@@ -2,10 +2,11 @@ from typing import Callable, Any
 from pathlib import Path
 import ast
 
+from .base_analyzer import Analyzer
 from ..data_wrappers.smell import Smell
 
 
-class ASTAnalyzer:
+class ASTAnalyzer(Analyzer):
     def analyze(
         self,
         file_path: Path,
