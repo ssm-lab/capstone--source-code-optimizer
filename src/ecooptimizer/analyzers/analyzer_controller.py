@@ -20,6 +20,6 @@ class AnalyzerController:
         options = prepare_smell_analysis(SMELL_REGISTRY)
 
         smells_data.extend(self.pylint_analyzer.analyze(file_path, options["pylint_options"]))
-        smells_data.extend(self.ast_analyzer.analyze(file_path, options["ast_analyzers"]))
+        smells_data.extend(self.ast_analyzer.analyze(file_path, options["ast_options"]))
 
         return smells_data

@@ -20,14 +20,14 @@ SMELL_REGISTRY: dict[str, SmellRegistry] = {
         "id": "R1729",
         "enabled": True,
         "analyzer_method": "pylint",
-        "analyzer_options": {"max_args": {"flag": "--max-args", "value": 6}},
+        "analyzer_options": {},
         "refactorer": UseAGeneratorRefactorer,
     },
     "long-parameter-list": {
         "id": "R0913",
         "enabled": True,
         "analyzer_method": "pylint",
-        "analyzer_options": {},
+        "analyzer_options": {"max_args": {"flag": "--max-args", "value": 6}},
         "refactorer": LongParameterListRefactorer,
     },
     "no-self-use": {
