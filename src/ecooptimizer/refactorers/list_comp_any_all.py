@@ -1,129 +1,111 @@
-# refactorers/use_a_generator_refactorer.py
-
 import ast
-import logging
 from pathlib import Path
-import astor  # For converting AST back to source code
+from asttokens import ASTTokens
 
-from ..data_wrappers.smell import Smell
-from ..testing.run_tests import run_tests
 from .base_refactorer import BaseRefactorer
+from ..data_wrappers.smell import Smell
 
 
 class UseAGeneratorRefactorer(BaseRefactorer):
-    def __init__(self, output_dir: Path):
-        """
-        Initializes the UseAGeneratorRefactor with a file path, pylint
-        smell, initial emission, and logger.
+    def refactor(self, input_file: Path, smell: Smell, output_file: Path):
+        line_number = smell["line"]
+        start_column = smell["column"]
+        end_column = smell["endColumn"]
 
-        :param file_path: Path to the file to be refactored.
-        :param pylint_smell: Dictionary containing details of the Pylint smell.
-        :param initial_emission: Initial emission value before refactoring.
-        :param logger: Logger instance to handle log messages.
-        """
-        super().__init__(output_dir)
-
-    def refactor(self, file_path: Path, pylint_smell: Smell, initial_emissions: float):
-        """
-        Refactors an unnecessary list comprehension by converting it to a generator expression.
-        Modifies the specified instance in the file directly if it results in lower emissions.
-        """
-        line_number = pylint_smell["line"]
-        logging.info(
-            f"Applying 'Use a Generator' refactor on '{file_path.name}' at line {line_number} for identified code smell."
+        print(
+            f"[DEBUG] Starting refactor for line: {line_number}, columns {start_column}-{end_column}"
         )
 
-        # Load the source code as a list of lines
-        with file_path.open() as file:
+        # Load the source file as a list of lines
+        with input_file.open() as file:
             original_lines = file.readlines()
 
-        # Check if the line number is valid within the file
+        # Check if the file ends with a newline
+        file_ends_with_newline = original_lines[-1].endswith("\n") if original_lines else False
+        print(f"[DEBUG] File ends with newline: {file_ends_with_newline}")
+
+        # Check bounds for line number
         if not (1 <= line_number <= len(original_lines)):
-            logging.info("Specified line number is out of bounds.\n")
+            print("[DEBUG] Line number out of bounds, aborting.")
             return
 
-        # Target the specific line and remove leading whitespace for parsing
-        line = original_lines[line_number - 1]
-        stripped_line = line.lstrip()  # Strip leading indentation
-        indentation = line[: len(line) - len(stripped_line)]  # Track indentation
+        # Extract the specific line to refactor
+        target_line = original_lines[line_number - 1]
+        print(f"[DEBUG] Original target line: {target_line!r}")
 
-        # Parse the line as an AST
-        line_ast = ast.parse(stripped_line, mode="exec")  # Use 'exec' mode for full statements
+        # Preserve the original indentation
+        leading_whitespace = target_line[: len(target_line) - len(target_line.lstrip())]
+        print(f"[DEBUG] Leading whitespace: {leading_whitespace!r}")
 
-        # Look for a list comprehension within the AST of this line
+        # Remove leading whitespace for parsing
+        stripped_line = target_line.lstrip()
+        print(f"[DEBUG] Stripped line for parsing: {stripped_line!r}")
+
+        # Parse the stripped line
+        try:
+            atok = ASTTokens(stripped_line, parse=True)
+            if not atok.tree:
+                print("[DEBUG] ASTTokens failed to generate a valid tree.")
+                return
+            target_ast = atok.tree
+            print(f"[DEBUG] Parsed AST for stripped line: {ast.dump(target_ast, indent=4)}")
+        except (SyntaxError, ValueError) as e:
+            print(f"[DEBUG] Error while parsing stripped line: {e}")
+            return
+
         modified = False
-        for node in ast.walk(line_ast):
-            if isinstance(node, ast.ListComp):
-                # Convert the list comprehension to a generator expression
-                generator_expr = ast.GeneratorExp(elt=node.elt, generators=node.generators)
-                ast.copy_location(generator_expr, node)
 
-                # Replace the list comprehension node with the generator expression
-                self._replace_node(line_ast, node, generator_expr)
-                modified = True
-                break
+        # Traverse the AST and locate the list comprehension at the specified column range
+        for node in ast.walk(target_ast):
+            if isinstance(node, ast.ListComp):
+                print(f"[DEBUG] Found ListComp node: {ast.dump(node, indent=4)}")
+                print(
+                    f"[DEBUG] Node col_offset: {node.col_offset}, Node end_col_offset: {getattr(node, 'end_col_offset', None)}"
+                )
+
+                # Check if end_col_offset exists and is valid
+                end_col_offset = getattr(node, "end_col_offset", None)
+                if end_col_offset is None:
+                    print("[DEBUG] Skipping node because end_col_offset is None")
+                    continue
+
+                # Check if the node matches the specified column range
+                if node.col_offset >= start_column - 1 and end_col_offset <= end_column:
+                    print(f"[DEBUG] Node matches column range {start_column}-{end_column}")
+
+                    # Calculate offsets relative to the original line
+                    start_offset = node.col_offset + len(leading_whitespace)
+                    end_offset = end_col_offset + len(leading_whitespace)
+
+                    # Check if parentheses are already present
+                    if target_line[start_offset - 1] == "(" and target_line[end_offset] == ")":
+                        # Parentheses already exist, avoid adding redundant ones
+                        refactored_code = (
+                            target_line[:start_offset]
+                            + f"{target_line[start_offset + 1 : end_offset - 1]}"
+                            + target_line[end_offset:]
+                        )
+                    else:
+                        # Add parentheses explicitly if not already wrapped
+                        refactored_code = (
+                            target_line[:start_offset]
+                            + f"({target_line[start_offset + 1 : end_offset - 1]})"
+                            + target_line[end_offset:]
+                        )
+
+                    print(f"[DEBUG] Refactored code: {refactored_code!r}")
+                    original_lines[line_number - 1] = refactored_code
+                    modified = True
+                    break
+                else:
+                    print(
+                        f"[DEBUG] Node does not match the column range {start_column}-{end_column}"
+                    )
 
         if modified:
-            # Convert the modified AST back to source code
-            modified_line = astor.to_source(line_ast).strip()
-            # Reapply the original indentation
-            modified_lines = original_lines[:]
-            modified_lines[line_number - 1] = indentation + modified_line + "\n"
-
-            # Temporarily write the modified content to a temporary file
-            temp_file_path = self.temp_dir / Path(f"{file_path.stem}_UGENR_line_{line_number}.py")
-
-            with temp_file_path.open("w") as temp_file:
-                temp_file.writelines(modified_lines)
-
-            # Measure emissions of the modified code
-            final_emission = self.measure_energy(temp_file_path)
-
-            if not final_emission:
-                # os.remove(temp_file_path)
-                logging.info(
-                    f"Could not measure emissions for '{temp_file_path.name}'. Discarded refactoring."
-                )
-                return
-
-            # Check for improvement in emissions
-            if self.check_energy_improvement(initial_emissions, final_emission):
-                # If improved, replace the original file with the modified content
-                if run_tests() == 0:
-                    logging.info("All test pass! Functionality maintained.")
-                    # shutil.move(temp_file_path, file_path)
-                    logging.info(
-                        f"Refactored list comprehension to generator expression on line {line_number} and saved.\n"
-                    )
-                    return
-
-                logging.info("Tests Fail! Discarded refactored changes")
-
-            else:
-                logging.info(
-                    "No emission improvement after refactoring. Discarded refactored changes.\n"
-                )
-
-            # Remove the temporary file if no energy improvement or failing tests
-            # os.remove(temp_file_path)
+            # Save the modified file
+            with output_file.open("w") as refactored_file:
+                refactored_file.writelines(original_lines)
+            print(f"[DEBUG] Refactored file saved to: {output_file}")
         else:
-            logging.info("No applicable list comprehension found on the specified line.\n")
-
-    def _replace_node(self, tree: ast.Module, old_node: ast.ListComp, new_node: ast.GeneratorExp):
-        """
-        Helper function to replace an old AST node with a new one within a tree.
-
-        :param tree: The AST tree or node containing the node to be replaced.
-        :param old_node: The node to be replaced.
-        :param new_node: The new node to replace it with.
-        """
-        for parent in ast.walk(tree):
-            for field, value in ast.iter_fields(parent):
-                if isinstance(value, list):
-                    for i, item in enumerate(value):
-                        if item is old_node:
-                            value[i] = new_node
-                            return
-                elif value is old_node:
-                    setattr(parent, field, new_node)
-                    return
+            print("[DEBUG] No modifications made.")
