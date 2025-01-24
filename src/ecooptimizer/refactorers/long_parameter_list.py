@@ -8,26 +8,32 @@ from .base_refactorer import BaseRefactorer
 
 
 class LongParameterListRefactorer(BaseRefactorer):
-    def __init__(self, output_dir: Path):
-        super().__init__(output_dir)
+    def __init__(self):
+        super().__init__()
         self.parameter_analyzer = ParameterAnalyzer()
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
 
-    def refactor(self, file_path: Path, pylint_smell: LPLSmell, overwrite: bool = True):
+    def refactor(
+        self,
+        input_file: Path,
+        smell: LPLSmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ):
         """
         Refactors function/method with more than 6 parameters by encapsulating those with related names and removing those that are unused
         """
         # maximum limit on number of parameters beyond which the code smell is configured to be detected(see analyzers_config.py)
         max_param_limit = 6
 
-        with file_path.open() as f:
+        with input_file.open() as f:
             tree = ast.parse(f.read())
 
         # find the line number of target function indicated by the code smell object
-        target_line = pylint_smell["occurences"][0]["line"]
+        target_line = smell["occurences"][0]["line"]
         logging.info(
-            f"Applying 'Fix Too Many Parameters' refactor on '{file_path.name}' at line {target_line} for identified code smell."
+            f"Applying 'Fix Too Many Parameters' refactor on '{input_file.name}' at line {target_line} for identified code smell."
         )
         # use target_line to find function definition at the specific line for given code smell object
         for node in ast.walk(tree):
@@ -78,14 +84,14 @@ class LongParameterListRefactorer(BaseRefactorer):
                             break
                     updated_tree = tree
 
-        temp_file_path = self.temp_dir / Path(f"{file_path.stem}_LPLR_line_{target_line}.py")
+        temp_file_path = output_file
 
         modified_source = astor.to_source(updated_tree)
         with temp_file_path.open("w") as temp_file:
             temp_file.write(modified_source)
 
         if overwrite:
-            with file_path.open("w") as f:
+            with input_file.open("w") as f:
                 f.write(modified_source)
 
 

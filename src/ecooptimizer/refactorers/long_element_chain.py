@@ -15,8 +15,8 @@ class LongElementChainRefactorer(BaseRefactorer):
     Strategries considered: intermediate variables, caching
     """
 
-    def __init__(self, output_dir: Path):
-        super().__init__(output_dir)
+    def __init__(self):
+        super().__init__()
         self._reference_map: dict[str, list[tuple[int, str]]] = {}
 
     def flatten_dict(self, d: dict[str, Any], parent_key: str = ""):
@@ -110,12 +110,18 @@ class LongElementChainRefactorer(BaseRefactorer):
         joined = "_".join(k.strip("'\"") for k in access_chain)
         return f"{base_var}_{joined}"
 
-    def refactor(self, file_path: Path, pylint_smell: LECSmell, overwrite: bool = True):
+    def refactor(
+        self,
+        input_file: Path,
+        smell: LECSmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ):
         """Refactor long element chains using the most appropriate strategy."""
-        line_number = pylint_smell["occurences"][0]["line"]
-        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LECR_line_{line_number}.py")
+        line_number = smell["occurences"][0]["line"]
+        temp_filename = output_file
 
-        with file_path.open() as f:
+        with input_file.open() as f:
             content = f.read()
             lines = content.splitlines(keepends=True)
             tree = ast.parse(content)
@@ -174,7 +180,7 @@ class LongElementChainRefactorer(BaseRefactorer):
             temp_file.writelines(new_lines)
 
         if overwrite:
-            with file_path.open("w") as f:
+            with input_file.open("w") as f:
                 f.writelines(new_lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

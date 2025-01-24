@@ -1,10 +1,12 @@
 import ast
 from pathlib import Path
 
-from ...data_wrappers.smell import Smell
+from ...utils.analyzers_config import CustomSmell
+
+from ...data_wrappers.smell import UVASmell
 
 
-def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> list[Smell]:
+def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> list[UVASmell]:
     """
     Detects unused variables and class attributes in the given Python code.
 
@@ -16,8 +18,7 @@ def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> li
         list[Smell]: A list of Smell objects containing details about detected unused variables or attributes.
     """
     # Store variable and attribute declarations and usage
-    results: list[Smell] = []
-    messageId = "UVA001"
+    results: list[UVASmell] = []
     declared_vars = set()
     used_vars = set()
 
@@ -93,21 +94,25 @@ def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> li
                 break
 
         # Create a Smell object for the unused variable or attribute
-        smell = Smell(
-            absolutePath=str(file_path),
-            column=column_no,
-            confidence="UNDEFINED",
-            endColumn=None,
-            endLine=None,
-            line=line_no,
-            message=f"Unused variable or attribute '{var}'",
-            messageId=messageId,
-            module=file_path.name,
-            obj="",
-            path=str(file_path),
-            symbol=symbol,
-            type="convention",
-        )
+        smell: UVASmell = {
+            "path": str(file_path),
+            "module": file_path.stem,
+            "obj": None,
+            "type": "convention",
+            "symbol": symbol,
+            "message": f"Unused variable or attribute '{var}'",
+            "messageId": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE.value,
+            "confidence": "UNDEFINED",
+            "occurences": [
+                {
+                    "line": line_no,
+                    "endLine": None,
+                    "column": column_no,
+                    "endColumn": None,
+                }
+            ],
+            "additionalInfo": None,
+        }
 
         results.append(smell)
 

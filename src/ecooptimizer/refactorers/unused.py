@@ -6,31 +6,32 @@ from ..data_wrappers.smell import UVASmell
 
 
 class RemoveUnusedRefactorer(BaseRefactorer):
-    def __init__(self, output_dir: Path):
-        """
-        Initializes the RemoveUnusedRefactor with the specified logger.
+    def __init__(self):
+        super().__init__()
 
-        :param logger: Logger instance to handle log messages.
-        """
-        super().__init__(output_dir)
-
-    def refactor(self, file_path: Path, pylint_smell: UVASmell, overwrite: bool = True):
+    def refactor(
+        self,
+        input_file: Path,
+        smell: UVASmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ):
         """
         Refactors unused imports, variables and class attributes by removing lines where they appear.
         Modifies the specified instance in the file if it results in lower emissions.
 
-        :param file_path: Path to the file to be refactored.
-        :param pylint_smell: Dictionary containing details of the Pylint smell, including the line number.
+        :param input_file: Path to the file to be refactored.
+        :param smell: Dictionary containing details of the Pylint smell, including the line number.
         :param initial_emission: Initial emission value before refactoring.
         """
-        line_number = pylint_smell["occurences"][0]["line"]
-        code_type = pylint_smell["messageId"]
+        line_number = smell["occurences"][0]["line"]
+        code_type = smell["messageId"]
         logging.info(
-            f"Applying 'Remove Unused Stuff' refactor on '{file_path.name}' at line {line_number} for identified code smell."
+            f"Applying 'Remove Unused Stuff' refactor on '{input_file.name}' at line {line_number} for identified code smell."
         )
 
         # Load the source code as a list of lines
-        with file_path.open() as file:
+        with input_file.open() as file:
             original_lines = file.readlines()
 
         # Check if the line number is valid within the file
@@ -54,13 +55,13 @@ class RemoveUnusedRefactorer(BaseRefactorer):
             return
 
         # Write the modified content to a temporary file
-        temp_file_path = self.temp_dir / Path(f"{file_path.stem}_UNSDR_line_{line_number}.py")
+        temp_file_path = output_file
 
         with temp_file_path.open("w") as temp_file:
             temp_file.writelines(modified_lines)
 
         if overwrite:
-            with file_path.open("w") as f:
+            with input_file.open("w") as f:
                 f.writelines(modified_lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

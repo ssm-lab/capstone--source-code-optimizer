@@ -13,28 +13,34 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
     Refactorer that targets methods that don't use any class attributes and makes them static to improve performance
     """
 
-    def __init__(self, output_dir: Path):
-        super().__init__(output_dir)
+    def __init__(self):
+        super().__init__()
         self.target_line = None
         self.mim_method_class = ""
         self.mim_method = ""
 
-    def refactor(self, file_path: Path, pylint_smell: MIMSmell, overwrite: bool = True):
+    def refactor(
+        self,
+        input_file: Path,
+        smell: MIMSmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ):
         """
         Perform refactoring
 
-        :param file_path: absolute path to source code
-        :param pylint_smell: pylint code for smell
+        :param input_file: absolute path to source code
+        :param smell: pylint code for smell
         :param initial_emission: inital carbon emission prior to refactoring
         """
-        self.target_line = pylint_smell["occurences"][0]["line"]
+        self.target_line = smell["occurences"][0]["line"]
         logging.info(
-            f"Applying 'Make Method Static' refactor on '{file_path.name}' at line {self.target_line} for identified code smell."
+            f"Applying 'Make Method Static' refactor on '{input_file.name}' at line {self.target_line} for identified code smell."
         )
         # Parse the code into an AST
-        source_code = file_path.read_text()
+        source_code = input_file.read_text()
         logging.debug(source_code)
-        tree = ast.parse(source_code, file_path)
+        tree = ast.parse(source_code, input_file)
 
         # Apply the transformation
         modified_tree = self.visit(tree)
@@ -42,11 +48,11 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         # Convert the modified AST back to source code
         modified_code = astor.to_source(modified_tree)
 
-        temp_file_path = self.temp_dir / Path(f"{file_path.stem}_MIMR_line_{self.target_line}.py")
+        temp_file_path = output_file
 
         temp_file_path.write_text(modified_code)
         if overwrite:
-            file_path.write_text(modified_code)
+            input_file.write_text(modified_code)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 

@@ -14,8 +14,7 @@ class ASTAnalyzer(Analyzer):
     ) -> list[Smell]:
         smells_data: list[Smell] = []
 
-        with file_path.open("r") as file:
-            source_code = file.read()
+        source_code = file_path.read_text()
 
         tree = ast.parse(source_code)
 

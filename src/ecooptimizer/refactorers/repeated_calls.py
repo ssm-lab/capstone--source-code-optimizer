@@ -2,25 +2,31 @@ import ast
 import logging
 from pathlib import Path
 
-from ecooptimizer.data_wrappers.smell import CRCSmell
+from ..data_wrappers.smell import CRCSmell
 
 from .base_refactorer import BaseRefactorer
 
 
 class CacheRepeatedCallsRefactorer(BaseRefactorer):
-    def __init__(self, output_dir: Path):
+    def __init__(self):
         """
         Initializes the CacheRepeatedCallsRefactorer.
         """
-        super().__init__(output_dir)
+        super().__init__()
         self.target_line = None
 
-    def refactor(self, file_path: Path, pylint_smell: CRCSmell, overwrite: bool = True):
+    def refactor(
+        self,
+        input_file: Path,
+        smell: CRCSmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ):
         """
         Refactor the repeated function call smell and save to a new file.
         """
-        self.input_file = file_path
-        self.smell = pylint_smell
+        self.input_file = input_file
+        self.smell = smell
 
         self.cached_var_name = "cached_" + self.smell["occurences"][0]["call_string"].split("(")[0]
 
@@ -62,13 +68,13 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
                 lines[adjusted_line_index] = updated_line
 
         # Save the modified file
-        temp_file_path = self.temp_dir / Path(f"{file_path.stem}_crc_line_{self.target_line}.temp")
+        temp_file_path = output_file
 
         with temp_file_path.open("w") as refactored_file:
             refactored_file.writelines(lines)
 
         if overwrite:
-            with file_path.open("w") as f:
+            with input_file.open("w") as f:
                 f.writelines(lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

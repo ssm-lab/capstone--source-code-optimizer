@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 import re
 from .base_refactorer import BaseRefactorer
-from ecooptimizer.data_wrappers.smell import LLESmell
+from ..data_wrappers.smell import LLESmell
 
 
 class LongLambdaFunctionRefactorer(BaseRefactorer):
@@ -10,8 +10,8 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
     Refactorer that targets long lambda functions by converting them into normal functions.
     """
 
-    def __init__(self, output_dir: Path):
-        super().__init__(output_dir)
+    def __init__(self) -> None:
+        super().__init__()
 
     @staticmethod
     def truncate_at_top_level_comma(body: str) -> str:
@@ -35,21 +35,27 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
 
         return "".join(truncated_body).strip()
 
-    def refactor(self, file_path: Path, pylint_smell: LLESmell, overwrite: bool = True):
+    def refactor(
+        self,
+        input_file: Path,
+        smell: LLESmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ):
         """
         Refactor long lambda functions by converting them into normal functions
         and writing the refactored code to a new file.
         """
-        # Extract details from pylint_smell
-        line_number = pylint_smell["occurences"][0]["line"]
-        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LLFR_line_{line_number}.py")
+        # Extract details from smell
+        line_number = smell["occurences"][0]["line"]
+        temp_filename = output_file
 
         logging.info(
-            f"Applying 'Lambda to Function' refactor on '{file_path.name}' at line {line_number} for identified code smell."
+            f"Applying 'Lambda to Function' refactor on '{input_file.name}' at line {line_number} for identified code smell."
         )
 
         # Read the original file
-        with file_path.open() as f:
+        with input_file.open() as f:
             lines = f.readlines()
 
         # Capture the entire logical line containing the lambda
@@ -130,7 +136,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
             temp_file.writelines(lines)
 
         if overwrite:
-            with file_path.open("w") as f:
+            with input_file.open("w") as f:
                 f.writelines(lines)
 
         logging.info(f"Refactoring completed and saved to: {temp_filename}")

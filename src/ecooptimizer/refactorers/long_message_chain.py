@@ -10,8 +10,8 @@ class LongMessageChainRefactorer(BaseRefactorer):
     Refactorer that targets long method chains to improve performance.
     """
 
-    def __init__(self, output_dir: Path):
-        super().__init__(output_dir)
+    def __init__(self) -> None:
+        super().__init__()
 
     @staticmethod
     def remove_unmatched_brackets(input_string: str):
@@ -45,20 +45,26 @@ class LongMessageChainRefactorer(BaseRefactorer):
 
         return result
 
-    def refactor(self, file_path: Path, pylint_smell: LMCSmell, overwrite: bool = True):
+    def refactor(
+        self,
+        input_file: Path,
+        smell: LMCSmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ):
         """
         Refactor long message chains by breaking them into separate statements
         and writing the refactored code to a new file.
         """
-        # Extract details from pylint_smell
-        line_number = pylint_smell["occurences"][0]["line"]
-        temp_filename = self.temp_dir / Path(f"{file_path.stem}_LMCR_line_{line_number}.py")
+        # Extract details from smell
+        line_number = smell["occurences"][0]["line"]
+        temp_filename = output_file
 
         logging.info(
-            f"Applying 'Separate Statements' refactor on '{file_path.name}' at line {line_number} for identified code smell."
+            f"Applying 'Separate Statements' refactor on '{input_file.name}' at line {line_number} for identified code smell."
         )
         # Read the original file
-        with file_path.open() as f:
+        with input_file.open() as f:
             lines = f.readlines()
 
         # Identify the line with the long method chain
@@ -136,7 +142,7 @@ class LongMessageChainRefactorer(BaseRefactorer):
             f.writelines(lines)
 
         if overwrite:
-            with file_path.open("w") as f:
+            with input_file.open("w") as f:
                 f.writelines(lines)
 
         logging.info(f"Refactored temp file saved to {temp_filename}")

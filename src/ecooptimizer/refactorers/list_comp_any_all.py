@@ -4,11 +4,20 @@ from asttokens import ASTTokens
 
 
 from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import Smell
+from ..data_wrappers.smell import LECSmell
 
 
 class UseAGeneratorRefactorer(BaseRefactorer):
-    def refactor(self, input_file: Path, smell: Smell, output_file: Path):
+    def __init__(self):
+        super().__init__()
+
+    def refactor(
+        self,
+        input_file: Path,
+        smell: LECSmell,
+        output_file: Path,
+        overwrite: bool = True,  # noqa: ARG002
+    ):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.

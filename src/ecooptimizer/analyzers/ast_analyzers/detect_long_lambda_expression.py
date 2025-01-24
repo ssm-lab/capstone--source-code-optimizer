@@ -1,12 +1,14 @@
 import ast
 from pathlib import Path
 
-from ...data_wrappers.smell import Smell
+from ...utils.analyzers_config import CustomSmell
+
+from ...data_wrappers.smell import LLESmell
 
 
 def detect_long_lambda_expression(
     file_path: Path, tree: ast.AST, threshold_length: int = 100, threshold_count: int = 3
-) -> list[Smell]:
+) -> list[LLESmell]:
     """
     Detects lambda functions that are too long, either by the number of expressions or the total length in characters.
 
@@ -20,9 +22,8 @@ def detect_long_lambda_expression(
         list[Smell]: A list of Smell objects, each containing details about detected long lambda functions.
     """
     # Initialize an empty list to store detected Smell objects
-    results: list[Smell] = []
+    results: list[LLESmell] = []
     used_lines = set()
-    messageId = "LLE001"
 
     # Function to check the length of lambda expressions
     def check_lambda(node: ast.Lambda):
@@ -42,21 +43,25 @@ def detect_long_lambda_expression(
         # Check if the lambda expression exceeds the threshold based on the number of expressions
         if lambda_length >= threshold_count:
             message = f"Lambda function too long ({lambda_length}/{threshold_count} expressions)"
-            smell = Smell(
-                absolutePath=str(file_path),
-                column=node.col_offset,
-                confidence="UNDEFINED",
-                endColumn=None,
-                endLine=None,
-                line=node.lineno,
-                message=message,
-                messageId=messageId,
-                module=file_path.name,
-                obj="",
-                path=str(file_path),
-                symbol="long-lambda-expression",
-                type="convention",
-            )
+            smell: LLESmell = {
+                "path": str(file_path),
+                "module": file_path.stem,
+                "obj": None,
+                "type": "convention",
+                "symbol": "long-lambda-expr",
+                "message": message,
+                "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
+                "confidence": "UNDEFINED",
+                "occurences": [
+                    {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    }
+                ],
+                "additionalInfo": None,
+            }
 
             if node.lineno in used_lines:
                 return
@@ -69,21 +74,25 @@ def detect_long_lambda_expression(
             message = (
                 f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
             )
-            smell = Smell(
-                absolutePath=str(file_path),
-                column=node.col_offset,
-                confidence="UNDEFINED",
-                endColumn=None,
-                endLine=None,
-                line=node.lineno,
-                message=message,
-                messageId=messageId,
-                module=file_path.name,
-                obj="",
-                path=str(file_path),
-                symbol="long-lambda-expression",
-                type="convention",
-            )
+            smell: LLESmell = {
+                "path": str(file_path),
+                "module": file_path.stem,
+                "obj": None,
+                "type": "convention",
+                "symbol": "long-lambda-expr",
+                "message": message,
+                "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
+                "confidence": "UNDEFINED",
+                "occurences": [
+                    {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    }
+                ],
+                "additionalInfo": None,
+            }
 
             if node.lineno in used_lines:
                 return

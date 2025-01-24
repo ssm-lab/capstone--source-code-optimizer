@@ -3,15 +3,17 @@ class Demo:
         self.test = ""
 
 def super_complex():
-    result = ''
-    log = ''
+    result = []
+    log = []
     for i in range(5):
-        result += "Iteration: " + str(i)
+        result.append('Iteration: ' + str(i))
         for j in range(3):
-            result += "Nested: " + str(j)  # Contributing to `result`
-        log += "Log entry for i=" + str(i)
+            result.append('Nested: ' + str(j))
+        log.append('Log entry for i=' + str(i))
         if i == 2:
-            result = ""  # Resetting `result`
+            result.clear()
+    log = ''.join(log)
+    result = ''.join(result)
 
 def concat_with_for_loop_simple_attr():
     result = Demo()

@@ -1,10 +1,12 @@
 import ast
 from pathlib import Path
 
-from ...data_wrappers.smell import Smell
+from ...utils.analyzers_config import CustomSmell
+
+from ...data_wrappers.smell import LECSmell
 
 
-def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3) -> list[Smell]:
+def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3) -> list[LECSmell]:
     """
     Detects long element chains in the given Python code and returns a list of Smell objects.
 
@@ -17,8 +19,7 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3
         list[Smell]: A list of Smell objects, each containing details about a detected long chain.
     """
     # Initialize an empty list to store detected Smell objects
-    results: list[Smell] = []
-    messageId = "LEC001"
+    results: list[LECSmell] = []
     used_lines = set()
 
     # Function to calculate the length of a dictionary chain and detect long chains
@@ -34,21 +35,25 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3
             message = f"Dictionary chain too long ({chain_length}/{threshold})"
 
             # Instantiate a Smell object with details about the detected issue
-            smell = Smell(
-                absolutePath=str(file_path),
-                column=node.col_offset,
-                confidence="UNDEFINED",
-                endColumn=None,
-                endLine=None,
-                line=node.lineno,
-                message=message,
-                messageId=messageId,
-                module=file_path.name,
-                obj="",
-                path=str(file_path),
-                symbol="long-element-chain",
-                type="convention",
-            )
+            smell: LECSmell = {
+                "path": str(file_path),
+                "module": file_path.stem,
+                "obj": None,
+                "type": "convention",
+                "symbol": "long-element-chain",
+                "message": message,
+                "messageId": CustomSmell.LONG_ELEMENT_CHAIN.value,
+                "confidence": "UNDEFINED",
+                "occurences": [
+                    {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    }
+                ],
+                "additionalInfo": None,
+            }
 
             # Ensure each line is only reported once
             if node.lineno in used_lines:

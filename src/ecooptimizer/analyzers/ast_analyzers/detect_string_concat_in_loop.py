@@ -9,7 +9,7 @@ from ...data_wrappers.smell import SCLSmell
 from ...utils.analyzers_config import CustomSmell
 
 
-def detect_string_concat_in_loop(file_path: Path, tree: ast.Module):  # noqa: ARG001
+def detect_string_concat_in_loop(file_path: Path, dummy: ast.Module):  # noqa: ARG001
     """
     Detects string concatenation inside loops within a Python AST tree.
 
@@ -36,9 +36,9 @@ def detect_string_concat_in_loop(file_path: Path, tree: ast.Module):  # noqa: AR
                     "module": file_path.name,
                     "obj": None,
                     "type": "performance",
-                    "symbol": "str-concat-loop",
+                    "symbol": "string-concat-loop",
                     "message": "String concatenation inside loop detected",
-                    "messageId": CustomSmell.STR_CONCAT_IN_LOOP,
+                    "messageId": CustomSmell.STR_CONCAT_IN_LOOP.value,
                     "confidence": "UNDEFINED",
                     "occurences": [create_smell_occ(node)],
                     "additionalInfo": {
@@ -254,8 +254,8 @@ def detect_string_concat_in_loop(file_path: Path, tree: ast.Module):  # noqa: AR
         return "\n".join(str_code)
 
     # Start traversal
-    tree_node = parse(transform_augassign_to_assign(file_path.read_text()))
-    for child in tree_node.get_children():
+    tree = parse(transform_augassign_to_assign(file_path.read_text()))
+    for child in tree.get_children():
         visit(child)
 
     return smells

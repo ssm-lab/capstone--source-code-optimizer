@@ -1,6 +1,5 @@
 from typing import Any, TypedDict
 
-from ..utils.analyzers_config import CustomSmell, PylintSmell
 
 from .custom_fields import BasicOccurence, CRCAddInfo, CRCOccurence, SCLAddInfo
 
@@ -24,7 +23,7 @@ class Smell(TypedDict):
 
     confidence: str
     message: str
-    messageId: CustomSmell | PylintSmell
+    messageId: str
     module: str
     obj: str | None
     path: str

@@ -1,10 +1,12 @@
 import ast
 from pathlib import Path
 
-from ...data_wrappers.smell import Smell
+from ...utils.analyzers_config import CustomSmell
+
+from ...data_wrappers.smell import LMCSmell
 
 
-def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 3) -> list[Smell]:
+def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 3) -> list[LMCSmell]:
     """
     Detects long message chains in the given Python code.
 
@@ -17,8 +19,7 @@ def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 3
         list[Smell]: A list of Smell objects, each containing details about the detected long chains.
     """
     # Initialize an empty list to store detected Smell objects
-    results: list[Smell] = []
-    messageId = "LMC001"
+    results: list[LMCSmell] = []
     used_lines = set()
 
     # Function to detect long chains
@@ -36,21 +37,25 @@ def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 3
             message = f"Method chain too long ({chain_length}/{threshold})"
 
             # Create a Smell object with the detected issue details
-            smell = Smell(
-                absolutePath=str(file_path),
-                column=node.col_offset,
-                confidence="UNDEFINED",
-                endColumn=None,
-                endLine=None,
-                line=node.lineno,
-                message=message,
-                messageId=messageId,
-                module=file_path.name,
-                obj="",
-                path=str(file_path),
-                symbol="long-message-chain",
-                type="convention",
-            )
+            smell: LMCSmell = {
+                "path": str(file_path),
+                "module": file_path.stem,
+                "obj": None,
+                "type": "convention",
+                "symbol": "",
+                "message": message,
+                "messageId": CustomSmell.LONG_MESSAGE_CHAIN.value,
+                "confidence": "UNDEFINED",
+                "occurences": [
+                    {
+                        "line": node.lineno,
+                        "endLine": node.end_lineno,
+                        "column": node.col_offset,
+                        "endColumn": node.end_col_offset,
+                    }
+                ],
+                "additionalInfo": None,
+            }
 
             # Ensure each line is only reported once
             if node.lineno in used_lines:
