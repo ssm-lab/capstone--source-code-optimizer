@@ -10,7 +10,10 @@ dependencies = [
   "rope",
   "astor",
   "codecarbon",
-  "asttokens"
+  "asttokens",
+  "uvicorn",
+  "fastapi",
+  "pydantic"
 ]
 requires-python = ">=3.9"
 authors = [
