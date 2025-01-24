@@ -1,10 +1,11 @@
 from pathlib import Path
 import ast
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+from ecooptimizer.data_wrappers.smell import LPLSmell
 from ecooptimizer.refactorers.long_parameter_list import LongParameterListRefactorer
 from ecooptimizer.utils.analyzers_config import PylintSmell
 
-TEST_INPUT_FILE = Path("../input/long_param.py")
+TEST_INPUT_FILE = (Path(__file__).parent / "../input/long_param.py").resolve()
 
 
 def get_smells(code: Path):
@@ -18,7 +19,7 @@ def test_long_param_list_detection():
     smells = get_smells(TEST_INPUT_FILE)
 
     # filter out long lambda smells from all calls
-    long_param_list_smells = [
+    long_param_list_smells: list[LPLSmell] = [
         smell for smell in smells if smell["messageId"] == PylintSmell.LONG_PARAMETER_LIST.value
     ]
 
@@ -27,26 +28,24 @@ def test_long_param_list_detection():
 
     # ensure that detected smells correspond to correct line numbers in test input file
     expected_lines = {26, 38, 50, 77, 88, 99, 126, 140, 183, 196, 209}
-    detected_lines = {smell["line"] for smell in long_param_list_smells}
+    detected_lines = {smell["occurences"][0]["line"] for smell in long_param_list_smells}
     assert detected_lines == expected_lines
 
 
-def test_long_parameter_refactoring():
+def test_long_parameter_refactoring(output_dir):
     smells = get_smells(TEST_INPUT_FILE)
 
-    long_param_list_smells = [
+    long_param_list_smells: list[LPLSmell] = [
         smell for smell in smells if smell["messageId"] == PylintSmell.LONG_PARAMETER_LIST.value
     ]
 
-    refactorer = LongParameterListRefactorer()
-
-    initial_emission = 100.0
+    refactorer = LongParameterListRefactorer(output_dir)
 
     for smell in long_param_list_smells:
-        refactorer.refactor(TEST_INPUT_FILE, smell, initial_emission)
+        refactorer.refactor(TEST_INPUT_FILE, smell, overwrite=False)
 
         refactored_file = refactorer.temp_dir / Path(
-            f"{TEST_INPUT_FILE.stem}_LPLR_line_{smell['line']}.py"
+            f"{TEST_INPUT_FILE.stem}_LPLR_line_{smell['occurences'][0]['line']}.py"
         )
 
         assert refactored_file.exists()

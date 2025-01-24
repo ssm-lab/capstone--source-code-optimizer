@@ -11,38 +11,43 @@ from .base_energy_meter import BaseEnergyMeter
 
 
 class CodeCarbonEnergyMeter(BaseEnergyMeter):
-    def __init__(self, file_path: Path):
+    def __init__(self):
         """
         Initializes the CodeCarbonEnergyMeter with a file path and logger.
 
         :param file_path: Path to the file to measure energy consumption.
         :param logger: Logger instance for logging events.
         """
-        super().__init__(file_path)
+        super().__init__()
         self.emissions_data = None
 
-    def measure_energy(self):
+    def measure_energy(self, file_path: Path):
         """
         Measures the carbon emissions for the specified file by running it with CodeCarbon.
         Logs each step and stores the emissions data if available.
         """
-        logging.info(f"Starting CodeCarbon energy measurement on {self.file_path.name}")
+        logging.info(f"Starting CodeCarbon energy measurement on {file_path.name}")
 
         with TemporaryDirectory() as custom_temp_dir:
             os.environ["TEMP"] = custom_temp_dir  # For Windows
             os.environ["TMPDIR"] = custom_temp_dir  # For Unix-based systems
 
             # TODO: Save to logger so doesn't print to console
-            tracker = EmissionsTracker(output_dir=custom_temp_dir, allow_multiple_runs=True)  # type: ignore
+            tracker = EmissionsTracker(
+                output_dir=custom_temp_dir,
+                allow_multiple_runs=True,
+                tracking_mode="process",
+                log_level="error",
+            )  # type: ignore
             tracker.start()
 
             try:
                 subprocess.run(
-                    [sys.executable, self.file_path], capture_output=True, text=True, check=True
+                    [sys.executable, file_path], capture_output=True, text=True, check=True
                 )
                 logging.info("CodeCarbon measurement completed successfully.")
             except subprocess.CalledProcessError as e:
-                logging.info(f"Error executing file '{self.file_path}': {e}")
+                logging.info(f"Error executing file '{file_path}': {e}")
             finally:
                 self.emissions = tracker.stop()
                 emissions_file = custom_temp_dir / Path("emissions.csv")

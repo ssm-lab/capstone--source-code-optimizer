@@ -2,15 +2,20 @@ import ast
 from pathlib import Path
 from asttokens import ASTTokens
 
+
 from .base_refactorer import BaseRefactorer
 from ..data_wrappers.smell import Smell
 
 
 class UseAGeneratorRefactorer(BaseRefactorer):
     def refactor(self, input_file: Path, smell: Smell, output_file: Path):
-        line_number = smell["line"]
-        start_column = smell["column"]
-        end_column = smell["endColumn"]
+        """
+        Refactors an unnecessary list comprehension by converting it to a generator expression.
+        Modifies the specified instance in the file directly if it results in lower emissions.
+        """
+        line_number = smell["occurences"][0]["line"]
+        start_column = smell["occurences"][0]["column"]
+        end_column = smell["occurences"][0]["endColumn"]
 
         print(
             f"[DEBUG] Starting refactor for line: {line_number}, columns {start_column}-{end_column}"

@@ -28,10 +28,9 @@ def refactorer(output_dir):
 @pytest.fixture
 def mock_smell():
     return {
-        "line": 25,
-        "column": 0,
         "message": "Long element chain detected",
         "messageId": "long-element-chain",
+        "occurences": [{"line": 25, "column": 0}],
     }
 
 
@@ -109,7 +108,7 @@ def test_nested_dict1_refactor(refactorer, nested_dict_code: Path, mock_smell):
     initial_content = nested_dict_code.read_text()
 
     # Perform refactoring
-    refactorer.refactor(nested_dict_code, mock_smell, 100.0)
+    refactorer.refactor(nested_dict_code, mock_smell, overwrite=False)
 
     # Find the refactored file
     refactored_files = list(refactorer.temp_dir.glob(f"{nested_dict_code.stem}_LECR_*.py"))
@@ -132,9 +131,9 @@ def test_nested_dict1_refactor(refactorer, nested_dict_code: Path, mock_smell):
 def test_nested_dict2_refactor(refactorer, nested_dict_code: Path, mock_smell):
     """Test the complete refactoring process"""
     initial_content = nested_dict_code.read_text()
-    mock_smell["line"] = 26
+    mock_smell["occurences"][0]["line"] = 26
     # Perform refactoring
-    refactorer.refactor(nested_dict_code, mock_smell, 100.0)
+    refactorer.refactor(nested_dict_code, mock_smell, overwrite=False)
 
     # Find the refactored file
     refactored_files = list(refactorer.temp_dir.glob(f"{nested_dict_code.stem}_LECR_*.py"))

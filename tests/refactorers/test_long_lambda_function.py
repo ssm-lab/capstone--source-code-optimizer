@@ -3,6 +3,7 @@ from pathlib import Path
 import textwrap
 import pytest
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+from ecooptimizer.data_wrappers.smell import LLESmell
 from ecooptimizer.refactorers.long_lambda_function import LongLambdaFunctionRefactorer
 from ecooptimizer.utils.analyzers_config import CustomSmell
 
@@ -106,7 +107,7 @@ def test_long_lambda_detection(long_lambda_code: Path):
     smells = get_smells(long_lambda_code)
 
     # Filter for long lambda smells
-    long_lambda_smells = [
+    long_lambda_smells: list[LLESmell] = [
         smell for smell in smells if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
     ]
 
@@ -115,7 +116,7 @@ def test_long_lambda_detection(long_lambda_code: Path):
 
     # Verify that the detected smells correspond to the correct lines in the sample code
     expected_lines = {10, 16, 26}  # Update based on actual line numbers of long lambdas
-    detected_lines = {smell["line"] for smell in long_lambda_smells}
+    detected_lines = {smell["occurences"][0]["line"] for smell in long_lambda_smells}
     assert detected_lines == expected_lines
 
 
@@ -123,24 +124,21 @@ def test_long_lambda_refactoring(long_lambda_code: Path, output_dir):
     smells = get_smells(long_lambda_code)
 
     # Filter for long lambda smells
-    long_lambda_smells = [
+    long_lambda_smells: list[LLESmell] = [
         smell for smell in smells if smell["messageId"] == CustomSmell.LONG_LAMBDA_EXPR.value
     ]
 
     # Instantiate the refactorer
     refactorer = LongLambdaFunctionRefactorer(output_dir)
 
-    # Measure initial emissions (mocked or replace with actual implementation)
-    initial_emissions = 100.0  # Mock value, replace with actual measurement
-
     # Apply refactoring to each smell
     for smell in long_lambda_smells:
-        refactorer.refactor(long_lambda_code, smell, initial_emissions)
+        refactorer.refactor(long_lambda_code, smell, overwrite=False)
 
     for smell in long_lambda_smells:
         # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(
-            f"{long_lambda_code.stem}_LLFR_line_{smell['line']}.py"
+            f"{long_lambda_code.stem}_LLFR_line_{smell['occurences'][0]['line']}.py"
         )
         assert refactored_file.exists()
 

@@ -1,5 +1,5 @@
 import pytest
-from .car_stuff import Vehicle, Car, process_vehicle 
+from .main import Vehicle, Car, process_vehicle 
 
 # Fixture to create a car instance
 @pytest.fixture

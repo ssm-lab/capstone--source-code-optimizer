@@ -2,6 +2,17 @@ class Demo:
     def __init__(self) -> None:
         self.test = ""
 
+def super_complex():
+    result = ''
+    log = ''
+    for i in range(5):
+        result += "Iteration: " + str(i)
+        for j in range(3):
+            result += "Nested: " + str(j)  # Contributing to `result`
+        log += "Log entry for i=" + str(i)
+        if i == 2:
+            result = ""  # Resetting `result`
+
 def concat_with_for_loop_simple_attr():
     result = Demo()
     for i in range(10):

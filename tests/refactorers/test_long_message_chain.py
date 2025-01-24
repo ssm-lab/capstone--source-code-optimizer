@@ -3,6 +3,7 @@ from pathlib import Path
 import textwrap
 import pytest
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+from ecooptimizer.data_wrappers.smell import LMCSmell
 from ecooptimizer.refactorers.long_message_chain import LongMessageChainRefactorer
 from ecooptimizer.utils.analyzers_config import CustomSmell
 
@@ -49,7 +50,7 @@ def long_message_chain_code(source_files: Path):
             condition = all([isinstance(attribute, str) for attribute in [self.make, self.model, self.year, self.color]])
             if condition:
                 return self.price * 0.9  # Apply a 10% discount if all attributes are strings (totally arbitrary condition)
-            
+
             return self.price
 
         def unused_method(self):
@@ -80,7 +81,7 @@ def long_message_chain_code(source_files: Path):
         vehicle.display_info()
         price_after_discount = vehicle.calculate_price()
         print(f"Price after discount: {price_after_discount}")
-        
+
         vehicle.unused_method()  # Calls a method that doesn't actually use the class attributes
 
     def is_all_string(attributes):
@@ -143,7 +144,7 @@ def test_long_message_chain_detection(long_message_chain_code: Path):
     smells = get_smells(long_message_chain_code)
 
     # Filter for long lambda smells
-    long_message_smells = [
+    long_message_smells: list[LMCSmell] = [
         smell for smell in smells if smell["messageId"] == CustomSmell.LONG_MESSAGE_CHAIN.value
     ]
 
@@ -152,7 +153,7 @@ def test_long_message_chain_detection(long_message_chain_code: Path):
 
     # Verify that the detected smells correspond to the correct lines in the sample code
     expected_lines = {19, 47}
-    detected_lines = {smell["line"] for smell in long_message_smells}
+    detected_lines = {smell["occurences"][0]["line"] for smell in long_message_smells}
     assert detected_lines == expected_lines
 
 
@@ -160,24 +161,21 @@ def test_long_message_chain_refactoring(long_message_chain_code: Path, output_di
     smells = get_smells(long_message_chain_code)
 
     # Filter for long msg chain smells
-    long_msg_chain_smells = [
+    long_msg_chain_smells: list[LMCSmell] = [
         smell for smell in smells if smell["messageId"] == CustomSmell.LONG_MESSAGE_CHAIN.value
     ]
 
     # Instantiate the refactorer
     refactorer = LongMessageChainRefactorer(output_dir)
 
-    # Measure initial emissions (mocked or replace with actual implementation)
-    initial_emissions = 100.0  # Mock value, replace with actual measurement
-
     # Apply refactoring to each smell
     for smell in long_msg_chain_smells:
-        refactorer.refactor(long_message_chain_code, smell, initial_emissions)
+        refactorer.refactor(long_message_chain_code, smell, overwrite=False)
 
     for smell in long_msg_chain_smells:
         # Verify the refactored file exists and contains expected changes
         refactored_file = refactorer.temp_dir / Path(
-            f"{long_message_chain_code.stem}_LMCR_line_{smell['line']}.py"
+            f"{long_message_chain_code.stem}_LMCR_line_{smell['occurences'][0]['line']}.py"
         )
         assert refactored_file.exists()
 
