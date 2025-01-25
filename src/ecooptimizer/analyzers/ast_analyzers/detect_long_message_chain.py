@@ -3,7 +3,8 @@ from pathlib import Path
 
 from ...utils.analyzers_config import CustomSmell
 
-from ...data_wrappers.smell import LMCSmell
+from ...data_types.smell import LMCSmell
+from ...data_types.custom_fields import BasicOccurence
 
 
 def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 3) -> list[LMCSmell]:
@@ -37,25 +38,25 @@ def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 3
             message = f"Method chain too long ({chain_length}/{threshold})"
 
             # Create a Smell object with the detected issue details
-            smell: LMCSmell = {
-                "path": str(file_path),
-                "module": file_path.stem,
-                "obj": None,
-                "type": "convention",
-                "symbol": "",
-                "message": message,
-                "messageId": CustomSmell.LONG_MESSAGE_CHAIN.value,
-                "confidence": "UNDEFINED",
-                "occurences": [
-                    {
-                        "line": node.lineno,
-                        "endLine": node.end_lineno,
-                        "column": node.col_offset,
-                        "endColumn": node.end_col_offset,
-                    }
+            smell = LMCSmell(
+                path=str(file_path),
+                module=file_path.stem,
+                obj=None,
+                type="convention",
+                symbol="long-message-chain",
+                message=message,
+                messageId=CustomSmell.LONG_MESSAGE_CHAIN.value,
+                confidence="UNDEFINED",
+                occurences=[
+                    BasicOccurence(
+                        line=node.lineno,
+                        endLine=node.end_lineno,
+                        column=node.col_offset,
+                        endColumn=node.end_col_offset,
+                    )
                 ],
-                "additionalInfo": None,
-            }
+                additionalInfo=None,
+            )
 
             # Ensure each line is only reported once
             if node.lineno in used_lines:

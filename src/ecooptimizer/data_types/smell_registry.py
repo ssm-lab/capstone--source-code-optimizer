@@ -1,4 +1,6 @@
-from typing import Any, TypedDict
+from typing import Any, Callable, TypedDict
+
+from ..refactorers.base_refactorer import BaseRefactorer
 
 
 class SmellRegistry(TypedDict):
@@ -15,6 +17,7 @@ class SmellRegistry(TypedDict):
 
     id: str
     enabled: bool
-    analyzer_method: Any  # Could be str (for pylint) or Callable (for AST)
-    refactorer: type[Any]  # Refers to a class, not an instance
-    analyzer_options: dict[str, Any]
+    analyzer_method: str
+    checker: Callable | None  # type: ignore
+    refactorer: type[BaseRefactorer]  # Refers to a class, not an instance
+    analyzer_options: dict[str, Any]  # type: ignore

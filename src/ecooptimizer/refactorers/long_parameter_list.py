@@ -3,7 +3,7 @@ import astor
 import logging
 from pathlib import Path
 
-from ..data_wrappers.smell import LPLSmell
+from ..data_types.smell import LPLSmell
 from .base_refactorer import BaseRefactorer
 
 
@@ -16,7 +16,8 @@ class LongParameterListRefactorer(BaseRefactorer):
 
     def refactor(
         self,
-        input_file: Path,
+        target_file: Path,
+        source_dir: Path,  # noqa: ARG002
         smell: LPLSmell,
         output_file: Path,
         overwrite: bool = True,
@@ -27,13 +28,13 @@ class LongParameterListRefactorer(BaseRefactorer):
         # maximum limit on number of parameters beyond which the code smell is configured to be detected(see analyzers_config.py)
         max_param_limit = 6
 
-        with input_file.open() as f:
+        with target_file.open() as f:
             tree = ast.parse(f.read())
 
         # find the line number of target function indicated by the code smell object
-        target_line = smell["occurences"][0]["line"]
+        target_line = smell.occurences[0].line
         logging.info(
-            f"Applying 'Fix Too Many Parameters' refactor on '{input_file.name}' at line {target_line} for identified code smell."
+            f"Applying 'Fix Too Many Parameters' refactor on '{target_file.name}' at line {target_line} for identified code smell."
         )
         # use target_line to find function definition at the specific line for given code smell object
         for node in ast.walk(tree):
@@ -90,9 +91,15 @@ class LongParameterListRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.write(modified_source)
 
+        # CHANGE FOR MULTI FILE IMPLEMENTATION
         if overwrite:
-            with input_file.open("w") as f:
+            with target_file.open("w") as f:
                 f.write(modified_source)
+        else:
+            with output_file.open("w") as f:
+                f.writelines(modified_source)
+
+        self.modified_files.append(target_file)
 
 
 class ParameterAnalyzer:

@@ -4,40 +4,42 @@ from pathlib import Path
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
+from ..data_types.custom_fields import BasicAddInfo, BasicOccurence
+
 from .base_analyzer import Analyzer
-from ..data_wrappers.smell import Smell
+from ..data_types.smell import Smell
 
 
 class PylintAnalyzer(Analyzer):
     def build_smells(self, pylint_smells: dict):  # type: ignore
         """Casts inital list of pylint smells to the proper Smell configuration."""
-        smells: list[Smell] = []
+        smells: list[Smell[BasicOccurence, BasicAddInfo]] = []
         for smell in pylint_smells:
             smells.append(
-                {
-                    "confidence": smell["confidence"],
-                    "message": smell["message"],
-                    "messageId": smell["messageId"],
-                    "module": smell["module"],
-                    "obj": smell["obj"],
-                    "path": smell["absolutePath"],
-                    "symbol": smell["symbol"],
-                    "type": smell["type"],
-                    "occurences": [
-                        {
-                            "line": smell["line"],
-                            "endLine": smell["endLine"],
-                            "column": smell["column"],
-                            "endColumn": smell["endColumn"],
-                        }
+                # Initialize the SmellModel instance
+                Smell(
+                    confidence=smell["confidence"],
+                    message=smell["message"],
+                    messageId=smell["messageId"],
+                    module=smell["module"],
+                    obj=smell["obj"],
+                    path=smell["absolutePath"],
+                    symbol=smell["symbol"],
+                    type=smell["type"],
+                    occurences=[
+                        BasicOccurence(
+                            line=smell["line"],
+                            endLine=smell["endLine"],
+                            column=smell["column"],
+                            endColumn=smell["endColumn"],
+                        )
                     ],
-                    "additionalInfo": None,
-                }
+                )
             )
         return smells
 
-    def analyze(self, file_path: Path, extra_options: list[str]) -> list[Smell]:
-        smells_data: list[Smell] = []
+    def analyze(self, file_path: Path, extra_options: list[str]):
+        smells_data: list[Smell[BasicOccurence, BasicAddInfo]] = []
         pylint_options = [str(file_path), *extra_options]
 
         with StringIO() as buffer:

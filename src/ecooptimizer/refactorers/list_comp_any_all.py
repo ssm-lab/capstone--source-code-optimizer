@@ -2,9 +2,8 @@ import ast
 from pathlib import Path
 from asttokens import ASTTokens
 
-
 from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import LECSmell
+from ..data_types.smell import UGESmell
 
 
 class UseAGeneratorRefactorer(BaseRefactorer):
@@ -13,25 +12,26 @@ class UseAGeneratorRefactorer(BaseRefactorer):
 
     def refactor(
         self,
-        input_file: Path,
-        smell: LECSmell,
+        target_file: Path,
+        source_dir: Path,  # noqa: ARG002
+        smell: UGESmell,
         output_file: Path,
-        overwrite: bool = True,  # noqa: ARG002
+        overwrite: bool = True,
     ):
         """
         Refactors an unnecessary list comprehension by converting it to a generator expression.
         Modifies the specified instance in the file directly if it results in lower emissions.
         """
-        line_number = smell["occurences"][0]["line"]
-        start_column = smell["occurences"][0]["column"]
-        end_column = smell["occurences"][0]["endColumn"]
+        line_number = smell.occurences[0].line
+        start_column = smell.occurences[0].column
+        end_column = smell.occurences[0].endColumn
 
         print(
             f"[DEBUG] Starting refactor for line: {line_number}, columns {start_column}-{end_column}"
         )
 
         # Load the source file as a list of lines
-        with input_file.open() as file:
+        with target_file.open() as file:
             original_lines = file.readlines()
 
         # Check if the file ends with a newline
@@ -67,7 +67,7 @@ class UseAGeneratorRefactorer(BaseRefactorer):
             print(f"[DEBUG] Error while parsing stripped line: {e}")
             return
 
-        modified = False
+        # modified = False
 
         # Traverse the AST and locate the list comprehension at the specified column range
         for node in ast.walk(target_ast):
@@ -109,17 +109,16 @@ class UseAGeneratorRefactorer(BaseRefactorer):
 
                     print(f"[DEBUG] Refactored code: {refactored_code!r}")
                     original_lines[line_number - 1] = refactored_code
-                    modified = True
+                    # modified = True
                     break
                 else:
                     print(
                         f"[DEBUG] Node does not match the column range {start_column}-{end_column}"
                     )
 
-        if modified:
-            # Save the modified file
-            with output_file.open("w") as refactored_file:
-                refactored_file.writelines(original_lines)
-            print(f"[DEBUG] Refactored file saved to: {output_file}")
+        if overwrite:
+            with target_file.open("w") as f:
+                f.writelines(original_lines)
         else:
-            print("[DEBUG] No modifications made.")
+            with output_file.open("w") as f:
+                f.writelines(original_lines)

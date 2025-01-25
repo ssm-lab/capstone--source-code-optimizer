@@ -3,7 +3,8 @@ from pathlib import Path
 
 from ...utils.analyzers_config import CustomSmell
 
-from ...data_wrappers.smell import LLESmell
+from ...data_types.smell import LLESmell
+from ...data_types.custom_fields import BasicOccurence
 
 
 def detect_long_lambda_expression(
@@ -43,25 +44,26 @@ def detect_long_lambda_expression(
         # Check if the lambda expression exceeds the threshold based on the number of expressions
         if lambda_length >= threshold_count:
             message = f"Lambda function too long ({lambda_length}/{threshold_count} expressions)"
-            smell: LLESmell = {
-                "path": str(file_path),
-                "module": file_path.stem,
-                "obj": None,
-                "type": "convention",
-                "symbol": "long-lambda-expr",
-                "message": message,
-                "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
-                "confidence": "UNDEFINED",
-                "occurences": [
-                    {
-                        "line": node.lineno,
-                        "endLine": node.end_lineno,
-                        "column": node.col_offset,
-                        "endColumn": node.end_col_offset,
-                    }
+            # Initialize the Smell instance
+            smell = LLESmell(
+                path=str(file_path),
+                module=file_path.stem,
+                obj=None,
+                type="convention",
+                symbol="long-lambda-expr",
+                message=message,
+                messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
+                confidence="UNDEFINED",
+                occurences=[
+                    BasicOccurence(
+                        line=node.lineno,
+                        endLine=node.end_lineno,
+                        column=node.col_offset,
+                        endColumn=node.end_col_offset,
+                    )
                 ],
-                "additionalInfo": None,
-            }
+                additionalInfo=None,
+            )
 
             if node.lineno in used_lines:
                 return
@@ -74,25 +76,25 @@ def detect_long_lambda_expression(
             message = (
                 f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
             )
-            smell: LLESmell = {
-                "path": str(file_path),
-                "module": file_path.stem,
-                "obj": None,
-                "type": "convention",
-                "symbol": "long-lambda-expr",
-                "message": message,
-                "messageId": CustomSmell.LONG_LAMBDA_EXPR.value,
-                "confidence": "UNDEFINED",
-                "occurences": [
-                    {
-                        "line": node.lineno,
-                        "endLine": node.end_lineno,
-                        "column": node.col_offset,
-                        "endColumn": node.end_col_offset,
-                    }
+            smell = LLESmell(
+                path=str(file_path),
+                module=file_path.stem,
+                obj=None,
+                type="convention",
+                symbol="long-lambda-expr",
+                message=message,
+                messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
+                confidence="UNDEFINED",
+                occurences=[
+                    BasicOccurence(
+                        line=node.lineno,
+                        endLine=node.end_lineno,
+                        column=node.col_offset,
+                        endColumn=node.end_col_offset,
+                    )
                 ],
-                "additionalInfo": None,
-            }
+                additionalInfo=None,
+            )
 
             if node.lineno in used_lines:
                 return

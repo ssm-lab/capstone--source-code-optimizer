@@ -3,7 +3,8 @@ from pathlib import Path
 
 from ...utils.analyzers_config import CustomSmell
 
-from ...data_wrappers.smell import UVASmell
+from ...data_types.custom_fields import BasicOccurence
+from ...data_types.smell import UVASmell
 
 
 def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> list[UVASmell]:
@@ -94,25 +95,25 @@ def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> li
                 break
 
         # Create a Smell object for the unused variable or attribute
-        smell: UVASmell = {
-            "path": str(file_path),
-            "module": file_path.stem,
-            "obj": None,
-            "type": "convention",
-            "symbol": symbol,
-            "message": f"Unused variable or attribute '{var}'",
-            "messageId": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE.value,
-            "confidence": "UNDEFINED",
-            "occurences": [
-                {
-                    "line": line_no,
-                    "endLine": None,
-                    "column": column_no,
-                    "endColumn": None,
-                }
+        smell = UVASmell(
+            path=str(file_path),
+            module=file_path.stem,
+            obj=None,
+            type="convention",
+            symbol=symbol,
+            message=f"Unused variable or attribute '{var}'",
+            messageId=CustomSmell.UNUSED_VAR_OR_ATTRIBUTE.value,
+            confidence="UNDEFINED",
+            occurences=[
+                BasicOccurence(
+                    line=line_no,
+                    endLine=None,
+                    column=column_no,
+                    endColumn=None,
+                )
             ],
-            "additionalInfo": None,
-        }
+            additionalInfo=None,
+        )
 
         results.append(smell)
 

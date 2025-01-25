@@ -1,15 +1,14 @@
-import ast
 import logging
 from pathlib import Path
 import re
-from astroid import nodes, util, parse
+from astroid import nodes, util
 
-from ...data_wrappers.custom_fields import BasicOccurence
-from ...data_wrappers.smell import SCLSmell
+from ...data_types.custom_fields import BasicOccurence
+from ...data_types.smell import SCLSmell
 from ...utils.analyzers_config import CustomSmell
 
 
-def detect_string_concat_in_loop(file_path: Path, dummy: ast.Module):  # noqa: ARG001
+def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
     """
     Detects string concatenation inside loops within a Python AST tree.
 
@@ -31,23 +30,23 @@ def detect_string_concat_in_loop(file_path: Path, dummy: ast.Module):  # noqa: A
 
         if node.lineno and node.col_offset:
             smells.append(
-                {
-                    "path": str(file_path),
-                    "module": file_path.name,
-                    "obj": None,
-                    "type": "performance",
-                    "symbol": "string-concat-loop",
-                    "message": "String concatenation inside loop detected",
-                    "messageId": CustomSmell.STR_CONCAT_IN_LOOP.value,
-                    "confidence": "UNDEFINED",
-                    "occurences": [create_smell_occ(node)],
-                    "additionalInfo": {
+                SCLSmell(
+                    path=str(file_path),
+                    module=file_path.name,
+                    obj=None,
+                    type="performance",
+                    symbol="string-concat-loop",
+                    message="String concatenation inside loop detected",
+                    messageId=CustomSmell.STR_CONCAT_IN_LOOP.value,
+                    confidence="UNDEFINED",
+                    occurences=[create_smell_occ(node)],
+                    additionalInfo={
                         "innerLoopLine": current_loops[
                             current_smells[node.targets[0].as_string()][1]
                         ].lineno,  # type: ignore
                         "concatTarget": node.targets[0].as_string(),
                     },
-                }
+                )
             )
 
     def create_smell_occ(node: nodes.Assign | nodes.AugAssign) -> BasicOccurence:
@@ -110,10 +109,8 @@ def detect_string_concat_in_loop(file_path: Path, dummy: ast.Module):  # noqa: A
                     value, target
                 ):
                     smell_id = current_smells[target.as_string()][0]
-                    logging.debug(
-                        f"Related to smell at line {smells[smell_id]['occurences'][0]['line']}"
-                    )
-                    smells[smell_id]["occurences"].append(create_smell_occ(node))
+                    logging.debug(f"Related to smell at line {smells[smell_id].occurences[0].line}")
+                    smells[smell_id].occurences.append(create_smell_occ(node))
         else:
             for child in node.get_children():
                 visit(child)
@@ -254,7 +251,6 @@ def detect_string_concat_in_loop(file_path: Path, dummy: ast.Module):  # noqa: A
         return "\n".join(str_code)
 
     # Start traversal
-    tree = parse(transform_augassign_to_assign(file_path.read_text()))
     for child in tree.get_children():
         visit(child)
 

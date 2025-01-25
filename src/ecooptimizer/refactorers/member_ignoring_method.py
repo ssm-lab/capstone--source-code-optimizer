@@ -5,7 +5,7 @@ import ast
 from ast import NodeTransformer
 
 from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import MIMSmell
+from ..data_types.smell import MIMSmell
 
 
 class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
@@ -21,7 +21,8 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
 
     def refactor(
         self,
-        input_file: Path,
+        target_file: Path,
+        source_dir: Path,  # noqa: ARG002
         smell: MIMSmell,
         output_file: Path,
         overwrite: bool = True,
@@ -29,18 +30,18 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         """
         Perform refactoring
 
-        :param input_file: absolute path to source code
+        :param target_file: absolute path to source code
         :param smell: pylint code for smell
         :param initial_emission: inital carbon emission prior to refactoring
         """
-        self.target_line = smell["occurences"][0]["line"]
+        self.target_line = smell.occurences[0].line
         logging.info(
-            f"Applying 'Make Method Static' refactor on '{input_file.name}' at line {self.target_line} for identified code smell."
+            f"Applying 'Make Method Static' refactor on '{target_file.name}' at line {self.target_line} for identified code smell."
         )
         # Parse the code into an AST
-        source_code = input_file.read_text()
+        source_code = target_file.read_text()
         logging.debug(source_code)
-        tree = ast.parse(source_code, input_file)
+        tree = ast.parse(source_code, target_file)
 
         # Apply the transformation
         modified_tree = self.visit(tree)
@@ -52,7 +53,7 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
 
         temp_file_path.write_text(modified_code)
         if overwrite:
-            input_file.write_text(modified_code)
+            target_file.write_text(modified_code)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 

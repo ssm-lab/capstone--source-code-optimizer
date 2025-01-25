@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 import re
 from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import LLESmell
+from ..data_types.smell import LLESmell
 
 
 class LongLambdaFunctionRefactorer(BaseRefactorer):
@@ -37,7 +37,8 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
 
     def refactor(
         self,
-        input_file: Path,
+        target_file: Path,
+        source_dir: Path,  # noqa: ARG002
         smell: LLESmell,
         output_file: Path,
         overwrite: bool = True,
@@ -47,15 +48,15 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
         and writing the refactored code to a new file.
         """
         # Extract details from smell
-        line_number = smell["occurences"][0]["line"]
+        line_number = smell.occurences[0].line
         temp_filename = output_file
 
         logging.info(
-            f"Applying 'Lambda to Function' refactor on '{input_file.name}' at line {line_number} for identified code smell."
+            f"Applying 'Lambda to Function' refactor on '{target_file.name}' at line {line_number} for identified code smell."
         )
 
         # Read the original file
-        with input_file.open() as f:
+        with target_file.open() as f:
             lines = f.readlines()
 
         # Capture the entire logical line containing the lambda
@@ -136,7 +137,12 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
             temp_file.writelines(lines)
 
         if overwrite:
-            with input_file.open("w") as f:
+            with target_file.open("w") as f:
                 f.writelines(lines)
+        else:
+            with output_file.open("w") as f:
+                f.writelines(lines)
+
+        self.modified_files.append(target_file)
 
         logging.info(f"Refactoring completed and saved to: {temp_filename}")

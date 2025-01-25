@@ -5,7 +5,7 @@ import ast
 from typing import Any
 
 from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import LECSmell
+from ..data_types.smell import LECSmell
 
 
 class LongElementChainRefactorer(BaseRefactorer):
@@ -112,16 +112,17 @@ class LongElementChainRefactorer(BaseRefactorer):
 
     def refactor(
         self,
-        input_file: Path,
+        target_file: Path,
+        source_dir: Path,  # noqa: ARG002
         smell: LECSmell,
         output_file: Path,
         overwrite: bool = True,
     ):
         """Refactor long element chains using the most appropriate strategy."""
-        line_number = smell["occurences"][0]["line"]
+        line_number = smell.occurences[0].line
         temp_filename = output_file
 
-        with input_file.open() as f:
+        with target_file.open() as f:
             content = f.read()
             lines = content.splitlines(keepends=True)
             tree = ast.parse(content)
@@ -179,8 +180,14 @@ class LongElementChainRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as temp_file:
             temp_file.writelines(new_lines)
 
+        # CHANGE FOR MULTI FILE IMPLEMENTATION
         if overwrite:
-            with input_file.open("w") as f:
+            with target_file.open("w") as f:
                 f.writelines(new_lines)
+        else:
+            with output_file.open("w") as f:
+                f.writelines(new_lines)
+
+        self.modified_files.append(target_file)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

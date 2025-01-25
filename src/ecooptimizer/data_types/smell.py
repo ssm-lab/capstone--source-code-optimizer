@@ -1,10 +1,27 @@
-from typing import Any, TypedDict
+from pydantic import BaseModel
+from typing import Generic, TypeVar
 
 
-from .custom_fields import BasicOccurence, CRCAddInfo, CRCOccurence, SCLAddInfo
+from .custom_fields import (
+    BasicAddInfo,
+    BasicOccurence,
+    CRCInfo,
+    CRCOccurence,
+    LECInfo,
+    LLEInfo,
+    LMCInfo,
+    LPLInfo,
+    MIMInfo,
+    SCLInfo,
+    UGEInfo,
+    UVAInfo,
+)
+
+O = TypeVar("O", bound=BasicOccurence)  # noqa: E741
+A = TypeVar("A", bound=BasicAddInfo)
 
 
-class Smell(TypedDict):
+class Smell(BaseModel, Generic[O, A]):
     """
     Represents a code smell detected in a source file, including its location, type, and related metadata.
 
@@ -18,7 +35,7 @@ class Smell(TypedDict):
         symbol (str): The symbol or code construct (e.g., variable, method) involved in the smell.
         type (str): The type or category of the smell (e.g., "complexity", "duplication").
         occurences (list): A list of individual occurences of a same smell, contains positional info.
-        additionalInfo (Any): Any custom information for a type of smell
+        additionalInfo (Any): (Optional) Any custom information for a type of smell
     """
 
     confidence: str
@@ -29,50 +46,16 @@ class Smell(TypedDict):
     path: str
     symbol: str
     type: str
-    occurences: list[Any]
-    additionalInfo: Any
+    occurences: list[O]
+    additionalInfo: A | None = None  # type: ignore
 
 
-class CRCSmell(Smell):
-    occurences: list[CRCOccurence]
-    additionalInfo: CRCAddInfo
-
-
-class SCLSmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: SCLAddInfo
-
-
-class LECSmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: None
-
-
-class LLESmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: None
-
-
-class LMCSmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: None
-
-
-class LPLSmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: None
-
-
-class UVASmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: None
-
-
-class MIMSmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: None
-
-
-class UGESmell(Smell):
-    occurences: list[BasicOccurence]
-    additionalInfo: None
+CRCSmell = Smell[CRCOccurence, CRCInfo]
+SCLSmell = Smell[BasicOccurence, SCLInfo]
+LECSmell = Smell[BasicOccurence, LECInfo]
+LLESmell = Smell[BasicOccurence, LLEInfo]
+LMCSmell = Smell[BasicOccurence, LMCInfo]
+LPLSmell = Smell[BasicOccurence, LPLInfo]
+UVASmell = Smell[BasicOccurence, UVAInfo]
+MIMSmell = Smell[BasicOccurence, MIMInfo]
+UGESmell = Smell[BasicOccurence, UGEInfo]

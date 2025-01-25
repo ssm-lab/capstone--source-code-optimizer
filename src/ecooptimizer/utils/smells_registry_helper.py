@@ -1,9 +1,9 @@
-import ast
-from pathlib import Path
 from typing import Any, Callable
 
-from ..data_wrappers.smell import Smell
-from ..data_wrappers.smell_registry import SmellRegistry
+from ..utils.analyzers_config import CustomSmell, PylintSmell
+
+from ..data_types.smell import Smell
+from ..data_types.smell_registry import SmellRegistry
 
 
 def filter_smells_by_method(
@@ -12,42 +12,46 @@ def filter_smells_by_method(
     filtered = {
         name: smell
         for name, smell in smell_registry.items()
-        if smell["enabled"]
-        and (
-            (method == "pylint" and smell["analyzer_method"] == "pylint")
-            or (method == "ast" and callable(smell["analyzer_method"]))
-        )
+        if smell["enabled"] and (method == smell["analyzer_method"])
     }
     return filtered
 
 
+def filter_smells_by_id(smells: list[Smell]):  # type: ignore
+    all_smell_ids = [
+        *[smell.value for smell in CustomSmell],
+        *[smell.value for smell in PylintSmell],
+    ]
+    return [smell for smell in smells if smell.messageId in all_smell_ids]
+
+
 def generate_pylint_options(filtered_smells: dict[str, SmellRegistry]) -> list[str]:
-    pylint_smell_ids = []
+    pylint_smell_symbols = []
     extra_pylint_options = [
         "--disable=all",
     ]
 
-    for smell in filtered_smells.values():
-        pylint_smell_ids.append(smell["id"])
+    for symbol, smell in zip(filtered_smells.keys(), filtered_smells.values()):
+        pylint_smell_symbols.append(symbol)
 
-        if smell.get("analyzer_options"):
+        if len(smell["analyzer_options"]) > 0:
             for param_data in smell["analyzer_options"].values():
                 flag = param_data["flag"]
                 value = param_data["value"]
                 if value:
                     extra_pylint_options.append(f"{flag}={value}")
 
-    extra_pylint_options.append(f"--enable={','.join(pylint_smell_ids)}")
+    extra_pylint_options.append(f"--enable={','.join(pylint_smell_symbols)}")
     return extra_pylint_options
 
 
-def generate_ast_options(
+def generate_custom_options(
     filtered_smells: dict[str, SmellRegistry],
-) -> list[tuple[Callable[[Path, ast.AST], list[Smell]], dict[str, Any]]]:
+) -> list[tuple[Callable, dict[str, Any]]]:  # type: ignore
     ast_options = []
     for smell in filtered_smells.values():
-        method = smell["analyzer_method"]
-        options = smell.get("analyzer_options", {})
+        method = smell["checker"]
+        options = smell["analyzer_options"]
         ast_options.append((method, options))
 
     return ast_options

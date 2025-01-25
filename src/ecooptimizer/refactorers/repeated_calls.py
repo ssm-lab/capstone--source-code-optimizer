@@ -2,7 +2,7 @@ import ast
 import logging
 from pathlib import Path
 
-from ..data_wrappers.smell import CRCSmell
+from ..data_types.smell import CRCSmell
 
 from .base_refactorer import BaseRefactorer
 
@@ -17,7 +17,8 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
 
     def refactor(
         self,
-        input_file: Path,
+        target_file: Path,
+        source_dir: Path,  # noqa: ARG002
         smell: CRCSmell,
         output_file: Path,
         overwrite: bool = True,
@@ -25,13 +26,13 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         """
         Refactor the repeated function call smell and save to a new file.
         """
-        self.input_file = input_file
+        self.target_file = target_file
         self.smell = smell
 
-        self.cached_var_name = "cached_" + self.smell["occurences"][0]["call_string"].split("(")[0]
+        self.cached_var_name = "cached_" + self.smell.occurences[0].call_string.split("(")[0]
 
-        print(f"Reading file: {self.input_file}")
-        with self.input_file.open("r") as file:
+        print(f"Reading file: {self.target_file}")
+        with self.target_file.open("r") as file:
             lines = file.readlines()
 
         # Parse the AST
@@ -47,7 +48,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         # Determine the insertion point for the cached variable
         insert_line = self._find_insert_line(parent_node)
         indent = self._get_indentation(lines, insert_line)
-        cached_assignment = f"{indent}{self.cached_var_name} = {self.smell['occurences'][0]['call_string'].strip()}\n"
+        cached_assignment = (
+            f"{indent}{self.cached_var_name} = {self.smell.occurences[0].call_string.strip()}\n"
+        )
         print(f"Inserting cached variable at line {insert_line}: {cached_assignment.strip()}")
 
         # Insert the cached variable into the source lines
@@ -55,16 +58,16 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         line_shift = 1  # Track the shift in line numbers caused by the insertion
 
         # Replace calls with the cached variable in the affected lines
-        for occurrence in self.smell["occurences"]:
-            adjusted_line_index = occurrence["line"] - 1 + line_shift
+        for occurrence in self.smell.occurences:
+            adjusted_line_index = occurrence.line - 1 + line_shift
             original_line = lines[adjusted_line_index]
-            call_string = occurrence["call_string"].strip()
-            print(f"Processing occurrence at line {occurrence['line']}: {original_line.strip()}")
+            call_string = occurrence.call_string.strip()
+            print(f"Processing occurrence at line {occurrence.line}: {original_line.strip()}")
             updated_line = self._replace_call_in_line(
                 original_line, call_string, self.cached_var_name
             )
             if updated_line != original_line:
-                print(f"Updated line {occurrence['line']}: {updated_line.strip()}")
+                print(f"Updated line {occurrence.line}: {updated_line.strip()}")
                 lines[adjusted_line_index] = updated_line
 
         # Save the modified file
@@ -73,9 +76,15 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         with temp_file_path.open("w") as refactored_file:
             refactored_file.writelines(lines)
 
+        # CHANGE FOR MULTI FILE IMPLEMENTATION
         if overwrite:
-            with input_file.open("w") as f:
+            with target_file.open("w") as f:
                 f.writelines(lines)
+        else:
+            with output_file.open("w") as f:
+                f.writelines(lines)
+
+        self.modified_files.append(target_file)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 
@@ -113,9 +122,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         candidate_parent = None
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.Module)):
-                if all(
-                    self._line_in_node_body(node, occ["line"]) for occ in self.smell["occurences"]
-                ):
+                if all(self._line_in_node_body(node, occ.line) for occ in self.smell.occurences):
                     candidate_parent = node
         if candidate_parent:
             print(

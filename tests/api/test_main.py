@@ -1,5 +1,5 @@
 # from fastapi.testclient import TestClient
-# from src.ecooptimizer.api.main import app
+# from ecooptimizer.api.main import app
 
 # client = TestClient(app)
 

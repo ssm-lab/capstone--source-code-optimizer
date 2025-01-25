@@ -6,7 +6,7 @@ import astroid
 from astroid import nodes
 
 from .base_refactorer import BaseRefactorer
-from ..data_wrappers.smell import SCLSmell
+from ..data_types.smell import SCLSmell
 
 
 class UseListAccumulationRefactorer(BaseRefactorer):
@@ -29,7 +29,8 @@ class UseListAccumulationRefactorer(BaseRefactorer):
 
     def refactor(
         self,
-        input_file: Path,
+        target_file: Path,
+        source_dir: Path,  # noqa: ARG002
         smell: SCLSmell,
         output_file: Path,
         overwrite: bool = True,
@@ -37,16 +38,20 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         """
         Refactor string concatenations in loops to use list accumulation and join
 
-        :param input_file: absolute path to source code
+        :param target_file: absolute path to source code
         :param smell: pylint code for smell
         :param initial_emission: inital carbon emission prior to refactoring
         """
-        self.target_lines = [occ["line"] for occ in smell["occurences"]]
-        self.assign_var = smell["additionalInfo"]["concatTarget"]
-        self.outer_loop_line = smell["additionalInfo"]["innerLoopLine"]
+        self.target_lines = [occ.line for occ in smell.occurences]
+
+        if not smell.additionalInfo:
+            raise RuntimeError("Missing additional info for 'string-concat-loop' smell")
+
+        self.assign_var = smell.additionalInfo.concatTarget
+        self.outer_loop_line = smell.additionalInfo.innerLoopLine
 
         logging.info(
-            f"Applying 'Use List Accumulation' refactor on '{input_file.name}' at line {self.target_lines[0]} for identified code smell."
+            f"Applying 'Use List Accumulation' refactor on '{target_file.name}' at line {self.target_lines[0]} for identified code smell."
         )
         logging.debug(f"target_lines: {self.target_lines}")
         print(f"target_lines: {self.target_lines}")
@@ -55,7 +60,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         print(f"outer line: {self.outer_loop_line}")
 
         # Parse the code into an AST
-        source_code = input_file.read_text()
+        source_code = target_file.read_text()
         tree = astroid.parse(source_code)
         for node in tree.get_children():
             self.visit(node)
@@ -84,8 +89,11 @@ class UseListAccumulationRefactorer(BaseRefactorer):
 
         temp_file_path.write_text(modified_code)
         if overwrite:
-            input_file.write_text(modified_code)
+            target_file.write_text(modified_code)
+        else:
+            output_file.write_text(modified_code)
 
+        self.modified_files.append(target_file)
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 
     def visit(self, node: nodes.NodeNG):
