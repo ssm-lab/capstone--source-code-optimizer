@@ -1,12 +1,11 @@
-import ast
 from pathlib import Path
 import py_compile
 import re
 import textwrap
 import pytest
 
-from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
-from ecooptimizer.data_wrappers.smell import MIMSmell
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
+from ecooptimizer.data_types.smell import MIMSmell
 from ecooptimizer.refactorers.member_ignoring_method import MakeStaticRefactorer
 from ecooptimizer.utils.analyzers_config import PylintSmell
 
@@ -39,51 +38,40 @@ def MIM_code(source_files: Path):
 
 @pytest.fixture(autouse=True)
 def get_smells(MIM_code) -> list[MIMSmell]:
-    analyzer = PylintAnalyzer(MIM_code, ast.parse(MIM_code.read_text()))
-    analyzer.analyze()
-    analyzer.configure_smells()
+    analyzer = AnalyzerController()
+    smells = analyzer.run_analysis(MIM_code)
 
-    return [
-        smell
-        for smell in analyzer.smells_data
-        if smell["messageId"] == PylintSmell.NO_SELF_USE.value
-    ]
+    return [smell for smell in smells if smell.messageId == PylintSmell.NO_SELF_USE.value]
 
 
 def test_member_ignoring_method_detection(get_smells, MIM_code: Path):
     smells: list[MIMSmell] = get_smells
 
-    # Filter for long lambda smells
-
     assert len(smells) == 1
-    assert smells[0]["symbol"] == "no-self-use"
-    assert smells[0]["messageId"] == "R6301"
-    assert smells[0]["occurences"][0]["line"] == 9
-    assert smells[0]["module"] == MIM_code.stem
+    assert smells[0].symbol == "no-self-use"
+    assert smells[0].messageId == "R6301"
+    assert smells[0].occurences[0].line == 9
+    assert smells[0].module == MIM_code.stem
 
 
-def test_mim_refactoring(get_smells, MIM_code: Path, output_dir: Path):
+def test_mim_refactoring(get_smells, MIM_code: Path, source_files: Path, output_dir: Path):
     smells: list[MIMSmell] = get_smells
 
     # Instantiate the refactorer
-    refactorer = MakeStaticRefactorer(output_dir)
+    refactorer = MakeStaticRefactorer()
 
     # Apply refactoring to each smell
     for smell in smells:
-        refactorer.refactor(MIM_code, smell, overwrite=False)
+        output_file = output_dir / f"{MIM_code.stem}_MIMR_{smell.occurences[0].line}.py"
+        refactorer.refactor(MIM_code, source_files, smell, output_file, overwrite=False)
 
-        # Verify the refactored file exists and contains expected changes
-        refactored_file = refactorer.temp_dir / Path(
-            f"{MIM_code.stem}_MIMR_line_{smell['occurences'][0]['line']}.py"
-        )
+        refactored_lines = output_file.read_text().splitlines()
 
-        refactored_lines = refactored_file.read_text().splitlines()
-
-        assert refactored_file.exists()
+        assert output_file.exists()
 
         # Check that the refactored file compiles
-        py_compile.compile(str(refactored_file), doraise=True)
+        py_compile.compile(str(output_file), doraise=True)
 
-        method_line = smell["occurences"][0]["line"] - 1
+        method_line = smell.occurences[0].line - 1
         assert refactored_lines[method_line].find("@staticmethod") != -1
         assert re.search(r"(\s*\bself\b\s*)", refactored_lines[method_line + 1]) is None

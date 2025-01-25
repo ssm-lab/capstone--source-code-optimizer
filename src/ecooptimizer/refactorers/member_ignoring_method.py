@@ -8,6 +8,32 @@ from .base_refactorer import BaseRefactorer
 from ..data_types.smell import MIMSmell
 
 
+class CallTransformer(NodeTransformer):
+    def __init__(self, mim_method: str, mim_class: str):
+        super().__init__()
+        self.mim_method = mim_method
+        self.mim_class = mim_class
+        self.transformed = False
+
+    def reset(self):
+        self.transformed = False
+
+    def visit_Call(self, node: ast.Call):
+        logging.debug("visiting Call")
+
+        if isinstance(node.func, ast.Attribute) and node.func.attr == self.mim_method:
+            if isinstance(node.func.value, ast.Name):
+                logging.debug("Modifying Call")
+                attr = ast.Attribute(
+                    value=ast.Name(id=self.mim_class, ctx=ast.Load()),
+                    attr=node.func.attr,
+                    ctx=ast.Load(),
+                )
+                self.transformed = True
+                return ast.Call(func=attr, args=node.args, keywords=node.keywords)
+        return node
+
+
 class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
     """
     Refactorer that targets methods that don't use any class attributes and makes them static to improve performance
@@ -22,10 +48,10 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
     def refactor(
         self,
         target_file: Path,
-        source_dir: Path,  # noqa: ARG002
+        source_dir: Path,
         smell: MIMSmell,
-        output_file: Path,
-        overwrite: bool = True,
+        output_file: Path,  # noqa: ARG002
+        overwrite: bool = True,  # noqa: ARG002
     ):
         """
         Perform refactoring
@@ -46,16 +72,35 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         # Apply the transformation
         modified_tree = self.visit(tree)
 
-        # Convert the modified AST back to source code
-        modified_code = astor.to_source(modified_tree)
+        target_file.write_text(astor.to_source(modified_tree))
 
-        temp_file_path = output_file
+        transformer = CallTransformer(self.mim_method, self.mim_method_class)
 
-        temp_file_path.write_text(modified_code)
-        if overwrite:
-            target_file.write_text(modified_code)
+        self._refactor_files(source_dir, transformer)
 
-        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
+        # temp_file_path = output_file
+
+        # temp_file_path.write_text(modified_code)
+        # if overwrite:
+        #     target_file.write_text(modified_code)
+
+        logging.info(
+            f"Refactoring completed for the following files: {[target_file, *self.modified_files]}"
+        )
+
+    def _refactor_files(self, directory: Path, transformer: CallTransformer):
+        for item in directory.iterdir():
+            logging.debug(f"Refactoring {item!s}")
+            if item.is_dir():
+                self._refactor_files(item, transformer)
+            elif item.is_file():
+                if item.suffix == ".py":
+                    modified_file = transformer.visit(ast.parse(item.read_text()))
+                    if transformer.transformed:
+                        self.modified_files.append(item)
+
+                        item.write_text(astor.to_source(modified_file))
+                        transformer.reset()
 
     def visit_FunctionDef(self, node: ast.FunctionDef):
         logging.debug(f"visiting FunctionDef {node.name} line {node.lineno}")
@@ -96,17 +141,4 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
             logging.debug("Getting class name")
             self.mim_method_class = node.name
             self.generic_visit(node)
-        return node
-
-    def visit_Call(self, node: ast.Call):
-        logging.debug("visiting Call")
-        if isinstance(node.func, ast.Attribute) and node.func.attr == self.mim_method:
-            if isinstance(node.func.value, ast.Name):
-                logging.debug("Modifying Call")
-                attr = ast.Attribute(
-                    value=ast.Name(id=self.mim_method_class, ctx=ast.Load()),
-                    attr=node.func.attr,
-                    ctx=ast.Load(),
-                )
-                return ast.Call(func=attr, args=node.args, keywords=node.keywords)
         return node

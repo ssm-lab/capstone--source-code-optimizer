@@ -1,10 +1,9 @@
-import ast
 from pathlib import Path
 import textwrap
 import pytest
 
-from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
-from ecooptimizer.data_wrappers.smell import CRCSmell
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
+from ecooptimizer.data_types.smell import CRCSmell
 from ecooptimizer.utils.analyzers_config import CustomSmell
 # from ecooptimizer.refactorers.repeated_calls import CacheRepeatedCallsRefactorer
 
@@ -36,26 +35,28 @@ def crc_code(source_files: Path):
 
 @pytest.fixture(autouse=True)
 def get_smells(crc_code):
-    analyzer = PylintAnalyzer(crc_code, ast.parse(crc_code.read_text()))
-    analyzer.analyze()
-    analyzer.configure_smells()
+    analyzer = AnalyzerController()
 
-    return analyzer.smells_data
+    return analyzer.run_analysis(crc_code)
 
 
 def test_cached_repeated_calls_detection(get_smells, crc_code: Path):
     smells: list[CRCSmell] = get_smells
 
     # Filter for cached repeated calls smells
-    crc_smells: list[CRCSmell] = [smell for smell in smells if smell["messageId"] == "CRC001"]
+    crc_smells: list[CRCSmell] = [
+        smell for smell in smells if smell.messageId == CustomSmell.CACHE_REPEATED_CALLS.value
+    ]
 
     assert len(crc_smells) == 1
-    assert crc_smells[0]["symbol"] == "cached-repeated-calls"
-    assert crc_smells[0]["messageId"] == CustomSmell.CACHE_REPEATED_CALLS.value
-    assert crc_smells[0]["occurences"][0]["line"] == 11
-    assert crc_smells[0]["occurences"][1]["line"] == 12
-    assert crc_smells[0]["module"] == crc_code.stem
+    assert crc_smells[0].symbol == "cached-repeated-calls"
+    assert crc_smells[0].messageId == CustomSmell.CACHE_REPEATED_CALLS.value
+    assert crc_smells[0].occurences[0].line == 11
+    assert crc_smells[0].occurences[1].line == 12
+    assert crc_smells[0].module == crc_code.stem
 
+
+# Whenever you uncomment this, will need to fix the test
 
 # def test_cached_repeated_calls_refactoring(get_smells, crc_code: Path, output_dir: Path):
 #     smells: list[CRCSmell] = get_smells

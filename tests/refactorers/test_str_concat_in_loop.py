@@ -1,11 +1,10 @@
-import ast
 from pathlib import Path
 import py_compile
 import textwrap
 import pytest
 
-from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
-from ecooptimizer.data_wrappers.smell import SCLSmell
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
+from ecooptimizer.data_types.smell import SCLSmell
 from ecooptimizer.refactorers.str_concat_in_loop import (
     UseListAccumulationRefactorer,
 )
@@ -117,14 +116,10 @@ def str_concat_loop_code(source_files: Path):
 
 @pytest.fixture
 def get_smells(str_concat_loop_code) -> list[SCLSmell]:
-    analyzer = PylintAnalyzer(str_concat_loop_code, ast.parse(str_concat_loop_code.read_text()))
-    analyzer.analyze()
-    analyzer.configure_smells()
-    return [
-        smell
-        for smell in analyzer.smells_data
-        if smell["messageId"] == CustomSmell.STR_CONCAT_IN_LOOP.value
-    ]
+    analyzer = AnalyzerController()
+    smells = analyzer.run_analysis(str_concat_loop_code)
+
+    return [smell for smell in smells if smell.messageId == CustomSmell.STR_CONCAT_IN_LOOP.value]
 
 
 def test_str_concat_in_loop_detection(get_smells):
@@ -147,32 +142,32 @@ def test_str_concat_in_loop_detection(get_smells):
         73,
         79,
     }  # Update based on actual line numbers of long lambdas
-    detected_lines = {smell["occurences"][0]["line"] for smell in smells}
+    detected_lines = {smell.occurences[0].line for smell in smells}
     assert detected_lines == expected_lines
 
 
-def test_scl_refactoring(get_smells, str_concat_loop_code: Path, output_dir: Path):
+def test_scl_refactoring(
+    get_smells, str_concat_loop_code: Path, source_files: Path, output_dir: Path
+):
     smells: list[SCLSmell] = get_smells
 
     # Instantiate the refactorer
-    refactorer = UseListAccumulationRefactorer(output_dir)
+    refactorer = UseListAccumulationRefactorer()
 
     # Apply refactoring to each smell
     for smell in smells:
-        refactorer.refactor(str_concat_loop_code, smell, overwrite=False)
+        output_file = output_dir / f"{str_concat_loop_code.stem}_SCLR_{smell.occurences[0].line}.py"
+        refactorer.refactor(str_concat_loop_code, source_files, smell, output_file, overwrite=False)
         refactorer.reset()
 
-    for smell in smells:
-        # Verify the refactored file exists and contains expected changes
-        refactored_file = refactorer.temp_dir / Path(
-            f"{str_concat_loop_code.stem}_SCLR_line_{smell['occurences'][0]['line']}.py"
-        )
-        assert refactored_file.exists()
+        assert output_file.exists()
 
-        py_compile.compile(str(refactored_file), doraise=True)
+        py_compile.compile(str(output_file), doraise=True)
 
     num_files = 0
+
     refac_code_dir = output_dir / "refactored_source"
+
     for file in refac_code_dir.iterdir():
         if file.stem.startswith("str_concat_loop_code_SCLR_line"):
             num_files += 1
