@@ -2,17 +2,12 @@ import ast
 from pathlib import Path
 import textwrap
 import pytest
-from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+from ecooptimizer.data_types.custom_fields import BasicOccurence
+from ecooptimizer.data_types.smell import LECSmell
 from ecooptimizer.refactorers.long_element_chain import (
     LongElementChainRefactorer,
 )
-
-
-def get_smells(code: Path):
-    analyzer = PylintAnalyzer(code, ast.parse(code.read_text()))
-    analyzer.analyze()
-    analyzer.configure_smells()
-    return analyzer.smells_data
+from ecooptimizer.utils.analyzers_config import CustomSmell
 
 
 @pytest.fixture(scope="module")
@@ -21,17 +16,8 @@ def source_files(tmp_path_factory):
 
 
 @pytest.fixture
-def refactorer(output_dir):
-    return LongElementChainRefactorer(output_dir)
-
-
-@pytest.fixture
-def mock_smell():
-    return {
-        "message": "Long element chain detected",
-        "messageId": "long-element-chain",
-        "occurences": [{"line": 25, "column": 0}],
-    }
+def refactorer():
+    return LongElementChainRefactorer()
 
 
 @pytest.fixture
@@ -75,6 +61,29 @@ def nested_dict_code(source_files: Path):
     return file
 
 
+@pytest.fixture
+def mock_smell(nested_dict_code: Path, request):
+    return LECSmell(
+        path=str(nested_dict_code),
+        module=nested_dict_code.stem,
+        obj=None,
+        type="convention",
+        symbol="long-element-chain",
+        message="Detected long element chain",
+        messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+        confidence="UNDEFINED",
+        occurences=[
+            BasicOccurence(
+                line=request.param,
+                endLine=None,
+                column=0,
+                endColumn=None,
+            )
+        ],
+        additionalInfo=None,
+    )
+
+
 def test_dict_flattening(refactorer):
     """Test the dictionary flattening functionality"""
     nested_dict = {"level1": {"level2": {"level3": {"key": "value"}}}}
@@ -103,15 +112,23 @@ def test_dict_reference_collection(refactorer, nested_dict_code: Path):
     assert len(reference_map[nested_dict2_pattern]) == 1
 
 
-def test_nested_dict1_refactor(refactorer, nested_dict_code: Path, mock_smell):
+@pytest.mark.parametrize("mock_smell", [(25)], indirect=["mock_smell"])
+def test_nested_dict1_refactor(
+    refactorer,
+    nested_dict_code: Path,
+    mock_smell: LECSmell,
+    source_files,
+    output_dir,
+):
     """Test the complete refactoring process"""
     initial_content = nested_dict_code.read_text()
 
     # Perform refactoring
-    refactorer.refactor(nested_dict_code, mock_smell, overwrite=False)
+    output_file = output_dir / f"{nested_dict_code.stem}_LECR_{mock_smell.occurences[0].line}.py"
+    refactorer.refactor(nested_dict_code, source_files, mock_smell, output_file, overwrite=False)
 
     # Find the refactored file
-    refactored_files = list(refactorer.temp_dir.glob(f"{nested_dict_code.stem}_LECR_*.py"))
+    refactored_files = list(output_dir.glob(f"{nested_dict_code.stem}_LECR_*.py"))
     assert len(refactored_files) > 0
 
     refactored_content = refactored_files[0].read_text()
@@ -128,15 +145,23 @@ def test_nested_dict1_refactor(refactorer, nested_dict_code: Path, mock_smell):
     )
 
 
-def test_nested_dict2_refactor(refactorer, nested_dict_code: Path, mock_smell):
+@pytest.mark.parametrize("mock_smell", [(26)], indirect=["mock_smell"])
+def test_nested_dict2_refactor(
+    refactorer,
+    nested_dict_code: Path,
+    mock_smell: LECSmell,
+    source_files,
+    output_dir,
+):
     """Test the complete refactoring process"""
     initial_content = nested_dict_code.read_text()
-    mock_smell["occurences"][0]["line"] = 26
+
     # Perform refactoring
-    refactorer.refactor(nested_dict_code, mock_smell, overwrite=False)
+    output_file = output_dir / f"{nested_dict_code.stem}_LECR_{mock_smell.occurences[0].line}.py"
+    refactorer.refactor(nested_dict_code, source_files, mock_smell, output_file, overwrite=False)
 
     # Find the refactored file
-    refactored_files = list(refactorer.temp_dir.glob(f"{nested_dict_code.stem}_LECR_*.py"))
+    refactored_files = list(output_dir.glob(f"{nested_dict_code.stem}_LECR_*.py"))
     assert len(refactored_files) > 0
 
     refactored_content = refactored_files[0].read_text()

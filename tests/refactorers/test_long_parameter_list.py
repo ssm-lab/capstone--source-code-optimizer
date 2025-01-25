@@ -1,26 +1,27 @@
+import pytest
 from pathlib import Path
-import ast
-from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
-from ecooptimizer.data_wrappers.smell import LPLSmell
+
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
+from ecooptimizer.data_types.smell import LPLSmell
 from ecooptimizer.refactorers.long_parameter_list import LongParameterListRefactorer
 from ecooptimizer.utils.analyzers_config import PylintSmell
 
 TEST_INPUT_FILE = (Path(__file__).parent / "../input/long_param.py").resolve()
 
 
-def get_smells(code: Path):
-    analyzer = PylintAnalyzer(code, ast.parse(code.read_text()))
-    analyzer.analyze()
-    analyzer.configure_smells()
-    return analyzer.smells_data
+@pytest.fixture(autouse=True)
+def get_smells():
+    analyzer = AnalyzerController()
+
+    return analyzer.run_analysis(TEST_INPUT_FILE)
 
 
-def test_long_param_list_detection():
-    smells = get_smells(TEST_INPUT_FILE)
+def test_long_param_list_detection(get_smells):
+    smells = get_smells
 
     # filter out long lambda smells from all calls
     long_param_list_smells: list[LPLSmell] = [
-        smell for smell in smells if smell["messageId"] == PylintSmell.LONG_PARAMETER_LIST.value
+        smell for smell in smells if smell.messageId == PylintSmell.LONG_PARAMETER_LIST.value
     ]
 
     # assert expected number of long lambda functions
@@ -28,24 +29,21 @@ def test_long_param_list_detection():
 
     # ensure that detected smells correspond to correct line numbers in test input file
     expected_lines = {26, 38, 50, 77, 88, 99, 126, 140, 183, 196, 209}
-    detected_lines = {smell["occurences"][0]["line"] for smell in long_param_list_smells}
+    detected_lines = {smell.occurences[0].line for smell in long_param_list_smells}
     assert detected_lines == expected_lines
 
 
-def test_long_parameter_refactoring(output_dir):
-    smells = get_smells(TEST_INPUT_FILE)
+def test_long_parameter_refactoring(get_smells, output_dir, source_files):
+    smells = get_smells
 
     long_param_list_smells: list[LPLSmell] = [
-        smell for smell in smells if smell["messageId"] == PylintSmell.LONG_PARAMETER_LIST.value
+        smell for smell in smells if smell.messageId == PylintSmell.LONG_PARAMETER_LIST.value
     ]
 
-    refactorer = LongParameterListRefactorer(output_dir)
+    refactorer = LongParameterListRefactorer()
 
     for smell in long_param_list_smells:
-        refactorer.refactor(TEST_INPUT_FILE, smell, overwrite=False)
+        output_file = output_dir / f"{TEST_INPUT_FILE.stem}_LPLR_{smell.occurences[0].line}.py"
+        refactorer.refactor(TEST_INPUT_FILE, source_files, smell, output_file, overwrite=False)
 
-        refactored_file = refactorer.temp_dir / Path(
-            f"{TEST_INPUT_FILE.stem}_LPLR_line_{smell['occurences'][0]['line']}.py"
-        )
-
-        assert refactored_file.exists()
+        assert output_file.exists()
