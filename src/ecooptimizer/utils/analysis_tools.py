@@ -1,14 +1,14 @@
 from typing import Any, Callable
 
-from ..utils.analyzers_config import CustomSmell, PylintSmell
+from .smell_enums import CustomSmell, PylintSmell
 
 from ..data_types.smell import Smell
-from ..data_types.smell_registry import SmellRegistry
+from ..data_types.smell_record import SmellRecord
 
 
 def filter_smells_by_method(
-    smell_registry: dict[str, SmellRegistry], method: str
-) -> dict[str, SmellRegistry]:
+    smell_registry: dict[str, SmellRecord], method: str
+) -> dict[str, SmellRecord]:
     filtered = {
         name: smell
         for name, smell in smell_registry.items()
@@ -22,10 +22,11 @@ def filter_smells_by_id(smells: list[Smell]):  # type: ignore
         *[smell.value for smell in CustomSmell],
         *[smell.value for smell in PylintSmell],
     ]
+    print(f"smell ids: {all_smell_ids}")
     return [smell for smell in smells if smell.messageId in all_smell_ids]
 
 
-def generate_pylint_options(filtered_smells: dict[str, SmellRegistry]) -> list[str]:
+def generate_pylint_options(filtered_smells: dict[str, SmellRecord]) -> list[str]:
     pylint_smell_symbols = []
     extra_pylint_options = [
         "--disable=all",
@@ -46,7 +47,7 @@ def generate_pylint_options(filtered_smells: dict[str, SmellRegistry]) -> list[s
 
 
 def generate_custom_options(
-    filtered_smells: dict[str, SmellRegistry],
+    filtered_smells: dict[str, SmellRecord],
 ) -> list[tuple[Callable, dict[str, Any]]]:  # type: ignore
     ast_options = []
     for smell in filtered_smells.values():

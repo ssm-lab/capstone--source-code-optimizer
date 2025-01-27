@@ -20,6 +20,8 @@ from . import (
     OUTPUT_DIR,
 )
 
+# FILE CONFIGURATION IN __init__.py !!!
+
 
 def main():
     # Measure initial energy
@@ -60,7 +62,7 @@ def main():
 
             try:
                 modified_files: list[Path] = refactorer_controller.run_refactorer(
-                    target_file_copy, source_copy, smell
+                    target_file_copy, source_copy, smell, overwrite=False
                 )
             except NotImplementedError as e:
                 print(e)

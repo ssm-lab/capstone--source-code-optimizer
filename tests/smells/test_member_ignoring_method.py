@@ -7,11 +7,11 @@ import pytest
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import MIMSmell
 from ecooptimizer.refactorers.member_ignoring_method import MakeStaticRefactorer
-from ecooptimizer.utils.analyzers_config import PylintSmell
+from ecooptimizer.utils.smell_enums import PylintSmell
 
 
 @pytest.fixture
-def MIM_code(source_files: Path):
+def MIM_code(source_files) -> tuple[Path, Path]:
     mim_code = textwrap.dedent(
         """\
     class SomeClass():
@@ -26,35 +26,37 @@ def MIM_code(source_files: Path):
             print(f"Hello {name}!")
 
     some_class = SomeClass("random")
-    some_class.say_hello()
+    some_class.say_hello("Mary")
     """
     )
-    file = source_files / Path("mim_code.py")
+    sample_dir = source_files / "sample_project"
+    sample_dir.mkdir(exist_ok=True)
+    file = source_files / sample_dir.name / Path("mim_code.py")
     with file.open("w") as f:
         f.write(mim_code)
 
-    return file
+    return sample_dir, file
 
 
 @pytest.fixture(autouse=True)
 def get_smells(MIM_code) -> list[MIMSmell]:
     analyzer = AnalyzerController()
-    smells = analyzer.run_analysis(MIM_code)
+    smells = analyzer.run_analysis(MIM_code[1])
 
     return [smell for smell in smells if smell.messageId == PylintSmell.NO_SELF_USE.value]
 
 
-def test_member_ignoring_method_detection(get_smells, MIM_code: Path):
+def test_member_ignoring_method_detection(get_smells, MIM_code):
     smells: list[MIMSmell] = get_smells
 
     assert len(smells) == 1
     assert smells[0].symbol == "no-self-use"
     assert smells[0].messageId == "R6301"
     assert smells[0].occurences[0].line == 9
-    assert smells[0].module == MIM_code.stem
+    assert smells[0].module == MIM_code[1].stem
 
 
-def test_mim_refactoring(get_smells, MIM_code: Path, source_files: Path, output_dir: Path):
+def test_mim_refactoring(get_smells, MIM_code, output_dir):
     smells: list[MIMSmell] = get_smells
 
     # Instantiate the refactorer
@@ -62,8 +64,8 @@ def test_mim_refactoring(get_smells, MIM_code: Path, source_files: Path, output_
 
     # Apply refactoring to each smell
     for smell in smells:
-        output_file = output_dir / f"{MIM_code.stem}_MIMR_{smell.occurences[0].line}.py"
-        refactorer.refactor(MIM_code, source_files, smell, output_file, overwrite=False)
+        output_file = output_dir / f"{MIM_code[1].stem}_MIMR_{smell.occurences[0].line}.py"
+        refactorer.refactor(MIM_code[1], MIM_code[0], smell, output_file, overwrite=False)
 
         refactored_lines = output_file.read_text().splitlines()
 

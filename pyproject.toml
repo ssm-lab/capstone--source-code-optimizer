@@ -74,7 +74,7 @@ unfixable = ["B"]
 # Ignore `E402` (import violations) in all `__init__.py` files, and in selected subdirectories.
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]
-"**/{tests,docs,tools}/*" = ["E402", "ANN"]
+"**/{tests,docs,tools}/*" = ["E402", "ANN", "INP001"]
 
 [tool.ruff.lint.flake8-annotations]
 suppress-none-returning = true

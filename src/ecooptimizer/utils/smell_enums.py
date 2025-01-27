@@ -1,5 +1,5 @@
 # Any configurations that are done by the analyzers
-from enum import EnumMeta, Enum
+from enum import Enum
 
 
 class ExtendedEnum(Enum):
@@ -31,28 +31,3 @@ class CustomSmell(ExtendedEnum):
     LONG_LAMBDA_EXPR = "LLE001"  # CUSTOM CODE
     STR_CONCAT_IN_LOOP = "SCL001"
     CACHE_REPEATED_CALLS = "CRC001"
-
-
-class CombinedSmellsMeta(EnumMeta):
-    def __new__(metacls, clsname, bases, clsdict):  # noqa: ANN001
-        # Add all members from base enums
-        for enum in (PylintSmell, CustomSmell):
-            for member in enum:
-                clsdict[member.name] = member.value
-        return super().__new__(metacls, clsname, bases, clsdict)
-
-
-# Define AllSmells, combining all enum members
-class AllSmells(ExtendedEnum, metaclass=CombinedSmellsMeta):
-    pass
-
-
-# Additional Pylint configuration options for analyzing code
-EXTRA_PYLINT_OPTIONS = [
-    "--enable-all-extensions",
-    "--max-line-length=80",  # Sets maximum allowed line length
-    "--max-nested-blocks=3",  # Limits maximum nesting of blocks
-    "--max-branches=3",  # Limits maximum branches in a function
-    "--max-parents=3",  # Limits maximum inheritance levels for a class
-    "--max-args=6",  # Limits max parameters for each function signature
-]

@@ -15,7 +15,9 @@ class RefactorerController:
         self.output_dir = output_dir
         self.smell_counters = {}
 
-    def run_refactorer(self, target_file: Path, source_dir: Path, smell: Smell[O, A]):
+    def run_refactorer(
+        self, target_file: Path, source_dir: Path, smell: Smell[O, A], overwrite: bool = True
+    ):
         smell_id = smell.messageId
         smell_symbol = smell.symbol
         refactorer_class = self._get_refactorer(smell_symbol)
@@ -30,7 +32,7 @@ class RefactorerController:
 
             print(f"Refactoring {smell_symbol} using {refactorer_class.__name__}")
             refactorer = refactorer_class()
-            refactorer.refactor(target_file, source_dir, smell, output_file_path)
+            refactorer.refactor(target_file, source_dir, smell, output_file_path, overwrite)
             modified_files = refactorer.modified_files
         else:
             print(f"No refactorer found for smell: {smell_symbol}")

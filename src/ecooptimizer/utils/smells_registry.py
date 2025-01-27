@@ -1,4 +1,4 @@
-from ..utils.analyzers_config import CustomSmell, PylintSmell
+from .smell_enums import CustomSmell, PylintSmell
 
 from ..analyzers.ast_analyzers.detect_long_element_chain import detect_long_element_chain
 from ..analyzers.ast_analyzers.detect_long_lambda_expression import detect_long_lambda_expression
@@ -19,9 +19,9 @@ from ..refactorers.long_parameter_list import LongParameterListRefactorer
 from ..refactorers.str_concat_in_loop import UseListAccumulationRefactorer
 
 
-from ..data_types.smell_registry import SmellRegistry
+from ..data_types.smell_record import SmellRecord
 
-SMELL_REGISTRY: dict[str, SmellRegistry] = {
+SMELL_REGISTRY: dict[str, SmellRecord] = {
     "use-a-generator": {
         "id": PylintSmell.USE_A_GENERATOR.value,
         "enabled": True,

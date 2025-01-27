@@ -3,7 +3,7 @@ from typing import Any, Callable, TypedDict
 from ..refactorers.base_refactorer import BaseRefactorer
 
 
-class SmellRegistry(TypedDict):
+class SmellRecord(TypedDict):
     """
     Represents a code smell configuration used for analysis and refactoring details.
 

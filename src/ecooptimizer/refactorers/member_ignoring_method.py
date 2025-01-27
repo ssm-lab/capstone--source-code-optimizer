@@ -50,7 +50,7 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         target_file: Path,
         source_dir: Path,
         smell: MIMSmell,
-        output_file: Path,  # noqa: ARG002
+        output_file: Path,
         overwrite: bool = True,  # noqa: ARG002
     ):
         """
@@ -71,8 +71,9 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
 
         # Apply the transformation
         modified_tree = self.visit(tree)
+        modified_text = astor.to_source(modified_tree)
 
-        target_file.write_text(astor.to_source(modified_tree))
+        target_file.write_text(modified_text)
 
         transformer = CallTransformer(self.mim_method, self.mim_method_class)
 
@@ -80,7 +81,7 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
 
         # temp_file_path = output_file
 
-        # temp_file_path.write_text(modified_code)
+        output_file.write_text(target_file.read_text())
         # if overwrite:
         #     target_file.write_text(modified_code)
 
@@ -95,11 +96,11 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
                 self._refactor_files(item, transformer)
             elif item.is_file():
                 if item.suffix == ".py":
-                    modified_file = transformer.visit(ast.parse(item.read_text()))
+                    modified_tree = transformer.visit(ast.parse(item.read_text()))
                     if transformer.transformed:
                         self.modified_files.append(item)
 
-                        item.write_text(astor.to_source(modified_file))
+                        item.write_text(astor.to_source(modified_tree))
                         transformer.reset()
 
     def visit_FunctionDef(self, node: ast.FunctionDef):

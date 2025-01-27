@@ -1,10 +1,11 @@
 from pathlib import Path
 import textwrap
 import pytest
+
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import LLESmell
 from ecooptimizer.refactorers.long_lambda_function import LongLambdaFunctionRefactorer
-from ecooptimizer.utils.analyzers_config import CustomSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
 
 @pytest.fixture(scope="module")

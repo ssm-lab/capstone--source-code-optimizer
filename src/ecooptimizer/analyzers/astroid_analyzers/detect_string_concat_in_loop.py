@@ -1,11 +1,11 @@
 import logging
 from pathlib import Path
 import re
-from astroid import nodes, util
+from astroid import nodes, util, parse
 
-from ...data_types.custom_fields import BasicOccurence
+from ...data_types.custom_fields import BasicOccurence, SCLInfo
 from ...data_types.smell import SCLSmell
-from ...utils.analyzers_config import CustomSmell
+from ...utils.smell_enums import CustomSmell
 
 
 def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
@@ -40,22 +40,22 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                     messageId=CustomSmell.STR_CONCAT_IN_LOOP.value,
                     confidence="UNDEFINED",
                     occurences=[create_smell_occ(node)],
-                    additionalInfo={
-                        "innerLoopLine": current_loops[
+                    additionalInfo=SCLInfo(
+                        innerLoopLine=current_loops[
                             current_smells[node.targets[0].as_string()][1]
                         ].lineno,  # type: ignore
-                        "concatTarget": node.targets[0].as_string(),
-                    },
+                        concatTarget=node.targets[0].as_string(),
+                    ),
                 )
             )
 
     def create_smell_occ(node: nodes.Assign | nodes.AugAssign) -> BasicOccurence:
-        return {
-            "line": node.lineno,
-            "endLine": node.end_lineno,
-            "column": node.col_offset,  # type: ignore
-            "endColumn": node.end_col_offset,
-        }
+        return BasicOccurence(
+            line=node.lineno,  # type: ignore
+            endLine=node.end_lineno,
+            column=node.col_offset,  # type: ignore
+            endColumn=node.end_col_offset,
+        )
 
     def visit(node: nodes.NodeNG):
         nonlocal smells, in_loop_counter, current_loops, current_smells
@@ -249,6 +249,9 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
 
         logging.debug("\n".join(str_code))
         return "\n".join(str_code)
+
+    # Change all AugAssigns to Assigns
+    tree = parse(transform_augassign_to_assign(file_path.read_text()))
 
     # Start traversal
     for child in tree.get_children():

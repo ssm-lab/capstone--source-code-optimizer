@@ -4,7 +4,7 @@ import pytest
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import LMCSmell
 from ecooptimizer.refactorers.long_message_chain import LongMessageChainRefactorer
-from ecooptimizer.utils.analyzers_config import CustomSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
 
 @pytest.fixture(scope="module")

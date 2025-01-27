@@ -43,6 +43,7 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         :param initial_emission: inital carbon emission prior to refactoring
         """
         self.target_lines = [occ.line for occ in smell.occurences]
+        logging.debug(smell.occurences)
 
         if not smell.additionalInfo:
             raise RuntimeError("Missing additional info for 'string-concat-loop' smell")

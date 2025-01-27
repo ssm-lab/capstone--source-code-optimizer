@@ -8,7 +8,7 @@ from ecooptimizer.data_types.smell import SCLSmell
 from ecooptimizer.refactorers.str_concat_in_loop import (
     UseListAccumulationRefactorer,
 )
-from ecooptimizer.utils.analyzers_config import CustomSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
 
 @pytest.fixture
@@ -166,10 +166,8 @@ def test_scl_refactoring(
 
     num_files = 0
 
-    refac_code_dir = output_dir / "refactored_source"
-
-    for file in refac_code_dir.iterdir():
-        if file.stem.startswith("str_concat_loop_code_SCLR_line"):
+    for file in output_dir.iterdir():
+        if file.stem.startswith(f"{str_concat_loop_code.stem}_SCLR"):
             num_files += 1
 
     assert num_files == 11

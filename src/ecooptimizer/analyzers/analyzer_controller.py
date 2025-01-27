@@ -7,7 +7,7 @@ from .ast_analyzer import ASTAnalyzer
 from .astroid_analyzer import AstroidAnalyzer
 
 from ..utils.smells_registry import SMELL_REGISTRY
-from ..utils.smells_registry_helper import (
+from ..utils.analysis_tools import (
     filter_smells_by_id,
     filter_smells_by_method,
     generate_pylint_options,

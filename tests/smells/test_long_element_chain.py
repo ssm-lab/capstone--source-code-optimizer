@@ -7,7 +7,7 @@ from ecooptimizer.data_types.smell import LECSmell
 from ecooptimizer.refactorers.long_element_chain import (
     LongElementChainRefactorer,
 )
-from ecooptimizer.utils.analyzers_config import CustomSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
 
 @pytest.fixture(scope="module")

@@ -1,7 +1,7 @@
 import ast
 from pathlib import Path
 
-from ...utils.analyzers_config import CustomSmell
+from ...utils.smell_enums import CustomSmell
 
 from ...data_types.smell import LMCSmell
 from ...data_types.custom_fields import BasicOccurence
