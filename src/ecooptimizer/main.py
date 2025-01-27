@@ -36,7 +36,7 @@ def main():
     analyzer_controller = AnalyzerController()
     smells_data = analyzer_controller.run_analysis(SOURCE)
     OUTPUT_MANAGER.save_json_files(
-        Path("code_smells.json"), [smell.model_dump() for smell in smells_data]
+        "code_smells.json", [smell.model_dump() for smell in smells_data]
     )
 
     OUTPUT_MANAGER.copy_file_to_output(SOURCE, "refactored-test-case.py")
@@ -105,7 +105,7 @@ def main():
                     # In reality the original code will now be overwritten but thats too much work
 
                     OUTPUT_MANAGER.save_json_files(
-                        Path("refactoring-data.json"), refactor_data.model_dump()
+                        "refactoring-data.json", refactor_data.model_dump()
                     )  # type: ignore
     print(output_paths)
 

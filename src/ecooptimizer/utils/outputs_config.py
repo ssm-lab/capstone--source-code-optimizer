@@ -21,7 +21,7 @@ class OutputConfig:
 
         self.out_folder.mkdir(exist_ok=True)
 
-    def save_file(self, filename: Path, data: str, mode: str, message: str = ""):
+    def save_file(self, filename: str, data: str, mode: str, message: str = ""):
         """
         Saves any data to a file in the output folder.
 
@@ -38,7 +38,7 @@ class OutputConfig:
         message = message if len(message) > 0 else f"Output saved to {file_path!s}"
         logging.info(message)
 
-    def save_json_files(self, filename: Path, data: dict[Any, Any] | list[Any]):
+    def save_json_files(self, filename: str, data: dict[Any, Any] | list[Any]):
         """
         Saves JSON data to a file in the output folder.
 

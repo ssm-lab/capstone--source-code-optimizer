@@ -22,7 +22,6 @@ def filter_smells_by_id(smells: list[Smell]):  # type: ignore
         *[smell.value for smell in CustomSmell],
         *[smell.value for smell in PylintSmell],
     ]
-    print(f"smell ids: {all_smell_ids}")
     return [smell for smell in smells if smell.messageId in all_smell_ids]
 
 

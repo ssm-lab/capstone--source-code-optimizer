@@ -43,7 +43,7 @@ class RefactorResModel(BaseModel):
     updatedSmells: list[Smell[BasicOccurence, BasicAddInfo]]
 
 
-@app.get("/smells", response_model=list[Smell[BasicOccurence, BasicAddInfo]])  # type: ignore
+@app.get("/smells", response_model=list[Smell[BasicOccurence, BasicAddInfo]])
 def get_smells(file_path: str):
     try:
         smells = detect_smells(Path(file_path))
@@ -52,7 +52,7 @@ def get_smells(file_path: str):
         raise HTTPException(status_code=404, detail=str(e)) from e
 
 
-@app.get("/refactor")
+@app.post("/refactor")
 def refactor(request: RefactorRqModel, response_model=RefactorResModel):  # noqa: ANN001, ARG001
     try:
         refactor_data, updated_smells = refactor_smell(
@@ -86,7 +86,10 @@ def detect_smells(file_path: Path) -> list[Smell[BasicOccurence, BasicAddInfo]]:
 
     smells_data = analyzer_controller.run_analysis(file_path)
 
-    OUTPUT_MANAGER.save_json_files(Path("code_smells.json"), smells_data)
+    OUTPUT_MANAGER.save_json_files(
+        "code_smells.json",
+        [smell.model_dump() for smell in smells_data],
+    )
 
     logging.info(f"Detected {len(smells_data)} code smells.")
 
