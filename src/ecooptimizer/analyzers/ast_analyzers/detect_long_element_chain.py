@@ -1,4 +1,5 @@
 import ast
+import logging
 from pathlib import Path
 
 from ...utils.smell_enums import CustomSmell
@@ -24,14 +25,22 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3
     used_lines = set()
 
     # Function to calculate the length of a dictionary chain and detect long chains
-    def check_chain(node: ast.Subscript, chain_length: int = 0):
+    def check_chain(node: ast.Subscript, chain_length: int = 1):
+        # Ensure each line is only reported once
+        if node.lineno in used_lines:
+            return
+
         current = node
+        logging.debug(f"Checking chain for line {node.lineno}")
         # Traverse through the chain to count its length
         while isinstance(current, ast.Subscript):
             chain_length += 1
+            logging.debug(f"Chain length is {chain_length}")
             current = current.value
 
         if chain_length >= threshold:
+            logging.debug("Found LEC smell")
+
             # Create a descriptive message for the detected long chain
             message = f"Dictionary chain too long ({chain_length}/{threshold})"
 
@@ -56,9 +65,6 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3
                 additionalInfo=None,
             )
 
-            # Ensure each line is only reported once
-            if node.lineno in used_lines:
-                return
             used_lines.add(node.lineno)
             results.append(smell)
 

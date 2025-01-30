@@ -1,3 +1,4 @@
+import ast
 import logging
 from pathlib import Path
 import shutil
@@ -24,6 +25,11 @@ from . import (
 
 
 def main():
+    # Save ast
+    OUTPUT_MANAGER.save_file(
+        "source_ast.txt", ast.dump(ast.parse(SOURCE.read_text()), indent=4), "w"
+    )
+
     # Measure initial energy
     energy_meter = CodeCarbonEnergyMeter()
     energy_meter.measure_energy(Path(SOURCE))
@@ -50,10 +56,10 @@ def main():
         # If you use the other line know that you will have to manually delete the temp dir after running the
         # code. It will NOT auto delete which, hence allowing you to see the refactoring results
 
-        # temp_dir = mkdtemp(prefix="ecooptimizer-") # < UNCOMMENT THIS LINE and shift code under to the left
+        # tempDir = mkdtemp(prefix="ecooptimizer-") # < UNCOMMENT THIS LINE and shift code under to the left
 
-        with TemporaryDirectory() as temp_dir:  # COMMENT OUT THIS ONE
-            source_copy = Path(temp_dir) / SAMPLE_PROJ_DIR.name
+        with TemporaryDirectory() as tempDir:  # COMMENT OUT THIS ONE
+            source_copy = Path(tempDir) / SAMPLE_PROJ_DIR.name
             target_file_copy = Path(str(SOURCE).replace(str(SAMPLE_PROJ_DIR), str(source_copy), 1))
 
             # source_copy = project_copy / SOURCE.name
@@ -85,7 +91,7 @@ def main():
                     f"Initial emissions: {initial_emissions} | Final emissions: {final_emissions}"
                 )
 
-                if not TestRunner("pytest", Path(temp_dir)).retained_functionality():
+                if not TestRunner("pytest", Path(tempDir)).retained_functionality():
                     logging.info("Functionality not maintained. Discarding refactoring.\n")
                     print("Refactoring Failed.\n")
 
@@ -94,13 +100,15 @@ def main():
                     print("Refactoring Succesful!\n")
 
                     refactor_data = RefactoredData(
-                        temp_dir=temp_dir,
-                        target_file=str(target_file_copy).replace(
+                        tempDir=tempDir,
+                        targetFile=str(target_file_copy).replace(
                             str(source_copy), str(SAMPLE_PROJ_DIR), 1
                         ),
-                        energy_saved=(final_emissions - initial_emissions),
-                        refactored_files=[str(file) for file in modified_files],
+                        energySaved=(final_emissions - initial_emissions),
+                        refactoredFiles=[str(file) for file in modified_files],
                     )
+
+                    output_paths = refactor_data.refactoredFiles
 
                     # In reality the original code will now be overwritten but thats too much work
 

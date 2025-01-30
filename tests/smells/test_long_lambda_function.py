@@ -8,11 +8,6 @@ from ecooptimizer.refactorers.long_lambda_function import LongLambdaFunctionRefa
 from ecooptimizer.utils.smell_enums import CustomSmell
 
 
-@pytest.fixture(scope="module")
-def source_files(tmp_path_factory):
-    return tmp_path_factory.mktemp("input")
-
-
 @pytest.fixture
 def long_lambda_code(source_files: Path):
     long_lambda_code = textwrap.dedent(

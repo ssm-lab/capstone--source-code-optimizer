@@ -121,7 +121,7 @@ def refactor_smell(source_dir: Path, smell: Smell[BasicOccurence, BasicAddInfo])
     refactor_data = None
     updated_smells = []
 
-    tempDir = mkdtemp()
+    tempDir = mkdtemp(prefix="ecooptimizer-")
 
     source_copy = Path(tempDir) / source_dir.name
     target_file_copy = Path(targetFile.replace(str(source_dir), str(source_copy), 1))

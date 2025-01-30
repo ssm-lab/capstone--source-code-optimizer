@@ -2,17 +2,12 @@ import ast
 from pathlib import Path
 import textwrap
 import pytest
-from ecooptimizer.data_types.custom_fields import BasicOccurence
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import LECSmell
 from ecooptimizer.refactorers.long_element_chain import (
     LongElementChainRefactorer,
 )
 from ecooptimizer.utils.smell_enums import CustomSmell
-
-
-@pytest.fixture(scope="module")
-def source_files(tmp_path_factory):
-    return tmp_path_factory.mktemp("input")
 
 
 @pytest.fixture
@@ -61,27 +56,41 @@ def nested_dict_code(source_files: Path):
     return file
 
 
-@pytest.fixture
-def mock_smell(nested_dict_code: Path, request):
-    return LECSmell(
-        path=str(nested_dict_code),
-        module=nested_dict_code.stem,
-        obj=None,
-        type="convention",
-        symbol="long-element-chain",
-        message="Detected long element chain",
-        messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-        confidence="UNDEFINED",
-        occurences=[
-            BasicOccurence(
-                line=request.param,
-                endLine=None,
-                column=0,
-                endColumn=None,
-            )
-        ],
-        additionalInfo=None,
-    )
+@pytest.fixture(autouse=True)
+def get_smells(nested_dict_code: Path):
+    analyzer = AnalyzerController()
+    smells = analyzer.run_analysis(nested_dict_code)
+
+    return [smell for smell in smells if smell.messageId == CustomSmell.LONG_ELEMENT_CHAIN.value]
+
+
+# @pytest.fixture
+# def mock_smell(nested_dict_code: Path, request):
+#     return LECSmell(
+#         path=str(nested_dict_code),
+#         module=nested_dict_code.stem,
+#         obj=None,
+#         type="convention",
+#         symbol="long-element-chain",
+#         message="Detected long element chain",
+#         messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+#         confidence="UNDEFINED",
+#         occurences=[
+#             BasicOccurence(
+#                 line=request.param,
+#                 endLine=None,
+#                 column=0,
+#                 endColumn=None,
+#             )
+#         ],
+#         additionalInfo=None,
+#     )
+
+
+def test_nested_dict_detection(get_smells):
+    smells: list[LECSmell] = get_smells
+
+    assert len(smells) == 5
 
 
 def test_dict_flattening(refactorer):

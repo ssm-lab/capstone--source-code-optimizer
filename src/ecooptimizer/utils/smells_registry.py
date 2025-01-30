@@ -4,6 +4,7 @@ from ..analyzers.ast_analyzers.detect_long_element_chain import detect_long_elem
 from ..analyzers.ast_analyzers.detect_long_lambda_expression import detect_long_lambda_expression
 from ..analyzers.ast_analyzers.detect_long_message_chain import detect_long_message_chain
 from ..analyzers.astroid_analyzers.detect_string_concat_in_loop import detect_string_concat_in_loop
+from ..analyzers.ast_analyzers.detect_repeated_calls import detect_repeated_calls
 from ..analyzers.ast_analyzers.detect_unused_variables_and_attributes import (
     detect_unused_variables_and_attributes,
 )
@@ -17,7 +18,7 @@ from ..refactorers.unused import RemoveUnusedRefactorer
 from ..refactorers.member_ignoring_method import MakeStaticRefactorer
 from ..refactorers.long_parameter_list import LongParameterListRefactorer
 from ..refactorers.str_concat_in_loop import UseListAccumulationRefactorer
-
+from ..refactorers.repeated_calls import CacheRepeatedCallsRefactorer
 
 from ..data_types.smell_record import SmellRecord
 
@@ -79,6 +80,14 @@ SMELL_REGISTRY: dict[str, SmellRecord] = {
         "checker": detect_long_element_chain,
         "analyzer_options": {"threshold": 5},
         "refactorer": LongElementChainRefactorer,
+    },
+    "cached-repeated-calls": {
+        "id": CustomSmell.CACHE_REPEATED_CALLS.value,
+        "enabled": True,
+        "analyzer_method": "ast",
+        "checker": detect_repeated_calls,
+        "analyzer_options": {"threshold": 2},
+        "refactorer": CacheRepeatedCallsRefactorer,
     },
     "string-concat-loop": {
         "id": CustomSmell.STR_CONCAT_IN_LOOP.value,
