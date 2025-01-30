@@ -50,7 +50,7 @@ def detect_long_lambda_expression(
                 module=file_path.stem,
                 obj=None,
                 type="convention",
-                symbol="long-lambda-expr",
+                symbol="long-lambda-expression",
                 message=message,
                 messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
                 confidence="UNDEFINED",

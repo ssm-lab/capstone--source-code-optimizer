@@ -9,7 +9,7 @@ class BasicOccurence(BaseModel):
 
 
 class CRCOccurence(BasicOccurence):
-    call_string: str
+    callString: str
 
 
 class BasicAddInfo(BaseModel): ...

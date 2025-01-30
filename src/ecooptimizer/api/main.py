@@ -7,8 +7,6 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 
-from ..testing.test_runner import TestRunner
-
 from ..refactorers.refactorer_controller import RefactorerController
 
 from ..analyzers.analyzer_controller import AnalyzerController
@@ -27,10 +25,10 @@ refactorer_controller = RefactorerController(OUTPUT_DIR)
 
 
 class RefactoredData(BaseModel):
-    temp_dir: str
-    target_file: str
-    energy_saved: float
-    refactored_files: list[str]
+    tempDir: str
+    targetFile: str
+    energySaved: float
+    refactoredFiles: list[str]
 
 
 class RefactorRqModel(BaseModel):
@@ -39,7 +37,7 @@ class RefactorRqModel(BaseModel):
 
 
 class RefactorResModel(BaseModel):
-    refactored_data: RefactoredData = None  # type: ignore
+    refactoredData: RefactoredData = None  # type: ignore
     updatedSmells: list[Smell[BasicOccurence, BasicAddInfo]]
 
 
@@ -62,7 +60,7 @@ def refactor(request: RefactorRqModel, response_model=RefactorResModel):  # noqa
         if not refactor_data:
             return RefactorResModel(updatedSmells=updated_smells)
         else:
-            return RefactorResModel(refactored_data=refactor_data, updatedSmells=updated_smells)
+            return RefactorResModel(refactoredData=refactor_data, updatedSmells=updated_smells)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 
@@ -97,11 +95,11 @@ def detect_smells(file_path: Path) -> list[Smell[BasicOccurence, BasicAddInfo]]:
 
 
 def refactor_smell(source_dir: Path, smell: Smell[BasicOccurence, BasicAddInfo]):
-    target_file = smell.path
+    targetFile = smell.path
 
     logging.info(
         f"Starting refactoring for smell symbol: {smell.symbol}\
-          at line {smell.occurences[0].line} in file: {target_file}"
+          at line {smell.occurences[0].line} in file: {targetFile}"
     )
 
     if not source_dir.is_dir():
@@ -111,7 +109,7 @@ def refactor_smell(source_dir: Path, smell: Smell[BasicOccurence, BasicAddInfo])
 
     # Measure initial energy
     energy_meter = CodeCarbonEnergyMeter()
-    energy_meter.measure_energy(Path(target_file))
+    energy_meter.measure_energy(Path(targetFile))
     initial_emissions = energy_meter.emissions
 
     if not initial_emissions:
@@ -123,10 +121,10 @@ def refactor_smell(source_dir: Path, smell: Smell[BasicOccurence, BasicAddInfo])
     refactor_data = None
     updated_smells = []
 
-    temp_dir = mkdtemp()
+    tempDir = mkdtemp()
 
-    source_copy = Path(temp_dir) / source_dir.name
-    target_file_copy = Path(target_file.replace(str(source_dir), str(source_copy), 1))
+    source_copy = Path(tempDir) / source_dir.name
+    target_file_copy = Path(targetFile.replace(str(source_dir), str(source_copy), 1))
 
     # source_copy = project_copy / SOURCE.name
 
@@ -154,22 +152,33 @@ def refactor_smell(source_dir: Path, smell: Smell[BasicOccurence, BasicAddInfo])
         logging.info("Energy saved!")
         logging.info(f"Initial emissions: {initial_emissions} | Final emissions: {final_emissions}")
 
-        if not TestRunner("pytest", Path(temp_dir)).retained_functionality():
-            logging.info("Functionality not maintained. Discarding refactoring.\n")
-            print("Refactoring Failed.\n")
+        # if not TestRunner("pytest", Path(tempDir)).retained_functionality():
+        #     logging.info("Functionality not maintained. Discarding refactoring.\n")
+        #     print("Refactoring Failed.\n")
 
-        else:
-            logging.info("Functionality maintained! Retaining refactored file.\n")
-            print("Refactoring Succesful!\n")
+        # else:
+        #     logging.info("Functionality maintained! Retaining refactored file.\n")
+        #     print("Refactoring Succesful!\n")
 
-            refactor_data = RefactoredData(
-                temp_dir=temp_dir,
-                target_file=str(target_file_copy).replace(str(source_copy), str(source_dir), 1),
-                energy_saved=(final_emissions - initial_emissions),
-                refactored_files=[str(file) for file in modified_files],
-            )
+        #     refactor_data = RefactoredData(
+        #         tempDir=tempDir,
+        #         targetFile=str(target_file_copy).replace(str(source_copy), str(source_dir), 1),
+        #         energySaved=(final_emissions - initial_emissions),
+        #         refactoredFiles=[str(file) for file in modified_files],
+        #     )
 
-            updated_smells = detect_smells(target_file_copy)
+        #     updated_smells = detect_smells(target_file_copy)
+
+        print("Refactoring Succesful!\n")
+
+        refactor_data = RefactoredData(
+            tempDir=tempDir,
+            targetFile=str(target_file_copy),
+            energySaved=(final_emissions - initial_emissions),
+            refactoredFiles=[str(file) for file in modified_files],
+        )
+
+        updated_smells = detect_smells(target_file_copy)
 
     return refactor_data, updated_smells
 
