@@ -1,13 +1,7 @@
 from pathlib import Path
-from typing import TypeVar
 
-from ..data_types.custom_fields import BasicAddInfo, BasicOccurence
 from ..data_types.smell import Smell
 from ..utils.smells_registry import SMELL_REGISTRY
-
-
-O = TypeVar("O", bound=BasicOccurence)  # noqa: E741
-A = TypeVar("A", bound=BasicAddInfo)
 
 
 class RefactorerController:
@@ -16,7 +10,7 @@ class RefactorerController:
         self.smell_counters = {}
 
     def run_refactorer(
-        self, target_file: Path, source_dir: Path, smell: Smell[O, A], overwrite: bool = True
+        self, target_file: Path, source_dir: Path, smell: Smell, overwrite: bool = True
     ):
         smell_id = smell.messageId
         smell_symbol = smell.symbol

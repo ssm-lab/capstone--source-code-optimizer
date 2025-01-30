@@ -4,7 +4,7 @@ from pathlib import Path
 from ...utils.smell_enums import CustomSmell
 
 from ...data_types.smell import LLESmell
-from ...data_types.custom_fields import BasicOccurence
+from ...data_types.custom_fields import AdditionalInfo, Occurence
 
 
 def detect_long_lambda_expression(
@@ -55,14 +55,14 @@ def detect_long_lambda_expression(
                 messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
                 confidence="UNDEFINED",
                 occurences=[
-                    BasicOccurence(
+                    Occurence(
                         line=node.lineno,
                         endLine=node.end_lineno,
                         column=node.col_offset,
                         endColumn=node.end_col_offset,
                     )
                 ],
-                additionalInfo=None,
+                additionalInfo=AdditionalInfo(),
             )
 
             if node.lineno in used_lines:
@@ -86,14 +86,14 @@ def detect_long_lambda_expression(
                 messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
                 confidence="UNDEFINED",
                 occurences=[
-                    BasicOccurence(
+                    Occurence(
                         line=node.lineno,
                         endLine=node.end_lineno,
                         column=node.col_offset,
                         endColumn=node.end_col_offset,
                     )
                 ],
-                additionalInfo=None,
+                additionalInfo=AdditionalInfo(),
             )
 
             if node.lineno in used_lines:

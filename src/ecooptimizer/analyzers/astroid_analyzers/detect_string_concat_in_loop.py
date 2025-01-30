@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 from astroid import nodes, util, parse
 
-from ...data_types.custom_fields import BasicOccurence, SCLInfo
+from ...data_types.custom_fields import Occurence, SCLInfo
 from ...data_types.smell import SCLSmell
 from ...utils.smell_enums import CustomSmell
 
@@ -49,8 +49,8 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                 )
             )
 
-    def create_smell_occ(node: nodes.Assign | nodes.AugAssign) -> BasicOccurence:
-        return BasicOccurence(
+    def create_smell_occ(node: nodes.Assign | nodes.AugAssign) -> Occurence:
+        return Occurence(
             line=node.lineno,  # type: ignore
             endLine=node.end_lineno,
             column=node.col_offset,  # type: ignore

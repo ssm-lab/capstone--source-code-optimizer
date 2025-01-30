@@ -1,15 +1,13 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import TypeVar
+from typing import Generic, TypeVar
 
-from ..data_types.custom_fields import BasicAddInfo, BasicOccurence
 from ..data_types.smell import Smell
 
-O = TypeVar("O", bound=BasicOccurence)  # noqa: E741
-A = TypeVar("A", bound=BasicAddInfo)
+T = TypeVar("T", bound=Smell)
 
 
-class BaseRefactorer(ABC):
+class BaseRefactorer(ABC, Generic[T]):
     def __init__(self):
         self.modified_files: list[Path] = []
 
@@ -18,7 +16,7 @@ class BaseRefactorer(ABC):
         self,
         target_file: Path,
         source_dir: Path,
-        smell: Smell[O, A],
+        smell: T,
         output_file: Path,
         overwrite: bool = True,
     ):

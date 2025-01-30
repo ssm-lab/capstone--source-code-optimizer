@@ -28,8 +28,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         """
         self.target_file = target_file
         self.smell = smell
+        self.call_string = self.smell.additionalInfo.callString.strip()
 
-        self.cached_var_name = "cached_" + self.smell.occurences[0].callString.split("(")[0]
+        self.cached_var_name = "cached_" + self.call_string.split("(")[0]
 
         print(f"Reading file: {self.target_file}")
         with self.target_file.open("r") as file:
@@ -48,9 +49,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         # Determine the insertion point for the cached variable
         insert_line = self._find_insert_line(parent_node)
         indent = self._get_indentation(lines, insert_line)
-        cached_assignment = (
-            f"{indent}{self.cached_var_name} = {self.smell.occurences[0].callString.strip()}\n"
-        )
+        cached_assignment = f"{indent}{self.cached_var_name} = {self.call_string}\n"
         print(f"Inserting cached variable at line {insert_line}: {cached_assignment.strip()}")
 
         # Insert the cached variable into the source lines
@@ -61,10 +60,9 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         for occurrence in self.smell.occurences:
             adjusted_line_index = occurrence.line - 1 + line_shift
             original_line = lines[adjusted_line_index]
-            callString = occurrence.callString.strip()
             print(f"Processing occurrence at line {occurrence.line}: {original_line.strip()}")
             updated_line = self._replace_call_in_line(
-                original_line, callString, self.cached_var_name
+                original_line, self.call_string, self.cached_var_name
             )
             if updated_line != original_line:
                 print(f"Updated line {occurrence.line}: {updated_line.strip()}")
@@ -99,17 +97,17 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         line = lines[line_number - 1]
         return line[: len(line) - len(line.lstrip())]
 
-    def _replace_call_in_line(self, line: str, callString: str, cached_var_name: str):
+    def _replace_call_in_line(self, line: str, call_string: str, cached_var_name: str):
         """
         Replace the repeated call in a line with the cached variable.
 
         :param line: The original line of source code.
-        :param callString: The string representation of the call.
+        :param call_string: The string representation of the call.
         :param cached_var_name: The name of the cached variable.
         :return: The updated line.
         """
         # Replace all exact matches of the call string with the cached variable
-        updated_line = line.replace(callString, cached_var_name)
+        updated_line = line.replace(call_string, cached_var_name)
         return updated_line
 
     def _find_valid_parent(self, tree: ast.Module):

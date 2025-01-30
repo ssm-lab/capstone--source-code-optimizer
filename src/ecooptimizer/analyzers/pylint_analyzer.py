@@ -4,7 +4,7 @@ from pathlib import Path
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
-from ..data_types.custom_fields import BasicAddInfo, BasicOccurence
+from ..data_types.custom_fields import AdditionalInfo, Occurence
 
 from .base_analyzer import Analyzer
 from ..data_types.smell import Smell
@@ -13,7 +13,7 @@ from ..data_types.smell import Smell
 class PylintAnalyzer(Analyzer):
     def build_smells(self, pylint_smells: dict):  # type: ignore
         """Casts inital list of pylint smells to the proper Smell configuration."""
-        smells: list[Smell[BasicOccurence, BasicAddInfo]] = []
+        smells: list[Smell] = []
         for smell in pylint_smells:
             smells.append(
                 # Initialize the SmellModel instance
@@ -27,19 +27,20 @@ class PylintAnalyzer(Analyzer):
                     symbol=smell["symbol"],
                     type=smell["type"],
                     occurences=[
-                        BasicOccurence(
+                        Occurence(
                             line=smell["line"],
                             endLine=smell["endLine"],
                             column=smell["column"],
                             endColumn=smell["endColumn"],
                         )
                     ],
+                    additionalInfo=AdditionalInfo(),
                 )
             )
         return smells
 
     def analyze(self, file_path: Path, extra_options: list[str]):
-        smells_data: list[Smell[BasicOccurence, BasicAddInfo]] = []
+        smells_data: list[Smell] = []
         pylint_options = [str(file_path), *extra_options]
 
         with StringIO() as buffer:

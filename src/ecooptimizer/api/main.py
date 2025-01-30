@@ -12,7 +12,6 @@ from ..refactorers.refactorer_controller import RefactorerController
 from ..analyzers.analyzer_controller import AnalyzerController
 
 from ..data_types.smell import Smell
-from ..data_types.custom_fields import BasicAddInfo, BasicOccurence
 from ..measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
 from .. import OUTPUT_MANAGER, OUTPUT_DIR
@@ -33,18 +32,22 @@ class RefactoredData(BaseModel):
 
 class RefactorRqModel(BaseModel):
     source_dir: str
-    smell: Smell[BasicOccurence, BasicAddInfo]
+    smell: Smell
 
 
 class RefactorResModel(BaseModel):
     refactoredData: RefactoredData = None  # type: ignore
-    updatedSmells: list[Smell[BasicOccurence, BasicAddInfo]]
+    updatedSmells: list[Smell]
 
 
-@app.get("/smells", response_model=list[Smell[BasicOccurence, BasicAddInfo]])
+@app.get("/smells", response_model=list[Smell])
 def get_smells(file_path: str):
     try:
         smells = detect_smells(Path(file_path))
+        OUTPUT_MANAGER.save_json_files(
+            "returned_smells.json",
+            [smell.model_dump() for smell in smells],
+        )
         return smells
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
@@ -53,6 +56,8 @@ def get_smells(file_path: str):
 @app.post("/refactor")
 def refactor(request: RefactorRqModel, response_model=RefactorResModel):  # noqa: ANN001, ARG001
     try:
+        raw_data = request.model_dump_json()
+        print(raw_data)
         refactor_data, updated_smells = refactor_smell(
             Path(request.source_dir),
             request.smell,
@@ -65,7 +70,7 @@ def refactor(request: RefactorRqModel, response_model=RefactorResModel):  # noqa
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
-def detect_smells(file_path: Path) -> list[Smell[BasicOccurence, BasicAddInfo]]:
+def detect_smells(file_path: Path) -> list[Smell]:
     """
     Detect code smells in a given file.
 
@@ -94,7 +99,7 @@ def detect_smells(file_path: Path) -> list[Smell[BasicOccurence, BasicAddInfo]]:
     return smells_data
 
 
-def refactor_smell(source_dir: Path, smell: Smell[BasicOccurence, BasicAddInfo]):
+def refactor_smell(source_dir: Path, smell: Smell):
     targetFile = smell.path
 
     logging.info(

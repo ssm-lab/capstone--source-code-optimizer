@@ -4,7 +4,7 @@ from pathlib import Path
 
 import astor
 
-from ...data_types.custom_fields import CRCInfo, CRCOccurence
+from ...data_types.custom_fields import CRCInfo, Occurence
 
 from ...data_types.smell import CRCSmell
 
@@ -26,10 +26,10 @@ def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 3):
 
             for subnode in ast.walk(node):
                 if isinstance(subnode, ast.Call):
-                    call_string = astor.to_source(subnode).strip()
-                    call_counts[call_string].append(subnode)
+                    callString = astor.to_source(subnode).strip()
+                    call_counts[callString].append(subnode)
 
-            for call_string, occurrences in call_counts.items():
+            for callString, occurrences in call_counts.items():
                 if len(occurrences) >= threshold:
                     skip_due_to_modification = any(
                         line in modified_lines
@@ -49,20 +49,19 @@ def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 3):
                         obj=None,
                         module=file_path.stem,
                         symbol="cached-repeated-calls",
-                        message=f"Repeated function call detected ({len(occurrences)}/{threshold}). Consider caching the result: {call_string}",
+                        message=f"Repeated function call detected ({len(occurrences)}/{threshold}). Consider caching the result: {callString}",
                         messageId=CustomSmell.CACHE_REPEATED_CALLS.value,
                         confidence="HIGH" if len(occurrences) > threshold else "MEDIUM",
                         occurences=[
-                            CRCOccurence(
+                            Occurence(
                                 line=occ.lineno,
                                 endLine=occ.end_lineno,
                                 column=occ.col_offset,
                                 endColumn=occ.end_col_offset,
-                                callString=call_string,
                             )
                             for occ in occurrences
                         ],
-                        additionalInfo=CRCInfo(repetitions=len(occurrences)),
+                        additionalInfo=CRCInfo(repetitions=len(occurrences), callString=callString),
                     )
                     results.append(smell)
 

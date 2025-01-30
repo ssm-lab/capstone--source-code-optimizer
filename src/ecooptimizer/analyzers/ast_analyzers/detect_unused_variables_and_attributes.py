@@ -3,7 +3,7 @@ from pathlib import Path
 
 from ...utils.smell_enums import CustomSmell
 
-from ...data_types.custom_fields import BasicOccurence
+from ...data_types.custom_fields import AdditionalInfo, Occurence
 from ...data_types.smell import UVASmell
 
 
@@ -105,14 +105,14 @@ def detect_unused_variables_and_attributes(file_path: Path, tree: ast.AST) -> li
             messageId=CustomSmell.UNUSED_VAR_OR_ATTRIBUTE.value,
             confidence="UNDEFINED",
             occurences=[
-                BasicOccurence(
+                Occurence(
                     line=line_no,
                     endLine=None,
                     column=column_no,
                     endColumn=None,
                 )
             ],
-            additionalInfo=None,
+            additionalInfo=AdditionalInfo(),
         )
 
         results.append(smell)

@@ -76,7 +76,7 @@ def get_smells(nested_dict_code: Path):
 #         messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
 #         confidence="UNDEFINED",
 #         occurences=[
-#             BasicOccurence(
+#             Occurence(
 #                 line=request.param,
 #                 endLine=None,
 #                 column=0,

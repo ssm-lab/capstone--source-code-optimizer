@@ -5,7 +5,7 @@ from pathlib import Path
 from ...utils.smell_enums import CustomSmell
 
 from ...data_types.smell import LECSmell
-from ...data_types.custom_fields import BasicOccurence
+from ...data_types.custom_fields import AdditionalInfo, Occurence
 
 
 def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3) -> list[LECSmell]:
@@ -55,14 +55,14 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3
                 messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
                 confidence="UNDEFINED",
                 occurences=[
-                    BasicOccurence(
+                    Occurence(
                         line=node.lineno,
                         endLine=node.end_lineno,
                         column=node.col_offset,
                         endColumn=node.end_col_offset,
                     )
                 ],
-                additionalInfo=None,
+                additionalInfo=AdditionalInfo(),
             )
 
             used_lines.add(node.lineno)

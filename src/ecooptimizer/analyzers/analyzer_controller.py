@@ -1,7 +1,5 @@
 from pathlib import Path
 
-from ..data_types.custom_fields import BasicAddInfo, BasicOccurence
-
 from .pylint_analyzer import PylintAnalyzer
 from .ast_analyzer import ASTAnalyzer
 from .astroid_analyzer import AstroidAnalyzer
@@ -24,7 +22,7 @@ class AnalyzerController:
         self.astroid_analyzer = AstroidAnalyzer()
 
     def run_analysis(self, file_path: Path):
-        smells_data: list[Smell[BasicOccurence, BasicAddInfo]] = []
+        smells_data: list[Smell] = []
 
         pylint_smells = filter_smells_by_method(SMELL_REGISTRY, "pylint")
         ast_smells = filter_smells_by_method(SMELL_REGISTRY, "ast")

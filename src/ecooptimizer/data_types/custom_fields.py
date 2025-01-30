@@ -1,33 +1,26 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
-class BasicOccurence(BaseModel):
+class Occurence(BaseModel):
     line: int
     endLine: int | None
     column: int
     endColumn: int | None
 
 
-class CRCOccurence(BasicOccurence):
-    callString: str
+class AdditionalInfo(BaseModel):
+    innerLoopLine: Optional[int] = None
+    concatTarget: Optional[str] = None
+    repetitions: Optional[int] = None
+    callString: Optional[str] = None
 
 
-class BasicAddInfo(BaseModel): ...
+class CRCInfo(AdditionalInfo):
+    callString: str  # type: ignore
+    repetitions: int  # type: ignore
 
 
-class CRCInfo(BasicAddInfo):
-    repetitions: int
-
-
-class SCLInfo(BasicAddInfo):
-    innerLoopLine: int
-    concatTarget: str
-
-
-LECInfo = BasicAddInfo
-LLEInfo = BasicAddInfo
-LMCInfo = BasicAddInfo
-LPLInfo = BasicAddInfo
-UVAInfo = BasicAddInfo
-MIMInfo = BasicAddInfo
-UGEInfo = BasicAddInfo
+class SCLInfo(AdditionalInfo):
+    innerLoopLine: int  # type: ignore
+    concatTarget: str  # type: ignore
