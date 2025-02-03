@@ -34,7 +34,7 @@ class CallTransformer(NodeTransformer):
         return node
 
 
-class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
+class MakeStaticRefactorer(NodeTransformer, BaseRefactorer[MIMSmell]):
     """
     Refactorer that targets methods that don't use any class attributes and makes them static to improve performance
     """
@@ -61,6 +61,7 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
         :param initial_emission: inital carbon emission prior to refactoring
         """
         self.target_line = smell.occurences[0].line
+        self.target_file = target_file
         logging.info(
             f"Applying 'Make Method Static' refactor on '{target_file.name}' at line {self.target_line} for identified code smell."
         )
@@ -98,10 +99,10 @@ class MakeStaticRefactorer(NodeTransformer, BaseRefactorer):
                 if item.suffix == ".py":
                     modified_tree = transformer.visit(ast.parse(item.read_text()))
                     if transformer.transformed:
-                        self.modified_files.append(item)
-
                         item.write_text(astor.to_source(modified_tree))
-                        transformer.reset()
+                        if not item.samefile(self.target_file):
+                            self.modified_files.append(item.resolve())
+                    transformer.reset()
 
     def visit_FunctionDef(self, node: ast.FunctionDef):
         logging.debug(f"visiting FunctionDef {node.name} line {node.lineno}")

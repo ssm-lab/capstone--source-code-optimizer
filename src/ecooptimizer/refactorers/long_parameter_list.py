@@ -7,7 +7,7 @@ from ..data_types.smell import LPLSmell
 from .base_refactorer import BaseRefactorer
 
 
-class LongParameterListRefactorer(BaseRefactorer):
+class LongParameterListRefactorer(BaseRefactorer[LPLSmell]):
     def __init__(self):
         super().__init__()
         self.parameter_analyzer = ParameterAnalyzer()
@@ -98,8 +98,6 @@ class LongParameterListRefactorer(BaseRefactorer):
         else:
             with output_file.open("w") as f:
                 f.writelines(modified_source)
-
-        self.modified_files.append(target_file)
 
 
 class ParameterAnalyzer:

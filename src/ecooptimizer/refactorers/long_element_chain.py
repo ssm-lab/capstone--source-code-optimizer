@@ -8,7 +8,7 @@ from .base_refactorer import BaseRefactorer
 from ..data_types.smell import LECSmell
 
 
-class LongElementChainRefactorer(BaseRefactorer):
+class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
     """
     Only implements flatten dictionary stratrgy becasuse every other strategy didnt save significant amount of
     energy after flattening was done.
@@ -187,7 +187,5 @@ class LongElementChainRefactorer(BaseRefactorer):
         else:
             with output_file.open("w") as f:
                 f.writelines(new_lines)
-
-        self.modified_files.append(target_file)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

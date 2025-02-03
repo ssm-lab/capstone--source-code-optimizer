@@ -5,7 +5,7 @@ from ..refactorers.base_refactorer import BaseRefactorer
 from ..data_types.smell import UVASmell
 
 
-class RemoveUnusedRefactorer(BaseRefactorer):
+class RemoveUnusedRefactorer(BaseRefactorer[UVASmell]):
     def __init__(self):
         super().__init__()
 
@@ -65,5 +65,4 @@ class RemoveUnusedRefactorer(BaseRefactorer):
             with target_file.open("w") as f:
                 f.writelines(modified_lines)
 
-        self.modified_files.append(target_file)
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")

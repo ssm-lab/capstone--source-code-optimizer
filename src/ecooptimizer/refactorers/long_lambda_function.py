@@ -5,7 +5,7 @@ from .base_refactorer import BaseRefactorer
 from ..data_types.smell import LLESmell
 
 
-class LongLambdaFunctionRefactorer(BaseRefactorer):
+class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
     """
     Refactorer that targets long lambda functions by converting them into normal functions.
     """
@@ -142,7 +142,5 @@ class LongLambdaFunctionRefactorer(BaseRefactorer):
         else:
             with output_file.open("w") as f:
                 f.writelines(lines)
-
-        self.modified_files.append(target_file)
 
         logging.info(f"Refactoring completed and saved to: {temp_filename}")

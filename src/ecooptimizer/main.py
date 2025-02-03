@@ -4,7 +4,7 @@ from pathlib import Path
 import shutil
 from tempfile import TemporaryDirectory, mkdtemp  # noqa: F401
 
-from .api.main import RefactoredData
+from .api.main import ChangedFile, RefactoredData
 
 from .testing.test_runner import TestRunner
 
@@ -101,14 +101,20 @@ def main():
 
                     refactor_data = RefactoredData(
                         tempDir=tempDir,
-                        targetFile=str(target_file_copy).replace(
-                            str(source_copy), str(SAMPLE_PROJ_DIR), 1
+                        targetFile=ChangedFile(
+                            original=str(SOURCE), refactored=str(target_file_copy)
                         ),
                         energySaved=(final_emissions - initial_emissions),
-                        refactoredFiles=[str(file) for file in modified_files],
+                        affectedFiles=[
+                            ChangedFile(
+                                original=str(file).replace(str(source_copy), str(SAMPLE_PROJ_DIR)),
+                                refactored=str(file),
+                            )
+                            for file in modified_files
+                        ],
                     )
 
-                    output_paths = refactor_data.refactoredFiles
+                    output_paths = refactor_data.affectedFiles
 
                     # In reality the original code will now be overwritten but thats too much work
 
