@@ -4,6 +4,8 @@ from pathlib import Path
 import shutil
 from tempfile import TemporaryDirectory, mkdtemp  # noqa: F401
 
+import libcst as cst
+
 from .api.main import ChangedFile, RefactoredData
 
 from .testing.test_runner import TestRunner
@@ -29,6 +31,7 @@ def main():
     OUTPUT_MANAGER.save_file(
         "source_ast.txt", ast.dump(ast.parse(SOURCE.read_text()), indent=4), "w"
     )
+    OUTPUT_MANAGER.save_file("source_cst.txt", str(cst.parse_module(SOURCE.read_text())), "w")
 
     # Measure initial energy
     energy_meter = CodeCarbonEnergyMeter()
