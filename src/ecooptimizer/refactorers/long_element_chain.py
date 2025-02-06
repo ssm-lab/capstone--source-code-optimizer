@@ -1,34 +1,200 @@
+import ast
+import json
 import logging
 from pathlib import Path
 import re
-import ast
-from typing import Any
+from typing import Any, Optional
 
 from .base_refactorer import BaseRefactorer
 from ..data_types.smell import LECSmell
 
 
+class DictAccess:
+    """Represents a dictionary access pattern found in code."""
+
+    def __init__(
+        self,
+        dictionary_name: str,
+        full_access: str,
+        nesting_level: int,
+        line_number: int,
+        col_offset: int,
+        path: Path,
+        node: ast.AST,
+    ):
+        self.dictionary_name = dictionary_name
+        self.full_access = full_access
+        self.nesting_level = nesting_level
+        self.col_offset = col_offset
+        self.line_number = line_number
+        self.path = path
+        self.node = node
+
+
 class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
     """
-    Only implements flatten dictionary stratrgy becasuse every other strategy didnt save significant amount of
-    energy after flattening was done.
-    Strategries considered: intermediate variables, caching
+    Refactors long element chains by flattening nested dictionaries.
+    Only implements flatten dictionary strategy as it proved most effective for energy savings.
     """
 
     def __init__(self):
         super().__init__()
-        self._reference_map: dict[str, list[tuple[int, str]]] = {}
+        self.dict_name: set[str] = set()
+        self.access_patterns: set[DictAccess] = set()
+        self.min_value = float("inf")
+        self.dict_assignment: Optional[dict[str, Any]] = None
+        self.target_file: Optional[Path] = None
+        self.modified_files: list[Path] = []
 
-    def flatten_dict(self, d: dict[str, Any], parent_key: str = ""):
-        """Recursively flatten a nested dictionary."""
-        items = []
-        for k, v in d.items():
-            new_key = f"{parent_key}_{k}" if parent_key else k
-            if isinstance(v, dict):
-                items.extend(self.flatten_dict(v, new_key).items())
+    def refactor(
+        self,
+        target_file: Path,
+        source_dir: Path,
+        smell: LECSmell,
+        output_file: Path,
+        overwrite: bool = True,
+    ) -> None:
+        """Main refactoring method that processes the target file and related files."""
+        self.target_file = target_file
+        line_number = smell.occurences[0].line
+
+        tree = ast.parse(target_file.read_text())
+        self._find_dict_names(tree, line_number)
+
+        # Abort if dictionary access is too shallow
+        self._find_all_access_patterns(source_dir, initial_parsing=True)
+        if self.min_value <= 1:
+            logging.info("Dictionary access is too shallow, skipping refactoring")
+            return
+
+        self._find_all_access_patterns(source_dir, initial_parsing=False)
+        print(f"not using: {output_file} and {overwrite}")
+
+    def _find_dict_names(self, tree: ast.AST, line_number: int) -> None:
+        """Extract dictionary names from the AST at the given line number."""
+        for node in ast.walk(tree):
+            if not (
+                isinstance(node, ast.Subscript)
+                and hasattr(node, "lineno")
+                and node.lineno == line_number
+            ):
+                continue
+
+            if isinstance(node.value, ast.Name):
+                self.dict_name.add(node.value.id)
             else:
-                items.append((new_key, v))
-        return dict(items)
+                dict_name = self._extract_dict_name(node.value)
+                if dict_name:
+                    self.dict_name.add(dict_name)
+                    self.dict_name.add(dict_name.split(".")[-1])
+
+    def _extract_dict_name(self, node: ast.AST) -> Optional[str]:
+        """Extract dictionary name from attribute access chains."""
+        while isinstance(node, ast.Subscript):
+            node = node.value
+
+        if isinstance(node, ast.Attribute):
+            return f"{node.value.id}.{node.attr}"
+        return None
+
+    # finds all access patterns in the directory (looping thru all files in directory)
+    def _find_all_access_patterns(self, source_dir: Path, initial_parsing: bool = True):
+        for item in source_dir.iterdir():
+            if item.is_dir():
+                self._find_all_access_patterns(item, initial_parsing)
+            elif item.is_file():
+                if item.suffix == ".py":
+                    tree = ast.parse(item.read_text())
+                    if initial_parsing:
+                        self._find_access_pattern_in_file(tree, item)
+                    else:
+                        self.find_dict_assignment_in_file(tree)
+                        self._refactor_all_in_file(item.read_text(), item)
+
+                    logging.info(
+                        "_______________________________________________________________________________________________"
+                    )
+
+    # finds all access patterns in the file
+    def _find_access_pattern_in_file(self, tree: ast.AST, path: Path):
+        offset = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Subscript):  # Check for dictionary access (Subscript)
+                dict_name, full_access, line_number, col_offset = self.extract_full_dict_access(
+                    node
+                )
+
+                if (line_number, col_offset) in offset:
+                    continue
+                offset.add((line_number, col_offset))
+
+                if dict_name.split(".")[-1] in self.dict_name:
+                    nesting_level = self._count_nested_subscripts(node)
+                    access = DictAccess(
+                        dict_name, full_access, nesting_level, line_number, col_offset, path, node
+                    )
+                    self.access_patterns.add(access)
+
+                    self.min_value = min(self.min_value, nesting_level)
+
+    def extract_full_dict_access(self, node: ast.Subscript):
+        """Extracts the full dictionary access chain as a string."""
+        access_chain = []
+        curr = node
+        # Traverse nested subscripts to build access path
+        while isinstance(curr, ast.Subscript):
+            if isinstance(curr.slice, ast.Constant):  # Python 3.8+
+                access_chain.append(f"['{curr.slice.value}']")
+            curr = curr.value  # Move to parent node
+
+        # Get the dictionary root (can be a variable or an attribute)
+        if isinstance(curr, ast.Name):
+            dict_name = curr.id  # Simple variable (e.g., "long_chain")
+        elif isinstance(curr, ast.Attribute) and isinstance(curr.value, ast.Name):
+            dict_name = f"{curr.value.id}.{curr.attr}"  # Attribute access (e.g., "self.long_chain")
+        else:
+            dict_name = "UNKNOWN"
+
+        full_access = f"{dict_name}{''.join(reversed(access_chain))}"
+
+        return dict_name, full_access, curr.lineno, curr.col_offset
+
+    def _count_nested_subscripts(self, node: ast.Subscript):
+        """
+        Counts how many times a dictionary is accessed (nested Subscript nodes).
+        """
+        level = 0
+        curr = node
+        while isinstance(curr, ast.Subscript):
+            curr = curr.value  # Move up the AST
+            level += 1
+        return level
+
+    def find_dict_assignment_in_file(self, tree: ast.AST):
+        """find the dictionary assignment from AST based on the dict name"""
+
+        class DictVisitor(ast.NodeVisitor):
+            def visit_Assign(self_, node: ast.Assign):
+                if isinstance(node.value, ast.Dict) and len(node.targets) == 1:
+                    # dictionary is a varibale
+                    if (
+                        isinstance(node.targets[0], ast.Name)
+                        and node.targets[0].id in self.dict_name
+                    ):
+                        dict_value = self.extract_dict_literal(node.value)
+                        flattened_version = self.flatten_dict(dict_value)
+                        self.dict_assignment = flattened_version
+
+                    # dictionary is an attribute
+                    elif (
+                        isinstance(node.targets[0], ast.Attribute)
+                        and node.targets[0].attr in self.dict_name
+                    ):
+                        dict_value = self.extract_dict_literal(node.value)
+                        self.dict_assignment = self.flatten_dict(dict_value)
+                self_.generic_visit(node)
+
+        DictVisitor().visit(tree)
 
     def extract_dict_literal(self, node: ast.AST):
         """Convert AST dict literal to Python dict."""
@@ -45,147 +211,136 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
             return node.id
         return node
 
-    def find_dict_assignments(self, tree: ast.AST, name: str):
-        """Find and extract dictionary assignments from AST."""
-        dict_assignments = {}
+    def flatten_dict(
+        self, d: dict[str, Any], depth: int = 0, parent_key: str = ""
+    ) -> dict[str, Any]:
+        """Recursively flatten a nested dictionary."""
 
-        class DictVisitor(ast.NodeVisitor):
-            def visit_Assign(self_, node: ast.Assign):
-                if (
-                    isinstance(node.value, ast.Dict)
-                    and len(node.targets) == 1
-                    and isinstance(node.targets[0], ast.Name)
-                    and node.targets[0].id == name
+        if depth >= self.min_value - 1:
+            # At max_depth, we return the current dictionary as flattened key-value pairs
+            items = {}
+            for k, v in d.items():
+                new_key = f"{parent_key}_{k}" if parent_key else k
+                items[new_key] = v
+            return items
+
+        items = {}
+        for k, v in d.items():
+            new_key = f"{parent_key}_{k}" if parent_key else k
+
+            if isinstance(v, dict):
+                # Recursively flatten the dictionary, increasing the depth
+                items.update(self.flatten_dict(v, depth + 1, new_key))
+            else:
+                # If it's not a dictionary, just add it to the result
+                items[new_key] = v
+
+        return items
+
+    def generate_flattened_access(self, access_chain: list[str]) -> str:
+        """Generate flattened dictionary key only until given min_value."""
+
+        joined = "_".join(k.strip("'\"") for k in access_chain[: self.min_value])
+        if not joined.endswith("']") or not joined.endswith('"]'):  # Corrected to check for "']"
+            joined += "']"
+        remaining = access_chain[self.min_value :]  # Keep the rest unchanged
+
+        rest = "".join(f"[{key}]" for key in remaining)
+
+        return f"{joined}" + rest
+
+    def _refactor_all_in_file(self, source_code: str, file_path: Path) -> None:
+        """Refactor dictionary access patterns in a single file."""
+        # Skip if no access patterns found
+        if not any(access.path == file_path for access in self.access_patterns):
+            return
+
+        lines = source_code.split("\n")
+        line_modifications = self._collect_line_modifications(file_path)
+
+        refactored_lines = self._apply_modifications(lines, line_modifications)
+        self._update_dict_assignment(refactored_lines)
+
+        # Write changes back to file
+        file_path.write_text("\n".join(refactored_lines))
+
+        if not file_path.samefile(self.target_file):
+            self.modified_files.append(file_path.resolve())
+
+    def _collect_line_modifications(self, file_path: Path) -> dict[int, list[tuple[int, str, str]]]:
+        """Collect all modifications needed for each line."""
+        modifications: dict[int, list[tuple[int, str, str]]] = {}
+
+        for access in sorted(self.access_patterns, key=lambda a: (a.line_number, a.col_offset)):
+            if access.path != file_path:
+                continue
+
+            access_chain = access.full_access.split("][")
+            for i in range(len(access_chain)):
+                access_chain[i] = access_chain[i].replace("]", "")
+            new_access = self.generate_flattened_access(access_chain)
+
+            if access.line_number not in modifications:
+                modifications[access.line_number] = []
+            modifications[access.line_number].append(
+                (access.col_offset, access.full_access, new_access)
+            )
+
+        return modifications
+
+    def _apply_modifications(
+        self, lines: list[str], modifications: dict[int, list[tuple[int, str, str]]]
+    ) -> list[str]:
+        """Apply collected modifications to each line."""
+        refactored_lines = []
+        for line_num, original_line in enumerate(lines, start=1):
+            if line_num in modifications:
+                # Sort modifications by column offset (reverse to replace from right to left)
+                mods = sorted(modifications[line_num], key=lambda x: x[0], reverse=True)
+                modified_line = original_line
+
+                for col_offset, old_access, new_access in mods:
+                    end_idx = col_offset + len(old_access)
+                    # Replace specific occurrence using slicing
+                    modified_line = (
+                        modified_line[:col_offset] + new_access + modified_line[end_idx:]
+                    )
+
+                refactored_lines.append(modified_line)
+            else:
+                # No modification, add original line
+                refactored_lines.append(original_line)
+
+        return refactored_lines
+
+    def _update_dict_assignment(self, refactored_lines: list[str]) -> None:
+        """Update dictionary assignment to be the new flattened dictionary."""
+        dictionary_assignment_name = self.dict_name
+        for i, line in enumerate(refactored_lines):
+            match = next(
+                (
+                    name
+                    for name in dictionary_assignment_name
+                    if re.match(rf"^\s*(?:\w+\.)*{re.escape(name)}\s*=", line)
+                ),
+                None,
+            )
+
+            if match:
+                # Preserve indentation and the `=`
+                indent, prefix, _ = re.split(r"(=)", line, maxsplit=1)
+
+                # Convert dict to a properly formatted string
+                dict_str = json.dumps(self.dict_assignment, separators=(",", ": "))
+                # Update the line with the new flattened dictionary
+                refactored_lines[i] = f"{indent}{prefix} {dict_str}"
+
+                # Remove the following lines of the original nested dictionary
+                j = i + 1
+                while j < len(refactored_lines) and (
+                    refactored_lines[j].strip().startswith('"')
+                    or refactored_lines[j].strip().startswith("}")
                 ):
-                    dict_name = node.targets[0].id
-                    dict_value = self.extract_dict_literal(node.value)
-                    dict_assignments[dict_name] = dict_value
-                self_.generic_visit(node)
-
-        DictVisitor().visit(tree)
-
-        return dict_assignments
-
-    def collect_dict_references(self, tree: ast.AST) -> None:
-        """Collect all dictionary access patterns."""
-        parent_map = {}
-
-        class ChainVisitor(ast.NodeVisitor):
-            def visit_Subscript(self_, node: ast.Subscript):
-                chain = []
-                current = node
-                while isinstance(current, ast.Subscript):
-                    if isinstance(current.slice, ast.Constant):
-                        chain.append(current.slice.value)
-                    current = current.value
-
-                if isinstance(current, ast.Name):
-                    base_var = current.id
-                    # Only store the pattern if we're at a leaf node (not part of another subscript)
-                    parent = parent_map.get(node)
-                    if not isinstance(parent, ast.Subscript):
-                        if chain:
-                            # Use single and double quotes in case user uses either
-                            joined_double = "][".join(f'"{k}"' for k in reversed(chain))
-                            access_pattern_double = f"{base_var}[{joined_double}]"
-
-                            flattened_key = "_".join(str(k) for k in reversed(chain))
-                            flattened_reference = f'{base_var}["{flattened_key}"]'
-
-                            if access_pattern_double not in self._reference_map:
-                                self._reference_map[access_pattern_double] = []
-
-                            self._reference_map[access_pattern_double].append(
-                                (node.lineno, flattened_reference)
-                            )
-
-                for child in ast.iter_child_nodes(node):
-                    parent_map[child] = node
-                self_.generic_visit(node)
-
-        ChainVisitor().visit(tree)
-
-    def generate_flattened_access(self, base_var: str, access_chain: list[str]) -> str:
-        """Generate flattened dictionary key."""
-        joined = "_".join(k.strip("'\"") for k in access_chain)
-        return f"{base_var}_{joined}"
-
-    def refactor(
-        self,
-        target_file: Path,
-        source_dir: Path,  # noqa: ARG002
-        smell: LECSmell,
-        output_file: Path,
-        overwrite: bool = True,
-    ):
-        """Refactor long element chains using the most appropriate strategy."""
-        line_number = smell.occurences[0].line
-        temp_filename = output_file
-
-        with target_file.open() as f:
-            content = f.read()
-            lines = content.splitlines(keepends=True)
-            tree = ast.parse(content)
-
-        dict_name = ""
-        # Traverse the AST
-        for node in ast.walk(tree):
-            if isinstance(
-                node, ast.Subscript
-            ):  # Check if the node is a Subscript (e.g., dictionary access)
-                if hasattr(node, "lineno") and node.lineno == line_number:  # Check line number
-                    if isinstance(
-                        node.value, ast.Name
-                    ):  # Ensure the value being accessed is a variable (dictionary)
-                        dict_name = node.value.id  # Extract the name of the dictionary
-
-        # Find dictionary assignments and collect references
-        dict_assignments = self.find_dict_assignments(tree, dict_name)
-
-        self._reference_map.clear()
-        self.collect_dict_references(tree)
-
-        new_lines = lines.copy()
-        processed_patterns = set()
-
-        for name, value in dict_assignments.items():
-            flat_dict = self.flatten_dict(value)
-            dict_def = f"{name} = {flat_dict!r}\n"
-
-            # Update all references to this dictionary
-            for pattern, occurrences in self._reference_map.items():
-                if pattern.startswith(name) and pattern not in processed_patterns:
-                    for line_num, flattened_reference in occurrences:
-                        if line_num - 1 < len(new_lines):
-                            line = new_lines[line_num - 1]
-                            new_lines[line_num - 1] = line.replace(pattern, flattened_reference)
-                    processed_patterns.add(pattern)
-
-            # Update dictionary definition
-            for i, line in enumerate(lines):
-                if re.match(rf"\s*{name}\s*=", line):
-                    new_lines[i] = " " * (len(line) - len(line.lstrip())) + dict_def
-
-                    # Remove the following lines of the original nested dictionary
-                    j = i + 1
-                    while j < len(new_lines) and (
-                        new_lines[j].strip().startswith('"') or new_lines[j].strip().startswith("}")
-                    ):
-                        new_lines[j] = ""  # Mark for removal
-                        j += 1
-                    break
-
-        temp_file_path = temp_filename
-        # Write the refactored code to a new temporary file
-        with temp_file_path.open("w") as temp_file:
-            temp_file.writelines(new_lines)
-
-        # CHANGE FOR MULTI FILE IMPLEMENTATION
-        if overwrite:
-            with target_file.open("w") as f:
-                f.writelines(new_lines)
-        else:
-            with output_file.open("w") as f:
-                f.writelines(new_lines)
-
-        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
+                    refactored_lines[j] = ""  # Mark for removal
+                    j += 1
+                break
