@@ -7,8 +7,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from ..testing.test_runner import TestRunner
-
-
+import math
+from typing import Optional
 from ..refactorers.refactorer_controller import RefactorerController
 
 from ..analyzers.analyzer_controller import AnalyzerController
@@ -33,7 +33,7 @@ class ChangedFile(BaseModel):
 class RefactoredData(BaseModel):
     tempDir: str
     targetFile: ChangedFile
-    energySaved: float
+    energySaved: Optional[float] = None
     affectedFiles: list[ChangedFile]
 
 
@@ -45,6 +45,18 @@ class RefactorRqModel(BaseModel):
 class RefactorResModel(BaseModel):
     refactoredData: RefactoredData = None  # type: ignore
     updatedSmells: list[Smell]
+
+
+def replace_nan_with_null(data: any):
+    if isinstance(data, float) and math.isnan(data):
+        return None
+    elif isinstance(data, dict):
+        return {k: replace_nan_with_null(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [replace_nan_with_null(item) for item in data]
+
+    else:
+        return data
 
 
 @app.get("/smells", response_model=list[Smell])
@@ -61,13 +73,14 @@ def get_smells(file_path: str):
 
 
 @app.post("/refactor")
-def refactor(request: RefactorRqModel, response_model=RefactorResModel):  # noqa: ANN001, ARG001
+def refactor(request: RefactorRqModel, response_model=RefactorResModel):
     try:
         print(request.model_dump_json())
         refactor_data, updated_smells = testing_refactor_smell(
             Path(request.source_dir),
             request.smell,
         )
+        refactor_data = replace_nan_with_null(refactor_data)
         if not refactor_data:
             return RefactorResModel(updatedSmells=updated_smells)
         else:
@@ -165,9 +178,14 @@ def testing_refactor_smell(source_dir: Path, smell: Smell):
         refactor_data = RefactoredData(
             tempDir=str(tempDir.resolve()),
             targetFile=ChangedFile(
-                original=str(Path(smell.path).resolve()), refactored=str(target_file_copy.resolve())
+                original=str(Path(smell.path).resolve()),
+                refactored=str(target_file_copy.resolve()),
             ),
-            energySaved=(final_emissions - initial_emissions),
+            energySaved=(
+                None
+                if math.isnan(final_emissions - initial_emissions)
+                else (final_emissions - initial_emissions)
+            ),
             affectedFiles=[
                 ChangedFile(
                     original=str(file.resolve()).replace(
@@ -255,7 +273,11 @@ def refactor_smell(source_dir: Path, smell: Smell):
             refactor_data = RefactoredData(
                 tempDir=str(tempDir),
                 targetFile=ChangedFile(original=smell.path, refactored=str(target_file_copy)),
-                energySaved=(final_emissions - initial_emissions),
+                energySaved=(
+                    None
+                    if math.isnan(final_emissions - initial_emissions)
+                    else (final_emissions - initial_emissions)
+                ),
                 affectedFiles=[
                     ChangedFile(
                         original=str(file).replace(str(source_copy), str(source_dir)),
@@ -266,7 +288,6 @@ def refactor_smell(source_dir: Path, smell: Smell):
             )
 
             updated_smells = detect_smells(target_file_copy)
-
     return refactor_data, updated_smells
 
 

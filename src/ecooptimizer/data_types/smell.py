@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 from .custom_fields import CRCInfo, Occurence, AdditionalInfo, SCLInfo
 
@@ -29,7 +30,7 @@ class Smell(BaseModel):
     symbol: str
     type: str
     occurences: list[Occurence]
-    additionalInfo: AdditionalInfo
+    additionalInfo: Optional[AdditionalInfo] = None
 
 
 class CRCSmell(Smell):
