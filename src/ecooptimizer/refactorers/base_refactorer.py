@@ -18,6 +18,7 @@ class BaseRefactorer(ABC, Generic[T]):
         source_dir: Path,
         smell: T,
         output_file: Path,
+        file_count: int = 0,
         overwrite: bool = True,
     ):
         pass

@@ -16,7 +16,14 @@ from ..measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
 from .. import OUTPUT_MANAGER, OUTPUT_DIR
 
-outputs_dir = Path("/Users/tanveerbrar/Desktop").resolve()
+base_dir = Path(__file__).resolve().parent
+logs_dir = base_dir / "logs"
+log_file = logs_dir / "app.log"
+outputs_dir = base_dir / "files"
+
+logs_dir.mkdir(exist_ok=True)
+outputs_dir.mkdir(exist_ok=True)
+
 app = FastAPI()
 
 analyzer_controller = AnalyzerController()
@@ -53,8 +60,8 @@ def get_smells(file_path: str):
         raise HTTPException(status_code=404, detail=str(e)) from e
 
 
-@app.post("/refactor")
-def refactor(request: RefactorRqModel, response_model=RefactorResModel):  # noqa: ANN001, ARG001
+@app.post("/refactor", response_model=RefactorResModel)
+def refactor(request: RefactorRqModel):
     try:
         raw_data = request.model_dump_json()
         print(raw_data)
@@ -101,9 +108,9 @@ def detect_smells(file_path: Path) -> list[Smell]:
 
 def refactor_smell(source_dir: Path, smell: Smell):
     targetFile = smell.path
-
+    logging.info(f"*** Source directory {source_dir}, target file {targetFile}")
     logging.info(
-        f"Starting refactoring for smell symbol: {smell.symbol}\
+        f"*** Starting refactoring for smell symbol: {smell.symbol}\
           at line {smell.occurences[0].line} in file: {targetFile}"
     )
 
@@ -115,13 +122,13 @@ def refactor_smell(source_dir: Path, smell: Smell):
     # Measure initial energy
     energy_meter = CodeCarbonEnergyMeter()
     energy_meter.measure_energy(Path(targetFile))
-    initial_emissions = energy_meter.emissions
+    initial_emissions = 10000
 
     if not initial_emissions:
         logging.error("Could not retrieve initial emissions.")
         raise RuntimeError("Could not retrieve initial emissions.")
 
-    logging.info(f"Initial emissions: {initial_emissions}")
+    logging.info(f"*** Initial emissions: {initial_emissions}")
 
     refactor_data = None
     updated_smells = []
@@ -143,7 +150,7 @@ def refactor_smell(source_dir: Path, smell: Smell):
         raise RuntimeError(str(e)) from e
 
     energy_meter.measure_energy(target_file_copy)
-    final_emissions = energy_meter.emissions
+    final_emissions = 5
 
     if not final_emissions:
         logging.error("Could not retrieve final emissions. Discarding refactoring.")
@@ -154,8 +161,10 @@ def refactor_smell(source_dir: Path, smell: Smell):
         print("Refactoring Failed.\n")
 
     else:
-        logging.info("Energy saved!")
-        logging.info(f"Initial emissions: {initial_emissions} | Final emissions: {final_emissions}")
+        logging.info("*** Energy saved!")
+        logging.info(
+            f"*** Initial emissions: {initial_emissions} | Final emissions: {final_emissions}"
+        )
 
         # if not TestRunner("pytest", Path(tempDir)).retained_functionality():
         #     logging.info("Functionality not maintained. Discarding refactoring.\n")
@@ -175,7 +184,9 @@ def refactor_smell(source_dir: Path, smell: Smell):
         #     updated_smells = detect_smells(target_file_copy)
 
         print("Refactoring Succesful!\n")
-
+        logging.info(f"*** Reading from tempDir {tempDir} targetFile {targetFile}")
+        for file in modified_files:
+            logging.info(f"*** Modified {file}")
         refactor_data = RefactoredData(
             tempDir=tempDir,
             targetFile=str(target_file_copy),

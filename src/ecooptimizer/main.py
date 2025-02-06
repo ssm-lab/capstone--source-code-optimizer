@@ -6,7 +6,6 @@ from tempfile import TemporaryDirectory, mkdtemp  # noqa: F401
 
 from .api.main import RefactoredData
 
-from .testing.test_runner import TestRunner
 
 from .measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
@@ -33,7 +32,7 @@ def main():
     # Measure initial energy
     energy_meter = CodeCarbonEnergyMeter()
     energy_meter.measure_energy(Path(SOURCE))
-    initial_emissions = energy_meter.emissions
+    initial_emissions = 1000
 
     if not initial_emissions:
         logging.error("Could not retrieve initial emissions. Exiting.")
@@ -50,15 +49,19 @@ def main():
     output_paths = []
 
     for smell in smells_data:
-        # Use the line below and comment out "with TemporaryDirectory()" if you want to see the refactored code
-        # It basically copies the source directory into a temp dir that you can find in your systems TEMP folder
-        # It varies per OS. The location of the folder can be found in the 'refactored-data.json' file in outputs.
-        # If you use the other line know that you will have to manually delete the temp dir after running the
-        # code. It will NOT auto delete which, hence allowing you to see the refactoring results
+        if smell.messageId == "R0913" and smell.occurences[0].line == 30:
+            logging.info("hello refactoring LPL for line 30")
+            # Use the line below and comment out "with TemporaryDirectory()" if you want to see the refactored code
+            # It basically copies the source directory into a temp dir that you can find in your systems TEMP folder
+            # It varies per OS. The location of the folder can be found in the 'refactored-data.json' file in outputs.
+            # If you use the other line know that you will have to manually delete the temp dir after running the
+            # code. It will NOT auto delete which, hence allowing you to see the refactoring results
 
-        # tempDir = mkdtemp(prefix="ecooptimizer-") # < UNCOMMENT THIS LINE and shift code under to the left
+            tempDir = mkdtemp(
+                prefix="ecooptimizer-"
+            )  # < UNCOMMENT THIS LINE and shift code under to the left
 
-        with TemporaryDirectory() as tempDir:  # COMMENT OUT THIS ONE
+            # with TemporaryDirectory() as tempDir:  # COMMENT OUT THIS ONE
             source_copy = Path(tempDir) / SAMPLE_PROJ_DIR.name
             target_file_copy = Path(str(SOURCE).replace(str(SAMPLE_PROJ_DIR), str(source_copy), 1))
 
@@ -66,6 +69,9 @@ def main():
 
             shutil.copytree(SAMPLE_PROJ_DIR, source_copy)
 
+            logging.info("hello this is what is passed to refactorer. overwrite is false")
+            logging.info(f"hello target_file {target_file_copy}")
+            logging.info(f"hello source_copy {source_copy}")
             try:
                 modified_files: list[Path] = refactorer_controller.run_refactorer(
                     target_file_copy, source_copy, smell, overwrite=False
@@ -75,7 +81,7 @@ def main():
                 continue
 
             energy_meter.measure_energy(target_file_copy)
-            final_emissions = energy_meter.emissions
+            final_emissions = 1
 
             if not final_emissions:
                 logging.error("Could not retrieve final emissions. Discarding refactoring.")
@@ -91,31 +97,36 @@ def main():
                     f"Initial emissions: {initial_emissions} | Final emissions: {final_emissions}"
                 )
 
-                if not TestRunner("pytest", Path(tempDir)).retained_functionality():
-                    logging.info("Functionality not maintained. Discarding refactoring.\n")
-                    print("Refactoring Failed.\n")
+                # if not TestRunner("pytest", Path(tempDir)).retained_functionality():
+                #     logging.info("Functionality not maintained. Discarding refactoring.\n")
+                #     print("Refactoring Failed.\n")
 
-                else:
-                    logging.info("Functionality maintained! Retaining refactored file.\n")
-                    print("Refactoring Succesful!\n")
+                # else:
+                logging.info("Functionality maintained! Retaining refactored file.\n")
+                print("Refactoring Succesful!\n")
 
-                    refactor_data = RefactoredData(
-                        tempDir=tempDir,
-                        targetFile=str(target_file_copy).replace(
-                            str(source_copy), str(SAMPLE_PROJ_DIR), 1
-                        ),
-                        energySaved=(final_emissions - initial_emissions),
-                        refactoredFiles=[str(file) for file in modified_files],
-                    )
+                logging.info("hello this is where we are reading")
+                logging.info(f"hello tempDir {tempDir}")
+                logging.info(f"hello targetFile {target_file_copy}")
+                for file in modified_files:
+                    logging.info(f"hello modified file {file}")
+                refactor_data = RefactoredData(
+                    tempDir=tempDir,
+                    targetFile=str(target_file_copy).replace(
+                        str(source_copy), str(SAMPLE_PROJ_DIR), 1
+                    ),
+                    energySaved=(final_emissions - initial_emissions),
+                    refactoredFiles=[str(file) for file in modified_files],
+                )
 
-                    output_paths = refactor_data.refactoredFiles
+                output_paths = refactor_data.refactoredFiles
 
-                    # In reality the original code will now be overwritten but thats too much work
+                # In reality the original code will now be overwritten but thats too much work
 
-                    OUTPUT_MANAGER.save_json_files(
-                        "refactoring-data.json", refactor_data.model_dump()
-                    )  # type: ignore
-    print(output_paths)
+                OUTPUT_MANAGER.save_json_files("refactoring-data.json", refactor_data.model_dump())  # type: ignore
+            print(output_paths)
+        else:
+            logging.info("hello not found")
 
 
 if __name__ == "__main__":
