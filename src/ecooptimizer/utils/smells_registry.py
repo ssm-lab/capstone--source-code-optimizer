@@ -78,7 +78,7 @@ SMELL_REGISTRY: dict[str, SmellRecord] = {
         "enabled": True,
         "analyzer_method": "ast",
         "checker": detect_long_element_chain,
-        "analyzer_options": {"threshold": 5},
+        "analyzer_options": {"threshold": 3},
         "refactorer": LongElementChainRefactorer,
     },
     "cached-repeated-calls": {
