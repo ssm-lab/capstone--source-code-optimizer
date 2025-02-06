@@ -241,16 +241,12 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
         """Generate flattened dictionary key only until given min_value."""
 
         joined = "_".join(k.strip("'\"") for k in access_chain[: self.min_value])
-        print(f"joined: {joined}")
         if not joined.endswith("']") or not joined.endswith('"]'):  # Corrected to check for "']"
             joined += "']"
         remaining = access_chain[self.min_value :]  # Keep the rest unchanged
-        print(f"remaining: {remaining}")
 
         rest = "".join(f"[{key}]" for key in remaining)
-        print(f"rest: {rest}")
 
-        print(f"final: {joined}" + rest)
         return f"{joined}" + rest
 
     def _refactor_all_in_file(self, source_code: str, file_path: Path) -> None:
@@ -280,10 +276,8 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
                 continue
 
             access_chain = access.full_access.split("][")
-            print(f"access_chain: {access_chain}")
             for i in range(len(access_chain)):
                 access_chain[i] = access_chain[i].replace("]", "")
-            print(f"now access chain is: {access_chain}")
             new_access = self.generate_flattened_access(access_chain)
 
             if access.line_number not in modifications:
