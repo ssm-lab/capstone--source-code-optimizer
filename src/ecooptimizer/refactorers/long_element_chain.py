@@ -1,4 +1,4 @@
-import logging
+# import logging
 from pathlib import Path
 import re
 import ast
@@ -188,4 +188,4 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
             with output_file.open("w") as f:
                 f.writelines(new_lines)
 
-        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
+        # logging.info(f"Refactoring completed and saved to: {temp_file_path}")

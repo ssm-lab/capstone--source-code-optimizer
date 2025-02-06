@@ -1,3 +1,4 @@
+import logging
 from io import StringIO
 import json
 from pathlib import Path
@@ -5,18 +6,30 @@ from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
 from ..data_types.custom_fields import AdditionalInfo, Occurence
-
 from .base_analyzer import Analyzer
 from ..data_types.smell import Smell
 
+logger = logging.getLogger("analyzers")
+
 
 class PylintAnalyzer(Analyzer):
+    """
+    Runs Pylint analysis on a given file and extracts detected code smells.
+    """
+
     def build_smells(self, pylint_smells: dict):  # type: ignore
-        """Casts inital list of pylint smells to the proper Smell configuration."""
+        """
+        Converts raw Pylint output into structured `Smell` objects.
+
+        Args:
+            pylint_smells (dict): Raw Pylint messages.
+
+        Returns:
+            list[Smell]: A list of formatted smell objects.
+        """
         smells: list[Smell] = []
         for smell in pylint_smells:
             smells.append(
-                # Initialize the SmellModel instance
                 Smell(
                     confidence=smell["confidence"],
                     message=smell["message"],
@@ -40,6 +53,16 @@ class PylintAnalyzer(Analyzer):
         return smells
 
     def analyze(self, file_path: Path, extra_options: list[str]):
+        """
+        Runs Pylint analysis on a given file and extracts smells.
+
+        Args:
+            file_path (Path): Path to the file to analyze.
+            extra_options (list[str]): Additional Pylint configuration options.
+
+        Returns:
+            list[Smell]: A list of detected code smells.
+        """
         smells_data: list[Smell] = []
         pylint_options = [str(file_path), *extra_options]
 
@@ -49,10 +72,11 @@ class PylintAnalyzer(Analyzer):
             try:
                 Run(pylint_options, reporter=reporter, exit=False)
                 buffer.seek(0)
-                smells_data.extend(self.build_smells(json.loads(buffer.getvalue())["messages"]))
+                parsed_output = json.loads(buffer.getvalue())["messages"]
+                smells_data.extend(self.build_smells(parsed_output))
             except json.JSONDecodeError as e:
-                print(f"Failed to parse JSON output from pylint: {e}")
+                logger.error(f"Failed to parse JSON output from Pylint: {e}")
             except Exception as e:
-                print(f"An error occurred during pylint analysis: {e}")
+                logger.error(f"An error occurred during Pylint analysis: {e}")
 
         return smells_data

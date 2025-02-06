@@ -1,6 +1,7 @@
 import ast
 import astor
-import logging
+
+# import logging
 from pathlib import Path
 
 from ..data_types.smell import LPLSmell
@@ -33,9 +34,9 @@ class LongParameterListRefactorer(BaseRefactorer[LPLSmell]):
 
         # find the line number of target function indicated by the code smell object
         target_line = smell.occurences[0].line
-        logging.info(
-            f"Applying 'Fix Too Many Parameters' refactor on '{target_file.name}' at line {target_line} for identified code smell."
-        )
+        # logging.info(
+        #     f"Applying 'Fix Too Many Parameters' refactor on '{target_file.name}' at line {target_line} for identified code smell."
+        # )
         # use target_line to find function definition at the specific line for given code smell object
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.lineno == target_line:

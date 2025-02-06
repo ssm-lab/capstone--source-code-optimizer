@@ -1,4 +1,3 @@
-import ast
 import logging
 from pathlib import Path
 import shutil
@@ -25,12 +24,6 @@ from . import (
 
 
 def main():
-    # Save ast
-    OUTPUT_MANAGER.save_file(
-        "source_ast.txt", ast.dump(ast.parse(SOURCE.read_text()), indent=4), "w"
-    )
-
-    # Measure initial energy
     energy_meter = CodeCarbonEnergyMeter()
     energy_meter.measure_energy(Path(SOURCE))
     initial_emissions = energy_meter.emissions
