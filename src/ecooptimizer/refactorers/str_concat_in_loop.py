@@ -9,7 +9,7 @@ from .base_refactorer import BaseRefactorer
 from ..data_types.smell import SCLSmell
 
 
-class UseListAccumulationRefactorer(BaseRefactorer):
+class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
     """
     Refactorer that targets string concatenations inside loops
     """
@@ -94,7 +94,6 @@ class UseListAccumulationRefactorer(BaseRefactorer):
         else:
             output_file.write_text(modified_code)
 
-        self.modified_files.append(target_file)
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 
     def visit(self, node: nodes.NodeNG):

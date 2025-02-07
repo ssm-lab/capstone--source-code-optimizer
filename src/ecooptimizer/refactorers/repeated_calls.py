@@ -7,7 +7,7 @@ from ..data_types.smell import CRCSmell
 from .base_refactorer import BaseRefactorer
 
 
-class CacheRepeatedCallsRefactorer(BaseRefactorer):
+class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
     def __init__(self):
         """
         Initializes the CacheRepeatedCallsRefactorer.
@@ -81,8 +81,6 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer):
         else:
             with output_file.open("w") as f:
                 f.writelines(lines)
-
-        self.modified_files.append(target_file)
 
         logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 

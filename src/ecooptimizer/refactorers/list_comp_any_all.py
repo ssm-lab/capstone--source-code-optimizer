@@ -6,7 +6,7 @@ from .base_refactorer import BaseRefactorer
 from ..data_types.smell import UGESmell
 
 
-class UseAGeneratorRefactorer(BaseRefactorer):
+class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
     def __init__(self):
         super().__init__()
 

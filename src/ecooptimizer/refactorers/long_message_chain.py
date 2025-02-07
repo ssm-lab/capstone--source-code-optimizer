@@ -5,7 +5,7 @@ from .base_refactorer import BaseRefactorer
 from ..data_types.smell import LMCSmell
 
 
-class LongMessageChainRefactorer(BaseRefactorer):
+class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
     """
     Refactorer that targets long method chains to improve performance.
     """

@@ -13,23 +13,32 @@ dependencies = [
   "asttokens",
   "uvicorn",
   "fastapi",
-  "pydantic"
+  "pydantic",
+  "libcst",
 ]
 requires-python = ">=3.9"
 authors = [
-  {name = "Sevhena Walker"},
-  {name = "Mya Hussain"},
-  {name = "Nivetha Kuruparan"},
-  {name = "Ayushi Amin"},
-  {name = "Tanveer Brar"}
+  { name = "Sevhena Walker" },
+  { name = "Mya Hussain" },
+  { name = "Nivetha Kuruparan" },
+  { name = "Ayushi Amin" },
+  { name = "Tanveer Brar" },
 ]
 
 description = "A source code eco optimizer"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "pytest-mock", "ruff", "coverage", "pyright", "pre-commit"]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "pytest-mock",
+  "ruff",
+  "coverage",
+  "pyright",
+  "pre-commit",
+]
 
 [project.urls]
 Documentation = "https://readthedocs.org"
@@ -48,21 +57,22 @@ line-length = 100
 
 [tool.ruff.lint]
 select = [
-    "E",    # Enforce Python Error rules (e.g., syntax errors, exceptions).
-    "UP",   # Check for unnecessary passes and other unnecessary constructs.
-    "ANN001",  # Ensure type annotations are present where needed.
-    "ANN002",
-    "ANN003",
-    "ANN401",
-    "INP",  # Flag invalid Python patterns or usage.
-    "PTH",  # Check path-like or import-related issues.
-    "F",    # Enforce function-level checks (e.g., complexity, arguments).
-    "B",    # Enforce best practices for Python coding (general style rules).
-    "PT",   # Enforce code formatting and Pythonic idioms.
-    "W",    # Enforce warnings (e.g., suspicious constructs or behaviours).
-    "A",    # Flag common anti-patterns or bad practices.
-    "RUF",  # Ruff-specific rules.
-    "ARG",  # Check for function argument issues.
+  "E",      # Enforce Python Error rules (e.g., syntax errors, exceptions).
+  "UP",     # Check for unnecessary passes and other unnecessary constructs.
+  "ANN001", # Ensure type annotations are present where needed.
+  "ANN002",
+  "ANN003",
+  "ANN401",
+  "INP",    # Flag invalid Python patterns or usage.
+  "PTH",    # Check path-like or import-related issues.
+  "F",      # Enforce function-level checks (e.g., complexity, arguments).
+  "B",      # Enforce best practices for Python coding (general style rules).
+  "PT",     # Enforce code formatting and Pythonic idioms.
+  "W",      # Enforce warnings (e.g., suspicious constructs or behaviours).
+  "A",      # Flag common anti-patterns or bad practices.
+  "RUF",    # Ruff-specific rules.
+  "ARG",    # Check for function argument issues.,
+  "FAST",   # FastApi checks
 ]
 
 # Avoid enforcing line-length violations (`E501`)

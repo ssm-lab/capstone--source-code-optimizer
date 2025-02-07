@@ -21,7 +21,7 @@ class RefactorerController:
             self.smell_counters[smell_id] = self.smell_counters.get(smell_id, 0) + 1
             file_count = self.smell_counters[smell_id]
 
-            output_file_name = f"{target_file.stem}, source_dir: path_{smell_id}_{file_count}.py"
+            output_file_name = f"{target_file.stem}_path_{smell_id}_{file_count}.py"
             output_file_path = self.output_dir / output_file_name
 
             print(f"Refactoring {smell_symbol} using {refactorer_class.__name__}")

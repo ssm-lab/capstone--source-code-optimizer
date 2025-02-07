@@ -19,5 +19,5 @@ class SmellRecord(TypedDict):
     enabled: bool
     analyzer_method: str
     checker: Callable | None  # type: ignore
-    refactorer: type[BaseRefactorer]  # Refers to a class, not an instance
+    refactorer: type[BaseRefactorer]  # type: ignore # Refers to a class, not an instance
     analyzer_options: dict[str, Any]  # type: ignore
