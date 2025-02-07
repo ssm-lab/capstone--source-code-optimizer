@@ -6,10 +6,6 @@ from pathlib import Path
 from ..data_types.smell import LPLSmell
 from .base_refactorer import BaseRefactorer
 
-from .. import (
-    OUTPUT_DIR,
-)
-
 
 class LongParameterListRefactorer(BaseRefactorer):
     def __init__(self):
@@ -23,7 +19,6 @@ class LongParameterListRefactorer(BaseRefactorer):
         self.classified_param_names = None
         self.classified_param_nodes = []
         self.modified_files = []
-        self.output_dir = OUTPUT_DIR
 
     def refactor(
         self,
