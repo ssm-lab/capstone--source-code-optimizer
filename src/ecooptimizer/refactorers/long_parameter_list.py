@@ -6,18 +6,29 @@ from pathlib import Path
 from ..data_types.smell import LPLSmell
 from .base_refactorer import BaseRefactorer
 
+from .. import (
+    OUTPUT_DIR,
+)
 
-class LongParameterListRefactorer(BaseRefactorer[LPLSmell]):
+
+class LongParameterListRefactorer(BaseRefactorer):
     def __init__(self):
         super().__init__()
         self.parameter_analyzer = ParameterAnalyzer()
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
+        self.function_node = None  # AST node of definition of function that needs to be refactored
+        self.used_params = None  # list of unclassified used params
+        self.classified_params = None
+        self.classified_param_names = None
+        self.classified_param_nodes = []
+        self.modified_files = []
+        self.output_dir = OUTPUT_DIR
 
     def refactor(
         self,
         target_file: Path,
-        source_dir: Path,  # noqa: ARG002
+        source_dir: Path,
         smell: LPLSmell,
         output_file: Path,
         overwrite: bool = True,
@@ -39,65 +50,187 @@ class LongParameterListRefactorer(BaseRefactorer[LPLSmell]):
         # use target_line to find function definition at the specific line for given code smell object
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.lineno == target_line:
-                params = [arg.arg for arg in node.args.args if arg.arg != "self"]
+                self.function_node = node
+                params = [arg.arg for arg in self.function_node.args.args if arg.arg != "self"]
                 default_value_params = self.parameter_analyzer.get_parameters_with_default_value(
-                    node.args.defaults, params
+                    self.function_node.args.defaults, params
                 )  # params that have default value assigned in function definition, stored as a dict of param name to default value
 
                 if (
                     len(params) > max_param_limit
                 ):  # max limit beyond which the code smell is configured to be detected
                     # need to identify used parameters so unused ones can be removed
-                    used_params = self.parameter_analyzer.get_used_parameters(node, params)
-                    if len(used_params) > max_param_limit:
+                    self.used_params = self.parameter_analyzer.get_used_parameters(
+                        self.function_node, params
+                    )
+                    if len(self.used_params) > max_param_limit:
                         # classify used params into data and config types and store the results in a dictionary, if number of used params is beyond the configured limit
-                        classified_params = self.parameter_analyzer.classify_parameters(used_params)
-
-                        # add class defitions for data and config encapsulations to the tree
-                        class_nodes = self.parameter_encapsulator.encapsulate_parameters(
-                            classified_params, default_value_params
+                        self.classified_params = self.parameter_analyzer.classify_parameters(
+                            self.used_params
                         )
-                        for class_node in class_nodes:
-                            tree.body.insert(0, class_node)
+                        self.classified_param_names = self._generate_unique_param_class_names()
+                        # add class defitions for data and config encapsulations to the tree
+                        self.classified_param_nodes = (
+                            self.parameter_encapsulator.encapsulate_parameters(
+                                self.classified_params,
+                                default_value_params,
+                                self.classified_param_names,
+                            )
+                        )
+
+                        tree = self._update_tree_with_class_nodes(tree)
 
                         # first update calls to this function(this needs to use existing params)
                         updated_tree = self.function_updater.update_function_calls(
-                            tree, node, classified_params
+                            tree,
+                            self.function_node,
+                            self.used_params,
+                            self.classified_params,
+                            self.classified_param_names,
                         )
                         # then update function signature and parameter usages with function body)
                         updated_function = self.function_updater.update_function_signature(
-                            node, classified_params
+                            self.function_node, self.classified_params
                         )
                         updated_function = self.function_updater.update_parameter_usages(
-                            node, classified_params
+                            self.function_node, self.classified_params
                         )
-
                     else:
                         # just remove the unused params if used parameters are within the max param list
                         updated_function = self.function_updater.remove_unused_params(
-                            node, used_params, default_value_params
+                            self.function_node, self.used_params, default_value_params
                         )
 
                     # update the tree by replacing the old function with the updated one
                     for i, body_node in enumerate(tree.body):
-                        if body_node == node:
+                        if body_node == self.function_node:
                             tree.body[i] = updated_function
                             break
                     updated_tree = tree
 
-        temp_file_path = output_file
-
         modified_source = astor.to_source(updated_tree)
-        with temp_file_path.open("w") as temp_file:
+
+        with output_file.open("w") as temp_file:
             temp_file.write(modified_source)
 
-        # CHANGE FOR MULTI FILE IMPLEMENTATION
         if overwrite:
             with target_file.open("w") as f:
                 f.write(modified_source)
-        else:
-            with output_file.open("w") as f:
-                f.writelines(modified_source)
+
+        if target_file not in self.modified_files:
+            self.modified_files.append(target_file)
+
+        self._refactor_files(source_dir, target_file)
+
+        logging.info(f"Refactoring completed for: {[target_file, *self.modified_files]}")
+
+    def _refactor_files(self, source_dir: Path, target_file: Path):
+        class FunctionCallVisitor(ast.NodeVisitor):
+            def __init__(self, function_name: str, class_name: str, is_constructor: bool):
+                self.function_name = function_name
+                self.is_constructor = (
+                    is_constructor  # whether or not given function call is a constructor
+                )
+                self.class_name = (
+                    class_name  # name of class being instantiated if function is a constructor
+                )
+                self.found = False
+
+            def visit_Call(self, node: ast.Call):
+                """Check if the function/class constructor is called."""
+                # handle function call
+                if isinstance(node.func, ast.Name) and node.func.id == self.function_name:
+                    self.found = True
+
+                # handle method call
+                elif isinstance(node.func, ast.Attribute):
+                    if node.func.attr == self.function_name:
+                        self.found = True
+
+                # handle class constructor call
+                elif (
+                    self.is_constructor
+                    and isinstance(node.func, ast.Name)
+                    and node.func.id == self.class_name
+                ):
+                    self.found = True
+
+                self.generic_visit(node)
+
+        function_name = self.function_node.name
+        enclosing_class_name = None
+        is_class = function_name == "__init__"
+
+        # if refactoring __init__, determine the class name
+        if is_class:
+            enclosing_class_name = FunctionCallUpdater.get_enclosing_class_name(
+                ast.parse(target_file.read_text()), self.function_node
+            )
+
+        for item in source_dir.iterdir():
+            if item.is_dir():
+                self._refactor_files(item, target_file)
+            elif item.is_file() and item.suffix == ".py" and item != target_file:
+                with item.open() as f:
+                    source_code = f.read()
+                    tree = ast.parse(source_code)
+
+                # check if function call or class instantiation occurs in this file
+                visitor = FunctionCallVisitor(function_name, enclosing_class_name, is_class)
+                visitor.visit(tree)
+
+                if not visitor.found:
+                    continue  # skip modification if function/constructor is never called
+
+                if is_class:
+                    logging.info(
+                        f"Updating instantiation calls for {enclosing_class_name} in {item}"
+                    )
+                else:
+                    logging.info(f"Updating references to {function_name} in {item}")
+
+                # insert class definitions before modifying function calls
+                updated_tree = self._update_tree_with_class_nodes(tree)
+
+                # update function calls/class instantiations
+                updated_tree = self.function_updater.update_function_calls(
+                    updated_tree,
+                    self.function_node,
+                    self.used_params,
+                    self.classified_params,
+                    self.classified_param_names,
+                )
+
+                modified_source = astor.to_source(updated_tree)
+                with item.open("w") as f:
+                    f.write(modified_source)
+
+                if item not in self.modified_files:
+                    self.modified_files.append(item)
+
+                logging.info(f"Updated function calls in: {item}")
+
+    def _generate_unique_param_class_names(self) -> tuple[str, str]:
+        """
+        Generate unique class names for data params and config params based on function name and line number.
+        :return: A tuple containing (DataParams class name, ConfigParams class name).
+        """
+        unique_suffix = f"{self.function_node.name}_{self.function_node.lineno}"
+        data_class_name = f"DataParams_{unique_suffix}"
+        config_class_name = f"ConfigParams_{unique_suffix}"
+        return data_class_name, config_class_name
+
+    def _update_tree_with_class_nodes(self, tree: ast.Module) -> ast.Module:
+        insert_index = 0
+        for i, node in enumerate(tree.body):
+            if isinstance(node, ast.FunctionDef):
+                insert_index = i  # first function definition found
+                break
+
+        # insert class nodes before the first function definition
+        for class_node in reversed(self.classified_param_nodes):
+            tree.body.insert(insert_index, class_node)
+        return tree
 
 
 class ParameterAnalyzer:
@@ -186,7 +319,10 @@ class ParameterEncapsulator:
         return class_def + init_method + "".join(init_body)
 
     def encapsulate_parameters(
-        self, classified_params: dict, default_value_params: dict
+        self,
+        classified_params: dict,
+        default_value_params: dict,
+        classified_param_names: tuple[str, str],
     ) -> list[ast.ClassDef]:
         """
         Injects parameter object classes into the AST tree
@@ -194,15 +330,17 @@ class ParameterEncapsulator:
         data_params, config_params = classified_params["data"], classified_params["config"]
         class_nodes = []
 
+        data_class_name, config_class_name = classified_param_names
+
         if data_params:
             data_param_object_code = self.create_parameter_object_class(
-                data_params, default_value_params, class_name="DataParams"
+                data_params, default_value_params, class_name=data_class_name
             )
             class_nodes.append(ast.parse(data_param_object_code).body[0])
 
         if config_params:
             config_param_object_code = self.create_parameter_object_class(
-                config_params, default_value_params, class_name="ConfigParams"
+                config_params, default_value_params, class_name=config_class_name
             )
             class_nodes.append(ast.parse(config_param_object_code).body[0])
 
@@ -349,13 +487,17 @@ class FunctionCallUpdater:
 
     @staticmethod
     def update_function_calls(
-        tree: ast.Module, function_node: ast.FunctionDef, params: dict
+        tree: ast.Module,
+        function_node: ast.FunctionDef,
+        used_params: [],
+        classified_params: dict,
+        classified_param_names: tuple[str, str],
     ) -> ast.Module:
         """
         Updates all calls to a given function in the provided AST tree to reflect new encapsulated parameters.
 
         :param tree: The AST tree of the code.
-        :param function_name: The name of the function to update calls for.
+        :param function_node: AST node of the function to update calls for.
         :param params: A dictionary containing 'data' and 'config' parameters.
         :return: The updated AST tree.
         """
@@ -364,14 +506,18 @@ class FunctionCallUpdater:
             def __init__(
                 self,
                 function_node: ast.FunctionDef,
-                params: dict,
+                unclassified_params: [],
+                classified_params: dict,
+                classified_param_names: tuple[str, str],
                 is_constructor: bool = False,
                 class_name: str = "",
             ):
                 self.function_node = function_node
-                self.params = params
+                self.unclassified_params = unclassified_params
+                self.classified_params = classified_params
                 self.is_constructor = is_constructor
                 self.class_name = class_name
+                self.classified_param_names = classified_param_names
 
             def visit_Call(self, node: ast.Call):
                 # node.func is a ast.Name if it is a function call, and ast.Attribute if it is a a method class
@@ -380,10 +526,11 @@ class FunctionCallUpdater:
                 elif isinstance(node.func, ast.Attribute):
                     node_name = node.func.attr
 
-                if self.is_constructor and node_name == self.class_name:
-                    return self.transform_call(node)
-                elif node_name == self.function_node.name:
-                    return self.transform_call(node)
+                if (
+                    self.is_constructor and node_name == self.class_name
+                ) or node_name == self.function_node.name:
+                    transformed_node = self.transform_call(node)
+                    return transformed_node
                 return node
 
             def create_ast_call(
@@ -413,33 +560,38 @@ class FunctionCallUpdater:
 
             def transform_call(self, node: ast.Call):
                 # original and classified params from function node
-                params = [arg.arg for arg in self.function_node.args.args if arg.arg != "self"]
-                data_params, config_params = self.params["data"], self.params["config"]
+                data_params, config_params = (
+                    self.classified_params["data"],
+                    self.classified_params["config"],
+                )
+                data_class_name, config_class_name = self.classified_param_names
 
                 # positional and keyword args passed in function call
-                args, keywords = node.args, node.keywords
+                original_args, original_kargs = node.args, node.keywords
 
                 data_args = {
-                    param: args[i]
-                    for i, param in enumerate(params)
-                    if i < len(args) and param in data_params
+                    param: original_args[i]
+                    for i, param in enumerate(self.unclassified_params)
+                    if i < len(original_args) and param in data_params
                 }
                 config_args = {
-                    param: args[i]
-                    for i, param in enumerate(params)
-                    if i < len(args) and param in config_params
+                    param: original_args[i]
+                    for i, param in enumerate(self.unclassified_params)
+                    if i < len(original_args) and param in config_params
                 }
 
-                data_keywords = {kw.arg: kw.value for kw in keywords if kw.arg in data_params}
-                config_keywords = {kw.arg: kw.value for kw in keywords if kw.arg in config_params}
+                data_keywords = {kw.arg: kw.value for kw in original_kargs if kw.arg in data_params}
+                config_keywords = {
+                    kw.arg: kw.value for kw in original_kargs if kw.arg in config_params
+                }
 
                 updated_node_args = []
                 if data_node := self.create_ast_call(
-                    "DataParams", data_params, data_args, data_keywords
+                    data_class_name, data_params, data_args, data_keywords
                 ):
                     updated_node_args.append(data_node)
                 if config_node := self.create_ast_call(
-                    "ConfigParams", config_params, config_args, config_keywords
+                    config_class_name, config_params, config_args, config_keywords
                 ):
                     updated_node_args.append(config_node)
 
@@ -451,9 +603,18 @@ class FunctionCallUpdater:
         if function_node.name == "__init__":
             # if function is a class initialization, then we need to fetch class name
             class_name = FunctionCallUpdater.get_enclosing_class_name(tree, function_node)
-            transformer = FunctionCallTransformer(function_node, params, True, class_name)
+            transformer = FunctionCallTransformer(
+                function_node,
+                used_params,
+                classified_params,
+                classified_param_names,
+                True,
+                class_name,
+            )
         else:
-            transformer = FunctionCallTransformer(function_node, params)
+            transformer = FunctionCallTransformer(
+                function_node, used_params, classified_params, classified_param_names
+            )
         updated_tree = transformer.visit(tree)
 
         return updated_tree
