@@ -2,7 +2,6 @@ import ast
 import astor
 import logging
 from pathlib import Path
-from typing import Optional
 
 from ..data_types.smell import LPLSmell
 from .base_refactorer import BaseRefactorer
@@ -126,38 +125,50 @@ class LongParameterListRefactorer(BaseRefactorer):
 
         logging.info(f"Refactoring completed for: {[target_file, *self.modified_files]}")
 
-    def _refactor_files(self, directory: Path, target_file: Path, file_count: int):
+    def _refactor_files(self, source_dir: Path, target_file: Path, file_count: int):
         class FunctionCallVisitor(ast.NodeVisitor):
-            """AST visitor to check if a function call to a specific node exists."""
-
-            def __init__(self, function_name: str, enclosing_class_name: Optional[str] = None):
+            def __init__(self, function_name: str, class_name: str, is_constructor: bool):
                 self.function_name = function_name
-                self.enclosing_class_name = enclosing_class_name
+                self.is_constructor = (
+                    is_constructor  # whether or not given function call is a constructor
+                )
+                self.class_name = (
+                    class_name  # name of class being instantiated if function is a constructor
+                )
                 self.found = False
 
             def visit_Call(self, node: ast.Call):
-                """Check if the function or method call matches the function name or class constructor."""
+                """Check if the function/class constructor is called."""
+                # handle function call
                 if isinstance(node.func, ast.Name) and node.func.id == self.function_name:
                     self.found = True
+
+                # handle method call
+                elif isinstance(node.func, ast.Attribute):
+                    if node.func.attr == self.function_name:
+                        self.found = True
+
+                # handle class constructor call
                 elif (
-                    self.enclosing_class_name
-                    and isinstance(node.func, ast.Attribute)
-                    and node.func.attr == "__init__"
-                    and isinstance(node.func.value, ast.Name)
-                    and node.func.value.id == self.enclosing_class_name
+                    self.is_constructor
+                    and isinstance(node.func, ast.Name)
+                    and node.func.id == self.class_name
                 ):
                     self.found = True
+
                 self.generic_visit(node)
 
         function_name = self.function_node.name
         enclosing_class_name = None
+        is_class = function_name == "__init__"
 
-        if function_name == "__init__":
+        # if refactoring __init__, determine the class name
+        if is_class:
             enclosing_class_name = FunctionCallUpdater.get_enclosing_class_name(
                 ast.parse(target_file.read_text()), self.function_node
             )
 
-        for item in directory.iterdir():
+        for item in source_dir.iterdir():
             if item.is_dir():
                 self._refactor_files(item, target_file, file_count)
             elif item.is_file() and item.suffix == ".py" and item != target_file:
@@ -165,17 +176,24 @@ class LongParameterListRefactorer(BaseRefactorer):
                     source_code = f.read()
                     tree = ast.parse(source_code)
 
-                # check if the function is called in the file
-                visitor = FunctionCallVisitor(function_name, enclosing_class_name)
+                # check if function call or class instantiation occurs in this file
+                visitor = FunctionCallVisitor(function_name, enclosing_class_name, is_class)
                 visitor.visit(tree)
 
                 if not visitor.found:
-                    continue  # Skip modification if function is never called
+                    continue  # skip modification if function/constructor is never called
+
+                if is_class:
+                    logging.info(
+                        f"Updating instantiation calls for {enclosing_class_name} in {item}"
+                    )
+                else:
+                    logging.info(f"Updating references to {function_name} in {item}")
 
                 # insert class definitions before modifying function calls
                 updated_tree = self._update_tree_with_class_nodes(tree)
 
-                # update function calls
+                # update function calls/class instantiations
                 updated_tree = self.function_updater.update_function_calls(
                     updated_tree,
                     self.function_node,
@@ -187,6 +205,7 @@ class LongParameterListRefactorer(BaseRefactorer):
                 output_file_path = (
                     self.output_dir / f"{item.stem}, source_dir: path_R0913_{file_count}.py"
                 )
+
                 modified_source = astor.to_source(updated_tree)
                 with output_file_path.open("w") as f:
                     f.write(modified_source)
