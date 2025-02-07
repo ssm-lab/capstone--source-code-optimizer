@@ -26,9 +26,7 @@ class RefactorerController:
 
             print(f"Refactoring {smell_symbol} using {refactorer_class.__name__}")
             refactorer = refactorer_class()
-            refactorer.refactor(
-                target_file, source_dir, smell, output_file_path, file_count, overwrite
-            )
+            refactorer.refactor(target_file, source_dir, smell, output_file_path, overwrite)
             modified_files = refactorer.modified_files
         else:
             print(f"No refactorer found for smell: {smell_symbol}")

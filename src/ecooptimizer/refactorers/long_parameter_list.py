@@ -31,7 +31,6 @@ class LongParameterListRefactorer(BaseRefactorer):
         source_dir: Path,
         smell: LPLSmell,
         output_file: Path,
-        file_count: int = 0,
         overwrite: bool = True,
     ):
         """
@@ -121,11 +120,11 @@ class LongParameterListRefactorer(BaseRefactorer):
         if target_file not in self.modified_files:
             self.modified_files.append(target_file)
 
-        self._refactor_files(source_dir, target_file, file_count)
+        self._refactor_files(source_dir, target_file)
 
         logging.info(f"Refactoring completed for: {[target_file, *self.modified_files]}")
 
-    def _refactor_files(self, source_dir: Path, target_file: Path, file_count: int):
+    def _refactor_files(self, source_dir: Path, target_file: Path):
         class FunctionCallVisitor(ast.NodeVisitor):
             def __init__(self, function_name: str, class_name: str, is_constructor: bool):
                 self.function_name = function_name
@@ -170,7 +169,7 @@ class LongParameterListRefactorer(BaseRefactorer):
 
         for item in source_dir.iterdir():
             if item.is_dir():
-                self._refactor_files(item, target_file, file_count)
+                self._refactor_files(item, target_file)
             elif item.is_file() and item.suffix == ".py" and item != target_file:
                 with item.open() as f:
                     source_code = f.read()
@@ -202,12 +201,8 @@ class LongParameterListRefactorer(BaseRefactorer):
                     self.classified_param_names,
                 )
 
-                output_file_path = (
-                    self.output_dir / f"{item.stem}, source_dir: path_R0913_{file_count}.py"
-                )
-
                 modified_source = astor.to_source(updated_tree)
-                with output_file_path.open("w") as f:
+                with item.open("w") as f:
                     f.write(modified_source)
 
                 if item not in self.modified_files:
