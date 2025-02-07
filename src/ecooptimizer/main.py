@@ -49,8 +49,7 @@ def main():
     output_paths = []
 
     for smell in smells_data:
-        if smell.messageId == "R0913" and smell.occurences[0].line == 30:
-            logging.info("hello refactoring LPL for line 30")
+        if smell.messageId == "R0913" and smell.occurences[0].line == 83:
             # Use the line below and comment out "with TemporaryDirectory()" if you want to see the refactored code
             # It basically copies the source directory into a temp dir that you can find in your systems TEMP folder
             # It varies per OS. The location of the folder can be found in the 'refactored-data.json' file in outputs.
@@ -69,9 +68,6 @@ def main():
 
             shutil.copytree(SAMPLE_PROJ_DIR, source_copy)
 
-            logging.info("hello this is what is passed to refactorer. overwrite is false")
-            logging.info(f"hello target_file {target_file_copy}")
-            logging.info(f"hello source_copy {source_copy}")
             try:
                 modified_files: list[Path] = refactorer_controller.run_refactorer(
                     target_file_copy, source_copy, smell, overwrite=False
@@ -105,11 +101,6 @@ def main():
                 logging.info("Functionality maintained! Retaining refactored file.\n")
                 print("Refactoring Succesful!\n")
 
-                logging.info("hello this is where we are reading")
-                logging.info(f"hello tempDir {tempDir}")
-                logging.info(f"hello targetFile {target_file_copy}")
-                for file in modified_files:
-                    logging.info(f"hello modified file {file}")
                 refactor_data = RefactoredData(
                     tempDir=tempDir,
                     targetFile=str(target_file_copy).replace(
@@ -125,8 +116,6 @@ def main():
 
                 OUTPUT_MANAGER.save_json_files("refactoring-data.json", refactor_data.model_dump())  # type: ignore
             print(output_paths)
-        else:
-            logging.info("hello not found")
 
 
 if __name__ == "__main__":
