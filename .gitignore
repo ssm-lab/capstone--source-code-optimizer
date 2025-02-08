@@ -307,3 +307,5 @@ tests/temp_dir/
 # Coverage
 .coverage
 coverage.*
+
+venv/

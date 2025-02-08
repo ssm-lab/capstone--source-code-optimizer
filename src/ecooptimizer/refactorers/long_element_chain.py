@@ -104,6 +104,7 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
                 self._find_all_access_patterns(item, initial_parsing)
             elif item.is_file():
                 if item.suffix == ".py":
+                    logging.info(f"Parsing file: {item}")
                     tree = ast.parse(item.read_text())
                     if initial_parsing:
                         self._find_access_pattern_in_file(tree, item)
