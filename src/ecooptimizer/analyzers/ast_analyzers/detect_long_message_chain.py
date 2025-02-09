@@ -7,14 +7,16 @@ from ...data_types.smell import LMCSmell
 from ...data_types.custom_fields import AdditionalInfo, Occurence
 
 
-def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 3) -> list[LMCSmell]:
+def detect_long_message_chain(
+    file_path: Path, tree: ast.AST, threshold: int = 5
+) -> list[LMCSmell]:
     """
     Detects long message chains in the given Python code.
 
     Args:
         file_path (Path): The file path to analyze.
         tree (ast.AST): The Abstract Syntax Tree (AST) of the source code.
-        threshold (int): The minimum number of chained method calls to flag as a long chain. Default is 3.
+        threshold (int): The minimum number of chained method calls to flag as a long chain. Default is 5.
 
     Returns:
         list[Smell]: A list of Smell objects, each containing details about the detected long chains.
