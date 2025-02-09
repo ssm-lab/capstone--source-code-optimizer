@@ -1,4 +1,3 @@
-import logging
 import libcst as cst
 
 # import libcst.matchers as m
@@ -117,10 +116,6 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
 
         self.mim_method_class, self.mim_method = smell.obj.split(".")
 
-        logging.info(
-            f"Applying 'Make Method Static' refactor on '{target_file.name}' at line {self.target_line}."
-        )
-
         source_code = target_file.read_text()
         tree = MetadataWrapper(cst.parse_module(source_code))
 
@@ -133,10 +128,6 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
         transformer = CallTransformer(self.mim_method, self.mim_method_class, self.subclasses)
         self._refactor_files(source_dir, transformer)
         output_file.write_text(target_file.read_text())
-
-        logging.info(
-            f"Refactoring completed for the following files: {[target_file, *self.modified_files]}"
-        )
 
     def _find_subclasses(self, tree: MetadataWrapper):
         """Find all subclasses of the target class within the file."""
@@ -152,17 +143,14 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
                     for base in node.bases
                     if isinstance(base.value, cst.Name)
                 ):
-                    logging.debug(f"Found subclass <{node.name.value}>")
                     self.subclasses.add(node.name.value)
 
         collector = SubclassCollector(self.mim_method_class)
-        logging.debug("Getting subclasses")
         tree.visit(collector)
         self.subclasses = collector.subclasses
 
     def _refactor_files(self, directory: Path, transformer: CallTransformer):
         for item in directory.iterdir():
-            logging.debug(f"Refactoring {item!s}")
             if item.is_dir():
                 self._refactor_files(item, transformer)
             elif item.is_file() and item.suffix == ".py":
@@ -181,7 +169,6 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
         if func_name and updated_node.deep_equals(original_node):
             position = self.get_metadata(PositionProvider, original_node).start  # type: ignore
             if position.line == self.target_line and func_name == self.mim_method:
-                logging.debug("Modifying FunctionDef")
                 decorators = [
                     *list(original_node.decorators),
                     cst.Decorator(cst.Name("staticmethod")),

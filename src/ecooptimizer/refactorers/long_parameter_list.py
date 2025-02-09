@@ -1,6 +1,5 @@
 import ast
 import astor
-import logging
 from pathlib import Path
 
 from ..data_types.smell import LPLSmell
@@ -39,9 +38,6 @@ class LongParameterListRefactorer(BaseRefactorer):
 
         # find the line number of target function indicated by the code smell object
         target_line = smell.occurences[0].line
-        logging.info(
-            f"Applying 'Fix Too Many Parameters' refactor on '{target_file.name}' at line {target_line} for identified code smell."
-        )
         # use target_line to find function definition at the specific line for given code smell object
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.lineno == target_line:
@@ -117,8 +113,6 @@ class LongParameterListRefactorer(BaseRefactorer):
 
         self._refactor_files(source_dir, target_file)
 
-        logging.info(f"Refactoring completed for: {[target_file, *self.modified_files]}")
-
     def _refactor_files(self, source_dir: Path, target_file: Path):
         class FunctionCallVisitor(ast.NodeVisitor):
             def __init__(self, function_name: str, class_name: str, is_constructor: bool):
@@ -177,13 +171,6 @@ class LongParameterListRefactorer(BaseRefactorer):
                 if not visitor.found:
                     continue  # skip modification if function/constructor is never called
 
-                if is_class:
-                    logging.info(
-                        f"Updating instantiation calls for {enclosing_class_name} in {item}"
-                    )
-                else:
-                    logging.info(f"Updating references to {function_name} in {item}")
-
                 # insert class definitions before modifying function calls
                 updated_tree = self._update_tree_with_class_nodes(tree)
 
@@ -202,8 +189,6 @@ class LongParameterListRefactorer(BaseRefactorer):
 
                 if item not in self.modified_files:
                     self.modified_files.append(item)
-
-                logging.info(f"Updated function calls in: {item}")
 
     def _generate_unique_param_class_names(self) -> tuple[str, str]:
         """

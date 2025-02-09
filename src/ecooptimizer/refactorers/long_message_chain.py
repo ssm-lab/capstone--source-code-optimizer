@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 import re
 from .base_refactorer import BaseRefactorer
@@ -61,9 +60,6 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
         line_number = smell.occurences[0].line
         temp_filename = output_file
 
-        logging.info(
-            f"Applying 'Separate Statements' refactor on '{target_file.name}' at line {line_number} for identified code smell."
-        )
         # Read the original file
         with target_file.open() as f:
             lines = f.readlines()
@@ -150,5 +146,3 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
                 f.writelines(lines)
 
         self.modified_files.append(target_file)
-
-        logging.info(f"Refactored temp file saved to {temp_filename}")
