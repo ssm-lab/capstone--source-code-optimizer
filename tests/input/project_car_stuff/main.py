@@ -19,13 +19,7 @@ class Vehicle:
 
     def display_info(self):
         # Code Smell: Long Message Chain
-        print(
-            f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(
-                ",", ""
-            )[
-                ::2
-            ]
-        )
+        print(f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(",", "")[::2])
 
     def calculate_price(self):
         # Code Smell: List Comprehension in an All Statement
