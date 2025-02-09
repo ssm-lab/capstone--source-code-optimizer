@@ -98,3 +98,9 @@ SMELL_REGISTRY: dict[str, SmellRecord] = {
         "refactorer": UseListAccumulationRefactorer,
     },
 }
+
+
+def update_smell_registry(enabled_smells: list[str]):
+    """Modifies SMELL_REGISTRY based on user preferences (enables/disables smells)."""
+    for smell in SMELL_REGISTRY.keys():
+        SMELL_REGISTRY[smell]["enabled"] = smell in enabled_smells  # ✅ Enable only selected smells

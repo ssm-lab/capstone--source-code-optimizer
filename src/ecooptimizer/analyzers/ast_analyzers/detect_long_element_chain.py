@@ -1,5 +1,4 @@
 import ast
-import logging
 from pathlib import Path
 
 from ...utils.smell_enums import CustomSmell
@@ -31,16 +30,12 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 3
             return
 
         current = node
-        logging.debug(f"Checking chain for line {node.lineno}")
         # Traverse through the chain to count its length
         while isinstance(current, ast.Subscript):
             chain_length += 1
-            logging.debug(f"Chain length is {chain_length}")
             current = current.value
 
         if chain_length >= threshold:
-            logging.debug("Found LEC smell")
-
             # Create a descriptive message for the detected long chain
             message = f"Dictionary chain too long ({chain_length}/{threshold})"
 

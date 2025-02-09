@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 import re
 from .base_refactorer import BaseRefactorer
@@ -51,10 +50,6 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
         line_number = smell.occurences[0].line
         temp_filename = output_file
 
-        logging.info(
-            f"Applying 'Lambda to Function' refactor on '{target_file.name}' at line {line_number} for identified code smell."
-        )
-
         # Read the original file
         with target_file.open() as f:
             lines = f.readlines()
@@ -73,7 +68,6 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
         # Match and extract the lambda content using regex
         lambda_match = re.search(r"lambda\s+([\w, ]+):\s+(.+)", full_lambda_line)
         if not lambda_match:
-            logging.warning(f"No valid lambda function found on line {line_number}.")
             return
 
         # Extract arguments and body of the lambda
@@ -82,7 +76,6 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
         lambda_body_before = LongLambdaFunctionRefactorer.truncate_at_top_level_comma(
             lambda_body_before
         )
-        print("1:", lambda_body_before)
 
         # Ensure that the lambda body does not contain extra trailing characters
         # Remove any trailing commas or mismatched closing brackets
@@ -142,5 +135,3 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
         else:
             with output_file.open("w") as f:
                 f.writelines(lines)
-
-        logging.info(f"Refactoring completed and saved to: {temp_filename}")

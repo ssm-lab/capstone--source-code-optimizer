@@ -1,8 +1,5 @@
 from typing import Any, Callable
 
-from .smell_enums import CustomSmell, PylintSmell
-
-from ..data_types.smell import Smell
 from ..data_types.smell_record import SmellRecord
 
 
@@ -15,14 +12,6 @@ def filter_smells_by_method(
         if smell["enabled"] and (method == smell["analyzer_method"])
     }
     return filtered
-
-
-def filter_smells_by_id(smells: list[Smell]):  # type: ignore
-    all_smell_ids = [
-        *[smell.value for smell in CustomSmell],
-        *[smell.value for smell in PylintSmell],
-    ]
-    return [smell for smell in smells if smell.messageId in all_smell_ids]
 
 
 def generate_pylint_options(filtered_smells: dict[str, SmellRecord]) -> list[str]:

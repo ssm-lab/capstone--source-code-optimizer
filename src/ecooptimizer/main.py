@@ -20,7 +20,6 @@ from . import (
     OUTPUT_MANAGER,
     SAMPLE_PROJ_DIR,
     SOURCE,
-    OUTPUT_DIR,
 )
 
 # FILE CONFIGURATION IN __init__.py !!!
@@ -49,7 +48,7 @@ def main():
     )
 
     OUTPUT_MANAGER.copy_file_to_output(SOURCE, "refactored-test-case.py")
-    refactorer_controller = RefactorerController(OUTPUT_DIR)
+    refactorer_controller = RefactorerController(OUTPUT_MANAGER.output_dir)
     output_paths = []
 
     for smell in smells_data:

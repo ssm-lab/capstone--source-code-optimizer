@@ -4,19 +4,23 @@ from pathlib import Path
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
+from ecooptimizer import OUTPUT_MANAGER
+
 from ..data_types.custom_fields import AdditionalInfo, Occurence
 
 from .base_analyzer import Analyzer
 from ..data_types.smell import Smell
 
+detect_smells_logger = OUTPUT_MANAGER.loggers["detect_smells"]
+
 
 class PylintAnalyzer(Analyzer):
-    def build_smells(self, pylint_smells: dict):  # type: ignore
-        """Casts inital list of pylint smells to the proper Smell configuration."""
+    def _build_smells(self, pylint_smells: dict):  # type: ignore
+        """Casts initial list of pylint smells to the Eco Optimizer's Smell configuration."""
         smells: list[Smell] = []
+
         for smell in pylint_smells:
             smells.append(
-                # Initialize the SmellModel instance
                 Smell(
                     confidence=smell["confidence"],
                     message=smell["message"],
@@ -37,6 +41,7 @@ class PylintAnalyzer(Analyzer):
                     additionalInfo=AdditionalInfo(),
                 )
             )
+
         return smells
 
     def analyze(self, file_path: Path, extra_options: list[str]):
@@ -49,10 +54,10 @@ class PylintAnalyzer(Analyzer):
             try:
                 Run(pylint_options, reporter=reporter, exit=False)
                 buffer.seek(0)
-                smells_data.extend(self.build_smells(json.loads(buffer.getvalue())["messages"]))
+                smells_data.extend(self._build_smells(json.loads(buffer.getvalue())["messages"]))
             except json.JSONDecodeError as e:
-                print(f"Failed to parse JSON output from pylint: {e}")
+                detect_smells_logger.error(f"❌ Failed to parse JSON output from pylint: {e}")
             except Exception as e:
-                print(f"An error occurred during pylint analysis: {e}")
+                detect_smells_logger.error(f"❌ An error occurred during pylint analysis: {e}")
 
         return smells_data

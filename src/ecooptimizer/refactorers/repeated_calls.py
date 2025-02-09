@@ -1,5 +1,4 @@
 import ast
-import logging
 from pathlib import Path
 
 from ..data_types.smell import CRCSmell
@@ -32,25 +31,21 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
 
         self.cached_var_name = "cached_" + self.call_string.split("(")[0]
 
-        print(f"Reading file: {self.target_file}")
         with self.target_file.open("r") as file:
             lines = file.readlines()
 
         # Parse the AST
         tree = ast.parse("".join(lines))
-        print("Parsed AST successfully.")
 
         # Find the valid parent node
         parent_node = self._find_valid_parent(tree)
         if not parent_node:
-            print("ERROR: Could not find a valid parent node for the repeated calls.")
             return
 
         # Determine the insertion point for the cached variable
         insert_line = self._find_insert_line(parent_node)
         indent = self._get_indentation(lines, insert_line)
         cached_assignment = f"{indent}{self.cached_var_name} = {self.call_string}\n"
-        print(f"Inserting cached variable at line {insert_line}: {cached_assignment.strip()}")
 
         # Insert the cached variable into the source lines
         lines.insert(insert_line - 1, cached_assignment)
@@ -60,12 +55,10 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
         for occurrence in self.smell.occurences:
             adjusted_line_index = occurrence.line - 1 + line_shift
             original_line = lines[adjusted_line_index]
-            print(f"Processing occurrence at line {occurrence.line}: {original_line.strip()}")
             updated_line = self._replace_call_in_line(
                 original_line, self.call_string, self.cached_var_name
             )
             if updated_line != original_line:
-                print(f"Updated line {occurrence.line}: {updated_line.strip()}")
                 lines[adjusted_line_index] = updated_line
 
         # Save the modified file
@@ -81,8 +74,6 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
         else:
             with output_file.open("w") as f:
                 f.writelines(lines)
-
-        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
 
     def _get_indentation(self, lines: list[str], line_number: int):
         """

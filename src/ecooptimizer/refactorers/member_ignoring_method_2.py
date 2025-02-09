@@ -1,4 +1,3 @@
-import logging
 import libcst as cst
 import libcst.matchers as m
 from libcst.metadata import PositionProvider, MetadataWrapper
@@ -17,7 +16,6 @@ class CallTransformer(cst.CSTTransformer):
 
     def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:
         if m.matches(original_node.func, m.Attribute(value=m.Name(), attr=m.Name(self.mim_method))):
-            logging.debug("Modifying Call")
 
             # Convert `obj.method()` → `Class.method()`
             new_func = cst.Attribute(
@@ -62,10 +60,6 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
 
         self.mim_method_class, self.mim_method = smell.obj.split(".")
 
-        logging.info(
-            f"Applying 'Make Method Static' refactor on '{target_file.name}' at line {self.target_line} for identified code smell."
-        )
-
         source_code = target_file.read_text()
         tree = MetadataWrapper(cst.parse_module(source_code))
 
@@ -76,13 +70,8 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
         self._refactor_files(source_dir, transformer)
         output_file.write_text(target_file.read_text())
 
-        logging.info(
-            f"Refactoring completed for the following files: {[target_file, *self.modified_files]}"
-        )
-
     def _refactor_files(self, directory: Path, transformer: CallTransformer):
         for item in directory.iterdir():
-            logging.debug(f"Refactoring {item!s}")
             if item.is_dir():
                 self._refactor_files(item, transformer)
             elif item.is_file():
@@ -100,15 +89,9 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
     ) -> cst.FunctionDef:
         func_name = original_node.name.value
         if func_name and updated_node.deep_equals(original_node):
-            logging.debug(
-                f"Checking function {original_node.name.value} at line {self.target_line}"
-            )
-
             position = self.get_metadata(PositionProvider, original_node).start  # type: ignore
 
             if position.line == self.target_line and func_name == self.mim_method:
-                logging.debug("Modifying FunctionDef")
-
                 decorators = [
                     *list(original_node.decorators),
                     cst.Decorator(cst.Name("staticmethod")),
