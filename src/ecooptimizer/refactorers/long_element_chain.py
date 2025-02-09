@@ -1,6 +1,5 @@
 import ast
 import json
-import logging
 from pathlib import Path
 import re
 from typing import Any, Optional
@@ -64,11 +63,9 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
         # Abort if dictionary access is too shallow
         self._find_all_access_patterns(source_dir, initial_parsing=True)
         if self.min_value <= 1:
-            logging.info("Dictionary access is too shallow, skipping refactoring")
             return
 
         self._find_all_access_patterns(source_dir, initial_parsing=False)
-        print(f"not using: {output_file} and {overwrite}")
 
     def _find_dict_names(self, tree: ast.AST, line_number: int) -> None:
         """Extract dictionary names from the AST at the given line number."""
@@ -110,10 +107,6 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
                     else:
                         self.find_dict_assignment_in_file(tree)
                         self._refactor_all_in_file(item.read_text(), item)
-
-                    logging.info(
-                        "_______________________________________________________________________________________________"
-                    )
 
     # finds all access patterns in the file
     def _find_access_pattern_in_file(self, tree: ast.AST, path: Path):

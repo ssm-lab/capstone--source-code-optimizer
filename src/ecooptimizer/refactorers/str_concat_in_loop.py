@@ -1,4 +1,3 @@
-import logging
 import re
 
 from pathlib import Path
@@ -43,22 +42,12 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
         :param initial_emission: inital carbon emission prior to refactoring
         """
         self.target_lines = [occ.line for occ in smell.occurences]
-        logging.debug(smell.occurences)
 
         if not smell.additionalInfo:
             raise RuntimeError("Missing additional info for 'string-concat-loop' smell")
 
         self.assign_var = smell.additionalInfo.concatTarget
         self.outer_loop_line = smell.additionalInfo.innerLoopLine
-
-        logging.info(
-            f"Applying 'Use List Accumulation' refactor on '{target_file.name}' at line {self.target_lines[0]} for identified code smell."
-        )
-        logging.debug(f"target_lines: {self.target_lines}")
-        print(f"target_lines: {self.target_lines}")
-        logging.debug(f"assign_var: {self.assign_var}")
-        logging.debug(f"outer line: {self.outer_loop_line}")
-        print(f"outer line: {self.outer_loop_line}")
 
         # Parse the code into an AST
         source_code = target_file.read_text()
@@ -67,7 +56,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
             self.visit(node)
 
         if not self.outer_loop or len(self.concat_nodes) != len(self.target_lines):
-            logging.error("Missing inner loop or concat nodes.")
             raise Exception("Missing inner loop or concat nodes.")
 
         self.find_reassignments()
@@ -94,8 +82,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
         else:
             output_file.write_text(modified_code)
 
-        logging.info(f"Refactoring completed and saved to: {temp_file_path}")
-
     def visit(self, node: nodes.NodeNG):
         if isinstance(node, nodes.Assign) and node.lineno in self.target_lines:
             self.concat_nodes.append(node)
@@ -115,16 +101,13 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                 if target.as_string() == self.assign_var and node.lineno not in self.target_lines:
                     self.reassignments.append(node)
 
-        logging.debug(f"reassignments: {self.reassignments}")
 
     def find_last_assignment(self, scope_node: nodes.NodeNG):
         """Find the last assignment of the target variable within a given scope node."""
         last_assignment_node = None
 
-        logging.debug("Finding last assignment node")
         # Traverse the scope node and find assignments within the valid range
         for node in scope_node.nodes_of_class((nodes.AugAssign, nodes.Assign)):
-            logging.debug(f"node: {node.as_string()}")
 
             if isinstance(node, nodes.Assign):
                 for target in node.targets:
@@ -147,15 +130,12 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                         last_assignment_node = node
 
         self.last_assign_node = last_assignment_node  # type: ignore
-        logging.debug(f"last assign node: {self.last_assign_node}")
 
     def find_scope(self):
         """Locate the second innermost loop if nested, else find first non-loop function/method/module ancestor."""
-        logging.debug("Finding scope")
 
         for node in self.outer_loop.node_ancestors():
             if isinstance(node, (nodes.For, nodes.While)):
-                logging.debug(f"checking loop scope: {node.as_string()}")
                 self.find_last_assignment(node)
                 if not self.last_assign_node:
                     self.outer_loop = node
@@ -163,15 +143,12 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                     self.scope_node = node
                     break
             elif isinstance(node, (nodes.Module, nodes.FunctionDef, nodes.AsyncFunctionDef)):
-                logging.debug(f"checking big dog scope: {node.as_string()}")
                 self.find_last_assignment(node)
                 self.scope_node = node
                 break
 
-        logging.debug("Finished scopping")
 
     def last_assign_is_referenced(self, search_area: str):
-        logging.debug(f"search area: {search_area}")
         return (
             search_area.find(self.assign_var) != -1
             or isinstance(self.last_assign_node, nodes.AugAssign)
@@ -213,10 +190,8 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
         """
         Add a new AST node
         """
-        logging.debug("Adding new nodes")
 
         code_file_lines = code_file.splitlines()
-        logging.debug(f"\n{code_file_lines}")
 
         list_name = self.assign_var
 
@@ -250,7 +225,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                     concat_node.value.as_string(),
                 )
 
-                logging.debug(f"Parts: {parts}")
 
                 if len(parts[0]) == 0:
                     concat_line = f"{list_name}.append({parts[1]})"
@@ -303,7 +277,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
         if not self.last_assign_node or self.last_assign_is_referenced(
             "".join(code_file_lines[self.last_assign_node.lineno : self.outer_loop.lineno - 1])  # type: ignore
         ):
-            logging.debug("Making list separate")
             list_lno: int = self.outer_loop.lineno - 1  # type: ignore
 
             source_line = code_file_lines[list_lno]
@@ -329,7 +302,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
             code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
 
         elif self.last_assign_node.value.as_string() in ["''", "str()"]:
-            logging.debug("Overwriting assign with list")
             list_lno: int = self.last_assign_node.lineno - 1  # type: ignore
 
             source_line = code_file_lines[list_lno]
@@ -341,7 +313,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
             code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
 
         else:
-            logging.debug(f"last assign value: {self.last_assign_node.value.as_string()}")
             list_lno: int = self.last_assign_node.lineno - 1  # type: ignore
 
             source_line = code_file_lines[list_lno]
@@ -351,7 +322,5 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
             code_file_lines.pop(list_lno)
             code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
-
-        logging.debug("New Nodes added")
 
         return "\n".join(code_file_lines)

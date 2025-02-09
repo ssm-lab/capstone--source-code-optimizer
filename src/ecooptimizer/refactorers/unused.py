@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 
 from ..refactorers.base_refactorer import BaseRefactorer
@@ -27,9 +26,6 @@ class RemoveUnusedRefactorer(BaseRefactorer[UVASmell]):
         """
         line_number = smell.occurences[0].line
         code_type = smell.messageId
-        logging.info(
-            f"Applying 'Remove Unused Stuff' refactor on '{target_file.name}' at line {line_number} for identified code smell."
-        )
 
         # Load the source code as a list of lines
         with target_file.open() as file:
@@ -37,7 +33,6 @@ class RemoveUnusedRefactorer(BaseRefactorer[UVASmell]):
 
         # Check if the line number is valid within the file
         if not (1 <= line_number <= len(original_lines)):
-            logging.info("Specified line number is out of bounds.\n")
             return
 
         # remove specified line
@@ -45,14 +40,7 @@ class RemoveUnusedRefactorer(BaseRefactorer[UVASmell]):
         modified_lines[line_number - 1] = "\n"
 
         # for logging purpose to see what was removed
-        if code_type == "W0611":  # UNUSED_IMPORT
-            logging.info("Removed unused import.")
-        elif code_type == "UV001":  # UNUSED_VARIABLE
-            logging.info("Removed unused variable or class attribute")
-        else:
-            logging.info(
-                "No matching refactor type found for this code smell but line was removed."
-            )
+        if code_type != "W0611" and code_type != "UV001":  # UNUSED_IMPORT
             return
 
         # Write the modified content to a temporary file
@@ -64,5 +52,3 @@ class RemoveUnusedRefactorer(BaseRefactorer[UVASmell]):
         if overwrite:
             with target_file.open("w") as f:
                 f.writelines(modified_lines)
-
-        logging.info(f"Refactoring completed and saved to: {temp_file_path}")

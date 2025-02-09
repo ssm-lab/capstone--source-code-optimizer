@@ -1,4 +1,3 @@
-# Any configurations that are done by the analyzers
 from enum import Enum
 
 
@@ -6,9 +5,6 @@ class ExtendedEnum(Enum):
     @classmethod
     def list(cls) -> list[str]:
         return [c.value for c in cls]
-
-    # def __str__(self):
-    #     return str(self.value)
 
     def __eq__(self, value: object) -> bool:
         return str(self.value) == value
@@ -25,9 +21,9 @@ class PylintSmell(ExtendedEnum):
 
 # Enum class for custom code smells not detected by Pylint
 class CustomSmell(ExtendedEnum):
-    LONG_MESSAGE_CHAIN = "LMC001"  # CUSTOM CODE
-    UNUSED_VAR_OR_ATTRIBUTE = "UVA001"  # CUSTOM CODE
-    LONG_ELEMENT_CHAIN = "LEC001"  # Custom code smell for long element chains (e.g dict["level1"]["level2"]["level3"]... )
-    LONG_LAMBDA_EXPR = "LLE001"  # CUSTOM CODE
-    STR_CONCAT_IN_LOOP = "SCL001"
-    CACHE_REPEATED_CALLS = "CRC001"
+    LONG_MESSAGE_CHAIN = "LMC001"  # Ast code smell for long message chains
+    UNUSED_VAR_OR_ATTRIBUTE = "UVA001"  # Ast code smell for unused variable or attribute
+    LONG_ELEMENT_CHAIN = "LEC001"  # Ast code smell for long element chains
+    LONG_LAMBDA_EXPR = "LLE001"  # Ast code smell for long lambda expressions
+    STR_CONCAT_IN_LOOP = "SCL001"  # Astroid code smell for string concatenation inside loops
+    CACHE_REPEATED_CALLS = "CRC001"  # Ast code smell for repeated calls
