@@ -7,9 +7,7 @@ from ...data_types.smell import LMCSmell
 from ...data_types.custom_fields import AdditionalInfo, Occurence
 
 
-def detect_long_message_chain(
-    file_path: Path, tree: ast.AST, threshold: int = 5
-) -> list[LMCSmell]:
+def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 5) -> list[LMCSmell]:
     """
     Detects long message chains in the given Python code.
 
