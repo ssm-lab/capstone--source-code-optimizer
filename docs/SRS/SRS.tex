@@ -1478,37 +1478,12 @@ This section lists potential features and enhancements that are not critical for
 \end{enumerate}
 
 \section{Ideas for Solution}
-In this section, we capture various ideas for implementing the project requirements. These ideas provide technical approaches and methods for achieving the energy-efficient refactoring of Python code through the refactoring tool, IDE integration, and CI/CD automation. By capturing these ideas now, we ensure that potential technical approaches are not lost and can be referred to during the design and development phase.
+In this section, we capture various ideas for implementing the project requirements. These ideas provide technical approaches and methods for achieving the energy-efficient refactoring of Python code through the refactoring tool and IDE integration. By capturing these ideas now, we ensure that potential technical approaches are not lost and can be referred to during the design and development phase.
 \begin{itemize}
     \item \textbf{Refactoring Library Implementation via AST Parsing:} 
     Use Python’s built-in \texttt{ast} (Abstract Syntax Tree) module to analyze code structure. The refactoring library can traverse the AST to detect inefficiencies and apply refactorings without modifying code functionality.
     \item \textbf{IDE Plugin for Refactoring – Leveraging VS Code API:} 
     Build an extension for Visual Studio Code that hooks into the editor’s event system to provide real-time refactoring suggestions.
-    \item \textbf{Integration with Existing Tools via Pre-Commit Hooks:} 
-    Integrate the refactoring tool with popular tools like PyLint or Black by setting up pre-commit hooks to run the refactoring library before committing.
-    \item \textbf{Energy Usage Dashboard Using JavaScript and Flask:} 
-    Build a simple dashboard to track and display energy consumption metrics for code refactorings over time. 
-    \begin{itemize}
-        \item \textbf{Data Sources:} The dashboard will utilize data provided by the CodeCarbon library, including:
-        \begin{itemize}
-            \item \textit{Energy Usage (kWh):} Measured by CodeCarbon for each refactoring session.
-            \item \textit{Refactoring Metadata:} Information such as the type of code smell addressed, refactored lines of code, and energy savings.
-            \item \textit{Time-Based Logs:} Timestamped entries to track trends over time.
-        \end{itemize}
-        \item \textbf{Insights Provided:} The dashboard will display:
-        \begin{itemize}
-            \item Total energy consumption for all refactoring processes.
-            \item Energy savings percentage for individual refactorings.
-            \item Trends in energy consumption over time.
-            \item Comparative metrics across projects or refactoring types.
-        \end{itemize}
-        \item \textbf{Implementation Details:} 
-        \begin{itemize}
-            \item \textit{Backend:} Flask to handle API requests and process CodeCarbon data.
-            \item \textit{Frontend:} JavaScript (e.g., Chart.js or D3.js) to create interactive graphs.
-            \item \textit{Data Storage:} SQLite to store historical metrics for trend analysis.
-        \end{itemize}
-    \end{itemize}
 \end{itemize}
 
 \newpage{}
