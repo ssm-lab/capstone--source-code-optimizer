@@ -1077,49 +1077,49 @@ The following are defined as maintainability requirements:
 \section{Security Requirements}
 \subsection{Access Requirements}
 \begin{enumerate}[label=SR-AR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{Users must authenticate before accessing any feature of the refactoring tool, especially the refactored code or reports.}\\[2mm]
-    {\bf Rationale:} User’s code and refactoring results are private data that must only be accessed by legitimate, authenticated users. \\
-    {\bf Fit Criterion:} The user can submit code and view refactoring results once authenticated using their company’s credentials.\\
+	\item \emph{The tool must be capable of protecting data during active sessions without requiring authentication of the user.}\\[2mm]
+    {\bf Rationale:} Ensuring secure handling of data during processing eliminates the need for user authentication, thereby improving the tool's accessibility. Organizational code is already access-controlled for developers, therefore authentication is unnecessary for the tool.\\
+    {\bf Fit Criterion:} The tool allows users to submit code and view refactoring results without requiring login credentials, and no sensitive data is stored beyond the active session.\\
     {\bf Priority:} High
-    \item \emph{Only the refactoring tool can communicate with the energy consumption tool and the reinforcement learning model.}\\
-    {\bf Rationale:} Reinforcement learning model and energy consumption tools are internal, abstracted services that are not directly needed by the user.\\
-    {\bf Fit Criterion:} The refactoring tool does not include any exposed API endpoints to the energy consumption tool and reinforcement learning model.\\
+    \item \emph{Only the refactoring tool can communicate with the energy consumption tool.}\\
+    {\bf Rationale:} Energy consumption tool is an internal abstracted service that is not directly needed by the user.\\
+    {\bf Fit Criterion:} The refactoring tool does not include any exposed API endpoints to the energy consumption tool.\\
     {\bf Priority:} High
 \end{enumerate}
 \subsection{Integrity Requirements}
 \begin{enumerate}[label=SR-IR \arabic*., wide=0pt, leftmargin=*]
 	\item \emph{The tool must prevent unauthorized, external changes to the refactored code and energy reports.}\\[2mm]
-    {\bf Rationale:} The system must maintain code consistency and correctness vis-à-vis the original input and energy improvement data. Any corruption of the code and/or performance reports could undermine trust in the tool.\\
-    {\bf Fit Criterion:} The system should be fully secure against any external attempts to modify the data in each implemented layer.\\
+    {\bf Rationale:} The system must maintain code consistency and correctness of the original input and energy improvement data. Any corruption of the code could undermine trust in the tool.\\
+    {\bf Fit Criterion:} The system must reject malformed data inputs, ensure data integrity during processing and transmission, and maintain comprehensive logging of system activities. It should safeguard against data corruption to maintain trust in the tool's outputs..\\
     {\bf Priority:} High
 \end{enumerate}
 \subsection{Privacy Requirements}
 \begin{enumerate}[label=SR-PR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The user must be notified of data collection, usage, storage and processing practices related to their code. }\\[2mm]
-    {\bf Rationale:} The tool must safeguard user privacy rights.\\
-    {\bf Fit Criterion:} The system notifies and obtains explicit consent from users in compliance with PIPIEDA before collecting their code.\\
+	\item \emph{The tool must ensure that no personal user data, such as GitHub profile, commit history, working hours, or any identifiable information, is collected or stored during its operation. }\\[2mm]
+    {\bf Rationale:} Personal information, including coding habits, working patterns, and associated data (such as GitHub profile or commits), is sensitive and must not be used to ensure that users maintain full control over their personal data.\\
+    {\bf Fit Criterion:} The tool analyzes code and provides refactoring suggestions without collecting, storing or transmitting any personal information about the user.\\
     {\bf Priority:} High
-    \item \emph{Any data related to user submissions, energy reports and refactored results must be treated as confidential and handled according to Personal Information Protection and Electronic Documents Act (PIPEDA).}\\
-    {\bf Rationale:} The tool must ensure compliance with PIPEDA to avoid any legal action and gain user trust.\\
-    {\bf Fit Criterion:} All submitted code, energy reports and refactored code are encrypted when being transmitted or stored. The system includes an option to allow users to request modification of their personal data as per PIPEDA specifications.\\
+    \item \emph{Any data related to user submissions, energy reports and refactored results must be treated as confidential and handled securely throughout processing and transmission.}\\
+    {\bf Rationale:} The tool must ensure user trust by safeguarding all user submissions and related data against unauthorized access or tampering. Secure handling of data during active sessions maintains the integrity and reliability of the tool. \\
+    {\bf Fit Criterion:} The system processes user submissions, energy reports, and refactored results securely within the active session. No data is stored or retained after processing, ensuring all user information remains private and protected.\\
     {\bf Priority:} High
 \end{enumerate}
 \subsection{Audit Requirements}
 \begin{enumerate}[label=SR-AUR \arabic*., wide=0pt, leftmargin=*]
-    \item \emph{The tool should record which users submitted the code and/or accessed the refactored code and energy reports.}\\[2mm]
-    {\bf Rationale:} The system must ensure accountability and traceability of the refactoring process to resolve any future conflicts.\\
-    {\bf Fit Criterion:} The system maintains tamper-proof logs of the following events: login, code submission and access to refactoring results.\\[2mm]
+    \item \emph{The tool should maintain a log of operational events related to the refactoring process, including code detetction, energy analysis, and refactoring.}\\[2mm]
+    {\bf Rationale:} The tool must ensure transparency in its operation by providing a record of key system actions, enabling the user to debug or review tool behavior.\\
+    {\bf Fit Criterion:} The system generates a log of important operational events, such as the start and completion of analysis, energy measurements, and refactoring. \\[2mm]
     {\bf Priority:} Medium
-    \item \emph{The system should maintain an audit log of all refactoring processes including pattern analysis, energy analysis and report generation. }\\
-    {\bf Rationale:} The tool must include a trail of refactoring events for any future security disputes.\\
-    {\bf Fit Criterion:}  The system maintains tamper-proof logs of refactoring changes made to the original code.\\
+    \item \emph{The tool should log user-triggered actions, such as code submissions and the initiation of refactoring processes, without storing any user-specific or identifiable data. }\\
+    {\bf Rationale:} The tool must provide accountability for user interactions with the system, allowing the user to trace and verify the actions they have taken within the session.\\
+    {\bf Fit Criterion:}  The system logs events such as user code submissions, requests for refactoring, and access to refactoring results. These logs do not include personal identifiable user data.\\
     {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Immunity Requirements}
 \begin{enumerate}[label=SR-AUR \arabic*., wide=0pt, leftmargin=*]
-	\item \emph{The tool must be protected from any malware, viruses and unauthorized programs that could alter the refactoring process. }\\[2mm]
-    {\bf Rationale:} Users need a secure and reliable system that is resistant to external attacks.\\
-    {\bf Fit Criterion:} The system includes a regularly updated security component that is tested against new threats.\\
+	\item \emph{The tool must minimize exposure to external threats, ensuring that the refactoring process is protected from unauthorized interference.}\\[2mm]
+    {\bf Rationale:} Reducing reliance on external systems decreases vulnerability to external threats, such as malware or unauthorized access, and ensures a secure and reliable refactoring process.\\
+    {\bf Fit Criterion:} The system operates without any external server communication so as exposure to external threats is limited. This setup inherently reduces exposure to external security risks.\\
     {\bf Priority:} High
 \end{enumerate}
 
