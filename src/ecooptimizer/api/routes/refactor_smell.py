@@ -6,11 +6,12 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Any, Optional
 
-from ecooptimizer import OUTPUT_MANAGER
-from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
-from ecooptimizer.refactorers.refactorer_controller import RefactorerController
-from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
-from ecooptimizer.data_types.smell import Smell
+from ... import OUTPUT_MANAGER
+from ...analyzers.analyzer_controller import AnalyzerController
+from ...exceptions import EnergySavingsError, RefactoringError
+from ...refactorers.refactorer_controller import RefactorerController
+from ...measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
+from ...data_types.smell import Smell
 
 router = APIRouter()
 refactor_logger = OUTPUT_MANAGER.loggers["refactor_smell"]
@@ -88,10 +89,10 @@ def perform_refactoring(source_dir: Path, smell: Smell):
         refactor_logger.error("❌ Could not retrieve initial emissions.")
         raise RuntimeError("Could not retrieve initial emissions.")
 
-    refactor_logger.info(f"📊 Initial emissions: {initial_emissions}")
+    refactor_logger.info(f"📊 Initial emissions: {initial_emissions} kg CO2")
 
-    temp_dir = mkdtemp(prefix="ecooptimizer-")  # ✅ Fix: No need for Path()
-    source_copy = Path(temp_dir) / source_dir.name  # Convert to Path when needed
+    temp_dir = mkdtemp(prefix="ecooptimizer-")
+    source_copy = Path(temp_dir) / source_dir.name
     target_file_copy = Path(str(target_file).replace(str(source_dir), str(source_copy), 1))
 
     shutil.copytree(source_dir, source_copy)
@@ -100,8 +101,9 @@ def perform_refactoring(source_dir: Path, smell: Smell):
         modified_files: list[Path] = refactorer_controller.run_refactorer(
             target_file_copy, source_copy, smell
         )
-    except NotImplementedError as e:
-        raise RuntimeError(str(e)) from e
+    except Exception as e:
+        shutil.rmtree(temp_dir)
+        raise RefactoringError(str(target_file), str(e)) from e
 
     energy_meter.measure_energy(target_file_copy)
     final_emissions = energy_meter.emissions
@@ -109,12 +111,13 @@ def perform_refactoring(source_dir: Path, smell: Smell):
     if not final_emissions:
         refactor_logger.error("❌ Could not retrieve final emissions. Discarding refactoring.")
         shutil.rmtree(temp_dir)
-        return None, []
+        raise RuntimeError("Could not retrieve initial emissions.")
 
     if final_emissions >= initial_emissions:
+        refactor_logger.info(f"📊 Final emissions: {final_emissions} kg CO2")
         refactor_logger.info("⚠️ No measured energy savings. Discarding refactoring.")
         shutil.rmtree(temp_dir)
-        return None, []
+        raise EnergySavingsError(str(target_file), "Energy was not saved after refactoring.")
 
     refactor_logger.info(f"✅ Energy saved! Initial: {initial_emissions}, Final: {final_emissions}")
 
@@ -124,8 +127,8 @@ def perform_refactoring(source_dir: Path, smell: Smell):
             "original": str(target_file.resolve()),
             "refactored": str(target_file_copy.resolve()),
         },
-        "energySaved": final_emissions - initial_emissions
-        if not math.isnan(final_emissions - initial_emissions)
+        "energySaved": initial_emissions - final_emissions
+        if not math.isnan(initial_emissions - final_emissions)
         else None,
         "affectedFiles": [
             {
