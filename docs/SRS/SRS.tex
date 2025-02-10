@@ -629,7 +629,7 @@ This subsection includes a diagram (\hyperref[img:prod-bound]{Figure 3}) showing
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{../Images/use_case_diagram.png}
+  \includegraphics[width=0.9\textwidth]{../Images/use_case_diagram.png}
   \caption{Product Boundary Diagram of System}
   \label{img:prod-bound}
 \end{figure}
@@ -1486,6 +1486,10 @@ This section lists potential features and enhancements that are not critical for
     {\bf Rationale:} Users around the world code projects in multitudes of languages depending on the context of their work. Being able to refactor in most popular languages would allow for the widespread usage of the tool.\\
     {\bf Fit Criterion:} The tool accepts and tailors code from the detected/specified language.\\
     {\bf Priority:} Low
+    \item \emph{A reinforcement learning model must be developed to learn from the most energy-efficient refactorings and user preferences over time.}\\[2mm]
+    {\bf Rationale:} The model must evolve to improve its refactoring suggestions by identifying patterns in energy-efficient code transformations and user preferences. By adapting its recommendations, the system will refine its ability to balance energy savings with maintainability and user preferences.\\
+    {\bf Fit Criterion:} The reinforcement learning model is trained using gathered refactoring data and energy consumption measurement. Over multiple iterations, the model should improve its ability to predict refactorings that maximize energy efficiency while aligning with user choices.\\
+    {\bf Priority:} Medium
   \item \emph{The reinforcement learning model for the tool should accept human feedback in the reinforcement learning process.}\\[2mm]
     {\bf Rationale:} This will allow users to guide the system's refactoring decisions based on developer expertise and preferences. Moreover, it will balance automated refactoring with human oversight to ensure that complex refactoring decisions align with the project's goals and constraints.\\
     {\bf Fit Criterion:} The language model accepts human feedback and incorporates it into its future decisions.\\
