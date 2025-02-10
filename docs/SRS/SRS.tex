@@ -54,13 +54,14 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3.5cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{3.7cm}p{1.8cm}X}
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
 October 11th, 2024 & 0 & Created initial revision of SRS\\
 January 5th, 2025 & 0.1 & Update FR-7, FR-8, Ideas for Solution \\
 January 6th, 2025 & 0.1 & Fixed link references to tables and figures and added preambles to those sections, move glossary section, added symbolic constants\\
 February 8th, 2025 & 0.2 & Removed requirement for interfacing with GitHub Actions.\\
+February 10th, 2025 & 0.2 & Updated the data dictionary and business data model \\
 \bottomrule
 \end{tabularx}
 
@@ -572,6 +573,7 @@ Each event listed in \hyperref[tab:work-part]{Table 2} is expanded into an indiv
     \end{enumerate}
 \end{enumerate}
 
+\newpage
 \section{Business Data Model and Data Dictionary}
 
 This section describes the structure and organization of the data that flows through the refactoring library. It explains how the system's components interact with data entities, ensuring a consistent and well-defined understanding of the information processed by the system.
@@ -586,11 +588,15 @@ The following diagram (\hyperref[img:bdata-model]{Figure 2}) illustrates the rel
   \label{img:bdata-model}
 \end{figure}
 
+\newpage
 \subsection{Data Dictionary}
 \hyperref[tab:data-dict]{Table 3} shown below defines each component in the system, including its attributes, type, and purpose. It ensures clarity and consistency in data handling and serves as a reference for development and testing.
 
 % \renewcommand{\arraystretch}{1}
-\begin{longtable}[H]{|p{3.5cm}|p{9cm}|p{2cm}|}
+\begin{longtable}[H]{
+  >{\raggedright\arraybackslash}p{3.5cm}
+  >{\raggedright\arraybackslash}p{9cm}
+  >{\raggedright\arraybackslash}p{2cm}}
   \toprule 
   \textbf{Name} & \textbf{Content} & \textbf{Type} \\
   \midrule
@@ -600,25 +606,12 @@ The following diagram (\hyperref[img:bdata-model]{Figure 2}) illustrates the rel
   \label{tab:data-dict}
   \endlastfoot
   
-  EcoOptimizer & CentralCtrl + RefactoringCtrl + TestingCtrl + Reinforcement Learning Model & package \\ \hline
-  GitHub Actions & External tool for automated customizable workflows & External Service Provider \\ \hline
-  VS Code extension & A plugin containing the EcoOptimizer package delivered through Visual Studio Code Marketplace & External Service Provider \\ \hline
-  Rope & External refactoring library & package \\ \hline
-  Pysmell & External python smell detection module & package \\ \hline
-  pyJoules & External python energy measuring module & package \\ \hline
-  CentralCtrl & source + excluded + tests + initialEnergy + smells + measureEnergy + getSmells + refactor + checkFunctionality & Class \\ \hline
-  TestingCtrl & testDir + runTests & Class \\ \hline
-  RefactoringCtrl & selectRefactoring & Class \\ \hline
-  Reinforcement Learning Model & Data model for improved energy efficient refactoring & Module \\ \hline
-  source & directory containing the code to be refactored & string \\ \hline
-  excluded & files and directories that should not be refactored & list[string] \\ \hline
-  testDir & directory containing tests related to the source code & string \\ \hline
-  initialEnergy & file containing all initial energy measurements prior to refactoring & string \\ \hline
-  smells & all code smells detected & list[string] \\ \hline
-  measureEnergy() & measures the energy consumption of the given source code & method \\ \hline
-  getSmells() & returns all the smells detected in the source code & method \\ \hline
-  refactor(smell) & refactors the source code based on the given code smell & method \\ \hline
-  checkFunctionality() & checks that the original functionality of the code is maintained & method \\
+  ecooptimizer & Controller + Analysis + Refactoring + Energy Measurement & package \\ \midrule
+  IDE extension & A plugin containing the \texttt{ecooptimizer} package delivered as an IDE extension & External Service Provider \\ \midrule
+  Controller & Controlls the flow of execution within the package. Responsible for calling other modules and handling outputs & Module \\ \midrule
+  Refactoring & Contains all necessary tools for refactoring the code smells defined in the package & Module \\ \midrule
+  Energy Measurement & measures the energy consumption of the given source code & Module \\ \midrule
+  Analysis & Contains all necessary tools for the analysis of the code smells defined in the package & Module \\
 \end{longtable}
 
 \section{The Scope of the Product}
