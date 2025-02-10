@@ -629,13 +629,13 @@ This subsection includes a diagram (\hyperref[img:prod-bound]{Figure 3}) showing
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{../Images/UseCaseDiagram.png}
+  \includegraphics[width=0.8\textwidth]{../Images/use_case_diagram.png}
   \caption{Product Boundary Diagram of System}
   \label{img:prod-bound}
 \end{figure}
 
 \subsection{Product Use Case Table}
-The following \hyperref[tab:puc]{table} summarizes the primary use cases of the refactoring library, such as identifying code smells, measuring energy consumption, and applying refactorings. Each use case briefly describes the interaction between the user and the system.
+The following \hyperref[tab:puc]{table} summarizes the primary use cases of the refactoring library, such as identifying code smells, measuring energy consumption, applying refactorings, and allowing users to accept or reject refactored code. Each use case briefly describes the interaction between the user and the system.
 
 \setlength\extrarowheight{2mm}
 
@@ -647,13 +647,13 @@ The following \hyperref[tab:puc]{table} summarizes the primary use cases of the 
     >{\raggedright\arraybackslash}X|}
     \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} \\
     \midrule
-    1 & Receive Code for Refactoring & User & Original Python Code (in) \\ 
-    2 & Detect Code Smells & VS Code Plugin (via Refactoring Library) & Original Code (in), Identified Code Smells (out) \\ 
-    3 & Select Code Smell for Refactoring & User & Selected Code Smell (in) \\ 
-    4 & Refactor Code & VS Code Plugin (via Refactoring Library) & Code Segment (in), Refactored Code (out) \\ 
-    5 & Measure Energy Consumption Before Refactoring & Refactoring Library (via Energy Measurement Tool) & Original Code (in), Initial Energy Consumption Results (out) \\ 
-    6 & Measure Energy Consumption After Refactoring & Refactoring Library (via Energy Measurement Tool) & Refactored Code (in), Final Energy Consumption Results (out) \\ 
-    7 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\ 
+    1 & Detect Code Smells & VS Code Plugin (via Refactoring Library) & Original Code (in), Identified Code Smells (out) \\ 
+    2 & Select Code Smell for Refactoring & User & Selected Code Smell (in) \\ 
+    3 & Refactor Code & VS Code Plugin (via Refactoring Library) & Code Segment (in), Refactored Code (out) \\ 
+    4 & Measure Energy Consumption Before Refactoring & Refactoring Library (via Energy Measurement Tool) & Original Code (in), Initial Energy Consumption Results (out) \\ 
+    5 & Measure Energy Consumption After Refactoring & Refactoring Library (via Energy Measurement Tool) & Refactored Code (in), Final Energy Consumption Results (out) \\ 
+    6 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\ 
+    7 & Accept or Reject Refactoring Results & User & Refactored Code, Energy Consumption Results (in), Accepted or Rejected Decision (out) \\ 
     \bottomrule
   \end{tabularx}
   \caption{Product Use Case Table of System}
@@ -665,17 +665,6 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 4}, 
 
 \setlength{\parindent}{0pt}
 \begin{enumerate}[label={\bf PUC \arabic*:}, wide=0pt, font=\itshape]
-\item {\bf Receive Code for Refactoring} \\[2mm]
-\textbf{Trigger:} User submits Python code via VS Code plugin. \\[2mm]
-\textbf{Preconditions:}
-\begin{itemize}
-    \item User has access to the refactoring tool.
-    \item The refactoring tool is active and ready to receive code.
-\end{itemize}
-\textbf{Actors:} User. \\
-\textbf{Outcome:} Python code is received by the refactoring tool. \\
-\textbf{Input:} Original Python Code. \\
-\textbf{Output:} Code is stored for further analysis (internal).
 
 \item \textbf{Detect Code Smells} \\[2mm]
 \textbf{Trigger:} The VS Code Plugin processes the input code using the refactoring library. \\[2mm]
@@ -738,15 +727,26 @@ This subsection expands on the use cases listed in \hyperref[tab:puc]{Table 4}, 
 \textbf{Output:} Final Energy Consumption Results.
 
 \item \textbf{Show Results} \\[2mm]
-\textbf{Trigger:} Refactored code and energy consumption metrics are results. \\[2mm]
+\textbf{Trigger:} Refactored code and energy consumption metrics are ready. \\[2mm]
 \textbf{Preconditions:}
 \begin{itemize}
     \item The refactoring process has completed.
     \item Energy consumption before and after refactoring has been measured.
 \end{itemize}
 \textbf{Actors:} VS Code Plugin. \\
-\textbf{Outcome:} The refactored code and energy consumption results are presented to the user. \\
+\textbf{Outcome:} The refactored code and performance metrics are presented to the user. \\
 \textbf{Output:} Refactored Code, Energy Consumption Results.
+
+\item \textbf{Accept or Reject Refactoring Results} \\[2mm]
+\textbf{Trigger:} The user reviews the refactored code and its energy consumption results. \\[2mm]
+\textbf{Preconditions:}
+\begin{itemize}
+    \item The system has presented the refactored code and energy consumption results.
+\end{itemize}
+\textbf{Actors:} User. \\
+\textbf{Outcome:} The user accepts or rejects the refactored code. If rejected, no changes are applied. If accepted, the refactored code replaces the original. \\
+\textbf{Input:} Refactored Code, Energy Consumption Results. \\
+\textbf{Output:} Accepted or Rejected Decision.
 
 \end{enumerate}
 
