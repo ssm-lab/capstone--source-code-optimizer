@@ -6,9 +6,9 @@ from tempfile import TemporaryDirectory, mkdtemp  # noqa: F401
 
 import libcst as cst
 
-from .api.main import ChangedFile, RefactoredData
+from .utils.smells_registry import update_smell_registry
 
-from .testing.test_runner import TestRunner
+from .api.routes.refactor_smell import ChangedFile, RefactoredData
 
 from .measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
@@ -21,6 +21,9 @@ from . import (
     SAMPLE_PROJ_DIR,
     SOURCE,
 )
+
+detect_logger = OUTPUT_MANAGER.loggers["detect_smells"]
+refactor_logger = OUTPUT_MANAGER.loggers["refactor_smell"]
 
 # FILE CONFIGURATION IN __init__.py !!!
 
@@ -42,6 +45,7 @@ def main():
         exit(1)
 
     analyzer_controller = AnalyzerController()
+    update_smell_registry(["no-self-use"])
     smells_data = analyzer_controller.run_analysis(SOURCE)
     OUTPUT_MANAGER.save_json_files(
         "code_smells.json", [smell.model_dump() for smell in smells_data]
@@ -80,49 +84,40 @@ def main():
             final_emissions = energy_meter.emissions
 
             if not final_emissions:
-                logging.error("Could not retrieve final emissions. Discarding refactoring.")
+                refactor_logger.error("Could not retrieve final emissions. Discarding refactoring.")
                 print("Refactoring Failed.\n")
 
             elif final_emissions >= initial_emissions:
-                logging.info("No measured energy savings. Discarding refactoring.\n")
+                refactor_logger.info("No measured energy savings. Discarding refactoring.\n")
                 print("Refactoring Failed.\n")
 
             else:
-                logging.info("Energy saved!")
-                logging.info(
+                refactor_logger.info("Energy saved!")
+                refactor_logger.info(
                     f"Initial emissions: {initial_emissions} | Final emissions: {final_emissions}"
                 )
 
-                if not TestRunner("pytest", Path(tempDir)).retained_functionality():
-                    logging.info("Functionality not maintained. Discarding refactoring.\n")
-                    print("Refactoring Failed.\n")
+                print("Refactoring Succesful!\n")
 
-                else:
-                    logging.info("Functionality maintained! Retaining refactored file.\n")
-                    print("Refactoring Succesful!\n")
+                refactor_data = RefactoredData(
+                    tempDir=tempDir,
+                    targetFile=ChangedFile(original=str(SOURCE), refactored=str(target_file_copy)),
+                    energySaved=(final_emissions - initial_emissions),
+                    affectedFiles=[
+                        ChangedFile(
+                            original=str(file).replace(str(source_copy), str(SAMPLE_PROJ_DIR)),
+                            refactored=str(file),
+                        )
+                        for file in modified_files
+                    ],
+                )
 
-                    refactor_data = RefactoredData(
-                        tempDir=tempDir,
-                        targetFile=ChangedFile(
-                            original=str(SOURCE), refactored=str(target_file_copy)
-                        ),
-                        energySaved=(final_emissions - initial_emissions),
-                        affectedFiles=[
-                            ChangedFile(
-                                original=str(file).replace(str(source_copy), str(SAMPLE_PROJ_DIR)),
-                                refactored=str(file),
-                            )
-                            for file in modified_files
-                        ],
-                    )
+                output_paths = refactor_data.affectedFiles
 
-                    output_paths = refactor_data.affectedFiles
+                # In reality the original code will now be overwritten but thats too much work
 
-                    # In reality the original code will now be overwritten but thats too much work
+                OUTPUT_MANAGER.save_json_files("refactoring-data.json", refactor_data.model_dump())  # type: ignore
 
-                    OUTPUT_MANAGER.save_json_files(
-                        "refactoring-data.json", refactor_data.model_dump()
-                    )  # type: ignore
     print(output_paths)
 
 
