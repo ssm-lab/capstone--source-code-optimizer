@@ -3,9 +3,9 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import time
 
-from ecooptimizer import OUTPUT_MANAGER
-from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
-from ecooptimizer.data_types.smell import Smell
+from ... import OUTPUT_MANAGER
+from ...analyzers.analyzer_controller import AnalyzerController
+from ...data_types.smell import Smell
 from ...utils.smells_registry import update_smell_registry
 
 router = APIRouter()

@@ -1,10 +1,18 @@
 import math  # Unused import
 
+class Test:
+    def __init__(self, name) -> None:
+        self.name = name
+        pass
+
+    def unused_method(self):
+        print('Hello World!')
+
 
 # Code Smell: Long Parameter List
 class Vehicle:
     def __init__(
-        self, make, model, year, color, fuel_type, engine_start_stop_option, mileage, suspension_setting, transmission, price, seat_position_setting = None
+        self, make, model, year: int, color, fuel_type, engine_start_stop_option, mileage, suspension_setting, transmission, price, seat_position_setting = None
     ):
         # Code Smell: Long Parameter List in __init__
         self.make = make # positional argument
@@ -22,6 +30,7 @@ class Vehicle:
 
     def display_info(self):
         # Code Smell: Long Message Chain
+        random_test = self.make.split('')
         print(f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(",", "")[::2])
 
     def calculate_price(self):
@@ -46,6 +55,8 @@ class Vehicle:
         )
 
 class Car(Vehicle):
+    test = Vehicle(1,1,1,1,1,1,1,1,1,1)
+
     def __init__(
         self,
         make,
@@ -69,6 +80,7 @@ class Car(Vehicle):
     def add_sunroof(self):
         # Code Smell: Long Parameter List
         self.sunroof = True
+        self.test.unused_method()
         print("Sunroof added!")
 
     def show_details(self):
@@ -77,7 +89,7 @@ class Car(Vehicle):
         print(details.upper().lower().upper().capitalize().upper().replace("|", "-"))
 
 
-def process_vehicle(vehicle):
+def process_vehicle(vehicle: Vehicle):
     # Code Smell: Unused Variables
     temp_discount = 0.05
     temp_shipping = 100
@@ -128,6 +140,8 @@ if __name__ == "__main__":
     process_vehicle(car1)
     car1.add_sunroof()
     car1.show_details()
+
+    car1.unused_method()
     
     # Testing with another vehicle object
     car2 = Vehicle(
@@ -144,4 +158,7 @@ if __name__ == "__main__":
     )
     process_vehicle(car2)
 
-    car1.unused_method()
+    test = Test('Anna')
+    test.unused_method()
+
+    print("Hello")
