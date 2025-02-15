@@ -3,9 +3,13 @@ import fnmatch
 from pathlib import Path
 from typing import TypeVar
 
+from .. import OUTPUT_MANAGER
+
 from .base_refactorer import BaseRefactorer
 
 from ..data_types.smell import Smell
+
+logger = OUTPUT_MANAGER.loggers["refactor_smell"]
 
 T = TypeVar("T", bound=Smell)
 
@@ -49,21 +53,19 @@ class MultiFileRefactorer(BaseRefactorer[T]):
     def traverse_and_process(self, directory: Path):
         for item in directory.iterdir():
             if item.is_dir():
-                print(f"Scanning directory: {item!s}, name: {item.name}")
+                logger.debug(f"Scanning directory: {item!s}, name: {item.name}")
                 if self.is_ignored(item):
-                    print(f"Ignored directory: {item!s}")
+                    logger.debug(f"Ignored directory: {item!s}")
                     continue
 
-                print(f"Entering directory: {item!s}")
+                logger.debug(f"Entering directory: {item!s}")
                 self.traverse_and_process(item)
             elif item.is_file() and item.suffix == ".py":
-                print(f"Checking file: {item!s}")
+                logger.debug(f"Checking file: {item!s}")
                 if self._process_file(item):
                     if item not in self.modified_files and not item.samefile(self.target_file):
                         self.modified_files.append(item.resolve())
-                print("finished processing file")
-
-        print("traversed all files, refactoring ending")
+                logger.debug("finished processing file")
 
     @abstractmethod
     def _process_file(self, file: Path) -> bool:
