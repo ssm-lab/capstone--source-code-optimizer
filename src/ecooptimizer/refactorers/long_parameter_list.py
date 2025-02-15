@@ -154,9 +154,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.traverse_and_process(source_dir)
 
     def _process_file(self, file: Path):
-        with file.open() as f:
-            source_code = f.read()
-            tree = ast.parse(source_code)
+        tree = ast.parse(file.read_text())
 
         # check if function call or class instantiation occurs in this file
         visitor = FunctionCallVisitor(
@@ -165,7 +163,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         visitor.visit(tree)
 
         if not visitor.found:
-            return  # skip modification if function/constructor is never called
+            return False
 
         # insert class definitions before modifying function calls
         updated_tree = self._update_tree_with_class_nodes(tree)
@@ -183,8 +181,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         with file.open("w") as f:
             f.write(modified_source)
 
-        if file not in self.modified_files and not file.samefile(self.target_file):
-            self.modified_files.append(file)
+        return True
 
     def _generate_unique_param_class_names(self) -> tuple[str, str]:
         """

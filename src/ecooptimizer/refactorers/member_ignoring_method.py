@@ -185,15 +185,18 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         logger.debug(f"valid classes: {self.valid_classes}")
 
     def _process_file(self, file: Path):
-        tree = MetadataWrapper(cst.parse_module(file.read_text()))
+        processed = False
+        tree = MetadataWrapper(cst.parse_module(file.read_text("utf-8")))
 
         modified_tree = tree.visit(self.transformer)
 
         if self.transformer.transformed:
             file.write_text(modified_tree.code)
             if not file.samefile(self.target_file):
-                self.modified_files.append(file.resolve())
+                processed = True
             self.transformer.transformed = False
+
+        return processed
 
     def leave_FunctionDef(
         self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef

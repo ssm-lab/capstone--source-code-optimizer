@@ -47,7 +47,7 @@ class CodeCarbonEnergyMeter(BaseEnergyMeter):
                 )
                 logging.info("CodeCarbon measurement completed successfully.")
             except subprocess.CalledProcessError as e:
-                logging.info(f"Error executing file '{file_path}': {e}")
+                logging.error(f"Error executing file '{file_path}': {e}")
             finally:
                 self.emissions = tracker.stop()
                 emissions_file = custom_temp_dir / Path("emissions.csv")
@@ -55,7 +55,9 @@ class CodeCarbonEnergyMeter(BaseEnergyMeter):
                 if emissions_file.exists():
                     self.emissions_data = self.extract_emissions_csv(emissions_file)
                 else:
-                    logging.info("Emissions file was not created due to an error during execution.")
+                    logging.error(
+                        "Emissions file was not created due to an error during execution."
+                    )
                     self.emissions_data = None
 
     def extract_emissions_csv(self, csv_file_path: Path):

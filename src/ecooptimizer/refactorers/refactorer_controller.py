@@ -8,9 +8,8 @@ refactor_logger = OUTPUT_MANAGER.loggers["refactor_smell"]
 
 
 class RefactorerController:
-    def __init__(self, output_dir: Path):
+    def __init__(self):
         """Manages the execution of refactorers for detected code smells."""
-        self.output_dir = output_dir
         self.smell_counters = {}
 
     def run_refactorer(
@@ -40,7 +39,7 @@ class RefactorerController:
             file_count = self.smell_counters[smell_id]
 
             output_file_name = f"{target_file.stem}_path_{smell_id}_{file_count}.py"
-            output_file_path = self.output_dir / output_file_name
+            output_file_path = Path(__file__).parent / "../../../outputs" / output_file_name
 
             refactor_logger.info(
                 f"🔄 Running refactoring for {smell_symbol} using {refactorer_class.__name__}"
