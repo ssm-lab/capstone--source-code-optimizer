@@ -51,7 +51,7 @@ def main():
     )
 
     OUTPUT_MANAGER.copy_file_to_output(SOURCE, "refactored-test-case.py")
-    refactorer_controller = RefactorerController(OUTPUT_MANAGER.output_dir)
+    refactorer_controller = RefactorerController()
     output_paths = []
 
     for smell in smells_data:

@@ -1,3 +1,7 @@
+import os
+import stat
+
+
 class RefactoringError(Exception):
     """Exception raised for errors that occured during the refcatoring process.
 
@@ -13,3 +17,9 @@ class RefactoringError(Exception):
 
 class EnergySavingsError(RefactoringError):
     pass
+
+
+def remove_readonly(func, path, _):  # noqa: ANN001
+    # "Clear the readonly bit and reattempt the removal"
+    os.chmod(path, stat.S_IWRITE)  # noqa: PTH101
+    func(path)
