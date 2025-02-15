@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .. import OUTPUT_MANAGER
 
-from .base_refactorer import BaseRefactorer
+from .multi_file_refactorer import MultiFileRefactorer
 from ..data_types.smell import MIMSmell
 
 logger = OUTPUT_MANAGER.loggers["refactor_smell"]
@@ -118,7 +118,7 @@ def check_for_annotations(caller: nodes.NodeNG, scope: nodes.NodeNG):
     return hint
 
 
-class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
+class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
     METADATA_DEPENDENCIES = (PositionProvider,)
 
     def __init__(self):
@@ -157,9 +157,9 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
         astroid_tree = astroid.parse(source_code)
         valid_calls = find_valid_method_calls(astroid_tree, self.mim_method, self.valid_classes)
 
-        transformer = CallTransformer(valid_calls, self.mim_method_class)
+        self.transformer = CallTransformer(valid_calls, self.mim_method_class)
 
-        self._refactor_files(source_dir, transformer)
+        self.traverse_and_process(source_dir)
         output_file.write_text(target_file.read_text())
 
     def _find_subclasses(self, tree: MetadataWrapper):
@@ -184,19 +184,16 @@ class MakeStaticRefactorer(BaseRefactorer[MIMSmell], cst.CSTTransformer):
         self.valid_classes = self.valid_classes.union(collector.subclasses)
         logger.debug(f"valid classes: {self.valid_classes}")
 
-    def _refactor_files(self, directory: Path, transformer: CallTransformer):
-        logger.debug("Refactoring other files")
-        for item in directory.iterdir():
-            if item.is_dir():
-                self._refactor_files(item, transformer)
-            elif item.is_file() and item.suffix == ".py":
-                tree = MetadataWrapper(cst.parse_module(item.read_text()))
-                modified_tree = tree.visit(transformer)
-                if transformer.transformed:
-                    item.write_text(modified_tree.code)
-                    if not item.samefile(self.target_file):
-                        self.modified_files.append(item.resolve())
-                    transformer.transformed = False
+    def _process_file(self, file: Path):
+        tree = MetadataWrapper(cst.parse_module(file.read_text()))
+
+        modified_tree = tree.visit(self.transformer)
+
+        if self.transformer.transformed:
+            file.write_text(modified_tree.code)
+            if not file.samefile(self.target_file):
+                self.modified_files.append(file.resolve())
+            self.transformer.transformed = False
 
     def leave_FunctionDef(
         self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
