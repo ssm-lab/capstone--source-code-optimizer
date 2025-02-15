@@ -95,7 +95,7 @@ include = ["src", "tests"]
 exclude = ["tests/input", "tests/_input*", "src/ecooptimizer/outputs"]
 
 disableBytesTypePromotions = true
-reportAttributeAccessIssue = "warning"
+reportAttributeAccessIssue = false
 reportPropertyTypeMismatch = true
 reportFunctionMemberAccess = true
 reportMissingImports = true

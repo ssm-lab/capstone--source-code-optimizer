@@ -100,7 +100,10 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
             self._find_access_pattern_in_file(tree, file)
         else:
             self.find_dict_assignment_in_file(tree)
-            self._refactor_all_in_file(file.read_text(), file)
+            if self._refactor_all_in_file(file):
+                return True
+
+        return False
 
     # finds all access patterns in the file
     def _find_access_pattern_in_file(self, tree: ast.AST, path: Path):
@@ -236,12 +239,13 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
 
         return f"{joined}" + rest
 
-    def _refactor_all_in_file(self, source_code: str, file_path: Path) -> None:
+    def _refactor_all_in_file(self, file_path: Path):
         """Refactor dictionary access patterns in a single file."""
         # Skip if no access patterns found
         if not any(access.path == file_path for access in self.access_patterns):
-            return
+            return False
 
+        source_code = file_path.read_text()
         lines = source_code.split("\n")
         line_modifications = self._collect_line_modifications(file_path)
 
@@ -252,7 +256,9 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
         file_path.write_text("\n".join(refactored_lines))
 
         if not file_path.samefile(self.target_file):
-            self.modified_files.append(file_path.resolve())
+            return True
+
+        return False
 
     def _collect_line_modifications(self, file_path: Path) -> dict[int, list[tuple[int, str, str]]]:
         """Collect all modifications needed for each line."""

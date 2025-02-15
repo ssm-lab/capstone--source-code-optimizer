@@ -1,0 +1,32 @@
+# Build and distribution artifacts
+*.whl
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# Version control and OS metadata
+.git/
+.gitignore
+.gitattributes
+.svn/
+.DS_Store
+Thumbs.db
+
+# Containerisation and deployment
+Dockerfile
+.dockerignore
+.env
+*.log
+
+# Dependency managers and tooling
+poetry.lock
+pyproject.toml
+requirements.txt
+*.ipynb_checkpoints/
+
+# Hidden files and miscellaneous patterns
+.*
+*.bak
+*.swp

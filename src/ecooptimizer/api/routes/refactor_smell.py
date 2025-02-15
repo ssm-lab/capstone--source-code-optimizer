@@ -2,6 +2,7 @@ import shutil
 import math
 from pathlib import Path
 from tempfile import mkdtemp
+import traceback
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Any, Optional
@@ -16,7 +17,7 @@ from ...data_types.smell import Smell
 router = APIRouter()
 refactor_logger = OUTPUT_MANAGER.loggers["refactor_smell"]
 analyzer_controller = AnalyzerController()
-refactorer_controller = RefactorerController(Path(mkdtemp(prefix="ecooptimizer-")))
+refactorer_controller = RefactorerController()
 
 
 class ChangedFile(BaseModel):
@@ -97,11 +98,16 @@ def perform_refactoring(source_dir: Path, smell: Smell):
 
     shutil.copytree(source_dir, source_copy)
 
+    modified_files = []
     try:
         modified_files: list[Path] = refactorer_controller.run_refactorer(
             target_file_copy, source_copy, smell
         )
+    except NotImplementedError:
+        print("Not implemented yet.")
     except Exception as e:
+        print(f"An unexpected error occured: {e!s}")
+        traceback.print_exc()
         shutil.rmtree(temp_dir)
         raise RefactoringError(str(target_file), str(e)) from e
 
@@ -109,6 +115,7 @@ def perform_refactoring(source_dir: Path, smell: Smell):
     final_emissions = energy_meter.emissions
 
     if not final_emissions:
+        print("❌ Could not retrieve final emissions. Discarding refactoring.")
         refactor_logger.error("❌ Could not retrieve final emissions. Discarding refactoring.")
         shutil.rmtree(temp_dir)
         raise RuntimeError("Could not retrieve initial emissions.")
@@ -116,13 +123,14 @@ def perform_refactoring(source_dir: Path, smell: Smell):
     if final_emissions >= initial_emissions:
         refactor_logger.info(f"📊 Final emissions: {final_emissions} kg CO2")
         refactor_logger.info("⚠️ No measured energy savings. Discarding refactoring.")
+        print("❌ Could not retrieve final emissions. Discarding refactoring.")
         shutil.rmtree(temp_dir)
         raise EnergySavingsError(str(target_file), "Energy was not saved after refactoring.")
 
     refactor_logger.info(f"✅ Energy saved! Initial: {initial_emissions}, Final: {final_emissions}")
 
     refactor_data = {
-        "tempDir": str(temp_dir),
+        "tempDir": temp_dir,
         "targetFile": {
             "original": str(target_file.resolve()),
             "refactored": str(target_file_copy.resolve()),

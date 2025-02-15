@@ -6,7 +6,6 @@ from tempfile import TemporaryDirectory, mkdtemp  # noqa: F401
 
 import libcst as cst
 
-from .utils.smells_registry import update_smell_registry
 
 from .api.routes.refactor_smell import ChangedFile, RefactoredData
 
@@ -45,7 +44,7 @@ def main():
         exit(1)
 
     analyzer_controller = AnalyzerController()
-    update_smell_registry(["no-self-use"])
+    # update_smell_registry(["no-self-use"])
     smells_data = analyzer_controller.run_analysis(SOURCE)
     OUTPUT_MANAGER.save_json_files(
         "code_smells.json", [smell.model_dump() for smell in smells_data]
