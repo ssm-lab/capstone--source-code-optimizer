@@ -2,11 +2,42 @@ import ast
 import astor
 from pathlib import Path
 
+from .multi_file_refactorer import MultiFileRefactorer
 from ..data_types.smell import LPLSmell
-from .base_refactorer import BaseRefactorer
 
 
-class LongParameterListRefactorer(BaseRefactorer):
+class FunctionCallVisitor(ast.NodeVisitor):
+    def __init__(self, function_name: str, class_name: str, is_constructor: bool):
+        self.function_name = function_name
+        self.is_constructor = is_constructor  # whether or not given function call is a constructor
+        self.class_name = (
+            class_name  # name of class being instantiated if function is a constructor
+        )
+        self.found = False
+
+    def visit_Call(self, node: ast.Call):
+        """Check if the function/class constructor is called."""
+        # handle function call
+        if isinstance(node.func, ast.Name) and node.func.id == self.function_name:
+            self.found = True
+
+        # handle method call
+        elif isinstance(node.func, ast.Attribute):
+            if node.func.attr == self.function_name:
+                self.found = True
+
+        # handle class constructor call
+        elif (
+            self.is_constructor
+            and isinstance(node.func, ast.Name)
+            and node.func.id == self.class_name
+        ):
+            self.found = True
+
+        self.generic_visit(node)
+
+
+class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
     def __init__(self):
         super().__init__()
         self.parameter_analyzer = ParameterAnalyzer()
@@ -32,6 +63,7 @@ class LongParameterListRefactorer(BaseRefactorer):
         """
         # maximum limit on number of parameters beyond which the code smell is configured to be detected(see analyzers_config.py)
         max_param_limit = 6
+        self.target_file = target_file
 
         with target_file.open() as f:
             tree = ast.parse(f.read())
@@ -111,84 +143,48 @@ class LongParameterListRefactorer(BaseRefactorer):
         if target_file not in self.modified_files:
             self.modified_files.append(target_file)
 
-        self._refactor_files(source_dir, target_file)
-
-    def _refactor_files(self, source_dir: Path, target_file: Path):
-        class FunctionCallVisitor(ast.NodeVisitor):
-            def __init__(self, function_name: str, class_name: str, is_constructor: bool):
-                self.function_name = function_name
-                self.is_constructor = (
-                    is_constructor  # whether or not given function call is a constructor
-                )
-                self.class_name = (
-                    class_name  # name of class being instantiated if function is a constructor
-                )
-                self.found = False
-
-            def visit_Call(self, node: ast.Call):
-                """Check if the function/class constructor is called."""
-                # handle function call
-                if isinstance(node.func, ast.Name) and node.func.id == self.function_name:
-                    self.found = True
-
-                # handle method call
-                elif isinstance(node.func, ast.Attribute):
-                    if node.func.attr == self.function_name:
-                        self.found = True
-
-                # handle class constructor call
-                elif (
-                    self.is_constructor
-                    and isinstance(node.func, ast.Name)
-                    and node.func.id == self.class_name
-                ):
-                    self.found = True
-
-                self.generic_visit(node)
-
-        function_name = self.function_node.name
-        enclosing_class_name = None
-        is_class = function_name == "__init__"
+        self.is_method = self.function_node.name == "__init__"
 
         # if refactoring __init__, determine the class name
-        if is_class:
-            enclosing_class_name = FunctionCallUpdater.get_enclosing_class_name(
+        if self.is_method:
+            self.enclosing_class_name = FunctionCallUpdater.get_enclosing_class_name(
                 ast.parse(target_file.read_text()), self.function_node
             )
 
-        for item in source_dir.iterdir():
-            if item.is_dir():
-                self._refactor_files(item, target_file)
-            elif item.is_file() and item.suffix == ".py" and item != target_file:
-                with item.open() as f:
-                    source_code = f.read()
-                    tree = ast.parse(source_code)
+        self.traverse_and_process(source_dir)
 
-                # check if function call or class instantiation occurs in this file
-                visitor = FunctionCallVisitor(function_name, enclosing_class_name, is_class)
-                visitor.visit(tree)
+    def _process_file(self, file: Path):
+        with file.open() as f:
+            source_code = f.read()
+            tree = ast.parse(source_code)
 
-                if not visitor.found:
-                    continue  # skip modification if function/constructor is never called
+        # check if function call or class instantiation occurs in this file
+        visitor = FunctionCallVisitor(
+            self.function_node.name, self.enclosing_class_name, self.is_method
+        )
+        visitor.visit(tree)
 
-                # insert class definitions before modifying function calls
-                updated_tree = self._update_tree_with_class_nodes(tree)
+        if not visitor.found:
+            return  # skip modification if function/constructor is never called
 
-                # update function calls/class instantiations
-                updated_tree = self.function_updater.update_function_calls(
-                    updated_tree,
-                    self.function_node,
-                    self.used_params,
-                    self.classified_params,
-                    self.classified_param_names,
-                )
+        # insert class definitions before modifying function calls
+        updated_tree = self._update_tree_with_class_nodes(tree)
 
-                modified_source = astor.to_source(updated_tree)
-                with item.open("w") as f:
-                    f.write(modified_source)
+        # update function calls/class instantiations
+        updated_tree = self.function_updater.update_function_calls(
+            updated_tree,
+            self.function_node,
+            self.used_params,
+            self.classified_params,
+            self.classified_param_names,
+        )
 
-                if item not in self.modified_files:
-                    self.modified_files.append(item)
+        modified_source = astor.to_source(updated_tree)
+        with file.open("w") as f:
+            f.write(modified_source)
+
+        if file not in self.modified_files and not file.samefile(self.target_file):
+            self.modified_files.append(file)
 
     def _generate_unique_param_class_names(self) -> tuple[str, str]:
         """

@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 from typing import Any, Optional
 
-from .base_refactorer import BaseRefactorer
+from .multi_file_refactorer import MultiFileRefactorer
 from ..data_types.smell import LECSmell
 
 
@@ -30,7 +30,7 @@ class DictAccess:
         self.node = node
 
 
-class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
+class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
     """
     Refactors long element chains by flattening nested dictionaries.
     Only implements flatten dictionary strategy as it proved most effective for energy savings.
@@ -42,16 +42,15 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
         self.access_patterns: set[DictAccess] = set()
         self.min_value = float("inf")
         self.dict_assignment: Optional[dict[str, Any]] = None
-        self.target_file: Optional[Path] = None
-        self.modified_files: list[Path] = []
+        self.initial_parsing = True
 
     def refactor(
         self,
         target_file: Path,
         source_dir: Path,
         smell: LECSmell,
-        output_file: Path,
-        overwrite: bool = True,
+        output_file: Path,  # noqa: ARG002
+        overwrite: bool = True,  # noqa: ARG002
     ) -> None:
         """Main refactoring method that processes the target file and related files."""
         self.target_file = target_file
@@ -61,11 +60,12 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
         self._find_dict_names(tree, line_number)
 
         # Abort if dictionary access is too shallow
-        self._find_all_access_patterns(source_dir, initial_parsing=True)
+        self.traverse_and_process(source_dir)
         if self.min_value <= 1:
             return
 
-        self._find_all_access_patterns(source_dir, initial_parsing=False)
+        self.initial_parsing = False
+        self.traverse_and_process(source_dir)
 
     def _find_dict_names(self, tree: ast.AST, line_number: int) -> None:
         """Extract dictionary names from the AST at the given line number."""
@@ -94,19 +94,13 @@ class LongElementChainRefactorer(BaseRefactorer[LECSmell]):
             return f"{node.value.id}.{node.attr}"
         return None
 
-    # finds all access patterns in the directory (looping thru all files in directory)
-    def _find_all_access_patterns(self, source_dir: Path, initial_parsing: bool = True):
-        for item in source_dir.iterdir():
-            if item.is_dir():
-                self._find_all_access_patterns(item, initial_parsing)
-            elif item.is_file():
-                if item.suffix == ".py":
-                    tree = ast.parse(item.read_text())
-                    if initial_parsing:
-                        self._find_access_pattern_in_file(tree, item)
-                    else:
-                        self.find_dict_assignment_in_file(tree)
-                        self._refactor_all_in_file(item.read_text(), item)
+    def _process_file(self, file: Path):
+        tree = ast.parse(file.read_text())
+        if self.initial_parsing:
+            self._find_access_pattern_in_file(tree, file)
+        else:
+            self.find_dict_assignment_in_file(tree)
+            self._refactor_all_in_file(file.read_text(), file)
 
     # finds all access patterns in the file
     def _find_access_pattern_in_file(self, tree: ast.AST, path: Path):
