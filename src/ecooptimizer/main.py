@@ -6,6 +6,9 @@ from tempfile import TemporaryDirectory, mkdtemp  # noqa: F401
 
 import libcst as cst
 
+from .utils.output_manager import LoggingManager
+from .utils.output_manager import save_file, save_json_files, copy_file_to_output
+
 
 from .api.routes.refactor_smell import ChangedFile, RefactoredData
 
@@ -16,23 +19,30 @@ from .analyzers.analyzer_controller import AnalyzerController
 from .refactorers.refactorer_controller import RefactorerController
 
 from . import (
-    OUTPUT_MANAGER,
     SAMPLE_PROJ_DIR,
     SOURCE,
 )
 
-detect_logger = OUTPUT_MANAGER.loggers["detect_smells"]
-refactor_logger = OUTPUT_MANAGER.loggers["refactor_smell"]
+from .config import CONFIG
+
+loggingManager = LoggingManager()
+
+CONFIG["loggingManager"] = loggingManager
+
+detect_logger = loggingManager.loggers["detect"]
+refactor_logger = loggingManager.loggers["refactor"]
+
+CONFIG["detectLogger"] = detect_logger
+CONFIG["refactorLogger"] = refactor_logger
+
 
 # FILE CONFIGURATION IN __init__.py !!!
 
 
 def main():
     # Save ast
-    OUTPUT_MANAGER.save_file(
-        "source_ast.txt", ast.dump(ast.parse(SOURCE.read_text()), indent=4), "w"
-    )
-    OUTPUT_MANAGER.save_file("source_cst.txt", str(cst.parse_module(SOURCE.read_text())), "w")
+    save_file("source_ast.txt", ast.dump(ast.parse(SOURCE.read_text()), indent=4), "w")
+    save_file("source_cst.txt", str(cst.parse_module(SOURCE.read_text())), "w")
 
     # Measure initial energy
     energy_meter = CodeCarbonEnergyMeter()
@@ -46,11 +56,9 @@ def main():
     analyzer_controller = AnalyzerController()
     # update_smell_registry(["no-self-use"])
     smells_data = analyzer_controller.run_analysis(SOURCE)
-    OUTPUT_MANAGER.save_json_files(
-        "code_smells.json", [smell.model_dump() for smell in smells_data]
-    )
+    save_json_files("code_smells.json", [smell.model_dump() for smell in smells_data])
 
-    OUTPUT_MANAGER.copy_file_to_output(SOURCE, "refactored-test-case.py")
+    copy_file_to_output(SOURCE, "refactored-test-case.py")
     refactorer_controller = RefactorerController()
     output_paths = []
 
@@ -115,7 +123,7 @@ def main():
 
                 # In reality the original code will now be overwritten but thats too much work
 
-                OUTPUT_MANAGER.save_json_files("refactoring-data.json", refactor_data.model_dump())  # type: ignore
+                save_json_files("refactoring-data.json", refactor_data.model_dump())  # type: ignore
 
     print(output_paths)
 

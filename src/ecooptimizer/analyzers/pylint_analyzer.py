@@ -4,14 +4,12 @@ from pathlib import Path
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
-from ecooptimizer import OUTPUT_MANAGER
+from ..config import CONFIG
 
 from ..data_types.custom_fields import AdditionalInfo, Occurence
 
 from .base_analyzer import Analyzer
 from ..data_types.smell import Smell
-
-detect_smells_logger = OUTPUT_MANAGER.loggers["detect_smells"]
 
 
 class PylintAnalyzer(Analyzer):
@@ -56,8 +54,8 @@ class PylintAnalyzer(Analyzer):
                 buffer.seek(0)
                 smells_data.extend(self._build_smells(json.loads(buffer.getvalue())["messages"]))
             except json.JSONDecodeError as e:
-                detect_smells_logger.error(f"❌ Failed to parse JSON output from pylint: {e}")
+                CONFIG["detectLogger"].error(f"❌ Failed to parse JSON output from pylint: {e}")  # type: ignore
             except Exception as e:
-                detect_smells_logger.error(f"❌ An error occurred during pylint analysis: {e}")
+                CONFIG["detectLogger"].error(f"❌ An error occurred during pylint analysis: {e}")  # type: ignore
 
         return smells_data
