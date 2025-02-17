@@ -1,15 +1,15 @@
+# pyright: reportOptionalMemberAccess=false
 from abc import abstractmethod
 import fnmatch
 from pathlib import Path
 from typing import TypeVar
 
-from .. import OUTPUT_MANAGER
+from ..config import CONFIG
 
 from .base_refactorer import BaseRefactorer
 
 from ..data_types.smell import Smell
 
-logger = OUTPUT_MANAGER.loggers["refactor_smell"]
 
 T = TypeVar("T", bound=Smell)
 
@@ -53,19 +53,19 @@ class MultiFileRefactorer(BaseRefactorer[T]):
     def traverse_and_process(self, directory: Path):
         for item in directory.iterdir():
             if item.is_dir():
-                logger.debug(f"Scanning directory: {item!s}, name: {item.name}")
+                CONFIG["refactorLogger"].debug(f"Scanning directory: {item!s}, name: {item.name}")
                 if self.is_ignored(item):
-                    logger.debug(f"Ignored directory: {item!s}")
+                    CONFIG["refactorLogger"].debug(f"Ignored directory: {item!s}")
                     continue
 
-                logger.debug(f"Entering directory: {item!s}")
+                CONFIG["refactorLogger"].debug(f"Entering directory: {item!s}")
                 self.traverse_and_process(item)
             elif item.is_file() and item.suffix == ".py":
-                logger.debug(f"Checking file: {item!s}")
+                CONFIG["refactorLogger"].debug(f"Checking file: {item!s}")
                 if self._process_file(item):
                     if item not in self.modified_files and not item.samefile(self.target_file):
                         self.modified_files.append(item.resolve())
-                logger.debug("finished processing file")
+                CONFIG["refactorLogger"].debug("finished processing file")
 
     @abstractmethod
     def _process_file(self, file: Path) -> bool:

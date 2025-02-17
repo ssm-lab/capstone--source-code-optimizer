@@ -1,10 +1,10 @@
+# pyright: reportOptionalMemberAccess=false
 from pathlib import Path
+
+from ..config import CONFIG
 
 from ..data_types.smell import Smell
 from ..utils.smells_registry import SMELL_REGISTRY
-from ecooptimizer import OUTPUT_MANAGER
-
-refactor_logger = OUTPUT_MANAGER.loggers["refactor_smell"]
 
 
 class RefactorerController:
@@ -41,14 +41,14 @@ class RefactorerController:
             output_file_name = f"{target_file.stem}_path_{smell_id}_{file_count}.py"
             output_file_path = Path(__file__).parent / "../../../outputs" / output_file_name
 
-            refactor_logger.info(
+            CONFIG["refactorLogger"].info(
                 f"🔄 Running refactoring for {smell_symbol} using {refactorer_class.__name__}"
             )
             refactorer = refactorer_class()
             refactorer.refactor(target_file, source_dir, smell, output_file_path, overwrite)
             modified_files = refactorer.modified_files
         else:
-            refactor_logger.error(f"❌ No refactorer found for smell: {smell_symbol}")
+            CONFIG["refactorLogger"].error(f"❌ No refactorer found for smell: {smell_symbol}")
             raise NotImplementedError(f"No refactorer implemented for smell: {smell_symbol}")
 
         return modified_files

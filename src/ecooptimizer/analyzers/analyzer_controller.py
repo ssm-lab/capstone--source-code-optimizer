@@ -1,7 +1,10 @@
+# pyright: reportOptionalMemberAccess=false
 from pathlib import Path
 
+from ..config import CONFIG
+
 from ..data_types.smell import Smell
-from ecooptimizer import OUTPUT_MANAGER
+
 from .pylint_analyzer import PylintAnalyzer
 from .ast_analyzer import ASTAnalyzer
 from .astroid_analyzer import AstroidAnalyzer
@@ -12,8 +15,6 @@ from ..utils.analysis_tools import (
     generate_pylint_options,
     generate_custom_options,
 )
-
-detect_smells_logger = OUTPUT_MANAGER.loggers["detect_smells"]
 
 
 class AnalyzerController:
@@ -35,38 +36,38 @@ class AnalyzerController:
             ast_smells = filter_smells_by_method(SMELL_REGISTRY, "ast")
             astroid_smells = filter_smells_by_method(SMELL_REGISTRY, "astroid")
 
-            detect_smells_logger.info("🟢 Starting analysis process")
-            detect_smells_logger.info(f"📂 Analyzing file: {file_path}")
+            CONFIG["detectLogger"].info("🟢 Starting analysis process")
+            CONFIG["detectLogger"].info(f"📂 Analyzing file: {file_path}")
 
             if pylint_smells:
-                detect_smells_logger.info(f"🔍 Running Pylint analysis on {file_path}")
+                CONFIG["detectLogger"].info(f"🔍 Running Pylint analysis on {file_path}")
                 pylint_options = generate_pylint_options(pylint_smells)
                 pylint_results = self.pylint_analyzer.analyze(file_path, pylint_options)
                 smells_data.extend(pylint_results)
-                detect_smells_logger.info(
+                CONFIG["detectLogger"].info(
                     f"✅ Pylint analysis completed. {len(pylint_results)} smells detected."
                 )
 
             if ast_smells:
-                detect_smells_logger.info(f"🔍 Running AST analysis on {file_path}")
+                CONFIG["detectLogger"].info(f"🔍 Running AST analysis on {file_path}")
                 ast_options = generate_custom_options(ast_smells)
                 ast_results = self.ast_analyzer.analyze(file_path, ast_options)
                 smells_data.extend(ast_results)
-                detect_smells_logger.info(
+                CONFIG["detectLogger"].info(
                     f"✅ AST analysis completed. {len(ast_results)} smells detected."
                 )
 
             if astroid_smells:
-                detect_smells_logger.info(f"🔍 Running Astroid analysis on {file_path}")
+                CONFIG["detectLogger"].info(f"🔍 Running Astroid analysis on {file_path}")
                 astroid_options = generate_custom_options(astroid_smells)
                 astroid_results = self.astroid_analyzer.analyze(file_path, astroid_options)
                 smells_data.extend(astroid_results)
-                detect_smells_logger.info(
+                CONFIG["detectLogger"].info(
                     f"✅ Astroid analysis completed. {len(astroid_results)} smells detected."
                 )
 
             if smells_data:
-                detect_smells_logger.info("⚠️ Detected Code Smells:")
+                CONFIG["detectLogger"].info("⚠️ Detected Code Smells:")
                 for smell in smells_data:
                     if smell.occurences:
                         first_occurrence = smell.occurences[0]
@@ -79,11 +80,11 @@ class AnalyzerController:
                     else:
                         line_info = ""
 
-                    detect_smells_logger.info(f"   • {smell.symbol} {line_info}: {smell.message}")
+                    CONFIG["detectLogger"].info(f"   • {smell.symbol} {line_info}: {smell.message}")
             else:
-                detect_smells_logger.info("🎉 No code smells detected.")
+                CONFIG["detectLogger"].info("🎉 No code smells detected.")
 
         except Exception as e:
-            detect_smells_logger.error(f"❌ Error during analysis: {e!s}")
+            CONFIG["detectLogger"].error(f"❌ Error during analysis: {e!s}")
 
         return smells_data
