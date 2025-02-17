@@ -15,6 +15,7 @@ dependencies = [
   "fastapi",
   "pydantic",
   "libcst",
+  "websockets",
 ]
 requires-python = ">=3.9"
 authors = [

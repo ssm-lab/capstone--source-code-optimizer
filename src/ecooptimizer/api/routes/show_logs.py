@@ -2,7 +2,7 @@
 
 import asyncio
 from pathlib import Path
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, WebSocketException
 from pydantic import BaseModel
 
 from ...utils.output_manager import LoggingManager
@@ -26,7 +26,7 @@ def initialize_logs(log_init: LogInit):
         print(CONFIG["detectLogger"])
         return {"message": "Logging initialized succesfully."}
     except Exception as e:
-        raise e
+        raise WebSocketException(code=500, reason=str(e)) from e
 
 
 @router.websocket("/logs/main")
