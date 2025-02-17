@@ -5,7 +5,7 @@ import pytest
 
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import SCLSmell
-from ecooptimizer.refactorers.str_concat_in_loop import (
+from ecooptimizer.refactorers.concrete.str_concat_in_loop import (
     UseListAccumulationRefactorer,
 )
 from ecooptimizer.utils.smell_enums import CustomSmell

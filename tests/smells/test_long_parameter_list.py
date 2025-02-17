@@ -3,7 +3,7 @@ from pathlib import Path
 
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import LPLSmell
-from ecooptimizer.refactorers.long_parameter_list import LongParameterListRefactorer
+from ecooptimizer.refactorers.concrete.long_parameter_list import LongParameterListRefactorer
 from ecooptimizer.utils.smell_enums import PylintSmell
 
 TEST_INPUT_FILE = (Path(__file__).parent / "../input/long_param.py").resolve()

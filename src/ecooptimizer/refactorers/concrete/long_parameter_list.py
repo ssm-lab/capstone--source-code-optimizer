@@ -2,8 +2,8 @@ import ast
 import astor
 from pathlib import Path
 
-from .multi_file_refactorer import MultiFileRefactorer
-from ..data_types.smell import LPLSmell
+from ..multi_file_refactorer import MultiFileRefactorer
+from ...data_types.smell import LPLSmell
 
 
 class FunctionCallVisitor(ast.NodeVisitor):

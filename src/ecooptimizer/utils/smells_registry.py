@@ -9,16 +9,16 @@ from ..analyzers.ast_analyzers.detect_unused_variables_and_attributes import (
     detect_unused_variables_and_attributes,
 )
 
-from ..refactorers.list_comp_any_all import UseAGeneratorRefactorer
+from ..refactorers.concrete.list_comp_any_all import UseAGeneratorRefactorer
 
-from ..refactorers.long_lambda_function import LongLambdaFunctionRefactorer
-from ..refactorers.long_element_chain import LongElementChainRefactorer
-from ..refactorers.long_message_chain import LongMessageChainRefactorer
-from ..refactorers.unused import RemoveUnusedRefactorer
-from ..refactorers.member_ignoring_method import MakeStaticRefactorer
-from ..refactorers.long_parameter_list import LongParameterListRefactorer
-from ..refactorers.str_concat_in_loop import UseListAccumulationRefactorer
-from ..refactorers.repeated_calls import CacheRepeatedCallsRefactorer
+from ..refactorers.concrete.long_lambda_function import LongLambdaFunctionRefactorer
+from ..refactorers.concrete.long_element_chain import LongElementChainRefactorer
+from ..refactorers.concrete.long_message_chain import LongMessageChainRefactorer
+from ..refactorers.concrete.unused import RemoveUnusedRefactorer
+from ..refactorers.concrete.member_ignoring_method import MakeStaticRefactorer
+from ..refactorers.concrete.long_parameter_list import LongParameterListRefactorer
+from ..refactorers.concrete.str_concat_in_loop import UseListAccumulationRefactorer
+from ..refactorers.concrete.repeated_calls import CacheRepeatedCallsRefactorer
 
 from ..data_types.smell_record import SmellRecord
 

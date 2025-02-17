@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from ..refactorers.base_refactorer import BaseRefactorer
-from ..data_types.smell import UVASmell
+from ..base_refactorer import BaseRefactorer
+from ...data_types.smell import UVASmell
 
 
 class RemoveUnusedRefactorer(BaseRefactorer[UVASmell]):
