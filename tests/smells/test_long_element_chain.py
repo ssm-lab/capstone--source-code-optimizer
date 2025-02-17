@@ -4,7 +4,7 @@ import textwrap
 import pytest
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import LECSmell
-from ecooptimizer.refactorers.long_element_chain import (
+from ecooptimizer.refactorers.concrete.long_element_chain import (
     LongElementChainRefactorer,
 )
 from ecooptimizer.utils.smell_enums import CustomSmell

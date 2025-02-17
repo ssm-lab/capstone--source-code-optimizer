@@ -3,7 +3,7 @@ import textwrap
 import pytest
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import LMCSmell
-from ecooptimizer.refactorers.long_message_chain import LongMessageChainRefactorer
+from ecooptimizer.refactorers.concrete.long_message_chain import LongMessageChainRefactorer
 from ecooptimizer.utils.smell_enums import CustomSmell
 
 

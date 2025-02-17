@@ -6,7 +6,7 @@ import pytest
 
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import MIMSmell
-from ecooptimizer.refactorers.member_ignoring_method import MakeStaticRefactorer
+from ecooptimizer.refactorers.concrete.member_ignoring_method import MakeStaticRefactorer
 from ecooptimizer.utils.smell_enums import PylintSmell
 
 

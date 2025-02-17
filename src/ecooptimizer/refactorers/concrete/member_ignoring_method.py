@@ -1,3 +1,4 @@
+# pyright: reportOptionalMemberAccess=false
 import astroid
 from astroid import nodes, util
 import libcst as cst
@@ -5,12 +6,10 @@ from libcst.metadata import PositionProvider, MetadataWrapper
 
 from pathlib import Path
 
-from .. import OUTPUT_MANAGER
+from ...config import CONFIG
 
-from .multi_file_refactorer import MultiFileRefactorer
-from ..data_types.smell import MIMSmell
-
-logger = OUTPUT_MANAGER.loggers["refactor_smell"]
+from ..multi_file_refactorer import MultiFileRefactorer
+from ...data_types.smell import MIMSmell
 
 
 class CallTransformer(cst.CSTTransformer):
@@ -33,13 +32,15 @@ class CallTransformer(cst.CSTTransformer):
 
             # Check if this call matches one from astroid (by caller, method name, and line number)
             for call_caller, line, call_method in self.method_calls:
-                logger.debug(f"cst caller: {call_caller} at line {position.start.line}")
+                CONFIG["refactorLogger"].debug(
+                    f"cst caller: {call_caller} at line {position.start.line}"
+                )
                 if (
                     method == call_method
                     and position.start.line - 1 == line
                     and caller.deep_equals(cst.parse_expression(call_caller))
                 ):
-                    logger.debug("transforming")
+                    CONFIG["refactorLogger"].debug("transforming")
                     # Transform `obj.method(args)` -> `ClassName.method(args)`
                     new_func = cst.Attribute(
                         value=cst.Name(self.class_name),  # Replace `obj` with class name
@@ -62,12 +63,12 @@ def find_valid_method_calls(
     """
     valid_calls = []
 
-    logger.info("Finding valid method calls")
+    CONFIG["refactorLogger"].info("Finding valid method calls")
 
     for node in tree.body:
         for descendant in node.nodes_of_class(nodes.Call):
             if isinstance(descendant.func, nodes.Attribute):
-                logger.debug(f"caller: {descendant.func.expr.as_string()}")
+                CONFIG["refactorLogger"].debug(f"caller: {descendant.func.expr.as_string()}")
                 caller = descendant.func.expr  # The object calling the method
                 method_name = descendant.func.attrname
 
@@ -78,7 +79,7 @@ def find_valid_method_calls(
                 inferrences = caller.infer()
 
                 for inferred in inferrences:
-                    logger.debug(f"inferred: {inferred.repr_name()}")
+                    CONFIG["refactorLogger"].debug(f"inferred: {inferred.repr_name()}")
                     if isinstance(inferred.repr_name(), util.UninferableBase):
                         hint = check_for_annotations(caller, descendant.scope())
                         if hint:
@@ -88,11 +89,11 @@ def find_valid_method_calls(
                     else:
                         inferred_types.append(inferred.repr_name())
 
-                logger.debug(f"Inferred types: {inferred_types}")
+                CONFIG["refactorLogger"].debug(f"Inferred types: {inferred_types}")
 
                 # Check if any inferred type matches a valid class
                 if any(cls in valid_classes for cls in inferred_types):
-                    logger.debug(
+                    CONFIG["refactorLogger"].debug(
                         f"Foud valid call: {caller.as_string()} at line {descendant.lineno}"
                     )
                     valid_calls.append((caller.as_string(), descendant.lineno, method_name))
@@ -105,7 +106,7 @@ def check_for_annotations(caller: nodes.NodeNG, scope: nodes.NodeNG):
         return None
 
     hint = None
-    logger.debug(f"annotations: {scope.args}")
+    CONFIG["refactorLogger"].debug(f"annotations: {scope.args}")
 
     args = scope.args.args
     anns = scope.args.annotations
@@ -178,11 +179,11 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
                 ):
                     self.subclasses.add(node.name.value)
 
-        logger.debug("find all subclasses")
+        CONFIG["refactorLogger"].debug("find all subclasses")
         collector = SubclassCollector(self.mim_method_class)
         tree.visit(collector)
         self.valid_classes = self.valid_classes.union(collector.subclasses)
-        logger.debug(f"valid classes: {self.valid_classes}")
+        CONFIG["refactorLogger"].debug(f"valid classes: {self.valid_classes}")
 
     def _process_file(self, file: Path):
         processed = False
@@ -205,7 +206,7 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         if func_name and updated_node.deep_equals(original_node):
             position = self.get_metadata(PositionProvider, original_node).start  # type: ignore
             if position.line == self.target_line and func_name == self.mim_method:
-                logger.debug("Modifying MIM method")
+                CONFIG["refactorLogger"].debug("Modifying MIM method")
                 decorators = [
                     *list(original_node.decorators),
                     cst.Decorator(cst.Name("staticmethod")),

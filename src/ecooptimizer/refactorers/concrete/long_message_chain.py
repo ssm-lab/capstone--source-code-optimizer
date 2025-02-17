@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
-from .base_refactorer import BaseRefactorer
-from ..data_types.smell import LMCSmell
+from ..base_refactorer import BaseRefactorer
+from ...data_types.smell import LMCSmell
 
 
 class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):

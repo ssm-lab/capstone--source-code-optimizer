@@ -2,8 +2,8 @@ import ast
 from pathlib import Path
 from asttokens import ASTTokens
 
-from .base_refactorer import BaseRefactorer
-from ..data_types.smell import UGESmell
+from ..base_refactorer import BaseRefactorer
+from ...data_types.smell import UGESmell
 
 
 class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
@@ -30,7 +30,6 @@ class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
         with target_file.open() as file:
             original_lines = file.readlines()
 
-
         # Check bounds for line number
         if not (1 <= line_number <= len(original_lines)):
             return
@@ -50,7 +49,7 @@ class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
             if not atok.tree:
                 return
             target_ast = atok.tree
-        except (SyntaxError, ValueError) as e:
+        except (SyntaxError, ValueError):
             return
 
         # modified = False
@@ -65,7 +64,6 @@ class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
 
                 # Check if the node matches the specified column range
                 if node.col_offset >= start_column - 1 and end_col_offset <= end_column:
-
                     # Calculate offsets relative to the original line
                     start_offset = node.col_offset + len(leading_whitespace)
                     end_offset = end_col_offset + len(leading_whitespace)
@@ -89,7 +87,6 @@ class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
                     original_lines[line_number - 1] = refactored_code
                     # modified = True
                     break
-                
 
         if overwrite:
             with target_file.open("w") as f:

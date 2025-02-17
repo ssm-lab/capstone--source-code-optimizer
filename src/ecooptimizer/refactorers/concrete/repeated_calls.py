@@ -1,9 +1,9 @@
 import ast
 from pathlib import Path
 
-from ..data_types.smell import CRCSmell
+from ...data_types.smell import CRCSmell
 
-from .base_refactorer import BaseRefactorer
+from ..base_refactorer import BaseRefactorer
 
 
 class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):

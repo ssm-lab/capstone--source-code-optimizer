@@ -4,8 +4,8 @@ from pathlib import Path
 import astroid
 from astroid import nodes
 
-from .base_refactorer import BaseRefactorer
-from ..data_types.smell import SCLSmell
+from ..base_refactorer import BaseRefactorer
+from ...data_types.smell import SCLSmell
 
 
 class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
@@ -101,14 +101,12 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                 if target.as_string() == self.assign_var and node.lineno not in self.target_lines:
                     self.reassignments.append(node)
 
-
     def find_last_assignment(self, scope_node: nodes.NodeNG):
         """Find the last assignment of the target variable within a given scope node."""
         last_assignment_node = None
 
         # Traverse the scope node and find assignments within the valid range
         for node in scope_node.nodes_of_class((nodes.AugAssign, nodes.Assign)):
-
             if isinstance(node, nodes.Assign):
                 for target in node.targets:
                     if (
@@ -146,7 +144,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                 self.find_last_assignment(node)
                 self.scope_node = node
                 break
-
 
     def last_assign_is_referenced(self, search_area: str):
         return (
@@ -224,7 +221,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                     rf"\s*[+]*\s*\b{re.escape(self.assign_var)}\b\s*[+]*\s*",
                     concat_node.value.as_string(),
                 )
-
 
                 if len(parts[0]) == 0:
                     concat_line = f"{list_name}.append({parts[1]})"
