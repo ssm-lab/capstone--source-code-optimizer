@@ -1,3 +1,4 @@
+from copy import deepcopy
 from .smell_enums import CustomSmell, PylintSmell
 
 from ..analyzers.ast_analyzers.detect_long_element_chain import detect_long_element_chain
@@ -22,7 +23,7 @@ from ..refactorers.concrete.repeated_calls import CacheRepeatedCallsRefactorer
 
 from ..data_types.smell_record import SmellRecord
 
-SMELL_REGISTRY: dict[str, SmellRecord] = {
+_SMELL_REGISTRY: dict[str, SmellRecord] = {
     "use-a-generator": {
         "id": PylintSmell.USE_A_GENERATOR.value,
         "enabled": True,
@@ -67,7 +68,7 @@ SMELL_REGISTRY: dict[str, SmellRecord] = {
     },
     "unused_variables_and_attributes": {
         "id": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE.value,
-        "enabled": True,
+        "enabled": False,
         "analyzer_method": "ast",
         "checker": detect_unused_variables_and_attributes,
         "analyzer_options": {},
@@ -100,7 +101,12 @@ SMELL_REGISTRY: dict[str, SmellRecord] = {
 }
 
 
-def update_smell_registry(enabled_smells: list[str]):
-    """Modifies SMELL_REGISTRY based on user preferences (enables/disables smells)."""
-    for smell in SMELL_REGISTRY.keys():
-        SMELL_REGISTRY[smell]["enabled"] = smell in enabled_smells  # ✅ Enable only selected smells
+def retrieve_smell_registry(enabled_smells: list[str] | str):
+    """Returns a modified SMELL_REGISTRY based on user preferences (enables/disables smells)."""
+    if enabled_smells == "ALL":
+        return deepcopy(_SMELL_REGISTRY)
+    return {key: val for (key, val) in _SMELL_REGISTRY.items() if key in enabled_smells}
+
+
+def get_refactorer(symbol: str):
+    return _SMELL_REGISTRY[symbol].get("refactorer", None)

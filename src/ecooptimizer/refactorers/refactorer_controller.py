@@ -4,7 +4,7 @@ from pathlib import Path
 from ..config import CONFIG
 
 from ..data_types.smell import Smell
-from ..utils.smells_registry import SMELL_REGISTRY
+from ..utils.smells_registry import get_refactorer
 
 
 class RefactorerController:
@@ -31,7 +31,7 @@ class RefactorerController:
         """
         smell_id = smell.messageId
         smell_symbol = smell.symbol
-        refactorer_class = self._get_refactorer(smell_symbol)
+        refactorer_class = get_refactorer(smell_symbol)
         modified_files = []
 
         if refactorer_class:
@@ -52,8 +52,3 @@ class RefactorerController:
             raise NotImplementedError(f"No refactorer implemented for smell: {smell_symbol}")
 
         return modified_files
-
-    def _get_refactorer(self, smell_symbol: str):
-        """Retrieves the appropriate refactorer class for the given smell."""
-        refactorer = SMELL_REGISTRY.get(smell_symbol)
-        return refactorer.get("refactorer") if refactorer else None
