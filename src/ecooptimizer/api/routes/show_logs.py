@@ -18,12 +18,11 @@ class LogInit(BaseModel):
 @router.post("/logs/init")
 def initialize_logs(log_init: LogInit):
     try:
-        loggingManager = LoggingManager(Path(log_init.log_dir), True)
+        loggingManager = LoggingManager(Path(log_init.log_dir), CONFIG["mode"] == "production")
         CONFIG["loggingManager"] = loggingManager
         CONFIG["detectLogger"] = loggingManager.loggers["detect"]
         CONFIG["refactorLogger"] = loggingManager.loggers["refactor"]
 
-        print(CONFIG["detectLogger"])
         return {"message": "Logging initialized succesfully."}
     except Exception as e:
         raise WebSocketException(code=500, reason=str(e)) from e

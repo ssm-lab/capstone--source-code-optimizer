@@ -8,7 +8,6 @@ from ...config import CONFIG
 
 from ...analyzers.analyzer_controller import AnalyzerController
 from ...data_types.smell import Smell
-from ...utils.smells_registry import update_smell_registry
 
 router = APIRouter()
 
@@ -26,7 +25,6 @@ def detect_smells(request: SmellRequest):
     Detects code smells in a given file, logs the process, and measures execution time.
     """
 
-    print(CONFIG["detectLogger"])
     CONFIG["detectLogger"].info(f"{'=' * 100}")
     CONFIG["detectLogger"].info(f"📂 Received smell detection request for: {request.file_path}")
 
@@ -46,12 +44,9 @@ def detect_smells(request: SmellRequest):
             f"🔎 Enabled smells: {', '.join(request.enabled_smells) if request.enabled_smells else 'None'}"
         )
 
-        # Apply user preferences to the smell registry
-        filter_smells(request.enabled_smells)
-
         # Run analysis
         CONFIG["detectLogger"].info(f"🎯 Running analysis on: {file_path_obj}")
-        smells_data = analyzer_controller.run_analysis(file_path_obj)
+        smells_data = analyzer_controller.run_analysis(file_path_obj, request.enabled_smells)
 
         execution_time = round(time.time() - start_time, 2)
         CONFIG["detectLogger"].info(f"📊 Execution Time: {execution_time} seconds")
@@ -68,12 +63,3 @@ def detect_smells(request: SmellRequest):
         CONFIG["detectLogger"].error(f"❌ Error during smell detection: {e!s}")
         CONFIG["detectLogger"].info(f"{'=' * 100}\n")
         raise HTTPException(status_code=500, detail="Internal server error") from e
-
-
-def filter_smells(enabled_smells: list[str]):
-    """
-    Updates the smell registry to reflect user-selected enabled smells.
-    """
-    CONFIG["detectLogger"].info("⚙️ Updating smell registry with user preferences...")
-    update_smell_registry(enabled_smells)
-    CONFIG["detectLogger"].info("✅ Smell registry updated successfully.")

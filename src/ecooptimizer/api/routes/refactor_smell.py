@@ -124,7 +124,7 @@ def perform_refactoring(source_dir: Path, smell: Smell):
         shutil.rmtree(temp_dir, onerror=remove_readonly)
         raise RuntimeError("Could not retrieve initial emissions.")
 
-    if final_emissions >= initial_emissions:
+    if CONFIG["mode"] == "production" and final_emissions >= initial_emissions:
         CONFIG["refactorLogger"].info(f"📊 Final emissions: {final_emissions} kg CO2")
         CONFIG["refactorLogger"].info("⚠️ No measured energy savings. Discarding refactoring.")
         print("❌ Could not retrieve final emissions. Discarding refactoring.")

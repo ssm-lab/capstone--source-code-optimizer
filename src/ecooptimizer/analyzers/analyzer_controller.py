@@ -1,5 +1,8 @@
 # pyright: reportOptionalMemberAccess=false
 from pathlib import Path
+from typing import Callable, Any
+
+from ..data_types.smell_record import SmellRecord
 
 from ..config import CONFIG
 
@@ -9,12 +12,7 @@ from .pylint_analyzer import PylintAnalyzer
 from .ast_analyzer import ASTAnalyzer
 from .astroid_analyzer import AstroidAnalyzer
 
-from ..utils.smells_registry import SMELL_REGISTRY
-from ..utils.analysis_tools import (
-    filter_smells_by_method,
-    generate_pylint_options,
-    generate_custom_options,
-)
+from ..utils.smells_registry import retrieve_smell_registry
 
 
 class AnalyzerController:
@@ -24,24 +22,30 @@ class AnalyzerController:
         self.ast_analyzer = ASTAnalyzer()
         self.astroid_analyzer = AstroidAnalyzer()
 
-    def run_analysis(self, file_path: Path):
+    def run_analysis(self, file_path: Path, selected_smells: str | list[str] = "ALL"):
         """
         Runs multiple analysis tools on the given Python file and logs the results.
         Returns a list of detected code smells.
         """
+
         smells_data: list[Smell] = []
 
+        if not selected_smells:
+            raise TypeError("At least 1 smell must be selected for detection")
+
+        SMELL_REGISTRY = retrieve_smell_registry(selected_smells)
+
         try:
-            pylint_smells = filter_smells_by_method(SMELL_REGISTRY, "pylint")
-            ast_smells = filter_smells_by_method(SMELL_REGISTRY, "ast")
-            astroid_smells = filter_smells_by_method(SMELL_REGISTRY, "astroid")
+            pylint_smells = self.filter_smells_by_method(SMELL_REGISTRY, "pylint")
+            ast_smells = self.filter_smells_by_method(SMELL_REGISTRY, "ast")
+            astroid_smells = self.filter_smells_by_method(SMELL_REGISTRY, "astroid")
 
             CONFIG["detectLogger"].info("🟢 Starting analysis process")
             CONFIG["detectLogger"].info(f"📂 Analyzing file: {file_path}")
 
             if pylint_smells:
                 CONFIG["detectLogger"].info(f"🔍 Running Pylint analysis on {file_path}")
-                pylint_options = generate_pylint_options(pylint_smells)
+                pylint_options = self.generate_pylint_options(pylint_smells)
                 pylint_results = self.pylint_analyzer.analyze(file_path, pylint_options)
                 smells_data.extend(pylint_results)
                 CONFIG["detectLogger"].info(
@@ -50,7 +54,7 @@ class AnalyzerController:
 
             if ast_smells:
                 CONFIG["detectLogger"].info(f"🔍 Running AST analysis on {file_path}")
-                ast_options = generate_custom_options(ast_smells)
+                ast_options = self.generate_custom_options(ast_smells)
                 ast_results = self.ast_analyzer.analyze(file_path, ast_options)
                 smells_data.extend(ast_results)
                 CONFIG["detectLogger"].info(
@@ -59,7 +63,7 @@ class AnalyzerController:
 
             if astroid_smells:
                 CONFIG["detectLogger"].info(f"🔍 Running Astroid analysis on {file_path}")
-                astroid_options = generate_custom_options(astroid_smells)
+                astroid_options = self.generate_custom_options(astroid_smells)
                 astroid_results = self.astroid_analyzer.analyze(file_path, astroid_options)
                 smells_data.extend(astroid_results)
                 CONFIG["detectLogger"].info(
@@ -88,3 +92,46 @@ class AnalyzerController:
             CONFIG["detectLogger"].error(f"❌ Error during analysis: {e!s}")
 
         return smells_data
+
+    @staticmethod
+    def filter_smells_by_method(
+        smell_registry: dict[str, SmellRecord], method: str
+    ) -> dict[str, SmellRecord]:
+        filtered = {
+            name: smell
+            for name, smell in smell_registry.items()
+            if smell["enabled"] and (method == smell["analyzer_method"])
+        }
+        return filtered
+
+    @staticmethod
+    def generate_pylint_options(filtered_smells: dict[str, SmellRecord]) -> list[str]:
+        pylint_smell_symbols = []
+        extra_pylint_options = [
+            "--disable=all",
+        ]
+
+        for symbol, smell in zip(filtered_smells.keys(), filtered_smells.values()):
+            pylint_smell_symbols.append(symbol)
+
+            if len(smell["analyzer_options"]) > 0:
+                for param_data in smell["analyzer_options"].values():
+                    flag = param_data["flag"]
+                    value = param_data["value"]
+                    if value:
+                        extra_pylint_options.append(f"{flag}={value}")
+
+        extra_pylint_options.append(f"--enable={','.join(pylint_smell_symbols)}")
+        return extra_pylint_options
+
+    @staticmethod
+    def generate_custom_options(
+        filtered_smells: dict[str, SmellRecord],
+    ) -> list[tuple[Callable, dict[str, Any]]]:  # type: ignore
+        ast_options = []
+        for smell in filtered_smells.values():
+            method = smell["checker"]
+            options = smell["analyzer_options"]
+            ast_options.append((method, options))
+
+        return ast_options
