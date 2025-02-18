@@ -2,7 +2,8 @@
 
 import asyncio
 from pathlib import Path
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, WebSocketException
+from fastapi import APIRouter, WebSocketException
+from fastapi.websockets import WebSocketState, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
 from ...utils.output_manager import LoggingManager
@@ -43,13 +44,35 @@ async def websocket_refactor_logs(websocket: WebSocket):
     await websocket_log_stream(websocket, CONFIG["loggingManager"].log_files["refactor"])
 
 
+async def listen_for_disconnect(websocket: WebSocket):
+    """Listens for client disconnects."""
+    try:
+        while True:
+            await websocket.receive()
+
+            if websocket.client_state == WebSocketState.DISCONNECTED:
+                raise WebSocketDisconnect()
+    except WebSocketDisconnect:
+        print("WebSocket disconnected from client.")
+        raise
+    except Exception as e:
+        print(f"Unexpected error in listener: {e}")
+
+
 async def websocket_log_stream(websocket: WebSocket, log_file: Path):
     """Streams log file content via WebSocket."""
     await websocket.accept()
+
+    # Start background task to listen for disconnect
+    listener_task = asyncio.create_task(listen_for_disconnect(websocket))
+
     try:
         with log_file.open(encoding="utf-8") as file:
             file.seek(0, 2)  # Start at file end
-            while True:
+            while not listener_task.done():
+                if websocket.application_state != WebSocketState.CONNECTED:
+                    raise WebSocketDisconnect(reason="Connection closed")
+
                 line = file.readline()
                 if line:
                     await websocket.send_text(line)
@@ -57,7 +80,11 @@ async def websocket_log_stream(websocket: WebSocket, log_file: Path):
                     await asyncio.sleep(0.5)
     except FileNotFoundError:
         await websocket.send_text("Error: Log file not found.")
-    except WebSocketDisconnect:
-        print("WebSocket disconnected")
+    except WebSocketDisconnect as e:
+        print(e.reason)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
     finally:
-        await websocket.close()
+        listener_task.cancel()
+        if websocket.client_state != WebSocketState.DISCONNECTED:
+            await websocket.close()
