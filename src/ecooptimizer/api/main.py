@@ -8,12 +8,27 @@ from ..config import CONFIG
 from .routes import detect_smells, show_logs, refactor_smell
 
 
+class HealthCheckFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return "/health" not in record.getMessage()
+
+
 app = FastAPI(title="Ecooptimizer")
 
 # Include API routes
 app.include_router(detect_smells.router)
 app.include_router(show_logs.router)
 app.include_router(refactor_smell.router)
+
+
+@app.get("/health")
+async def ping():
+    return {"status": "ok"}
+
+
+# Apply the filter to Uvicorn's access logger
+logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
+
 
 if __name__ == "__main__":
     CONFIG["mode"] = "development" if "--dev" in sys.argv else "production"
