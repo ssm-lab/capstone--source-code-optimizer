@@ -36,8 +36,6 @@ class LoggingManager:
         if not self.production:
             DEV_OUTPUT.mkdir(exist_ok=True)
         self.logs_dir.mkdir(exist_ok=True)
-        if not self.production:
-            self._clear_logs()
 
     def _clear_logs(self):
         """Removes existing log files while preserving the log directory."""
