@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from ..config import CONFIG
 
-from .routes import detect_smells, show_logs, refactor_smell
+from .routes import RefactorRouter, DetectRouter, LogRouter
 
 
 class HealthCheckFilter(logging.Filter):
@@ -16,9 +16,9 @@ class HealthCheckFilter(logging.Filter):
 app = FastAPI(title="Ecooptimizer")
 
 # Include API routes
-app.include_router(detect_smells.router)
-app.include_router(show_logs.router)
-app.include_router(refactor_smell.router)
+app.include_router(RefactorRouter)
+app.include_router(DetectRouter)
+app.include_router(LogRouter)
 
 
 @app.get("/health")
@@ -30,9 +30,7 @@ async def ping():
 logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
 
 
-if __name__ == "__main__":
-    CONFIG["mode"] = "development" if "--dev" in sys.argv else "production"
-
+def start():
     # ANSI codes
     RESET = "\u001b[0m"
     BLUE = "\u001b[36m"
@@ -57,3 +55,17 @@ if __name__ == "__main__":
         access_log=True,
         timeout_graceful_shutdown=2,
     )
+
+
+def main():
+    CONFIG["mode"] = "development" if "--dev" in sys.argv else "production"
+    start()
+
+
+def dev():
+    CONFIG["mode"] = "development"
+    start()
+
+
+if __name__ == "__main__":
+    main()
