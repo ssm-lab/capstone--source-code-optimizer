@@ -41,6 +41,11 @@ dev = [
   "pre-commit",
 ]
 
+[project.scripts]
+eco-local = "ecooptimizer.__main__:main"
+eco-ext = "ecooptimizer.api.__main__:main"
+eco-ext-dev = "ecooptimizer.api.__main__:dev"
+
 [project.urls]
 Documentation = "https://readthedocs.org"
 Repository = "https://github.com/ssm-lab/capstone--source-code-optimizer"
