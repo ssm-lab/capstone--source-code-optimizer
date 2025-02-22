@@ -49,6 +49,8 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.classified_param_names = None
         self.classified_param_nodes = []
         self.modified_files = []
+        self.enclosing_class_name = None
+        self.is_method = False
 
     def refactor(
         self,
