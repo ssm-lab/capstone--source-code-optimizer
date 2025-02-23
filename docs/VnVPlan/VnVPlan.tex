@@ -1493,6 +1493,8 @@ The following subsection tests cover all Compliance requirements listed in the S
   \end{tabular}
 \end{table}
 
+\newpage
+
 \section{Unit Test Description}
 
 \wss{This section should not be filled in until after the MIS (detailed design
@@ -1509,7 +1511,63 @@ and as many tests as needed for edge cases.  Rather than create the details of t
 and output here, you could point to the unit testing code.  For this to work, you code 
 needs to be well-documented, with meaningful names for all of the tests.}
 
-This will be done after the Detailed Design.
+\subsection{Detection Module}
+
+\subsubsection{String Concatenation in a Loop}
+
+\textbf{Target requirement(s)}: FR2~\cite{SRS} \\
+
+\noindent
+The following describes the testing strategy for the identification of the ``String Concatenation in a Loop'' code smell. The tests are to be implemented in \texttt{pytest}.
+
+\begin{itemize}
+  \item \textbf{Basic Concatenation in a Loop}
+  \begin{itemize}
+      \item Simple assignment string concatenation of the form \texttt{var = var + \( \ldots \)} inside \texttt{for} and \texttt{while} loops.
+      \item Augmented assignment string concatenation using \texttt{+=} inside \texttt{for} and \texttt{while} loops.
+      \item Concatenation involving object attributes (e.g., \texttt{var.attr += \( \ldots \)}).
+      \item Concatenation modifying values inside complex objects (i.e. dictionaries, iterables)
+  \end{itemize}
+  
+  \item \textbf{Nested Loop Concatenation}
+  \begin{itemize}
+      \item String concatenation inside nested loops where the outer loop contributes to the concatenation.
+      \item Resetting the concatenation variable inside the outer loop but continuing inside the inner loop.
+  \end{itemize}
+
+  \item \textbf{Conditional Concatenation}
+  \begin{itemize}
+      \item String concatenation inside loops with \texttt{if}-\texttt{else} conditions modifying the concatenation variable.
+      \item Different branches of a condition appending different string literals.
+  \end{itemize}
+
+  \item \textbf{String Interpolation Methods}
+  \begin{itemize}
+      \item Concatenation using \texttt{\%} formatting.
+      \item Concatenation using \texttt{str.format()}.
+      \item Concatenation using f-strings inside loops.
+  \end{itemize}
+
+  \item \textbf{Concatenation with Repeated Reassignment}
+  \begin{itemize}
+      \item A variable being reassigned multiple times in the same loop iteration before proceeding to the next iteration.
+  \end{itemize}
+
+  \item \textbf{Concatenation with Variable Access Inside the Loop}
+  \begin{itemize}
+      \item Cases where the concatenation variable is accessed inside the loop, making refactoring ineffective since the joined result would be required at every iteration.
+  \end{itemize}
+
+  \item \textbf{Concatenation Order Sensitivity}
+  \begin{itemize}
+      \item Concatenation where new values are inserted at the beginning of the string instead of the end.
+      \item Concatenation that involves both prefix and suffix additions within the same loop.
+  \end{itemize}
+\end{itemize}
+
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/dev/tests/input/string_concat_sample.py}{here}.
+
 
 % \subsection{Unit Testing Scope}
 
@@ -1621,6 +1679,7 @@ This will be done after the Detailed Design.
 
 % \wss{Provide evidence that all of the modules have been considered.}
   
+\newpage
 
 \bibliography{../../refs/References}
 
