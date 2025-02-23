@@ -1568,6 +1568,49 @@ The following describes the testing strategy for the identification of the ``Str
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/dev/tests/input/string_concat_sample.py}{here}.
 
+\subsection{Refactoring Module}
+
+\textbf{Target requirement(s)}: FR3, FR6~\cite{SRS} \\
+
+The refactoring module transforms inefficient string concatenation into a more performant approach using list accumulation and \texttt{''.join()}. Unit tests for this module ensure that:
+
+\begin{itemize}
+    \item \textbf{Proper Initialization of the List}
+    \begin{itemize}
+        \item The string variable being concatenated is replaced with a list at the start of the loop.
+        \item The list is initialized to an empty list if the initial string is obviously empty, otherwise the list is initialized with the initial string as the first item.
+    \end{itemize}
+
+    \item \textbf{Correct Usage of List Methods in the Loop}
+    \begin{itemize}
+        \item The \texttt{append()} method is used instead of assignments inside the loop.
+        \item The \texttt{insert()} method is used to insert values at the beginning of the string.
+        \item If the string is re-initialized inside the loop, the \texttt{clear()} method is used to empty the list which is then re-initialized to the new value.
+        \item If multiple concatenations happen in the same loop, each is accumulated in the correct list.
+    \end{itemize}
+
+    \item \textbf{Correct String Joining After the Loop}
+    \begin{itemize}
+        \item The accumulated list is joined using \texttt{''.join(list)} after the loop.
+        \item The final assignment replaces the original concatenation variable with the joined string.
+    \end{itemize}
+
+    \item \textbf{Handling of Edge Cases from Detection}
+    \begin{itemize}
+        \item If the concatenation variable is accessed inside the loop, no refactoring is applied.
+        \item Conditional concatenations result in conditional list appends.
+        \item Order-sensitive concatenations (e.g., prefix insertions) preserve the original behaviour.
+    \end{itemize}
+
+    \item \textbf{Preserving Readability and Maintainability}
+    \begin{itemize}
+        \item The refactored code maintains readability and does not introduce unnecessary complexity.
+        \item Nested loop modifications preserve the correct scoping of the refactored lists.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/dev/tests/input/string_concat_sample.py}{here}.
+
 
 % \subsection{Unit Testing Scope}
 
