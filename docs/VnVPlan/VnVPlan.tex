@@ -1520,6 +1520,57 @@ This will be done after the Detailed Design.
   have a lower priority for verification than others.  If this is the case,
   explain your rationale for the ranking of module importance.}
 
+\subsection{Refactoring Module}
+
+\subsubsection{Member Ignoring Method}
+
+\textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
+
+\noindent
+The refactoring module ensures that methods which do not reference instance attributes or methods are converted into static methods. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+    \item \textbf{Correct Addition of the \texttt{@staticmethod} Decorator}
+    \begin{itemize}
+        \item The method receives the \texttt{@staticmethod} decorator when it does not use \texttt{self} or any instance attributes.
+        \item The decorator is added directly above the method definition, preserving any existing decorators.
+    \end{itemize}
+
+    \item \textbf{Removal of the \texttt{self} Parameter}
+    \begin{itemize}
+        \item The first parameter of the method is removed if it is named \texttt{self}.
+        \item Other parameters remain unchanged.
+        \item The method signature is correctly adjusted to reflect the removal.
+    \end{itemize}
+
+    \item \textbf{Handling of Methods in Classes with Inheritance}
+    \begin{itemize}
+        \item If a method does not reference instance attributes but calls another method in the same class, refactoring only occurs if the called method is also static.
+        \item If a method calls an inherited method, it is not refactored unless the inherited method is static.
+        \item If a method is overridden in a subclass, refactoring only applies if the overridden version is also eligible for static conversion.
+    \end{itemize}
+
+    \item \textbf{Ensuring No Modification to Instance-Dependent Methods}
+    \begin{itemize}
+        \item Methods that reference \texttt{self} directly (e.g., \texttt{self.attr}, \texttt{self.method()}) are not modified.
+        \item Methods that indirectly access instance attributes (e.g., through another method call) are left unchanged.
+    \end{itemize}
+
+    \item \textbf{Correct Refactoring of Multiple Methods in the Same Class}
+    \begin{itemize}
+        \item If multiple methods in a class are eligible, all are correctly refactored.
+        \item If only some methods in a class are eligible, the refactoring applies selectively.
+    \end{itemize}
+
+    \item \textbf{Preserving Readability and Maintainability}
+    \begin{itemize}
+        \item The refactored code maintains proper formatting and indentation.
+        \item Unnecessary modifications to unrelated code are avoided.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/dev/tests/smells/test_member_ignoring_method.py}{here}
+
 
 % \subsection{Tests for Functional Requirements}
 
