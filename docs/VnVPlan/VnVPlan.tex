@@ -1566,12 +1566,15 @@ The following describes the testing strategy for the identification of the ``Str
 \end{itemize}
 
 
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/dev/tests/input/string_concat_sample.py}{here}.
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/smells/test_str_concat_in_loop.py}{here}.
 
 \subsection{Refactoring Module}
 
+\subsubsection{String Concatenation in a Loop}
+
 \textbf{Target requirement(s)}: FR3, FR6~\cite{SRS} \\
 
+\noindent
 The refactoring module transforms inefficient string concatenation into a more performant approach using list accumulation and \texttt{''.join()}. Unit tests for this module ensure that:
 
 \begin{itemize}
@@ -1606,10 +1609,12 @@ The refactoring module transforms inefficient string concatenation into a more p
     \begin{itemize}
         \item The refactored code maintains readability and does not introduce unnecessary complexity.
         \item Nested loop modifications preserve the correct scoping of the refactored lists.
+        \item The refactored code maintains proper formatting and indentation.
+        \item Unnecessary modifications to unrelated code are avoided.
     \end{itemize}
 \end{itemize}
 
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/dev/tests/input/string_concat_sample.py}{here}.
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/smells/test_str_concat_in_loop.py}{here}.
 
 
 % \subsection{Unit Testing Scope}
