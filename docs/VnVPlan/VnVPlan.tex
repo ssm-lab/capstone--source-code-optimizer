@@ -95,7 +95,7 @@ in.}
 % \end{tabular}\\
 
 % \wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-%   \cite{SRS} tables, if appropriate}
+%  ~\cite{SRS} tables, if appropriate}
 
 % \wss{Remove this section if it isn't needed}
 
@@ -129,11 +129,11 @@ Our project, set at a \textbf{general} challenge level, includes two additional 
 
 The Verification and Validation (VnV) plan relies on three key documents to guide testing and assessment: 
 \begin{itemize}
-  \item[] \textbf{Software Requirements Specification (\SRS)\cite{SRS}:} The foundation for the VnV plan, as it defines the functional and non-functional requirements the software must meet; aligning tests with these requirements ensures that the software performs as expected in terms of correctness, performance, and usability.
+  \item[] \textbf{Software Requirements Specification (\SRS)~\cite{SRS}:} The foundation for the VnV plan, as it defines the functional and non-functional requirements the software must meet; aligning tests with these requirements ensures that the software performs as expected in terms of correctness, performance, and usability.
   
-  \item[] \textbf{Module Interface Specification (\MG)\cite{MGDoc}:} Provides detailed information about each module's interfaces, which is crucial for integration testing to verify that all modules interact correctly within the system.
+  \item[] \textbf{Module Interface Specification (\MG)~\cite{MGDoc}:} Provides detailed information about each module's interfaces, which is crucial for integration testing to verify that all modules interact correctly within the system.
   
-  \item[] \textbf{Module Guide (\MIS)\cite{MISDoc}:} Outlines the system's architectural design and module structure, ensuring the design of tests that align with the intended flow and dependencies within the system.
+  \item[] \textbf{Module Guide (\MIS)~\cite{MISDoc}:} Outlines the system's architectural design and module structure, ensuring the design of tests that align with the intended flow and dependencies within the system.
 \end{itemize}
 
 \section{Plan}
@@ -309,9 +309,9 @@ The Verification and Validation (V\&V) Plan for the Source Code Optimizer projec
 The Implementation Verification Plan for the Source Code Optimizer project aims to ensure that the software implementation adheres to the requirements and design specifications defined in the SRS. Key components of this plan include:
 
 \begin{itemize}
-    \item \textbf{Unit Testing}: A comprehensive suite of unit tests will be established to validate the functionality of individual components within the optimizer. These tests will specifically focus on the effectiveness of the code refactoring methods employed by the optimizer, utilizing \texttt{pytest} for writing and executing these tests.
+    \item \textbf{Unit Testing}: A comprehensive suite of unit tests will be established to validate the functionality of individual components within the optimizer. These tests will specifically focus on the effectiveness of the code refactoring methods employed by the optimizer, utilizing \texttt{pytest}~\cite{pytest} for writing and executing these tests.
     
-    \item \textbf{Static Code Analysis}: To maintain high code quality, static analysis tools such as \texttt{Pylint} and \texttt{Flake8} will be employed. These tools will help identify potential bugs, security vulnerabilities, and adherence to coding standards in the Python codebase, ensuring that the optimizer is both efficient and secure.
+    \item \textbf{Static Code Analysis}: To maintain high code quality, static analysis tools will be employed. These tools will help identify potential bugs, security vulnerabilities, and adherence to coding standards in the Python codebase, ensuring that the optimizer is both efficient and secure.
     
     \item \textbf{Code Walkthroughs and Reviews}: The development team will hold regular code reviews and walkthrough sessions to collaboratively evaluate the implementation of the source code optimizer. These sessions will focus on code quality, readability, and compliance with the project’s design patterns. Additionally, the final presentation will provide an opportunity for a thorough code walkthrough, allowing peers to contribute feedback on usability and functionality.
     
@@ -323,25 +323,24 @@ The Implementation Verification Plan for the Source Code Optimizer project aims 
 \subsection{Automated Testing and Verification Tools}
 
 \textbf{Unit Testing Framework:} Pytest is chosen as the main framework for unit testing due to its \begin{inparaenum}[(i)]
-                                                                                                        \item scalability
-                                                                                                        \item integration with other tools(\texttt{coverage.py} for code coverage)
-                                                                                                        \item extensive support for parameterized tests.
-\end{inparaenum} These features make it easy to test the codebase as it grows, adapting to changes throughout the project's development \citep{pytest}.\\
+  \item scalability
+  \item integration with other tools (\texttt{pytest-cov}~\cite{pytest-cov} for code coverage)
+  \item extensive support for parameterized tests.
+  \end{inparaenum} These features make it easy to test the codebase as it grows, adapting to changes throughout the project's development.\\
+  
+\noindent\textbf{Profiling Tool:} The codebase will be evaluated based on results from both time and memory profiling to optimize computational speed and resource usage. For time profiling (recording the number of function calls, time spent in each function, and its descendants), \texttt{cProfile} will be used, as it is included within Python, making it a convenient choice for profiling. For memory profiling, \texttt{memory\_profiler}~\cite{memory_profiler} will be used, as it is easy to install and includes built-in support for visual display of output.\\
+  
+\noindent\textbf{Static Analyzer:} The codebase will be statically analyzed using \texttt{ruff}~\cite{ruff}, as it provides fast linting, built-in rule enforcement, and integrates well with modern Python projects. \texttt{ruff}~\cite{ruff} enforces both linting and formatting rules, reducing the need for multiple tools.\\
+  
+\noindent\textbf{Code Coverage Tools and Plan for Summary:} The codebase will be analyzed to determine the percentage of code executed during tests. For granular-level coverage, \texttt{pytest-cov}~\cite{pytest-cov} will be used, as it supports branch, line, and path coverage. Additionally, \texttt{pytest-cov}~\cite{pytest-cov} integrates seamlessly with \texttt{pytest}~\cite{pytest}, ensuring that test coverage results are generated alongside test execution.\\
 
-\noindent\textbf{Profiling Tool:} The codebase will be evaluated based on results from both time and memory profiling to optimize computational speed and resource usage. For time profiling (recording the number of function calls, time spent in each function, and its descendants), \texttt{cProfile} will be used, as it is included within Python, making it a convenient choice for profiling. For memory profiling, \texttt{memory\_profiler} will be used, as it is easy to install and includes built-in support for visual display of output \citep{memory_profiler}.\\
-
-\noindent\textbf{Static Analyzer:} The codebase will be statically analyzed using the PyLint tool, as it is easy to integrate with most IDEs and is actively maintained (as opposed to PySmells). PyLint provides a wide range of support, including error detection, refactoring suggestions, and code style enforcement, making it a strong choice for static analysis \citep{pylint}.\\
-
-\noindent\textbf{Code Coverage Tools and Plan for Summary:} The code base will be analyzed to determine the percentage of code executed during tests. For granular-level coverage, \texttt{coverage.py} will be used, as it supports branch, line, and path coverage. Additionally, \texttt{coverage.py} is a test framework-independent, allowing integration with the project's unit test framework, Pytest.\\
-Initially the aim is to achieve a 40\% coverage and gradually increment the level with time. Weekly reports generated from \texttt{coverage.py} will be used to track coverage trends and set goals accordingly to address any gaps in testing in the growing codebase.\\
-
-
-\noindent\textbf{Test Coverage Tools:} The project will use \texttt{TestRail}, a test case management tool, to provide traceability from test cases to requirements, ensuring all requirements are covered by tests. Additionally, TestRail can help run tests and track results in integration with Pytest \citep{testrail}.\\
-
-
-\noindent\textbf{Linters:} To enforce the official Python PEP 8 style guide, the team will use \texttt{PyLint}, which is also the choice for static analysis of the code.\\
-
-\noindent\textbf{CI Plan:} As mentioned in the Development Plan, GitHub Actions will integrate the above tools within the CI pipeline. GitHub Actions will be configured to run unit tests written in \texttt{Pytest} as well as \texttt{PyLint} checks on every code push. Through automated testing, any errors and code smells will be promptly identified.\\
+Initially, the aim is to achieve a 40\% coverage and gradually increment the level over time. Weekly reports generated from \texttt{pytest-cov}~\cite{pytest-cov} will be used to track coverage trends and set goals accordingly to address any gaps in testing in the growing codebase.\\
+  
+\noindent\textbf{Linters and Formatters:} To enforce the official Python PEP 8 style guide and maintain code quality, the team will use \texttt{ruff}~\cite{ruff} for Python code and \texttt{eslint}~\cite{eslint} paired with \texttt{Prettier}~\cite{prettier} for the TypeScript extension.\\
+  
+\noindent\textbf{Testing Strategy for the VSCode Extension:} The TypeScript extension will be tested using \texttt{vscode-test}~\cite{vscode-test}, the official VSCode extension testing framework. This ensures that core functionality, commands, and UI interactions behave as expected in the VSCode environment. Automated tests will verify interactions between the extension and the editor, reducing regressions during development.\\
+  
+\noindent\textbf{CI Plan:} As mentioned in the Development Plan, GitHub Actions will integrate the above tools within the CI pipeline. GitHub Actions will be configured to run unit tests written in \texttt{pytest}, perform static analysis using \texttt{ruff}~\cite{ruff}, and execute \texttt{pytest-cov}~\cite{pytest-cov} for test coverage. For the TypeScript extension, a pre-commit will run \texttt{eslint}~\cite{eslint} and \texttt{Prettier}~\cite{prettier}, and automated tests will be executed as a GitHub Action using \texttt{vscode-test}~\cite{vscode-test}. Through automated testing, any errors, code style violations, and regressions will be promptly identified.\\
 
 \subsection{Software Validation Plan}
 
@@ -358,7 +357,7 @@ This section outlines the tests for verifying both functional and nonfunctional 
 \subsection{Tests for Functional Requirements}
 
 The subsections below outline tests corresponding to functional 
-requirements in the \SRS \cite{SRS}. Each test is associated with a unique functional area, helping to confirm that the tool meets the specified requirements. Each functional area has its own subsection for clarity.
+requirements in the \SRS~\cite{SRS}. Each test is associated with a unique functional area, helping to confirm that the tool meets the specified requirements. Each functional area has its own subsection for clarity.
 
 \noindent
 \colorrule
@@ -837,7 +836,7 @@ The section will cover system tests for the non-functional requirements (NFR) li
 \medskip
 
 \noindent
-The following subsection tests cover all Look and Feel requirements listed in the SRS \cite{SRS}. They seek to validate that the system is modern, visually appealing, and supporting of a calm and focused user experience. 
+The following subsection tests cover all Look and Feel requirements listed in the SRS~\cite{SRS}. They seek to validate that the system is modern, visually appealing, and supporting of a calm and focused user experience. 
 		
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-LF-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Side-by-side code comparison in IDE plugin} \\[2mm]
@@ -886,7 +885,7 @@ The following subsection tests cover all Look and Feel requirements listed in th
 \medskip
 
 \noindent
-The following subsection tests cover all Usability \& Humanity requirements listed in the SRS \cite{SRS}. They seek to validate that the system is accessible, user-centred, intuitive and easy to navigate.
+The following subsection tests cover all Usability \& Humanity requirements listed in the SRS~\cite{SRS}. They seek to validate that the system is accessible, user-centred, intuitive and easy to navigate.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-UH-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Customizable settings for refactoring preferences} \\[2mm]
@@ -917,7 +916,7 @@ The following subsection tests cover all Usability \& Humanity requirements list
     \textbf{Process:} 
     \begin{itemize}
       \item Identify all colour codes used in the system and categorize them by their role in the UI (i.e. background, foreground text, buttons, etc.).
-      \item Use tools to measure colour contrast ratios against WCAG thresholds (4.5:1 for normal text, 3:1 for large text)\cite{WCAG}.
+      \item Use tools to measure colour contrast ratios against WCAG thresholds (4.5:1 for normal text, 3:1 for large text~\cite{WCAG}.
     \end{itemize}
     \textbf{Roles and Responsibilities:} Developers implement themes that pass the testing process. \\[2mm]
     \textbf{Tools and Resources:} WebAIM Color Contrast Checker, WCAG guidelines documentation, internal coding standards. \\[2mm]
@@ -968,7 +967,7 @@ The following subsection tests cover all Usability \& Humanity requirements list
 \medskip
 
 \noindent
-The following subsection tests cover all Performance requirements listed in the SRS \cite{SRS}. These tests validate the tool’s efficiency and responsiveness under varying workloads, including code analysis, refactoring, and data reporting.
+The following subsection tests cover all Performance requirements listed in the SRS~\cite{SRS}. These tests validate the tool’s efficiency and responsiveness under varying workloads, including code analysis, refactoring, and data reporting.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Performance and capacity validation for analysis and refactoring} \\[2mm]
@@ -1053,7 +1052,7 @@ The following subsection tests cover all Performance requirements listed in the 
 \medskip
 
 \noindent
-The following subsection tests cover all Operational and Environmental requirements listed in the SRS \cite{SRS}. Testing includes adherence to emissions standards, integration with environmental metrics, and adaptability to diverse operational settings.
+The following subsection tests cover all Operational and Environmental requirements listed in the SRS~\cite{SRS}. Testing includes adherence to emissions standards, integration with environmental metrics, and adaptability to diverse operational settings.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-OPE-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Emissions Standards Compliance} \\[2mm]
@@ -1110,7 +1109,7 @@ The following subsection tests cover all Operational and Environmental requireme
 \medskip
 
 \noindent
-The following subsection tests cover all Maintenance and Support requirements listed in the SRS \cite{SRS}. These tests focus on rollback capabilities, compatibility with external libraries, automated testing, and extensibility for adding new code smells and refactoring functions.
+The following subsection tests cover all Maintenance and Support requirements listed in the SRS~\cite{SRS}. These tests focus on rollback capabilities, compatibility with external libraries, automated testing, and extensibility for adding new code smells and refactoring functions.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-MS-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Extensibility for New Code Smells and Refactorings} \\[2mm]
@@ -1161,7 +1160,7 @@ The following subsection tests cover all Maintenance and Support requirements li
 \medskip
 
 \noindent
-The following subsection tests cover all Security requirements listed in the SRS \cite{SRS}. These tests seek to validate that the tool is protected against unauthorized access, data breaches, and external threats.
+The following subsection tests cover all Security requirements listed in the SRS~\cite{SRS}. These tests seek to validate that the tool is protected against unauthorized access, data breaches, and external threats.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-SRT-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{User authentication before accessing tool features} \\[2mm]
@@ -1266,7 +1265,7 @@ The following subsection tests cover all Security requirements listed in the SRS
 \medskip
 
 \noindent
-The following subsection tests cover all Cultural requirements listed in the SRS \cite{SRS}. These test are to ensure that the tool is accessible and appropriate for a global audience, avoiding any culturally sensitive or inappropriate elements. 
+The following subsection tests cover all Cultural requirements listed in the SRS~\cite{SRS}. These test are to ensure that the tool is accessible and appropriate for a global audience, avoiding any culturally sensitive or inappropriate elements. 
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-CULT-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Cultural sensitivity of icons and colours} \\[2mm]
@@ -1302,7 +1301,7 @@ The following subsection tests cover all Cultural requirements listed in the SRS
 \medskip
 
 \noindent
-The following subsection tests cover all Compliance requirements listed in the SRS \cite{SRS}. The tests focus on adherence to PIPEDA, CASL, and ISO 9001, as well as SSADM standards, ensuring the tool complies with relevant regulations and aligns with professional development practices.
+The following subsection tests cover all Compliance requirements listed in the SRS~\cite{SRS}. The tests focus on adherence to PIPEDA, CASL, and ISO 9001, as well as SSADM standards, ensuring the tool complies with relevant regulations and aligns with professional development practices.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-CPL-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Compliance with PIPEDA and CASL} \\[2mm]
