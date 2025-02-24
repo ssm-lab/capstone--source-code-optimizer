@@ -29,7 +29,7 @@ DEFAULT_IGNORE_PATH = Path(__file__).parent / "patterns_to_ignore"
 class MultiFileRefactorer(BaseRefactorer[T]):
     def __init__(self):
         super().__init__()
-        self.target_file: Path = None
+        self.target_file: Path = None  # type: ignore
         self.ignore_patterns = self._load_ignore_patterns()
 
     def _load_ignore_patterns(self, ignore_dir: Path = DEFAULT_IGNORE_PATH) -> set[str]:

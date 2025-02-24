@@ -255,10 +255,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
         # Write changes back to file
         file_path.write_text("\n".join(refactored_lines))
 
-        if not file_path.samefile(self.target_file):
-            return True
-
-        return False
+        return True
 
     def _collect_line_modifications(self, file_path: Path) -> dict[int, list[tuple[int, str, str]]]:
         """Collect all modifications needed for each line."""
