@@ -16,7 +16,7 @@ Evaluate the usability of the extension’s **smell detection, refactoring proce
 
 ### **Test Type**
 
-Moderated usability testing (conducted remotely via screen-sharing).
+Moderated usability testing.
 
 ### **Participants**
 
@@ -43,6 +43,7 @@ Moderated usability testing (conducted remotely via screen-sharing).
 - Observe user interactions without providing assistance unless necessary.
 - Take notes on usability issues, pain points, and confusion.
 - Ask follow-up questions after each task.
+- Encourage participants to **think aloud**.
 
 ## **Task List**  
 
