@@ -48,7 +48,6 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.classified_params = None
         self.classified_param_names = None
         self.classified_param_nodes = []
-        self.modified_files = []
         self.enclosing_class_name = None
         self.is_method = False
 
@@ -174,9 +173,6 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
             with target_file.open("w") as f:
                 f.write(modified_source)
 
-        if target_file not in self.modified_files:
-            self.modified_files.append(target_file)
-
         self.is_method = self.function_node.name == "__init__"
 
         # if refactoring __init__, determine the class name
@@ -188,6 +184,9 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.traverse_and_process(source_dir)
 
     def _process_file(self, file: Path):
+        if file.samefile(self.target_file):
+            return False
+
         tree = ast.parse(file.read_text())
 
         # check if function call or class instantiation occurs in this file

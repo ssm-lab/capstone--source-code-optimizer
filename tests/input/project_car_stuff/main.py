@@ -55,7 +55,6 @@ class Vehicle:
         )
 
 class Car(Vehicle):
-    test = Vehicle(1,1,1,1,1,1,1,1,1,1)
 
     def __init__(
         self,
@@ -80,7 +79,6 @@ class Car(Vehicle):
     def add_sunroof(self):
         # Code Smell: Long Parameter List
         self.sunroof = True
-        self.test.unused_method()
         print("Sunroof added!")
 
     def show_details(self):
