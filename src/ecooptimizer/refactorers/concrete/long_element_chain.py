@@ -172,7 +172,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
                         and node.targets[0].id in self.dict_name
                     ):
                         dict_value = self.extract_dict_literal(node.value)
-                        flattened_version = self.flatten_dict(dict_value)
+                        flattened_version = self.flatten_dict(dict_value)  # type: ignore
                         self.dict_assignment = flattened_version
 
                     # dictionary is an attribute
@@ -181,7 +181,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
                         and node.targets[0].attr in self.dict_name
                     ):
                         dict_value = self.extract_dict_literal(node.value)
-                        self.dict_assignment = self.flatten_dict(dict_value)
+                        self.dict_assignment = self.flatten_dict(dict_value)  # type: ignore
                 self_.generic_visit(node)
 
         DictVisitor().visit(tree)
