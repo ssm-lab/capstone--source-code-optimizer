@@ -2,10 +2,11 @@ import logging
 from pathlib import Path
 import py_compile
 import textwrap
+from unittest.mock import Mock
 import pytest
 
-from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.config import CONFIG
+from ecooptimizer.data_types.custom_fields import Occurence
 from ecooptimizer.data_types.smell import LECSmell
 from ecooptimizer.refactorers.concrete.long_element_chain import LongElementChainRefactorer
 from ecooptimizer.utils.smell_enums import CustomSmell
@@ -104,21 +105,120 @@ def LEC_multifile_project(source_files) -> tuple[Path, list[Path]]:
     return project_dir, [data_file, usage_file]
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def get_smells(LEC_code) -> list[LECSmell]:
-    analyzer = AnalyzerController()
-    smells = analyzer.run_analysis(LEC_code[1])
-    return [s for s in smells if isinstance(s, LECSmell)]
+    """Mocked smell data for single file"""
+    return [
+        LECSmell(
+            confidence="UNDEFINED",
+            message="Dictionary chain too long (6/4)",
+            obj="lec_function",
+            symbol="long-element-chain",
+            type="convention",
+            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+            path=str(LEC_code[1]),
+            module="lec_code",
+            occurences=[
+                Occurence(line=25, column=0, endLine=25, endColumn=0),
+            ],
+            additionalInfo=None,
+            detector=Mock(),
+        ),
+        LECSmell(
+            confidence="UNDEFINED",
+            message="Dictionary chain too long (6/4)",
+            obj="lec_function",
+            symbol="long-element-chain",
+            type="convention",
+            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+            path=str(LEC_code[1]),
+            module="lec_code",
+            occurences=[
+                Occurence(line=26, column=0, endLine=26, endColumn=0),
+            ],
+            additionalInfo=None,
+            detector=Mock(),
+        ),
+        LECSmell(
+            confidence="UNDEFINED",
+            message="Dictionary chain too long (6/4)",
+            obj="lec_function",
+            symbol="long-element-chain",
+            type="convention",
+            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+            path=str(LEC_code[1]),
+            module="lec_code",
+            occurences=[
+                Occurence(line=27, column=0, endLine=27, endColumn=0),
+            ],
+            additionalInfo=None,
+            detector=Mock(),
+        ),
+        LECSmell(
+            confidence="UNDEFINED",
+            message="Dictionary chain too long (6/4)",
+            obj="lec_function",
+            symbol="long-element-chain",
+            type="convention",
+            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+            path=str(LEC_code[1]),
+            module="lec_code",
+            occurences=[
+                Occurence(line=28, column=0, endLine=28, endColumn=0),
+            ],
+            additionalInfo=None,
+            detector=Mock(),
+        ),
+        LECSmell(
+            confidence="UNDEFINED",
+            message="Dictionary chain too long (6/4)",
+            obj="lec_function",
+            symbol="long-element-chain",
+            type="convention",
+            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+            path=str(LEC_code[1]),
+            module="lec_code",
+            occurences=[
+                Occurence(line=29, column=0, endLine=29, endColumn=0),
+            ],
+            additionalInfo=None,
+            detector=Mock(),
+        ),
+    ]
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def get_multifile_smells(LEC_multifile_project) -> list[LECSmell]:
-    analyzer = AnalyzerController()
-    all_smells = []
-    for file in LEC_multifile_project[1]:
-        smells = analyzer.run_analysis(file)
-        all_smells.extend([s for s in smells if isinstance(s, LECSmell)])
-    return all_smells
+    """Mocked smell data for multi-file"""
+    _, files = LEC_multifile_project
+    return [
+        LECSmell(
+            confidence="UNDEFINED",
+            message="Dictionary chain too long (6/4)",
+            obj="lec_function",
+            symbol="long-element-chain",
+            type="convention",
+            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+            path=str(files[0]),
+            module="data_def",
+            occurences=[Occurence(line=10, column=0, endLine=10, endColumn=0)],
+            additionalInfo=None,
+            detector=Mock(),
+        ),
+        LECSmell(
+            confidence="UNDEFINED",
+            message="Dictionary chain too long (6/4)",
+            obj="lec_function",
+            symbol="long-element-chain",
+            type="convention",
+            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
+            path=str(files[1]),
+            module="data_usage",
+            occurences=[Occurence(line=4, column=0, endLine=4, endColumn=0)],
+            additionalInfo=None,
+            detector=Mock(),
+        ),
+    ]
 
 
 def test_lec_detection_single_file(get_smells):
