@@ -17,6 +17,7 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
         super().__init__()
         self.target_lines: list[int] = []
         self.assign_var = ""
+        self.target_node: nodes.NodeNG = None
         self.last_assign_node: nodes.Assign | nodes.AugAssign = None  # type: ignore
         self.concat_nodes: list[nodes.Assign | nodes.AugAssign] = []
         self.reassignments: list[nodes.Assign] = []
@@ -74,9 +75,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
         modified_code = self.add_node_to_body(source_code, combined_nodes)
 
-        temp_file_path = output_file
-
-        temp_file_path.write_text(modified_code)
         if overwrite:
             target_file.write_text(modified_code)
         else:
@@ -84,8 +82,12 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
     def visit(self, node: nodes.NodeNG):
         if isinstance(node, nodes.Assign) and node.lineno in self.target_lines:
+            if not self.target_node:
+                self.target_node = node.targets[0]
             self.concat_nodes.append(node)
         elif isinstance(node, nodes.AugAssign) and node.lineno in self.target_lines:
+            if not self.target_node:
+                self.target_node = node.target
             self.concat_nodes.append(node)
         elif isinstance(node, (nodes.For, nodes.While)) and node.lineno == self.outer_loop_line:
             self.outer_loop = node
@@ -152,7 +154,9 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
             or self.assign_var in self.last_assign_node.value.as_string()
         )
 
-    def generate_temp_list_name(self, node: nodes.NodeNG):
+    def generate_temp_list_name(self):
+        node = self.target_node
+
         def _get_node_representation(node: nodes.NodeNG):
             """Helper function to get a string representation of a node."""
             if isinstance(node, astroid.Const):
@@ -161,12 +165,6 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                 return node.name
             if isinstance(node, astroid.Attribute):
                 return node.attrname
-            if isinstance(node, astroid.Slice):
-                lower = _get_node_representation(node.lower) if node.lower else ""
-                upper = _get_node_representation(node.upper) if node.upper else ""
-                step = _get_node_representation(node.step) if node.step else ""
-                step_part = f"_step_{step}" if step else ""
-                return f"{lower}_{upper}{step_part}"
             return "unknown"
 
         if isinstance(node, astroid.Subscript):
@@ -192,14 +190,8 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
         list_name = self.assign_var
 
-        if isinstance(self.concat_nodes[0], nodes.Assign) and not isinstance(
-            self.concat_nodes[0].targets[0], nodes.AssignName
-        ):
-            list_name = self.generate_temp_list_name(self.concat_nodes[0].targets[0])
-        elif isinstance(self.concat_nodes[0], nodes.AugAssign) and not isinstance(
-            self.concat_nodes[0].target, nodes.AssignName
-        ):
-            list_name = self.generate_temp_list_name(self.concat_nodes[0].target)
+        if not isinstance(self.target_node, nodes.AssignName):
+            list_name = self.generate_temp_list_name()
 
         # -------------  ADD JOIN STATEMENT TO SOURCE ----------------
 
@@ -270,23 +262,12 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
                 code_file_lines.insert(reassign_lno, reassign_whitespace + new_reassign)
 
         # -------------  INITIALIZE TARGET VAR AS A LIST  -------------
-        if not self.last_assign_node or self.last_assign_is_referenced(
-            "".join(code_file_lines[self.last_assign_node.lineno : self.outer_loop.lineno - 1])  # type: ignore
-        ):
-            list_lno: int = self.outer_loop.lineno - 1  # type: ignore
-
-            source_line = code_file_lines[list_lno]
-            outer_scope_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
-
-            list_line = f"{list_name} = [{self.assign_var}]"
-
-            code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
-        elif (
-            isinstance(self.concat_nodes[0], nodes.Assign)
-            and not isinstance(self.concat_nodes[0].targets[0], nodes.AssignName)
-        ) or (
-            isinstance(self.concat_nodes[0], nodes.AugAssign)
-            and not isinstance(self.concat_nodes[0].target, nodes.AssignName)
+        if (
+            not isinstance(self.target_node, nodes.AssignName)
+            or not self.last_assign_node
+            or self.last_assign_is_referenced(
+                "".join(code_file_lines[self.last_assign_node.lineno : self.outer_loop.lineno - 1])  # type: ignore
+            )
         ):
             list_lno: int = self.outer_loop.lineno - 1  # type: ignore
 
