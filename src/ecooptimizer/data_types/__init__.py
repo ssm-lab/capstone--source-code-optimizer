@@ -18,8 +18,6 @@ from .smell import (
     UGESmell,
 )
 
-from .smell_record import SmellRecord
-
 __all__ = [
     "AdditionalInfo",
     "CRCInfo",
@@ -33,7 +31,6 @@ __all__ = [
     "SCLInfo",
     "SCLSmell",
     "Smell",
-    "SmellRecord",
     "UGESmell",
     "UVASmell",
 ]
