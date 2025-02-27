@@ -1,4 +1,3 @@
-# pyright: reportOptionalMemberAccess=false
 import astroid
 from astroid import nodes, util
 import libcst as cst
@@ -15,10 +14,13 @@ from ...data_types.smell import MIMSmell
 class CallTransformer(cst.CSTTransformer):
     METADATA_DEPENDENCIES = (PositionProvider,)
 
-    def __init__(self, method_calls: list[tuple[str, int, str]], class_name: str):
-        self.method_calls = {(caller, lineno, method) for caller, lineno, method in method_calls}
+    def __init__(self, class_name: str):
+        self.method_calls: list[tuple[str, int, str, str]] = None
         self.class_name = class_name  # Class name to replace instance calls
         self.transformed = False
+
+    def set_calls(self, valid_calls: list[tuple[str, int, str, str]]):
+        self.method_calls = valid_calls
 
     def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:
         """Transform instance calls to static calls if they match."""
@@ -31,19 +33,19 @@ class CallTransformer(cst.CSTTransformer):
                 raise TypeError("What do you mean you can't find the position?")
 
             # Check if this call matches one from astroid (by caller, method name, and line number)
-            for call_caller, line, call_method in self.method_calls:
+            for call_caller, line, call_method, cls in self.method_calls:
                 CONFIG["refactorLogger"].debug(
                     f"cst caller: {call_caller} at line {position.start.line}"
                 )
                 if (
                     method == call_method
-                    and position.start.line - 1 == line
+                    and position.start.line == line
                     and caller.deep_equals(cst.parse_expression(call_caller))
                 ):
                     CONFIG["refactorLogger"].debug("transforming")
                     # Transform `obj.method(args)` -> `ClassName.method(args)`
                     new_func = cst.Attribute(
-                        value=cst.Name(self.class_name),  # Replace `obj` with class name
+                        value=cst.Name(cls),  # Replace `obj` with class name
                         attr=original_node.func.attr,
                     )
                     self.transformed = True
@@ -54,7 +56,7 @@ class CallTransformer(cst.CSTTransformer):
 
 def find_valid_method_calls(
     tree: nodes.Module, mim_method: str, valid_classes: set[str]
-) -> list[tuple[str, int, str]]:
+) -> list[tuple[str, int, str, str]]:
     """
     Finds method calls where the instance is of a valid class.
 
@@ -75,15 +77,18 @@ def find_valid_method_calls(
                 if method_name != mim_method:
                     continue
 
-                inferred_types = []
+                inferred_types: list[str] = []
                 inferrences = caller.infer()
 
                 for inferred in inferrences:
                     CONFIG["refactorLogger"].debug(f"inferred: {inferred.repr_name()}")
-                    if isinstance(inferred.repr_name(), util.UninferableBase):
+                    if isinstance(inferred, util.UninferableBase):
                         hint = check_for_annotations(caller, descendant.scope())
+                        inits = check_for_initializations(caller, descendant.scope())
                         if hint:
                             inferred_types.append(hint.as_string())
+                        elif inits:
+                            inferred_types.extend(inits)
                         else:
                             continue
                     else:
@@ -92,13 +97,29 @@ def find_valid_method_calls(
                 CONFIG["refactorLogger"].debug(f"Inferred types: {inferred_types}")
 
                 # Check if any inferred type matches a valid class
-                if any(cls in valid_classes for cls in inferred_types):
-                    CONFIG["refactorLogger"].debug(
-                        f"Foud valid call: {caller.as_string()} at line {descendant.lineno}"
-                    )
-                    valid_calls.append((caller.as_string(), descendant.lineno, method_name))
+                for cls in inferred_types:
+                    if cls in valid_classes:
+                        CONFIG["refactorLogger"].debug(
+                            f"Foud valid call: {caller.as_string()} at line {descendant.lineno}"
+                        )
+                        valid_calls.append(
+                            (caller.as_string(), descendant.lineno, method_name, cls)
+                        )
 
     return valid_calls
+
+
+def check_for_initializations(caller: nodes.NodeNG, scope: nodes.NodeNG):
+    inits: list[str] = []
+
+    for assign in scope.nodes_of_class(nodes.Assign):
+        if assign.targets[0].as_string() == caller.as_string() and isinstance(
+            assign.value, nodes.Call
+        ):
+            if isinstance(assign.value.func, nodes.Name):
+                inits.append(assign.value.func.name)
+
+    return inits
 
 
 def check_for_annotations(caller: nodes.NodeNG, scope: nodes.NodeNG):
@@ -111,9 +132,9 @@ def check_for_annotations(caller: nodes.NodeNG, scope: nodes.NodeNG):
     args = scope.args.args
     anns = scope.args.annotations
     if args and anns:
-        for i in range(len(args)):
-            if args[i].name == caller.as_string():
-                hint = scope.args.annotations[i]
+        for arg, ann in zip(args, anns):
+            if arg.name == caller.as_string() and ann:
+                hint = ann
                 break
 
     return hint
@@ -135,7 +156,7 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         source_dir: Path,
         smell: MIMSmell,
         output_file: Path,
-        overwrite: bool = True,  # noqa: ARG002
+        overwrite: bool = True,
     ):
         self.target_line = smell.occurences[0].line
         self.target_file = target_file
@@ -150,45 +171,45 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         tree = MetadataWrapper(cst.parse_module(source_code))
 
         # Find all subclasses of the target class
-        self._find_subclasses(tree)
+        self._find_subclasses(source_dir)
 
         modified_tree = tree.visit(self)
         target_file.write_text(modified_tree.code)
 
-        astroid_tree = astroid.parse(source_code)
-        valid_calls = find_valid_method_calls(astroid_tree, self.mim_method, self.valid_classes)
-
-        self.transformer = CallTransformer(valid_calls, self.mim_method_class)
+        self.transformer = CallTransformer(self.mim_method_class)
 
         self.traverse_and_process(source_dir)
-        output_file.write_text(target_file.read_text())
+        if not overwrite:
+            output_file.write_text(target_file.read_text())
 
-    def _find_subclasses(self, tree: MetadataWrapper):
+    def _find_subclasses(self, directory: Path):
         """Find all subclasses of the target class within the file."""
 
-        class SubclassCollector(cst.CSTVisitor):
-            def __init__(self, base_class: str):
-                self.base_class = base_class
-                self.subclasses: set[str] = set()
-
-            def visit_ClassDef(self, node: cst.ClassDef):
-                if any(
-                    base.value.value == self.base_class
-                    for base in node.bases
-                    if isinstance(base.value, cst.Name)
-                ):
-                    self.subclasses.add(node.name.value)
+        def get_subclasses(tree: nodes.Module):
+            subclasses: set[str] = set()
+            for klass in tree.nodes_of_class(nodes.ClassDef):
+                if any(base == self.mim_method_class for base in klass.basenames):
+                    if not any(method.name == self.mim_method for method in klass.mymethods()):
+                        subclasses.add(klass.name)
+            return subclasses
 
         CONFIG["refactorLogger"].debug("find all subclasses")
-        collector = SubclassCollector(self.mim_method_class)
-        tree.visit(collector)
-        self.valid_classes = self.valid_classes.union(collector.subclasses)
+        self.traverse(directory)
+        for file in self.py_files:
+            tree = astroid.parse(file.read_text())
+            self.valid_classes = self.valid_classes.union(get_subclasses(tree))
         CONFIG["refactorLogger"].debug(f"valid classes: {self.valid_classes}")
 
     def _process_file(self, file: Path):
         processed = False
-        tree = MetadataWrapper(cst.parse_module(file.read_text("utf-8")))
 
+        source_code = file.read_text("utf-8")
+
+        astroid_tree = astroid.parse(source_code)
+        valid_calls = find_valid_method_calls(astroid_tree, self.mim_method, self.valid_classes)
+        self.transformer.set_calls(valid_calls)
+
+        tree = MetadataWrapper(cst.parse_module(source_code))
         modified_tree = tree.visit(self.transformer)
 
         if self.transformer.transformed:
