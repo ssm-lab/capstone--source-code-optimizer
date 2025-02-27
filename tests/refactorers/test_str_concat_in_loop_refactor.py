@@ -46,7 +46,7 @@ def create_smell(occurences: list[int], concat_target: str, inner_loop_line: int
 
 @pytest.mark.parametrize("val", [("''"), ('""'), ("str()")])
 def test_empty_initial_var(refactorer, val):
-    """Ensure the string is replaced with a list"""
+    """Test for inital concat var being empty."""
     code = f"""
     def example():
         result = {val}
@@ -75,7 +75,7 @@ def test_empty_initial_var(refactorer, val):
 
 
 def test_non_empty_initial_name_var_not_referenced(refactorer):
-    """Ensure the string is replaced with a list"""
+    """Test for initial concat value being none empty."""
     code = """
     def example():
         result = "Hello"
@@ -104,7 +104,7 @@ def test_non_empty_initial_name_var_not_referenced(refactorer):
 
 
 def test_non_empty_initial_name_var_referenced(refactorer):
-    """Ensure the string is replaced with a list"""
+    """Test for initialization when var is referenced after but before the loop start."""
     code = """
     def example():
         result = "Hello"
@@ -134,7 +134,7 @@ def test_non_empty_initial_name_var_referenced(refactorer):
 
 
 def test_initial_not_name_var(refactorer):
-    """Ensure the string is replaced with a list"""
+    """Test that none name vars are initialized to a temp list"""
     code = """
     def example():
         result = {"key" : "Hello"}
@@ -165,7 +165,7 @@ def test_initial_not_name_var(refactorer):
 
 
 def test_initial_not_in_scope(refactorer):
-    """Ensure the string is replaced with a list"""
+    """Test for refactoring of a concat variable not initialized in the same scope."""
     code = """
     def example(result: str):
         for i in range(5):
@@ -220,7 +220,7 @@ def test_insert_on_prefix(refactorer):
 
 
 def test_concat_with_prefix_and_suffix(refactorer):
-    """Ensure insert(0) is used for prefix concatenation"""
+    """Test for proper refactoring of a concatenation containing both a prefix and suffix concat."""
     code = """
     def example():
         result = ""
@@ -249,7 +249,7 @@ def test_concat_with_prefix_and_suffix(refactorer):
 
 
 def test_multiple_concat_occurrences(refactorer):
-    """Ensure insert(0) is used for prefix concatenation"""
+    """Test for multiple successive concatenations in the same loop for 1 smell."""
     code = """
     def example():
         result = ""
@@ -280,7 +280,7 @@ def test_multiple_concat_occurrences(refactorer):
 
 
 def test_nested_concat(refactorer):
-    """Ensure insert(0) is used for prefix concatenation"""
+    """Test for nested concat in loop."""
     code = """
     def example():
         result = ""
@@ -310,7 +310,7 @@ def test_nested_concat(refactorer):
 
 
 def test_multi_occurrence_nested_concat(refactorer):
-    """Ensure insert(0) is used for prefix concatenation"""
+    """Test for multiple occurrences of a same smell at different loop levels."""
     code = """
     def example():
         result = ""
@@ -340,8 +340,8 @@ def test_multi_occurrence_nested_concat(refactorer):
     assert "result = ''.join(result)\n" in written_code
 
 
-def test_reassignment_clears_list(refactorer):
-    """Ensure list is cleared when reassigned inside the loop"""
+def test_reassignment(refactorer):
+    """Ensure list is reset to new val when reassigned inside the loop."""
     code = """
     class Test:
         def __init__(self):
@@ -350,7 +350,40 @@ def test_reassignment_clears_list(refactorer):
     for word in ["bug", "warning", "Hello", "World"]:
         obj.text += word
         if word == "warning":
-            obj.text = ""
+            obj.text = "Well, "
+    """
+    smell = create_smell(occurences=[7], concat_target="obj.text", inner_loop_line=6)()
+
+    with (
+        patch.object(Path, "read_text", return_value=code),
+        patch.object(Path, "write_text") as mock_write_text,
+    ):
+        refactorer.refactor(Path("fake.py"), Path("fake.py"), smell, Path("fake.py"))
+
+    mock_write_text.assert_called_once()  # Ensure write_text was called once
+    written_code = mock_write_text.call_args[0][0]  # The first argument is the modified code
+
+    list_name = refactorer.generate_temp_list_name()
+
+    assert f"{list_name} = [obj.text]\n" in written_code
+
+    assert f"{list_name}.append(word)\n" in written_code
+    assert f"{list_name} = ['Well, ']\n" in written_code  # astroid changes quotes
+    assert 'obj.text = "Well, "\n' not in written_code
+
+
+@pytest.mark.parametrize("val", [("''"), ('""'), ("str()")])
+def test_reassignment_clears_list(refactorer, val):
+    """Ensure list is cleared when reassigned inside the loop using clear()."""
+    code = f"""
+    class Test:
+        def __init__(self):
+            self.text = ""
+    obj = Test()
+    for word in ["bug", "warning", "Hello", "World"]:
+        obj.text += word
+        if word == "warning":
+            obj.text = {val}
     """
     smell = create_smell(occurences=[7], concat_target="obj.text", inner_loop_line=6)()
 
@@ -372,7 +405,7 @@ def test_reassignment_clears_list(refactorer):
 
 
 def test_no_unrelated_modifications(refactorer):
-    """Ensure formatting is preserved"""
+    """Ensure formatting and any comments for unrelated lines are preserved."""
     code = """
     def example():
         print("Hello World")

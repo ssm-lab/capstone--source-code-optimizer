@@ -226,7 +226,7 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
             return concat_line
 
         def get_new_reassign_line(reassign_node: nodes.Assign):
-            if reassign_node.value.as_string() in ["''", "str()"]:
+            if reassign_node.value.as_string() in ["''", '""', "str()"]:
                 return f"{list_name}.clear()"
             else:
                 return f"{list_name} = [{reassign_node.value.as_string()}]"
