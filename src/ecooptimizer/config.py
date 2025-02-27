@@ -1,4 +1,5 @@
 from logging import Logger
+import logging
 from typing import TypedDict
 
 from .utils.output_manager import LoggingManager
@@ -7,13 +8,13 @@ from .utils.output_manager import LoggingManager
 class Config(TypedDict):
     mode: str
     loggingManager: LoggingManager | None
-    detectLogger: Logger | None
-    refactorLogger: Logger | None
+    detectLogger: Logger
+    refactorLogger: Logger
 
 
 CONFIG: Config = {
     "mode": "development",
     "loggingManager": None,
-    "detectLogger": None,
-    "refactorLogger": None,
+    "detectLogger": logging.getLogger("detect"),
+    "refactorLogger": logging.getLogger("refactor"),
 }
