@@ -7,7 +7,31 @@ from ...data_types.smell import LMCSmell
 from ...data_types.custom_fields import AdditionalInfo, Occurence
 
 
-def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 5) -> list[LMCSmell]:
+def compute_chain_length(node: ast.expr) -> int:
+    """
+    Recursively determines how many consecutive calls exist in a chain
+    ending at 'node'. Each .something() is +1.
+    """
+    if isinstance(node, ast.Call):
+        # We have a call, so that's +1
+        if isinstance(node.func, ast.Attribute):
+            # The chain might continue if node.func.value is also a call
+            return 1 + compute_chain_length(node.func.value)
+        else:
+            return 1
+    elif isinstance(node, ast.Attribute):
+        # If it's just an attribute (like `details` or `obj.x`),
+        # we keep looking up the chain but *don’t increment*,
+        # because we only count calls.
+        return compute_chain_length(node.value)
+    else:
+        # If it's a Name or something else, we stop
+        return 0
+
+
+def detect_long_message_chain(
+    file_path: Path, tree: ast.AST, threshold: int = 5
+) -> list[LMCSmell]:
     """
     Detects long message chains in the given Python code.
 
@@ -23,66 +47,39 @@ def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 5
     results: list[LMCSmell] = []
     used_lines = set()
 
-    # Function to detect long chains
-    def check_chain(node: ast.Attribute | ast.expr, chain_length: int = 0):
-        """
-        Recursively checks if a chain of method calls or attributes exceeds the threshold.
-
-        Args:
-            node (ast.Attribute | ast.expr): The current AST node to check.
-            chain_length (int): The current length of the method/attribute chain.
-        """
-        # If the chain length exceeds the threshold, add it to results
-        if chain_length >= threshold:
-            # Create the message for the convention
-            message = f"Method chain too long ({chain_length}/{threshold})"
-
-            # Create a Smell object with the detected issue details
-            smell = LMCSmell(
-                path=str(file_path),
-                module=file_path.stem,
-                obj=None,
-                type="convention",
-                symbol="long-message-chain",
-                message=message,
-                messageId=CustomSmell.LONG_MESSAGE_CHAIN.value,
-                confidence="UNDEFINED",
-                occurences=[
-                    Occurence(
-                        line=node.lineno,
-                        endLine=node.end_lineno,
-                        column=node.col_offset,
-                        endColumn=node.end_col_offset,
-                    )
-                ],
-                additionalInfo=AdditionalInfo(),
-            )
-
-            # Ensure each line is only reported once
-            if node.lineno in used_lines:
-                return
-            used_lines.add(node.lineno)
-            results.append(smell)
-            return
-
-        if isinstance(node, ast.Call):
-            # If the node is a function call, increment the chain length
-            chain_length += 1
-            # Recursively check if there's a chain in the function being called
-            if isinstance(node.func, ast.Attribute):
-                check_chain(node.func, chain_length)
-
-        elif isinstance(node, ast.Attribute):
-            # Increment chain length for attribute access (part of the chain)
-            chain_length += 1
-            check_chain(node.value, chain_length)
-
     # Walk through the AST to find method calls and attribute chains
     for node in ast.walk(tree):
-        # We are only interested in method calls (attribute access)
+        # Check only method calls (Call node whose func is an Attribute)
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            # Call check_chain to detect long chains
-            check_chain(node.func)
+            length = compute_chain_length(node)
+            if length >= threshold:
+                line = node.lineno
+                # Make sure we haven’t already reported on this line
+                if line not in used_lines:
+                    used_lines.add(line)
+
+                    message = f"Method chain too long ({length}/{threshold})"
+                    # Create the smell object
+                    smell = LMCSmell(
+                        path=str(file_path),
+                        module=file_path.stem,
+                        obj=None,
+                        type="convention",
+                        symbol="long-message-chain",
+                        message=message,
+                        messageId=CustomSmell.LONG_MESSAGE_CHAIN.value,
+                        confidence="UNDEFINED",
+                        occurences=[
+                            Occurence(
+                                line=node.lineno,
+                                endLine=node.end_lineno,
+                                column=node.col_offset,
+                                endColumn=node.end_col_offset,
+                            )
+                        ],
+                        additionalInfo=AdditionalInfo(),
+                    )
+                    results.append(smell)
 
     # Return the list of detected Smell objects
     return results
