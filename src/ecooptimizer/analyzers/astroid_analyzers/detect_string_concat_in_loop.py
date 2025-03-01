@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from astroid import nodes, util, parse
+from astroid import nodes, util, parse, AttributeInferenceError
 
 from ...data_types.custom_fields import Occurence, SCLInfo
 from ...data_types.smell import SCLSmell
@@ -114,33 +114,12 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                 line.find(node.targets[0].as_string()) != -1
                 and re.search(rf"\b{re.escape(node.targets[0].as_string())}\b\s*=", line) is None
             ):
-
                 return False
         return True
 
-    def is_string_type(node: nodes.Assign):
-        inferred_types = node.targets[0].infer()
-
-        for inferred in inferred_types:
-            if inferred.repr_name() == "str":
-                return True
-            elif isinstance(inferred.repr_name(), util.UninferableBase) and has_str_format(
-                node.value
-            ):
-                return True
-            elif isinstance(inferred.repr_name(), util.UninferableBase) and has_str_interpolation(
-                node.value
-            ):
-                return True
-            elif isinstance(inferred.repr_name(), util.UninferableBase) and has_str_vars(
-                node.value
-            ):
-                return True
-
-        return False
-
     def is_concatenating_with_self(binop_node: nodes.BinOp, target: nodes.NodeNG):
         """Check if the BinOp node includes the target variable being added."""
+
         def is_same_variable(var1: nodes.NodeNG, var2: nodes.NodeNG):
             if isinstance(var1, nodes.Name) and isinstance(var2, nodes.AssignName):
                 return var1.name == var2.name
@@ -155,6 +134,88 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
 
         left, right = binop_node.left, binop_node.right
         return is_same_variable(left, target) or is_same_variable(right, target)
+
+    def is_string_type(node: nodes.Assign) -> bool:
+        target = node.targets[0]
+
+        # Check type hints first
+        if has_type_hints_str(node, target):
+            return True
+
+        # Infer types
+        for inferred in target.infer():
+            if inferred.repr_name() == "str":
+                return True
+            if isinstance(inferred, util.UninferableBase):
+                print(f"here: {node}")
+                if has_str_format(node.value) or has_str_interpolation(node.value):
+                    return True
+                for var in node.value.nodes_of_class(
+                    (nodes.Name, nodes.Attribute, nodes.Subscript)
+                ):
+                    if var.as_string() == target.as_string():
+                        for inferred_target in var.infer():
+                            if inferred_target.repr_name() == "str":
+                                return True
+
+                    print(f"Checking type hints for {var}")
+                    if has_type_hints_str(node, var):
+                        return True
+
+        return False
+
+    def has_type_hints_str(context: nodes.NodeNG, target: nodes.NodeNG) -> bool:
+        """Checks if a variable has an explicit type hint for `str`"""
+        parent = context.scope()
+
+        # Function argument type hints
+        if isinstance(parent, nodes.FunctionDef) and parent.args.args:
+            for arg, ann in zip(parent.args.args, parent.args.annotations):
+                print(f"arg: {arg}, target: {target}, ann: {ann}")
+                if arg.name == target.as_string() and ann and ann.as_string() == "str":
+                    return True
+
+            # Class attributes (annotations in class scope or __init__)
+            if "self." in target.as_string():
+                class_def = parent.frame()
+                if not isinstance(class_def, nodes.ClassDef):
+                    class_def = next(
+                        (
+                            ancestor
+                            for ancestor in context.node_ancestors()
+                            if isinstance(ancestor, nodes.ClassDef)
+                        ),
+                        None,
+                    )
+
+                if class_def:
+                    attr_name = target.as_string().replace("self.", "")
+                    try:
+                        for attr in class_def.instance_attr(attr_name):
+                            if (
+                                isinstance(attr, nodes.AnnAssign)
+                                and attr.annotation.as_string() == "str"
+                            ):
+                                return True
+                            if any(inf.repr_name() == "str" for inf in attr.infer()):
+                                return True
+                    except AttributeInferenceError:
+                        pass
+
+        # Global/scope variable annotations before assignment
+        for child in parent.nodes_of_class((nodes.AnnAssign, nodes.Assign)):
+            if child == context:
+                break
+            if (
+                isinstance(child, nodes.AnnAssign)
+                and child.target.as_string() == target.as_string()
+            ):
+                return child.annotation.as_string() == "str"
+            print("checking var types")
+            if isinstance(child, nodes.Assign) and is_string_type(child):
+                return True
+
+        return False
 
     def has_str_format(node: nodes.NodeNG):
         if isinstance(node, nodes.BinOp) and node.op == "+":
@@ -171,32 +232,7 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
             match = re.search("%[a-z]", str_repr)
             if match:
                 return True
-
         return False
-
-    def has_str_vars(node: nodes.NodeNG):
-        binops = find_all_binops(node)
-        for binop in binops:
-            inferred_types = binop.left.infer()
-
-            for inferred in inferred_types:
-
-                if inferred.repr_name() == "str":
-                    return True
-
-        return False
-
-    def find_all_binops(node: nodes.NodeNG):
-        binops: list[nodes.BinOp] = []
-        for child in node.get_children():
-            if isinstance(child, nodes.BinOp):
-                binops.append(child)
-                # Recursively search within the current BinOp
-                binops.extend(find_all_binops(child))
-            else:
-                # Continue searching in non-BinOp children
-                binops.extend(find_all_binops(child))
-        return binops
 
     def transform_augassign_to_assign(code_file: str):
         """

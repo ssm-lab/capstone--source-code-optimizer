@@ -7,8 +7,55 @@ from ...data_types.smell import LLESmell
 from ...data_types.custom_fields import AdditionalInfo, Occurence
 
 
+def count_expressions(node: ast.expr) -> int:
+    """
+    Recursively counts the number of sub-expressions inside a lambda body.
+    Ensures `sum()` only operates on integers.
+    """
+    if isinstance(node, (ast.BinOp, ast.BoolOp, ast.Compare, ast.Call, ast.IfExp)):
+        return 1 + sum(
+            count_expressions(child)
+            for child in ast.iter_child_nodes(node)
+            if isinstance(child, ast.expr)
+        )
+
+    # Ensure all recursive calls return an integer
+    return sum(
+        (
+            count_expressions(child)
+            for child in ast.iter_child_nodes(node)
+            if isinstance(child, ast.expr)
+        ),
+        start=0,
+    )
+
+
+# Helper function to get the string representation of the lambda expression
+def get_lambda_code(lambda_node: ast.Lambda) -> str:
+    """
+    Constructs the string representation of a lambda expression.
+
+    Args:
+        lambda_node (ast.Lambda): The lambda node to reconstruct.
+
+    Returns:
+        str: The string representation of the lambda expression.
+    """
+    # Reconstruct the lambda arguments and body as a string
+    args = ", ".join(arg.arg for arg in lambda_node.args.args)
+
+    # Convert the body to a string by using ast's built-in functionality
+    body = ast.unparse(lambda_node.body)
+
+    # Combine to form the lambda expression
+    return f"lambda {args}: {body}"
+
+
 def detect_long_lambda_expression(
-    file_path: Path, tree: ast.AST, threshold_length: int = 100, threshold_count: int = 3
+    file_path: Path,
+    tree: ast.AST,
+    threshold_length: int = 100,
+    threshold_count: int = 5,
 ) -> list[LLESmell]:
     """
     Detects lambda functions that are too long, either by the number of expressions or the total length in characters.
@@ -36,10 +83,7 @@ def detect_long_lambda_expression(
             node (ast.Lambda): The lambda node to analyze.
         """
         # Count the number of expressions in the lambda body
-        if isinstance(node.body, list):
-            lambda_length = len(node.body)
-        else:
-            lambda_length = 1  # Single expression if it's not a list
+        lambda_length = count_expressions(node.body)
 
         # Check if the lambda expression exceeds the threshold based on the number of expressions
         if lambda_length >= threshold_count:
@@ -73,9 +117,7 @@ def detect_long_lambda_expression(
         # Convert the lambda function to a string and check its total length in characters
         lambda_code = get_lambda_code(node)
         if len(lambda_code) > threshold_length:
-            message = (
-                f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
-            )
+            message = f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
             smell = LLESmell(
                 path=str(file_path),
                 module=file_path.stem,
@@ -100,26 +142,6 @@ def detect_long_lambda_expression(
                 return
             used_lines.add(node.lineno)
             results.append(smell)
-
-    # Helper function to get the string representation of the lambda expression
-    def get_lambda_code(lambda_node: ast.Lambda) -> str:
-        """
-        Constructs the string representation of a lambda expression.
-
-        Args:
-            lambda_node (ast.Lambda): The lambda node to reconstruct.
-
-        Returns:
-            str: The string representation of the lambda expression.
-        """
-        # Reconstruct the lambda arguments and body as a string
-        args = ", ".join(arg.arg for arg in lambda_node.args.args)
-
-        # Convert the body to a string by using ast's built-in functionality
-        body = ast.unparse(lambda_node.body)
-
-        # Combine to form the lambda expression
-        return f"lambda {args}: {body}"
 
     # Walk through the AST to find lambda expressions
     for node in ast.walk(tree):
