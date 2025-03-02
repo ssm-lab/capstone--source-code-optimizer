@@ -54,18 +54,21 @@
    - ☐ Somewhat  
    - ☐ No  
 
+9. **Did you fins any elements of the extension to be culturally insensitive?** (Open-ended)
+    ___________________________________________________________
+
 ## **Overall Experience**
 
-9. **What was the most frustrating part of using the extension?** (Open-ended)
+10. **What was the most frustrating part of using the extension?** (Open-ended)
     ___________________________________________________________  
 
-10. **What did you find most useful about the extension?** (Open-ended)
+11. **What did you find most useful about the extension?** (Open-ended)
     ___________________________________________________________  
 
-11. **Do you have any suggestions for improving the extension?**
+12. **Do you have any suggestions for improving the extension?**
     ___________________________________________________________  
 
-12. **Would you use this extension in your daily workflow?**
+13. **Would you use this extension in your daily workflow?**
 
 - ☐ Yes  
 - ☐ Maybe  
