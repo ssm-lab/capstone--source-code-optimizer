@@ -40,7 +40,9 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
         indexes_to_remove.update(stack)
 
         # Build the result string without unmatched brackets
-        result = "".join(char for i, char in enumerate(input_string) if i not in indexes_to_remove)
+        result = "".join(
+            char for i, char in enumerate(input_string) if i not in indexes_to_remove
+        )
 
         return result
 
@@ -58,11 +60,11 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
         """
         # Extract details from smell
         line_number = smell.occurences[0].line
-        temp_filename = output_file
+        # temp_filename = output_file
 
-        # Read the original file
-        with target_file.open() as f:
-            lines = f.readlines()
+        # Read file content using read_text
+        content = target_file.read_text(encoding="utf-8")
+        lines = content.splitlines(keepends=True)  # Preserve line endings
 
         # Identify the line with the long method chain
         line_with_chain = lines[line_number - 1].rstrip()
@@ -73,76 +75,107 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
         # Check if the line contains an f-string
         f_string_pattern = r"f\".*?\""
         if re.search(f_string_pattern, line_with_chain):
-            # Extract the f-string part and its methods
-            f_string_content = re.search(f_string_pattern, line_with_chain).group()  # type: ignore
-            remaining_chain = line_with_chain.split(f_string_content, 1)[-1]
+            # Determine if original was print or assignment
+            is_print = line_with_chain.startswith("print(")
+            original_var = (
+                None if is_print else line_with_chain.split("=", 1)[0].strip()
+            )
 
-            # Start refactoring
+            # Extract f-string and methods
+            f_string_content = re.search(f_string_pattern, line_with_chain).group()  # type: ignore
+            remaining_chain = line_with_chain.split(f_string_content, 1)[-1].lstrip(".")
+
+            method_calls = re.split(r"\.(?![^()]*\))", remaining_chain.strip())
             refactored_lines = []
 
-            if remaining_chain.strip():
-                # Split the chain into method calls
-                method_calls = re.split(r"\.(?![^()]*\))", remaining_chain.strip())
+            # Initial f-string assignment
+            refactored_lines.append(
+                f"{leading_whitespace}intermediate_0 = {f_string_content}"
+            )
 
-                # Handle the first method call directly on the f-string or as intermediate_0
-                refactored_lines.append(f"{leading_whitespace}intermediate_0 = {f_string_content}")
-                counter = 0
-                # Handle remaining method calls
-                for i, method in enumerate(method_calls, start=1):
-                    if method.strip():
-                        if i < len(method_calls):
-                            refactored_lines.append(
-                                f"{leading_whitespace}intermediate_{counter+1} = intermediate_{counter}.{method.strip()}"
-                            )
-                            counter += 1
-                        else:
-                            # Final result
-                            refactored_lines.append(
-                                f"{leading_whitespace}result = intermediate_{counter}.{LongMessageChainRefactorer.remove_unmatched_brackets(method.strip())}"
-                            )
-                            counter += 1
-            else:
-                refactored_lines.append(
-                    f"{leading_whitespace}result = {LongMessageChainRefactorer.remove_unmatched_brackets(f_string_content)}"
-                )
+            # Process method calls
+            for i, method in enumerate(method_calls, start=1):
+                method = method.strip()
+                if not method:
+                    continue
 
-            # Add final print statement or function call
-            refactored_lines.append(f"{leading_whitespace}print(result)\n")
-
-            # Replace the original line with the refactored lines
-            lines[line_number - 1] = "\n".join(refactored_lines) + "\n"
-        else:
-            # Handle non-f-string long method chains (existing logic)
-            chain_content = re.sub(r"^\s*print\((.*)\)\s*$", r"\1", line_with_chain)
-            method_calls = re.split(r"\.(?![^()]*\))", chain_content)
-
-            if len(method_calls) > 2:
-                refactored_lines = []
-                base_var = method_calls[0].strip()
-                refactored_lines.append(f"{leading_whitespace}intermediate_0 = {base_var}")
-
-                for i, method in enumerate(method_calls[1:], start=1):
-                    if i < len(method_calls) - 1:
+                if i < len(method_calls):
+                    refactored_lines.append(
+                        f"{leading_whitespace}intermediate_{i} = "
+                        f"intermediate_{i-1}.{method}"
+                    )
+                else:
+                    # Final assignment using original variable name
+                    if is_print:
                         refactored_lines.append(
-                            f"{leading_whitespace}intermediate_{i} = intermediate_{i-1}.{method.strip()}"
+                            f"{leading_whitespace}print(intermediate_{i-1}.{method})"
                         )
                     else:
                         refactored_lines.append(
-                            f"{leading_whitespace}result = intermediate_{i-1}.{method.strip()}"
+                            f"{leading_whitespace}{original_var} = "
+                            f"intermediate_{i-1}.{method}"
                         )
 
-                refactored_lines.append(f"{leading_whitespace}print(result)\n")
+            lines[line_number - 1] = "\n".join(refactored_lines) + "\n"
+
+        else:
+            # Handle non-f-string chains
+            original_has_print = "print(" in line_with_chain
+            chain_content = re.sub(r"^\s*print\((.*)\)\s*$", r"\1", line_with_chain)
+
+            # Extract RHS if assignment exists
+            if "=" in chain_content:
+                chain_content = chain_content.split("=", 1)[1].strip()
+
+            # Split chain after closing parentheses
+            method_calls = re.split(r"(?<=\))\.", chain_content)
+
+            if len(method_calls) > 1:
+                refactored_lines = []
+                base_var = method_calls[0].strip()
+                refactored_lines.append(
+                    f"{leading_whitespace}intermediate_0 = {base_var}"
+                )
+
+                # Process subsequent method calls
+                for i, method in enumerate(method_calls[1:], start=1):
+                    method = method.strip().lstrip(".")
+                    if not method:
+                        continue
+
+                    if i < len(method_calls) - 1:
+                        refactored_lines.append(
+                            f"{leading_whitespace}intermediate_{i} = "
+                            f"intermediate_{i-1}.{method}"
+                        )
+                    else:
+                        # Preserve original assignment/print structure
+                        if original_has_print:
+                            refactored_lines.append(
+                                f"{leading_whitespace}print(intermediate_{i-1}.{method})"
+                            )
+                        else:
+                            original_assignment = line_with_chain.split("=", 1)[
+                                0
+                            ].strip()
+                            refactored_lines.append(
+                                f"{leading_whitespace}{original_assignment} = "
+                                f"intermediate_{i-1}.{method}"
+                            )
+
                 lines[line_number - 1] = "\n".join(refactored_lines) + "\n"
 
-        # Write the refactored file
-        with temp_filename.open("w") as f:
-            f.writelines(lines)
+        # # Write the refactored file
+        # with temp_filename.open("w") as f:
+        #     f.writelines(lines)
 
+        # Join lines and write using write_text
+        new_content = "".join(lines)
+
+        # Write to appropriate file based on overwrite flag
         if overwrite:
-            with target_file.open("w") as f:
-                f.writelines(lines)
+            target_file.write_text(new_content, encoding="utf-8")
         else:
-            with output_file.open("w") as f:
-                f.writelines(lines)
+            output_file.write_text(new_content, encoding="utf-8")
 
         self.modified_files.append(target_file)
