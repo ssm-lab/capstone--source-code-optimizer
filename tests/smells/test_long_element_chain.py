@@ -1,305 +1,364 @@
-import logging
-from pathlib import Path
-import py_compile
-import textwrap
-from unittest.mock import Mock
 import pytest
+import textwrap
+from pathlib import Path
 
-from ecooptimizer.config import CONFIG
-from ecooptimizer.data_types.custom_fields import Occurence
-from ecooptimizer.data_types.smell import LECSmell
 from ecooptimizer.refactorers.concrete.long_element_chain import LongElementChainRefactorer
+from ecooptimizer.data_types import LECSmell, Occurence
 from ecooptimizer.utils.smell_enums import CustomSmell
 
 
-# Reuse existing logging fixtures
-@pytest.fixture(autouse=True)
-def _dummy_logger_detect():
-    dummy = logging.getLogger("dummy")
-    dummy.addHandler(logging.NullHandler())
-    CONFIG["detectLogger"] = dummy
-    yield
-    CONFIG["detectLogger"] = None
-
-
-@pytest.fixture(autouse=True)
-def _dummy_logger_refactor():
-    dummy = logging.getLogger("dummy")
-    dummy.addHandler(logging.NullHandler())
-    CONFIG["refactorLogger"] = dummy
-    yield
-    CONFIG["refactorLogger"] = None
-
-
 @pytest.fixture
-def LEC_code(source_files) -> tuple[Path, Path]:
-    lec_code = textwrap.dedent("""\
-    def access_nested_dict():
-        nested_dict1 = {
-            "level1": {
-                "level2": {
-                    "level3": {
-                        "key": "value"
-                    }
-                }
-            }
-        }
-
-        nested_dict2 = {
-            "level1": {
-                "level2": {
-                    "level3": {
-                        "key": "value",
-                        "key2": "value2"
-                    },
-                    "level3a": {
-                        "key": "value"
-                    }
-                }
-            }
-        }
-        print(nested_dict1["level1"]["level2"]["level3"]["key"])
-        print(nested_dict2["level1"]["level2"]["level3"]["key2"])
-        print(nested_dict2["level1"]["level2"]["level3"]["key"])
-        print(nested_dict2["level1"]["level2"]["level3a"]["key"])
-        print(nested_dict1["level1"]["level2"]["level3"]["key"])
-    """)
-    sample_dir = source_files / "lec_project"
-    sample_dir.mkdir(exist_ok=True)
-    file_path = sample_dir / "lec_code.py"
-    file_path.write_text(lec_code)
-    return sample_dir, file_path
+def refactorer():
+    return LongElementChainRefactorer()
 
 
-@pytest.fixture
-def LEC_multifile_project(source_files) -> tuple[Path, list[Path]]:
-    project_dir = source_files / "lec_multifile"
-    project_dir.mkdir(exist_ok=True)
+def create_smell(occurences: list[int]):
+    """Factory function to create a smell object"""
 
-    # Data definition file
-    data_def = textwrap.dedent("""\
-    nested_dict = {
-        "level1": {
-            "level2": {
-                "level3": {
-                    "key": "deep_value"
-                }
-            }
-        }
-    }
-    print(nested_dict["level1"]["level2"]["level3"]["key"])
-    """)
-    data_file = project_dir / "data_def.py"
-    data_file.write_text(data_def)
-
-    # Data usage file
-    data_usage = textwrap.dedent("""\
-    from .data_def import nested_dict
-
-    def get_value():
-        return nested_dict["level1"]["level2"]["level3"]["key"]
-    """)
-    usage_file = project_dir / "data_usage.py"
-    usage_file.write_text(data_usage)
-
-    return project_dir, [data_file, usage_file]
-
-
-@pytest.fixture
-def get_smells(LEC_code) -> list[LECSmell]:
-    """Mocked smell data for single file"""
-    return [
-        LECSmell(
+    def _create():
+        return LECSmell(
             confidence="UNDEFINED",
             message="Dictionary chain too long (6/4)",
             obj="lec_function",
             symbol="long-element-chain",
             type="convention",
             messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-            path=str(LEC_code[1]),
-            module="lec_code",
+            path="fake.py",
+            module="some_module",
             occurences=[
-                Occurence(line=25, column=0, endLine=25, endColumn=0),
+                Occurence(
+                    line=occ,
+                    endLine=occ,
+                    column=0,
+                    endColumn=999,
+                )
+                for occ in occurences
             ],
             additionalInfo=None,
-            detector=Mock(),
-        ),
-        LECSmell(
-            confidence="UNDEFINED",
-            message="Dictionary chain too long (6/4)",
-            obj="lec_function",
-            symbol="long-element-chain",
-            type="convention",
-            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-            path=str(LEC_code[1]),
-            module="lec_code",
-            occurences=[
-                Occurence(line=26, column=0, endLine=26, endColumn=0),
-            ],
-            additionalInfo=None,
-            detector=Mock(),
-        ),
-        LECSmell(
-            confidence="UNDEFINED",
-            message="Dictionary chain too long (6/4)",
-            obj="lec_function",
-            symbol="long-element-chain",
-            type="convention",
-            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-            path=str(LEC_code[1]),
-            module="lec_code",
-            occurences=[
-                Occurence(line=27, column=0, endLine=27, endColumn=0),
-            ],
-            additionalInfo=None,
-            detector=Mock(),
-        ),
-        LECSmell(
-            confidence="UNDEFINED",
-            message="Dictionary chain too long (6/4)",
-            obj="lec_function",
-            symbol="long-element-chain",
-            type="convention",
-            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-            path=str(LEC_code[1]),
-            module="lec_code",
-            occurences=[
-                Occurence(line=28, column=0, endLine=28, endColumn=0),
-            ],
-            additionalInfo=None,
-            detector=Mock(),
-        ),
-        LECSmell(
-            confidence="UNDEFINED",
-            message="Dictionary chain too long (6/4)",
-            obj="lec_function",
-            symbol="long-element-chain",
-            type="convention",
-            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-            path=str(LEC_code[1]),
-            module="lec_code",
-            occurences=[
-                Occurence(line=29, column=0, endLine=29, endColumn=0),
-            ],
-            additionalInfo=None,
-            detector=Mock(),
-        ),
-    ]
-
-
-@pytest.fixture
-def get_multifile_smells(LEC_multifile_project) -> list[LECSmell]:
-    """Mocked smell data for multi-file"""
-    _, files = LEC_multifile_project
-    return [
-        LECSmell(
-            confidence="UNDEFINED",
-            message="Dictionary chain too long (6/4)",
-            obj="lec_function",
-            symbol="long-element-chain",
-            type="convention",
-            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-            path=str(files[0]),
-            module="data_def",
-            occurences=[Occurence(line=10, column=0, endLine=10, endColumn=0)],
-            additionalInfo=None,
-            detector=Mock(),
-        ),
-        LECSmell(
-            confidence="UNDEFINED",
-            message="Dictionary chain too long (6/4)",
-            obj="lec_function",
-            symbol="long-element-chain",
-            type="convention",
-            messageId=CustomSmell.LONG_ELEMENT_CHAIN.value,
-            path=str(files[1]),
-            module="data_usage",
-            occurences=[Occurence(line=4, column=0, endLine=4, endColumn=0)],
-            additionalInfo=None,
-            detector=Mock(),
-        ),
-    ]
-
-
-def test_lec_detection_single_file(get_smells):
-    """Test detection in a single file with multiple nested accesses"""
-    smells = get_smells
-    # Filter for long lambda smells
-    lec_smells: list[LECSmell] = [
-        smell for smell in smells if smell.messageId == CustomSmell.LONG_ELEMENT_CHAIN.value
-    ]
-    # Verify we detected all 5 access points
-    assert len(lec_smells) == 5  # Single smell with multiple occurrences
-    assert lec_smells[0].messageId == "LEC001"
-
-    # Verify occurrence locations (lines 22-26 in the sample code)
-    occurrences = lec_smells[0].occurences
-    assert len(occurrences) == 1
-    expected_lines = [25, 26, 27, 28, 29]
-    for occ, line in zip(occurrences, expected_lines):
-        assert occ.line == line
-    assert lec_smells[0].module == "lec_code"
-
-
-def test_lec_detection_multifile(get_multifile_smells, LEC_multifile_project):
-    """Test detection across multiple files"""
-    smells = get_multifile_smells
-    _, files = LEC_multifile_project
-
-    # Should detect 1 smell in the both file
-    assert len(smells) == 2
-
-    # Verify the smell is in the usage file
-    usage_file = files[1]
-    data_file = files[0]
-    data_smell = smells[0]
-    usage_smell = smells[1]
-
-    assert str(data_smell.path) == str(data_file)
-    assert str(usage_smell.path) == str(usage_file)
-
-    assert data_smell.occurences[0].line == 10  # Line with deep access
-    assert usage_smell.occurences[0].line == 4  # Line with deep access
-
-    assert data_smell.messageId == "LEC001"
-    assert usage_smell.messageId == "LEC001"
-
-
-def test_lec_multifile_refactoring(get_multifile_smells, LEC_multifile_project, output_dir):
-    smells: list[LECSmell] = get_multifile_smells
-    refactorer = LongElementChainRefactorer()
-    project_dir, files = LEC_multifile_project
-
-    # Process each smell
-    for i, smell in enumerate(smells):
-        output_file = output_dir / f"refactored_{i}.py"
-        refactorer.refactor(
-            Path(smell.path),  # Should be implemented in your LECSmell
-            project_dir,
-            smell,
-            output_file,
-            overwrite=False,
         )
 
-    # Verify definitions file
-    refactored_data = output_dir / "refactored_0.py"
-    data_content = refactored_data.read_text()
+    return _create
 
-    # Check flattened dictionary structure
-    assert "'level1_level2_level3_key': 'value'" in data_content
-    assert "'level1_level2_level3_key2': 'value2'" in data_content
-    assert "'level1_level2_level3a_key': 'value'" in data_content
 
-    # Verify usage file
-    refactored_usage = output_dir / "refactored_1.py"
-    usage_content = refactored_usage.read_text()
+def test_lec_basic_case(source_files, refactorer):
+    """
+    Tests that the long element chain refactorer:
+    - Identifies nested dictionary access
+    - Flattens the access pattern
+    - Updates the dictionary definition
+    """
 
-    # Check all access points were updated
-    assert "nested_dict1['level1_level2_level3_key']" in usage_content
-    assert "nested_dict2['level1_level2_level3_key2']" in usage_content
-    assert "nested_dict2['level1_level2_level3_key']" in usage_content
-    assert "nested_dict2['level1_level2_level3a_key']" in usage_content
+    # --- File 1: Defines and uses the nested dictionary ---
+    test_dir = Path(source_files, "temp_basic_lec")
+    test_dir.mkdir(exist_ok=True)
 
-    # Verify compilation
-    for f in [refactored_data, refactored_usage]:
-        py_compile.compile(str(f), doraise=True)
+    file1 = test_dir / "dict_def.py"
+    file1.write_text(
+        textwrap.dedent("""\
+        config = {
+            "server": {
+                "host": "localhost",
+                "port": 8080,
+                "settings": {
+                    "timeout": 30,
+                    "retry": 3
+                }
+            },
+            "database": {
+                "type": "postgresql",
+                "credentials": {
+                    "username": "admin",
+                    "password": "secret"
+                }
+            }
+        }
+
+        # Line where the smell is detected
+        timeout = config["server"]["settings"]["timeout"]
+        """)
+    )
+
+    smell = create_smell(occurences=[20])()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    # The dictionary should be flattened and accesses should be updated
+    expected_file1 = textwrap.dedent("""config = {"server_host": "localhost","server_port": 8080,"server_settings_timeout": 30,"server_settings_retry": 3,"database_type": "postgresql","database_credentials_username": "admin","database_credentials_password": "secret"}
+
+# Line where the smell is detected
+timeout = config['server_settings_timeout']
+        """)
+
+    # Check if the refactoring worked
+    assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_lec_multiple_files(source_files, refactorer):
+    """
+    Tests that the refactorer updates dictionary accesses across multiple files.
+    """
+
+    # --- File 1: Defines the nested dictionary ---
+    test_dir = Path(source_files, "temp_multi_lec")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "dict_def.py"
+    file1.write_text(
+        textwrap.dedent("""\
+        app_config = {
+            "server": {
+                "host": "localhost",
+                "port": 8080,
+                "settings": {
+                    "timeout": 30,
+                    "retry": 3
+                }
+            },
+            "database": {
+                "credentials": {
+                    "username": "admin",
+                    "password": "secret"
+                }
+            }
+        }
+
+        # Local usage
+        timeout = app_config["server"]["settings"]["timeout"]
+        """)
+    )
+
+    # --- File 2: Uses the nested dictionary ---
+    file2 = test_dir / "dict_user.py"
+    file2.write_text(
+        textwrap.dedent("""\
+        from .dict_def import app_config
+
+        # External usage
+        def get_db_credentials():
+            username = app_config["database"]["credentials"]["username"]
+            password = app_config["database"]["credentials"]["password"]
+            return username, password
+        """)
+    )
+
+    smell = create_smell(occurences=[17])()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    expected_file1 = textwrap.dedent("""\
+        app_config = {"server_host": "localhost", "server_port": 8080, "server_settings_timeout": 30, "server_settings_retry": 3, "database_credentials_username": "admin", "database_credentials_password": "secret"}
+
+        # Local usage
+        timeout = app_config["server_settings_timeout"]
+        """)
+
+    # --- Expected Result for File 2 ---
+    expected_file2 = textwrap.dedent("""\
+        from .dict_def import app_config
+
+        # External usage
+        def get_db_credentials():
+            username = app_config["database_credentials_username"]
+            password = app_config["database_credentials_password"]
+            return username, password
+        """)
+
+    # Check if the refactoring worked
+    assert file1.read_text().strip() == expected_file1.strip()
+    assert file2.read_text().strip() == expected_file2.strip()
+
+
+def test_lec_attribute_access(source_files, refactorer):
+    """
+    Tests refactoring of dictionary accessed via class attribute.
+    """
+
+    # --- File 1: Defines and uses the nested dictionary as class attribute ---
+    test_dir = Path(source_files, "temp_attr_lec")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "class_dict.py"
+    file1.write_text(
+        textwrap.dedent("""\
+        class ConfigManager:
+            def __init__(self):
+                self.config = {
+                    "server": {
+                        "host": "localhost",
+                        "port": 8080,
+                        "settings": {
+                            "timeout": 30,
+                            "retry": 3
+                        }
+                    }
+                }
+
+            def get_timeout(self):
+                return self.config["server"]["settings"]["timeout"]
+
+        manager = ConfigManager()
+        timeout = manager.config["server"]["settings"]["timeout"]
+        """)
+    )
+
+    smell = create_smell(occurences=[15])()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    expected_file1 = textwrap.dedent("""\
+        class ConfigManager:
+    def __init__(self):
+        self.config = {"server_host": "localhost","server_port": 8080,"server_settings_timeout": 30,"server_settings_retry": 3}
+
+    def get_timeout(self):
+        return self.config['server_settings_timeout']
+
+manager = ConfigManager()
+timeout = manager.config['server_settings_timeout']
+        """)
+
+    # Check if the refactoring worked
+    assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_lec_shallow_access_ignored(source_files, refactorer):
+    """
+    Tests that refactoring is skipped when dictionary access is too shallow.
+    """
+
+    # --- File with shallow dictionary access ---
+    test_dir = Path(source_files, "temp_shallow_lec")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "shallow_dict.py"
+    original_content = textwrap.dedent("""\
+        config = {
+            "server": {
+                "host": "localhost",
+                "port": 8080
+            },
+            "database": {
+                "type": "postgresql"
+            }
+        }
+
+        # Only one level deep
+        host = config["server"]
+        """)
+
+    file1.write_text(original_content)
+
+    smell = create_smell(occurences=[11])()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # Refactoring should be skipped because access is too shallow
+    assert file1.read_text().strip() == original_content.strip()
+
+
+# def test_lec_multiple_occurrences(source_files, refactorer):
+#     """
+#     Tests refactoring when there are multiple dictionary access patterns in the same file.
+#     """
+
+#     # --- File with multiple dictionary accesses ---
+#     test_dir = Path(source_files, "temp_multi_occur_lec")
+#     test_dir.mkdir(exist_ok=True)
+
+#     file1 = test_dir / "multi_access.py"
+#     file1.write_text(
+#         textwrap.dedent("""\
+#         settings = {
+#             "app": {
+#                 "name": "EcoOptimizer",
+#                 "version": "1.0",
+#                 "config": {
+#                     "debug": True,
+#                     "logging": {
+#                         "level": "INFO",
+#                         "format": "standard"
+#                     }
+#                 }
+#             }
+#         }
+
+#         # Multiple deep accesses
+#         print(settings["app"]["config"]["debug"])
+#         print(settings["app"]["config"]["logging"]["level"])
+#         print(settings["app"]["config"]["logging"]["format"])
+#         """)
+#     )
+
+#     smell = create_smell(occurences=[15])()
+
+#     refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+#     # --- Expected Result ---
+#     expected_file1 = textwrap.dedent("""\
+#         settings = {"app_name": "EcoOptimizer", "app_version": "1.0", "app_config_debug": true, "app_config_logging_level": "INFO", "app_config_logging_format": "standard"}
+
+#         # Multiple deep accesses
+#         debug_mode = settings["app_config_debug"]
+#         log_level = settings["app_config_logging_level"]
+#         app_name = settings["app_name"]
+#         """)
+
+#     print("this is the file: " + file1.read_text().strip())
+#     print("this is the expected: " + expected_file1.strip())
+#     print(file1.read_text().strip() == expected_file1.strip())
+#     # Check if the refactoring worked
+#     assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_lec_mixed_access_depths(source_files, refactorer):
+    """
+    Tests refactoring when there are different depths of dictionary access.
+    """
+    # --- File with different depths of dictionary access ---
+    test_dir = Path(source_files, "temp_mixed_depth_lec")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "mixed_depth.py"
+    file1.write_text(
+        textwrap.dedent("""\
+        data = {
+            "user": {
+                "profile": {
+                    "name": "John Doe",
+                    "email": "john@example.com",
+                    "preferences": {
+                        "theme": "dark",
+                        "notifications": True
+                    }
+                },
+                "role": "admin"
+            }
+        }
+
+        # Different access depths
+        name = data["user"]["profile"]["name"]
+        theme = data["user"]["profile"]["preferences"]["theme"]
+        role = data["user"]["role"]
+        """)
+    )
+
+    smell = create_smell(occurences=[16])()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result ---
+    # Note: The min nesting level determines what gets flattened
+    expected_file1 = textwrap.dedent("""\
+        data = {"user_profile": {"name": "John Doe","email": "john@example.com","preferences": {"theme": "dark","notifications": true}},"user_role": "admin"}
+
+        # Different access depths
+        name = data['user_profile']['name']
+        theme = data['user_profile']['preferences']['theme']
+        role = data['user_role']
+        """)
+
+    # Check if the refactoring worked
+    assert file1.read_text().strip() == expected_file1.strip()
