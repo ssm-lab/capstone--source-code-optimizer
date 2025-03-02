@@ -124,7 +124,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
                         dict_name, full_access, nesting_level, line_number, col_offset, path, node
                     )
                     self.access_patterns.add(access)
-
+                    print(self.access_patterns)
                     self.min_value = min(self.min_value, nesting_level)
 
     def extract_full_dict_access(self, node: ast.Subscript):
@@ -250,7 +250,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
         line_modifications = self._collect_line_modifications(file_path)
 
         refactored_lines = self._apply_modifications(lines, line_modifications)
-        self._update_dict_assignment(refactored_lines)
+        refactored_lines = self._update_dict_assignment(refactored_lines)
 
         # Write changes back to file
         file_path.write_text("\n".join(refactored_lines))
@@ -288,6 +288,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
                 # Sort modifications by column offset (reverse to replace from right to left)
                 mods = sorted(modifications[line_num], key=lambda x: x[0], reverse=True)
                 modified_line = original_line
+                # print("this si the  og line: " + modified_line)
 
                 for col_offset, old_access, new_access in mods:
                     end_idx = col_offset + len(old_access)
@@ -295,6 +296,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
                     modified_line = (
                         modified_line[:col_offset] + new_access + modified_line[end_idx:]
                     )
+                    # print(modified_line)
 
                 refactored_lines.append(modified_line)
             else:
@@ -325,12 +327,17 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
                 # Update the line with the new flattened dictionary
                 refactored_lines[i] = f"{indent}{prefix} {dict_str}"
 
-                # Remove the following lines of the original nested dictionary
+                # Remove the following lines of the original nested dictionary,
+                # leaving only one empty line after them
                 j = i + 1
                 while j < len(refactored_lines) and (
                     refactored_lines[j].strip().startswith('"')
                     or refactored_lines[j].strip().startswith("}")
                 ):
-                    refactored_lines[j] = ""  # Mark for removal
+                    refactored_lines[j] = "Remove this line"  # Mark for removal
                     j += 1
                 break
+
+        refactored_lines = [line for line in refactored_lines if line.strip() != "Remove this line"]
+
+        return refactored_lines
