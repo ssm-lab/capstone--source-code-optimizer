@@ -53,12 +53,30 @@ Repository = "https://github.com/ssm-lab/capstone--source-code-optimizer"
 
 [tool.pytest.ini_options]
 norecursedirs = ["tests/temp*", "tests/input", "tests/_input_copies"]
-addopts = ["--basetemp=tests/temp_dir"]
+addopts = [
+  "--basetemp=tests/temp_dir",
+  "--cov=src/ecooptimizer",
+  "--cov-report=term-missing",
+  "--cov-fail-under=85",
+]
 testpaths = ["tests"]
 pythonpath = "src"
 
+[tool.coverage.run]
+omit = [
+  "*/__main__.py",
+  '*/__init__.py',
+  '*/utils/*',
+  "*/test_*.py",
+  "*/analyzers/*_analyzer.py",
+]
+
 [tool.ruff]
-extend-exclude = ["*tests/input/**/*.py", "tests/_input_copies"]
+extend-exclude = [
+  "*tests/input/**/*.py",
+  "tests/_input_copies",
+  "tests/temp_dir",
+]
 line-length = 100
 
 [tool.ruff.lint]
@@ -98,7 +116,7 @@ mypy-init-return = true
 
 [tool.pyright]
 include = ["src", "tests"]
-exclude = ["tests/input", "tests/_input*", "src/ecooptimizer/outputs"]
+exclude = ["tests/input", "tests/_input*", "tests/temp_dir"]
 
 disableBytesTypePromotions = true
 reportAttributeAccessIssue = false
