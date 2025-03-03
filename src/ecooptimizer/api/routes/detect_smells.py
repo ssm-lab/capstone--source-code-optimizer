@@ -33,14 +33,11 @@ def detect_smells(request: SmellRequest):
     try:
         file_path_obj = Path(request.file_path)
 
-        # Verify file existence
-        CONFIG["detectLogger"].info(f"🔍 Checking if file exists: {file_path_obj}")
         if not file_path_obj.exists():
             CONFIG["detectLogger"].error(f"❌ File does not exist: {file_path_obj}")
-            raise HTTPException(status_code=404, detail=f"File not found: {file_path_obj}")
+            raise FileNotFoundError(f"File not found: {file_path_obj}")
 
-        # Log enabled smells
-        CONFIG["detectLogger"].info(
+        CONFIG["detectLogger"].debug(
             f"🔎 Enabled smells: {', '.join(request.enabled_smells) if request.enabled_smells else 'None'}"
         )
 
@@ -51,13 +48,17 @@ def detect_smells(request: SmellRequest):
         execution_time = round(time.time() - start_time, 2)
         CONFIG["detectLogger"].info(f"📊 Execution Time: {execution_time} seconds")
 
-        # Log results
         CONFIG["detectLogger"].info(
             f"🏁 Analysis completed for {file_path_obj}. {len(smells_data)} smells found."
         )
         CONFIG["detectLogger"].info(f"{'=' * 100}\n")
 
         return smells_data
+
+    except FileNotFoundError as e:
+        CONFIG["detectLogger"].error(f"❌ File not found: {e}")
+        CONFIG["detectLogger"].info(f"{'=' * 100}\n")
+        raise HTTPException(status_code=404, detail=str(e)) from e
 
     except Exception as e:
         CONFIG["detectLogger"].error(f"❌ Error during smell detection: {e!s}")

@@ -1,29 +1,15 @@
 import logging
 import sys
 import uvicorn
-from fastapi import FastAPI
+
+from .app import app
 
 from ..config import CONFIG
-
-from .routes import RefactorRouter, DetectRouter, LogRouter
 
 
 class HealthCheckFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         return "/health" not in record.getMessage()
-
-
-app = FastAPI(title="Ecooptimizer")
-
-# Include API routes
-app.include_router(RefactorRouter)
-app.include_router(DetectRouter)
-app.include_router(LogRouter)
-
-
-@app.get("/health")
-async def ping():
-    return {"status": "ok"}
 
 
 # Apply the filter to Uvicorn's access logger
