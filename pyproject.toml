@@ -97,7 +97,6 @@ select = [
   "A",      # Flag common anti-patterns or bad practices.
   "RUF",    # Ruff-specific rules.
   "ARG",    # Check for function argument issues.,
-  "FAST",   # FastApi checks
 ]
 
 # Avoid enforcing line-length violations (`E501`)

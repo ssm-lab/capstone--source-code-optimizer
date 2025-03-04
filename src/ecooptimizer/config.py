@@ -13,7 +13,7 @@ class Config(TypedDict):
 
 
 CONFIG: Config = {
-    "mode": "development",
+    "mode": "production",
     "loggingManager": None,
     "detectLogger": logging.getLogger("detect"),
     "refactorLogger": logging.getLogger("refactor"),

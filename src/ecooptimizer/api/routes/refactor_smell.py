@@ -18,6 +18,7 @@ from ...data_types.smell import Smell
 router = APIRouter()
 analyzer_controller = AnalyzerController()
 refactorer_controller = RefactorerController()
+energy_meter = CodeCarbonEnergyMeter()
 
 
 class ChangedFile(BaseModel):
@@ -66,6 +67,9 @@ def refactor(request: RefactorRqModel):
         CONFIG["refactorLogger"].info(f"{'=' * 100}\n")
         return RefactorResModel(updatedSmells=updated_smells)
 
+    except OSError as e:
+        CONFIG["refactorLogger"].error(f"❌ OS error: {e!s}")
+        raise HTTPException(status_code=404, detail=str(e)) from e
     except Exception as e:
         CONFIG["refactorLogger"].error(f"❌ Refactoring error: {e!s}")
         CONFIG["refactorLogger"].info(f"{'=' * 100}\n")
@@ -84,9 +88,7 @@ def perform_refactoring(source_dir: Path, smell: Smell):
         CONFIG["refactorLogger"].error(f"❌ Directory does not exist: {source_dir}")
         raise OSError(f"Directory {source_dir} does not exist.")
 
-    energy_meter = CodeCarbonEnergyMeter()
-    energy_meter.measure_energy(target_file)
-    initial_emissions = energy_meter.emissions
+    initial_emissions = measure_energy(target_file)
 
     if not initial_emissions:
         CONFIG["refactorLogger"].error("❌ Could not retrieve initial emissions.")
@@ -113,21 +115,24 @@ def perform_refactoring(source_dir: Path, smell: Smell):
         shutil.rmtree(temp_dir, onerror=remove_readonly)
         raise RefactoringError(str(target_file), str(e)) from e
 
-    energy_meter.measure_energy(target_file_copy)
-    final_emissions = energy_meter.emissions
+    final_emissions = measure_energy(target_file_copy)
 
     if not final_emissions:
         print("❌ Could not retrieve final emissions. Discarding refactoring.")
+
         CONFIG["refactorLogger"].error(
             "❌ Could not retrieve final emissions. Discarding refactoring."
         )
+
         shutil.rmtree(temp_dir, onerror=remove_readonly)
-        raise RuntimeError("Could not retrieve initial emissions.")
+        raise RuntimeError("Could not retrieve final emissions.")
 
     if CONFIG["mode"] == "production" and final_emissions >= initial_emissions:
         CONFIG["refactorLogger"].info(f"📊 Final emissions: {final_emissions} kg CO2")
         CONFIG["refactorLogger"].info("⚠️ No measured energy savings. Discarding refactoring.")
+
         print("❌ Could not retrieve final emissions. Discarding refactoring.")
+
         shutil.rmtree(temp_dir, onerror=remove_readonly)
         raise EnergySavingsError(str(target_file), "Energy was not saved after refactoring.")
 
@@ -157,6 +162,11 @@ def perform_refactoring(source_dir: Path, smell: Smell):
 
     updated_smells = analyzer_controller.run_analysis(target_file_copy)
     return refactor_data, updated_smells
+
+
+def measure_energy(file: Path):
+    energy_meter.measure_energy(file)
+    return energy_meter.emissions
 
 
 def clean_refactored_data(refactor_data: dict[str, Any]):
