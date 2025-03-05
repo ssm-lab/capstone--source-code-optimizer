@@ -1,75 +1,104 @@
-# **Post-Test Survey (Usability & Experience Feedback)**
+# **Post-Test Survey (Usability & Experience Feedback)**  
 
-*Objective: Gather user feedback on the usability, effectiveness, and clarity of the extension.*  
+*Objective: Gather user feedback on the usability, effectiveness, and clarity of the extension during the testing session.*  
 
-## **Usability & Functionality**
+---
 
-1. **How easy was it to use the extension overall?**  
-   - ☐ Very easy  
-   - ☐ Easy  
-   - ☐ Neutral  
-   - ☐ Difficult  
-   - ☐ Very difficult  
+## **Usability & Functionality**  
 
-2. **Did you understand how to detect code smells using the extension?**  
-   - ☐ Yes, it was clear  
-   - ☐ Somewhat clear, but I had minor difficulties  
-   - ☐ No, I found it confusing  
+1. **While using the extension to detect and refactor code smells, I felt...**  
+   *Mark only one oval per row.*  
 
-3. **How intuitive was the refactoring process?**  
-   - ☐ Very intuitive  
-   - ☐ Somewhat intuitive  
-   - ☐ Neutral  
-   - ☐ Somewhat confusing  
-   - ☐ Very confusing  
+   |                                                           | 1 (Strongly Disagree) | 2 (Disagree) | 3 (Neutral) | 4 (Agree) | 5 (Strongly Agree) |
+   | --------------------------------------------------------- | --------------------- | ------------ | ----------- | --------- | ------------------ |
+   | **Confident in my ability to use the tool effectively**   | ○                     | ○            | ○           | ○         | ○                  |
+   | **Confused about how to use certain features**            | ○                     | ○            | ○           | ○         | ○                  |
+   | **Guided towards a good solution by the extension**       | ○                     | ○            | ○           | ○         | ○                  |
+   | **Productive in completing the refactoring tasks**        | ○                     | ○            | ○           | ○         | ○                  |
+   | **Slowed down by the extension’s interface or processes** | ○                     | ○            | ○           | ○         | ○                  |
 
-4. **How easy was it to use the refactoring view (sidebar)?**  
-   - ☐ Very easy  
-   - ☐ Somewhat easy  
-   - ☐ Neutral  
-   - ☐ Somewhat difficult  
-   - ☐ Very difficult  
+---
 
-5. **Did you find the navigation between modified files intuitive?**  
-   - ☐ Yes  
-   - ☐ Somewhat  
-   - ☐ No  
+## **User Interface (UI) Experience**  
 
-6. **How useful was the energy savings information?**  
-   - ☐ Very useful  
-   - ☐ Somewhat useful  
-   - ☐ Neutral  
-   - ☐ Not very useful  
-   - ☐ Not useful at all  
+2. **When interacting with the extension’s user interface, I felt...**  
+   *Mark only one oval per row.*  
 
-## **Settings & Customization**
+   |                                                       | 1 (Strongly Disagree) | 2 (Disagree) | 3 (Neutral) | 4 (Agree) | 5 (Strongly Agree) |
+   | ----------------------------------------------------- | --------------------- | ------------ | ----------- | --------- | ------------------ |
+   | **Satisfied with the overall design and layout**      | ○                     | ○            | ○           | ○         | ○                  |
+   | **Frustrated by unclear or cluttered elements**       | ○                     | ○            | ○           | ○         | ○                  |
+   | **Impressed by the visual appeal of the interface**   | ○                     | ○            | ○           | ○         | ○                  |
+   | **Confused by the placement of buttons or menus**     | ○                     | ○            | ○           | ○         | ○                  |
+   | **Delighted by the ease of navigating the interface** | ○                     | ○            | ○           | ○         | ○                  |
+   | **Annoyed by the lack of intuitive controls**         | ○                     | ○            | ○           | ○         | ○                  |
 
-7. **Was it clear how to customize the detected smells in the settings?**  
-   - ☐ Yes  
-   - ☐ Somewhat  
-   - ☐ No  
+---
 
-8. **Did you understand how to set folder restrictions for multi-file refactorings?**  
-   - ☐ Yes  
-   - ☐ Somewhat  
-   - ☐ No  
+## **Performance & Reliability**  
 
-9. **Did you fins any elements of the extension to be culturally insensitive?** (Open-ended)
-    ___________________________________________________________
+3. **When evaluating the extension’s performance during testing, I felt...**  
+   *Mark only one oval per row.*  
 
-## **Overall Experience**
+   |                                                        | 1 (Strongly Disagree) | 2 (Disagree) | 3 (Neutral) | 4 (Agree) | 5 (Strongly Agree) |
+   | ------------------------------------------------------ | --------------------- | ------------ | ----------- | --------- | ------------------ |
+   | **Confident that the extension worked reliably**       | ○                     | ○            | ○           | ○         | ○                  |
+   | **Assured that the code smell detection was accurate** | ○                     | ○            | ○           | ○         | ○                  |
+   | **Frustrated by technical issues or bugs**             | ○                     | ○            | ○           | ○         | ○                  |
+   | **Trusting of the refactoring suggestions provided**   | ○                     | ○            | ○           | ○         | ○                  |
 
-10. **What was the most frustrating part of using the extension?** (Open-ended)
+---
+
+## **Learning Curve & Guidance**  
+
+4. **When learning how to use the extension during testing, I felt...**  
+   *Mark only one oval per row.*  
+
+   |                                                                    | 1 (Strongly Disagree) | 2 (Disagree) | 3 (Neutral) | 4 (Agree) | 5 (Strongly Agree) |
+   | ------------------------------------------------------------------ | --------------------- | ------------ | ----------- | --------- | ------------------ |
+   | **Supported by clear and sufficient instructions**                 | ○                     | ○            | ○           | ○         | ○                  |
+   | **Overwhelmed by the complexity of the tool**                      | ○                     | ○            | ○           | ○         | ○                  |
+   | **Curious to learn more through additional examples or tutorials** | ○                     | ○            | ○           | ○         | ○                  |
+
+---
+
+## **Perceived Value & Utility**  
+
+5. **When considering the extension’s potential impact, I felt...**  
+   *Mark only one oval per row.*  
+
+   |                                                                           | 1 (Strongly Disagree) | 2 (Disagree) | 3 (Neutral) | 4 (Agree) | 5 (Strongly Agree) |
+   | ------------------------------------------------------------------------- | --------------------- | ------------ | ----------- | --------- | ------------------ |
+   | **Optimistic that the extension could improve energy efficiency in code** | ○                     | ○            | ○           | ○         | ○                  |
+   | **Encouraged that the extension could help me write better code**         | ○                     | ○            | ○           | ○         | ○                  |
+   | **Informed by the energy savings information provided**                   | ○                     | ○            | ○           | ○         | ○                  |
+   | **Interested in using this extension in the future**                      | ○                     | ○            | ○           | ○         | ○                  |
+
+---
+
+## **Emotional & Cognitive Experience**  
+
+6. **When reflecting on my overall experience with the extension, I felt...**  
+   *Mark only one oval per row.*  
+
+   |                                                      | 1 (Strongly Disagree) | 2 (Disagree) | 3 (Neutral) | 4 (Agree) | 5 (Strongly Agree) |
+   | ---------------------------------------------------- | --------------------- | ------------ | ----------- | --------- | ------------------ |
+   | **Motivated to continue using the extension**        | ○                     | ○            | ○           | ○         | ○                  |
+   | **Frustrated by unnecessary complexity in the tool** | ○                     | ○            | ○           | ○         | ○                  |
+   | **Satisfied with the overall experience**            | ○                     | ○            | ○           | ○         | ○                  |
+
+---
+
+## **Open-Ended Feedback**  
+
+7. **What was the most frustrating part of using the extension during testing?**  
     ___________________________________________________________  
 
-11. **What did you find most useful about the extension?** (Open-ended)
+8. **What did you find most useful about the extension during testing?**  
     ___________________________________________________________  
 
-12. **Do you have any suggestions for improving the extension?**
+9. **Do you have any suggestions for improving the extension’s user interface?**  
     ___________________________________________________________  
 
-13. **Would you use this extension in your daily workflow?**
-
-- ☐ Yes  
-- ☐ Maybe  
-- ☐ No
+10. **Any other comments or feedback about your testing experience with the extension?**  
+    ___________________________________________________________  
