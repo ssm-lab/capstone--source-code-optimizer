@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi.testclient import TestClient
 from unittest.mock import patch
 
@@ -56,7 +57,10 @@ def test_detect_smells_file_not_found():
     response = client.post("/smells", json=request_data)
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "File not found: path\\to\\nonexistent\\file.py"
+    assert (
+        response.json()["detail"]
+        == f"File not found: {Path('path','to','nonexistent','file.py')!s}"
+    )
 
 
 def test_detect_smells_internal_server_error():
