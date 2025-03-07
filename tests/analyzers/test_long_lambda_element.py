@@ -97,7 +97,7 @@ def test_lambda_exceeds_both_thresholds():
     code = textwrap.dedent(
         """
     def example():
-        giant_lambda = lambda a, b, c: (a + b if a > b else b - c) + (max(a, b, c) * 10) + (min(a, b, c) / 2) + ("hello" + "world") 
+        giant_lambda = lambda a, b, c: (a + b if a > b else b - c) + (max(a, b, c) * 10) + (min(a, b, c) / 2) + ("hello" + "world")
         return giant_lambda(1,2,3)
     """
     )
@@ -144,12 +144,12 @@ def test_lambda_inline_passed_to_function():
     def test_lambdas():
         result = map(lambda x: x*2 + (x//3) if x > 10 else x, range(20))
 
-        # This lambda has a ternary, but let's keep it short enough 
+        # This lambda has a ternary, but let's keep it short enough
         # that it doesn't trigger by default unless threshold_count=2 or so.
         # We'll push it with a second ternary + more code to reach threshold_count=3
 
         result2 = filter(lambda z: (z+1 if z < 5 else z-1) + (z*3 if z%2==0 else z/2) and z != 0, result)
-        
+
         return list(result2)
     """
     )

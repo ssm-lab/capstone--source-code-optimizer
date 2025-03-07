@@ -27,8 +27,7 @@ def create_smell(occurences: list[int]):
         messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
         confidence="UNDEFINED",
         occurences=[
-            Occurence(line=occ, endLine=999, column=999, endColumn=999)
-            for occ in occurences
+            Occurence(line=occ, endLine=999, column=999, endColumn=999) for occ in occurences
         ],
         additionalInfo=None,
     )
@@ -54,7 +53,7 @@ def test_basic_lambda_conversion(refactorer):
         def converted_lambda_3(x):
             result = x + 1
             return result
-        
+
         my_lambda = converted_lambda_3
     """
     )
@@ -64,7 +63,6 @@ def test_basic_lambda_conversion(refactorer):
         patch.object(Path, "read_text", return_value=code),
         patch.object(Path, "write_text") as mock_write,
     ):
-
         refactorer.refactor(Path("fake.py"), Path("fake.py"), smell, Path("fake.py"))
 
         written = mock_write.call_args[0][0]
@@ -87,7 +85,7 @@ def test_no_extra_print_statements(refactorer):
         def converted_lambda_3(x):
             result = x.strip().lower()
             return result
-        
+
         processor = converted_lambda_3
     """
     )
@@ -97,7 +95,6 @@ def test_no_extra_print_statements(refactorer):
         patch.object(Path, "read_text", return_value=code),
         patch.object(Path, "write_text") as mock_write,
     ):
-
         refactorer.refactor(Path("fake.py"), Path("fake.py"), smell, Path("fake.py"))
         written = mock_write.call_args[0][0]
         assert "print(" not in written
@@ -119,7 +116,7 @@ def test_lambda_in_function_argument(refactorer):
         def converted_lambda_3(x):
             result = x * 2
             return result
-        
+
         results = list(map(converted_lambda_3, [1, 2, 3]))
     """
     )
@@ -129,7 +126,6 @@ def test_lambda_in_function_argument(refactorer):
         patch.object(Path, "read_text", return_value=code),
         patch.object(Path, "write_text") as mock_write,
     ):
-
         refactorer.refactor(Path("fake.py"), Path("fake.py"), smell, Path("fake.py"))
 
         written = mock_write.call_args[0][0]
@@ -153,7 +149,7 @@ def test_multi_argument_lambda(refactorer):
         def converted_lambda_4(a, b):
             result = a + b
             return result
-        
+
         total = reduce(converted_lambda_4, [1, 2, 3, 4])
     """
     )
@@ -163,7 +159,6 @@ def test_multi_argument_lambda(refactorer):
         patch.object(Path, "read_text", return_value=code),
         patch.object(Path, "write_text") as mock_write,
     ):
-
         refactorer.refactor(Path("fake.py"), Path("fake.py"), smell, Path("fake.py"))
         written = mock_write.call_args[0][0]
         assert normalize_code(written) == normalize_code(expected)
@@ -187,7 +182,7 @@ def test_lambda_with_keyword_arguments(refactorer):
         def converted_lambda_5(event):
             result = handle_event(event, retries=3)
             return result
-        
+
         button = Button(
             text="Submit",
             on_click=converted_lambda_5
@@ -200,7 +195,6 @@ def test_lambda_with_keyword_arguments(refactorer):
         patch.object(Path, "read_text", return_value=code),
         patch.object(Path, "write_text") as mock_write,
     ):
-
         refactorer.refactor(Path("fake.py"), Path("fake.py"), smell, Path("fake.py"))
         written = mock_write.call_args[0][0]
         print(written)
@@ -232,8 +226,10 @@ def test_very_long_lambda_function(refactorer):
     )
 
     smell = create_smell([4])()
-    with patch.object(Path, "read_text", return_value=code), \
-         patch.object(Path, "write_text") as mock_write:
+    with (
+        patch.object(Path, "read_text", return_value=code),
+        patch.object(Path, "write_text") as mock_write,
+    ):
         refactorer.refactor(Path("fake.py"), Path("fake.py"), smell, Path("fake.py"))
         written = mock_write.call_args[0][0]
         print(written)

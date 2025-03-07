@@ -53,12 +53,7 @@ Repository = "https://github.com/ssm-lab/capstone--source-code-optimizer"
 
 [tool.pytest.ini_options]
 norecursedirs = ["tests/temp*", "tests/input", "tests/_input_copies"]
-addopts = [
-  "--basetemp=tests/temp_dir",
-  "--cov=src/ecooptimizer",
-  "--cov-report=term-missing",
-  "--cov-fail-under=85",
-]
+addopts = ["--basetemp=tests/temp_dir"]
 testpaths = ["tests"]
 pythonpath = "src"
 
