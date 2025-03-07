@@ -3,7 +3,7 @@ name: "Run Python Tests"
 on:
     pull_request:
       types: [opened, reopened, synchronize]
-      branches: [dev]
+      branches: [dev, dev-workflow-test]
       paths:
         - "src/ecooptimizer/**/*.py"
   
