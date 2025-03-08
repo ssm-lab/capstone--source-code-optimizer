@@ -1700,23 +1700,36 @@ Confirms that the refactored output includes well-structured results, such as co
 
 \subsection{Plugin Tests}
 
+
 \subsubsection{Hover Manager Tests}
 
-\textbf{Goal:} These tests verify the behavior of the HoverManager class, ensuring that hover content is correctly generated for detected smells and that refactor commands function as expected.
+\textbf{Goal:} The Hover Manager module manages hover functionality for Python files, providing hover content for detected code smells and allowing refactoring commands. The following unit tests verify the accuracy of this functionality.
+
+The tests assess the ability of the \texttt{HoverManager} to register hover providers, handle hover content, update smells, generate refactor commands, and ensure correct hover content formatting. Edge cases, such as no smells and the correct propagation of updates to smells, are also considered.
 
 \begin{itemize}
-\item \textbf{Verifying Hover Content for Detected Smells} \newline
-Ensures that hover content is generated for detected smells on the current line in Python files. The test verifies that the correct smells are identified and that the hover content is formatted with links to refactor the smell or all smells of the same type.
+\item \textbf{Registers hover provider for Python files} \newline
+Verifies that the \texttt{HoverManager} correctly registers a hover provider for Python files.
 
-\item \textbf{Verifying Hover Content When No Smells Are Present} \newline
-Tests the scenario when no smells are present on the current line in the document. In this case, it ensures that the hover content is null, meaning that no hover information is displayed.
+\item \textbf{Subscribes hover provider correctly} \newline
+Ensures that the hover provider is correctly subscribed to the context manager.
 
-\item \textbf{Verifying the Correctness of Refactor Command for a Selected Smell} \newline
-Verifies that the refactor command for a selected smell correctly triggers the `refactorSelectedSmell` function with the appropriate context and smell data. This tests that the specific refactoring action is executed when the user selects a smell to refactor.
+\item \textbf{Returns null for hover content if there are no smells} \newline
+Checks that \texttt{getHoverContent} returns \texttt{null} when no smells are detected for a file.
 
-\item \textbf{Verifying the Correctness of Refactor Command for All Smells of a Type} \newline
-Ensures that the refactor command for all smells of a specific type triggers the `refactorAllSmellsOfType` function with the correct context and messageId. This tests that the refactoring action is performed for all occurrences of the same type of smell in the document.
+\item \textbf{Updates smells when \texttt{getInstance} is called again} \newline
+Verifies that when \texttt{getInstance} is called again with new smells, the manager updates the stored smells and returns the same instance.
+
+\item \textbf{Updates smells correctly} \newline
+Confirms that \texttt{updateSmells} correctly updates the list of smells in the manager.
+
+\item \textbf{Generates valid hover content} \newline
+Ensures that \texttt{getHoverContent} generates valid hover content with correctly formatted smell details, including refactor commands and proper structure.
+
+\item \textbf{Registers refactor commands} \newline
+Verifies that the refactor commands are properly registered for individual and all smells of a specific type.
 \end{itemize}
+
 
 \subsubsection{Line Selection Manager Tests}
 
