@@ -1645,6 +1645,34 @@ Ensures that adjusting the threshold parameter correctly affects detection behav
 Confirms that detected chains return correctly formatted results, including message ID, type, and occurrence details.
 \end{itemize}
 
+\subsubsection{Long Element Chain Refactoring}
+
+\textbf{Goal:} The long element chain refactoring module simplifies deeply nested dictionary accesses by flattening them into top-level keys while preserving functionality. The following unit tests verify the correctness of this transformation.
+
+The tests assess the ability to detect and refactor long element chains by verifying correct dictionary transformations, accessing pattern updates, and handling of various data structures. Edge cases, such as shallow accesses, multiple affected files, and mixed depths of access, are included to ensure robustness.
+
+\begin{itemize}
+\item \textbf{Identifies and refactors basic nested dictionary access} \newline
+Ensures that deeply nested dictionary keys are detected and refactored correctly.
+
+\item \textbf{Refactors dictionary accesses across multiple files} \newline
+Verifies that dictionary changes propagate correctly when a deeply nested dictionary is accessed in different files.
+
+\item \textbf{Handles dictionary access via class attributes} \newline
+Ensures that nested dictionary accesses within class attributes are correctly detected and refactored.
+
+\item \textbf{Ignores shallow dictionary accesses} \newline
+Verifies that dictionary accesses below the predefined threshold remain unchanged.
+
+\item \textbf{Handles multiple long element chains in the same file} \newline
+Ensures that all occurrences of excessive dictionary accesses in a file are refactored individually.
+
+\item \textbf{Detects and refactors mixed access depths} \newline
+Confirms that the module correctly differentiates and processes deep accesses while ignoring shallow ones.
+
+\item \textbf{Validates resulting metadata and formatting} \newline
+Confirms that the refactored output includes well-structured results, such as correct message IDs, types, and occurrences.
+\end{itemize}
 
 
 \bibliography{../../refs/References}
