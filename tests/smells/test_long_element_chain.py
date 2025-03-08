@@ -258,61 +258,6 @@ def test_lec_shallow_access_ignored(source_files, refactorer):
     # Refactoring should be skipped because access is too shallow
     assert file1.read_text().strip() == original_content.strip()
 
-
-# def test_lec_multiple_occurrences(source_files, refactorer):
-#     """
-#     Tests refactoring when there are multiple dictionary access patterns in the same file.
-#     """
-
-#     # --- File with multiple dictionary accesses ---
-#     test_dir = Path(source_files, "temp_multi_occur_lec")
-#     test_dir.mkdir(exist_ok=True)
-
-#     file1 = test_dir / "multi_access.py"
-#     file1.write_text(
-#         textwrap.dedent("""\
-#         settings = {
-#             "app": {
-#                 "name": "EcoOptimizer",
-#                 "version": "1.0",
-#                 "config": {
-#                     "debug": True,
-#                     "logging": {
-#                         "level": "INFO",
-#                         "format": "standard"
-#                     }
-#                 }
-#             }
-#         }
-
-#         # Multiple deep accesses
-#         print(settings["app"]["config"]["debug"])
-#         print(settings["app"]["config"]["logging"]["level"])
-#         print(settings["app"]["config"]["logging"]["format"])
-#         """)
-#     )
-
-#     smell = create_smell(occurences=[15])()
-
-#     refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
-
-#     # --- Expected Result ---
-#     expected_file1 = textwrap.dedent("""\
-#         settings = {"app_name": "EcoOptimizer", "app_version": "1.0", "app_config_debug": true, "app_config_logging_level": "INFO", "app_config_logging_format": "standard"}
-
-#         # Multiple deep accesses
-#         debug_mode = settings["app_config_debug"]
-#         log_level = settings["app_config_logging_level"]
-#         app_name = settings["app_name"]
-#         """)
-
-#     print("this is the file: " + file1.read_text().strip())
-#     print("this is the expected: " + expected_file1.strip())
-#     print(file1.read_text().strip() == expected_file1.strip())
-#     # Check if the refactoring worked
-#     assert file1.read_text().strip() == expected_file1.strip()
-
-
 def test_lec_mixed_access_depths(source_files, refactorer):
     """
     Tests refactoring when there are different depths of dictionary access.
