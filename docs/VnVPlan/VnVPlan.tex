@@ -1698,7 +1698,7 @@ Confirms that detected chains return correctly formatted results, including mess
 
 The tests assess the ability to detect and refactor long element chains by verifying correct dictionary transformations, accessing pattern updates, and handling of various data structures. Edge cases, such as shallow accesses, multiple affected files, and mixed depths of access, are included to ensure robustness.
 
-\textbf{Target requirement(s):}  FR3, FR6~\cite{SRS} \\
+\textbf{Target requirement(s):}  FR3, FR6, PR-PAR3 ~\cite{SRS} \\
 
 \begin{itemize}
 \item \textbf{Identifies and refactors basic nested dictionary access} \newline
@@ -1736,6 +1736,8 @@ Confirms that the refactored output includes well-structured results, such as co
 
 The tests assess the ability of the \texttt{HoverManager} to register hover providers, handle hover content, update smells, generate refactor commands, and ensure correct hover content formatting. Edge cases, such as no smells and the correct propagation of updates to smells, are also considered.
 
+\textbf{Target requirement(s):}  IDK ~\cite{SRS} \\
+
 \begin{itemize}
 \item \textbf{Registers hover provider for Python files} \newline
 Verifies that the \texttt{HoverManager} correctly registers a hover provider for Python files.
@@ -1759,12 +1761,17 @@ Ensures that \texttt{getHoverContent} generates valid hover content with correct
 Verifies that the refactor commands are properly registered for individual and all smells of a specific type.
 \end{itemize}
 
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/hoverManager.test.ts}{here}
+
+
 
 \subsubsection{Line Selection Manager Tests}
 
 \textbf{Goal:} The Line Selection Manager module provides functionality for detecting and commenting on code smells based on a line selection. The following unit tests verify the correctness of this functionality.
 
 The tests assess the ability of the \texttt{LineSelectionManager} to handle various scenarios such as missing editor instances, multiple smells on a line, single-line vs. multi-line selections, and correct comment generation. Edge cases, such as mismatched document hashes, non-existent smells, and the absence of selected text, are also considered.
+
+\textbf{Target requirement(s):}  UHR-EOU1 ~\cite{SRS} \\
 
 \begin{itemize}
 \item \textbf{Removes last comment if decoration exists} \newline
@@ -1794,6 +1801,8 @@ Confirms that a single-line comment is added correctly when a smell is found on 
 \item \textbf{Displays a combined comment if multiple smells exist} \newline
 Verifies that a combined comment is displayed when multiple smells exist on the same line, and that the decoration is created with the correct formatting and applied to the correct range.
 \end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelection.test.ts}{here}
 
 
 \bibliography{../../refs/References}
