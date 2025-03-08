@@ -1606,7 +1606,46 @@ This will be done after the Detailed Design.
 % \subsection{Traceability Between Test Cases and Modules}
 
 % \wss{Provide evidence that all of the modules have been considered.}
-  
+
+
+\subsubsection{Long Element Chain Detection}
+
+\textbf{Goal:} The long element chain detection module identifies excessive dictionary access chains that exceed a predefined threshold (default: 3). The following unit tests verify the detection capabilities. \
+
+The tests evaluate the detection of long element chains by verifying that sequences exceeding the threshold, such as deep dictionary accesses, are correctly identified. They include edge cases, such as chains just below the threshold, variations in data structures, and multiple chains in the same scope, to assess the robustness of the detection logic.
+
+\begin{itemize}
+\item \textbf{Ignores code with no chains} \newline
+Ensures that code without any nested element chains does not trigger a detection.
+\item \textbf{Ignores chains below the threshold} \newline
+Verifies that element chains shorter than the threshold are not flagged.
+
+\item \textbf{Detects chains exactly at threshold} \newline
+Ensures that an element chain with a length equal to the threshold is flagged.
+
+\item \textbf{Detects chains exceeding the threshold} \newline
+Verifies that chains longer than the threshold are correctly detected.
+
+\item \textbf{Detects multiple chains in the same file} \newline
+Ensures that multiple long element chains appearing in different locations within the same code file are individually detected.
+
+\item \textbf{Detects chains inside nested functions and classes} \newline
+Confirms that element chains occurring within functions and class methods are correctly identified.
+
+\item \textbf{Reports identical chains on the same line only once} \newline
+Ensures that duplicate chains appearing on a single line are not reported multiple times.
+
+\item \textbf{Handles different variable types in chains} \newline
+Verifies detection of chains that involve a mix of dictionaries, lists, tuples, and nested structures.
+
+\item \textbf{Correctly applies custom threshold values} \newline
+Ensures that adjusting the threshold parameter correctly affects detection behavior.
+
+\item \textbf{Verifies result structure and metadata} \newline
+Confirms that detected chains return correctly formatted results, including message ID, type, and occurrence details.
+\end{itemize}
+
+
 
 \bibliography{../../refs/References}
 
