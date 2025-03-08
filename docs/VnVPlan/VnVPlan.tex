@@ -1512,6 +1512,45 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 This will be done after the Detailed Design.
 
+\subsection{API Routes}
+
+\subsubsection{Smell Detection}
+
+% TODO: Requirements traceability
+\textbf{Target requirement(s):} FR4, FR7~\cite{SRS} \
+
+\noindent
+The smell detection module is responsible for identifying code smells in a given file based on the enabled smell types. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Successful Detection of Smells}
+  \begin{itemize}
+    \item The API endpoint returns a successful response when the file exists and smells are detected.
+    \item The response contains the correct number of detected smells and adheres to the expected data structure.
+  \end{itemize}
+
+  \item \textbf{Handling of File Not Found Errors}
+  \begin{itemize}
+      \item The API endpoint returns an appropriate error response when the specified file does not exist.
+      \item The error message clearly indicates that the file was not found.
+  \end{itemize}
+
+  \item \textbf{Handling of Internal Server Errors}
+  \begin{itemize}
+      \item The API endpoint returns an error response when an unexpected exception occurs during smell detection.
+      \item The error message indicates an internal server error.
+  \end{itemize}
+
+  \item \textbf{Validation of Input Data}
+  \begin{itemize}
+      \item The API validates the presence and correctness of required fields in the request.
+      \item The API rejects invalid input with appropriate error messages.
+  \end{itemize}
+
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_detect_route.py}{here}.
+
 % \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
