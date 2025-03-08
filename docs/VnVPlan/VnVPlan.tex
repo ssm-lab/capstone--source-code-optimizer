@@ -1608,6 +1608,28 @@ This will be done after the Detailed Design.
 % \wss{Provide evidence that all of the modules have been considered.}
 
 
+\subsubsection{Refactoring Controller}
+
+\textbf{Goal:} These tests verify the behavior of the RefactorerController in various scenarios, ensuring that it handles refactoring correctly and interacts with external components as expected.
+
+\begin{itemize}
+\item \textbf{Verifying Successful Refactoring with a Valid Refactorer} \newline
+Verifies that the RefactorerController correctly runs the refactorer when a valid refactorer is available. It checks that the logger captures the refactoring event, the refactor method is called with the expected arguments, and the modified file path is correctly generated.
+
+\item \textbf{Handling Case When No Refactorer is Found} \newline
+Ensures that if no refactorer is found for a given smell, the RefactorerController raises a NotImplementedError. It also confirms that the appropriate error message is logged.
+
+\item \textbf{Handling Multiple Refactorer Calls for the Same Smell} \newline
+Tests the behavior of the RefactorerController when the refactorer is called multiple times for the same smell. It ensures that the smell counter is updated correctly and that unique file names are generated for each call.
+
+\item \textbf{Verifying the Behavior When Overwrite is Disabled} \newline
+Verifies that when the overwrite flag is set to false, the refactor method is called with the correct argument, ensuring that files are not overwritten when this option is disabled.
+
+\item \textbf{Handling Case Where No Files are Modified} \newline
+Checks that when no files are modified by the refactorer, the RefactorerController correctly returns an empty list of modified files.
+\end{itemize}
+
+
 \subsubsection{Long Element Chain Detection}
 
 \textbf{Goal:} The long element chain detection module identifies excessive dictionary access chains that exceed a predefined threshold (default: 3). The following unit tests verify the detection capabilities. \
