@@ -1698,6 +1698,8 @@ Confirms that detected chains return correctly formatted results, including mess
 
 The tests assess the ability to detect and refactor long element chains by verifying correct dictionary transformations, accessing pattern updates, and handling of various data structures. Edge cases, such as shallow accesses, multiple affected files, and mixed depths of access, are included to ensure robustness.
 
+\textbf{Target requirement(s):}  FR3, FR6~\cite{SRS} \\
+
 \begin{itemize}
 \item \textbf{Identifies and refactors basic nested dictionary access} \newline
 Ensures that deeply nested dictionary keys are detected and refactored correctly.
@@ -1720,6 +1722,9 @@ Confirms that the module correctly differentiates and processes deep accesses wh
 \item \textbf{Validates resulting metadata and formatting} \newline
 Confirms that the refactored output includes well-structured results, such as correct message IDs, types, and occurrences.
 \end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}
+
 
 
 \subsection{Plugin Tests}
