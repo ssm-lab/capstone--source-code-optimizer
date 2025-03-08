@@ -1655,9 +1655,12 @@ Checks that when no files are modified by the refactorer, the RefactorerControll
 
 The tests evaluate the detection of long element chains by verifying that sequences exceeding the threshold, such as deep dictionary accesses, are correctly identified. They include edge cases, such as chains just below the threshold, variations in data structures, and multiple chains in the same scope, to assess the robustness of the detection logic.
 
+\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
+
 \begin{itemize}
 \item \textbf{Ignores code with no chains} \newline
 Ensures that code without any nested element chains does not trigger a detection.
+
 \item \textbf{Ignores chains below the threshold} \newline
 Verifies that element chains shorter than the threshold are not flagged.
 
@@ -1685,6 +1688,9 @@ Ensures that adjusting the threshold parameter correctly affects detection behav
 \item \textbf{Verifies result structure and metadata} \newline
 Confirms that detected chains return correctly formatted results, including message ID, type, and occurrence details.
 \end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_lec.py}{here}
+
 
 \subsubsection{Long Element Chain Refactoring}
 
