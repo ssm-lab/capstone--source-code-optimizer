@@ -1,8 +1,8 @@
-name: "Lint Python Files"
+name: "Make Python Files Pretty"
 
 on:
     pull_request:
-      types: [opened, reopened, synchronize]
+      types: [opened, reopened]
       branches: [dev]
       paths:
         - "src/**/*.py"
@@ -26,31 +26,25 @@ jobs:
               with:
                   token: ${{ steps.app-token.outputs.token }}
 
-            # Get changed .py files
-            - name: Get changed .py files
-              id: changed-py-files
-              uses: tj-actions/changed-files@v45
-              with:
-                  files: |
-                      **/*.py
-                  files_ignore: |
-                      tests/input/**/*.py
-                      tests/_input_copies/**/*.py
-                  diff_relative: true # Get the list of files relative to the repo root
-
             - name: Install Python
               uses: actions/setup-python@v5
               with:
-                  python-version: "3.11"
+                python-version: "3.11"
 
             - name: Install dependencies
               run: |
-                  python -m pip install --upgrade pip
-                  pip install ruff
+                python -m pip install --upgrade pip
+                pip install ruff
 
             - name: Run Ruff
-              env:
-                  ALL_CHANGED_FILES: ${{ steps.changed-py-files.outputs.all_changed_files }}
               run: |
-                  ruff check $ALL_CHANGED_FILES --output-format=github .
+                ruff check --fix --output-format=github .
+
+            # Commit the generated PDF back to the repository
+            - name: Commit & Push changes
+              uses: EndBug/add-and-commit@v9
+              with:
+                author_name: "Github Action"
+                author_email: "action@github.com"
+                message: "Made automatic lint fixes"
             
