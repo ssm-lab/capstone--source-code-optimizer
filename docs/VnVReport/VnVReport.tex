@@ -80,6 +80,26 @@ This section will not be appropriate for every project.
 
 \section{Unit Testing}
 
+\subsection{Line Selection Manager Module}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|p{2.5cm}|p{3cm}|p{3.5cm}|p{3.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Reference Requirement} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ \hline
+LSM1 & & Call the `removeLastComment` method after adding a comment. & The decoration is removed and no comment remains on the line. & The decoration is removed, and no comment appears on the selected line. & \cellcolor{green!20} Pass \\ \hline
+LSM2 & & Call `commentLine` method with null editor. & The method does not throw an error. & The method does not throw an error. & \cellcolor{green!20} Pass \\ \hline
+LSM3 & & Call `commentLine` on a file with no detected smells. & No comment is added to the line. & No decoration is added, and the line remains unchanged. & \cellcolor{green!20} Pass \\ \hline
+LSM4 & & Call `commentLine` on a file where the document hash does not match. & The method does not add a comment because the document has changed. & No decoration is added due to the document hash mismatch. & \cellcolor{green!20} Pass \\ \hline
+LSM5 & & Call `commentLine` with a multi-line selection. & The method returns early without adding a comment. & No comment is added to any lines in the selection. & \cellcolor{green!20} Pass \\ \hline
+LSM6 & & Call `commentLine` on a line with no detected smells. & No comment is added for the line. & No decoration is added, and the line remains unchanged. & \cellcolor{green!20} Pass \\ \hline
+LSM7 & & Call `commentLine` on a line with a single detected smell. & The comment shows the first smell symbol without a count. & Comment shows the first smell symbol: `Smell: PERF-001`. & \cellcolor{green!20} Pass \\ \hline
+LSM8 & & Call `commentLine` on a line with a detected smell. & A comment is added on the selected line in the editor showing the detected smell. & Comment added with the correct smell symbol and count. & \cellcolor{green!20} Pass \\ \hline
+LSM9 & & Call `commentLine` on a line with multiple detected smells. & The comment shows the first smell followed by the count of additional smells. & Comment shows `Smell: PERF-001 | (+1)`. & \cellcolor{green!20} Pass \\ \hline
+\end{tabular}
+\caption{Line Selection Module Test Cases}
+\label{table:line_selection_tests}
+\end{table}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
