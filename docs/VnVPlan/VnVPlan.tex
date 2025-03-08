@@ -1697,6 +1697,29 @@ Confirms that the refactored output includes well-structured results, such as co
 \end{itemize}
 
 
+\subsection{Plugin Tests}
+
+\subsubsection{HoverManager Tests}
+
+\textbf{Goal:} These tests verify the behavior of the HoverManager class, ensuring that hover content is correctly generated for detected smells and that refactor commands function as expected.
+
+\begin{itemize}
+\item \textbf{Verifying Hover Content for Detected Smells} \newline
+Ensures that hover content is generated for detected smells on the current line in Python files. The test verifies that the correct smells are identified and that the hover content is formatted with links to refactor the smell or all smells of the same type.
+
+\item \textbf{Verifying Hover Content When No Smells Are Present} \newline
+Tests the scenario when no smells are present on the current line in the document. In this case, it ensures that the hover content is null, meaning that no hover information is displayed.
+
+\item \textbf{Verifying the Correctness of Refactor Command for a Selected Smell} \newline
+Verifies that the refactor command for a selected smell correctly triggers the `refactorSelectedSmell` function with the appropriate context and smell data. This tests that the specific refactoring action is executed when the user selects a smell to refactor.
+
+\item \textbf{Verifying the Correctness of Refactor Command for All Smells of a Type} \newline
+Ensures that the refactor command for all smells of a specific type triggers the `refactorAllSmellsOfType` function with the correct context and messageId. This tests that the refactoring action is performed for all occurrences of the same type of smell in the document.
+\end{itemize}
+
+
+
+
 \bibliography{../../refs/References}
 
 \newpage
