@@ -100,6 +100,32 @@ LSM9 & & Call `commentLine` on a line with multiple detected smells. & The comme
 \label{table:line_selection_tests}
 \end{table}
 
+\subsection{Hover Manager Module}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|p{2.5cm}|p{3cm}|p{3.5cm}|p{3.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Reference Requirement} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ \hline
+
+HM1 & & Register hover provider for Python files. & Hover provider registered for Python files. & Hover provider is registered for Python files. & \cellcolor{green!20} Pass \\ \hline
+
+HM2 & & Subscribe hover provider. & Hover provider subscription registered. & Hover provider subscription registered. & \cellcolor{green!20} Pass \\ \hline
+
+HM3 & & Return hover content with no smells. & Returns null for hover content. & Hover content = null. & \cellcolor{green!20} Pass \\ \hline
+
+HM4 & & Update smells with new data. & Smells updated correctly with new data. & Smells are updated correctly with new smells data. & \cellcolor{green!20} Pass \\ \hline
+
+HM5 & & Update smells correctly. & Smells updated with new content. & Current smells content updated to new smells content provided.  & \cellcolor{green!20} Pass \\ \hline
+
+HM6 & & Generate valid hover content. & Generates hover content with correct smell information. & Correct and valid hover content generated for given smell. & \cellcolor{green!20} Pass \\ \hline
+
+HM7 & & Register refactor commands. & Both commands registered correctly on initialization & Refactor commands registered correctly. & \cellcolor{green!20} Pass \\ \hline
+
+\end{tabular}
+\caption{Hover Manager Module Test Cases}
+\label{table:hover_manager_tests}
+\end{table}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
