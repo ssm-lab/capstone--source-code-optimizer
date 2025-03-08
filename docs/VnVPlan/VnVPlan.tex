@@ -1550,6 +1550,42 @@ The smell detection endpoint module is responsible for providing an entry point 
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_detect_route.py}{here}.
 
+\subsubsection{Refactoring Endpoint}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\noindent
+The refactoring endpoint module is responsible for providing an entry point for communication with the backend library in order to refactor code smells. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Successful Refactoring Process}
+  \begin{itemize}
+    \item The API endpoint returns a successful response when the refactoring process completes without errors.
+    \item The response includes the refactored data and updated smells.
+    \item Energy measurements are correctly retrieved and compared to ensure energy savings.
+  \end{itemize}
+
+  \item \textbf{Handling of Source Directory Not Found}
+  \begin{itemize}
+      \item The API endpoint returns an appropriate error response when the specified source directory does not exist.
+      \item The error message clearly indicates that the directory was not found.
+  \end{itemize}
+
+  \item \textbf{Handling of Energy Measurement Failures}
+  \begin{itemize}
+      \item The API endpoint returns an error response when initial or final energy measurements cannot be retrieved.
+      \item The API endpoint returns an error response when no energy savings are detected after refactoring.
+  \end{itemize}
+
+  \item \textbf{Handling of Unexpected Errors}
+  \begin{itemize}
+      \item The API endpoint returns an error response when an unexpected exception occurs during the refactoring process.
+      \item The error message includes details about the exception.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_refactoring.py}{here}.
+
 % \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
