@@ -1718,27 +1718,39 @@ Verifies that the refactor command for a selected smell correctly triggers the `
 Ensures that the refactor command for all smells of a specific type triggers the `refactorAllSmellsOfType` function with the correct context and messageId. This tests that the refactoring action is performed for all occurrences of the same type of smell in the document.
 \end{itemize}
 
-
-
 \subsubsection{Line Selection Manager Tests}
 
-\textbf{Goal:} These tests verify the functionality of the LineSelectionManager class, ensuring that comments are correctly applied to lines with detected smells and that decorations are properly managed.
+\textbf{Goal:} The Line Selection Manager module provides functionality for detecting and commenting on code smells based on a line selection. The following unit tests verify the correctness of this functionality.
+
+The tests assess the ability of the \texttt{LineSelectionManager} to handle various scenarios such as missing editor instances, multiple smells on a line, single-line vs. multi-line selections, and correct comment generation. Edge cases, such as mismatched document hashes, non-existent smells, and the absence of selected text, are also considered.
 
 \begin{itemize}
-\item \textbf{Verifying the Removal of Previous Comments} \newline
-Tests that the `removeLastComment` method correctly disposes of any previous decorations, ensuring that the editor's visual state is cleared before new decorations are applied.
+\item \textbf{Removes last comment if decoration exists} \newline
+Verifies that the last comment decoration is removed correctly if one exists, ensuring that the decoration is disposed of properly.
 
-\item \textbf{Verifying Commenting on a Line with Detected Smells} \newline
-Ensures that when a user selects a line in the editor, and the line contains detected smells, the correct comment is generated and applied. The test verifies that the comment reflects the smell symbol and the correct number of occurrences.
+\item \textbf{Does not proceed if no editor is provided} \newline
+Ensures that no action is taken when \texttt{commentLine} is called with \texttt{null} as the editor.
 
-\item \textbf{Verifying Behavior When No Smells Are Detected on the Line} \newline
-Tests that if no smells are detected on the selected line, the method does not apply any decorations or comments, ensuring that the editor state remains unchanged.
+\item \textbf{Does not add comment if no smells detected for file} \newline
+Checks that no comment is added when no smells are detected for the current file, confirming that no unnecessary decorations are applied.
 
-\item \textbf{Verifying Behavior When the Hash Mismatch Occurs} \newline
-Verifies that when the hash of the document content does not match the stored hash, no comment or decoration is applied, ensuring that stale data is not processed.
+\item \textbf{Does not add comment if document hash does not match} \newline
+Verifies that no comment is added when the document hash in the workspace data does not match the hash of the document, ensuring that the editor's state remains consistent with the expected data.
 
-\item \textbf{Verifying Behavior for Multi-Line Selections} \newline
-Ensures that the method only applies comments and decorations for single-line selections, and that multi-line selections are ignored without any changes to the editor state.
+\item \textbf{Does not add comment for multi-line selections} \newline
+Tests that no comment is added when there is a multi-line selection, ensuring that only single-line selections are processed.
+
+\item \textbf{Does not add comment when no smells exist at line} \newline
+Ensures that no comment is added when no smells are associated with the selected line, preventing unnecessary decorations from being applied.
+
+\item \textbf{Displays single smell comment without count} \newline
+Verifies that a single smell is displayed correctly without a count, confirming that the decoration is applied with the correct content format.
+
+\item \textbf{Adds a single-line comment if a smell is found} \newline
+Confirms that a single-line comment is added correctly when a smell is found on the selected line, ensuring proper decoration application.
+
+\item \textbf{Displays a combined comment if multiple smells exist} \newline
+Verifies that a combined comment is displayed when multiple smells exist on the same line, and that the decoration is created with the correct formatting and applied to the correct range.
 \end{itemize}
 
 
