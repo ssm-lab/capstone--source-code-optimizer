@@ -1512,6 +1512,57 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 This will be done after the Detailed Design.
 
+\subsection{VsCode Plugin}
+
+\subsubsection{Detect Smells Command}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\noindent
+The smell detection command module is responsible communicating with the backend to fetch the smells of the current file as well as the highlighting module to display the smells in the vscode editor. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Handling of Missing Active Editor}
+  \begin{itemize}
+    \item The command shows an error message when no active editor is found.
+  \end{itemize}
+
+  \item \textbf{Handling of Missing File Path}
+  \begin{itemize}
+      \item The command shows an error message when the active editor has no valid file path.
+  \end{itemize}
+
+  \item \textbf{Handling of No Enabled Smells}
+  \begin{itemize}
+      \item The command shows a warning message when no smells are enabled in the configuration.
+  \end{itemize}
+
+  \item \textbf{Using Cached Smells}
+  \begin{itemize}
+      \item The command uses cached smells when the file hash and enabled smells match the cached data.
+      \item The command highlights the cached smells in the editor.
+  \end{itemize}
+
+  \item \textbf{Fetching New Smells}
+  \begin{itemize}
+      \item The command fetches new smells when the file hash changes or enabled smells are updated.
+      \item The command updates the cache with the new smells and highlights them in the editor.
+  \end{itemize}
+
+  \item \textbf{Handling of Server Downtime}
+  \begin{itemize}
+      \item The command shows a warning message when the server is down and no cached smells are available.
+  \end{itemize}
+
+  \item \textbf{Highlighting Smells}
+  \begin{itemize}
+      \item The command highlights detected smells in the editor when smells are found.
+      \item The command shows a success message with the number of highlighted smells.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
+
 % \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
