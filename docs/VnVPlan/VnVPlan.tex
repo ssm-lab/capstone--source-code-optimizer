@@ -1543,23 +1543,22 @@ The refactoring module ensures that methods which do not reference instance attr
         \item The method signature is correctly adjusted to reflect the removal.
     \end{itemize}
 
+    \item \textbf{Modify Instance Calls to the Method}
+    \begin{itemize}
+        \item Instance objects of the class calling the method will be modified to a use a static call directly from the class itself.
+        \item Calls in a different file from the one where the smell was detected will also have the appropriate calls modified.
+    \end{itemize}
+
     \item \textbf{Handling of Methods in Classes with Inheritance}
     \begin{itemize}
-        \item If a method does not reference instance attributes but calls another method in the same class, refactoring only occurs if the called method is also static.
-        \item If a method calls an inherited method, it is not refactored unless the inherited method is static.
-        \item If a method is overridden in a subclass, refactoring only applies if the overridden version is also eligible for static conversion.
+        \item If a subclass instance calls the method, the call is also modified.
+        \item If a method is overridden in a subclass, refactoring is \textbf{not} applied.
     \end{itemize}
 
     \item \textbf{Ensuring No Modification to Instance-Dependent Methods}
     \begin{itemize}
         \item Methods that reference \texttt{self} directly (e.g., \texttt{self.attr}, \texttt{self.method()}) are not modified.
         \item Methods that indirectly access instance attributes (e.g., through another method call) are left unchanged.
-    \end{itemize}
-
-    \item \textbf{Correct Refactoring of Multiple Methods in the Same Class}
-    \begin{itemize}
-        \item If multiple methods in a class are eligible, all are correctly refactored.
-        \item If only some methods in a class are eligible, the refactoring applies selectively.
     \end{itemize}
 
     \item \textbf{Preserving Readability and Maintainability}
@@ -1569,7 +1568,7 @@ The refactoring module ensures that methods which do not reference instance attr
     \end{itemize}
 \end{itemize}
 
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/dev/tests/smells/test_member_ignoring_method.py}{here}
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_member_ignoring_method.py}{here}
 
 
 % \subsection{Tests for Functional Requirements}
