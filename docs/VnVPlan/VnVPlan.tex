@@ -1541,6 +1541,14 @@ The following describes the testing strategy for the identification of the ``Str
       \item Different branches of a condition appending different string literals.
   \end{itemize}
 
+  \item \textbf{Type Inference}
+  \begin{itemize}
+      \item Proper detection of string types when through initial variable assignment.
+      \item Proper detection of string types through assignment type hints.
+      \item Proper detection of string types through function definition type hints.
+      \item Proper detection of string types initialized as class variables.
+  \end{itemize}
+
   \item \textbf{String Interpolation Methods}
   \begin{itemize}
       \item Concatenation using \texttt{\%} formatting.
@@ -1566,7 +1574,7 @@ The following describes the testing strategy for the identification of the ``Str
 \end{itemize}
 
 
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/smells/test_str_concat_in_loop.py}{here}.
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_str_concat_in_loop.py}{here}.
 
 \subsection{Refactoring Module}
 
@@ -1614,7 +1622,7 @@ The refactoring module transforms inefficient string concatenation into a more p
     \end{itemize}
 \end{itemize}
 
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/smells/test_str_concat_in_loop.py}{here}.
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_str_concat_in_loop_refactor.py}{here}.
 
 
 % \subsection{Unit Testing Scope}
