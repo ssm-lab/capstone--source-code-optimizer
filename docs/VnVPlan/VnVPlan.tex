@@ -1699,7 +1699,7 @@ Confirms that the refactored output includes well-structured results, such as co
 
 \subsection{Plugin Tests}
 
-\subsubsection{HoverManager Tests}
+\subsubsection{Hover Manager Tests}
 
 \textbf{Goal:} These tests verify the behavior of the HoverManager class, ensuring that hover content is correctly generated for detected smells and that refactor commands function as expected.
 
@@ -1717,6 +1717,28 @@ Verifies that the refactor command for a selected smell correctly triggers the `
 Ensures that the refactor command for all smells of a specific type triggers the `refactorAllSmellsOfType` function with the correct context and messageId. This tests that the refactoring action is performed for all occurrences of the same type of smell in the document.
 \end{itemize}
 
+
+
+\subsubsection{Line Selection Manager Tests}
+
+\textbf{Goal:} These tests verify the functionality of the LineSelectionManager class, ensuring that comments are correctly applied to lines with detected smells and that decorations are properly managed.
+
+\begin{itemize}
+\item \textbf{Verifying the Removal of Previous Comments} \newline
+Tests that the `removeLastComment` method correctly disposes of any previous decorations, ensuring that the editor's visual state is cleared before new decorations are applied.
+
+\item \textbf{Verifying Commenting on a Line with Detected Smells} \newline
+Ensures that when a user selects a line in the editor, and the line contains detected smells, the correct comment is generated and applied. The test verifies that the comment reflects the smell symbol and the correct number of occurrences.
+
+\item \textbf{Verifying Behavior When No Smells Are Detected on the Line} \newline
+Tests that if no smells are detected on the selected line, the method does not apply any decorations or comments, ensuring that the editor state remains unchanged.
+
+\item \textbf{Verifying Behavior When the Hash Mismatch Occurs} \newline
+Verifies that when the hash of the document content does not match the stored hash, no comment or decoration is applied, ensuring that stale data is not processed.
+
+\item \textbf{Verifying Behavior for Multi-Line Selections} \newline
+Ensures that the method only applies comments and decorations for single-line selections, and that multi-line selections are ignored without any changes to the editor state.
+\end{itemize}
 
 
 
