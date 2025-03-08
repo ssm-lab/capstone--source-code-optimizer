@@ -1514,13 +1514,12 @@ This will be done after the Detailed Design.
 
 \subsection{API Routes}
 
-\subsubsection{Smell Detection}
+\subsubsection{Smell Detection Endpoint}
 
-% TODO: Requirements traceability
-\textbf{Target requirement(s):} FR4, FR7~\cite{SRS} \
+\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
 
 \noindent
-The smell detection module is responsible for identifying code smells in a given file based on the enabled smell types. Unit tests for this module validate the following aspects:
+The smell detection endpoint module is responsible for providing an entry point for communication with the backend library in order to retrieve code smells for a certain file. Unit tests for this module validate the following aspects:
 
 \begin{itemize}
   \item \textbf{Successful Detection of Smells}
