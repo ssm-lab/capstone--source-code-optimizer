@@ -1563,6 +1563,41 @@ The smell detection command module is responsible communicating with the backend
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
 
+\subsubsection{File Highlighter}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1, LFR-AP2~\cite{SRS} \\
+
+\noindent
+The file highlighter module is responsible for applying visual decorations to highlight code smells in the editor. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Creation of Decorations}
+  \begin{itemize}
+    \item Decorations are created with the correct color and style for each type of code smell.
+    \item The decoration type is properly initialized and can be applied to the editor.
+  \end{itemize}
+
+  \item \textbf{Highlighting Smells}
+  \begin{itemize}
+      \item Smells are highlighted in the editor based on their line occurrences.
+      \item The hover content for each smell is correctly associated with the decoration.
+  \end{itemize}
+
+  \item \textbf{Handling of Initial Highlighting}
+  \begin{itemize}
+      \item On the first initialization, decorations are applied without resetting existing ones.
+      \item The decorations are properly stored for future updates.
+  \end{itemize}
+
+  \item \textbf{Resetting Decorations}
+  \begin{itemize}
+      \item On subsequent calls, existing decorations are disposed of before applying new ones.
+      \item The reset process ensures no overlapping or redundant decorations.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
+
 % \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
