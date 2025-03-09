@@ -161,6 +161,87 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1 & Unexpected error occurs during refactoring. & Status code is 400. Error message contains the exception details. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsection{Smell Analyzers}
+
+\subsubsection{String Concatenation in Loop}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{String Concatenation in Loop Detection Test Cases}
+  \label{table:string_concat_detection_tests}
+  \endlastfoot
+
+  TC\testcount & FR2 & Detects \texttt{+=} string concatenation inside a \texttt{for} loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{<var = var + ...>} string concatenation inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} string concatenation inside a \texttt{while} loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} modifying a list item inside a loop. & One smell detected with target \lstinline|self.text[0]| and line 6. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} modifying an object attribute inside a loop. & One smell detected with target \lstinline|self.text| and line 6. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} modifying a dictionary value inside a loop. & One smell detected with target \texttt{data['key']} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects multiple separate string concatenations in a loop. & Two smells detected with targets \texttt{result} and \texttt{logs[0]} on line 5. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenations with re-assignments inside the loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects concatenation inside nested loops. & One smell detected with target \texttt{result} and line 5. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects multi-level concatenations belonging to the same smell. & One smell detected with target \texttt{result} and two occurrences on lines 4 and 5. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} inside an \texttt{if-else} condition within a loop. & One smell detected with target \texttt{result} and two occurrences on line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} using f-strings inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} using \texttt{\%} formatting inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} using \texttt{.format()} inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures accessing the concatenation variable inside the loop is NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures regular string assignments are NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures number operations with \texttt{+=} are NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures string concatenation OUTSIDE a loop is NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects a variable concatenated multiple times in the same loop iteration. & One smell detected with target \texttt{result} and two occurrences on line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects concatenation where both prefix and suffix are added. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} where new values are inserted at the beginning instead of the end. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ignores potential smells where type cannot be confirmed as a string. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from function type hints. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from variable type hints. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from class attributes. & One smell detected with target \texttt{result} and line 9. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from the initial value assigned. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
