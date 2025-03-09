@@ -1,5 +1,5 @@
 \documentclass[12pt, titlepage]{article}
-
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -10,7 +10,18 @@
     linkcolor=red,
     urlcolor=blue
 }
+\usepackage{longtable}
 \usepackage[round]{natbib}
+\usepackage{colortbl}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup[table]{width=0.9\textwidth}
+
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily, % Use monospaced font
+    breaklines=true,      % Enable line breaks
+}
 
 \input{../Comments}
 \input{../Common}
@@ -79,6 +90,42 @@ This document ...
 This section will not be appropriate for every project.
 
 \section{Unit Testing}
+\newcounter{testcase}
+\newcommand{\testcount}{\stepcounter{testcase}\thetestcase}
+\renewcommand{\arraystretch}{1.2} % Adjust row height for better readability
+
+\subsection{API Endpoints}
+
+\subsubsection{Smell Detection Endpoint}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Smell Detection Endpoint Test Cases}
+  \label{table:detection_endpoint_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & User requests to detect smells in a valid file. & Status code is 200. Response contains 2 smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to detect smells in a non-existent file. & Status code is 404. Error message indicates file not found. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Internal server error occurs during smell detection. & Status code is 500. Error message indicates internal server error. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
 
 \section{Changes Due to Testing}
 
