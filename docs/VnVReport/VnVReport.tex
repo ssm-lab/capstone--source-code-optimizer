@@ -242,6 +242,61 @@ This section will not be appropriate for every project.
   TC\testcount & FR2 & Detects string concatenation where type is inferred from the initial value assigned. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsection{Smell Refactorers}
+
+\subsubsection{String Concatenation in Loop}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{String Concatenation in Loop Refactoring Test Cases}
+  \label{table:string_concat_refactoring_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR6 & Refactors empty initial concatenation variable (e.g., \lstinline|result = ""|). & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors non-empty initial concatenation variable not referenced before the loop. & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors non-empty initial concatenation variable referenced before the loop. & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors concatenation where the target is not a simple variable (e.g., \texttt{result["key"]}). & Code is refactored to use a temporary list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors concatenation where the variable is not initialized in the same scope. & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors prefix concatenation (e.g., \lstinline|result = str(i) + result|). & Code uses \lstinline|insert(0, ...)| for prefix concatenation. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors concatenation with both prefix and suffix. & Code uses both \lstinline|insert(0, ...)| and \texttt{append(...)}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors multiple concatenations in the same loop. & Code uses \texttt{append(...)} and \texttt{insert(0, ...)} as needed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors nested concatenation in loops. & Code uses \texttt{append(...)} and \texttt{insert(0, ...)} for nested loops. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors multiple occurrences of concatenation at different loop levels. & Code uses \texttt{append(...)} for all occurrences. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Handles reassignment of the concatenation variable inside the loop. & Code resets the list to the new value. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Handles reassignment of the concatenation variable to an empty value. & Code clears the list using \texttt{clear()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Ensures unrelated code and comments are preserved during refactoring. & Unrelated lines and comments remain unchanged. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
