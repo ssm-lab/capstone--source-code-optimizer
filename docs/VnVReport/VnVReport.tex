@@ -334,6 +334,51 @@ This section will not be appropriate for every project.
   TC\testcount & FR3, FR6 & Refactors a member-ignoring method with type hints. & Updates calls using type hints to infer instance type. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsection{VS Code Extension}
+
+\subsubsection{Detect Smells Command}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Detect Smells Command Test Cases}
+  \label{table:plugin_detect_command_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & No active editor is found. & Shows error message: ``Eco: No active editor found.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Active editor has no valid file path. & Shows error message: ``Eco: Active editor has no valid file path.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No smells are enabled. & Shows warning message: ``Eco: No smells are enabled! Detection skipped.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Uses cached smells when hash is unchanged and same smells are enabled. & Shows info message: ``Eco: Using cached smells for fake.path'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Fetches new smells when enabled smells change. & Calls \texttt{wipeWorkCache}, \texttt{updateHash}, and \texttt{fetchSmells}. Updates workspace data. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Fetches new smells when hash changes but enabled smells remain the same. & Calls \texttt{updateHash} and \texttt{fetchSmells}. Updates workspace data. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No cached smells and server is down. & Shows warning message: ``Action blocked: Server is down and no cached smells exist for this file version.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Highlights smells when smells are found. & Shows info messages and calls \texttt{highlightSmells}. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
