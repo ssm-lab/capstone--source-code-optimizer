@@ -127,6 +127,40 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1 & Internal server error occurs during smell detection. & Status code is 500. Error message indicates internal server error. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Refactor Endpoint}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Endpoint Test Cases}
+  \label{table:refactor_endpoint_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor a valid source directory. & Status code is 200. Response contains refactored data and updated smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor a non-existent source directory. & Status code is 404. Error message indicates directory not found. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Energy is not saved after refactoring. & Status code is 400. Error message indicates energy was not saved. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Initial energy measurement fails. & Status code is 400. Error message indicates initial emissions could not be retrieved. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Final energy measurement fails. & Status code is 400. Error message indicates final emissions could not be retrieved. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Unexpected error occurs during refactoring. & Status code is 400. Error message contains the exception details. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
