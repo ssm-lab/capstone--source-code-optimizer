@@ -379,6 +379,41 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1 & Highlights smells when smells are found. & Shows info messages and calls \texttt{highlightSmells}. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{File Highlighter}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{File Highlighter Test Cases}
+  \label{table:plugin_file_highlighter_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Creates decorations for a given color. & Decoration is created using \lstinline|vscode.window.createTextEditor DecorationType|. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Highlights smells in the active text editor. & Decorations are set using \texttt{setDecorations}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Does not reset highlight decorations on first initialization. & Decorations are not disposed of on the first call. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Resets highlight decorations on subsequent calls. & Decorations are disposed of on subsequent calls. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
