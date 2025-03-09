@@ -187,6 +187,32 @@ DLEC13 & & Test with threshold of 1 (every subscript reported). & One chain shou
 \end{longtable}
 
 
+\subsection{Long Element Chain Refactorer Module}
+
+\begin{longtable}{|c|p{2.5cm}|p{3cm}|p{4cm}|p{2.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Reference Requirement} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ \hline
+\endfirsthead
+
+\multicolumn{6}{c}{\textit{(Continued from previous page)}} \\ \hline
+\textbf{ID} & \textbf{Reference Requirement} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ \hline
+\endhead
+
+\hline \multicolumn{6}{|r|}{\textit{Continued on next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+LEC1 & Test with basic nested dictionary access & Test the long element chain refactorer on basic nested dictionary access & Dictionary should be flattened, and access updated & Refactoring applied successfully, dictionary access updated & \cellcolor{green!20} Pass \\ \hline
+LEC2 & Test with multiple files & Test the long element chain refactorer across multiple files & Dictionary access across multiple files should be updated & Refactoring applied successfully across multiple files & \cellcolor{yellow!20} TBD \\ \hline
+LEC3 & Test with class attribute-based dictionary access & Test the refactorer on dictionary access via class attributes & Class attributes should be flattened and access updated & Refactoring applied successfully on class attribute accesses. All accesses changed correctly. & \cellcolor{green!20} Pass \\ \hline
+LEC4 & Test with shallow dictionary access & Ensure the refactorer skips shallow dictionary access & Refactoring should be skipped for shallow access & Refactoring correctly skipped for shallow access & \cellcolor{green!20} Pass \\ \hline
+LEC5 & Test with mixed access depths & Test the refactorer on dictionary access with mixed depths & Flatten the dictionary up to the minimum access depth & All dictionary access chains flattened to minimum access depth and dictionary flattened successfully. & \cellcolor{green!20} Pass \\ \hline
+
+\caption{Long Element Chain Refactorer Test Cases}
+\label{table:lec_refactorer_tests}
+\end{longtable}
 
 
 \section{Changes Due to Testing}
