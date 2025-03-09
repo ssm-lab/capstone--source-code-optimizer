@@ -414,6 +414,39 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1, LFR-AP2 & Resets highlight decorations on subsequent calls. & Decorations are disposed of on subsequent calls. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{File Hashing}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Hashing Tools Test Cases}
+  \label{table:plugin_hashing_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & Document hash has not changed. & Does not update workspace storage. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Document hash has changed. & Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No hash exists for the document. & Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
