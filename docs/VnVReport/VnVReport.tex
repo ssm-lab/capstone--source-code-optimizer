@@ -108,17 +108,11 @@ LSM9 & & Call `commentLine` on a line with multiple detected smells. & The comme
 \textbf{ID} & \textbf{Reference Requirement} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ \hline
 
 HM1 & & Register hover provider for Python files. & Hover provider registered for Python files. & Hover provider is registered for Python files. & \cellcolor{green!20} Pass \\ \hline
-
 HM2 & & Subscribe hover provider. & Hover provider subscription registered. & Hover provider subscription registered. & \cellcolor{green!20} Pass \\ \hline
-
 HM3 & & Return hover content with no smells. & Returns null for hover content. & Hover content = null. & \cellcolor{green!20} Pass \\ \hline
-
 HM4 & & Update smells with new data. & Smells updated correctly with new data. & Smells are updated correctly with new smells data. & \cellcolor{green!20} Pass \\ \hline
-
 HM5 & & Update smells correctly. & Smells updated with new content. & Current smells content updated to new smells content provided.  & \cellcolor{green!20} Pass \\ \hline
-
 HM6 & & Generate valid hover content. & Generates hover content with correct smell information. & Correct and valid hover content generated for given smell. & \cellcolor{green!20} Pass \\ \hline
-
 HM7 & & Register refactor commands. & Both commands registered correctly on initialization & Refactor commands registered correctly. & \cellcolor{green!20} Pass \\ \hline
 
 \end{tabular}
@@ -155,6 +149,44 @@ RC5 & & System handles empty modified files correctly. & Modified files list rem
 \caption{Refactorer Controller Module Test Cases}
 \label{table:refactorer_controller_tests}
 \end{longtable}
+
+
+\subsection{Long Element Chain Detector Module}
+
+\begin{longtable}{|c|p{2.5cm}|p{2.5cm}|p{4cm}|p{3cm}|c|}
+\hline
+\textbf{ID} & \textbf{Reference Requirement} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ \hline
+\endfirsthead
+
+\multicolumn{6}{c}{\textit{(Continued from previous page)}} \\ \hline
+\textbf{ID} & \textbf{Reference Requirement} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ \hline
+\endhead
+
+\hline \multicolumn{6}{|r|}{\textit{Continued on next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+DLEC1 & & Test with code that has no chains. & No chains should be detected. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC2 & & Test with chains shorter than threshold. & No chains should be detected for threshold of 5. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC3 & & Test with chains exactly at threshold. & One chain should be detected at line 3. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC4 & & Test with chains longer than threshold. & One chain should be detected with message "Dictionary chain too long (4/3)". & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC5 & & Test with multiple chains in the same file. & Two chains should be detected at different lines. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC6 & & Test chains inside nested functions and classes. & Two chains should be detected, one inside a function, one inside a class. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC7 & & Test that chains on the same line are reported only once. & One chain should be detected at line 4. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC8 & & Test chains with different variable types. & Two chains should be detected, one in a list and one in a tuple. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC9 & & Test with a custom threshold value. & No chains detected with threshold 4. One chain detected with threshold 2. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC10 & & Test the structure of the returned LECSmell object. & Object should have correct type, path, module, symbol, and occurrence details. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC11 & & Test chains within complex expressions. & Three chains should be detected in different contexts. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC12 & & Test with an empty file. & No chains should be detected. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+DLEC13 & & Test with threshold of 1 (every subscript reported). & One chain should be detected with message "Dictionary chain too long (5/5)". & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+
+\caption{Long Element Chain Detector Module Test Cases}
+\label{table:lec_tests}
+\end{longtable}
+
+
 
 
 \section{Changes Due to Testing}
