@@ -297,6 +297,43 @@ This section will not be appropriate for every project.
   TC\testcount & FR3, FR6 & Ensures unrelated code and comments are preserved during refactoring. & Unrelated lines and comments remain unchanged. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Member Ignoring Method}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Member Ignoring Method Refactoring Test Cases}
+  \label{table:member_ignoring_method_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR6 & Refactors a basic member-ignoring method. & Adds \texttt{@staticmethod}, removes \texttt{self}, and updates calls. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with inheritance. & Updates calls from subclass instances. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with subclass in a separate file. & Updates calls from subclass instances in external files. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with subclass method override. & Does not update calls to overridden methods. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with type hints. & Updates calls using type hints to infer instance type. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
