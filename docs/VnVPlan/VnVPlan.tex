@@ -1740,6 +1740,80 @@ The file highlighter module is responsible for applying visual decorations to hi
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
 
+\subsection{API Routes}
+
+\subsubsection{Smell Detection Endpoint}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\noindent
+The smell detection endpoint module is responsible for providing an entry point for communication with the backend library in order to retrieve code smells for a certain file. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Successful Detection of Smells}
+  \begin{itemize}
+    \item The API endpoint returns a successful response when the file exists and smells are detected.
+    \item The response contains the correct number of detected smells and adheres to the expected data structure.
+  \end{itemize}
+
+  \item \textbf{Handling of File Not Found Errors}
+  \begin{itemize}
+      \item The API endpoint returns an appropriate error response when the specified file does not exist.
+      \item The error message clearly indicates that the file was not found.
+  \end{itemize}
+
+  \item \textbf{Handling of Internal Server Errors}
+  \begin{itemize}
+      \item The API endpoint returns an error response when an unexpected exception occurs during smell detection.
+      \item The error message indicates an internal server error.
+  \end{itemize}
+
+  \item \textbf{Validation of Input Data}
+  \begin{itemize}
+      \item The API validates the presence and correctness of required fields in the request.
+      \item The API rejects invalid input with appropriate error messages.
+  \end{itemize}
+
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_detect_route.py}{here}.
+
+\subsubsection{Refactoring Endpoint}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\noindent
+The refactoring endpoint module is responsible for providing an entry point for communication with the backend library in order to refactor code smells. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Successful Refactoring Process}
+  \begin{itemize}
+    \item The API endpoint returns a successful response when the refactoring process completes without errors.
+    \item The response includes the refactored data and updated smells.
+    \item Energy measurements are correctly retrieved and compared to ensure energy savings.
+  \end{itemize}
+
+  \item \textbf{Handling of Source Directory Not Found}
+  \begin{itemize}
+      \item The API endpoint returns an appropriate error response when the specified source directory does not exist.
+      \item The error message clearly indicates that the directory was not found.
+  \end{itemize}
+
+  \item \textbf{Handling of Energy Measurement Failures}
+  \begin{itemize}
+      \item The API endpoint returns an error response when initial or final energy measurements cannot be retrieved.
+      \item The API endpoint returns an error response when no energy savings are detected after refactoring.
+  \end{itemize}
+
+  \item \textbf{Handling of Unexpected Errors}
+  \begin{itemize}
+      \item The API endpoint returns an error response when an unexpected exception occurs during the refactoring process.
+      \item The error message includes details about the exception.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_refactoring.py}{here}.
+
 % \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
