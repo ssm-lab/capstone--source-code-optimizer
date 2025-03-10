@@ -93,6 +93,10 @@ def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 3):
                                 call_counts[callString].append(subnode)
                             continue
 
+                        # Check if it's a class by looking for capitalized names (heuristic)
+                        if func_name[0].isupper():
+                            continue
+
                     obj_name = (
                         astor.to_source(subnode.func.value).strip()
                         if isinstance(subnode.func, ast.Attribute)
