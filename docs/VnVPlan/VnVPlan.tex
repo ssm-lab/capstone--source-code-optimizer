@@ -1513,6 +1513,43 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsection{Detection Module}
 
+\subsubsection{Analyzer Controller}
+
+\textbf{Goal:} The analyzer controller serves as the central coordination unit for detecting code smells using various analysis methods. It interfaces with multiple analyzers, processes detection results, and ensures accurate filtering and customization of analysis options. The following unit tests verify the correctness of this functionality.\\
+
+\noindent The tests validate the proper execution of smell detection, correct filtering of smells based on the chosen analysis method, appropriate handling of missing or disabled smells, and the generation of custom analysis options. Edge cases such as empty files, incorrect configurations, and mismatched smell detection methods are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR2, FR5~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Running Smell Detection Analysis}
+    \begin{itemize}
+        \item Ensures the analyzer correctly detects CRC smells in a given Python file.
+        \item Validates that detected smells include the correct attributes, such as message ID, file path, and confidence level.
+        \item Confirms that logs capture detected smells for debugging.
+    \end{itemize}
+
+    \item \textbf{Handling Cases with No Detected Smells}
+    \begin{itemize}
+        \item Ensures that when no smells are detected, the controller logs an appropriate success message.
+        \item Verifies that the returned list of smells is empty.
+    \end{itemize}
+
+    \item \textbf{Filtering Smells by Analysis Method}
+    \begin{itemize}
+        \item Ensures that the controller correctly filters smells based on the specified analysis method (e.g., AST, Astroid, Pylint).
+        \item Verifies that only smells matching the given method are returned.
+    \end{itemize}
+
+    \item \textbf{Generating Custom Analysis Options}
+    \begin{itemize}
+        \item Ensures that the controller correctly generates custom options for AST and Astroid analysis.
+        \item Validates that generated options include callable detection functions for applicable smells.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/controllers/test_analyzer_controller.py}{here}.
+
 \subsubsection{String Concatenation in a Loop}
 
 \textbf{Goal:} The string concatenation in a loop detection module identifies inefficient string operations occurring inside loops, which can significantly impact performance. The following unit tests verify the detection capabilities.\\
@@ -1638,10 +1675,148 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_lec.py}{here}.
 
+\subsubsection{Repeated Calls}
+
+\textbf{Goal:} The repeated calls detection module identifies instances where function or method calls are redundantly executed within the same scope, leading to unnecessary performance overhead. It ensures that developers receive precise recommendations for caching results when applicable. The following unit tests validate the accuracy of this functionality.\\ 
+
+\noindent The tests assess the module’s ability to detect redundant function calls, ignore functionally distinct calls, handle object state changes, and recognize cases where caching would not be beneficial. Edge cases, such as external function calls, built-in function invocations, and method calls on different objects, are also considered. \\
+
+\noindent \textbf{Target requirement(s):} FR2, FR3, PR-PAR2, PR-PAR3~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Detecting Repeated Function Calls}
+    \begin{itemize}
+        \item Ensures the detection of repeated function calls with identical arguments within the same scope.
+        \item Validates that function calls on different arguments are not incorrectly flagged.
+    \end{itemize}
+
+    \item \textbf{Detecting Repeated Method Calls}
+    \begin{itemize}
+        \item Ensures that method calls on the same object instance are detected when repeated within a function.
+        \item Verifies that method calls on different object instances are not falsely flagged.
+    \end{itemize}
+
+    \item \textbf{Handling Object State Modifications}
+    \begin{itemize}
+        \item Ensures that function calls on objects with modified attributes between calls are not flagged.
+        \item Verifies that method calls are only flagged when they occur without intervening state changes.
+    \end{itemize}
+
+    \item \textbf{Detecting External Function Calls}
+    \begin{itemize}
+        \item Detects redundant external function calls such as \texttt{len(data.get("key"))}.
+        \item Ensures that only calls with matching parameters and return values are considered redundant.
+    \end{itemize}
+
+    \item \textbf{Handling Built-in Functions}
+    \begin{itemize}
+        \item Ensures that expensive built-in function calls (e.g., \texttt{max(data)}) are detected when redundant.
+        \item Verifies that lightweight built-in functions (e.g., \texttt{abs(-5)}) are ignored.
+    \end{itemize}
+
+    \item \textbf{Ensuring Accuracy and Performance}
+    \begin{itemize}
+        \item Ensures that detection does not introduce false positives by incorrectly flagging calls that differ in meaningful ways.
+        \item Verifies that detection performance scales efficiently with large codebases.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_repeated_calls.py}{here}.
+
+\subsubsection{Long Message Chain}
+
+\textbf{Goal:} The long message chain detection module identifies method call chains that exceed a predefined threshold (default: 5 calls). The following unit tests verify the detection capabilities. \\
+
+\noindent The tests evaluate the detection of long message chains by verifying that sequences exceeding the threshold, such as five consecutive messages within a short time, are correctly identified. They include edge cases, like chains just below the threshold or varying in length, to assess the robustness of the detection logic\\
+
+\noindent\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Detects exact five calls chain} \newline
+    Ensures that a method chain with exactly five calls is flagged.
+    
+    \item \textbf{Detects six calls chain} \newline
+    Verifies that a chain with six method calls is detected as a smell.
+    
+    \item \textbf{Ignores chain of four calls} \newline
+    Ensures that a chain with only four calls (below threshold) is not flagged.
+    
+    \item \textbf{Detects chain with attributes and calls} \newline
+    Tests detection of a chain that involves both attribute access and method calls.
+    
+    \item \textbf{Detects chain inside a loop} \newline
+    Ensures detection of a chain meeting the threshold when inside a loop.
+    
+    \item \textbf{Detects multiple chains on one line} \newline
+    Verifies that only the first long chain on a single line is reported.
+    
+    \item \textbf{Ignores separate statements} \newline
+    Ensures that separate method calls across multiple statements are not mistakenly combined into a single chain.
+    
+    \item \textbf{Ignores short chain comprehension} \newline
+    Ensures that a short chain within a list comprehension is not flagged.
+    
+    \item \textbf{Detects long chain comprehension} \newline
+    Verifies that a list comprehension with a long method chain is detected.
+    
+    \item \textbf{Detects five separate long chains} \newline
+    Ensures that multiple long chains on separate lines within the same function are individually detected.
+    
+    \item \textbf{Ignores element access chains} \newline
+    Confirms that attribute and index lookups without method calls are not flagged.
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_message_chain.py}{here}
+
+
+\subsubsection{Long Lambda Element}
+
+\textbf{Goal:} The following unit tests verify the correct detection of long lambda functions based on expression count and character length thresholds.\\
+
+\noindent The goal of this test suite is to ensure the detection system accurately identifies long lambda 
+functions based on predefined complexity thresholds, such as expression count and character 
+length. It verifies that the detection logic is precise, avoiding false positives for trivial 
+or short lambdas while correctly flagging complex or lengthy ones. The tests cover edge cases, 
+including nested lambdas and inline lambdas passed as arguments to functions like map or 
+filter. Additionally, the suite ensures degenerate cases, such as empty or extremely short 
+lambdas, are not mistakenly flagged. By validating these scenarios, the detection system 
+maintains robustness and reliability in identifying problematic lambda expressions.\\
+
+\noindent\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{No lambdas present} \newline
+    Ensures that when no lambda functions exist in the code, no smells are detected.
+    
+    \item \textbf{Short single lambda} \newline
+    Confirms that a single short lambda (well under the length threshold) with only one expression is not flagged.
+
+    \item \textbf{Lambda exceeding expression count} \newline
+    Detects a lambda function that contains multiple expressions, exceeding the threshold for complexity.
+
+    \item \textbf{Lambda exceeding character length} \newline
+    Identifies a lambda function that surpasses the maximum allowed character length, making it difficult to read.
+
+    \item \textbf{Lambda exceeding both thresholds} \newline
+    Flags a lambda function that is both too long in character length and contains too many expressions.
+
+    \item \textbf{Nested lambda functions} \newline
+    Ensures that both outer and inner nested lambdas are properly detected as long expressions.
+
+    \item \textbf{Inline lambda passed to function} \newline
+    Detects lambda functions that are passed inline to functions like \texttt{map} and \texttt{filter} when they exceed the complexity thresholds.
+
+    \item \textbf{Trivially short lambda function} \newline
+    Verifies that degenerate cases, such as a lambda with no real body or trivial operations, are not mistakenly flagged.
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_lambda_element.py}{here}
+
+
 
 \subsection{Refactoring Module}
 
-\subsubsection{Refactoring Controller}
+\subsubsection{Refactorer Controller}
 
 \textbf{Goal:} These tests verify the behavior of the RefactorerController in various scenarios, ensuring that it handles refactoring correctly and interacts with external components as expected.\\
 
@@ -1825,6 +2000,175 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_member_ignoring_method.py}{here}.
 
+\subsubsection{Use a Generator}
+
+\textbf{Goal:} The use-a-generator refactoring module optimizes list comprehensions used within functions like \texttt{all()} and \texttt{any()} by transforming them into generator expressions. This refactoring improves memory efficiency while maintaining code correctness. The following unit tests validate the accuracy of this functionality.\\
+
+\noindent The tests ensure that list comprehensions inside \texttt{all()} and \texttt{any()} calls are correctly converted to generator expressions while preserving original behavior. Additional test cases verify proper handling of multiline comprehensions, nested conditions, and various iterable types. Edge cases, such as improperly formatted comprehensions or comprehensions spanning multiple lines, are also considered.\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR5, FR6, PR-PAR3~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Refactoring List Comprehensions Inside \texttt{all()} Calls}
+    \begin{itemize}
+        \item Ensures that list comprehensions within \texttt{all()} are transformed into generator expressions.
+        \item Validates that the transformation preserves original functionality.
+    \end{itemize}
+
+    \item \textbf{Refactoring List Comprehensions Inside \texttt{any()} Calls}
+    \begin{itemize}
+        \item Ensures that list comprehensions within \texttt{any()} are transformed into generator expressions.
+        \item Verifies that the modified code remains functionally identical to the original.
+    \end{itemize}
+
+    \item \textbf{Handling Multi-line List Comprehensions}
+    \begin{itemize}
+        \item Ensures that multi-line list comprehensions are refactored correctly.
+        \item Verifies that proper indentation and formatting are preserved after transformation.
+    \end{itemize}
+
+    \item \textbf{Handling Edge Cases}
+    \begin{itemize}
+        \item Ensures that improperly formatted comprehensions do not result in errors.
+        \item Confirms that refactoring does not introduce unnecessary modifications or change unrelated code.
+    \end{itemize}
+
+    \item \textbf{Ensuring Correct Formatting and Readability}
+    \begin{itemize}
+        \item Validates that refactored code adheres to Python’s style guidelines.
+        \item Ensures that readability and maintainability are preserved after refactoring.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_list_comp_any_all_refactor.py}{here}.
+
+\subsubsection{Cache Repeated Calls}
+
+\textbf{Goal:} The cache repeated calls refactoring module optimizes redundant function and method calls by storing results in local variables, reducing unnecessary recomputation. This refactoring enhances performance by eliminating duplicate executions of expensive operations. The following unit tests validate the accuracy of this functionality.\\
+
+\noindent The tests ensure that function and method calls that produce identical results are cached and replaced with stored values where applicable. Additional test cases verify proper handling of method calls on objects, preserving object state, and integrating with function arguments. Edge cases, such as function calls with varying inputs, method calls on different instances, and presence of docstrings, are also considered.\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR5, FR6, PR-PAR3, PR-PAR2~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Refactoring Repeated Function Calls}
+    \begin{itemize}
+        \item Ensures that repeated function calls within a scope are replaced with cached results.
+        \item Validates that caching is only applied when function arguments remain unchanged.
+    \end{itemize}
+
+    \item \textbf{Refactoring Repeated Method Calls}
+    \begin{itemize}
+        \item Ensures that method calls on the same object instance are cached and replaced with stored values.
+        \item Verifies that method calls on different object instances are not incorrectly refactored.
+    \end{itemize}
+
+    \item \textbf{Handling Object State Modifications}
+    \begin{itemize}
+        \item Ensures that method calls on objects whose attributes change between calls are not cached.
+        \item Verifies that method calls are only cached when no state changes occur.
+    \end{itemize}
+
+    \item \textbf{Handling Edge Cases}
+    \begin{itemize}
+        \item Ensures that function calls with varying arguments are not incorrectly cached.
+        \item Confirms that caching does not interfere with function scope, closures, or nested function calls.
+    \end{itemize}
+
+    \item \textbf{Refactoring in the Presence of Docstrings}
+    \begin{itemize}
+        \item Ensures that refactoring does not alter function behavior when docstrings are present.
+        \item Verifies that caching maintains readability and proper formatting.
+    \end{itemize}
+
+    \item \textbf{Ensuring Correct Formatting and Readability}
+    \begin{itemize}
+        \item Validates that refactored code adheres to Python’s style guidelines.
+        \item Ensures that readability and maintainability are preserved after refactoring.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_repeated_calls.py}{here}.
+
+\subsubsection{Long Message Chain}
+
+\textbf{Goal:} The following unit tests verify the correctness of refactoring long element chains into more readable and efficient code while maintaining valid Python syntax.\\
+
+\noindent This test suite focuses on validating the refactoring of long method chains into 
+intermediate variables, improving code readability while preserving functionality. 
+It ensures that simple method chains are split correctly and that special cases, 
+such as f-strings or chains with arguments, are handled appropriately. The tests 
+also verify that refactoring maintains proper indentation, especially within nested 
+blocks like if statements or loops. Additionally, the suite confirms that 
+refactoring does not alter the behavior of the original code, even in contexts 
+like print statements. By testing both long and short chains, the suite ensures 
+consistency and correctness across various scenarios.\\
+
+\noindent \textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Basic method chain refactoring} \newline
+    Ensures that a simple method chain is refactored correctly into separate intermediate variables.
+
+    \item \textbf{F-string chain refactoring} \newline
+    Verifies that method chains applied to f-strings are properly broken down while preserving correctness.
+
+    \item \textbf{Modifications even if the chain is not long} \newline
+    Ensures that method chains are refactored consistently, even if they do not exceed the length threshold.
+
+    \item \textbf{Proper indentation preserved} \newline
+    Confirms that the refactored code maintains the correct indentation when inside a block statement such as an \texttt{if} condition.
+
+    \item \textbf{Method chain with arguments} \newline
+    Tests that method chains containing arguments (e.g., \texttt{replace("H", "J")}) are correctly refactored.
+
+    \item \textbf{Print statement preservation} \newline
+    Ensures that method chains within a \texttt{print} statement are refactored without altering their functionality.
+
+    \item \textbf{Nested method chains} \newline
+    Verifies that nested method chains (e.g., method calls on method results) are properly refactored into intermediate variables.
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}
+
+\subsubsection{Long Lambda Element}
+
+\textbf{Goal:} The following unit tests verify the correctness of refactoring long lambda expressions into named functions while maintaining valid Python syntax and preserving code functionality.\\
+
+\noindent The goal of this test suite is to ensure long lambda expressions are refactored into named 
+functions while maintaining code functionality, readability, and proper syntax. It verifies 
+that simple single-line lambdas are converted correctly and that more complex cases, such as 
+multi-line lambdas or those with multiple parameters, are handled appropriately. The tests 
+ensure that refactoring preserves the original behavior of the code, even for lambdas used 
+as keyword arguments or passed to functions like map or reduce. Additionally, the suite 
+confirms that no unnecessary changes, such as added print statements, are introduced during 
+refactoring. By covering a wide range of cases, the suite ensures the refactoring process
+ is both reliable and effective.\\
+
+\noindent \textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Basic lambda conversion} \newline
+    Verifies that a simple single-line lambda expression is correctly converted into a named function with proper indentation and structure.
+
+    \item \textbf{No extra print statements} \newline
+    Ensures that the refactoring process does not introduce unnecessary print statements when converting lambda expressions.
+
+    \item \textbf{Lambda in function argument} \newline
+    Tests that lambda expressions used as arguments to other functions (e.g., in \texttt{map()} calls) are properly refactored while maintaining the original function call structure.
+
+    \item \textbf{Multi-argument lambda} \newline
+    Verifies that lambda expressions with multiple parameters are correctly converted into named functions with the appropriate parameter list.
+
+    \item \textbf{Lambda with keyword arguments} \newline
+    Ensures that lambda expressions used as keyword arguments in function calls are properly refactored while preserving the original keyword argument syntax and indentation.
+
+    \item \textbf{Very long lambda function} \newline
+    Tests the refactoring of complex, multi-line lambda expressions with extensive mathematical operations, verifying that the converted function maintains the original logic and structure.
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_lambda_element_refactoring.py}{here}
+
 
 \subsection{VsCode Plugin}
 
@@ -1945,8 +2289,6 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
 
-
-
 \subsubsection{Hover Manager}
 
 \textbf{Goal:} The Hover Manager module manages hover functionality for Python files, providing hover content for detected code smells and allowing refactoring commands. The following unit tests verify the accuracy of this functionality.\\
@@ -2052,173 +2394,48 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelection.test.ts}{here}.
 
-\subsection{Long Message Chain Detection Tests}
+\subsubsection{Handle Smells Settings}
 
-\textbf{Goal:} The long message chain detection module identifies method call chains that exceed a predefined threshold (default: 5 calls). The following unit tests verify the detection capabilities. \\
+\textbf{Goal:} The VS Code settings management module enables users to customize detection settings, update enabled smells, and ensure workspace consistency. This module integrates with the IDE to provide real-time updates when settings change. The following unit tests validate the correctness of this functionality.\\
 
-The tests evaluate the detection of long message chains by verifying that sequences exceeding the threshold, such as five consecutive messages within a short time, are correctly identified. They include edge cases, like chains just below the threshold or varying in length, to assess the robustness of the detection logic\\
+\noindent The tests ensure that enabled smells are correctly retrieved from user configurations, updates to settings trigger the appropriate notifications, and changes are accurately reflected in the workspace. Additional test cases verify proper handling of missing configurations, format conversions, and cache clearing operations. Edge cases, such as unchanged settings and invalid inputs, are also considered.\\
 
-\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
-
-\begin{itemize}
-    \item \textbf{Detects exact five calls chain} \newline
-    Ensures that a method chain with exactly five calls is flagged.
-    
-    \item \textbf{Detects six calls chain} \newline
-    Verifies that a chain with six method calls is detected as a smell.
-    
-    \item \textbf{Ignores chain of four calls} \newline
-    Ensures that a chain with only four calls (below threshold) is not flagged.
-    
-    \item \textbf{Detects chain with attributes and calls} \newline
-    Tests detection of a chain that involves both attribute access and method calls.
-    
-    \item \textbf{Detects chain inside a loop} \newline
-    Ensures detection of a chain meeting the threshold when inside a loop.
-    
-    \item \textbf{Detects multiple chains on one line} \newline
-    Verifies that only the first long chain on a single line is reported.
-    
-    \item \textbf{Ignores separate statements} \newline
-    Ensures that separate method calls across multiple statements are not mistakenly combined into a single chain.
-    
-    \item \textbf{Ignores short chain comprehension} \newline
-    Ensures that a short chain within a list comprehension is not flagged.
-    
-    \item \textbf{Detects long chain comprehension} \newline
-    Verifies that a list comprehension with a long method chain is detected.
-    
-    \item \textbf{Detects five separate long chains} \newline
-    Ensures that multiple long chains on separate lines within the same function are individually detected.
-    
-    \item \textbf{Ignores element access chains} \newline
-    Confirms that attribute and index lookups without method calls are not flagged.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_message_chain.py}{here}
-
-\subsection{Long Lambda Element Detection}
-
-\textbf{Goal:} The following unit tests verify the correct detection of long lambda functions based on expression count and character length thresholds.\\
-
-The goal of this test suite is to ensure the detection system accurately identifies long lambda 
-functions based on predefined complexity thresholds, such as expression count and character 
-length. It verifies that the detection logic is precise, avoiding false positives for trivial 
-or short lambdas while correctly flagging complex or lengthy ones. The tests cover edge cases, 
-including nested lambdas and inline lambdas passed as arguments to functions like map or 
-filter. Additionally, the suite ensures degenerate cases, such as empty or extremely short 
-lambdas, are not mistakenly flagged. By validating these scenarios, the detection system 
-maintains robustness and reliability in identifying problematic lambda expressions.\\
-
-\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
+\noindent \textbf{Target requirement(s):} FR10, UHR-PSI1, UHR-EOU2, OER-IAS1~\cite{SRS} \\
 
 \begin{itemize}
-    \item \textbf{No lambdas present} \newline
-    Ensures that when no lambda functions exist in the code, no smells are detected.
-    
-    \item \textbf{Short single lambda} \newline
-    Confirms that a single short lambda (well under the length threshold) with only one expression is not flagged.
+    \item \textbf{Retrieving Enabled Smells}
+    \begin{itemize}
+        \item Ensures that the function retrieves all enabled smells from the user's VS Code settings.
+        \item Validates that the function returns an empty object when no smells are enabled.
+    \end{itemize}
 
-    \item \textbf{Lambda exceeding expression count} \newline
-    Detects a lambda function that contains multiple expressions, exceeding the threshold for complexity.
+    \item \textbf{Handling Updates to Smell Filters}
+    \begin{itemize}
+        \item Ensures that enabling a smell triggers a notification to the user.
+        \item Confirms that disabling a smell results in a proper update message.
+        \item Validates that when no changes occur, no unnecessary cache updates are performed.
+    \end{itemize}
 
-    \item \textbf{Lambda exceeding character length} \newline
-    Identifies a lambda function that surpasses the maximum allowed character length, making it difficult to read.
+    \item \textbf{Clearing Cache on Settings Update}
+    \begin{itemize}
+        \item Ensures that enabling or disabling a smell triggers a workspace cache wipe.
+        \item Confirms that cache clearing only occurs when actual changes are made.
+    \end{itemize}
 
-    \item \textbf{Lambda exceeding both thresholds} \newline
-    Flags a lambda function that is both too long in character length and contains too many expressions.
+    \item \textbf{Formatting Smell Names}
+    \begin{itemize}
+        \item Ensures that smell names stored in kebab-case are correctly formatted into a readable format.
+        \item Verifies that empty input results in an empty string without errors.
+    \end{itemize}
 
-    \item \textbf{Nested lambda functions} \newline
-    Ensures that both outer and inner nested lambdas are properly detected as long expressions.
-
-    \item \textbf{Inline lambda passed to function} \newline
-    Detects lambda functions that are passed inline to functions like \texttt{map} and \texttt{filter} when they exceed the complexity thresholds.
-
-    \item \textbf{Trivially short lambda function} \newline
-    Verifies that degenerate cases, such as a lambda with no real body or trivial operations, are not mistakenly flagged.
+    \item \textbf{Ensuring User-Friendly Notifications}
+    \begin{itemize}
+        \item Confirms that updates to smell settings provide clear, informative messages.
+        \item Ensures that error handling follows polite and constructive messaging principles.
+    \end{itemize}
 \end{itemize}
 
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_lambda_element.py}{here}
-
-\subsection{Long Message Chain Refactoring}
-
-\textbf{Goal:} The following unit tests verify the correctness of refactoring long element chains into more readable and efficient code while maintaining valid Python syntax.\\
-
-This test suite focuses on validating the refactoring of long method chains into 
-intermediate variables, improving code readability while preserving functionality. 
-It ensures that simple method chains are split correctly and that special cases, 
-such as f-strings or chains with arguments, are handled appropriately. The tests 
-also verify that refactoring maintains proper indentation, especially within nested 
-blocks like if statements or loops. Additionally, the suite confirms that 
-refactoring does not alter the behavior of the original code, even in contexts 
-like print statements. By testing both long and short chains, the suite ensures 
-consistency and correctness across various scenarios.\\
-
-\textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
-
-\begin{itemize}
-    \item \textbf{Basic method chain refactoring} \newline
-    Ensures that a simple method chain is refactored correctly into separate intermediate variables.
-
-    \item \textbf{F-string chain refactoring} \newline
-    Verifies that method chains applied to f-strings are properly broken down while preserving correctness.
-
-    \item \textbf{Modifications even if the chain is not long} \newline
-    Ensures that method chains are refactored consistently, even if they do not exceed the length threshold.
-
-    \item \textbf{Proper indentation preserved} \newline
-    Confirms that the refactored code maintains the correct indentation when inside a block statement such as an \texttt{if} condition.
-
-    \item \textbf{Method chain with arguments} \newline
-    Tests that method chains containing arguments (e.g., \texttt{replace("H", "J")}) are correctly refactored.
-
-    \item \textbf{Print statement preservation} \newline
-    Ensures that method chains within a \texttt{print} statement are refactored without altering their functionality.
-
-    \item \textbf{Nested method chains} \newline
-    Verifies that nested method chains (e.g., method calls on method results) are properly refactored into intermediate variables.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}
-
-\subsection{Long Lambda Element Refactoring}
-
-\textbf{Goal:} The following unit tests verify the correctness of refactoring long lambda expressions into named functions while maintaining valid Python syntax and preserving code functionality.\\
-
-The goal of this test suite is to ensure long lambda expressions are refactored into named 
-functions while maintaining code functionality, readability, and proper syntax. It verifies 
-that simple single-line lambdas are converted correctly and that more complex cases, such as 
-multi-line lambdas or those with multiple parameters, are handled appropriately. The tests 
-ensure that refactoring preserves the original behavior of the code, even for lambdas used 
-as keyword arguments or passed to functions like map or reduce. Additionally, the suite 
-confirms that no unnecessary changes, such as added print statements, are introduced during 
-refactoring. By covering a wide range of cases, the suite ensures the refactoring process
- is both reliable and effective.\\
-
-\textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
-
-\begin{itemize}
-    \item \textbf{Basic lambda conversion} \newline
-    Verifies that a simple single-line lambda expression is correctly converted into a named function with proper indentation and structure.
-
-    \item \textbf{No extra print statements} \newline
-    Ensures that the refactoring process does not introduce unnecessary print statements when converting lambda expressions.
-
-    \item \textbf{Lambda in function argument} \newline
-    Tests that lambda expressions used as arguments to other functions (e.g., in \texttt{map()} calls) are properly refactored while maintaining the original function call structure.
-
-    \item \textbf{Multi-argument lambda} \newline
-    Verifies that lambda expressions with multiple parameters are correctly converted into named functions with the appropriate parameter list.
-
-    \item \textbf{Lambda with keyword arguments} \newline
-    Ensures that lambda expressions used as keyword arguments in function calls are properly refactored while preserving the original keyword argument syntax and indentation.
-
-    \item \textbf{Very long lambda function} \newline
-    Tests the refactoring of complex, multi-line lambda expressions with extensive mathematical operations, verifying that the converted function maintains the original logic and structure.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_lambda_element_refactoring.py}{here}
-
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/handleSmellSettings.test.ts}{here}.
 
 \subsection{API Routes}
 
