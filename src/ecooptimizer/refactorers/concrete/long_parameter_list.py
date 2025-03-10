@@ -1,12 +1,14 @@
-import ast
-import astor
+import libcst as cst
+import libcst.matchers as m
+from libcst.metadata import PositionProvider, MetadataWrapper, ParentNodeProvider
 from pathlib import Path
+from typing import Optional
 
 from ..multi_file_refactorer import MultiFileRefactorer
 from ...data_types.smell import LPLSmell
 
 
-class FunctionCallVisitor(ast.NodeVisitor):
+class FunctionCallVisitor(cst.CSTVisitor):
     def __init__(self, function_name: str, class_name: str, is_constructor: bool):
         self.function_name = function_name
         self.is_constructor = is_constructor  # whether or not given function call is a constructor
@@ -15,26 +17,432 @@ class FunctionCallVisitor(ast.NodeVisitor):
         )
         self.found = False
 
-    def visit_Call(self, node: ast.Call):
+    def visit_Call(self, node: cst.Call):
         """Check if the function/class constructor is called."""
-        # handle function call
-        if isinstance(node.func, ast.Name) and node.func.id == self.function_name:
-            self.found = True
-
-        # handle method call
-        elif isinstance(node.func, ast.Attribute):
-            if node.func.attr == self.function_name:
-                self.found = True
-
         # handle class constructor call
-        elif (
-            self.is_constructor
-            and isinstance(node.func, ast.Name)
-            and node.func.id == self.class_name
-        ):
+        if self.is_constructor and m.matches(node.func, m.Name(self.class_name)):
             self.found = True
 
-        self.generic_visit(node)
+        # handle standalone function calls
+        elif m.matches(node.func, m.Name(self.function_name)):
+            self.found = True
+
+        # handle method calss
+        elif m.matches(node.func, m.Attribute(attr=m.Name(self.function_name))):
+            self.found = True
+
+
+class ParameterAnalyzer:
+    @staticmethod
+    def get_used_parameters(function_node: cst.FunctionDef, params: list[str]) -> list[str]:
+        """
+        Identifies parameters that actually are used within the function/method body using CST analysis
+        """
+
+        # visitor class to collect variable names used in the function body
+        class UsedParamVisitor(cst.CSTVisitor):
+            def __init__(self):
+                self.used_names = set()
+
+            def visit_Name(self, node: cst.Name) -> None:
+                self.used_names.add(node.value)
+
+        # traverse the function body to collect used variable names
+        visitor = UsedParamVisitor()
+        function_node.body.visit(visitor)
+
+        return [name for name in params if name in visitor.used_names]
+
+    @staticmethod
+    def get_parameters_with_default_value(params: list[cst.Param]) -> dict[str, cst.Arg]:
+        """
+        Given a list of function parameters and their default values, maps parameter names to their default values
+        """
+        param_defaults = {}
+
+        for param in params:
+            if param.default is not None:  # check if the parameter has a default value
+                param_defaults[param.name.value] = param.default
+
+        return param_defaults
+
+    @staticmethod
+    def classify_parameters(params: list[str]) -> dict[str, list[str]]:
+        """
+        Classifies parameters into 'data' and 'config' groups based on naming conventions
+        """
+        data_params, config_params = [], []
+        data_keywords = {"data", "input", "output", "result", "record", "item"}
+        config_keywords = {"config", "setting", "option", "env", "parameter", "path"}
+
+        for param in params:
+            param_lower = param.lower()
+            if any(keyword in param_lower for keyword in data_keywords):
+                data_params.append(param)
+            elif any(keyword in param_lower for keyword in config_keywords):
+                config_params.append(param)
+            else:
+                data_params.append(param)
+        return {"data_params": data_params, "config_params": config_params}
+
+
+class ParameterEncapsulator:
+    @staticmethod
+    def encapsulate_parameters(
+        classified_params: dict[str, list[str]],
+        default_value_params: dict[str, cst.Arg],
+        classified_param_names: tuple[str, str],
+    ) -> list[cst.ClassDef]:
+        """
+        Generates CST class definitions for encapsulating parameter objects.
+        """
+        data_params, config_params = (
+            classified_params["data_params"],
+            classified_params["config_params"],
+        )
+        class_nodes = []
+
+        data_class_name, config_class_name = classified_param_names
+
+        if data_params:
+            data_param_class = ParameterEncapsulator.create_parameter_object_class(
+                data_params, default_value_params, data_class_name
+            )
+            class_nodes.append(data_param_class)
+
+        if config_params:
+            config_param_class = ParameterEncapsulator.create_parameter_object_class(
+                config_params, default_value_params, config_class_name
+            )
+            class_nodes.append(config_param_class)
+
+        return class_nodes
+
+    @staticmethod
+    def create_parameter_object_class(
+        param_names: list[str],
+        default_value_params: dict[str, cst.Arg],
+        class_name: str = "ParamsObject",
+    ) -> cst.ClassDef:
+        """
+        Creates a CST class definition for encapsulating related parameters.
+        """
+        # create constructor parameters
+        constructor_params = [cst.Param(name=cst.Name("self"))]
+        assignments = []
+
+        for param in param_names:
+            default_value = default_value_params.get(param, None)
+
+            param_cst = cst.Param(
+                name=cst.Name(param),
+                default=default_value,  # set default value if available
+            )
+            constructor_params.append(param_cst)
+
+            assignment = cst.SimpleStatementLine(
+                [
+                    cst.Assign(
+                        targets=[
+                            cst.AssignTarget(
+                                cst.Attribute(value=cst.Name("self"), attr=cst.Name(param))
+                            )
+                        ],
+                        value=cst.Name(param),
+                    )
+                ]
+            )
+            assignments.append(assignment)
+
+        constructor = cst.FunctionDef(
+            name=cst.Name("__init__"),
+            params=cst.Parameters(params=constructor_params),
+            body=cst.IndentedBlock(body=assignments),
+        )
+
+        # create class definition
+        return cst.ClassDef(
+            name=cst.Name(class_name),
+            body=cst.IndentedBlock(body=[constructor]),
+        )
+
+
+class FunctionCallUpdater:
+    @staticmethod
+    def get_method_type(func_node: cst.FunctionDef) -> str:
+        """
+        Determines whether a function is an instance method, class method, or static method
+        """
+        # check for @staticmethod or @classmethod decorators
+        for decorator in func_node.decorators:
+            if isinstance(decorator.decorator, cst.Name):
+                if decorator.decorator.value == "staticmethod":
+                    return "static method"
+                if decorator.decorator.value == "classmethod":
+                    return "class method"
+
+        # check the first parameter name
+        if func_node.params.params:
+            first_param = func_node.params.params[0].name.value
+            if first_param == "self":
+                return "instance method"
+            if first_param == "cls":
+                return "class method"
+
+        return "unknown method type"
+
+    @staticmethod
+    def remove_unused_params(
+        function_node: cst.FunctionDef,
+        used_params: list[str],
+        default_value_params: dict[str, cst.Arg],
+    ) -> cst.FunctionDef:
+        """
+        Removes unused parameters from the function signature while preserving self/cls if applicable.
+        Ensures there is no trailing comma when removing the last parameter.
+        """
+        method_type = FunctionCallUpdater.get_method_type(function_node)
+
+        updated_params = []
+        updated_defaults = []
+
+        # preserve self/cls if it's an instance or class method
+        if function_node.params.params and method_type in {"instance method", "class method"}:
+            updated_params.append(function_node.params.params[0])
+
+        # remove unused parameters, keeping only those that are used
+        for param in function_node.params.params:
+            if param.name.value in used_params:
+                updated_params.append(param)
+                if param.name.value in default_value_params:
+                    updated_defaults.append(default_value_params[param.name.value])
+
+        # ensure that the last parameter does not leave a trailing comma
+        updated_params = [p.with_changes(comma=cst.MaybeSentinel.DEFAULT) for p in updated_params]
+
+        return function_node.with_changes(
+            params=function_node.params.with_changes(params=updated_params)
+        )
+
+    @staticmethod
+    def update_function_signature(
+        function_node: cst.FunctionDef, classified_params: dict[str, list[str]]
+    ) -> cst.FunctionDef:
+        """
+        Updates the function signature to use encapsulated parameter objects
+        """
+        data_params, config_params = (
+            classified_params["data_params"],
+            classified_params["config_params"],
+        )
+
+        method_type = FunctionCallUpdater.get_method_type(function_node)
+        new_params = []
+
+        # preserve self/cls if it's a method
+        if function_node.params.params and method_type in {"instance method", "class method"}:
+            new_params.append(function_node.params.params[0])
+
+        # add encapsulated objects as new parameters
+        if data_params:
+            new_params.append(cst.Param(name=cst.Name("data_params")))
+        if config_params:
+            new_params.append(cst.Param(name=cst.Name("config_params")))
+
+        return function_node.with_changes(
+            params=function_node.params.with_changes(params=new_params)
+        )
+
+    @staticmethod
+    def update_parameter_usages(
+        function_node: cst.FunctionDef, classified_params: dict[str, list[str]]
+    ) -> cst.FunctionDef:
+        """
+        Updates the function body to use encapsulated parameter objects.
+        """
+
+        class ParameterUsageTransformer(cst.CSTTransformer):
+            def __init__(self, classified_params: dict[str, list[str]]):
+                self.param_to_group = {}
+
+                # flatten classified_params to map each param to its group (dataParams or configParams)
+                for group, params in classified_params.items():
+                    for param in params:
+                        self.param_to_group[param] = group
+
+            def leave_Assign(
+                self, original_node: cst.Assign, updated_node: cst.Assign
+            ) -> cst.Assign:
+                """
+                Transform only right-hand side references to parameters that need to be updated.
+                Ensure left-hand side (self attributes) remain unchanged.
+                """
+                if not isinstance(updated_node.value, cst.Name):
+                    return updated_node
+
+                var_name = updated_node.value.value
+
+                if var_name in self.param_to_group:
+                    new_value = cst.Attribute(
+                        value=cst.Name(self.param_to_group[var_name]), attr=cst.Name(var_name)
+                    )
+                    return updated_node.with_changes(value=new_value)
+
+                return updated_node
+
+        # wrap CST node in a MetadataWrapper to enable metadata analysis
+        transformer = ParameterUsageTransformer(classified_params)
+        return function_node.visit(transformer)
+
+    @staticmethod
+    def get_enclosing_class_name(
+        tree: cst.Module, init_node: cst.FunctionDef, parent_metadata
+    ) -> Optional[str]:
+        """
+        Finds the class name enclosing the given __init__ function node.
+        """
+        wrapper = MetadataWrapper(tree)
+        current_node = init_node
+        while current_node in parent_metadata:
+            parent = parent_metadata[current_node]
+            if isinstance(parent, cst.ClassDef):
+                return parent.name.value
+            current_node = parent
+        return None
+
+    @staticmethod
+    def update_function_calls(
+        tree: cst.Module,
+        function_node: cst.FunctionDef,
+        used_params: list[str],
+        classified_params: dict[str, list[str]],
+        classified_param_names: tuple[str, str],
+        enclosing_class_name: str,
+    ) -> cst.Module:
+        """
+        Updates all calls to a given function in the provided CST tree to reflect new encapsulated parameters
+        :param tree: CST tree of the code.
+        :param function_node: CST node of the function to update calls for.
+        :param params: A dictionary containing 'data' and 'config' parameters.
+        :return: The updated CST tree
+        """
+        param_to_group = {}
+
+        for group_name, params in zip(classified_param_names, classified_params.values()):
+            for param in params:
+                param_to_group[param] = group_name
+
+        function_name = function_node.name.value
+        if function_name == "__init__":
+            function_name = enclosing_class_name
+
+        class FunctionCallTransformer(cst.CSTTransformer):
+            def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:
+                """Transforms function calls to use grouped parameters."""
+                # Handle both standalone function calls and instance method calls
+                if not isinstance(updated_node.func, (cst.Name, cst.Attribute)):
+                    return updated_node  # Ignore other calls that are not functions/methods
+
+                # Extract the function/method name
+                func_name = (
+                    updated_node.func.attr.value
+                    if isinstance(updated_node.func, cst.Attribute)
+                    else updated_node.func.value
+                )
+
+                # If the function/method being called is not the one we're refactoring, skip it
+                if func_name != function_name:
+                    return updated_node
+
+                positional_args = []
+                keyword_args = {}
+
+                # Separate positional and keyword arguments
+                for arg in updated_node.args:
+                    if arg.keyword is None:
+                        positional_args.append(arg.value)
+                    else:
+                        keyword_args[arg.keyword.value] = arg.value
+
+                # Group arguments based on classified_params
+                grouped_args = {group: [] for group in classified_param_names}
+
+                # Process positional arguments
+                param_index = 0
+                for param in used_params:
+                    if param_index < len(positional_args):
+                        grouped_args[param_to_group[param]].append(
+                            cst.Arg(value=positional_args[param_index])
+                        )
+                        param_index += 1
+
+                # Process keyword arguments
+                for kw, value in keyword_args.items():
+                    if kw in param_to_group:
+                        grouped_args[param_to_group[kw]].append(
+                            cst.Arg(value=value, keyword=cst.Name(kw))
+                        )
+
+                # Construct new grouped arguments
+                new_args = [
+                    cst.Arg(
+                        value=cst.Call(func=cst.Name(group_name), args=grouped_args[group_name])
+                    )
+                    for group_name in classified_param_names
+                    if grouped_args[group_name]  # Skip empty groups
+                ]
+
+                return updated_node.with_changes(args=new_args)
+
+        transformer = FunctionCallTransformer()
+        return tree.visit(transformer)
+
+
+class ClassInserter(cst.CSTTransformer):
+    def __init__(self, class_nodes: list[cst.ClassDef]):
+        self.class_nodes = class_nodes
+        self.insert_index = None
+
+    def visit_Module(self, node: cst.Module) -> None:
+        """
+        Identify the first function definition in the module.
+        """
+        for i, statement in enumerate(node.body):
+            if isinstance(statement, cst.FunctionDef):
+                self.insert_index = i
+                break
+
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
+        """
+        Insert the generated class definitions before the first function definition.
+        """
+        if self.insert_index is None:
+            # if no function is found, append the class nodes at the beginning
+            new_body = list(self.class_nodes) + list(updated_node.body)
+        else:
+            # insert class nodes before the first function
+            new_body = (
+                list(updated_node.body[: self.insert_index])
+                + list(self.class_nodes)
+                + list(updated_node.body[self.insert_index :])
+            )
+
+        return updated_node.with_changes(body=new_body)
+
+
+class FunctionFinder(cst.CSTVisitor):
+    METADATA_DEPENDENCIES = (PositionProvider,)
+
+    def __init__(self, position_metadata, target_line):
+        self.position_metadata = position_metadata
+        self.target_line = target_line
+        self.function_node = None
+
+    def visit_FunctionDef(self, node: cst.FunctionDef):
+        """Check if the function's starting line matches the target."""
+        pos = self.position_metadata.get(node)
+        if pos and pos.start.line == self.target_line:
+            self.function_node = node  # Store the function node
 
 
 class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
@@ -43,13 +451,15 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.parameter_analyzer = ParameterAnalyzer()
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
-        self.function_node = None  # AST node of definition of function that needs to be refactored
-        self.used_params = None  # list of unclassified used params
+        self.function_node: Optional[cst.FunctionDef] = (
+            None  # AST node of definition of function that needs to be refactored
+        )
+        self.used_params: None  # list of unclassified used params
         self.classified_params = None
         self.classified_param_names = None
         self.classified_param_nodes = []
-        self.enclosing_class_name = None
-        self.is_method = False
+        self.enclosing_class_name: Optional[str] = None
+        self.is_constructor = False
 
     def refactor(
         self,
@@ -67,72 +477,105 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.target_file = target_file
 
         with target_file.open() as f:
-            tree = ast.parse(f.read())
+            source_code = f.read()
 
-        # find the line number of target function indicated by the code smell object
+        tree = cst.parse_module(source_code)
+        wrapper = MetadataWrapper(tree)
+        position_metadata = wrapper.resolve(PositionProvider)
+        parent_metadata = wrapper.resolve(ParentNodeProvider)
         target_line = smell.occurences[0].line
-        # use target_line to find function definition at the specific line for given code smell object
-        for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef) and node.lineno == target_line:
-                self.function_node = node
-                params = [arg.arg for arg in self.function_node.args.args if arg.arg != "self"]
-                default_value_params = self.parameter_analyzer.get_parameters_with_default_value(
-                    self.function_node.args.defaults, params
-                )  # params that have default value assigned in function definition, stored as a dict of param name to default value
 
-                if (
-                    len(params) > max_param_limit
-                ):  # max limit beyond which the code smell is configured to be detected
-                    # need to identify used parameters so unused ones can be removed
-                    self.used_params = self.parameter_analyzer.get_used_parameters(
-                        self.function_node, params
+        visitor = FunctionFinder(position_metadata, target_line)
+        wrapper.visit(visitor)  # Traverses the CST tree
+
+        if visitor.function_node:
+            self.function_node = visitor.function_node
+
+            self.is_constructor = self.function_node.name.value == "__init__"
+            if self.is_constructor:
+                self.enclosing_class_name = FunctionCallUpdater.get_enclosing_class_name(
+                    tree, self.function_node, parent_metadata
+                )
+            param_names = [
+                param.name.value
+                for param in self.function_node.params.params
+                if param.name.value != "self"
+            ]
+            param_nodes = [
+                param for param in self.function_node.params.params if param.name.value != "self"
+            ]
+            # params that have default value assigned in function definition, stored as a dict of param name to default value
+            default_value_params = self.parameter_analyzer.get_parameters_with_default_value(
+                param_nodes
+            )
+
+            if len(param_nodes) > max_param_limit:
+                # need to identify used parameters so unused ones can be removed
+                self.used_params = self.parameter_analyzer.get_used_parameters(
+                    self.function_node, param_names
+                )
+
+                if len(self.used_params) > max_param_limit:
+                    # classify used params into data and config types and store the results in a dictionary, if number of used params is beyond the configured limit
+                    self.classified_params = self.parameter_analyzer.classify_parameters(
+                        self.used_params
                     )
-                    if len(self.used_params) > max_param_limit:
-                        # classify used params into data and config types and store the results in a dictionary, if number of used params is beyond the configured limit
-                        self.classified_params = self.parameter_analyzer.classify_parameters(
-                            self.used_params
-                        )
-                        self.classified_param_names = self._generate_unique_param_class_names()
-                        # add class defitions for data and config encapsulations to the tree
-                        self.classified_param_nodes = (
-                            self.parameter_encapsulator.encapsulate_parameters(
-                                self.classified_params,
-                                default_value_params,
-                                self.classified_param_names,
-                            )
-                        )
-
-                        tree = self._update_tree_with_class_nodes(tree)
-
-                        # first update calls to this function(this needs to use existing params)
-                        updated_tree = self.function_updater.update_function_calls(
-                            tree,
-                            self.function_node,
-                            self.used_params,
+                    self.classified_param_names = self._generate_unique_param_class_names(
+                        target_line
+                    )
+                    # add class defitions for data and config encapsulations to the tree
+                    self.classified_param_nodes = (
+                        self.parameter_encapsulator.encapsulate_parameters(
                             self.classified_params,
+                            default_value_params,
                             self.classified_param_names,
                         )
-                        # then update function signature and parameter usages with function body)
-                        updated_function = self.function_updater.update_function_signature(
-                            self.function_node, self.classified_params
-                        )
-                        updated_function = self.function_updater.update_parameter_usages(
-                            self.function_node, self.classified_params
-                        )
-                    else:
-                        # just remove the unused params if used parameters are within the max param list
-                        updated_function = self.function_updater.remove_unused_params(
-                            self.function_node, self.used_params, default_value_params
-                        )
+                    )
 
-                    # update the tree by replacing the old function with the updated one
-                    for i, body_node in enumerate(tree.body):
-                        if body_node == self.function_node:
-                            tree.body[i] = updated_function
-                            break
-                    updated_tree = tree
+                    # insert class definitions and update function calls
+                    tree = tree.visit(ClassInserter(self.classified_param_nodes))
+                    # update calls to the function
+                    tree = self.function_updater.update_function_calls(
+                        tree,
+                        self.function_node,
+                        self.used_params,
+                        self.classified_params,
+                        self.classified_param_names,
+                        self.enclosing_class_name,
+                    )
+                    # next updaate function signature and parameter usages within function body
+                    updated_function_node = self.function_updater.update_function_signature(
+                        self.function_node, self.classified_params
+                    )
+                    updated_function_node = self.function_updater.update_parameter_usages(
+                        updated_function_node, self.classified_params
+                    )
 
-        modified_source = astor.to_source(updated_tree)
+                else:
+                    # just remove the unused params if the used parameters are within the max param list
+                    updated_function_node = self.function_updater.remove_unused_params(
+                        self.function_node, self.used_params, default_value_params
+                    )
+
+                class FunctionReplacer(cst.CSTTransformer):
+                    def __init__(
+                        self, original_function: cst.FunctionDef, updated_function: cst.FunctionDef
+                    ):
+                        self.original_function = original_function
+                        self.updated_function = updated_function
+
+                    def leave_FunctionDef(
+                        self, original_node: cst.FunctionDef, updated_node: cst.FunctionDef
+                    ) -> cst.FunctionDef:
+                        """Replace the original function definition with the updated one."""
+                        if original_node.deep_equals(self.original_function):
+                            return self.updated_function  # replace with the modified function
+                        return updated_node  # leave other functions unchanged
+
+                tree = tree.visit(FunctionReplacer(self.function_node, updated_function_node))
+
+        # Write the modified source
+        modified_source = tree.code
 
         with output_file.open("w") as temp_file:
             temp_file.write(modified_source)
@@ -141,454 +584,47 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
             with target_file.open("w") as f:
                 f.write(modified_source)
 
-        self.is_method = self.function_node.name == "__init__"
-
-        # if refactoring __init__, determine the class name
-        if self.is_method:
-            self.enclosing_class_name = FunctionCallUpdater.get_enclosing_class_name(
-                ast.parse(target_file.read_text()), self.function_node
-            )
-
         self.traverse_and_process(source_dir)
+
+    def _generate_unique_param_class_names(self, target_line: int) -> tuple[str, str]:
+        """
+        Generate unique class names for data params and config params based on function name and line number.
+        :return: A tuple containing (DataParams class name, ConfigParams class name).
+        """
+        unique_suffix = f"{self.function_node.name.value}_{target_line}"
+        data_class_name = f"DataParams_{unique_suffix}"
+        config_class_name = f"ConfigParams_{unique_suffix}"
+        return data_class_name, config_class_name
 
     def _process_file(self, file: Path):
         if file.samefile(self.target_file):
             return False
 
-        tree = ast.parse(file.read_text())
+        tree = cst.parse_module(file.read_text())
 
-        # check if function call or class instantiation occurs in this file
         visitor = FunctionCallVisitor(
-            self.function_node.name, self.enclosing_class_name, self.is_method
+            self.function_node.name.value, self.enclosing_class_name, self.is_constructor
         )
-        visitor.visit(tree)
+        tree.visit(visitor)
 
         if not visitor.found:
             return False
 
         # insert class definitions before modifying function calls
-        updated_tree = self._update_tree_with_class_nodes(tree)
+        tree = tree.visit(ClassInserter(self.classified_param_nodes))
 
         # update function calls/class instantiations
-        updated_tree = self.function_updater.update_function_calls(
-            updated_tree,
+        tree = self.function_updater.update_function_calls(
+            tree,
             self.function_node,
             self.used_params,
             self.classified_params,
             self.classified_param_names,
+            self.enclosing_class_name,
         )
 
-        modified_source = astor.to_source(updated_tree)
+        modified_source = tree.code
         with file.open("w") as f:
             f.write(modified_source)
 
         return True
-
-    def _generate_unique_param_class_names(self) -> tuple[str, str]:
-        """
-        Generate unique class names for data params and config params based on function name and line number.
-        :return: A tuple containing (DataParams class name, ConfigParams class name).
-        """
-        unique_suffix = f"{self.function_node.name}_{self.function_node.lineno}"
-        data_class_name = f"DataParams_{unique_suffix}"
-        config_class_name = f"ConfigParams_{unique_suffix}"
-        return data_class_name, config_class_name
-
-    def _update_tree_with_class_nodes(self, tree: ast.Module) -> ast.Module:
-        insert_index = 0
-        for i, node in enumerate(tree.body):
-            if isinstance(node, ast.FunctionDef):
-                insert_index = i  # first function definition found
-                break
-
-        # insert class nodes before the first function definition
-        for class_node in reversed(self.classified_param_nodes):
-            tree.body.insert(insert_index, class_node)
-        return tree
-
-
-class ParameterAnalyzer:
-    @staticmethod
-    def get_used_parameters(function_node: ast.FunctionDef, params: list[str]) -> set[str]:
-        """
-        Identifies parameters that actually are used within the function/method body using AST analysis
-        """
-        source_code = astor.to_source(function_node)
-        tree = ast.parse(source_code)
-
-        used_set = set()
-
-        # visitor class that tracks parameter usage
-        class ParamUsageVisitor(ast.NodeVisitor):
-            def visit_Name(self, node: ast.Name):
-                if isinstance(node.ctx, ast.Load) and node.id in params:
-                    used_set.add(node.id)
-
-        ParamUsageVisitor().visit(tree)
-
-        # preserve the order of params by filtering used parameters
-        used_params = [param for param in params if param in used_set]
-        return used_params
-
-    @staticmethod
-    def get_parameters_with_default_value(default_values: list[ast.Constant], params: list[str]):
-        """
-        Given list of default values for params and params, creates a dictionary mapping param names to default values
-        """
-        default_params_len = len(default_values)
-        params_len = len(params)
-        # default params are always defined towards the end of param list, so offest is needed to access param names
-        offset = params_len - default_params_len
-
-        defaultsDict = dict()
-        for i in range(0, default_params_len):
-            defaultsDict[params[offset + i]] = default_values[i].value
-        return defaultsDict
-
-    @staticmethod
-    def classify_parameters(params: list[str]) -> dict:
-        """
-        Classifies parameters into 'data' and 'config' groups based on naming conventions
-        """
-        data_params: list[str] = []
-        config_params: list[str] = []
-
-        data_keywords = {"data", "input", "output", "result", "record", "item"}
-        config_keywords = {"config", "setting", "option", "env", "parameter", "path"}
-
-        for param in params:
-            param_lower = param.lower()
-            if any(keyword in param_lower for keyword in data_keywords):
-                data_params.append(param)
-            elif any(keyword in param_lower for keyword in config_keywords):
-                config_params.append(param)
-            else:
-                data_params.append(param)
-        return {"data": data_params, "config": config_params}
-
-
-class ParameterEncapsulator:
-    @staticmethod
-    def create_parameter_object_class(
-        param_names: list[str], default_value_params: dict, class_name: str = "ParamsObject"
-    ) -> str:
-        """
-        Creates a class definition for encapsulating related parameters
-        """
-        # class_def = f"class {class_name}:\n"
-        # init_method = "    def __init__(self, {}):\n".format(", ".join(param_names))
-        # init_body = "".join([f"        self.{param} = {param}\n" for param in param_names])
-        # return class_def + init_method + init_body
-        class_def = f"class {class_name}:\n"
-        init_params = []
-        init_body = []
-        for param in param_names:
-            if param in default_value_params:  # Include default value in the constructor
-                init_params.append(f"{param}={default_value_params[param]}")
-            else:
-                init_params.append(param)
-            init_body.append(f"        self.{param} = {param}\n")
-
-        init_method = "    def __init__(self, {}):\n".format(", ".join(init_params))
-        return class_def + init_method + "".join(init_body)
-
-    def encapsulate_parameters(
-        self,
-        classified_params: dict,
-        default_value_params: dict,
-        classified_param_names: tuple[str, str],
-    ) -> list[ast.ClassDef]:
-        """
-        Injects parameter object classes into the AST tree
-        """
-        data_params, config_params = classified_params["data"], classified_params["config"]
-        class_nodes = []
-
-        data_class_name, config_class_name = classified_param_names
-
-        if data_params:
-            data_param_object_code = self.create_parameter_object_class(
-                data_params, default_value_params, class_name=data_class_name
-            )
-            class_nodes.append(ast.parse(data_param_object_code).body[0])
-
-        if config_params:
-            config_param_object_code = self.create_parameter_object_class(
-                config_params, default_value_params, class_name=config_class_name
-            )
-            class_nodes.append(ast.parse(config_param_object_code).body[0])
-
-        return class_nodes
-
-
-class FunctionCallUpdater:
-    @staticmethod
-    def get_method_type(func_node: ast.FunctionDef):
-        # Check decorators
-        for decorator in func_node.decorator_list:
-            if isinstance(decorator, ast.Name) and decorator.id == "staticmethod":
-                return "static method"
-            if isinstance(decorator, ast.Name) and decorator.id == "classmethod":
-                return "class method"
-
-        # Check first argument
-        if func_node.args.args:
-            first_arg = func_node.args.args[0].arg
-            if first_arg == "self":
-                return "instance method"
-            elif first_arg == "cls":
-                return "class method"
-
-        return "unknown method type"
-
-    @staticmethod
-    def remove_unused_params(
-        function_node: ast.FunctionDef, used_params: set[str], default_value_params: dict
-    ) -> ast.FunctionDef:
-        """
-        Removes unused parameters from the function signature.
-        """
-        method_type = FunctionCallUpdater.get_method_type(function_node)
-        updated_node_args = (
-            [ast.arg(arg="self", annotation=None)]
-            if method_type == "instance method"
-            else [ast.arg(arg="cls", annotation=None)]
-            if method_type == "class method"
-            else []
-        )
-
-        updated_node_defaults = []
-        for arg in function_node.args.args:
-            if arg.arg in used_params:
-                updated_node_args.append(arg)
-                if arg.arg in default_value_params.keys():
-                    updated_node_defaults.append(default_value_params[arg.arg])
-
-        function_node.args.args = updated_node_args
-        function_node.args.defaults = updated_node_defaults
-        return function_node
-
-    @staticmethod
-    def update_function_signature(function_node: ast.FunctionDef, params: dict) -> ast.FunctionDef:
-        """
-        Updates the function signature to use encapsulated parameter objects.
-        """
-        data_params, config_params = params["data"], params["config"]
-
-        method_type = FunctionCallUpdater.get_method_type(function_node)
-        updated_node_args = (
-            [ast.arg(arg="self", annotation=None)]
-            if method_type == "instance method"
-            else [ast.arg(arg="cls", annotation=None)]
-            if method_type == "class method"
-            else []
-        )
-
-        updated_node_args += [
-            ast.arg(arg="data_params", annotation=None) for _ in [data_params] if data_params
-        ] + [
-            ast.arg(arg="config_params", annotation=None) for _ in [config_params] if config_params
-        ]
-
-        function_node.args.args = updated_node_args
-        function_node.args.defaults = []
-
-        return function_node
-
-    @staticmethod
-    def update_parameter_usages(function_node: ast.FunctionDef, params: dict) -> ast.FunctionDef:
-        """
-        Updates all parameter usages within the function body with encapsulated objects.
-        """
-        data_params, config_params = params["data"], params["config"]
-
-        class ParameterUsageTransformer(ast.NodeTransformer):
-            def visit_Name(self, node: ast.Name):
-                if node.id in data_params and isinstance(node.ctx, ast.Load):
-                    return ast.Attribute(
-                        value=ast.Name(id="data_params", ctx=ast.Load()), attr=node.id, ctx=node.ctx
-                    )
-                if node.id in config_params and isinstance(node.ctx, ast.Load):
-                    return ast.Attribute(
-                        value=ast.Name(id="config_params", ctx=ast.Load()),
-                        attr=node.id,
-                        ctx=node.ctx,
-                    )
-                return node
-
-        function_node.body = [
-            ParameterUsageTransformer().visit(stmt) for stmt in function_node.body
-        ]
-        return function_node
-
-    @staticmethod
-    def get_enclosing_class_name(tree: ast.Module, init_node: ast.FunctionDef) -> str | None:
-        """
-        Finds the class name enclosing the given __init__ function node. This will be the class that is instantiaeted by the init method.
-
-        :param tree: AST tree
-        :param init_node: __init__ function node
-        :return: name of the enclosing class, or None if not found
-        """
-        # Stack to track parent nodes
-        parent_stack = []
-
-        class ClassNameVisitor(ast.NodeVisitor):
-            def visit_ClassDef(self, node: ast.ClassDef):
-                # Push the class onto the stack
-                parent_stack.append(node)
-                self.generic_visit(node)
-                # Pop the class after visiting its children
-                parent_stack.pop()
-
-            def visit_FunctionDef(self, node: ast.FunctionDef):
-                # If this is the target __init__ function, get the enclosing class
-                if node is init_node:
-                    # Find the nearest enclosing class from the stack
-                    for parent in reversed(parent_stack):
-                        if isinstance(parent, ast.ClassDef):
-                            raise StopIteration(parent.name)  # Return the class name
-                self.generic_visit(node)
-
-        # Traverse the AST with the visitor
-        try:
-            ClassNameVisitor().visit(tree)
-        except StopIteration as e:
-            return e.value
-
-        # If no enclosing class is found
-        return None
-
-    @staticmethod
-    def update_function_calls(
-        tree: ast.Module,
-        function_node: ast.FunctionDef,
-        used_params: [],
-        classified_params: dict,
-        classified_param_names: tuple[str, str],
-    ) -> ast.Module:
-        """
-        Updates all calls to a given function in the provided AST tree to reflect new encapsulated parameters.
-
-        :param tree: The AST tree of the code.
-        :param function_node: AST node of the function to update calls for.
-        :param params: A dictionary containing 'data' and 'config' parameters.
-        :return: The updated AST tree.
-        """
-
-        class FunctionCallTransformer(ast.NodeTransformer):
-            def __init__(
-                self,
-                function_node: ast.FunctionDef,
-                unclassified_params: [],
-                classified_params: dict,
-                classified_param_names: tuple[str, str],
-                is_constructor: bool = False,
-                class_name: str = "",
-            ):
-                self.function_node = function_node
-                self.unclassified_params = unclassified_params
-                self.classified_params = classified_params
-                self.is_constructor = is_constructor
-                self.class_name = class_name
-                self.classified_param_names = classified_param_names
-
-            def visit_Call(self, node: ast.Call):
-                # node.func is a ast.Name if it is a function call, and ast.Attribute if it is a a method class
-                if isinstance(node.func, ast.Name):
-                    node_name = node.func.id
-                elif isinstance(node.func, ast.Attribute):
-                    node_name = node.func.attr
-
-                if (
-                    self.is_constructor and node_name == self.class_name
-                ) or node_name == self.function_node.name:
-                    transformed_node = self.transform_call(node)
-                    return transformed_node
-                return node
-
-            def create_ast_call(
-                self,
-                function_name: str,
-                param_list: dict,
-                args_map: list[ast.expr],
-                keywords_map: list[ast.keyword],
-            ):
-                """
-                Creates a AST for function call
-                """
-
-                return (
-                    ast.Call(
-                        func=ast.Name(id=function_name, ctx=ast.Load()),
-                        args=[args_map[key] for key in param_list if key in args_map],
-                        keywords=[
-                            ast.keyword(arg=key, value=keywords_map[key])
-                            for key in param_list
-                            if key in keywords_map
-                        ],
-                    )
-                    if param_list
-                    else None
-                )
-
-            def transform_call(self, node: ast.Call):
-                # original and classified params from function node
-                data_params, config_params = (
-                    self.classified_params["data"],
-                    self.classified_params["config"],
-                )
-                data_class_name, config_class_name = self.classified_param_names
-
-                # positional and keyword args passed in function call
-                original_args, original_kargs = node.args, node.keywords
-
-                data_args = {
-                    param: original_args[i]
-                    for i, param in enumerate(self.unclassified_params)
-                    if i < len(original_args) and param in data_params
-                }
-                config_args = {
-                    param: original_args[i]
-                    for i, param in enumerate(self.unclassified_params)
-                    if i < len(original_args) and param in config_params
-                }
-
-                data_keywords = {kw.arg: kw.value for kw in original_kargs if kw.arg in data_params}
-                config_keywords = {
-                    kw.arg: kw.value for kw in original_kargs if kw.arg in config_params
-                }
-
-                updated_node_args = []
-                if data_node := self.create_ast_call(
-                    data_class_name, data_params, data_args, data_keywords
-                ):
-                    updated_node_args.append(data_node)
-                if config_node := self.create_ast_call(
-                    config_class_name, config_params, config_args, config_keywords
-                ):
-                    updated_node_args.append(config_node)
-
-                # update function call node. note that keyword arguments are updated within encapsulated param objects above
-                node.args, node.keywords = updated_node_args, []
-                return node
-
-        # apply the transformer to update all function calls to given function node
-        if function_node.name == "__init__":
-            # if function is a class initialization, then we need to fetch class name
-            class_name = FunctionCallUpdater.get_enclosing_class_name(tree, function_node)
-            transformer = FunctionCallTransformer(
-                function_node,
-                used_params,
-                classified_params,
-                classified_param_names,
-                True,
-                class_name,
-            )
-        else:
-            transformer = FunctionCallTransformer(
-                function_node, used_params, classified_params, classified_param_names
-            )
-        updated_tree = transformer.visit(tree)
-
-        return updated_tree
