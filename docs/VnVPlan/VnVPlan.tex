@@ -1910,6 +1910,49 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_member_ignoring_method.py}{here}.
 
+\subsubsection{Use a Generator}
+
+\textbf{Goal:} The use-a-generator refactoring module optimizes list comprehensions used within functions like \texttt{all()} and \texttt{any()} by transforming them into generator expressions. This refactoring improves memory efficiency while maintaining code correctness. The following unit tests validate the accuracy of this functionality.\\
+
+\noindent The tests ensure that list comprehensions inside \texttt{all()} and \texttt{any()} calls are correctly converted to generator expressions while preserving original behavior. Additional test cases verify proper handling of multiline comprehensions, nested conditions, and various iterable types. Edge cases, such as improperly formatted comprehensions or comprehensions spanning multiple lines, are also considered.\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR5, FR6, PR-PAR3~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Refactoring List Comprehensions Inside \texttt{all()} Calls}
+    \begin{itemize}
+        \item Ensures that list comprehensions within \texttt{all()} are transformed into generator expressions.
+        \item Validates that the transformation preserves original functionality.
+    \end{itemize}
+
+    \item \textbf{Refactoring List Comprehensions Inside \texttt{any()} Calls}
+    \begin{itemize}
+        \item Ensures that list comprehensions within \texttt{any()} are transformed into generator expressions.
+        \item Verifies that the modified code remains functionally identical to the original.
+    \end{itemize}
+
+    \item \textbf{Handling Multi-line List Comprehensions}
+    \begin{itemize}
+        \item Ensures that multi-line list comprehensions are refactored correctly.
+        \item Verifies that proper indentation and formatting are preserved after transformation.
+    \end{itemize}
+
+    \item \textbf{Handling Edge Cases}
+    \begin{itemize}
+        \item Ensures that improperly formatted comprehensions do not result in errors.
+        \item Confirms that refactoring does not introduce unnecessary modifications or change unrelated code.
+    \end{itemize}
+
+    \item \textbf{Ensuring Correct Formatting and Readability}
+    \begin{itemize}
+        \item Validates that refactored code adheres to Python’s style guidelines.
+        \item Ensures that readability and maintainability are preserved after refactoring.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_list_comp_any_all_refactor.py}{here}.
+
+
 
 \subsection{VsCode Plugin}
 
