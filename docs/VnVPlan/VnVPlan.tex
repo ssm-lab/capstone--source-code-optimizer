@@ -1513,6 +1513,43 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsection{Detection Module}
 
+\subsubsection{Analyzer Controller}
+
+\textbf{Goal:} The analyzer controller serves as the central coordination unit for detecting code smells using various analysis methods. It interfaces with multiple analyzers, processes detection results, and ensures accurate filtering and customization of analysis options. The following unit tests verify the correctness of this functionality.\\
+
+\noindent The tests validate the proper execution of smell detection, correct filtering of smells based on the chosen analysis method, appropriate handling of missing or disabled smells, and the generation of custom analysis options. Edge cases such as empty files, incorrect configurations, and mismatched smell detection methods are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR2, FR5~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Running Smell Detection Analysis}
+    \begin{itemize}
+        \item Ensures the analyzer correctly detects CRC smells in a given Python file.
+        \item Validates that detected smells include the correct attributes, such as message ID, file path, and confidence level.
+        \item Confirms that logs capture detected smells for debugging.
+    \end{itemize}
+
+    \item \textbf{Handling Cases with No Detected Smells}
+    \begin{itemize}
+        \item Ensures that when no smells are detected, the controller logs an appropriate success message.
+        \item Verifies that the returned list of smells is empty.
+    \end{itemize}
+
+    \item \textbf{Filtering Smells by Analysis Method}
+    \begin{itemize}
+        \item Ensures that the controller correctly filters smells based on the specified analysis method (e.g., AST, Astroid, Pylint).
+        \item Verifies that only smells matching the given method are returned.
+    \end{itemize}
+
+    \item \textbf{Generating Custom Analysis Options}
+    \begin{itemize}
+        \item Ensures that the controller correctly generates custom options for AST and Astroid analysis.
+        \item Validates that generated options include callable detection functions for applicable smells.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/controllers/test_analyzer_controller.py}{here}.
+
 \subsubsection{String Concatenation in a Loop}
 
 \textbf{Goal:} The string concatenation in a loop detection module identifies inefficient string operations occurring inside loops, which can significantly impact performance. The following unit tests verify the detection capabilities.\\
@@ -1641,7 +1678,7 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsection{Refactoring Module}
 
-\subsubsection{Refactoring Controller}
+\subsubsection{Refactorer Controller}
 
 \textbf{Goal:} These tests verify the behavior of the RefactorerController in various scenarios, ensuring that it handles refactoring correctly and interacts with external components as expected.\\
 
