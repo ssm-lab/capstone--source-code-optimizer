@@ -73,12 +73,6 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
             if updated_line != original_line:
                 lines[adjusted_line_index] = updated_line
 
-        # Save the modified file
-        temp_file_path = output_file
-
-        with temp_file_path.open("w") as refactored_file:
-            refactored_file.writelines(lines)
-
         # Multi-file implementation
         if overwrite:
             with target_file.open("w") as f:
