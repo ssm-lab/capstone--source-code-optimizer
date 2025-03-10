@@ -31,7 +31,7 @@ def is_primitive_expression(node: ast.AST):
     return False
 
 
-def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 3):
+def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 2):
     results: list[CRCSmell] = []
 
     with file_path.open("r") as file:
