@@ -303,6 +303,7 @@ __pycache__/
 outputs/
 build/
 tests/temp_dir/
+tests/benchmarking/output/
 
 # Coverage
 .coverage

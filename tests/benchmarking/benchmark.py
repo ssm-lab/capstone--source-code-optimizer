@@ -32,6 +32,8 @@ from ecooptimizer.refactorers.refactorer_controller import RefactorerController
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
 TEST_DIR = Path(__file__).parent.resolve()
+OUTPUT_DIR = TEST_DIR / "output"
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 # Set up logging configuration
 # logging.basicConfig(level=logging.INFO)
@@ -48,7 +50,7 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)  # You can adjust the level for the console if needed
 
 # Create a file handler
-log_file = TEST_DIR / "benchmark_log.txt"
+log_file = OUTPUT_DIR / "benchmark_log.txt"
 file_handler = logging.FileHandler(log_file, mode="w")
 file_handler.setLevel(logging.INFO)  # You can adjust the level for the file if needed
 
@@ -173,10 +175,10 @@ def main():
     logger.info(f"Starting benchmark on source file: {source_file_path!s}")
 
     # Benchmark the detection phase.
-    smells_data, avg_detection = benchmark_detection(str(source_file_path), iterations=3)
+    smells_data, avg_detection = benchmark_detection(str(source_file_path))
 
     # Benchmark the refactoring phase per smell type.
-    ref_stats, eng_stats = benchmark_refactoring(smells_data, str(source_file_path), iterations=3)
+    ref_stats, eng_stats = benchmark_refactoring(smells_data, str(source_file_path))
 
     # Compile overall benchmark results.
     overall_stats = {
@@ -186,9 +188,6 @@ def main():
     }
     logger.info("Overall Benchmark Results:")
     logger.info(json.dumps(overall_stats, indent=4))
-
-    OUTPUT_DIR = TEST_DIR / "output"
-    OUTPUT_DIR.mkdir(exist_ok=True)
 
     output_file = OUTPUT_DIR / f"{source_file_path.stem}_benchmark_results.json"
 
