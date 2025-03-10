@@ -334,6 +334,43 @@ This section will not be appropriate for every project.
   TC\testcount & FR3, FR6 & Refactors a member-ignoring method with type hints. & Updates calls using type hints to infer instance type. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Long Parameter List}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Parameter List Refactoring Test Cases}
+  \label{table:long_parameter_list_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR6 & Refactors a constructor definition with 8 parameters, and class initialization with positional arguments. & Declares grouping classes. Updates constructor call with grouped instantiations. Also updates function signature and body to reflect new parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a constructor definition with 8 parameters with one unused in body, as well as class initialization with positional arguments. & Declares grouping classes. Updates constructor call with grouped instantiations. Also updates function signature and body to reflect new used parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors an instance method with 8 parameters (two default values) and the call made to it (1 positional argument). & Declares grouping classes with default values preserved. Updates method call with grouped instantiations. Also updates method signature and body to reflect new parameters.  & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a static method with 8 parameters (1 with default value, 4 unused in body) and the call made to it (2 positional arguments)& Declares grouping classes with default values preserved. Updates method call with grouped instantiations. Also updates method signature and body to reflect new used parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a standalone function with 8 parameters (1 with default value that is also unused in body) and the call made to it (1 positional arguments) & Declares grouping classes. Updates method call with grouped instantiations. Also updates method signature and body to reflect new used parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \subsection{VS Code Extension}
 
 \subsubsection{Detect Smells Command}
