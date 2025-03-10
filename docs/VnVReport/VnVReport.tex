@@ -416,6 +416,43 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1 & Highlights smells when smells are found. & Shows info messages and calls \texttt{highlightSmells}. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Refactor Smell Command}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Smell Command Test Cases}
+  \label{table:plugin_refactor_command_tests}
+  \endlastfoot
+
+  TC\testcount & PR-RFT1 & No active editor is found. & Shows error message ``Eco: Unable to proceed as no active editor or file path found.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT1, FR6 & Attempting to refactor when no smells are detected in the file & Shows error message ``Eco: No smells detected in the file for refactoring.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR6 & Attempting to refactor when selected line doesn't match any smell & Shows error message ``Eco: No matching smell found for refactoring.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR6, FR10 & Refactoring a smell when found on the selected line & Saves the current file. Calls \texttt{refactorSmell} method with correct parameters. Shows message ``Refactoring report available in sidebar''. Executes command to focus refactor sidebar. Opens and shows the refactored preview. Highlights updated smells. Updates the UI with new smells & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT2 & Handling API failure during refactoring & Shows error message ``Eco: Refactoring failed. See console for details.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \end{longtable}
+
 \subsubsection{File Highlighter}
 
 \begin{longtable}{c 
