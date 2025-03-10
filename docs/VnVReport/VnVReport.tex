@@ -484,6 +484,45 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1 & No hash exists for the document. & Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Wipe Workspace Cache Command}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Wipe Workspace Cache Command Test Cases}
+  \label{table:plugin_wipe_cache_tests}
+  \endlastfoot
+
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with no reason provided. & The smells cache should be cleared and reset to an empty state. A success message indicating that the workspace cache was successfully wiped should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "manual." & Both the smells cache and file changes cache should be cleared and reset to empty states. A success message indicating that the workspace cache was manually wiped by the user should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are no open files. & A log message indicating that there are no open files to update should be generated. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are open files. & A message indicating the number of visible files should be logged, and the hashes for each open file should be updated. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "settings." & Only the smells cache should be cleared. A success message indicating that the cache was wiped due to smell detection settings changes should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error occurs. & An error message should be logged, and an error message indicating failure to wipe the workspace cache should be displayed to the user. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \subsection{Line Selection Manager Module}
 \begin{table}[h!]
 \centering
