@@ -1625,6 +1625,121 @@ The refactoring module transforms inefficient string concatenation into a more p
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_str_concat_in_loop_refactor.py}{here}.
 
 
+\subsection{VsCode Plugin}
+
+\subsubsection{Detect Smells Command}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\noindent
+The smell detection command module is responsible communicating with the backend to fetch the smells of the current file as well as the highlighting module to display the smells in the vscode editor. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Handling of Missing Active Editor}
+  \begin{itemize}
+    \item The command shows an error message when no active editor is found.
+  \end{itemize}
+
+  \item \textbf{Handling of Missing File Path}
+  \begin{itemize}
+      \item The command shows an error message when the active editor has no valid file path.
+  \end{itemize}
+
+  \item \textbf{Handling of No Enabled Smells}
+  \begin{itemize}
+      \item The command shows a warning message when no smells are enabled in the configuration.
+  \end{itemize}
+
+  \item \textbf{Using Cached Smells}
+  \begin{itemize}
+      \item The command uses cached smells when the file hash and enabled smells match the cached data.
+      \item The command highlights the cached smells in the editor.
+  \end{itemize}
+
+  \item \textbf{Fetching New Smells}
+  \begin{itemize}
+      \item The command fetches new smells when the file hash changes or enabled smells are updated.
+      \item The command updates the cache with the new smells and highlights them in the editor.
+  \end{itemize}
+
+  \item \textbf{Handling of Server Downtime}
+  \begin{itemize}
+      \item The command shows a warning message when the server is down and no cached smells are available.
+  \end{itemize}
+
+  \item \textbf{Highlighting Smells}
+  \begin{itemize}
+      \item The command highlights detected smells in the editor when smells are found.
+      \item The command shows a success message with the number of highlighted smells.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
+
+\subsubsection{Document Hashing}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\noindent
+The hashing tools module is responsible for generating and managing document hashes to track changes in files. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Handling of Unchanged Document Hashes}
+  \begin{itemize}
+    \item The module does not update the workspace storage if the document hash has not changed.
+    \item The existing hash is retained for the document.
+  \end{itemize}
+
+  \item \textbf{Handling of Changed Document Hashes}
+  \begin{itemize}
+      \item The module updates the workspace storage when the document hash changes.
+      \item The new hash is correctly calculated and stored.
+  \end{itemize}
+
+  \item \textbf{Handling of New Documents}
+  \begin{itemize}
+      \item The module updates the workspace storage when no hash exists for the document.
+      \item A new hash is generated and stored for the document.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/hashDocs.test.ts}{here}.
+
+\subsubsection{File Highlighter}
+
+\textbf{Target requirement(s):} FR10, OER-IAS1, LFR-AP2~\cite{SRS} \\
+
+\noindent
+The file highlighter module is responsible for applying visual decorations to highlight code smells in the editor. Unit tests for this module validate the following aspects:
+
+\begin{itemize}
+  \item \textbf{Creation of Decorations}
+  \begin{itemize}
+    \item Decorations are created with the correct color and style for each type of code smell.
+    \item The decoration type is properly initialized and can be applied to the editor.
+  \end{itemize}
+
+  \item \textbf{Highlighting Smells}
+  \begin{itemize}
+      \item Smells are highlighted in the editor based on their line occurrences.
+      \item The hover content for each smell is correctly associated with the decoration.
+  \end{itemize}
+
+  \item \textbf{Handling of Initial Highlighting}
+  \begin{itemize}
+      \item On the first initialization, decorations are applied without resetting existing ones.
+      \item The decorations are properly stored for future updates.
+  \end{itemize}
+
+  \item \textbf{Resetting Decorations}
+  \begin{itemize}
+      \item On subsequent calls, existing decorations are disposed of before applying new ones.
+      \item The reset process ensures no overlapping or redundant decorations.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
+
 % \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
