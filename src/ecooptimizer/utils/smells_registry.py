@@ -6,16 +6,12 @@ from ..analyzers.ast_analyzers.detect_long_lambda_expression import detect_long_
 from ..analyzers.ast_analyzers.detect_long_message_chain import detect_long_message_chain
 from ..analyzers.astroid_analyzers.detect_string_concat_in_loop import detect_string_concat_in_loop
 from ..analyzers.ast_analyzers.detect_repeated_calls import detect_repeated_calls
-from ..analyzers.ast_analyzers.detect_unused_variables_and_attributes import (
-    detect_unused_variables_and_attributes,
-)
 
 from ..refactorers.concrete.list_comp_any_all import UseAGeneratorRefactorer
 
 from ..refactorers.concrete.long_lambda_function import LongLambdaFunctionRefactorer
 from ..refactorers.concrete.long_element_chain import LongElementChainRefactorer
 from ..refactorers.concrete.long_message_chain import LongMessageChainRefactorer
-from ..refactorers.concrete.unused import RemoveUnusedRefactorer
 from ..refactorers.concrete.member_ignoring_method import MakeStaticRefactorer
 from ..refactorers.concrete.long_parameter_list import LongParameterListRefactorer
 from ..refactorers.concrete.str_concat_in_loop import UseListAccumulationRefactorer
@@ -65,14 +61,6 @@ _SMELL_REGISTRY: dict[str, SmellRecord] = {
         "checker": detect_long_message_chain,
         "analyzer_options": {"threshold": 3},
         "refactorer": LongMessageChainRefactorer,
-    },
-    "unused_variables_and_attributes": {
-        "id": CustomSmell.UNUSED_VAR_OR_ATTRIBUTE.value,
-        "enabled": False,
-        "analyzer_method": "ast",
-        "checker": detect_unused_variables_and_attributes,
-        "analyzer_options": {},
-        "refactorer": RemoveUnusedRefactorer,
     },
     "long-element-chain": {
         "id": CustomSmell.LONG_ELEMENT_CHAIN.value,
