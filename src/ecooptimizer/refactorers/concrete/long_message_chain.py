@@ -12,40 +12,6 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
     def __init__(self) -> None:
         super().__init__()
 
-    @staticmethod
-    def remove_unmatched_brackets(input_string: str):
-        """
-        Removes unmatched brackets from the input string.
-
-        Args:
-            input_string (str): The string to process.
-
-        Returns:
-            str: The string with unmatched brackets removed.
-        """
-        stack = []
-        indexes_to_remove = set()
-
-        # Iterate through the string to find unmatched brackets
-        for i, char in enumerate(input_string):
-            if char == "(":
-                stack.append(i)
-            elif char == ")":
-                if stack:
-                    stack.pop()  # Matched bracket, remove from stack
-                else:
-                    indexes_to_remove.add(i)  # Unmatched closing bracket
-
-        # Add any unmatched opening brackets left in the stack
-        indexes_to_remove.update(stack)
-
-        # Build the result string without unmatched brackets
-        result = "".join(
-            char for i, char in enumerate(input_string) if i not in indexes_to_remove
-        )
-
-        return result
-
     def refactor(
         self,
         target_file: Path,
@@ -77,9 +43,7 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
         if re.search(f_string_pattern, line_with_chain):
             # Determine if original was print or assignment
             is_print = line_with_chain.startswith("print(")
-            original_var = (
-                None if is_print else line_with_chain.split("=", 1)[0].strip()
-            )
+            original_var = None if is_print else line_with_chain.split("=", 1)[0].strip()
 
             # Extract f-string and methods
             f_string_content = re.search(f_string_pattern, line_with_chain).group()  # type: ignore
@@ -89,9 +53,7 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
             refactored_lines = []
 
             # Initial f-string assignment
-            refactored_lines.append(
-                f"{leading_whitespace}intermediate_0 = {f_string_content}"
-            )
+            refactored_lines.append(f"{leading_whitespace}intermediate_0 = {f_string_content}")
 
             # Process method calls
             for i, method in enumerate(method_calls, start=1):
@@ -101,8 +63,7 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
 
                 if i < len(method_calls):
                     refactored_lines.append(
-                        f"{leading_whitespace}intermediate_{i} = "
-                        f"intermediate_{i-1}.{method}"
+                        f"{leading_whitespace}intermediate_{i} = " f"intermediate_{i-1}.{method}"
                     )
                 else:
                     # Final assignment using original variable name
@@ -112,8 +73,7 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
                         )
                     else:
                         refactored_lines.append(
-                            f"{leading_whitespace}{original_var} = "
-                            f"intermediate_{i-1}.{method}"
+                            f"{leading_whitespace}{original_var} = " f"intermediate_{i-1}.{method}"
                         )
 
             lines[line_number - 1] = "\n".join(refactored_lines) + "\n"
@@ -133,9 +93,7 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
             if len(method_calls) > 1:
                 refactored_lines = []
                 base_var = method_calls[0].strip()
-                refactored_lines.append(
-                    f"{leading_whitespace}intermediate_0 = {base_var}"
-                )
+                refactored_lines.append(f"{leading_whitespace}intermediate_0 = {base_var}")
 
                 # Process subsequent method calls
                 for i, method in enumerate(method_calls[1:], start=1):
@@ -155,9 +113,7 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
                                 f"{leading_whitespace}print(intermediate_{i-1}.{method})"
                             )
                         else:
-                            original_assignment = line_with_chain.split("=", 1)[
-                                0
-                            ].strip()
+                            original_assignment = line_with_chain.split("=", 1)[0].strip()
                             refactored_lines.append(
                                 f"{leading_whitespace}{original_assignment} = "
                                 f"intermediate_{i-1}.{method}"

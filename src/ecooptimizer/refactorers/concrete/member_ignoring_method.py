@@ -15,7 +15,7 @@ class CallTransformer(cst.CSTTransformer):
     METADATA_DEPENDENCIES = (PositionProvider,)
 
     def __init__(self, class_name: str):
-        self.method_calls: list[tuple[str, int, str, str]] = None
+        self.method_calls: list[tuple[str, int, str, str]] = None  # type: ignore
         self.class_name = class_name  # Class name to replace instance calls
         self.transformed = False
 
@@ -149,6 +149,7 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         self.mim_method_class = ""
         self.mim_method = ""
         self.valid_classes: set[str] = set()
+        self.transformer: CallTransformer = None  # type: ignore
 
     def refactor(
         self,
