@@ -1515,10 +1515,11 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsubsection{String Concatenation in a Loop}
 
-\textbf{Target requirement(s)}: FR2~\cite{SRS} \\
+\textbf{Goal:} The string concatenation in a loop detection module identifies inefficient string operations occurring inside loops, which can significantly impact performance. The following unit tests verify the detection capabilities.\\
 
-\noindent
-The following describes the testing strategy for the identification of the ``String Concatenation in a Loop'' code smell. The tests are to be implemented in \texttt{pytest}.
+\noindent The tests evaluate different types of string concatenation scenarios within loops, ensuring that various cases are detected correctly. These include basic concatenation, nested loops, conditional concatenation, type inference, and different string interpolation methods. The robustness of the detection logic is assessed through multiple test cases covering common patterns.\\
+
+\noindent\textbf{Target requirement(s)}: FR2~\cite{SRS} \\
 
 \begin{itemize}
   \item \textbf{Basic Concatenation in a Loop}
@@ -1526,7 +1527,7 @@ The following describes the testing strategy for the identification of the ``Str
       \item Simple assignment string concatenation of the form \texttt{var = var + \( \ldots \)} inside \texttt{for} and \texttt{while} loops.
       \item Augmented assignment string concatenation using \texttt{+=} inside \texttt{for} and \texttt{while} loops.
       \item Concatenation involving object attributes (e.g., \texttt{var.attr += \( \ldots \)}).
-      \item Concatenation modifying values inside complex objects (i.e. dictionaries, iterables)
+      \item Concatenation modifying values inside complex objects (i.e., dictionaries, iterables).
   \end{itemize}
   
   \item \textbf{Nested Loop Concatenation}
@@ -1543,7 +1544,7 @@ The following describes the testing strategy for the identification of the ``Str
 
   \item \textbf{Type Inference}
   \begin{itemize}
-      \item Proper detection of string types when through initial variable assignment.
+      \item Proper detection of string types through initial variable assignment.
       \item Proper detection of string types through assignment type hints.
       \item Proper detection of string types through function definition type hints.
       \item Proper detection of string types initialized as class variables.
@@ -1573,30 +1574,134 @@ The following describes the testing strategy for the identification of the ``Str
   \end{itemize}
 \end{itemize}
 
-
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_str_concat_in_loop.py}{here}.
+
+\subsubsection{Long Element Chain}
+
+\textbf{Goal:} The long element chain detection module identifies excessive dictionary access chains that exceed a predefined threshold (default: 3). The following unit tests verify the detection capabilities.\\
+
+\noindent The tests evaluate the detection of long element chains by verifying that sequences exceeding the threshold, such as deep dictionary accesses, are correctly identified. They include edge cases, such as chains just below the threshold, variations in data structures, and multiple chains in the same scope, to assess the robustness of the detection logic.\\
+
+\noindent\textbf{Target requirement(s):} FR2~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Ignores code with no chains}
+  \begin{itemize}
+      \item Ensures that code without any nested element chains does not trigger a detection.
+  \end{itemize}
+
+  \item \textbf{Ignores chains below the threshold}
+  \begin{itemize}
+      \item Verifies that element chains shorter than the threshold are not flagged.
+  \end{itemize}
+
+  \item \textbf{Detects chains exactly at threshold}
+  \begin{itemize}
+      \item Ensures that an element chain with a length equal to the threshold is flagged.
+  \end{itemize}
+
+  \item \textbf{Detects chains exceeding the threshold}
+  \begin{itemize}
+      \item Verifies that chains longer than the threshold are correctly detected.
+  \end{itemize}
+
+  \item \textbf{Detects multiple chains in the same file}
+  \begin{itemize}
+      \item Ensures that multiple long element chains appearing in different locations within the same code file are individually detected.
+  \end{itemize}
+
+  \item \textbf{Detects chains inside nested functions and classes}
+  \begin{itemize}
+      \item Confirms that element chains occurring within functions and class methods are correctly identified.
+  \end{itemize}
+
+  \item \textbf{Reports identical chains on the same line only once}
+  \begin{itemize}
+      \item Ensures that duplicate chains appearing on a single line are not reported multiple times.
+  \end{itemize}
+
+  \item \textbf{Handles different variable types in chains}
+  \begin{itemize}
+      \item Verifies detection of chains that involve a mix of dictionaries, lists, tuples, and nested structures.
+  \end{itemize}
+
+  \item \textbf{Correctly applies custom threshold values}
+  \begin{itemize}
+      \item Ensures that adjusting the threshold parameter correctly affects detection behavior.
+  \end{itemize}
+
+  \item \textbf{Verifies result structure and metadata}
+  \begin{itemize}
+      \item Confirms that detected chains return correctly formatted results, including message ID, type, and occurrence details.
+  \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_lec.py}{here}.
+
 
 \subsection{Refactoring Module}
 
+\subsubsection{Refactoring Controller}
+
+\textbf{Goal:} These tests verify the behavior of the RefactorerController in various scenarios, ensuring that it handles refactoring correctly and interacts with external components as expected.\\
+
+\noindent \textbf{Target requirement(s):} FR5, UHR-UPL1~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Verifying Successful Refactoring with a Valid Refactorer}
+    \begin{itemize}
+        \item Ensures that the RefactorerController correctly runs the refactorer when a valid refactorer is available.
+        \item Checks that the logger captures the refactoring event.
+        \item Ensures the refactor method is called with the expected arguments.
+        \item Verifies that the modified file path is correctly generated.
+    \end{itemize}
+
+    \item \textbf{Handling Case When No Refactorer is Found}
+    \begin{itemize}
+        \item Ensures that if no refactorer is found for a given smell, the RefactorerController raises a \texttt{NotImplementedError}.
+        \item Confirms that the appropriate error message is logged.
+    \end{itemize}
+
+    \item \textbf{Handling Multiple Refactorer Calls for the Same Smell}
+    \begin{itemize}
+        \item Tests the behavior when the refactorer is called multiple times for the same smell.
+        \item Ensures that the smell counter is updated correctly.
+        \item Verifies that unique file names are generated for each call.
+    \end{itemize}
+
+    \item \textbf{Verifying the Behavior When Overwrite is Disabled}
+    \begin{itemize}
+        \item Ensures that when the overwrite flag is set to false, the refactor method is called with the correct argument.
+        \item Verifies that files are not overwritten when this option is disabled.
+    \end{itemize}
+
+    \item \textbf{Handling Case Where No Files are Modified}
+    \begin{itemize}
+        \item Checks that when no files are modified by the refactorer, the RefactorerController correctly returns an empty list of modified files.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/controllers/test_refactorer_controller.py}{here}.
+
 \subsubsection{String Concatenation in a Loop}
 
-\textbf{Target requirement(s)}: FR3, FR6~\cite{SRS} \\
+\textbf{Goal:} The refactoring module transforms inefficient string concatenation into a more performant approach using list accumulation and \texttt{''.join()}. Unit tests for this module ensure that:\\
 
-\noindent
-The refactoring module transforms inefficient string concatenation into a more performant approach using list accumulation and \texttt{''.join()}. Unit tests for this module ensure that:
+\noindent\textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
 
 \begin{itemize}
     \item \textbf{Proper Initialization of the List}
     \begin{itemize}
         \item The string variable being concatenated is replaced with a list at the start of the loop.
-        \item The list is initialized to an empty list if the initial string is obviously empty, otherwise the list is initialized with the initial string as the first item.
+        \item The list is initialized to an empty list if the initial string is obviously empty.
+        \item Otherwise, the list is initialized with the initial string as the first item.
     \end{itemize}
 
     \item \textbf{Correct Usage of List Methods in the Loop}
     \begin{itemize}
         \item The \texttt{append()} method is used instead of assignments inside the loop.
         \item The \texttt{insert()} method is used to insert values at the beginning of the string.
-        \item If the string is re-initialized inside the loop, the \texttt{clear()} method is used to empty the list which is then re-initialized to the new value.
+        \item If the string is re-initialized inside the loop, the \texttt{clear()} method is used to empty the list before re-initializing it.
         \item If multiple concatenations happen in the same loop, each is accumulated in the correct list.
     \end{itemize}
 
@@ -1610,7 +1715,7 @@ The refactoring module transforms inefficient string concatenation into a more p
     \begin{itemize}
         \item If the concatenation variable is accessed inside the loop, no refactoring is applied.
         \item Conditional concatenations result in conditional list appends.
-        \item Order-sensitive concatenations (e.g., prefix insertions) preserve the original behaviour.
+        \item Order-sensitive concatenations (e.g., prefix insertions) preserve the original behavior.
     \end{itemize}
 
     \item \textbf{Preserving Readability and Maintainability}
@@ -1624,195 +1729,329 @@ The refactoring module transforms inefficient string concatenation into a more p
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_str_concat_in_loop_refactor.py}{here}.
 
+\subsubsection{Long Element Chain}
+
+\textbf{Goal:} The long element chain refactoring module simplifies deeply nested dictionary accesses by flattening them into top-level keys while preserving functionality. The following unit tests verify the correctness of this transformation.\\
+
+\noindent The tests assess the ability to detect and refactor long element chains by verifying correct dictionary transformations, accessing pattern updates, and handling of various data structures. Edge cases, such as shallow accesses, multiple affected files, and mixed depths of access, are included to ensure robustness. \\
+
+\noindent\textbf{Target requirement(s):} FR3, FR6, PR-PAR3~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Identifies and Refactors Basic Nested Dictionary Access}
+    \begin{itemize}
+        \item Ensures that deeply nested dictionary keys are detected and refactored correctly.
+    \end{itemize}
+
+    \item \textbf{Refactors Dictionary Accesses Across Multiple Files}
+    \begin{itemize}
+        \item Verifies that dictionary changes propagate correctly when a deeply nested dictionary is accessed in different files.
+    \end{itemize}
+
+    \item \textbf{Handles Dictionary Access via Class Attributes}
+    \begin{itemize}
+        \item Ensures that nested dictionary accesses within class attributes are correctly detected and refactored.
+    \end{itemize}
+
+    \item \textbf{Ignores Shallow Dictionary Accesses}
+    \begin{itemize}
+        \item Verifies that dictionary accesses below the predefined threshold remain unchanged.
+    \end{itemize}
+
+    \item \textbf{Handles Multiple Long Element Chains in the Same File}
+    \begin{itemize}
+        \item Ensures that all occurrences of excessive dictionary accesses in a file are refactored individually.
+    \end{itemize}
+
+    \item \textbf{Detects and Refactors Mixed Access Depths}
+    \begin{itemize}
+        \item Confirms that the module correctly differentiates and processes deep accesses while ignoring shallow ones.
+    \end{itemize}
+
+    \item \textbf{Validates Resulting Metadata and Formatting}
+    \begin{itemize}
+        \item Confirms that the refactored output includes well-structured results, such as correct message IDs, types, and occurrences.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}.
+
+\subsubsection{Member Ignoring Method}
+
+\textbf{Goal:} The member ignoring method refactoring module ensures that methods that do not reference instance attributes or methods are converted into static methods. This transformation improves code clarity, enforces proper design patterns, and eliminates unnecessary instance bindings. The following unit tests validate the correctness of this functionality.\\
+
+\noindent The tests assess the correct detection of methods that can be converted to static methods, proper removal of \texttt{self} as a parameter, correct updating of method calls, and handling of inheritance. Edge cases such as instance-dependent methods, overridden methods, and preserving existing decorators are also considered.\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Correct Addition of the \texttt{@staticmethod} Decorator}
+    \begin{itemize}
+        \item The method receives the \texttt{@staticmethod} decorator when it does not use \texttt{self} or any instance attributes.
+        \item The decorator is added directly above the method definition, preserving any existing decorators.
+    \end{itemize}
+
+    \item \textbf{Removal of the \texttt{self} Parameter}
+    \begin{itemize}
+        \item The first parameter of the method is removed if it is named \texttt{self}.
+        \item Other parameters remain unchanged.
+        \item The method signature is correctly adjusted to reflect the removal.
+    \end{itemize}
+
+    \item \textbf{Modify Instance Calls to the Method}
+    \begin{itemize}
+        \item Instance objects of the class calling the method will be modified to use a static call directly from the class itself.
+        \item Calls in a different file from the one where the smell was detected will also have the appropriate calls modified.
+    \end{itemize}
+
+    \item \textbf{Handling of Methods in Classes with Inheritance}
+    \begin{itemize}
+        \item If a subclass instance calls the method, the call is also modified.
+        \item If a method is overridden in a subclass, refactoring is \textbf{not} applied.
+    \end{itemize}
+
+    \item \textbf{Ensuring No Modification to Instance-Dependent Methods}
+    \begin{itemize}
+        \item Methods that reference \texttt{self} directly (e.g., \texttt{self.attr}, \texttt{self.method()}) are not modified.
+        \item Methods that indirectly access instance attributes (e.g., through another method call) are left unchanged.
+    \end{itemize}
+
+    \item \textbf{Preserving Readability and Maintainability}
+    \begin{itemize}
+        \item The refactored code maintains proper formatting and indentation.
+        \item Unnecessary modifications to unrelated code are avoided.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_member_ignoring_method.py}{here}.
+
 
 \subsection{VsCode Plugin}
 
 \subsubsection{Detect Smells Command}
 
-\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+\textbf{Goal:} The detect smells command is responsible for initiating the smell detection process, retrieving results from the backend, and ensuring proper highlighting in the VS Code editor. The command must handle various scenarios, including caching, missing editor instances, and server failures, while providing meaningful feedback to the user. The following unit tests verify its accuracy.\\
 
-\noindent
-The smell detection command module is responsible communicating with the backend to fetch the smells of the current file as well as the highlighting module to display the smells in the vscode editor. Unit tests for this module validate the following aspects:
+\noindent The tests assess the correct fetching and caching of smells, proper interaction with the highlighting module, handling of missing files or inactive editors, and the system's ability to recover from server downtime. Edge cases such as rapidly changing file hashes and updates to enabled smells are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
 
 \begin{itemize}
-  \item \textbf{Handling of Missing Active Editor}
-  \begin{itemize}
-    \item The command shows an error message when no active editor is found.
-  \end{itemize}
+    \item \textbf{Handling of Missing Active Editor}
+    \begin{itemize}
+        \item The command shows an error message when no active editor is found.
+    \end{itemize}
 
-  \item \textbf{Handling of Missing File Path}
-  \begin{itemize}
-      \item The command shows an error message when the active editor has no valid file path.
-  \end{itemize}
+    \item \textbf{Handling of Missing File Path}
+    \begin{itemize}
+        \item The command shows an error message when the active editor has no valid file path.
+    \end{itemize}
 
-  \item \textbf{Handling of No Enabled Smells}
-  \begin{itemize}
-      \item The command shows a warning message when no smells are enabled in the configuration.
-  \end{itemize}
+    \item \textbf{Handling of No Enabled Smells}
+    \begin{itemize}
+        \item The command shows a warning message when no smells are enabled in the configuration.
+    \end{itemize}
 
-  \item \textbf{Using Cached Smells}
-  \begin{itemize}
-      \item The command uses cached smells when the file hash and enabled smells match the cached data.
-      \item The command highlights the cached smells in the editor.
-  \end{itemize}
+    \item \textbf{Using Cached Smells}
+    \begin{itemize}
+        \item The command uses cached smells when the file hash and enabled smells match the cached data.
+        \item The command highlights the cached smells in the editor.
+    \end{itemize}
 
-  \item \textbf{Fetching New Smells}
-  \begin{itemize}
-      \item The command fetches new smells when the file hash changes or enabled smells are updated.
-      \item The command updates the cache with the new smells and highlights them in the editor.
-  \end{itemize}
+    \item \textbf{Fetching New Smells}
+    \begin{itemize}
+        \item The command fetches new smells when the file hash changes or enabled smells are updated.
+        \item The command updates the cache with the new smells and highlights them in the editor.
+    \end{itemize}
 
-  \item \textbf{Handling of Server Downtime}
-  \begin{itemize}
-      \item The command shows a warning message when the server is down and no cached smells are available.
-  \end{itemize}
+    \item \textbf{Handling of Server Downtime}
+    \begin{itemize}
+        \item The command shows a warning message when the server is down and no cached smells are available.
+    \end{itemize}
 
-  \item \textbf{Highlighting Smells}
-  \begin{itemize}
-      \item The command highlights detected smells in the editor when smells are found.
-      \item The command shows a success message with the number of highlighted smells.
-  \end{itemize}
+    \item \textbf{Highlighting Smells}
+    \begin{itemize}
+        \item The command highlights detected smells in the editor when smells are found.
+        \item The command shows a success message with the number of highlighted smells.
+    \end{itemize}
 \end{itemize}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
 
 \subsubsection{Document Hashing}
 
-\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+\textbf{Goal:} The document hashing module is responsible for generating and managing document hashes to track changes in files. By ensuring efficient tracking, this module allows caching mechanisms to work correctly and prevents unnecessary reprocessing. The following unit tests validate its correctness.\\
 
-\noindent
-The hashing tools module is responsible for generating and managing document hashes to track changes in files. Unit tests for this module validate the following aspects:
+\noindent The tests verify the module’s ability to detect file modifications, handle new files, and prevent redundant updates when no changes occur. Edge cases such as rapid sequential edits, hash mismatches, and multiple concurrent document updates are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
 
 \begin{itemize}
-  \item \textbf{Handling of Unchanged Document Hashes}
-  \begin{itemize}
-    \item The module does not update the workspace storage if the document hash has not changed.
-    \item The existing hash is retained for the document.
-  \end{itemize}
+    \item \textbf{Handling of Unchanged Document Hashes}
+    \begin{itemize}
+        \item The module does not update the workspace storage if the document hash has not changed.
+        \item The existing hash is retained for the document.
+    \end{itemize}
 
-  \item \textbf{Handling of Changed Document Hashes}
-  \begin{itemize}
-      \item The module updates the workspace storage when the document hash changes.
-      \item The new hash is correctly calculated and stored.
-  \end{itemize}
+    \item \textbf{Handling of Changed Document Hashes}
+    \begin{itemize}
+        \item The module updates the workspace storage when the document hash changes.
+        \item The new hash is correctly calculated and stored.
+    \end{itemize}
 
-  \item \textbf{Handling of New Documents}
-  \begin{itemize}
-      \item The module updates the workspace storage when no hash exists for the document.
-      \item A new hash is generated and stored for the document.
-  \end{itemize}
+    \item \textbf{Handling of New Documents}
+    \begin{itemize}
+        \item The module updates the workspace storage when no hash exists for the document.
+        \item A new hash is generated and stored for the document.
+    \end{itemize}
 \end{itemize}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/hashDocs.test.ts}{here}.
 
+
 \subsubsection{File Highlighter}
 
-\textbf{Target requirement(s):} FR10, OER-IAS1, LFR-AP2~\cite{SRS} \\
+\textbf{Goal:} The file highlighter module enhances code visibility by applying visual decorations to highlight detected code smells in the editor. It ensures that identified issues are clearly distinguishable while preserving readability. The following unit tests verify the correctness of this functionality.\\
 
-\noindent
-The file highlighter module is responsible for applying visual decorations to highlight code smells in the editor. Unit tests for this module validate the following aspects:
+\noindent The tests assess the correct creation of decorations, accurate application of highlighting based on detected smells, proper handling of initial and subsequent highlights, and the removal of outdated decorations. Edge cases such as overlapping decorations and incorrect style applications are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR10, OER-IAS1, LFR-AP2~\cite{SRS} \\
 
 \begin{itemize}
-  \item \textbf{Creation of Decorations}
-  \begin{itemize}
-    \item Decorations are created with the correct color and style for each type of code smell.
-    \item The decoration type is properly initialized and can be applied to the editor.
-  \end{itemize}
+    \item \textbf{Creation of Decorations}
+    \begin{itemize}
+        \item Decorations are created with the correct color and style for each type of code smell.
+        \item The decoration type is properly initialized and can be applied to the editor.
+    \end{itemize}
 
-  \item \textbf{Highlighting Smells}
-  \begin{itemize}
-      \item Smells are highlighted in the editor based on their line occurrences.
-      \item The hover content for each smell is correctly associated with the decoration.
-  \end{itemize}
+    \item \textbf{Highlighting Smells}
+    \begin{itemize}
+        \item Smells are highlighted in the editor based on their line occurrences.
+        \item The hover content for each smell is correctly associated with the decoration.
+    \end{itemize}
 
-  \item \textbf{Handling of Initial Highlighting}
-  \begin{itemize}
-      \item On the first initialization, decorations are applied without resetting existing ones.
-      \item The decorations are properly stored for future updates.
-  \end{itemize}
+    \item \textbf{Handling of Initial Highlighting}
+    \begin{itemize}
+        \item On the first initialization, decorations are applied without resetting existing ones.
+        \item The decorations are properly stored for future updates.
+    \end{itemize}
 
-  \item \textbf{Resetting Decorations}
-  \begin{itemize}
-      \item On subsequent calls, existing decorations are disposed of before applying new ones.
-      \item The reset process ensures no overlapping or redundant decorations.
-  \end{itemize}
+    \item \textbf{Resetting Decorations}
+    \begin{itemize}
+        \item On subsequent calls, existing decorations are disposed of before applying new ones.
+        \item The reset process ensures no overlapping or redundant decorations.
+    \end{itemize}
 \end{itemize}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
 
-\subsection{API Routes}
 
-\subsubsection{Smell Detection Endpoint}
 
-\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+\subsubsection{Hover Manager}
 
-\noindent
-The smell detection endpoint module is responsible for providing an entry point for communication with the backend library in order to retrieve code smells for a certain file. Unit tests for this module validate the following aspects:
+\textbf{Goal:} The Hover Manager module manages hover functionality for Python files, providing hover content for detected code smells and allowing refactoring commands. The following unit tests verify the accuracy of this functionality.\\
 
-\begin{itemize}
-  \item \textbf{Successful Detection of Smells}
-  \begin{itemize}
-    \item The API endpoint returns a successful response when the file exists and smells are detected.
-    \item The response contains the correct number of detected smells and adheres to the expected data structure.
-  \end{itemize}
+\noindent The tests assess the ability of the \texttt{HoverManager} to register hover providers, handle hover content, update smells, generate refactor commands, and ensure correct hover content formatting. Edge cases, such as no smells and the correct propagation of updates to smells, are also considered.\\
 
-  \item \textbf{Handling of File Not Found Errors}
-  \begin{itemize}
-      \item The API endpoint returns an appropriate error response when the specified file does not exist.
-      \item The error message clearly indicates that the file was not found.
-  \end{itemize}
-
-  \item \textbf{Handling of Internal Server Errors}
-  \begin{itemize}
-      \item The API endpoint returns an error response when an unexpected exception occurs during smell detection.
-      \item The error message indicates an internal server error.
-  \end{itemize}
-
-  \item \textbf{Validation of Input Data}
-  \begin{itemize}
-      \item The API validates the presence and correctness of required fields in the request.
-      \item The API rejects invalid input with appropriate error messages.
-  \end{itemize}
-
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_detect_route.py}{here}.
-
-\subsubsection{Refactoring Endpoint}
-
-\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-\noindent
-The refactoring endpoint module is responsible for providing an entry point for communication with the backend library in order to refactor code smells. Unit tests for this module validate the following aspects:
+\noindent \textbf{Target requirement(s):} LFR-AP2~\cite{SRS} \\
 
 \begin{itemize}
-  \item \textbf{Successful Refactoring Process}
-  \begin{itemize}
-    \item The API endpoint returns a successful response when the refactoring process completes without errors.
-    \item The response includes the refactored data and updated smells.
-    \item Energy measurements are correctly retrieved and compared to ensure energy savings.
-  \end{itemize}
+    \item \textbf{Registers hover provider for Python files}
+    \begin{itemize}
+        \item Verifies that the \texttt{HoverManager} correctly registers a hover provider for Python files.
+    \end{itemize}
 
-  \item \textbf{Handling of Source Directory Not Found}
-  \begin{itemize}
-      \item The API endpoint returns an appropriate error response when the specified source directory does not exist.
-      \item The error message clearly indicates that the directory was not found.
-  \end{itemize}
+    \item \textbf{Subscribes hover provider correctly}
+    \begin{itemize}
+        \item Ensures that the hover provider is correctly subscribed to the context manager.
+    \end{itemize}
 
-  \item \textbf{Handling of Energy Measurement Failures}
-  \begin{itemize}
-      \item The API endpoint returns an error response when initial or final energy measurements cannot be retrieved.
-      \item The API endpoint returns an error response when no energy savings are detected after refactoring.
-  \end{itemize}
+    \item \textbf{Returns null for hover content if there are no smells}
+    \begin{itemize}
+        \item Checks that \texttt{getHoverContent} returns \texttt{null} when no smells are detected for a file.
+    \end{itemize}
 
-  \item \textbf{Handling of Unexpected Errors}
-  \begin{itemize}
-      \item The API endpoint returns an error response when an unexpected exception occurs during the refactoring process.
-      \item The error message includes details about the exception.
-  \end{itemize}
+    \item \textbf{Updates smells when \texttt{getInstance} is called again}
+    \begin{itemize}
+        \item Verifies that when \texttt{getInstance} is called again with new smells, the manager updates the stored smells and returns the same instance.
+    \end{itemize}
+
+    \item \textbf{Updates smells correctly}
+    \begin{itemize}
+        \item Confirms that \texttt{updateSmells} correctly updates the list of smells in the manager.
+    \end{itemize}
+
+    \item \textbf{Generates valid hover content}
+    \begin{itemize}
+        \item Ensures that \texttt{getHoverContent} generates valid hover content with correctly formatted smell details, including refactor commands and proper structure.
+    \end{itemize}
+
+    \item \textbf{Registers refactor commands}
+    \begin{itemize}
+        \item Verifies that the refactor commands are properly registered for individual and all smells of a specific type.
+    \end{itemize}
 \end{itemize}
 
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_refactoring.py}{here}.
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/hoverManager.test.ts}{here}.
+
+\subsubsection{Line Selection Manager}
+
+\textbf{Goal:} The Line Selection Manager module provides functionality for detecting and commenting on code smells based on a line selection. The following unit tests verify the correctness of this functionality.\\
+
+\noindent The tests assess the ability of the \texttt{LineSelectionManager} to handle various scenarios such as missing editor instances, multiple smells on a line, single-line vs. multi-line selections, and correct comment generation. Edge cases, such as mismatched document hashes, non-existent smells, and the absence of selected text, are also considered.\\
+
+\noindent \textbf{Target requirement(s):} UHR-EOU1~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Removes last comment if decoration exists}
+    \begin{itemize}
+        \item Verifies that the last comment decoration is removed correctly if one exists, ensuring that the decoration is disposed of properly.
+    \end{itemize}
+
+    \item \textbf{Does not proceed if no editor is provided}
+    \begin{itemize}
+        \item Ensures that no action is taken when \texttt{commentLine} is called with \texttt{null} as the editor.
+    \end{itemize}
+
+    \item \textbf{Does not add comment if no smells detected for file}
+    \begin{itemize}
+        \item Checks that no comment is added when no smells are detected for the current file, confirming that no unnecessary decorations are applied.
+    \end{itemize}
+
+    \item \textbf{Does not add comment if document hash does not match}
+    \begin{itemize}
+        \item Verifies that no comment is added when the document hash in the workspace data does not match the hash of the document, ensuring that the editor's state remains consistent with the expected data.
+    \end{itemize}
+
+    \item \textbf{Does not add comment for multi-line selections}
+    \begin{itemize}
+        \item Tests that no comment is added when there is a multi-line selection, ensuring that only single-line selections are processed.
+    \end{itemize}
+
+    \item \textbf{Does not add comment when no smells exist at line}
+    \begin{itemize}
+        \item Ensures that no comment is added when no smells are associated with the selected line, preventing unnecessary decorations from being applied.
+    \end{itemize}
+
+    \item \textbf{Displays single smell comment without count}
+    \begin{itemize}
+        \item Verifies that a single smell is displayed correctly without a count, confirming that the decoration is applied with the correct content format.
+    \end{itemize}
+
+    \item \textbf{Adds a single-line comment if a smell is found}
+    \begin{itemize}
+        \item Confirms that a single-line comment is added correctly when a smell is found on the selected line, ensuring proper decoration application.
+    \end{itemize}
+
+    \item \textbf{Displays a combined comment if multiple smells exist}
+    \begin{itemize}
+        \item Verifies that a combined comment is displayed when multiple smells exist on the same line.
+        \item Ensures that the decoration is created with the correct formatting and applied to the correct range.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelection.test.ts}{here}.
+
 \subsection{Long Message Chain Detection Tests}
 
 \textbf{Goal:} The long message chain detection module identifies method call chains that exceed a predefined threshold (default: 5 calls). The following unit tests verify the detection capabilities. \\
@@ -1980,6 +2219,83 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_lambda_element_refactoring.py}{here}
 
+
+\subsection{API Routes}
+
+\subsubsection{Smell Detection Endpoint}
+
+\textbf{Goal:} The smell detection endpoint provides an API for retrieving detected code smells from the backend. It ensures efficient communication with the smell detection module while handling errors gracefully. The following unit tests verify the accuracy of this functionality.\\
+
+\noindent The tests assess the correctness of the endpoint’s response structure, error handling for missing files, validation of request data, and handling of internal exceptions. Edge cases, such as malformed requests and empty responses, are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Successful Detection of Smells}
+    \begin{itemize}
+        \item The API endpoint returns a successful response when the file exists and smells are detected.
+        \item The response contains the correct number of detected smells and adheres to the expected data structure.
+    \end{itemize}
+
+    \item \textbf{Handling of File Not Found Errors}
+    \begin{itemize}
+        \item The API endpoint returns an appropriate error response when the specified file does not exist.
+        \item The error message clearly indicates that the file was not found.
+    \end{itemize}
+
+    \item \textbf{Handling of Internal Server Errors}
+    \begin{itemize}
+        \item The API endpoint returns an error response when an unexpected exception occurs during smell detection.
+        \item The error message indicates an internal server error.
+    \end{itemize}
+
+    \item \textbf{Validation of Input Data}
+    \begin{itemize}
+        \item The API validates the presence and correctness of required fields in the request.
+        \item The API rejects invalid input with appropriate error messages.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_detect_route.py}{here}.
+
+\subsubsection{Refactoring Endpoint}
+
+\textbf{Goal:} The refactoring endpoint provides an API for refactoring detected code smells by leveraging the backend refactoring module. It ensures that refactored code is returned efficiently while verifying energy savings. The following unit tests validate the accuracy of this functionality.\\
+
+\noindent The tests assess the correctness of refactored output, proper retrieval of energy measurements, error handling for missing source directories, and graceful failures when unexpected conditions arise. Edge cases such as unsuccessful refactorings and unchanged energy consumption are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Successful Refactoring Process}
+    \begin{itemize}
+        \item The API endpoint returns a successful response when the refactoring process completes without errors.
+        \item The response includes the refactored data and updated smells.
+        \item Energy measurements are correctly retrieved and compared to ensure energy savings.
+    \end{itemize}
+
+    \item \textbf{Handling of Source Directory Not Found}
+    \begin{itemize}
+        \item The API endpoint returns an appropriate error response when the specified source directory does not exist.
+        \item The error message clearly indicates that the directory was not found.
+    \end{itemize}
+
+    \item \textbf{Handling of Energy Measurement Failures}
+    \begin{itemize}
+        \item The API endpoint returns an error response when initial or final energy measurements cannot be retrieved.
+        \item The API endpoint returns an error response when no energy savings are detected after refactoring.
+    \end{itemize}
+
+    \item \textbf{Handling of Unexpected Errors}
+    \begin{itemize}
+        \item The API endpoint returns an error response when an unexpected exception occurs during the refactoring process.
+        \item The error message includes details about the exception.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_refactoring.py}{here}.
+
+
 % \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
@@ -1988,55 +2304,6 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
   have a lower priority for verification than others.  If this is the case,
   explain your rationale for the ranking of module importance.}
 
-\subsection{Refactoring Module}
-
-\subsubsection{Member Ignoring Method}
-
-\textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
-
-\noindent
-The refactoring module ensures that methods which do not reference instance attributes or methods are converted into static methods. Unit tests for this module validate the following aspects:
-
-\begin{itemize}
-    \item \textbf{Correct Addition of the \texttt{@staticmethod} Decorator}
-    \begin{itemize}
-        \item The method receives the \texttt{@staticmethod} decorator when it does not use \texttt{self} or any instance attributes.
-        \item The decorator is added directly above the method definition, preserving any existing decorators.
-    \end{itemize}
-
-    \item \textbf{Removal of the \texttt{self} Parameter}
-    \begin{itemize}
-        \item The first parameter of the method is removed if it is named \texttt{self}.
-        \item Other parameters remain unchanged.
-        \item The method signature is correctly adjusted to reflect the removal.
-    \end{itemize}
-
-    \item \textbf{Modify Instance Calls to the Method}
-    \begin{itemize}
-        \item Instance objects of the class calling the method will be modified to a use a static call directly from the class itself.
-        \item Calls in a different file from the one where the smell was detected will also have the appropriate calls modified.
-    \end{itemize}
-
-    \item \textbf{Handling of Methods in Classes with Inheritance}
-    \begin{itemize}
-        \item If a subclass instance calls the method, the call is also modified.
-        \item If a method is overridden in a subclass, refactoring is \textbf{not} applied.
-    \end{itemize}
-
-    \item \textbf{Ensuring No Modification to Instance-Dependent Methods}
-    \begin{itemize}
-        \item Methods that reference \texttt{self} directly (e.g., \texttt{self.attr}, \texttt{self.method()}) are not modified.
-        \item Methods that indirectly access instance attributes (e.g., through another method call) are left unchanged.
-    \end{itemize}
-
-    \item \textbf{Preserving Readability and Maintainability}
-    \begin{itemize}
-        \item The refactored code maintains proper formatting and indentation.
-        \item Unnecessary modifications to unrelated code are avoided.
-    \end{itemize}
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_member_ignoring_method.py}{here}
 
 
 % \subsection{Tests for Functional Requirements}
@@ -2139,189 +2406,6 @@ The refactoring module ensures that methods which do not reference instance attr
 % \subsection{Traceability Between Test Cases and Modules}
 
 % \wss{Provide evidence that all of the modules have been considered.}
-  
-\newpage
-
-\subsubsection{Refactoring Controller}
-
-\textbf{Goal:} These tests verify the behavior of the RefactorerController in various scenarios, ensuring that it handles refactoring correctly and interacts with external components as expected.
-
-\textbf{Target requirement(s):} FR5, UHR-UPL1 ~\cite{SRS} \\
-
-\begin{itemize}
-\item \textbf{Verifying Successful Refactoring with a Valid Refactorer} \newline
-Verifies that the RefactorerController correctly runs the refactorer when a valid refactorer is available. It checks that the logger captures the refactoring event, the refactor method is called with the expected arguments, and the modified file path is correctly generated.
-
-\item \textbf{Handling Case When No Refactorer is Found} \newline
-Ensures that if no refactorer is found for a given smell, the RefactorerController raises a NotImplementedError. It also confirms that the appropriate error message is logged.
-
-\item \textbf{Handling Multiple Refactorer Calls for the Same Smell} \newline
-Tests the behavior of the RefactorerController when the refactorer is called multiple times for the same smell. It ensures that the smell counter is updated correctly and that unique file names are generated for each call.
-
-\item \textbf{Verifying the Behavior When Overwrite is Disabled} \newline
-Verifies that when the overwrite flag is set to false, the refactor method is called with the correct argument, ensuring that files are not overwritten when this option is disabled.
-
-\item \textbf{Handling Case Where No Files are Modified} \newline
-Checks that when no files are modified by the refactorer, the RefactorerController correctly returns an empty list of modified files.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/controllers/test_refactorer_controller.py}{here}
-
-
-\subsubsection{Long Element Chain Detection}
-
-\textbf{Goal:} The long element chain detection module identifies excessive dictionary access chains that exceed a predefined threshold (default: 3). The following unit tests verify the detection capabilities. \
-
-The tests evaluate the detection of long element chains by verifying that sequences exceeding the threshold, such as deep dictionary accesses, are correctly identified. They include edge cases, such as chains just below the threshold, variations in data structures, and multiple chains in the same scope, to assess the robustness of the detection logic.
-
-\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
-
-\begin{itemize}
-\item \textbf{Ignores code with no chains} \newline
-Ensures that code without any nested element chains does not trigger a detection.
-
-\item \textbf{Ignores chains below the threshold} \newline
-Verifies that element chains shorter than the threshold are not flagged.
-
-\item \textbf{Detects chains exactly at threshold} \newline
-Ensures that an element chain with a length equal to the threshold is flagged.
-
-\item \textbf{Detects chains exceeding the threshold} \newline
-Verifies that chains longer than the threshold are correctly detected.
-
-\item \textbf{Detects multiple chains in the same file} \newline
-Ensures that multiple long element chains appearing in different locations within the same code file are individually detected.
-
-\item \textbf{Detects chains inside nested functions and classes} \newline
-Confirms that element chains occurring within functions and class methods are correctly identified.
-
-\item \textbf{Reports identical chains on the same line only once} \newline
-Ensures that duplicate chains appearing on a single line are not reported multiple times.
-
-\item \textbf{Handles different variable types in chains} \newline
-Verifies detection of chains that involve a mix of dictionaries, lists, tuples, and nested structures.
-
-\item \textbf{Correctly applies custom threshold values} \newline
-Ensures that adjusting the threshold parameter correctly affects detection behavior.
-
-\item \textbf{Verifies result structure and metadata} \newline
-Confirms that detected chains return correctly formatted results, including message ID, type, and occurrence details.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_lec.py}{here}
-
-
-\subsubsection{Long Element Chain Refactoring}
-
-\textbf{Goal:} The long element chain refactoring module simplifies deeply nested dictionary accesses by flattening them into top-level keys while preserving functionality. The following unit tests verify the correctness of this transformation.
-
-The tests assess the ability to detect and refactor long element chains by verifying correct dictionary transformations, accessing pattern updates, and handling of various data structures. Edge cases, such as shallow accesses, multiple affected files, and mixed depths of access, are included to ensure robustness.
-
-\textbf{Target requirement(s):}  FR3, FR6, PR-PAR3 ~\cite{SRS} \\
-
-\begin{itemize}
-\item \textbf{Identifies and refactors basic nested dictionary access} \newline
-Ensures that deeply nested dictionary keys are detected and refactored correctly.
-
-\item \textbf{Refactors dictionary accesses across multiple files} \newline
-Verifies that dictionary changes propagate correctly when a deeply nested dictionary is accessed in different files.
-
-\item \textbf{Handles dictionary access via class attributes} \newline
-Ensures that nested dictionary accesses within class attributes are correctly detected and refactored.
-
-\item \textbf{Ignores shallow dictionary accesses} \newline
-Verifies that dictionary accesses below the predefined threshold remain unchanged.
-
-\item \textbf{Handles multiple long element chains in the same file} \newline
-Ensures that all occurrences of excessive dictionary accesses in a file are refactored individually.
-
-\item \textbf{Detects and refactors mixed access depths} \newline
-Confirms that the module correctly differentiates and processes deep accesses while ignoring shallow ones.
-
-\item \textbf{Validates resulting metadata and formatting} \newline
-Confirms that the refactored output includes well-structured results, such as correct message IDs, types, and occurrences.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}
-
-
-
-\subsection{Plugin Tests}
-
-
-\subsubsection{Hover Manager Tests}
-
-\textbf{Goal:} The Hover Manager module manages hover functionality for Python files, providing hover content for detected code smells and allowing refactoring commands. The following unit tests verify the accuracy of this functionality.
-
-The tests assess the ability of the \texttt{HoverManager} to register hover providers, handle hover content, update smells, generate refactor commands, and ensure correct hover content formatting. Edge cases, such as no smells and the correct propagation of updates to smells, are also considered.
-
-\textbf{Target requirement(s):}  LFR-AP2 ~\cite{SRS} \\
-
-\begin{itemize}
-\item \textbf{Registers hover provider for Python files} \newline
-Verifies that the \texttt{HoverManager} correctly registers a hover provider for Python files.
-
-\item \textbf{Subscribes hover provider correctly} \newline
-Ensures that the hover provider is correctly subscribed to the context manager.
-
-\item \textbf{Returns null for hover content if there are no smells} \newline
-Checks that \texttt{getHoverContent} returns \texttt{null} when no smells are detected for a file.
-
-\item \textbf{Updates smells when \texttt{getInstance} is called again} \newline
-Verifies that when \texttt{getInstance} is called again with new smells, the manager updates the stored smells and returns the same instance.
-
-\item \textbf{Updates smells correctly} \newline
-Confirms that \texttt{updateSmells} correctly updates the list of smells in the manager.
-
-\item \textbf{Generates valid hover content} \newline
-Ensures that \texttt{getHoverContent} generates valid hover content with correctly formatted smell details, including refactor commands and proper structure.
-
-\item \textbf{Registers refactor commands} \newline
-Verifies that the refactor commands are properly registered for individual and all smells of a specific type.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/hoverManager.test.ts}{here}
-
-
-
-\subsubsection{Line Selection Manager Tests}
-
-\textbf{Goal:} The Line Selection Manager module provides functionality for detecting and commenting on code smells based on a line selection. The following unit tests verify the correctness of this functionality.
-
-The tests assess the ability of the \texttt{LineSelectionManager} to handle various scenarios such as missing editor instances, multiple smells on a line, single-line vs. multi-line selections, and correct comment generation. Edge cases, such as mismatched document hashes, non-existent smells, and the absence of selected text, are also considered.
-
-\textbf{Target requirement(s):}  UHR-EOU1 ~\cite{SRS} \\
-
-\begin{itemize}
-\item \textbf{Removes last comment if decoration exists} \newline
-Verifies that the last comment decoration is removed correctly if one exists, ensuring that the decoration is disposed of properly.
-
-\item \textbf{Does not proceed if no editor is provided} \newline
-Ensures that no action is taken when \texttt{commentLine} is called with \texttt{null} as the editor.
-
-\item \textbf{Does not add comment if no smells detected for file} \newline
-Checks that no comment is added when no smells are detected for the current file, confirming that no unnecessary decorations are applied.
-
-\item \textbf{Does not add comment if document hash does not match} \newline
-Verifies that no comment is added when the document hash in the workspace data does not match the hash of the document, ensuring that the editor's state remains consistent with the expected data.
-
-\item \textbf{Does not add comment for multi-line selections} \newline
-Tests that no comment is added when there is a multi-line selection, ensuring that only single-line selections are processed.
-
-\item \textbf{Does not add comment when no smells exist at line} \newline
-Ensures that no comment is added when no smells are associated with the selected line, preventing unnecessary decorations from being applied.
-
-\item \textbf{Displays single smell comment without count} \newline
-Verifies that a single smell is displayed correctly without a count, confirming that the decoration is applied with the correct content format.
-
-\item \textbf{Adds a single-line comment if a smell is found} \newline
-Confirms that a single-line comment is added correctly when a smell is found on the selected line, ensuring proper decoration application.
-
-\item \textbf{Displays a combined comment if multiple smells exist} \newline
-Verifies that a combined comment is displayed when multiple smells exist on the same line, and that the decoration is created with the correct formatting and applied to the correct range.
-\end{itemize}
-
-\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelection.test.ts}{here}
 
 
 \bibliography{../../refs/References}
