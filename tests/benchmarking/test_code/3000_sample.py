@@ -3,7 +3,6 @@ This module provides various mathematical helper functions.
 It intentionally contains code smells for demonstration purposes.
 """
 
-from ast import List
 import collections
 import math
 
@@ -198,7 +197,7 @@ class Vehicle:
         print("This method doesn't interact with instance attributes, it just prints a statement.")
 
 
-def longestArithSeqLength2(A: List[int]) -> int:
+def longestArithSeqLength2(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -207,7 +206,7 @@ def longestArithSeqLength2(A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength3(A: List[int]) -> int:
+def longestArithSeqLength3(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -216,7 +215,7 @@ def longestArithSeqLength3(A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength2(A: List[int]) -> int:
+def longestArithSeqLength4(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -225,7 +224,7 @@ def longestArithSeqLength2(A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength3(A: List[int]) -> int:
+def longestArithSeqLength5(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -276,8 +275,8 @@ class rootop:
     def cbrt():
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
-        print(math.cbrt(a))
-        print(math.cbrt(b))
+        print(a ** (1 / 3))
+        print(b ** (1 / 3))
 
     def ranroot():
         a = int(input("Enter the x: "))
@@ -305,38 +304,38 @@ def multiply_numbers(a, b):
     return a * b
 
 
-def is_even(n):
+def is_even1(n):
     """Check if a number is even."""
     return n % 2 == 0
 
 
-def factorial(n):
+def factorial1(n):
     """Calculate the factorial of a number recursively."""
     return 1 if n == 0 else n * factorial(n - 1)
 
 
-def reverse_string(s):
+def reverse_string1(s):
     """Reverse a given string."""
     return s[::-1]
 
 
-def count_vowels(s):
+def count_vowels1(s):
     """Count the number of vowels in a string."""
     return sum(1 for char in s.lower() if char in "aeiou")
 
 
-def find_max(numbers):
+def find_max1(numbers):
     """Find the maximum value in a list of numbers."""
     return max(numbers) if numbers else None
 
 
-def shuffle_list(lst):
+def shuffle_list1(lst):
     """Shuffle a list randomly."""
     random.shuffle(lst)
     return lst
 
 
-def fibonacci(n):
+def fibonacci1(n):
     """Generate Fibonacci sequence up to the nth term."""
     sequence = [0, 1]
     for _ in range(n - 2):
@@ -344,12 +343,12 @@ def fibonacci(n):
     return sequence[:n]
 
 
-def is_palindrome(s):
+def is_palindrome1(s):
     """Check if a string is a palindrome."""
     return s == s[::-1]
 
 
-def remove_duplicates(lst):
+def remove_duplicates1(lst):
     """Remove duplicates from a list."""
     return list(set(lst))
 
@@ -391,7 +390,7 @@ def get_random_element(lst):
     return random.choice(lst) if lst else None
 
 
-def sum_list(lst):
+def sum_list1(lst):
     """Return the sum of elements in a list."""
     return sum(lst)
 
@@ -429,7 +428,7 @@ def most_frequent_element(lst):
     return max(set(lst), key=lst.count) if lst else None
 
 
-def is_prime(n):
+def is_prime1(n):
     """Check if a number is prime."""
     if n < 2:
         return False
@@ -444,7 +443,7 @@ def convert_to_binary(n):
     return bin(n)[2:]
 
 
-def sum_of_digits(n):
+def sum_of_digits2(n):
     """Find the sum of digits of a number."""
     return sum(int(digit) for digit in str(n))
 
@@ -532,7 +531,7 @@ def list_intersection(lst1, lst2):
 
 
 # 15. Function to calculate the sum of digits of a number
-def sum_of_digits(n):
+def sum_of_digits4(n):
     return sum(int(digit) for digit in str(n))
 
 
@@ -557,12 +556,12 @@ def is_leap_year(year):
 
 
 # 24. Function to calculate the GCD of two numbers
-def gcd(a, b):
+def gcd4(a, b):
     return a if b == 0 else gcd(b, a % b)
 
 
 # 25. Function to calculate the LCM of two numbers
-def lcm(a, b):
+def lcm4(a, b):
     return a * b // gcd(a, b)
 
 
@@ -674,17 +673,17 @@ def cube_volume(s):
 
 
 # 46. Function to calculate the volume of a sphere
-def sphere_volume(r):
+def sphere_volume1(r):
     return (4 / 3) * 3.14159 * r**3
 
 
 # 47. Function to calculate the volume of a cylinder
-def cylinder_volume(r, h):
+def cylinder_volume1(r, h):
     return 3.14159 * r**2 * h
 
 
 # 48. Function to calculate the volume of a cone
-def cone_volume(r, h):
+def cone_volume1(r, h):
     return (1 / 3) * 3.14159 * r**2 * h
 
 
@@ -694,17 +693,17 @@ def cube_surface_area(s):
 
 
 # 50. Function to calculate the surface area of a sphere
-def sphere_surface_area(r):
+def sphere_surface_area1(r):
     return 4 * 3.14159 * r**2
 
 
 # 51. Function to calculate the surface area of a cylinder
-def cylinder_surface_area(r, h):
+def cylinder_surface_area1(r, h):
     return 2 * 3.14159 * r * (r + h)
 
 
 # 52. Function to calculate the surface area of a cone
-def cone_surface_area(r, l):
+def cone_surface_area1(r, l):
     return 3.14159 * r * (r + l)
 
 
@@ -974,7 +973,7 @@ def absolute_cumulative_ratio_lambda(lst, func):
 
 
 # 134. Function to check if a string is a valid email address
-def is_valid_email(email):
+def is_valid_email1(email):
     import re
 
     pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
@@ -982,7 +981,7 @@ def is_valid_email(email):
 
 
 # 135. Function to generate a list of prime numbers up to a given limit
-def generate_primes(limit):
+def generate_primes1(limit):
     primes = []
     for num in range(2, limit + 1):
         if all(num % i != 0 for i in range(2, int(num**0.5) + 1)):
@@ -991,7 +990,7 @@ def generate_primes(limit):
 
 
 # 136. Function to calculate the nth Fibonacci number using recursion
-def nth_fibonacci_recursive(n):
+def nth_fibonacci_recursive1(n):
     if n <= 0:
         return 0
     elif n == 1:
@@ -1001,7 +1000,7 @@ def nth_fibonacci_recursive(n):
 
 
 # 137. Function to calculate the nth Fibonacci number using iteration
-def nth_fibonacci_iterative(n):
+def nth_fibonacci_iterative1(n):
     a, b = 0, 1
     for _ in range(n):
         a, b = b, a + b
@@ -1009,7 +1008,7 @@ def nth_fibonacci_iterative(n):
 
 
 # 138. Function to calculate the factorial of a number using iteration
-def factorial_iterative(n):
+def factorial_iterative1(n):
     result = 1
     for i in range(1, n + 1):
         result *= i
@@ -1017,7 +1016,7 @@ def factorial_iterative(n):
 
 
 # 139. Function to calculate the factorial of a number using recursion
-def factorial_recursive(n):
+def factorial_recursive1(n):
     if n <= 1:
         return 1
     else:
@@ -1025,7 +1024,7 @@ def factorial_recursive(n):
 
 
 # 140. Function to calculate the sum of all elements in a nested list
-def sum_nested_list(lst):
+def sum_nested_list1(lst):
     total = 0
     for element in lst:
         if isinstance(element, list):
@@ -1036,7 +1035,7 @@ def sum_nested_list(lst):
 
 
 # 141. Function to flatten a nested list
-def flatten_nested_list(lst):
+def flatten_nested_list1(lst):
     flattened = []
     for element in lst:
         if isinstance(element, list):
@@ -1047,7 +1046,7 @@ def flatten_nested_list(lst):
 
 
 # 142. Function to find the longest word in a string
-def longest_word_in_string(s):
+def longest_word_in_string1(s):
     words = s.split()
     longest = ""
     for word in words:
@@ -1057,7 +1056,7 @@ def longest_word_in_string(s):
 
 
 # 143. Function to count the frequency of each character in a string
-def character_frequency(s):
+def character_frequency1(s):
     frequency = {}
     for char in s:
         if char in frequency:
@@ -1068,7 +1067,7 @@ def character_frequency(s):
 
 
 # 144. Function to check if a number is a perfect square
-def is_perfect_square(n):
+def is_perfect_square1(n):
     if n < 0:
         return False
     sqrt = int(n**0.5)
@@ -1076,7 +1075,7 @@ def is_perfect_square(n):
 
 
 # 145. Function to check if a number is a perfect cube
-def is_perfect_cube(n):
+def is_perfect_cube1(n):
     if n < 0:
         return False
     cube_root = round(n ** (1 / 3))
@@ -1084,17 +1083,17 @@ def is_perfect_cube(n):
 
 
 # 146. Function to calculate the sum of squares of the first n natural numbers
-def sum_of_squares(n):
+def sum_of_squares1(n):
     return sum(i**2 for i in range(1, n + 1))
 
 
 # 147. Function to calculate the sum of cubes of the first n natural numbers
-def sum_of_cubes(n):
+def sum_of_cubes1(n):
     return sum(i**3 for i in range(1, n + 1))
 
 
 # 148. Function to calculate the sum of the digits of a number
-def sum_of_digits(n):
+def sum_of_digits1(n):
     total = 0
     while n > 0:
         total += n % 10
@@ -1103,7 +1102,7 @@ def sum_of_digits(n):
 
 
 # 149. Function to calculate the product of the digits of a number
-def product_of_digits(n):
+def product_of_digits1(n):
     product = 1
     while n > 0:
         product *= n % 10
@@ -1112,7 +1111,7 @@ def product_of_digits(n):
 
 
 # 150. Function to reverse a number
-def reverse_number(n):
+def reverse_number1(n):
     reversed_num = 0
     while n > 0:
         reversed_num = reversed_num * 10 + n % 10
@@ -1121,12 +1120,12 @@ def reverse_number(n):
 
 
 # 151. Function to check if a number is a palindrome
-def is_number_palindrome(n):
+def is_number_palindrome1(n):
     return n == reverse_number(n)
 
 
 # 152. Function to generate a list of all divisors of a number
-def divisors(n):
+def divisors1(n):
     divisors = []
     for i in range(1, n + 1):
         if n % i == 0:
@@ -1135,158 +1134,158 @@ def divisors(n):
 
 
 # 153. Function to check if a number is abundant
-def is_abundant(n):
+def is_abundant1(n):
     return sum(divisors(n)) - n > n
 
 
 # 154. Function to check if a number is deficient
-def is_deficient(n):
+def is_deficient1(n):
     return sum(divisors(n)) - n < n
 
 
 # 155. Function to check if a number is perfect
-def is_perfect(n):
+def is_perfect1(n):
     return sum(divisors(n)) - n == n
 
 
 # 156. Function to calculate the greatest common divisor (GCD) of two numbers
-def gcd(a, b):
+def gcd1(a, b):
     while b:
         a, b = b, a % b
     return a
 
 
 # 157. Function to calculate the least common multiple (LCM) of two numbers
-def lcm(a, b):
+def lcm1(a, b):
     return a * b // gcd(a, b)
 
 
 # 158. Function to generate a list of the first n triangular numbers
-def triangular_numbers(n):
+def triangular_numbers1(n):
     return [i * (i + 1) // 2 for i in range(1, n + 1)]
 
 
 # 159. Function to generate a list of the first n square numbers
-def square_numbers(n):
+def square_numbers1(n):
     return [i**2 for i in range(1, n + 1)]
 
 
 # 160. Function to generate a list of the first n cube numbers
-def cube_numbers(n):
+def cube_numbers1(n):
     return [i**3 for i in range(1, n + 1)]
 
 
 # 161. Function to calculate the area of a triangle given its base and height
-def triangle_area(base, height):
+def triangle_area1(base, height):
     return 0.5 * base * height
 
 
 # 162. Function to calculate the area of a trapezoid given its bases and height
-def trapezoid_area(base1, base2, height):
+def trapezoid_area1(base1, base2, height):
     return 0.5 * (base1 + base2) * height
 
 
 # 163. Function to calculate the area of a parallelogram given its base and height
-def parallelogram_area(base, height):
+def parallelogram_area1(base, height):
     return base * height
 
 
 # 164. Function to calculate the area of a rhombus given its diagonals
-def rhombus_area(diagonal1, diagonal2):
+def rhombus_area1(diagonal1, diagonal2):
     return 0.5 * diagonal1 * diagonal2
 
 
 # 165. Function to calculate the area of a regular polygon given the number of sides and side length
-def regular_polygon_area(n, side_length):
+def regular_polygon_area1(n, side_length):
     import math
 
     return (n * side_length**2) / (4 * math.tan(math.pi / n))
 
 
 # 166. Function to calculate the perimeter of a regular polygon given the number of sides and side length
-def regular_polygon_perimeter(n, side_length):
+def regular_polygon_perimeter1(n, side_length):
     return n * side_length
 
 
 # 167. Function to calculate the volume of a rectangular prism given its dimensions
-def rectangular_prism_volume(length, width, height):
+def rectangular_prism_volume1(length, width, height):
     return length * width * height
 
 
 # 168. Function to calculate the surface area of a rectangular prism given its dimensions
-def rectangular_prism_surface_area(length, width, height):
+def rectangular_prism_surface_area1(length, width, height):
     return 2 * (length * width + width * height + height * length)
 
 
 # 169. Function to calculate the volume of a pyramid given its base area and height
-def pyramid_volume(base_area, height):
+def pyramid_volume1(base_area, height):
     return (1 / 3) * base_area * height
 
 
 # 170. Function to calculate the surface area of a pyramid given its base area and slant height
-def pyramid_surface_area(base_area, slant_height):
+def pyramid_surface_area1(base_area, slant_height):
     return base_area + (1 / 2) * base_area * slant_height
 
 
 # 171. Function to calculate the volume of a cone given its radius and height
-def cone_volume(radius, height):
+def cone_volume2(radius, height):
     return (1 / 3) * 3.14159 * radius**2 * height
 
 
 # 172. Function to calculate the surface area of a cone given its radius and slant height
-def cone_surface_area(radius, slant_height):
+def cone_surface_area2(radius, slant_height):
     return 3.14159 * radius * (radius + slant_height)
 
 
 # 173. Function to calculate the volume of a sphere given its radius
-def sphere_volume(radius):
+def sphere_volume2(radius):
     return (4 / 3) * 3.14159 * radius**3
 
 
 # 174. Function to calculate the surface area of a sphere given its radius
-def sphere_surface_area(radius):
+def sphere_surface_area2(radius):
     return 4 * 3.14159 * radius**2
 
 
 # 175. Function to calculate the volume of a cylinder given its radius and height
-def cylinder_volume(radius, height):
+def cylinder_volume2(radius, height):
     return 3.14159 * radius**2 * height
 
 
 # 176. Function to calculate the surface area of a cylinder given its radius and height
-def cylinder_surface_area(radius, height):
+def cylinder_surface_area2(radius, height):
     return 2 * 3.14159 * radius * (radius + height)
 
 
 # 177. Function to calculate the volume of a torus given its major and minor radii
-def torus_volume(major_radius, minor_radius):
+def torus_volume2(major_radius, minor_radius):
     return 2 * 3.14159**2 * major_radius * minor_radius**2
 
 
 # 178. Function to calculate the surface area of a torus given its major and minor radii
-def torus_surface_area(major_radius, minor_radius):
+def torus_surface_area2(major_radius, minor_radius):
     return 4 * 3.14159**2 * major_radius * minor_radius
 
 
 # 179. Function to calculate the volume of an ellipsoid given its semi-axes
-def ellipsoid_volume(a, b, c):
+def ellipsoid_volume2(a, b, c):
     return (4 / 3) * 3.14159 * a * b * c
 
 
 # 180. Function to calculate the surface area of an ellipsoid given its semi-axes
-def ellipsoid_surface_area(a, b, c):
+def ellipsoid_surface_area2(a, b, c):
     # Approximation for surface area of an ellipsoid
     p = 1.6075
     return 4 * 3.14159 * ((a**p * b**p + a**p * c**p + b**p * c**p) / 3) ** (1 / p)
 
 
 # 181. Function to calculate the volume of a paraboloid given its radius and height
-def paraboloid_volume(radius, height):
+def paraboloid_volume2(radius, height):
     return (1 / 2) * 3.14159 * radius**2 * height
 
 
 # 182. Function to calculate the surface area of a paraboloid given its radius and height
-def paraboloid_surface_area(radius, height):
+def paraboloid_surface_area2(radius, height):
     # Approximation for surface area of a paraboloid
     return (3.14159 * radius / (6 * height**2)) * (
         (radius**2 + 4 * height**2) ** (3 / 2) - radius**3
@@ -1294,28 +1293,28 @@ def paraboloid_surface_area(radius, height):
 
 
 # 183. Function to calculate the volume of a hyperboloid given its radii and height
-def hyperboloid_volume(radius1, radius2, height):
+def hyperboloid_volume2(radius1, radius2, height):
     return (1 / 3) * 3.14159 * height * (radius1**2 + radius1 * radius2 + radius2**2)
 
 
 # 184. Function to calculate the surface area of a hyperboloid given its radii and height
-def hyperboloid_surface_area(radius1, radius2, height):
+def hyperboloid_surface_area2(radius1, radius2, height):
     # Approximation for surface area of a hyperboloid
     return 3.14159 * (radius1 + radius2) * math.sqrt((radius1 - radius2) ** 2 + height**2)
 
 
 # 185. Function to calculate the volume of a tetrahedron given its edge length
-def tetrahedron_volume(edge_length):
+def tetrahedron_volume2(edge_length):
     return (edge_length**3) / (6 * math.sqrt(2))
 
 
 # 186. Function to calculate the surface area of a tetrahedron given its edge length
-def tetrahedron_surface_area(edge_length):
+def tetrahedron_surface_area2(edge_length):
     return math.sqrt(3) * edge_length**2
 
 
 # 187. Function to calculate the volume of an octahedron given its edge length
-def octahedron_volume(edge_length):
+def octahedron_volume2(edge_length):
     return (math.sqrt(2) / 3) * edge_length**3
 
 
@@ -1403,7 +1402,7 @@ def longest_word_in_string(s):
 
 
 # 143. Function to count the frequency of each character in a string
-def character_frequency(s):
+def character_frequency3(s):
     frequency = {}
     for char in s:
         if char in frequency:
@@ -1414,7 +1413,7 @@ def character_frequency(s):
 
 
 # 144. Function to check if a number is a perfect square
-def is_perfect_square(n):
+def is_perfect_square3(n):
     if n < 0:
         return False
     sqrt = int(n**0.5)
@@ -1422,7 +1421,7 @@ def is_perfect_square(n):
 
 
 # 145. Function to check if a number is a perfect cube
-def is_perfect_cube(n):
+def is_perfect_cube3(n):
     if n < 0:
         return False
     cube_root = round(n ** (1 / 3))
@@ -1430,17 +1429,17 @@ def is_perfect_cube(n):
 
 
 # 146. Function to calculate the sum of squares of the first n natural numbers
-def sum_of_squares(n):
+def sum_of_squares3(n):
     return sum(i**2 for i in range(1, n + 1))
 
 
 # 147. Function to calculate the sum of cubes of the first n natural numbers
-def sum_of_cubes(n):
+def sum_of_cubes3(n):
     return sum(i**3 for i in range(1, n + 1))
 
 
 # 148. Function to calculate the sum of the digits of a number
-def sum_of_digits(n):
+def sum_of_digits3(n):
     total = 0
     while n > 0:
         total += n % 10
@@ -1449,7 +1448,7 @@ def sum_of_digits(n):
 
 
 # 149. Function to calculate the product of the digits of a number
-def product_of_digits(n):
+def product_of_digits3(n):
     product = 1
     while n > 0:
         product *= n % 10
@@ -1458,7 +1457,7 @@ def product_of_digits(n):
 
 
 # 150. Function to reverse a number
-def reverse_number(n):
+def reverse_number3(n):
     reversed_num = 0
     while n > 0:
         reversed_num = reversed_num * 10 + n % 10
@@ -1467,12 +1466,12 @@ def reverse_number(n):
 
 
 # 151. Function to check if a number is a palindrome
-def is_number_palindrome(n):
+def is_number_palindrome3(n):
     return n == reverse_number(n)
 
 
 # 152. Function to generate a list of all divisors of a number
-def divisors(n):
+def divisors3(n):
     divisors = []
     for i in range(1, n + 1):
         if n % i == 0:
@@ -1481,158 +1480,158 @@ def divisors(n):
 
 
 # 153. Function to check if a number is abundant
-def is_abundant(n):
+def is_abundant3(n):
     return sum(divisors(n)) - n > n
 
 
 # 154. Function to check if a number is deficient
-def is_deficient(n):
+def is_deficient3(n):
     return sum(divisors(n)) - n < n
 
 
 # 155. Function to check if a number is perfect
-def is_perfect(n):
+def is_perfect3(n):
     return sum(divisors(n)) - n == n
 
 
 # 156. Function to calculate the greatest common divisor (GCD) of two numbers
-def gcd(a, b):
+def gcd3(a, b):
     while b:
         a, b = b, a % b
     return a
 
 
 # 157. Function to calculate the least common multiple (LCM) of two numbers
-def lcm(a, b):
+def lcm3(a, b):
     return a * b // gcd(a, b)
 
 
 # 158. Function to generate a list of the first n triangular numbers
-def triangular_numbers(n):
+def triangular_numbers3(n):
     return [i * (i + 1) // 2 for i in range(1, n + 1)]
 
 
 # 159. Function to generate a list of the first n square numbers
-def square_numbers(n):
+def square_numbers3(n):
     return [i**2 for i in range(1, n + 1)]
 
 
 # 160. Function to generate a list of the first n cube numbers
-def cube_numbers(n):
+def cube_numbers3(n):
     return [i**3 for i in range(1, n + 1)]
 
 
 # 161. Function to calculate the area of a triangle given its base and height
-def triangle_area(base, height):
+def triangle_area3(base, height):
     return 0.5 * base * height
 
 
 # 162. Function to calculate the area of a trapezoid given its bases and height
-def trapezoid_area(base1, base2, height):
+def trapezoid_area3(base1, base2, height):
     return 0.5 * (base1 + base2) * height
 
 
 # 163. Function to calculate the area of a parallelogram given its base and height
-def parallelogram_area(base, height):
+def parallelogram_area3(base, height):
     return base * height
 
 
 # 164. Function to calculate the area of a rhombus given its diagonals
-def rhombus_area(diagonal1, diagonal2):
+def rhombus_area3(diagonal1, diagonal2):
     return 0.5 * diagonal1 * diagonal2
 
 
 # 165. Function to calculate the area of a regular polygon given the number of sides and side length
-def regular_polygon_area(n, side_length):
+def regular_polygon_area3(n, side_length):
     import math
 
     return (n * side_length**2) / (4 * math.tan(math.pi / n))
 
 
 # 166. Function to calculate the perimeter of a regular polygon given the number of sides and side length
-def regular_polygon_perimeter(n, side_length):
+def regular_polygon_perimeter3(n, side_length):
     return n * side_length
 
 
 # 167. Function to calculate the volume of a rectangular prism given its dimensions
-def rectangular_prism_volume(length, width, height):
+def rectangular_prism_volume3(length, width, height):
     return length * width * height
 
 
 # 168. Function to calculate the surface area of a rectangular prism given its dimensions
-def rectangular_prism_surface_area(length, width, height):
+def rectangular_prism_surface_area3(length, width, height):
     return 2 * (length * width + width * height + height * length)
 
 
 # 169. Function to calculate the volume of a pyramid given its base area and height
-def pyramid_volume(base_area, height):
+def pyramid_volume3(base_area, height):
     return (1 / 3) * base_area * height
 
 
 # 170. Function to calculate the surface area of a pyramid given its base area and slant height
-def pyramid_surface_area(base_area, slant_height):
+def pyramid_surface_area3(base_area, slant_height):
     return base_area + (1 / 2) * base_area * slant_height
 
 
 # 171. Function to calculate the volume of a cone given its radius and height
-def cone_volume(radius, height):
+def cone_volume3(radius, height):
     return (1 / 3) * 3.14159 * radius**2 * height
 
 
 # 172. Function to calculate the surface area of a cone given its radius and slant height
-def cone_surface_area(radius, slant_height):
+def cone_surface_area3(radius, slant_height):
     return 3.14159 * radius * (radius + slant_height)
 
 
 # 173. Function to calculate the volume of a sphere given its radius
-def sphere_volume(radius):
+def sphere_volume3(radius):
     return (4 / 3) * 3.14159 * radius**3
 
 
 # 174. Function to calculate the surface area of a sphere given its radius
-def sphere_surface_area(radius):
+def sphere_surface_area3(radius):
     return 4 * 3.14159 * radius**2
 
 
 # 175. Function to calculate the volume of a cylinder given its radius and height
-def cylinder_volume(radius, height):
+def cylinder_volume3(radius, height):
     return 3.14159 * radius**2 * height
 
 
 # 176. Function to calculate the surface area of a cylinder given its radius and height
-def cylinder_surface_area(radius, height):
+def cylinder_surface_area3(radius, height):
     return 2 * 3.14159 * radius * (radius + height)
 
 
 # 177. Function to calculate the volume of a torus given its major and minor radii
-def torus_volume(major_radius, minor_radius):
+def torus_volume3(major_radius, minor_radius):
     return 2 * 3.14159**2 * major_radius * minor_radius**2
 
 
 # 178. Function to calculate the surface area of a torus given its major and minor radii
-def torus_surface_area(major_radius, minor_radius):
+def torus_surface_area3(major_radius, minor_radius):
     return 4 * 3.14159**2 * major_radius * minor_radius
 
 
 # 179. Function to calculate the volume of an ellipsoid given its semi-axes
-def ellipsoid_volume(a, b, c):
+def ellipsoid_volume3(a, b, c):
     return (4 / 3) * 3.14159 * a * b * c
 
 
 # 180. Function to calculate the surface area of an ellipsoid given its semi-axes
-def ellipsoid_surface_area(a, b, c):
+def ellipsoid_surface_area3(a, b, c):
     # Approximation for surface area of an ellipsoid
     p = 1.6075
     return 4 * 3.14159 * ((a**p * b**p + a**p * c**p + b**p * c**p) / 3) ** (1 / p)
 
 
 # 181. Function to calculate the volume of a paraboloid given its radius and height
-def paraboloid_volume(radius, height):
+def paraboloid_volume3(radius, height):
     return (1 / 2) * 3.14159 * radius**2 * height
 
 
 # 182. Function to calculate the surface area of a paraboloid given its radius and height
-def paraboloid_surface_area(radius, height):
+def paraboloid_surface_area3(radius, height):
     # Approximation for surface area of a paraboloid
     return (3.14159 * radius / (6 * height**2)) * (
         (radius**2 + 4 * height**2) ** (3 / 2) - radius**3
@@ -1897,7 +1896,7 @@ def useless_function_10():
     squares = [i**2 for i in range(10)]
     for i in range(10):
         if squares[i] % 2 == 0:
-            squares[i] = None
+            squares[i] = 1
         else:
             squares[i] = 0
     return None
@@ -2021,7 +2020,7 @@ def useless_function_20():
     d = {i: i**2 for i in range(10)}
     for i in range(10):
         if d[i] % 2 == 0:
-            d[i] = None
+            d[i] = 1
         else:
             d[i] = 0
     return None

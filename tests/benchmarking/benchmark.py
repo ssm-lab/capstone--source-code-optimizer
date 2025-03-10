@@ -12,18 +12,16 @@ For each detected smell (grouped by smell type), refactoring is run multiple tim
 Usage: python benchmark.py <source_file_path>
 """
 
-import sys
-import os
+# import sys
+# import os
 
-# Add the src directory to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
-
+# # Add the src directory to the Python path
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
 
 import time
 import statistics
 import json
 import logging
-import sys
 import shutil
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -33,6 +31,7 @@ from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.refactorers.refactorer_controller import RefactorerController
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
+TEST_DIR = Path(__file__).parent.resolve()
 
 # Set up logging configuration
 # logging.basicConfig(level=logging.INFO)
@@ -49,7 +48,8 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)  # You can adjust the level for the console if needed
 
 # Create a file handler
-file_handler = logging.FileHandler("benchmark_log.txt", mode="w")
+log_file = TEST_DIR / "benchmark_log.txt"
+file_handler = logging.FileHandler(log_file, mode="w")
 file_handler.setLevel(logging.INFO)  # You can adjust the level for the file if needed
 
 # Create a formatter
@@ -168,14 +168,15 @@ def main():
     #     print("Usage: python benchmark.py <source_file_path>")
     #     sys.exit(1)
 
-    source_file_path = "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/benchmarking/test_code/250_sample.py"  # sys.argv[1]
-    logger.info(f"Starting benchmark on source file: {source_file_path}")
+    source_file_path = TEST_DIR / "test_code/250_sample.py"
+
+    logger.info(f"Starting benchmark on source file: {source_file_path!s}")
 
     # Benchmark the detection phase.
-    smells_data, avg_detection = benchmark_detection(source_file_path, iterations=3)
+    smells_data, avg_detection = benchmark_detection(str(source_file_path), iterations=3)
 
     # Benchmark the refactoring phase per smell type.
-    ref_stats, eng_stats = benchmark_refactoring(smells_data, source_file_path, iterations=3)
+    ref_stats, eng_stats = benchmark_refactoring(smells_data, str(source_file_path), iterations=3)
 
     # Compile overall benchmark results.
     overall_stats = {
@@ -186,10 +187,15 @@ def main():
     logger.info("Overall Benchmark Results:")
     logger.info(json.dumps(overall_stats, indent=4))
 
+    OUTPUT_DIR = TEST_DIR / "output"
+    OUTPUT_DIR.mkdir(exist_ok=True)
+
+    output_file = OUTPUT_DIR / f"{source_file_path.stem}_benchmark_results.json"
+
     # Save benchmark results to a JSON file.
-    with open("benchmark_results.json", "w") as outfile:
+    with open(output_file, "w") as outfile:  # noqa: PTH123
         json.dump(overall_stats, outfile, indent=4)
-    logger.info("Benchmark results saved to benchmark_results.json")
+    logger.info(f"Benchmark results saved to {output_file!s}")
 
 
 if __name__ == "__main__":

@@ -3,7 +3,6 @@ This module provides various mathematical helper functions.
 It intentionally contains code smells for demonstration purposes.
 """
 
-from ast import List
 import collections
 import math
 
@@ -198,7 +197,7 @@ class Vehicle:
         print("This method doesn't interact with instance attributes, it just prints a statement.")
 
 
-def longestArithSeqLength2(A: List[int]) -> int:
+def longestArithSeqLength2(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -207,7 +206,7 @@ def longestArithSeqLength2(A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength3(A: List[int]) -> int:
+def longestArithSeqLength3(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -216,7 +215,7 @@ def longestArithSeqLength3(A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength2(A: List[int]) -> int:
+def longestArithSeqLength4(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -225,7 +224,7 @@ def longestArithSeqLength2(A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength3(A: List[int]) -> int:
+def longestArithSeqLength5(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -267,19 +266,19 @@ class Calculator:
 
 
 class rootop:
-    def sqrt():
+    def sqrt(self):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         print(math.sqrt(a))
         print(math.sqrt(b))
 
-    def cbrt():
+    def cbrt(self):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
-        print(math.cbrt(a))
-        print(math.cbrt(b))
+        print(a ** (1 / 3))
+        print(b ** (1 / 3))
 
-    def ranroot():
+    def ranroot(self):
         a = int(input("Enter the x: "))
         b = int(input("Enter the y: "))
         b_div = 1 / b
@@ -315,28 +314,28 @@ def factorial(n):
     return 1 if n == 0 else n * factorial(n - 1)
 
 
-def reverse_string(s):
+def reverse_string1(s):
     """Reverse a given string."""
     return s[::-1]
 
 
-def count_vowels(s):
+def count_vowels1(s):
     """Count the number of vowels in a string."""
     return sum(1 for char in s.lower() if char in "aeiou")
 
 
-def find_max(numbers):
+def find_max1(numbers):
     """Find the maximum value in a list of numbers."""
     return max(numbers) if numbers else None
 
 
-def shuffle_list(lst):
+def shuffle_list1(lst):
     """Shuffle a list randomly."""
     random.shuffle(lst)
     return lst
 
 
-def fibonacci(n):
+def fibonacci1(n):
     """Generate Fibonacci sequence up to the nth term."""
     sequence = [0, 1]
     for _ in range(n - 2):
@@ -344,12 +343,12 @@ def fibonacci(n):
     return sequence[:n]
 
 
-def is_palindrome(s):
+def is_palindrome1(s):
     """Check if a string is a palindrome."""
     return s == s[::-1]
 
 
-def remove_duplicates(lst):
+def remove_duplicates1(lst):
     """Remove duplicates from a list."""
     return list(set(lst))
 
@@ -391,7 +390,7 @@ def get_random_element(lst):
     return random.choice(lst) if lst else None
 
 
-def sum_list(lst):
+def sum_list1(lst):
     """Return the sum of elements in a list."""
     return sum(lst)
 
@@ -444,7 +443,7 @@ def convert_to_binary(n):
     return bin(n)[2:]
 
 
-def sum_of_digits(n):
+def sum_of_digits1(n):
     """Find the sum of digits of a number."""
     return sum(int(digit) for digit in str(n))
 
@@ -467,12 +466,12 @@ def reverse_string(s):
 
 
 # 2. Function to check if a number is prime
-def is_prime(n):
+def is_prime1(n):
     return n > 1 and all(n % i != 0 for i in range(2, int(n**0.5) + 1))
 
 
 # 3. Function to calculate factorial
-def factorial(n):
+def factorial1(n):
     return 1 if n <= 1 else n * factorial(n - 1)
 
 
@@ -532,7 +531,7 @@ def list_intersection(lst1, lst2):
 
 
 # 15. Function to calculate the sum of digits of a number
-def sum_of_digits(n):
+def sum_of_digits2(n):
     return sum(int(digit) for digit in str(n))
 
 
@@ -557,12 +556,12 @@ def is_leap_year(year):
 
 
 # 24. Function to calculate the GCD of two numbers
-def gcd(a, b):
+def gcd1(a, b):
     return a if b == 0 else gcd(b, a % b)
 
 
 # 25. Function to calculate the LCM of two numbers
-def lcm(a, b):
+def lcm1(a, b):
     return a * b // gcd(a, b)
 
 
@@ -619,7 +618,7 @@ def nth_fibonacci(n):
 
 
 # 35. Function to check if a number is even
-def is_even(n):
+def is_even1(n):
     return n % 2 == 0
 
 
@@ -674,17 +673,17 @@ def cube_volume(s):
 
 
 # 46. Function to calculate the volume of a sphere
-def sphere_volume(r):
+def sphere_volume1(r):
     return (4 / 3) * 3.14159 * r**3
 
 
 # 47. Function to calculate the volume of a cylinder
-def cylinder_volume(r, h):
+def cylinder_volume1(r, h):
     return 3.14159 * r**2 * h
 
 
 # 48. Function to calculate the volume of a cone
-def cone_volume(r, h):
+def cone_volume1(r, h):
     return (1 / 3) * 3.14159 * r**2 * h
 
 
@@ -694,17 +693,17 @@ def cube_surface_area(s):
 
 
 # 50. Function to calculate the surface area of a sphere
-def sphere_surface_area(r):
+def sphere_surface_area1(r):
     return 4 * 3.14159 * r**2
 
 
 # 51. Function to calculate the surface area of a cylinder
-def cylinder_surface_area(r, h):
+def cylinder_surface_area1(r, h):
     return 2 * 3.14159 * r * (r + h)
 
 
 # 52. Function to calculate the surface area of a cone
-def cone_surface_area(r, l):
+def cone_surface_area1(r, l):
     return 3.14159 * r * (r + l)
 
 

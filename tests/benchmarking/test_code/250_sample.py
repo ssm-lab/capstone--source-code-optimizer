@@ -3,7 +3,6 @@ This module provides various mathematical helper functions.
 It intentionally contains code smells for demonstration purposes.
 """
 
-from ast import List
 import collections
 import math
 
@@ -198,7 +197,7 @@ class Vehicle:
         print("This method doesn't interact with instance attributes, it just prints a statement.")
 
 
-def longestArithSeqLength2(A: List[int]) -> int:
+def longestArithSeqLength2(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -207,7 +206,7 @@ def longestArithSeqLength2(A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength3(A: List[int]) -> int:
+def longestArithSeqLength3(A: list[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):

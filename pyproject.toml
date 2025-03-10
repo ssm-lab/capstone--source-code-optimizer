@@ -72,6 +72,7 @@ extend-exclude = [
   "*tests/input/**/*.py",
   "tests/_input_copies",
   "tests/temp_dir",
+  "tests/benchmarking/test_code/**/*.py",
 ]
 line-length = 100
 
