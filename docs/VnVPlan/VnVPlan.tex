@@ -1675,6 +1675,54 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_lec.py}{here}.
 
+\subsubsection{Repeated Calls}
+
+\textbf{Goal:} The repeated calls detection module identifies instances where function or method calls are redundantly executed within the same scope, leading to unnecessary performance overhead. It ensures that developers receive precise recommendations for caching results when applicable. The following unit tests validate the accuracy of this functionality.\\ 
+
+\noindent The tests assess the module’s ability to detect redundant function calls, ignore functionally distinct calls, handle object state changes, and recognize cases where caching would not be beneficial. Edge cases, such as external function calls, built-in function invocations, and method calls on different objects, are also considered. \\
+
+\noindent \textbf{Target requirement(s):} FR2, FR3, PR-PAR2, PR-PAR3~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Detecting Repeated Function Calls}
+    \begin{itemize}
+        \item Ensures the detection of repeated function calls with identical arguments within the same scope.
+        \item Validates that function calls on different arguments are not incorrectly flagged.
+    \end{itemize}
+
+    \item \textbf{Detecting Repeated Method Calls}
+    \begin{itemize}
+        \item Ensures that method calls on the same object instance are detected when repeated within a function.
+        \item Verifies that method calls on different object instances are not falsely flagged.
+    \end{itemize}
+
+    \item \textbf{Handling Object State Modifications}
+    \begin{itemize}
+        \item Ensures that function calls on objects with modified attributes between calls are not flagged.
+        \item Verifies that method calls are only flagged when they occur without intervening state changes.
+    \end{itemize}
+
+    \item \textbf{Detecting External Function Calls}
+    \begin{itemize}
+        \item Detects redundant external function calls such as \texttt{len(data.get("key"))}.
+        \item Ensures that only calls with matching parameters and return values are considered redundant.
+    \end{itemize}
+
+    \item \textbf{Handling Built-in Functions}
+    \begin{itemize}
+        \item Ensures that expensive built-in function calls (e.g., \texttt{max(data)}) are detected when redundant.
+        \item Verifies that lightweight built-in functions (e.g., \texttt{abs(-5)}) are ignored.
+    \end{itemize}
+
+    \item \textbf{Ensuring Accuracy and Performance}
+    \begin{itemize}
+        \item Ensures that detection does not introduce false positives by incorrectly flagging calls that differ in meaningful ways.
+        \item Verifies that detection performance scales efficiently with large codebases.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_repeated_calls.py}{here}.
+
 
 \subsection{Refactoring Module}
 
