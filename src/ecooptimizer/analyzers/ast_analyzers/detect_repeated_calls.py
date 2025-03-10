@@ -34,8 +34,7 @@ def is_primitive_expression(node: ast.AST):
 def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 2):
     results: list[CRCSmell] = []
 
-    with file_path.open("r") as file:
-        source_code = file.read()
+    source_code = file_path.read_text()
 
     def match_quote_style(source: str, function_call: str):
         """Detect whether the function call uses single or double quotes in the source."""
