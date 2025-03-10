@@ -1,0 +1,150 @@
+2025-03-10 13:55:52,872 - benchmark - INFO - Starting benchmark on source file: /Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/benchmarking/test_code/250_sample.py
+2025-03-10 13:55:53,519 - benchmark - INFO - Detection iteration 1/3 took 0.647473 seconds
+2025-03-10 13:55:53,673 - benchmark - INFO - Detection iteration 2/3 took 0.153882 seconds
+2025-03-10 13:55:53,795 - benchmark - INFO - Detection iteration 3/3 took 0.121003 seconds
+2025-03-10 13:55:53,795 - benchmark - INFO - Average detection time over 3 iterations: 0.307453 seconds
+2025-03-10 13:55:53,795 - benchmark - INFO - Benchmarking refactoring for smell type: R0913
+2025-03-10 13:55:54,105 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R0913' took 0.309561 seconds
+2025-03-10 13:56:07,448 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R0913' took 13.341894 seconds
+2025-03-10 13:56:07,725 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R0913' took 0.275963 seconds
+2025-03-10 13:56:20,027 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R0913' took 12.301285 seconds
+2025-03-10 13:56:20,380 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R0913' took 0.351922 seconds
+2025-03-10 13:56:35,658 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R0913' took 15.276670 seconds
+2025-03-10 13:56:35,925 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R0913' took 0.265646 seconds
+2025-03-10 13:56:49,118 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R0913' took 13.192729 seconds
+2025-03-10 13:56:49,370 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R0913' took 0.251111 seconds
+2025-03-10 13:57:01,412 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R0913' took 12.040934 seconds
+2025-03-10 13:57:01,663 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R0913' took 0.249446 seconds
+2025-03-10 13:57:16,700 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R0913' took 15.036789 seconds
+2025-03-10 13:57:16,954 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R0913' took 0.252521 seconds
+2025-03-10 13:57:30,024 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R0913' took 13.069741 seconds
+2025-03-10 13:57:30,348 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R0913' took 0.322236 seconds
+2025-03-10 13:57:42,420 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R0913' took 12.071956 seconds
+2025-03-10 13:57:42,679 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R0913' took 0.257064 seconds
+2025-03-10 13:57:57,814 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R0913' took 15.134338 seconds
+2025-03-10 13:57:58,100 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R0913' took 0.285577 seconds
+2025-03-10 13:58:11,234 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R0913' took 13.132521 seconds
+2025-03-10 13:58:11,517 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R0913' took 0.281954 seconds
+2025-03-10 13:58:23,623 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R0913' took 12.105982 seconds
+2025-03-10 13:58:23,989 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R0913' took 0.364494 seconds
+2025-03-10 13:58:39,106 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R0913' took 15.116098 seconds
+2025-03-10 13:58:39,107 - benchmark - INFO - Smell Type: R0913 - Average Refactoring Time: 0.288958 sec
+2025-03-10 13:58:39,107 - benchmark - INFO - Smell Type: R0913 - Average Energy Measurement Time: 13.485078 sec
+2025-03-10 13:58:39,107 - benchmark - INFO - Benchmarking refactoring for smell type: R6301
+2025-03-10 13:58:39,364 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R6301' took 0.256159 seconds
+2025-03-10 13:58:52,430 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R6301' took 13.064701 seconds
+2025-03-10 13:58:52,763 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R6301' took 0.331662 seconds
+2025-03-10 13:59:04,802 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R6301' took 12.038633 seconds
+2025-03-10 13:59:05,060 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R6301' took 0.256595 seconds
+2025-03-10 13:59:20,144 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R6301' took 15.083322 seconds
+2025-03-10 13:59:20,486 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R6301' took 0.340277 seconds
+2025-03-10 13:59:33,659 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R6301' took 13.173222 seconds
+2025-03-10 13:59:33,931 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R6301' took 0.269868 seconds
+2025-03-10 13:59:46,138 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R6301' took 12.206758 seconds
+2025-03-10 13:59:46,411 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R6301' took 0.271943 seconds
+2025-03-10 14:00:01,757 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R6301' took 15.344759 seconds
+2025-03-10 14:00:01,758 - benchmark - INFO - Smell Type: R6301 - Average Refactoring Time: 0.287751 sec
+2025-03-10 14:00:01,758 - benchmark - INFO - Smell Type: R6301 - Average Energy Measurement Time: 13.485232 sec
+2025-03-10 14:00:01,758 - benchmark - INFO - Benchmarking refactoring for smell type: R1729
+2025-03-10 14:00:01,961 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R1729' took 0.201996 seconds
+2025-03-10 14:00:15,228 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R1729' took 13.266402 seconds
+2025-03-10 14:00:15,344 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R1729' took 0.114954 seconds
+2025-03-10 14:00:27,457 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R1729' took 12.112975 seconds
+2025-03-10 14:00:27,575 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R1729' took 0.116181 seconds
+2025-03-10 14:00:42,702 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R1729' took 15.126831 seconds
+2025-03-10 14:00:42,817 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'R1729' took 0.113419 seconds
+2025-03-10 14:00:56,001 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'R1729' took 13.182864 seconds
+2025-03-10 14:00:56,137 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'R1729' took 0.134556 seconds
+2025-03-10 14:01:09,066 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'R1729' took 12.928494 seconds
+2025-03-10 14:01:09,294 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'R1729' took 0.225074 seconds
+2025-03-10 14:01:24,975 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'R1729' took 15.680632 seconds
+2025-03-10 14:01:24,976 - benchmark - INFO - Smell Type: R1729 - Average Refactoring Time: 0.151030 sec
+2025-03-10 14:01:24,976 - benchmark - INFO - Smell Type: R1729 - Average Energy Measurement Time: 13.716366 sec
+2025-03-10 14:01:24,976 - benchmark - INFO - Benchmarking refactoring for smell type: LLE001
+2025-03-10 14:01:24,978 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'LLE001' took 0.001026 seconds
+2025-03-10 14:01:38,280 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'LLE001' took 13.301614 seconds
+2025-03-10 14:01:38,282 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'LLE001' took 0.000527 seconds
+2025-03-10 14:01:50,462 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'LLE001' took 12.179841 seconds
+2025-03-10 14:01:50,465 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'LLE001' took 0.000536 seconds
+2025-03-10 14:02:05,518 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'LLE001' took 15.052181 seconds
+2025-03-10 14:02:05,519 - benchmark - INFO - Smell Type: LLE001 - Average Refactoring Time: 0.000696 sec
+2025-03-10 14:02:05,519 - benchmark - INFO - Smell Type: LLE001 - Average Energy Measurement Time: 13.511212 sec
+2025-03-10 14:02:05,519 - benchmark - INFO - Benchmarking refactoring for smell type: LMC001
+2025-03-10 14:02:05,521 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'LMC001' took 0.000839 seconds
+2025-03-10 14:02:18,566 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'LMC001' took 13.044773 seconds
+2025-03-10 14:02:18,569 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'LMC001' took 0.000473 seconds
+2025-03-10 14:02:30,706 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'LMC001' took 12.137029 seconds
+2025-03-10 14:02:30,709 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'LMC001' took 0.000530 seconds
+2025-03-10 14:02:46,086 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'LMC001' took 15.376609 seconds
+2025-03-10 14:02:46,088 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'LMC001' took 0.000514 seconds
+2025-03-10 14:02:59,286 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'LMC001' took 13.197402 seconds
+2025-03-10 14:02:59,288 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'LMC001' took 0.000494 seconds
+2025-03-10 14:03:11,523 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'LMC001' took 12.234940 seconds
+2025-03-10 14:03:11,526 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'LMC001' took 0.000484 seconds
+2025-03-10 14:03:26,646 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'LMC001' took 15.120026 seconds
+2025-03-10 14:03:26,647 - benchmark - INFO - Smell Type: LMC001 - Average Refactoring Time: 0.000556 sec
+2025-03-10 14:03:26,647 - benchmark - INFO - Smell Type: LMC001 - Average Energy Measurement Time: 13.518463 sec
+2025-03-10 14:03:26,647 - benchmark - INFO - Benchmarking refactoring for smell type: LEC001
+2025-03-10 14:03:26,660 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'LEC001' took 0.011132 seconds
+2025-03-10 14:03:39,713 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'LEC001' took 13.052298 seconds
+2025-03-10 14:03:39,724 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'LEC001' took 0.010551 seconds
+2025-03-10 14:03:51,760 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'LEC001' took 12.034855 seconds
+2025-03-10 14:03:51,772 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'LEC001' took 0.010272 seconds
+2025-03-10 14:04:06,907 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'LEC001' took 15.134745 seconds
+2025-03-10 14:04:06,908 - benchmark - INFO - Smell Type: LEC001 - Average Refactoring Time: 0.010652 sec
+2025-03-10 14:04:06,908 - benchmark - INFO - Smell Type: LEC001 - Average Energy Measurement Time: 13.407299 sec
+2025-03-10 14:04:06,908 - benchmark - INFO - Benchmarking refactoring for smell type: CRC001
+2025-03-10 14:04:06,915 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'CRC001' took 0.004866 seconds
+2025-03-10 14:04:20,138 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'CRC001' took 13.222846 seconds
+2025-03-10 14:04:20,144 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'CRC001' took 0.004081 seconds
+2025-03-10 14:04:32,534 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'CRC001' took 12.389675 seconds
+2025-03-10 14:04:32,540 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'CRC001' took 0.004455 seconds
+2025-03-10 14:04:48,017 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'CRC001' took 15.476104 seconds
+2025-03-10 14:04:48,018 - benchmark - INFO - Smell Type: CRC001 - Average Refactoring Time: 0.004467 sec
+2025-03-10 14:04:48,018 - benchmark - INFO - Smell Type: CRC001 - Average Energy Measurement Time: 13.696208 sec
+2025-03-10 14:04:48,018 - benchmark - INFO - Benchmarking refactoring for smell type: SCL001
+2025-03-10 14:04:48,032 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'SCL001' took 0.013736 seconds
+2025-03-10 14:05:01,375 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'SCL001' took 13.342013 seconds
+2025-03-10 14:05:01,390 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'SCL001' took 0.013091 seconds
+2025-03-10 14:05:13,912 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'SCL001' took 12.521438 seconds
+2025-03-10 14:05:13,930 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'SCL001' took 0.015276 seconds
+2025-03-10 14:05:29,458 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'SCL001' took 15.526820 seconds
+2025-03-10 14:05:29,474 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'SCL001' took 0.014386 seconds
+2025-03-10 14:05:43,984 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'SCL001' took 14.508569 seconds
+2025-03-10 14:05:44,000 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'SCL001' took 0.013970 seconds
+2025-03-10 14:05:56,217 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'SCL001' took 12.216388 seconds
+2025-03-10 14:05:56,233 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'SCL001' took 0.013325 seconds
+2025-03-10 14:06:11,391 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'SCL001' took 15.157878 seconds
+2025-03-10 14:06:11,406 - benchmark - INFO - Refactoring iteration 1/3 for smell type 'SCL001' took 0.013385 seconds
+2025-03-10 14:06:24,460 - benchmark - INFO - Energy measurement iteration 1/3 for smell type 'SCL001' took 13.053072 seconds
+2025-03-10 14:06:24,474 - benchmark - INFO - Refactoring iteration 2/3 for smell type 'SCL001' took 0.012583 seconds
+2025-03-10 14:06:36,504 - benchmark - INFO - Energy measurement iteration 2/3 for smell type 'SCL001' took 12.029474 seconds
+2025-03-10 14:06:36,519 - benchmark - INFO - Refactoring iteration 3/3 for smell type 'SCL001' took 0.013018 seconds
+2025-03-10 14:06:51,586 - benchmark - INFO - Energy measurement iteration 3/3 for smell type 'SCL001' took 15.066615 seconds
+2025-03-10 14:06:51,587 - benchmark - INFO - Smell Type: SCL001 - Average Refactoring Time: 0.013641 sec
+2025-03-10 14:06:51,587 - benchmark - INFO - Smell Type: SCL001 - Average Energy Measurement Time: 13.713585 sec
+2025-03-10 14:06:51,587 - benchmark - INFO - Overall Benchmark Results:
+2025-03-10 14:06:51,587 - benchmark - INFO - {
+    "detection_average_time": 0.30745271294532966,
+    "refactoring_times": {
+        "R0913": 0.2889580096719631,
+        "R6301": 0.28775068186223507,
+        "R1729": 0.1510301371648287,
+        "LLE001": 0.0006964643253013492,
+        "LMC001": 0.0005555886503619453,
+        "LEC001": 0.010651869039672116,
+        "CRC001": 0.004467369018432994,
+        "SCL001": 0.013641241187643673
+    },
+    "energy_measurement_times": {
+        "R0913": 13.485077957506292,
+        "R6301": 13.485232442171158,
+        "R1729": 13.716366431637047,
+        "LLE001": 13.511212014399158,
+        "LMC001": 13.518463252015257,
+        "LEC001": 13.407299365615472,
+        "CRC001": 13.696208274302384,
+        "SCL001": 13.713585255887462
+    }
+}
+2025-03-10 14:06:51,588 - benchmark - INFO - Benchmark results saved to benchmark_results.json

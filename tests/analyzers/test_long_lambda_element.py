@@ -8,7 +8,6 @@ from ecooptimizer.analyzers.ast_analyzers.detect_long_lambda_expression import (
     detect_long_lambda_expression,
 )
 
-
 def test_no_lambdas():
     """Ensures no smells are detected when no lambda is present."""
     code = textwrap.dedent(

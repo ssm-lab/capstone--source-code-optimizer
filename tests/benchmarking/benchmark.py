@@ -11,13 +11,12 @@ This script benchmarks:
 For each detected smell (grouped by smell type), refactoring is run multiple times to compute average times.
 Usage: python benchmark.py <source_file_path>
 """
+
 import sys
 import os
 
 # Add the src directory to the Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src"))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
 
 
 import time
@@ -47,9 +46,7 @@ logger.setLevel(logging.INFO)
 
 # Create a console handler
 console_handler = logging.StreamHandler()
-console_handler.setLevel(
-    logging.INFO
-)  # You can adjust the level for the console if needed
+console_handler.setLevel(logging.INFO)  # You can adjust the level for the console if needed
 
 # Create a file handler
 file_handler = logging.FileHandler("benchmark_log.txt", mode="w")
@@ -82,13 +79,9 @@ def benchmark_detection(source_path: str, iterations: int = 10):
         end = time.perf_counter()
         elapsed = end - start
         detection_times.append(elapsed)
-        logger.info(
-            f"Detection iteration {i+1}/{iterations} took {elapsed:.6f} seconds"
-        )
+        logger.info(f"Detection iteration {i+1}/{iterations} took {elapsed:.6f} seconds")
     avg_detection = statistics.mean(detection_times)
-    logger.info(
-        f"Average detection time over {iterations} iterations: {avg_detection:.6f} seconds"
-    )
+    logger.info(f"Average detection time over {iterations} iterations: {avg_detection:.6f} seconds")
     return smells_data, avg_detection
 
 
@@ -158,9 +151,7 @@ def benchmark_refactoring(smells_data, source_path: str, iterations: int = 10):
         avg_eng_time = statistics.mean(eng_times) if eng_times else None
         refactoring_stats[smell_type] = avg_ref_time
         energy_stats[smell_type] = avg_eng_time
-        logger.info(
-            f"Smell Type: {smell_type} - Average Refactoring Time: {avg_ref_time:.6f} sec"
-        )
+        logger.info(f"Smell Type: {smell_type} - Average Refactoring Time: {avg_ref_time:.6f} sec")
         logger.info(
             f"Smell Type: {smell_type} - Average Energy Measurement Time: {avg_eng_time:.6f} sec"
         )
@@ -184,9 +175,7 @@ def main():
     smells_data, avg_detection = benchmark_detection(source_file_path, iterations=3)
 
     # Benchmark the refactoring phase per smell type.
-    ref_stats, eng_stats = benchmark_refactoring(
-        smells_data, source_file_path, iterations=3
-    )
+    ref_stats, eng_stats = benchmark_refactoring(smells_data, source_file_path, iterations=3)
 
     # Compile overall benchmark results.
     overall_stats = {

@@ -1,21 +1,33 @@
 import math  # Unused import
 
+
 class Test:
     def __init__(self, name) -> None:
         self.name = name
         pass
 
     def unused_method(self):
-        print('Hello World!')
+        print("Hello World!")
 
 
 # Code Smell: Long Parameter List
 class Vehicle:
     def __init__(
-        self, make, model, year: int, color, fuel_type, engine_start_stop_option, mileage, suspension_setting, transmission, price, seat_position_setting = None
+        self,
+        make,
+        model,
+        year: int,
+        color,
+        fuel_type,
+        engine_start_stop_option,
+        mileage,
+        suspension_setting,
+        transmission,
+        price,
+        seat_position_setting=None,
     ):
         # Code Smell: Long Parameter List in __init__
-        self.make = make # positional argument
+        self.make = make  # positional argument
         self.model = model
         self.year = year
         self.color = color
@@ -25,13 +37,19 @@ class Vehicle:
         self.suspension_setting = suspension_setting
         self.transmission = transmission
         self.price = price
-        self.seat_position_setting = seat_position_setting # default value
+        self.seat_position_setting = seat_position_setting  # default value
         self.owner = None  # Unused class attribute, used in constructor
 
     def display_info(self):
         # Code Smell: Long Message Chain
-        random_test = self.make.split('')
-        print(f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(",", "")[::2])
+        random_test = self.make.split("")
+        print(
+            f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(
+                ",", ""
+            )[
+                ::2
+            ]
+        )
 
     def calculate_price(self):
         # Code Smell: List Comprehension in an All Statement
@@ -54,6 +72,7 @@ class Vehicle:
             "This method doesn't interact with instance attributes, it just prints a statement."
         )
 
+
 class Car(Vehicle):
 
     def __init__(
@@ -71,7 +90,16 @@ class Car(Vehicle):
         sunroof=False,
     ):
         super().__init__(
-            make, model, year, color, fuel_type, engine_start_stop_option, mileage, suspension_setting, transmission, price
+            make,
+            model,
+            year,
+            color,
+            fuel_type,
+            engine_start_stop_option,
+            mileage,
+            suspension_setting,
+            transmission,
+            price,
         )
         self.sunroof = sunroof
         self.engine_size = 2.0  # Unused variable in class
@@ -121,6 +149,7 @@ def access_nested_dict():
     print(nested_dict2["level1"]["level2"]["level3a"]["key"])
     print(nested_dict1["level1"]["level2"]["level3"]["key"])
 
+
 # Main loop: Arbitrary use of the classes and demonstrating code smells
 if __name__ == "__main__":
     car1 = Car(
@@ -129,9 +158,9 @@ if __name__ == "__main__":
         year=2020,
         color="Blue",
         fuel_type="Gas",
-        engine_start_stop_option = "no key",
+        engine_start_stop_option="no key",
         mileage=25000,
-        suspension_setting = "Sport",
+        suspension_setting="Sport",
         transmission="Automatic",
         price=20000,
     )
@@ -140,7 +169,7 @@ if __name__ == "__main__":
     car1.show_details()
 
     car1.unused_method()
-    
+
     # Testing with another vehicle object
     car2 = Vehicle(
         "Honda",
@@ -148,15 +177,15 @@ if __name__ == "__main__":
         year=2018,
         color="Red",
         fuel_type="Gas",
-        engine_start_stop_option = "key",
+        engine_start_stop_option="key",
         mileage=30000,
-        suspension_setting = "Sport",
+        suspension_setting="Sport",
         transmission="Manual",
         price=15000,
     )
     process_vehicle(car2)
 
-    test = Test('Anna')
+    test = Test("Anna")
     test.unused_method()
 
     print("Hello")

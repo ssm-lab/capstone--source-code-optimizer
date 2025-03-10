@@ -7,6 +7,7 @@ from ast import List
 import collections
 import math
 
+
 def long_element_chain(data):
     """Access deeply nested elements repeatedly."""
     return data["level1"]["level2"]["level3"]["level4"]["level5"]
@@ -14,7 +15,7 @@ def long_element_chain(data):
 
 def long_lambda_function():
     """Creates an unnecessarily long lambda function."""
-    return lambda x: (x**2 + 2*x + 1) / (math.sqrt(x) + x**3 + x**4 + math.sin(x) + math.cos(x))
+    return lambda x: (x**2 + 2 * x + 1) / (math.sqrt(x) + x**3 + x**4 + math.sin(x) + math.cos(x))
 
 
 def long_message_chain(obj):
@@ -33,6 +34,8 @@ def member_ignoring_method(self):
 
 
 _cache = {}
+
+
 def cached_expensive_call(x):
     """Caches repeated calls to avoid redundant computations."""
     if x in _cache:
@@ -71,14 +74,10 @@ def inefficient_fibonacci(n):
 class MathHelper:
     def __init__(self, value):
         self.value = value
-    
+
     def chained_operations(self):
         """Demonstrates a long message chain."""
-        return (self.value.increment()
-                      .double()
-                      .square()
-                      .cube()
-                      .finalize())
+        return self.value.increment().double().square().cube().finalize()
 
     def ignore_member(self):
         """This method does not use 'self' but exists in the class."""
@@ -87,6 +86,7 @@ class MathHelper:
 
 def expensive_function(x):
     return x * x
+
 
 def test_case():
     result1 = expensive_function(42)
@@ -106,7 +106,7 @@ def long_loop_with_string_concatenation(n):
 # More helper functions to reach 250 lines with similar bad practices.
 def another_long_parameter_list(a, b, c, d, e, f, g, h, i):
     """Another example of too many parameters."""
-    return (a * b + c / d - e ** f + g - h + i)
+    return a * b + c / d - e**f + g - h + i
 
 
 def contains_large_strings(strings):
@@ -116,28 +116,47 @@ def contains_large_strings(strings):
 def do_god_knows_what():
     mystring = "i hate capstone"
     n = 10
-    
+
     for i in range(n):
-        b = 10 
+        b = 10
         mystring += "word"
 
-    return n 
+    return n
+
 
 def do_something_dumb():
     return
 
+
 class Solution:
     def isSameTree(self, p, q):
-        return p == q if not p or not q else p.val == q.val and self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
-    
+        return (
+            p == q
+            if not p or not q
+            else p.val == q.val
+            and self.isSameTree(p.left, q.left)
+            and self.isSameTree(p.right, q.right)
+        )
+
 
 # Code Smell: Long Parameter List
 class Vehicle:
     def __init__(
-        self, make, model, year: int, color, fuel_type, engine_start_stop_option, mileage, suspension_setting, transmission, price, seat_position_setting = None
+        self,
+        make,
+        model,
+        year: int,
+        color,
+        fuel_type,
+        engine_start_stop_option,
+        mileage,
+        suspension_setting,
+        transmission,
+        price,
+        seat_position_setting=None,
     ):
         # Code Smell: Long Parameter List in __init__
-        self.make = make # positional argument
+        self.make = make  # positional argument
         self.model = model
         self.year = year
         self.color = color
@@ -147,13 +166,17 @@ class Vehicle:
         self.suspension_setting = suspension_setting
         self.transmission = transmission
         self.price = price
-        self.seat_position_setting = seat_position_setting # default value
+        self.seat_position_setting = seat_position_setting  # default value
         self.owner = None  # Unused class attribute, used in constructor
 
     def display_info(self):
         # Code Smell: Long Message Chain
-        random_test = self.make.split('')
-        print(f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(",", "")[::2])
+        random_test = self.make.split("")
+        print(
+            f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(",", "")[
+                ::2
+            ]
+        )
 
     def calculate_price(self):
         # Code Smell: List Comprehension in an All Statement
@@ -172,12 +195,10 @@ class Vehicle:
 
     def unused_method(self):
         # Code Smell: Member Ignoring Method
-        print(
-            "This method doesn't interact with instance attributes, it just prints a statement."
-        )
+        print("This method doesn't interact with instance attributes, it just prints a statement.")
 
 
-def longestArithSeqLength2( A: List[int]) -> int:
+def longestArithSeqLength2(A: List[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
@@ -186,7 +207,7 @@ def longestArithSeqLength2( A: List[int]) -> int:
     return max(dp.values()) + 1
 
 
-def longestArithSeqLength3( A: List[int]) -> int:
+def longestArithSeqLength3(A: List[int]) -> int:
     dp = collections.defaultdict(int)
     for i in range(len(A)):
         for j in range(i + 1, len(A)):
