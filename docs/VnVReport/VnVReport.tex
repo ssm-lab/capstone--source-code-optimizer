@@ -161,6 +161,43 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1 & Unexpected error occurs during refactoring. & Status code is 400. Error message contains the exception details. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsection{CodeCarbon Measurement}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{CodeCarbon Measurement Test Cases}
+  \label{table:measurement_tests}
+  \endlastfoot
+
+  TC\testcount & PR-RFT1, FR6 & Trigger CodeCarbon measurements with a valid file path. & CodeCarbon subprocess for the file should be invoked at least once. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. Success message ``CodeCarbon measurement completed successfully." should be logged. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT1 & Trigger CodeCarbon function with a valid file path that causes a subprocess failure. & CodeCarbon subprocess run should still be invoked. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. An error message ``Error executing file" should be logged. Returned emissions data should be \texttt{None} since the execution failed.& All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, PR-SCR1 & Results produced by CodeCarbon run are at a valid CSV file path and can be read. & Emissions data should be read successfully from the CSV file. The function should return the last row of emissions data. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT1, FR6 & Results produced by CodeCarbon run are at a valid CSV file path but the file cannot be read. & An error message ``Error reading file" should be logged. The function should return \texttt{None} because the file reading failed. & All assertions pass. & \cellcolor{green} Pass \\ 
+   \midrule
+  TC\testcount & PR-RFT1, FR5 & Given CSV Path for results produced by CodeCarbon does not have a file. & An error message ``File \texttt{file path} does not exist." should be logged.The function should return \texttt{None} since the file does not exist. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \subsection{Smell Analyzers}
 
 \subsubsection{String Concatenation in Loop}
