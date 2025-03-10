@@ -597,6 +597,41 @@ This section will not be appropriate for every project.
   TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error occurs. & An error message should be logged, and an error message indicating failure to wipe the workspace cache should be displayed to the user. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Backend}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Backend Test Cases}
+  \label{table:plugin_backend_tests}
+  \endlastfoot
+
+  TC\testcount & PR-SCR1, PR-RFT1 & Trigger request to check server status when server responds with a successful status. & The set status method should be called with the \texttt{ServerStatusType.UP} status & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-SCR1, PR-RFT2 & Trigger request to check server status when server responds with an error status or fails to respond. & The set status method should be called with the \texttt{ServerStatusType.DOWN} status & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR-6, PR-RFT1 & Trigger intialize logs call with a valid directory path, and backend responds with success. & The function should return \texttt{true} indicating successful log initialization. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-SCR1, PR-RFT2 & Trigger intialize logs call with a valid directory path, and backend responds with a failure. & TThe function should return \texttt{false} indicating failure to initialize logs. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \subsection{Line Selection Manager Module}
 \begin{table}[h!]
 \centering
