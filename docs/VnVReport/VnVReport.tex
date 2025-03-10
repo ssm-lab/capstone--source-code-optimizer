@@ -141,7 +141,7 @@ HM7 & LFR-AP2 & Register refactor commands. & Both commands registered correctly
 \endlastfoot
 
 RC1 & FR5 & User requests to refactor a smell. & Correct smell is identified. Logger logs ``Running refactoring for long-element-chain using TestRefactorer.'' Correct refactorer is called once with correct arguments. Output path is \texttt{test\_path.LEC001\_1.py}. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
-RC2 & UHR-UPLD1 & System handles missing refactorer. & Raises \texttt{NotImplementedError} with message "No refactorer implemented for smell: long-element-chain." Logger logs error. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
+RC2 & UHR-UPLD1 & System handles missing refactorer. & Raises \texttt{NotImplementedError} with message ``No refactorer implemented for smell: long-element-chain.'' Logger logs error. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
 RC3 & FR5 & Multiple refactorer calls are handled correctly. & Correct smell counter incremented. Refactorer is called twice. First output: \texttt{test\_path.LEC001\_1.py}. Second output: \texttt{test\_path.LEC001\_2.py}. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
 RC4 & FR5 & Refactorer runs with overwrite set to False. & Refactorer is called once. Overwrite argument is set to False. & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
 RC5 & PR-RFT 1, FR5 & System handles empty modified files correctly. & Modified files list remains empty (\texttt{[]} in output). & All assertions pass. & \cellcolor{green!20} Pass \\ \hline
