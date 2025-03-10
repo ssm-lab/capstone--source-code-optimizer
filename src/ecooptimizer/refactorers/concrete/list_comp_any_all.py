@@ -1,9 +1,54 @@
-import ast
+import libcst as cst
 from pathlib import Path
-from asttokens import ASTTokens
+from libcst.metadata import PositionProvider
 
 from ..base_refactorer import BaseRefactorer
 from ...data_types.smell import UGESmell
+
+
+class ListCompInAnyAllTransformer(cst.CSTTransformer):
+    METADATA_DEPENDENCIES = (PositionProvider,)
+
+    def __init__(self, target_line: int, start_col: int, end_col: int):
+        super().__init__()
+        self.target_line = target_line
+        self.start_col = start_col
+        self.end_col = end_col
+        self.found = False
+
+    def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.BaseExpression:
+        """
+        Detects `any([...])` or `all([...])` calls and converts their list comprehension argument
+        to a generator expression.
+        """
+        if self.found:
+            return updated_node  # Avoid modifying multiple nodes in one pass
+
+        # Check if the function is `any` or `all`
+        if isinstance(original_node.func, cst.Name) and original_node.func.value in {"any", "all"}:
+            # Ensure it has exactly one argument
+            if len(original_node.args) == 1:
+                arg = original_node.args[0].value  # Extract the argument expression
+
+                # Ensure the argument is a list comprehension
+                if isinstance(arg, cst.ListComp):
+                    metadata = self.get_metadata(PositionProvider, original_node, None)
+                    if (
+                        metadata and metadata.start.line == self.target_line
+                        # and self.start_col <= metadata.start.column < self.end_col
+                    ):
+                        self.found = True
+                        return updated_node.with_changes(
+                            args=[
+                                updated_node.args[0].with_changes(
+                                    value=cst.GeneratorExp(
+                                        elt=arg.elt, for_in=arg.for_in, lpar=[], rpar=[]
+                                    )
+                                )
+                            ]
+                        )
+
+        return updated_node
 
 
 class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
@@ -19,78 +64,25 @@ class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
         overwrite: bool = True,
     ):
         """
-        Refactors an unnecessary list comprehension by converting it to a generator expression.
-        Modifies the specified instance in the file directly if it results in lower emissions.
+        Refactors an unnecessary list comprehension inside `any()` or `all()` calls
+        by converting it to a generator expression.
         """
         line_number = smell.occurences[0].line
         start_column = smell.occurences[0].column
         end_column = smell.occurences[0].endColumn
 
-        # Load the source file as a list of lines
-        with target_file.open() as file:
-            original_lines = file.readlines()
+        # Read the source file
+        source_code = target_file.read_text()
 
-        # Check bounds for line number
-        if not (1 <= line_number <= len(original_lines)):
-            return
+        # Parse with LibCST
+        wrapper = cst.MetadataWrapper(cst.parse_module(source_code))
 
-        # Extract the specific line to refactor
-        target_line = original_lines[line_number - 1]
+        # Apply transformation
+        transformer = ListCompInAnyAllTransformer(line_number, start_column, end_column)  # type: ignore
+        modified_tree = wrapper.visit(transformer)
 
-        # Preserve the original indentation
-        leading_whitespace = target_line[: len(target_line) - len(target_line.lstrip())]
-
-        # Remove leading whitespace for parsing
-        stripped_line = target_line.lstrip()
-
-        # Parse the stripped line
-        try:
-            atok = ASTTokens(stripped_line, parse=True)
-            if not atok.tree:
-                return
-            target_ast = atok.tree
-        except (SyntaxError, ValueError):
-            return
-
-        # modified = False
-
-        # Traverse the AST and locate the list comprehension at the specified column range
-        for node in ast.walk(target_ast):
-            if isinstance(node, ast.ListComp):
-                # Check if end_col_offset exists and is valid
-                end_col_offset = getattr(node, "end_col_offset", None)
-                if end_col_offset is None:
-                    continue
-
-                # Check if the node matches the specified column range
-                if node.col_offset >= start_column - 1 and end_col_offset <= end_column:
-                    # Calculate offsets relative to the original line
-                    start_offset = node.col_offset + len(leading_whitespace)
-                    end_offset = end_col_offset + len(leading_whitespace)
-
-                    # Check if parentheses are already present
-                    if target_line[start_offset - 1] == "(" and target_line[end_offset] == ")":
-                        # Parentheses already exist, avoid adding redundant ones
-                        refactored_code = (
-                            target_line[:start_offset]
-                            + f"{target_line[start_offset + 1 : end_offset - 1]}"
-                            + target_line[end_offset:]
-                        )
-                    else:
-                        # Add parentheses explicitly if not already wrapped
-                        refactored_code = (
-                            target_line[:start_offset]
-                            + f"({target_line[start_offset + 1 : end_offset - 1]})"
-                            + target_line[end_offset:]
-                        )
-
-                    original_lines[line_number - 1] = refactored_code
-                    # modified = True
-                    break
-
-        if overwrite:
-            with target_file.open("w") as f:
-                f.writelines(original_lines)
-        else:
-            with output_file.open("w") as f:
-                f.writelines(original_lines)
+        if transformer.found:
+            if overwrite:
+                target_file.write_text(modified_tree.code)
+            else:
+                output_file.write_text(modified_tree.code)
