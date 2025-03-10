@@ -972,24 +972,13 @@ The following subsection tests cover all Performance requirements listed in the 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Performance and capacity validation for analysis and refactoring} \\[2mm]
     \textbf{Type:} Non-Functional, Automated, Dynamic \\
-    \textbf{Initial State:} IDE open with multiple python projects of varying sizes ready (1,000, 5,000, 10,000, 100,000 lines of code). \\
-    \textbf{Input/Condition:} Initiate the refactoring process for each project sequentially \\
-    \textbf{Output/Result:} Process completes within 15 seconds for projects up to 5,000 lines of code, 20 seconds for 10,000 lines of code and within 2 minutes for 100,000 lines of code. \\[2mm]
-    \textbf{How test will be performed:} The tester will use four python projects of different sizes: small (1,000 lines), medium (5,000 and 10,000 lines), and large (100,000 lines). For each project, start the refactoring process while running a timer. The scope of the test ends when the system presents the user with the completed refactoring proposal. The time taken for each project is checked against the expected result.
-
-  \item \textbf{Integrity of refactored code against runtime errors} \\[2mm]
-    \textbf{Type:} Non-Functional, Automated, Dynamic \\
-    \textbf{Initial State:} Refactoring tool ready, with user-provided code and test suite loaded \\
-    \textbf{Input/Condition:} User initiates refactoring on the input code \\
-    \textbf{Output/Result:} Refactored code passes all tests in the user-provided suite without runtime errors and adheres to Python syntax standards \\[2mm]
-    \textbf{How test will be performed:} The refactoring tool will first apply the refactoring to the user-provided code. After refactoring, an automated test suite will run, confirming that all original tests pass, indicating no loss of functionality. The refactored code will then be validated by an automatic linter to ensure compliance with Python syntax standards.
-
-  \item \textbf{Functionality preservation post-refactoring} \\[2mm]
-    \textbf{Type:} Non-Functional, Automated, Dynamic \\
-    \textbf{Initial State:} Python file ready for refactoring with proper configurations for the system \\
-    \textbf{Input/Condition:} User initiates refactoring on the code file \\
-    \textbf{Output/Result:} The refactored code should pass 100\% of user-provided tests \\[2mm]
-    \textbf{How test will be performed:} see test \hyperref[itm:FR-OV-1]{test-FR-OV-1}
+    \textbf{Initial State:} IDE open with multiple python files of varying sizes ready (250, 1000, 3000 lines of code). \\
+    \textbf{Input/Condition:} Initiate the refactoring process for each file sequentially \\
+    \textbf{Output/Result:} Process completes within 20 seconds for files up to 250 lines of code, 50 seconds for 1000 lines of code and within 2 minutes for 3000 lines of code. \\[2mm]
+    \textbf{How test will be performed:} The tester will use three python files of different sizes: small (250 lines), medium (1000 lines), and 
+    large (3000 lines). For each file, start the refactoring process while running a timer. 
+    The scope of the test ends when the system presents the user with the completed refactoring proposal. 
+    The time taken for the total detection + refactoring is checked against the expected result.
 
   \item \textbf{Accuracy of code smell detection} \\[2mm]
     \textbf{Type:} Non-Functional, Automated, Dynamic \\
@@ -1005,41 +994,6 @@ The following subsection tests cover all Performance requirements listed in the 
     \textbf{Output/Result:} Refactored code meets Python syntax and structural standards \\[2mm]
     \textbf{How test will be performed:} see test \hyperref[itm:FR-OV-2]{test-FR-OV-2}
 
-  \item \textbf{Handling unexpected inputs} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE open and ready with various non-standard and invalid input files \\
-    \textbf{Input/Condition:} User attempts to refactor invalid code files and non-Python files \\
-    \textbf{Output/Result:} Tool detects invalid input, displays a clear error message, and does not crash \\[2mm]
-    \textbf{How test will be performed:} The tester will sequentially give any of the following invalid files as input to the system :
-    \begin{itemize}
-        \item Non-Python files (e.g., .txt, .java, .cpp, .js)
-        \item Invalid Python files with syntax errors (e.g., unmatched brackets, improper indentation)
-        \item Corrupted files that contain random symbols or partially deleted code
-    \end{itemize}
-    For each file type, the tester will initiate the refactoring process and observe the tool's response. The tool should detect each invalid input, display an error message describing the issue, and recover from the error without crashing. 
-
-  \item \textbf{Fallback Options for Failed Refactoring Attempts} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} The tool is set up in an IDE with a sample code file that includes code smells \\
-    \textbf{Input/Condition:} User initiates a refactoring process on the sample code file \\
-    \textbf{Output/Result:} The tool logs failed refactoring attempts, provides a clear error notification, and suggests alternative refactoring options without interrupting the overall process. \\[2mm]
-    \textbf{How test will be performed:} The tester will load a sample code file into the tool that contains code smells. Upon initiating the refactoring, the tester will observe the tool’s response to any failed attempts, verifying that it logs the error. The tool should then attempt alternative refactorings without restarting the process. The tester will document the clarity of the error message, the relevance of alternative suggestions, and confirm that the tool remains functional, supporting uninterrupted refactoring of other code smells.
-  
-
-    \item \textbf{Maintainability and Adaptability of the Tool} \\[2mm]
-    \textbf{Objective:} Ensure that the tool’s codebase is structured to support future updates for new Python versions and evolving coding standards, minimizing the effort required for maintenance. \\[2mm]
-    \textbf{Scope:} This test applies to the tool’s code structure, documentation quality, and modularity to facilitate adaptability and maintainability over time. \\[2mm]
-    \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
-    \textbf{Process:}
-    \begin{itemize}
-      \item Conduct a code walkthrough to evaluate the modular structure of the codebase, verifying that components are organized to allow independent updates.
-      \item Review code comments, documentation, and naming conventions to ensure clarity and consistency, supporting ease of understanding for future developers.
-      \item Identify any dependencies on specific Python versions and assess the ease of updating these components for compatibility with newer versions.
-      \item Document any gaps in modularity or documentation and consult with the development team on improvements to support maintainability.
-    \end{itemize}
-    \textbf{Roles and Responsibilities:} The development team will conduct the code review and documentation assessment, with the project supervisor overseeing and validating improvements for long-term adaptability. \\[2mm]
-    \textbf{Tools and Resources:} Code editor, documentation templates, Python development guidelines, and coding standards \\[2mm]
-    \textbf{Acceptance Criteria:} The codebase is modular, well-documented, and adaptable, allowing for straightforward updates with minimal impact on existing functionality.
 
 \end{enumerate}
 
