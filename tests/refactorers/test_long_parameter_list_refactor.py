@@ -1,6 +1,5 @@
 import pytest
 import textwrap
-from pathlib import Path
 
 from ecooptimizer.refactorers.concrete.long_parameter_list import LongParameterListRefactorer
 from ecooptimizer.data_types import LPLSmell, Occurence
@@ -28,17 +27,16 @@ def create_smell(occurences: list[int]):
             occurences=[
                 Occurence(line=occ, endLine=999, column=999, endColumn=999) for occ in occurences
             ],
-            additionalInfo={},
         )
 
     return _create
 
 
-def test_lpl_constructor_1(refactorer):
+def test_lpl_constructor_1(refactorer, source_files):
     """Test for constructor with 8 params all used, mix of keyword and positions params"""
 
-    test_dir = Path("./temp_test_lpl")
-    test_dir.mkdir(parents=True, exist_ok=True)
+    test_dir = source_files / "temp_test_lpl"
+    test_dir.mkdir(exist_ok=True)
 
     test_file = test_dir / "fake.py"
 
@@ -93,10 +91,10 @@ def test_lpl_constructor_1(refactorer):
     test_dir.rmdir()
 
 
-def test_lpl_constructor_2(refactorer):
+def test_lpl_constructor_2(refactorer, source_files):
     """Test for constructor with 8 params 1 unused, mix of keyword and positions params"""
 
-    test_dir = Path("./temp_test_lpl")
+    test_dir = source_files / "temp_test_lpl"
     test_dir.mkdir(parents=True, exist_ok=True)
 
     test_file = test_dir / "fake.py"
@@ -158,10 +156,10 @@ def test_lpl_constructor_2(refactorer):
     test_dir.rmdir()
 
 
-def test_lpl_instance(refactorer):
+def test_lpl_instance(refactorer, source_files):
     """Test for instance method 8 params 0 unused"""
 
-    test_dir = Path("./temp_test_lpl")
+    test_dir = source_files / "temp_test_lpl"
     test_dir.mkdir(parents=True, exist_ok=True)
 
     test_file = test_dir / "fake.py"
@@ -235,10 +233,10 @@ def test_lpl_instance(refactorer):
     test_dir.rmdir()
 
 
-def test_lpl_static(refactorer):
+def test_lpl_static(refactorer, source_files):
     """Test for static method for 8 params 1 unused, default values"""
 
-    test_dir = Path("./temp_test_lpl")
+    test_dir = source_files / "temp_test_lpl"
     test_dir.mkdir(parents=True, exist_ok=True)
 
     test_file = test_dir / "fake.py"
@@ -320,10 +318,10 @@ def test_lpl_static(refactorer):
     test_dir.rmdir()
 
 
-def test_lpl_standalone(refactorer):
+def test_lpl_standalone(refactorer, source_files):
     """Test for standalone function 8 params 1 unused keyword arguments and default values"""
 
-    test_dir = Path("./temp_test_lpl")
+    test_dir = source_files / "temp_test_lpl"
     test_dir.mkdir(parents=True, exist_ok=True)
 
     test_file = test_dir / "fake.py"
