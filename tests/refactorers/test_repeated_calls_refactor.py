@@ -194,3 +194,56 @@ def test_crc_instance_method_repeated(source_files, refactorer):
         """)
 
     assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_crc_with_docstrigs(source_files, refactorer):
+    """
+    Tests that repeated function calls are cached properly when docstrings present.
+    """
+    test_dir = Path(source_files, "temp_crc_docstring")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "crc_def.py"
+    file1.write_text(
+        textwrap.dedent('''
+        def expensive_function(x):
+            return x * x
+
+        def test_case():
+            """
+            Example docstring
+            """
+            result1 = expensive_function(100)
+            result2 = expensive_function(100)
+            result3 = expensive_function(42)
+            return result1 + result2 + result3
+        ''')
+    )
+
+    smell = create_smell(
+        occurences=[
+            {"line": 9, "endLine": 9, "column": 14, "endColumn": 38},
+            {"line": 10, "endLine": 10, "column": 14, "endColumn": 38},
+            {"line": 11, "endLine": 11, "column": 14, "endColumn": 38},
+        ],
+        call_string="expensive_function(100)",
+        repetitions=3,
+    )()
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    expected_file1 = textwrap.dedent('''
+        def expensive_function(x):
+            return x * x
+
+        def test_case():
+            """
+            Example docstring
+            """
+            cached_expensive_function = expensive_function(100)
+            result1 = cached_expensive_function
+            result2 = cached_expensive_function
+            result3 = expensive_function(42)
+            return result1 + result2 + result3
+        ''')
+
+    assert file1.read_text().strip() == expected_file1.strip()
