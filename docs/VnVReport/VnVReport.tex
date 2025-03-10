@@ -514,6 +514,43 @@ This section will not be appropriate for every project.
   TC\testcount & FR3, FR5, PR-PAR2 & Test that caching does not interfere with scope and closures. & The cached value should remain valid within the correct scope. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Use a Generator Refactoring Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Use a Generator Refactoring Module Test Cases}
+  \label{table:ugen_refactor_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of list comprehensions in `all()` calls. & The list comprehension should be converted into a generator expression. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of list comprehensions in `any()` calls. & The list comprehension should be converted into a generator expression. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of multi-line list comprehensions. & The multi-line comprehension should be refactored correctly while preserving indentation. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of complex conditions within `any()` and `all()`. & The refactored generator expression should maintain logical correctness. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that improperly formatted list comprehensions are handled correctly. & No unintended modifications should be applied to non-standard formats. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that readability is preserved in refactored code. & The refactored code should be clear, well-formatted, and maintain original intent. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that list comprehensions outside of `all()` and `any()` remain unchanged. & The refactorer should not modify list comprehensions used in other contexts. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test refactoring when `all()` or `any()` calls are nested. & The refactored code should handle nested expressions correctly. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
 
 \subsection{VS Code Extension}
 
