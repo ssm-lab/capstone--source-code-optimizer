@@ -283,6 +283,43 @@ This section will not be appropriate for every project.
   DLEC13 & FR2 & Test with threshold of 1 (every subscript reported). & One chain should be detected with message ``Dictionary chain too long (5/5)''. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
+\subsubsection{Repeated Calls Detection Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Repeated Calls Detection Module Test Cases}
+  \label{table:crc_tests}
+  \endlastfoot
+
+  TC\testcount & FR2, PR-PAR2 & Test detection of repeated function calls within the same scope. & One repeated call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test detection of repeated method calls on the same object instance. & One repeated method call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that function calls with different arguments are not flagged. & No repeated calls should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that function calls on modified objects are not flagged. & No repeated calls should be detected due to object state change. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR3 & Test detection of repeated external function calls. & One repeated function call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR3 & Test detection of repeated calls to expensive built-in functions. & One repeated function call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR3 & Test that built-in functions with primitive arguments are not flagged. & No repeated calls should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that method calls on different object instances are not flagged. & No repeated calls should be detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
 \subsection{Refactorer Controller Module}
 
 \begin{longtable}{c 
