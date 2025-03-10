@@ -1952,6 +1952,55 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_list_comp_any_all_refactor.py}{here}.
 
+\subsubsection{Cache Repeated Calls}
+
+\textbf{Goal:} The cache repeated calls refactoring module optimizes redundant function and method calls by storing results in local variables, reducing unnecessary recomputation. This refactoring enhances performance by eliminating duplicate executions of expensive operations. The following unit tests validate the accuracy of this functionality.\\
+
+\noindent The tests ensure that function and method calls that produce identical results are cached and replaced with stored values where applicable. Additional test cases verify proper handling of method calls on objects, preserving object state, and integrating with function arguments. Edge cases, such as function calls with varying inputs, method calls on different instances, and presence of docstrings, are also considered.\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR5, FR6, PR-PAR3, PR-PAR2~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Refactoring Repeated Function Calls}
+    \begin{itemize}
+        \item Ensures that repeated function calls within a scope are replaced with cached results.
+        \item Validates that caching is only applied when function arguments remain unchanged.
+    \end{itemize}
+
+    \item \textbf{Refactoring Repeated Method Calls}
+    \begin{itemize}
+        \item Ensures that method calls on the same object instance are cached and replaced with stored values.
+        \item Verifies that method calls on different object instances are not incorrectly refactored.
+    \end{itemize}
+
+    \item \textbf{Handling Object State Modifications}
+    \begin{itemize}
+        \item Ensures that method calls on objects whose attributes change between calls are not cached.
+        \item Verifies that method calls are only cached when no state changes occur.
+    \end{itemize}
+
+    \item \textbf{Handling Edge Cases}
+    \begin{itemize}
+        \item Ensures that function calls with varying arguments are not incorrectly cached.
+        \item Confirms that caching does not interfere with function scope, closures, or nested function calls.
+    \end{itemize}
+
+    \item \textbf{Refactoring in the Presence of Docstrings}
+    \begin{itemize}
+        \item Ensures that refactoring does not alter function behavior when docstrings are present.
+        \item Verifies that caching maintains readability and proper formatting.
+    \end{itemize}
+
+    \item \textbf{Ensuring Correct Formatting and Readability}
+    \begin{itemize}
+        \item Validates that refactored code adheres to Python’s style guidelines.
+        \item Ensures that readability and maintainability are preserved after refactoring.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_repeated_calls.py}{here}.
+
+
 
 
 \subsection{VsCode Plugin}
@@ -2073,8 +2122,6 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
 
-
-
 \subsubsection{Hover Manager}
 
 \textbf{Goal:} The Hover Manager module manages hover functionality for Python files, providing hover content for detected code smells and allowing refactoring commands. The following unit tests verify the accuracy of this functionality.\\
@@ -2180,6 +2227,48 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelection.test.ts}{here}.
 
+\subsubsection{Handle Smells Settings}
+
+\textbf{Goal:} The VS Code settings management module enables users to customize detection settings, update enabled smells, and ensure workspace consistency. This module integrates with the IDE to provide real-time updates when settings change. The following unit tests validate the correctness of this functionality.\\
+
+\noindent The tests ensure that enabled smells are correctly retrieved from user configurations, updates to settings trigger the appropriate notifications, and changes are accurately reflected in the workspace. Additional test cases verify proper handling of missing configurations, format conversions, and cache clearing operations. Edge cases, such as unchanged settings and invalid inputs, are also considered.\\
+
+\noindent \textbf{Target requirement(s):} FR10, UHR-PSI1, UHR-EOU2, OER-IAS1~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Retrieving Enabled Smells}
+    \begin{itemize}
+        \item Ensures that the function retrieves all enabled smells from the user's VS Code settings.
+        \item Validates that the function returns an empty object when no smells are enabled.
+    \end{itemize}
+
+    \item \textbf{Handling Updates to Smell Filters}
+    \begin{itemize}
+        \item Ensures that enabling a smell triggers a notification to the user.
+        \item Confirms that disabling a smell results in a proper update message.
+        \item Validates that when no changes occur, no unnecessary cache updates are performed.
+    \end{itemize}
+
+    \item \textbf{Clearing Cache on Settings Update}
+    \begin{itemize}
+        \item Ensures that enabling or disabling a smell triggers a workspace cache wipe.
+        \item Confirms that cache clearing only occurs when actual changes are made.
+    \end{itemize}
+
+    \item \textbf{Formatting Smell Names}
+    \begin{itemize}
+        \item Ensures that smell names stored in kebab-case are correctly formatted into a readable format.
+        \item Verifies that empty input results in an empty string without errors.
+    \end{itemize}
+
+    \item \textbf{Ensuring User-Friendly Notifications}
+    \begin{itemize}
+        \item Confirms that updates to smell settings provide clear, informative messages.
+        \item Ensures that error handling follows polite and constructive messaging principles.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/handleSmellSettings.test.ts}{here}.
 
 \subsection{API Routes}
 
