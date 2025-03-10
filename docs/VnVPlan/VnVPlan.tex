@@ -1514,7 +1514,9 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \textbf{Goal:} The long message chain detection module identifies method call chains that exceed a predefined threshold (default: 5 calls). The following unit tests verify the detection capabilities. \\
 
-The tests evaluate the detection of long message chains by verifying that sequences exceeding the threshold, such as five consecutive messages within a short time, are correctly identified. They include edge cases, like chains just below the threshold or varying in length, to assess the robustness of the detection logic
+The tests evaluate the detection of long message chains by verifying that sequences exceeding the threshold, such as five consecutive messages within a short time, are correctly identified. They include edge cases, like chains just below the threshold or varying in length, to assess the robustness of the detection logic\\
+
+\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
 
 \begin{itemize}
     \item \textbf{Detects exact five calls chain} \newline
@@ -1551,6 +1553,8 @@ The tests evaluate the detection of long message chains by verifying that sequen
     Confirms that attribute and index lookups without method calls are not flagged.
 \end{itemize}
 
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_message_chain.py}{here}
+
 \subsection{Long Lambda Element Detection}
 
 \textbf{Goal:} The following unit tests verify the correct detection of long lambda functions based on expression count and character length thresholds.\\
@@ -1562,7 +1566,9 @@ or short lambdas while correctly flagging complex or lengthy ones. The tests cov
 including nested lambdas and inline lambdas passed as arguments to functions like map or 
 filter. Additionally, the suite ensures degenerate cases, such as empty or extremely short 
 lambdas, are not mistakenly flagged. By validating these scenarios, the detection system 
-maintains robustness and reliability in identifying problematic lambda expressions.
+maintains robustness and reliability in identifying problematic lambda expressions.\\
+
+\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
 
 \begin{itemize}
     \item \textbf{No lambdas present} \newline
@@ -1590,6 +1596,8 @@ maintains robustness and reliability in identifying problematic lambda expressio
     Verifies that degenerate cases, such as a lambda with no real body or trivial operations, are not mistakenly flagged.
 \end{itemize}
 
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_lambda_element.py}{here}
+
 \subsection{Long Element Chain Refactoring}
 
 \textbf{Goal:} The following unit tests verify the correctness of refactoring long element chains into more readable and efficient code while maintaining valid Python syntax.\\
@@ -1602,7 +1610,9 @@ also verify that refactoring maintains proper indentation, especially within nes
 blocks like if statements or loops. Additionally, the suite confirms that 
 refactoring does not alter the behavior of the original code, even in contexts 
 like print statements. By testing both long and short chains, the suite ensures 
-consistency and correctness across various scenarios.
+consistency and correctness across various scenarios.\\
+
+\textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
 
 \begin{itemize}
     \item \textbf{Basic method chain refactoring} \newline
@@ -1627,6 +1637,8 @@ consistency and correctness across various scenarios.
     Verifies that nested method chains (e.g., method calls on method results) are properly refactored into intermediate variables.
 \end{itemize}
 
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}
+
 \subsection{Long Lambda Element Refactoring}
 
 \textbf{Goal:} The following unit tests verify the correctness of refactoring long lambda expressions into named functions while maintaining valid Python syntax and preserving code functionality.\\
@@ -1639,7 +1651,9 @@ ensure that refactoring preserves the original behavior of the code, even for la
 as keyword arguments or passed to functions like map or reduce. Additionally, the suite 
 confirms that no unnecessary changes, such as added print statements, are introduced during 
 refactoring. By covering a wide range of cases, the suite ensures the refactoring process
- is both reliable and effective.
+ is both reliable and effective.\\
+
+\textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
 
 \begin{itemize}
     \item \textbf{Basic lambda conversion} \newline
@@ -1660,6 +1674,8 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
     \item \textbf{Very long lambda function} \newline
     Tests the refactoring of complex, multi-line lambda expressions with extensive mathematical operations, verifying that the converted function maintains the original logic and structure.
 \end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_lambda_element_refactoring.py}{here}
 
 % \subsection{Unit Testing Scope}
 
