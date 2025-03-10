@@ -478,6 +478,43 @@ This section will not be appropriate for every project.
   TC\testcount & PR-PAR3, FR6, FR3 & Test the refactorer on dictionary access with mixed depths & Flatten the dictionary up to the minimum access depth & All dictionary access chains flattened to minimum access depth and dictionary flattened successfully. & \cellcolor{green} Pass \\
 \end{longtable}
 
+\subsubsection{Repeated Calls Refactoring Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Cache Repeated Calls Refactoring Module Test Cases}
+  \label{table:crc_refactor_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR5, PR-PAR3 & Test that repeated function calls are cached properly. & The function calls should be replaced with a cached variable. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test that repeated method calls on the same object are cached. & Method calls should be replaced with a cached result stored in a variable. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR2 & Test that repeated method calls on different object instances are not cached. & Calls on different object instances should remain unchanged. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that caching is applied even with multiple identical function calls. & The repeated function calls should be replaced with a cached variable. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test caching when refactoring function calls that appear in a docstring. & Function calls inside the docstring should not be modified. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test caching of method calls inside a class with an unchanged instance state. & Repeated method calls should be cached correctly. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that functions with varying arguments are not cached. & Calls with different arguments should remain unchanged. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR2 & Test that caching does not interfere with scope and closures. & The cached value should remain valid within the correct scope. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
 \subsection{VS Code Extension}
 
 \subsubsection{Detect Smells Command}
