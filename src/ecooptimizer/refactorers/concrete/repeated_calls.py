@@ -1,9 +1,20 @@
 import ast
+import re
 from pathlib import Path
 
 from ...data_types.smell import CRCSmell
-
 from ..base_refactorer import BaseRefactorer
+
+
+def extract_function_name(call_string: str):
+    """Extracts a specific function/method name from a call string."""
+    match = re.match(r"(\w+)\.(\w+)\s*\(", call_string)  # Match `obj.method()`
+    if match:
+        return f"{match.group(1)}_{match.group(2)}"  # Format: cache_obj_method
+    match = re.match(r"(\w+)\s*\(", call_string)  # Match `function()`
+    if match:
+        return f"{match.group(1)}"  # Format: cache_function
+    return call_string  # Fallback (shouldn't happen in valid calls)
 
 
 class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
@@ -29,7 +40,8 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
         self.smell = smell
         self.call_string = self.smell.additionalInfo.callString.strip()
 
-        self.cached_var_name = "cached_" + self.call_string.split("(")[0]
+        # Correctly generate cached variable name
+        self.cached_var_name = "cached_" + extract_function_name(self.call_string)
 
         with self.target_file.open("r") as file:
             lines = file.readlines()
@@ -67,7 +79,7 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
         with temp_file_path.open("w") as refactored_file:
             refactored_file.writelines(lines)
 
-        # CHANGE FOR MULTI FILE IMPLEMENTATION
+        # Multi-file implementation
         if overwrite:
             with target_file.open("w") as f:
                 f.writelines(lines)
@@ -76,66 +88,81 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
                 f.writelines(lines)
 
     def _get_indentation(self, lines: list[str], line_number: int):
-        """
-        Determine the indentation level of a given line.
-
-        :param lines: List of source code lines.
-        :param line_number: The line number to check.
-        :return: The indentation string.
-        """
+        """Determine the indentation level of a given line."""
         line = lines[line_number - 1]
         return line[: len(line) - len(line.lstrip())]
 
     def _replace_call_in_line(self, line: str, call_string: str, cached_var_name: str):
         """
         Replace the repeated call in a line with the cached variable.
-
-        :param line: The original line of source code.
-        :param call_string: The string representation of the call.
-        :param cached_var_name: The name of the cached variable.
-        :return: The updated line.
         """
-        # Replace all exact matches of the call string with the cached variable
-        updated_line = line.replace(call_string, cached_var_name)
-        return updated_line
+        return line.replace(call_string, cached_var_name)
 
     def _find_valid_parent(self, tree: ast.Module):
         """
-        Find the valid parent node that contains all occurences of the repeated call.
-
-        :param tree: The root AST tree.
-        :return: The valid parent node, or None if not found.
+        Find the valid parent node that contains all occurrences of the repeated call.
         """
         candidate_parent = None
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.Module)):
                 if all(self._line_in_node_body(node, occ.line) for occ in self.smell.occurences):
                     candidate_parent = node
-        if candidate_parent:
-            print(
-                f"Valid parent found: {type(candidate_parent).__name__} at line "
-                f"{getattr(candidate_parent, 'lineno', 'module')}"
-            )
         return candidate_parent
 
     def _find_insert_line(self, parent_node: ast.FunctionDef | ast.ClassDef | ast.Module):
         """
         Find the line to insert the cached variable assignment.
 
-        :param parent_node: The parent node containing the occurences.
-        :return: The line number where the cached variable should be inserted.
+        - If it's a function, insert at the beginning but **after a docstring** if present.
+        - If it's a method call (`obj.method()`), insert after `obj` is defined.
+        - If it's a lambda assignment (`compute_demo = lambda ...`), insert after it.
         """
         if isinstance(parent_node, ast.Module):
             return 1  # Top of the module
-        return parent_node.body[0].lineno  # Beginning of the parent node's body
+
+        # Extract variable or function name from call string
+        var_match = re.match(r"(\w+)\.", self.call_string)  # Matches `obj.method()`
+        if var_match:
+            obj_name = var_match.group(1)  # Extract `obj`
+
+            # Find the first assignment of `obj`
+            for node in parent_node.body:
+                if isinstance(node, ast.Assign):
+                    if any(
+                        isinstance(target, ast.Name) and target.id == obj_name
+                        for target in node.targets
+                    ):
+                        return node.lineno + 1  # Insert after the assignment of `obj`
+
+        # Find the first lambda assignment
+        for node in parent_node.body:
+            if isinstance(node, ast.Assign) and isinstance(node.value, ast.Lambda):
+                lambda_var_name = node.targets[0].id  # Extract variable name
+                if lambda_var_name in self.call_string:
+                    return node.lineno + 1  # Insert after the lambda function
+
+        # Check if the first statement is a docstring
+        if (
+            isinstance(parent_node.body[0], ast.Expr)
+            and isinstance(parent_node.body[0].value, ast.Constant)
+            and isinstance(parent_node.body[0].value.value, str)  # Ensures it's a string docstring
+        ):
+            docstring_start = parent_node.body[0].lineno
+            docstring_end = docstring_start
+
+            # Find the last line of the docstring by counting the lines it spans
+            docstring_content = parent_node.body[0].value.value
+            docstring_lines = docstring_content.count("\n")
+            if docstring_lines > 0:
+                docstring_end += docstring_lines
+
+            return docstring_end + 1  # Insert after the last line of the docstring
+
+        return parent_node.body[0].lineno  # Default: insert at function start
 
     def _line_in_node_body(self, node: ast.FunctionDef | ast.ClassDef | ast.Module, line: int):
         """
         Check if a line is within the body of a given AST node.
-
-        :param node: The AST node to check.
-        :param line: The line number to check.
-        :return: True if the line is within the node's body, False otherwise.
         """
         if not hasattr(node, "body"):
             return False
