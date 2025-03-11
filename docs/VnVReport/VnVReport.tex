@@ -1,5 +1,5 @@
 \documentclass[12pt, titlepage]{article}
-
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -10,7 +10,18 @@
     linkcolor=red,
     urlcolor=blue
 }
+\usepackage{longtable}
 \usepackage[round]{natbib}
+\usepackage{colortbl}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup[table]{width=0.9\textwidth}
+
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily, % Use monospaced font
+    breaklines=true,      % Enable line breaks
+}
 
 \input{../Comments}
 \input{../Common}
@@ -30,7 +41,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
+March 8th, 2025 & 0.0 & Started VnV Report\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
@@ -79,6 +90,724 @@ This document ...
 This section will not be appropriate for every project.
 
 \section{Unit Testing}
+\newcounter{testcase}
+\newcommand{\testcount}{\stepcounter{testcase}\thetestcase}
+\renewcommand{\arraystretch}{1.2} % Adjust row height for better readability
+
+\subsection{API Endpoints}
+
+\subsubsection{Smell Detection Endpoint}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Smell Detection Endpoint Test Cases}
+  \label{table:detection_endpoint_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & User requests to detect smells in a valid file. & Status code is 200. Response contains 2 smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to detect smells in a non-existent file. & Status code is 404. Error message indicates file not found. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Internal server error occurs during smell detection. & Status code is 500. Error message indicates internal server error. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{Refactor Endpoint}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Endpoint Test Cases}
+  \label{table:refactor_endpoint_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor a valid source directory. & Status code is 200. Response contains refactored data and updated smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor a non-existent source directory. & Status code is 404. Error message indicates directory not found. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Energy is not saved after refactoring. & Status code is 400. Error message indicates energy was not saved. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Initial energy measurement fails. & Status code is 400. Error message indicates initial emissions could not be retrieved. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Final energy measurement fails. & Status code is 400. Error message indicates final emissions could not be retrieved. & All assertions pass. & \cellcolor{green} Pass \\ \midrule 
+  TC\testcount & FR10, OER-IAS1 & Unexpected error occurs during refactoring. & Status code is 400. Error message contains the exception details. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsection{Analyzer Controller Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Analyzer Controller Module Test Cases}
+  \label{table:analyzer_controller_tests}
+  \endlastfoot
+
+  TC\testcount & FR2, FR5, PR-PAR3 & Test detection of repeated function calls in AST-based analysis. & One repeated function call should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, FR5, PR-PAR3 & Test detection of repeated method calls on the same object instance. & One repeated method call should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that no code smells are detected in a clean file. & The system should return an empty list of smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test filtering of smells by analysis method. & The function should return only smells matching the specified method (AST, Pylint, Astroid). & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test generating custom analysis options for AST-based analysis. & The generated options should include callable detection functions. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, FR5, PR-PAR3 & Test correct logging of detected code smells. & Detected smells should be logged with correct details. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, FR5 & Test handling of an empty registry when filtering smells. & The function should return an empty dictionary. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test that smells remain unchanged if no modifications occur. & The function should not modify existing smells if no changes are detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
+\subsection{Smell Analyzers}
+
+\subsubsection{String Concatenation in Loop}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{String Concatenation in Loop Detection Test Cases}
+  \label{table:string_concat_detection_tests}
+  \endlastfoot
+
+  TC\testcount & FR2 & Detects \texttt{+=} string concatenation inside a \texttt{for} loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{<var = var + ...>} string concatenation inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} string concatenation inside a \texttt{while} loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} modifying a list item inside a loop. & One smell detected with target \lstinline|self.text[0]| and line 6. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} modifying an object attribute inside a loop. & One smell detected with target \lstinline|self.text| and line 6. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} modifying a dictionary value inside a loop. & One smell detected with target \texttt{data['key']} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects multiple separate string concatenations in a loop. & Two smells detected with targets \texttt{result} and \texttt{logs[0]} on line 5. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenations with re-assignments inside the loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects concatenation inside nested loops. & One smell detected with target \texttt{result} and line 5. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects multi-level concatenations belonging to the same smell. & One smell detected with target \texttt{result} and two occurrences on lines 4 and 5. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} inside an \texttt{if-else} condition within a loop. & One smell detected with target \texttt{result} and two occurrences on line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} using f-strings inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} using \texttt{\%} formatting inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} using \texttt{.format()} inside a loop. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures accessing the concatenation variable inside the loop is NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures regular string assignments are NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures number operations with \texttt{+=} are NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ensures string concatenation OUTSIDE a loop is NOT flagged. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects a variable concatenated multiple times in the same loop iteration. & One smell detected with target \texttt{result} and two occurrences on line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects concatenation where both prefix and suffix are added. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects \texttt{+=} where new values are inserted at the beginning instead of the end. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Ignores potential smells where type cannot be confirmed as a string. & No smells detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from function type hints. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from variable type hints. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from class attributes. & One smell detected with target \texttt{result} and line 9. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR2 & Detects string concatenation where type is inferred from the initial value assigned. & One smell detected with target \texttt{result} and line 4. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{Long Element Chain Detector Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Element Chain Detector Module Test Cases}
+  \label{table:lec_tests}
+  \endlastfoot
+
+  TC\testcount & FR2 & Test with code that has no chains. & No chains should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with chains shorter than threshold. & No chains should be detected for threshold of 5. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2  & Test with chains exactly at threshold. & One chain should be detected at line 3. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with chains longer than threshold. & One chain should be detected with message ``Dictionary chain too long (4/3)''. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with multiple chains in the same file. & Two chains should be detected at different lines. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chains inside nested functions and classes. & Two chains should be detected, one inside a function, one inside a class. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that chains on the same line are reported only once. & One chain should be detected at line 4. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chains with different variable types. & Two chains should be detected, one in a list and one in a tuple. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with a custom threshold value. & No chains detected with threshold 4. One chain detected with threshold 2. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  DLEC10 & FR2 & Test the structure of the returned LECSmell object. & Object should have correct type, path, module, symbol, and occurrence details. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  DLEC11 & FR2 & Test chains within complex expressions. & Three chains should be detected in different contexts. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  DLEC12 & FR2 & Test with an empty file. & No chains should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  DLEC13 & FR2 & Test with threshold of 1 (every subscript reported). & One chain should be detected with message ``Dictionary chain too long (5/5)''. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Repeated Calls Detection Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Repeated Calls Detection Module Test Cases}
+  \label{table:crc_tests}
+  \endlastfoot
+
+  TC\testcount & FR2, PR-PAR2 & Test detection of repeated function calls within the same scope. & One repeated call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test detection of repeated method calls on the same object instance. & One repeated method call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that function calls with different arguments are not flagged. & No repeated calls should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that function calls on modified objects are not flagged. & No repeated calls should be detected due to object state change. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR3 & Test detection of repeated external function calls. & One repeated function call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR3 & Test detection of repeated calls to expensive built-in functions. & One repeated function call detected with two occurrences. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR3 & Test that built-in functions with primitive arguments are not flagged. & No repeated calls should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that method calls on different object instances are not flagged. & No repeated calls should be detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
+\subsection{Refactorer Controller Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactorer Controller Module Test Cases}
+  \label{table:refactorer_controller_tests}
+  \endlastfoot
+
+  TC\testcount & FR5 & User requests to refactor a smell. & Correct smell is identified. Logger logs ``Running refactoring for long-element-chain using TestRefactorer.'' Correct refactorer is called once with correct arguments. Output path is \texttt{test\_path.LEC001\_1.py}. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-UPLD1 & System handles missing refactorer. & Raises \texttt{NotImplementedError} with message ``No refactorer implemented for smell: long-element-chain.'' Logger logs error. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR5 & Multiple refactorer calls are handled correctly. & Correct smell counter incremented. Refactorer is called twice. First output: \texttt{test\_path.LEC001\_1.py}. Second output: \texttt{test\_path.LEC001\_2.py}. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR5 & Refactorer runs with overwrite set to False. & Refactorer is called once. Overwrite argument is set to False. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & PR-RFT 1, FR5 & System handles empty modified files correctly. & Modified files list remains empty (\texttt{[]} in output). & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsection{Smell Refactorers}
+
+\subsubsection{String Concatenation in Loop}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{String Concatenation in Loop Refactoring Test Cases}
+  \label{table:string_concat_refactoring_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR6 & Refactors empty initial concatenation variable (e.g., \lstinline|result = ""|). & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors non-empty initial concatenation variable not referenced before the loop. & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors non-empty initial concatenation variable referenced before the loop. & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors concatenation where the target is not a simple variable (e.g., \texttt{result["key"]}). & Code is refactored to use a temporary list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors concatenation where the variable is not initialized in the same scope. & Code is refactored to use a list and \texttt{join()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors prefix concatenation (e.g., \lstinline|result = str(i) + result|). & Code uses \lstinline|insert(0, ...)| for prefix concatenation. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors concatenation with both prefix and suffix. & Code uses both \lstinline|insert(0, ...)| and \texttt{append(...)}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors multiple concatenations in the same loop. & Code uses \texttt{append(...)} and \texttt{insert(0, ...)} as needed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors nested concatenation in loops. & Code uses \texttt{append(...)} and \texttt{insert(0, ...)} for nested loops. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors multiple occurrences of concatenation at different loop levels. & Code uses \texttt{append(...)} for all occurrences. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Handles reassignment of the concatenation variable inside the loop. & Code resets the list to the new value. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Handles reassignment of the concatenation variable to an empty value. & Code clears the list using \texttt{clear()}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Ensures unrelated code and comments are preserved during refactoring. & Unrelated lines and comments remain unchanged. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{Member Ignoring Method}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Member Ignoring Method Refactoring Test Cases}
+  \label{table:member_ignoring_method_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR6 & Refactors a basic member-ignoring method. & Adds \texttt{@staticmethod}, removes \texttt{self}, and updates calls. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with inheritance. & Updates calls from subclass instances. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with subclass in a separate file. & Updates calls from subclass instances in external files. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with subclass method override. & Does not update calls to overridden methods. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a member-ignoring method with type hints. & Updates calls using type hints to infer instance type. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{Long Element Chain Refactorer Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Element Chain Refactorer Test Cases}
+  \label{table:lec_refactorer_tests}
+  \endlastfoot
+
+  TC\testcount & PR-PAR3, FR6, FR3 & Test the long element chain refactorer on basic nested dictionary access & Dictionary should be flattened, and access updated & Refactoring applied successfully, dictionary access updated & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & PR-PAR3, FR6, FR3 & Test the long element chain refactorer across multiple files & Dictionary access across multiple files should be updated & Refactoring applied successfully across multiple files & \cellcolor{yellow} TBD \\ \midrule
+  TC\testcount & PR-PAR3, FR6, FR3 & Test the refactorer on dictionary access via class attributes & Class attributes should be flattened and access updated & Refactoring applied successfully on class attribute accesses. All accesses changed correctly. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & PR-PAR3, FR6, FR3 & Ensure the refactorer skips shallow dictionary access & Refactoring should be skipped for shallow access & Refactoring correctly skipped for shallow access & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & PR-PAR3, FR6, FR3 & Test the refactorer on dictionary access with mixed depths & Flatten the dictionary up to the minimum access depth & All dictionary access chains flattened to minimum access depth and dictionary flattened successfully. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Repeated Calls Refactoring Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Cache Repeated Calls Refactoring Module Test Cases}
+  \label{table:crc_refactor_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR5, PR-PAR3 & Test that repeated function calls are cached properly. & The function calls should be replaced with a cached variable. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test that repeated method calls on the same object are cached. & Method calls should be replaced with a cached result stored in a variable. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR2 & Test that repeated method calls on different object instances are not cached. & Calls on different object instances should remain unchanged. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that caching is applied even with multiple identical function calls. & The repeated function calls should be replaced with a cached variable. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test caching when refactoring function calls that appear in a docstring. & Function calls inside the docstring should not be modified. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test caching of method calls inside a class with an unchanged instance state. & Repeated method calls should be cached correctly. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that functions with varying arguments are not cached. & Calls with different arguments should remain unchanged. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR2 & Test that caching does not interfere with scope and closures. & The cached value should remain valid within the correct scope. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{Use a Generator Refactoring Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Use a Generator Refactoring Module Test Cases}
+  \label{table:ugen_refactor_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of list comprehensions in `all()` calls. & The list comprehension should be converted into a generator expression. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of list comprehensions in `any()` calls. & The list comprehension should be converted into a generator expression. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of multi-line list comprehensions. & The multi-line comprehension should be refactored correctly while preserving indentation. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5, PR-PAR3 & Test refactoring of complex conditions within `any()` and `all()`. & The refactored generator expression should maintain logical correctness. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that improperly formatted list comprehensions are handled correctly. & No unintended modifications should be applied to non-standard formats. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that readability is preserved in refactored code. & The refactored code should be clear, well-formatted, and maintain original intent. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test that list comprehensions outside of `all()` and `any()` remain unchanged. & The refactorer should not modify list comprehensions used in other contexts. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR3, FR5 & Test refactoring when `all()` or `any()` calls are nested. & The refactored code should handle nested expressions correctly. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
+
+\subsection{VS Code Extension}
+
+\subsubsection{Detect Smells Command}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Detect Smells Command Test Cases}
+  \label{table:plugin_detect_command_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & No active editor is found. & Shows error message: ``Eco: No active editor found.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Active editor has no valid file path. & Shows error message: ``Eco: Active editor has no valid file path.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No smells are enabled. & Shows warning message: ``Eco: No smells are enabled! Detection skipped.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Uses cached smells when hash is unchanged and same smells are enabled. & Shows info message: ``Eco: Using cached smells for fake.path'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Fetches new smells when enabled smells change. & Calls \texttt{wipeWorkCache}, \texttt{updateHash}, and \texttt{fetchSmells}. Updates workspace data. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Fetches new smells when hash changes but enabled smells remain the same. & Calls \texttt{updateHash} and \texttt{fetchSmells}. Updates workspace data. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No cached smells and server is down. & Shows warning message: ``Action blocked: Server is down and no cached smells exist for this file version.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Highlights smells when smells are found. & Shows info messages and calls \texttt{highlightSmells}. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{File Highlighter}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{File Highlighter Test Cases}
+  \label{table:plugin_file_highlighter_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Creates decorations for a given color. & Decoration is created using \lstinline|vscode.window.createTextEditor DecorationType|. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Highlights smells in the active text editor. & Decorations are set using \texttt{setDecorations}. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Does not reset highlight decorations on first initialization. & Decorations are not disposed of on the first call. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Resets highlight decorations on subsequent calls. & Decorations are disposed of on subsequent calls. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{File Hashing}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Hashing Tools Test Cases}
+  \label{table:plugin_hashing_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & Document hash has not changed. & Does not update workspace storage. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Document hash has changed. & Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No hash exists for the document. & Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{Line Selection Manager Module}
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Line Selection Module Test Cases}
+  \label{table:line_selection_tests}
+  \endlastfoot
+
+  TC\testcount & UHR-EOU1 & Call the `removeLastComment` method after adding a comment. & The decoration is removed and no comment remains on the line. & The decoration is removed, and no comment appears on the selected line. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` method with null editor. & The method does not throw an error. & The method does not throw an error. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` on a file with no detected smells. & No comment is added to the line. & No decoration is added, and the line remains unchanged. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` on a file where the document hash does not match. & The method does not add a comment because the document has changed. & No decoration is added due to the document hash mismatch. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` with a multi-line selection. & The method returns early without adding a comment. & No comment is added to any lines in the selection. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with no detected smells. & No comment is added for the line. & No decoration is added, and the line remains unchanged. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with a single detected smell. & The comment shows the first smell symbol without a count. & Comment shows the first smell symbol: `Smell: PERF-001`. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with a detected smell. & A comment is added on the selected line in the editor showing the detected smell. & Comment added with the correct smell symbol and count. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with multiple detected smells. & The comment shows the first smell followed by the count of additional smells. & Comment shows `Smell: PERF-001 | (+1)`. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Hover Manager Module}
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Hover Manager Module Test Cases}
+  \label{table:hover_manager_tests}
+  \endlastfoot
+
+  TC\testcount & LFR-AP2 & Register hover provider for Python files. & Hover provider registered for Python files. & Hover provider is registered for Python files. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & LFR-AP2 & Subscribe hover provider. & Hover provider subscription registered. & Hover provider subscription registered. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & LFR-AP2 & Return hover content with no smells. & Returns null for hover content. & Hover content = null. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & LFR-AP2, FR2 & Update smells with new data. & Smells updated correctly with new data. & Smells are updated correctly with new smells data. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & LFR-AP2, FR2 & Update smells correctly. & Smells updated with new content. & Current smells content updated to new smells content provided.  & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & LFR-AP2 & Generate valid hover content. & Generates hover content with correct smell information. & Correct and valid hover content generated for given smell. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & LFR-AP2 & Register refactor commands. & Both commands registered correctly on initialization & Refactor commands registered correctly. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Handle Smell Settings Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{VS Code Settings Management Module Test Cases}
+  \label{table:vs_code_settings_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells from settings. & Function should return the current enabled smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells when no settings exist. & Function should return an empty object. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test enabling a smell and verifying notification. & Notification should be displayed and cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test disabling a smell and verifying notification. & Notification should be displayed and cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test that cache is not wiped if no changes occur. & No notification or cache wipe should happen. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1 & Test formatting of kebab-case smell names. & Smell names should be correctly converted to readable format. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1 & Test formatting with an empty string input. & Function should return an empty string without errors. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
 
 \section{Changes Due to Testing}
 
