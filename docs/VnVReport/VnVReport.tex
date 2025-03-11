@@ -198,6 +198,44 @@ This section will not be appropriate for every project.
 \end{longtable}
 
 
+
+\subsection{CodeCarbon Measurement}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{CodeCarbon Measurement Test Cases}
+  \label{table:measurement_tests}
+  \endlastfoot
+
+  TC\testcount & PR-RFT1, FR6 & Trigger CodeCarbon measurements with a valid file path. & CodeCarbon subprocess for the file should be invoked at least once. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. Success message ``CodeCarbon measurement completed successfully." should be logged. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT1 & Trigger CodeCarbon function with a valid file path that causes a subprocess failure. & CodeCarbon subprocess run should still be invoked. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. An error message ``Error executing file" should be logged. Returned emissions data should be \texttt{None} since the execution failed.& All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, PR-SCR1 & Results produced by CodeCarbon run are at a valid CSV file path and can be read. & Emissions data should be read successfully from the CSV file. The function should return the last row of emissions data. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT1, FR6 & Results produced by CodeCarbon run are at a valid CSV file path but the file cannot be read. & An error message ``Error reading file" should be logged. The function should return \texttt{None} because the file reading failed. & All assertions pass. & \cellcolor{green} Pass \\ 
+   \midrule
+  TC\testcount & PR-RFT1, FR5 & Given CSV Path for results produced by CodeCarbon does not have a file. & An error message ``File \texttt{file path} does not exist." should be logged.The function should return \texttt{None} since the file does not exist. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 \subsection{Smell Analyzers}
 
 \subsubsection{String Concatenation in Loop}
@@ -588,6 +626,43 @@ This section will not be appropriate for every project.
 \end{longtable}
 
 
+\subsubsection{Long Parameter List}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Parameter List Refactoring Test Cases}
+  \label{table:long_parameter_list_tests}
+  \endlastfoot
+
+  TC\testcount & FR3, FR6 & Refactors a constructor definition with 8 parameters, and class initialization with positional arguments. & Declares grouping classes. Updates constructor call with grouped instantiations. Also updates function signature and body to reflect new parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a constructor definition with 8 parameters with one unused in body, as well as class initialization with positional arguments. & Declares grouping classes. Updates constructor call with grouped instantiations. Also updates function signature and body to reflect new used parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors an instance method with 8 parameters (two default values) and the call made to it (1 positional argument). & Declares grouping classes with default values preserved. Updates method call with grouped instantiations. Also updates method signature and body to reflect new parameters.  & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a static method with 8 parameters (1 with default value, 4 unused in body) and the call made to it (2 positional arguments)& Declares grouping classes with default values preserved. Updates method call with grouped instantiations. Also updates method signature and body to reflect new used parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR6 & Refactors a standalone function with 8 parameters (1 with default value that is also unused in body) and the call made to it (1 positional arguments) & Declares grouping classes. Updates method call with grouped instantiations. Also updates method signature and body to reflect new used parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 
 \subsection{VS Code Extension}
 
@@ -633,6 +708,43 @@ This section will not be appropriate for every project.
   \midrule
   TC\testcount & FR10, OER-IAS1 & Highlights smells when smells are found. & Shows info messages and calls \texttt{highlightSmells}. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
+
+\subsubsection{Refactor Smell Command}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Smell Command Test Cases}
+  \label{table:plugin_refactor_command_tests}
+  \endlastfoot
+
+  TC\testcount & PR-RFT1 & No active editor is found. & Shows error message ``Eco: Unable to proceed as no active editor or file path found.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT1, FR6 & Attempting to refactor when no smells are detected in the file & Shows error message ``Eco: No smells detected in the file for refactoring.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR6 & Attempting to refactor when selected line doesn't match any smell & Shows error message ``Eco: No matching smell found for refactoring.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR6, FR10 & Refactoring a smell when found on the selected line & Saves the current file. Calls \texttt{refactorSmell} method with correct parameters. Shows message ``Refactoring report available in sidebar''. Executes command to focus refactor sidebar. Opens and shows the refactored preview. Highlights updated smells. Updates the UI with new smells & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-RFT2 & Handling API failure during refactoring & Shows error message ``Eco: Refactoring failed. See console for details.'' & All assertions pass. & \cellcolor{green} Pass \\ 
+  \end{longtable}
 
 \subsubsection{File Highlighter}
 
@@ -749,6 +861,7 @@ This section will not be appropriate for every project.
   \midrule
   \endfirsthead
 
+
   \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
@@ -784,6 +897,7 @@ This section will not be appropriate for every project.
   \midrule
   \endfirsthead
 
+
   \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
@@ -794,6 +908,7 @@ This section will not be appropriate for every project.
   \endfoot
 
   \bottomrule
+
   \caption{VS Code Settings Management Module Test Cases}
   \label{table:vs_code_settings_tests}
   \endlastfoot
@@ -805,9 +920,86 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test that cache is not wiped if no changes occur. & No notification or cache wipe should happen. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR10, UHR-PSI1 & Test formatting of kebab-case smell names. & Smell names should be correctly converted to readable format. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR10, UHR-PSI1 & Test formatting with an empty string input. & Function should return an empty string without errors. & All assertions pass. & \cellcolor{green} Pass \\ 
+
 \end{longtable}
 
+\subsubsection{Handle Smell Settings Module}
 
+
+\subsubsection{Wipe Workspace Cache Command}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Wipe Workspace Cache Command Test Cases}
+  \label{table:plugin_wipe_cache_tests}
+  \endlastfoot
+
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with no reason provided. & The smells cache should be cleared and reset to an empty state. A success message indicating that the workspace cache was successfully wiped should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "manual." & Both the smells cache and file changes cache should be cleared and reset to empty states. A success message indicating that the workspace cache was manually wiped by the user should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are no open files. & A log message indicating that there are no open files to update should be generated. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are open files. & A message indicating the number of visible files should be logged, and the hashes for each open file should be updated. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "settings." & Only the smells cache should be cleared. A success message indicating that the cache was wiped due to smell detection settings changes should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error occurs. & An error message should be logged, and an error message indicating failure to wipe the workspace cache should be displayed to the user. & All assertions pass. & \cellcolor{green} Pass \\ 
+
+\end{longtable}
+
+\subsubsection{Backend}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Backend Test Cases}
+  \label{table:plugin_backend_tests}
+  \endlastfoot
+
+  TC\testcount & PR-SCR1, PR-RFT1 & Trigger request to check server status when server responds with a successful status. & The set status method should be called with the \texttt{ServerStatusType.UP} status & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-SCR1, PR-RFT2 & Trigger request to check server status when server responds with an error status or fails to respond. & The set status method should be called with the \texttt{ServerStatusType.DOWN} status & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR-6, PR-RFT1 & Trigger intialize logs call with a valid directory path, and backend responds with success. & The function should return \texttt{true} indicating successful log initialization. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & PR-SCR1, PR-RFT2 & Trigger intialize logs call with a valid directory path, and backend responds with a failure. & TThe function should return \texttt{false} indicating failure to initialize logs. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
 
 \section{Changes Due to Testing}
 
