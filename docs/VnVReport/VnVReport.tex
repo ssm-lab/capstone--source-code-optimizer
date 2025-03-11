@@ -82,6 +82,92 @@ Date 2 & 1.1 & Notes\\
 This document ...
 
 \section{Functional Requirements Evaluation}
+\subsection{Code Input Acceptance Tests}
+\begin{enumerate}
+
+\item \textbf{test-FR-1A Valid Python File Acceptance} \\[2mm]
+The \textbf{valid Python file acceptance test} ensures that the system correctly processes a syntactically valid Python file without errors. A correctly formatted Python file was provided as input, and the expected result was that the system should accept the file without issue. The \textbf{actual result} confirmed that the system successfully processed the valid file without generating any errors.
+
+\item \textbf{test-FR-1A-2 Feedback for Python File with Bad Syntax} \\[2mm]
+This test verifies that the system correctly handles Python files containing deliberate syntax errors. A Python file with syntax errors was fed into the system, and the expected result was that the system should reject the file and provide an appropriate error message indicating the syntax issue. The \textbf{actual result} confirmed that the system correctly identified the syntax errors and displayed the expected error message.
+
+\item \textbf{test-FR-1A-3 Feedback for Non-Python File} \\[2mm]
+The \textbf{non-Python file test} ensures that the system correctly rejects unsupported file types and provides clear feedback. A document file (\texttt{document.txt}) and a script with an incorrect file extension (\texttt{script.js}) were tested. The expected result was that the system should reject the files and return an error message indicating that the file format is not supported. The \textbf{actual result} confirmed that the system correctly flagged the non-Python files and provided the appropriate error message.
+
+\end{enumerate}
+
+\subsection{Code Smell Detection and Refactoring Suggestion (RS) Tests}
+\begin{enumerate}
+    \item \textbf{test-FR-2 Code Smell Detection and Refactoring Suggestion} \\[2mm]
+    The \textbf{code smell detection and refactoring tests} validate the system’s ability to identify and refactor specific code smells that impact energy efficiency. These tests ensure compliance with \textbf{functional requirement FR2} and were conducted through unit testing.
+
+    The tester provided Python files containing common code smells such as \textbf{long parameter lists, repeated function calls, and inefficient string concatenation}. The \textbf{expected result} was that the system would correctly detect these smells and suggest appropriate refactoring strategies. The \textbf{actual result} confirmed that the system successfully identified all tested code smells, displayed warnings, and provided optimization suggestions. More details can be found in the unit tests.
+\end{enumerate}
+
+\subsection{Output Validation Tests}
+\begin{enumerate}
+\item \textbf{test-FR-OV-1 Verification of Valid Python Output} \\[2mm]
+The \textbf{output validation test} ensures that refactored Python code remains syntactically correct and compliant with Python standards. This validation is crucial for maintaining \textbf{functional requirement FR3}, as it confirms that the refactored code behaves identically to the original but with improved efficiency.
+
+A Python file with detected code smells was refactored, and the expected result was that the optimized code should pass a syntax check and retain its original functionality. The \textbf{actual result} confirmed that the refactored code was valid, passed linting checks, and maintained correctness.
+\end{enumerate}
+
+\subsection{Tests for Reporting Functionality}
+The reporting functionality of the tool is a critical feature that provides comprehensive insights into the refactoring process, including detected code smells, applied refactorings, energy consumption measurements, and test results. These tests ensure that the reporting feature operates correctly and delivers accurate, well-structured information as specified in \textbf{functional requirement FR9}.\\
+
+\noindent At this stage, the reporting functionality is still under development, and testing has not yet been conducted. The tests outlined below will be performed in \textbf{Revision 1} once the reporting feature is fully implemented.
+
+\begin{enumerate}
+    \item \textbf{test-FR-RP-1 A Report With All Components Is Generated} \\[2mm]
+    This test ensures that the tool generates a comprehensive report that includes all necessary information required by \textbf{FR9}. The system should produce a structured summary of the refactoring process, displaying detected code smells, applied refactorings, and energy consumption metrics.
+
+    \textbf{Planned Test Execution:} After refactoring, the tool will invoke the report generation feature, and a user will validate that the output meets the structure and content specifications.
+
+    \item \textbf{test-FR-RP-2 Validation of Code Smell and Refactoring Data in Report} \\[2mm]
+    This test will verify that the report correctly includes details on detected code smells and refactorings, ensuring compliance with \textbf{FR9}.
+
+    \textbf{Planned Test Execution:} The tool will generate a report, and its contents will be compared with the detected code smells and refactorings to confirm accuracy.
+
+    \item \textbf{test-FR-RP-3 Energy Consumption Metrics Included in Report} \\[2mm]
+    This test will validate that the reporting feature correctly includes energy consumption measurements before and after refactoring, aligning with \textbf{FR9}.
+
+    \textbf{Planned Test Execution:} A user will analyze the energy consumption metrics in the generated report to ensure they accurately reflect the measurements taken during the refactoring process.
+
+    \item \textbf{test-FR-RP-4 Functionality Test Results Included in Report} \\[2mm]
+    This test will ensure that the reporting functionality accurately reflects the results of the test suite, summarizing test pass/fail outcomes after refactoring.
+
+    \textbf{Planned Test Execution:} The tool will generate a report, and validation will be conducted to confirm that it includes a summary of test results matching the actual execution outcomes.
+\end{enumerate}
+
+\subsection{Documentation Availability Tests}
+The following tests will ensure that the necessary documentation is available as per \textbf{FR10}. Since documentation is still under development, these tests have not yet been conducted and will be included in \textbf{Revision 1}.
+
+\begin{enumerate}
+    \item \textbf{test-FR-DA-1 Test for Documentation Availability} \\[2mm]
+    This test verifies that the system provides proper documentation covering installation, usage, and troubleshooting.
+
+    \textbf{Planned Test Execution:} Review the documentation for completeness, clarity, and accuracy, ensuring it meets \textbf{FR10}.
+\end{enumerate}
+
+\subsection{IDE Extension Tests}
+The following tests ensure that users can integrate the tool as a VS Code extension in compliance with \textbf{FR11}. Local testing has been conducted successfully, confirming the extension’s ability to function within the development environment. Once all features are implemented, the extension will be packaged and tested in a deployed environment.
+
+\begin{enumerate}
+    \item \textbf{test-FR-IE-1 Installation of Extension in Visual Studio Code} \\[2mm]
+    This test ensures that the refactoring tool extension can be installed from the Visual Studio Marketplace.
+
+    \textbf{Test Execution:} The extension was installed locally, and its presence in the Extensions View was confirmed.
+
+    \textbf{Future Testing:} Once all features are implemented, the extension will be zipped, packaged, and tested as a published extension.
+
+    \item \textbf{test-FR-IE-2 Running the Extension in Visual Studio Code} \\[2mm]
+    This test validates that the extension functions correctly within the development environment, detecting code smells and suggesting refactorings.
+
+    \textbf{Test Execution:} Local tests confirmed that activating the extension successfully detects code smells and applies refactorings.
+
+    \textbf{Future Testing:} Once the extension is packaged, additional tests will be conducted to confirm functionality in a deployed environment.
+\end{enumerate}
+
 
 \section{Nonfunctional Requirements Evaluation}
 
