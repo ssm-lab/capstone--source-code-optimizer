@@ -13,6 +13,8 @@
 \usepackage{longtable}
 \usepackage[round]{natbib}
 \usepackage{colortbl}
+\usepackage{graphicx} 
+\usepackage{placeins}
 \usepackage{float}
 \usepackage{caption}
 \captionsetup[table]{width=0.9\textwidth}
@@ -106,7 +108,56 @@ this approach guarantees that users will be able to revert to a previous stable 
 
 
 \subsection{etc.}
-	
+
+\subsection{Look and Feel}
+\begin{enumerate}
+\item \textbf{test-LF-1 Side-by-Side Code Comparison in IDE Plugin} \\[2mm]
+The **side-by-side code comparison feature** in the IDE plugin was tested manually to verify that users can clearly view the original and refactored code within the VS Code interface. The test followed the procedure outlined in **Test-LF-1**, which specifies that upon initiating a refactoring operation, the plugin should display the original and modified versions of the code in parallel, allowing users to compare changes effectively.
+
+The tester performed the test dynamically by opening a sample code file within the plugin and applying various refactoring operations across all detected code smells. The **expected result** was that the IDE plugin would correctly display the two versions side by side, with clear options for users to **accept** or **reject** each change. The **actual result** confirmed that the functionality operates as expected: refactored code was displayed adjacent to the original code, ensuring an intuitive comparison process. The tester was also able to interact with the **accept/reject buttons**, verifying their usability and correctness.
+
+A screenshot of the **successful test execution** is provided in Figure \ref{fig:lf1_test}, illustrating the side-by-side code comparison functionality within the IDE plugin.
+
+\FloatBarrier
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Images/test-LF-1-image.png}
+    \caption{Side-by-Side Code Comparison in VS Code Plugin}
+    \label{fig:lf1_test}
+\end{figure}
+\FloatBarrier 
+
+\item \textbf{test-LF-2 Theme Adaptation in VS Code} \\[2mm]
+The **theme adaptation feature** in the IDE plugin was tested manually to confirm that the plugin correctly adjusts to VS Code’s light and dark themes without requiring manual configuration. The tester performed the test by opening the plugin in **both themes** and switching between them using VS Code’s settings.
+
+The **expected result** was that the plugin’s interface should automatically adjust when the theme is changed. The **actual result** confirmed that the plugin seamlessly transitioned between light and dark themes while maintaining a consistent interface. The images in Figures \ref{fig:lf2_light} and \ref{fig:lf2_dark} illustrate the side-by-side refactoring panel in both **light mode** and **dark mode**.
+
+\FloatBarrier
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Images/test-LF-2-image-light.png}
+    \caption{Side-by-Side Refactoring Panel in Light Mode}
+    \label{fig:lf2_light}
+\end{figure}
+\FloatBarrier 
+
+\FloatBarrier 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../Images/test-LF-2-image-dark.png}
+    \caption{Side-by-Side Refactoring Panel in Dark Mode}
+    \label{fig:lf2_dark}
+\end{figure}
+\FloatBarrier 
+
+\item \textbf{test-LF-3 Design Acceptance} \\[2mm]
+The **design acceptance test** was conducted as part of the **usability testing session**, where developers and testers interacted with the plugin and provided feedback. This test evaluated user experience, ease of navigation, and overall satisfaction with the plugin’s interface.
+
+The **expected result** was that users would be able to interact with the plugin smoothly and provide structured feedback. The **actual result** confirmed that users were able to navigate and use the plugin effectively. The feedback collected during this session was used to assess the overall usability of the plugin. More details regarding this evaluation can be found in the **Usability Testing section**.
+
+\end{enumerate}
+
+
 \section{Comparison to Existing Implementation}	
 
 This section will not be appropriate for every project.
