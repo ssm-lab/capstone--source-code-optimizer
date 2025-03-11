@@ -2271,6 +2271,48 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
 
+\subsubsection{Refactor Smells Command}
+
+\textbf{Goal:} The refactorSmell command is responsible for refactoring code areas identified as "smells" in a project. It works by refactoring areas in code that could benefit from refactoring (smells) that are chosen by the user. The process involves multiple steps, including saving the file, calling a backend refactoring service to refactor the identified smell, updating any relevant data, and initiating a refactor preview to the user.\\
+
+\noindent The tests assess the correct fetching and caching of smells, proper interaction with the highlighting module, handling of missing files or inactive editors, and the system's ability to recover from server downtime. Edge cases such as rapidly changing file hashes and updates to enabled smells are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR5, FR6, FR10, PR-RFT1, PR-RFT2 ~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{No Active Editor Found}
+    \begin{itemize}
+        \item The command correctly handles the case where there is no active editor open.
+        \item An appropriate error message is shown when no editor or file path is available.
+    \end{itemize}
+
+    \item \textbf{Attempting to Refactor When No Smells Are Detected}
+    \begin{itemize}
+        \item The command does not proceed when no smells are detected in the file.
+        \item An error message is shown indicating that no smells are detected for refactoring.
+    \end{itemize}
+
+    \item \textbf{Attempting to Refactor When Selected Line Doesn’t Match Any Smell}
+    \begin{itemize}
+        \item The command doesn't proceed if the selected line doesn't match any detected smell.
+        \item An error message is shown to inform the user that no matching smell was found for refactoring.
+    \end{itemize}
+
+    \item \textbf{Refactoring a Smell When Found on the Selected Line}
+    \begin{itemize}
+        \item The command successfully saves the current file and triggers the refactoring of a detected smell.
+        \item The \texttt{refactorSmell} method is called with the correct parameters, and the refactored preview is shown to the user.
+    \end{itemize}
+
+    \item \textbf{Handling API Failure During Refactoring}
+    \begin{itemize}
+        \item The command gracefully handles API failures during the refactoring process.
+        \item An error message is displayed to the user if refactoring fails, with the appropriate details logged.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/refactorSmell.test.ts}{here}.
+
 \subsubsection{Document Hashing}
 
 \textbf{Goal:} The document hashing module is responsible for generating and managing document hashes to track changes in files. By ensuring efficient tracking, this module allows caching mechanisms to work correctly and prevents unnecessary reprocessing. The following unit tests validate its correctness.\\
