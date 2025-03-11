@@ -1813,7 +1813,45 @@ graduate attribute of Reflection.
   evidence that demonstrates the required quality?  (It is expected that most
   teams will have had to deviate from their original VnV Plan.)}\\ 
   
-  ans
+  There were definitely some differences between what we assumed would happen during 
+  the VnV Plan and the results we actually got during testing. For example, the plan initially assumed that
+  energy measurement times would vary significantly with file size, but the 
+  testing revealed that they were actually decently consistent. This meant we 
+  had to adjust our focus in the report to highlight the fixed overhead of energy 
+  measurement rather than exploring variability.
+
+  For the most part, though, all of the unit testing we planned in the VnV Plan was 
+  written out per spec, and the code was fixed until all of them passed. This 
+  rigorous testing process actually caught a lot of bugs and edge cases that we 
+  hadn't fully anticipated in the plan. For instance, some refactoring operations 
+  worked fine on smaller files but broke on larger ones. Testing also revealed edge cases, 
+  like how the tool handled files with \textbf{multiline whitespace}, \textbf{nested structures}, 
+  \textbf{degenerate/trivial input} (e.g., empty files or files with a single line), and 
+  \textbf{wrong input} (e.g., malformed code or unsupported syntax). These cases weren't 
+  explicitly called out in the original plan, but they became a big part of the testing process 
+  once we realized how critical they were to the tool's reliability.
+
+  For example:
+  \begin{itemize}
+      \item \textbf{Multiline whitespace:} The tool initially struggled with files that had excessive or irregular whitespace, which caused false positives in code smell detection. We had to update the detection logic to handle these cases gracefully.
+      \item \textbf{Nested structures:} Deeply nested code (e.g., loops within loops or functions within functions) exposed performance bottlenecks and sometimes caused the tool to crash. This led to optimizations in the refactoring algorithms.
+      \item \textbf{Degenerate/trivial input:} Empty files or files with minimal content revealed that some refactoring operations weren't properly handling edge cases, so we added checks to ensure the tool behaved correctly in these scenarios.
+      \item \textbf{Wrong input:} Malformed or unsupported code caused unexpected errors, so we improved error handling and added clearer feedback for users.
+  \end{itemize}
+  
+  Fixing these issues required additional effort, but it ultimately made the tool more robust and user-friendly.
+  
+
+  These changes happened because testing revealed patterns in the data 
+   and uncovered bugs that weren't obvious during the planning phase. 
+   The bugs and edge cases we found during testing forced us to 
+   revisit parts of the code and make improvements we hadn't planned for initially. 
+
+   Some of these changes could be anticipated in future projects with more thorough initial testing.
+    If i could do it again I'd build more flexibility into the VnV Plan to account for unexpected results and allocate extra time for debugging and edge-case testing. I’d also include a broader range of test cases (e.g., multiline whitespace, wrong input) in the initial plan to catch these issues sooner.
+
+
+
 \end{itemize}
 
 \end{document}
