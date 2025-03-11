@@ -11,7 +11,6 @@
     urlcolor=blue
 }
 \usepackage{longtable}
-\usepackage[round]{natbib}
 \usepackage{colortbl}
 \usepackage{graphicx} 
 \usepackage{placeins}
@@ -42,19 +41,18 @@
 
 \pagenumbering{roman}
 
-\section{Revision History}
+\section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 March 8th, 2025 & 0.0 & Started VnV Report\\
-Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
 ~\newpage
 
-\section{Symbols, Abbreviations and Acronyms}
+\section*{Symbols, Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
@@ -62,6 +60,8 @@ Date 2 & 1.1 & Notes\\
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  TC & Test Case\\
+  VSCode & Visual Studio Code\\
   \bottomrule
 \end{tabular}\\
 
@@ -79,7 +79,7 @@ Date 2 & 1.1 & Notes\\
 
 \pagenumbering{arabic}
 
-This document ...
+This Verification and Validation (V\&V) report outlines the testing process used to ensure the accuracy, reliability, and performance of our system. It details our verification approach, test cases, and validation results, demonstrating that the system meets its requirements and functions as intended. Key findings and resolutions are also discussed.
 
 \section{Functional Requirements Evaluation}
 \subsection{Code Input Acceptance Tests}
@@ -451,6 +451,26 @@ The expected result was that users would be able to interact with the plugin smo
 
 \end{enumerate}
 
+\subsection{Operational \& Environmental}
+
+\textbf{test-OPE-1} will be tested once the extension is officially launched.\\[2mm]
+
+\noindent
+\textbf{test-OPE-2} tests a feature that is yet to be implemented. \\[2mm]
+
+\noindent
+\textbf{test-OPE-3} will be tested once the python package is published.
+
+\subsection{Security}
+
+\textbf{test-SRT-1: Audit Logs for Refactoring Processes} \\[2mm]
+We conducted a combination of code walkthroughs and static analysis of logging mechanisms to validate that the tool maintains a secure log of all refactoring processes, including pattern analysis, energy analysis, and report generation. The objective was to do so while covering the logging mechanisms for refactoring events, ensuring that logs are complete and immutable.\\
+
+\noindent The development team reviewed the codebase to confirm that each refactoring event (pattern analysis, energy analysis, report generation) is logged with accurate timestamps and event description. Missing log entries and/or insufficient details were identified and added to the logging process.\\
+
+\noindent Through this process, all major refactoring processes were correctly logged with accurate timestamps. Logs are stored locally on the user's device, ensuring that unauthorized modifications are prevented by restricting external access.\\
+
+\noindent The team was able to confirm that the tool maintains a secure logging system for refactoring processes, with logs being tamper-resistant due to their local storage on user devices. 
 
 \subsection{Compliance}
 \begin{enumerate}
@@ -469,9 +489,12 @@ This process evaluated development workflows, documentation practices, and adher
 
 \section{Comparison to Existing Implementation}	
 
-This section will not be appropriate for every project.
+Not applicable.
 
 \section{Unit Testing}
+
+The following section outlines the unit tests created for the python backend modules and the vscode extension.
+
 \newcounter{testcase}
 \newcommand{\testcount}{\stepcounter{testcase}\thetestcase}
 \renewcommand{\arraystretch}{1.2} % Adjust row height for better readability
@@ -607,15 +630,15 @@ This section will not be appropriate for every project.
   \label{table:measurement_tests}
   \endlastfoot
 
-  TC\testcount & PR-RFT1, FR6 & Trigger CodeCarbon measurements with a valid file path. & CodeCarbon subprocess for the file should be invoked at least once. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. Success message ``CodeCarbon measurement completed successfully." should be logged. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1, FR6 & Trigger CodeCarbon measurements with a valid file path. & CodeCarbon subprocess for the file should be invoked at least once. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. Success message ``CodeCarbon measurement completed successfully.'' should be logged. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & PR-RFT1 & Trigger CodeCarbon function with a valid file path that causes a subprocess failure. & CodeCarbon subprocess run should still be invoked. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. An error message ``Error executing file" should be logged. Returned emissions data should be \texttt{None} since the execution failed.& All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1 & Trigger CodeCarbon function with a valid file path that causes a subprocess failure. & CodeCarbon subprocess run should still be invoked. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. An error message ``Error executing file'' should be logged. Returned emissions data should be \texttt{None} since the execution failed.& All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR5, PR-SCR1 & Results produced by CodeCarbon run are at a valid CSV file path and can be read. & Emissions data should be read successfully from the CSV file. The function should return the last row of emissions data. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & PR-RFT1, FR6 & Results produced by CodeCarbon run are at a valid CSV file path but the file cannot be read. & An error message ``Error reading file" should be logged. The function should return \texttt{None} because the file reading failed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1, FR6 & Results produced by CodeCarbon run are at a valid CSV file path but the file cannot be read. & An error message ``Error reading file'' should be logged. The function should return \texttt{None} because the file reading failed. & All assertions pass. & \cellcolor{green} Pass \\ 
    \midrule
-  TC\testcount & PR-RFT1, FR5 & Given CSV Path for results produced by CodeCarbon does not have a file. & An error message ``File \texttt{file path} does not exist." should be logged.The function should return \texttt{None} since the file does not exist. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1, FR5 & Given CSV Path for results produced by CodeCarbon does not have a file. & An error message ``File \texttt{file path} does not exist.'' should be logged.The function should return \texttt{None} since the file does not exist. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
 \subsection{Smell Analyzers}
@@ -734,10 +757,10 @@ This section will not be appropriate for every project.
   TC\testcount & FR2 & Test that chains on the same line are reported only once. & One chain should be detected at line 4. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR2 & Test chains with different variable types. & Two chains should be detected, one in a list and one in a tuple. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR2 & Test with a custom threshold value. & No chains detected with threshold 4. One chain detected with threshold 2. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC10 & FR2 & Test the structure of the returned LECSmell object. & Object should have correct type, path, module, symbol, and occurrence details. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC11 & FR2 & Test chains within complex expressions. & Three chains should be detected in different contexts. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC12 & FR2 & Test with an empty file. & No chains should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC13 & FR2 & Test with threshold of 1 (every subscript reported). & One chain should be detected with message ``Dictionary chain too long (5/5)''. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR2 & Test the structure of the returned LECSmell object. & Object should have correct type, path, module, symbol, and occurrence details. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chains within complex expressions. & Three chains should be detected in different contexts. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with an empty file. & No chains should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with threshold of 1 (every subscript reported). & One chain should be detected with message ``Dictionary chain too long (5/5)''. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsubsection{Repeated Calls Detection Module}
@@ -1496,13 +1519,13 @@ This section will not be appropriate for every project.
 
   TC\testcount & FR5, FR8 & Trigger the cache wipe with no reason provided. & The smells cache should be cleared and reset to an empty state. A success message indicating that the workspace cache was successfully wiped should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "manual." & Both the smells cache and file changes cache should be cleared and reset to empty states. A success message indicating that the workspace cache was manually wiped by the user should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason ``manual''. & Both the smells cache and file changes cache should be cleared and reset to empty states. A success message indicating that the workspace cache was manually wiped by the user should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR5, FR8 & Trigger the cache wipe when there are no open files. & A log message indicating that there are no open files to update should be generated. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR5, FR8 & Trigger the cache wipe when there are open files. & A message indicating the number of visible files should be logged, and the hashes for each open file should be updated. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "settings." & Only the smells cache should be cleared. A success message indicating that the cache was wiped due to smell detection settings changes should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason ``settings''. & Only the smells cache should be cleared. A success message indicating that the cache was wiped due to smell detection settings changes should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error occurs. & An error message should be logged, and an error message indicating failure to wipe the workspace cache should be displayed to the user. & All assertions pass. & \cellcolor{green} Pass \\ 
 
@@ -1588,33 +1611,30 @@ All test for the Python backend as well as the individual modules on the TypeScr
 
 \section{Code Coverage Metrics}
 
-The following analyzes the code coverage metrics for the Python backend and frontend (TypeScript) of the VSCode extension. The analysis is based on the coverage data provided in \ref{img:python-cov} (Python backend) and \ref{img:vscode-cov} (frontend). Code coverage is a measure of how well the codebase is tested, and it helps identify areas that may require additional testing.
+The following analyzes the code coverage metrics for the Python backend and frontend (TypeScript) of the VSCode extension. The analysis is based on the coverage data provided in Figure \ref{img:python-cov} (Python backend) and Figure \ref{img:vscode-cov} (frontend). Code coverage is a measure of how well the codebase is tested, and it helps identify areas that may require additional testing.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../Images/python-coverage.png}
-  \label{img:python-cov}
   \caption{Coverage Report of the Python Backend Library}
+  \label{img:python-cov}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../Images/vscode-coverage.png}
-  \label{img:vscode-cov}
   \caption{Coverage Report of the VSCode Extension}
+  \label{img:vscode-cov}
 \end{figure}
 
 \subsection{VSCode Extension}
-The frontend codebase has an overall coverage of 45.43\% for statements, 36.48\% for branches, 42.62\% for functions, and 45.53\% for lines (\ref{img:vscode-cov}). These metrics fall below the global coverage thresholds of 80\% for the following reasons. The file \texttt{extension.ts}, which contains the core logic for the VSCode extension, has 0\% coverage as it is mainly made up of initialization commands with no real logic that can be tested. The file \texttt{refactorView.ts}, responsible for the refactoring view, also has 0\% coverage. This module is a UI component and will be tested for revision 1. Since \texttt{handleEditorChange.ts} is closely related to the UI component, its testing has also been put off.\\
+The frontend codebase has an overall coverage of 45.43\% for statements, 36.48\% for branches, 42.62\% for functions, and 45.53\% for lines (Figure \ref{img:vscode-cov}). These metrics fall below the global coverage thresholds of 80\% for the following reasons. The file \texttt{extension.ts}, which contains the core logic for the VSCode extension, has 0\% coverage as it is mainly made up of initialization commands with no real logic that can be tested. The file \texttt{refactorView.ts}, responsible for the refactoring view, also has 0\% coverage. This module is a UI component and will be tested for revision 1. Since \texttt{handleEditorChange.ts} is closely related to the UI component, its testing has also been put off.\\
 
-The file \texttt{refactorSmell.ts} has moderate coverage (55.37\% statements, 45.23\% branches), with significant gaps in testing around lines 143–269 and 328–337 (Image 2). This is due to a feature that is not fully implemented and therefore not tested. Finally, \texttt{configManager.ts} has not been tested as yet due to evolving configuration options, but will be tested for revision 1.
+The file \texttt{refactorSmell.ts} has moderate coverage (55.37\% statements, 45.23\% branches), with significant gaps in testing around lines 143–269 and 328–337 (Figure \ref{img:vscode-cov}). This is due to a feature that is not fully implemented and therefore not tested. Finally, \texttt{configManager.ts} has not been tested as yet due to evolving configuration options, but will be tested for revision 1.
 
 \subsection{Python Backend}
-The backend codebase has an overall coverage of 91\% (Image 1) and has been thoroughly tested as it contains the key features of project and the bulk of the logic. The exception is \texttt{show\_logs.py}, which handles the websocket endpoint for logging, due to the complex nature of this module testing has been omitted. Since its function is mainly to broadcast logs it is also relatively simple to verify its functionality manually\\
+The backend codebase has an overall coverage of 91\% (Figure \ref{img:python-cov}) and has been thoroughly tested as it contains the key features of project and the bulk of the logic. The exception is \texttt{show\_logs.py}, which handles the websocket endpoint for logging, due to the complex nature of this module testing has been omitted. Since its function is mainly to broadcast logs it is also relatively simple to verify its functionality manually\\
 
-
-\bibliographystyle{plainnat}
-\bibliography{../../refs/References}
 
 \newpage
 \section*{Appendix A -- Usability Testing Data} \label{appendix:usability}
@@ -1828,5 +1848,153 @@ graduate attribute of Reflection.
   evidence that demonstrates the required quality?  (It is expected that most
   teams will have had to deviate from their original VnV Plan.)
 \end{enumerate}
+
+
+
+\subsubsection*{Mya Hussain}
+\begin{itemize}
+  \item \textit{What went well while writing this deliverable?} \\ 
+  
+  One of the most rewarding parts of completing this report was writing and compiling 
+  the benchmarking and performance analysis. Seeing the data come to life through plots 
+  and visualizations was very satisfying as we could see the underlying patterns we 
+  knew existed in our code in a visual format. It also outted everyones performance 
+  on their corresponding refactorers which was cool. Overall, the whole process of turning raw data 
+  into meaningful insights was really fulfilling.  It felt like I was uncovering useful information that 
+  could really help improve the tool, which made the effort feel worthwhile
+
+  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}\\ 
+  
+  The biggest pain point for me was definitely the sheer amount of unit testing that had to 
+  be done before even starting the report. Writing all those tests and making sure everything 
+  worked as expected was a lot of legwork, it felt like I was stuck in an endless loop of running 
+  tests, fixing bugs, and then running more tests. It was necessary but not the most exciting part of 
+  the process. The tricky part was making sure the report actually reflected all that effort. As we spent hours 
+  testing, and finding bugs, and fixing them, so the tool is a lot better, but logging all of those fixes without 
+  1. sounding like the tool was broken to start and 2. overselling all the trivial tests we felt like 
+  we had to do to achive coverage, was a challenge.
+
+\end{itemize}
+
+\subsubsection*{Sevhena Walker}
+\begin{itemize}
+  \item \textit{What went well while writing this deliverable?} \\ 
+  
+  A big win was how much of our work naturally fed into the report. Since we had already been refining our verification and validation (V\&V) process throughout development, we weren’t starting from scratch, we just had to document what we had done. Having clear test cases in place made it easier to describe our approach and results, rather than writing purely in the abstract. Another positive was that our understanding of the system had improved significantly by this point, so explaining our reasoning behind certain tests felt more natural.
+
+  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}\\ 
+  
+  One challenge was finalizing our tests while also writing about them. Since we were still adjusting some test cases, we had to ensure that any changes were reflected correctly in the report, which meant some back-and-forth edits. Another issue was balancing detail; some sections needed more explanation than expected, while others felt overly technical. We resolved this by reviewing each section with fresh eyes and making sure we explained things clearly without unnecessary complexity. Time was also a factor, as wrapping up both testing and documentation at the same time was a bit hectic. We managed by setting smaller milestones to keep things on track and making sure to check in regularly to avoid last-minute rushes.
+\end{itemize}
+
+\subsubsection*{Ayushi Amin}
+\begin{itemize}
+  \item \textit{What went well while writing this deliverable?} \\ 
+  
+  One of the best parts of working on this deliverable was how well my team collaborated. We had a clear understanding of what needed to be covered, which made it easier to organize our thoughts and avoid unnecessary back-and-forth. Writing about our unit tests was also pretty smooth since we had already put a lot of effort into designing them in the vnv-plan. 
+  It was satisfying to document the thought process behind them, especially since they played a big role in making sure the tool was accurate and functioned correctly.
+  Another thing I really enjoyed was usability testing. It was fun to see how others interacted with our tool and to get real feedback on what worked and what did not. Seeing users struggle with certain parts that we thought were intuitive was interesting to find out, but it also made the process more rewarding because we could make meaningful improvements.
+
+  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}\\ 
+  
+  One pain point I experienced was structering the unit tests report and tracing back to the VnV plan tests. This is because The samples we had were really all over the place and not consistent at all.
+  It was difficult to know what information was required for certian portions when most of the samples did not cover some portions. Also tracing back to VnV Plan tests, I realized that that some tests were not
+  feasible and it would make no sense to do them for this project. Not entirely sure what we were thinking when we wrote them. So we decided to modify our VnV plan to be more realistic with the time frame we have
+  and since a lot was changed in the scope of this project, we removed certain tests to better suit our current project.
+  
+\end{itemize}
+
+\subsubsection*{Nivetha Kuruparan}
+\begin{itemize}
+  \item \textit{What went well while writing this deliverable?}  
+  
+      One of the things that went well while working on this deliverable was our ability to catch a significant number of bugs and edge cases during testing. Through extensive unit and integration testing, we identified multiple issues related to multi-file refactoring, detection accuracy, and performance optimization. This allowed us to refine our detection and refactoring mechanisms, making them more reliable and robust.
+
+  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}  
+  
+    One of the biggest challenges we faced was the overwhelming number of tests outlined in the original V\&V Plan. While comprehensive, implementing every test and writing detailed reports for each became highly time-consuming and impractical. As a result, we had to carefully trim down and consolidate tests to focus on the most critical functionalities while still maintaining full coverage of our system requirements. This process involved combining similar tests and prioritizing cases that had the most significant impact on correctness, usability, and performance. While this required careful review and restructuring, it ultimately streamlined the validation process and improved efficiency in writing the report.
+\end{itemize}
+
+\subsubsection*{Tanveer}
+\begin{itemize}
+  \item \textit{What went well while writing this deliverable?} \\ 
+  
+  The fun part was validating different requirements that we had defined in the VnV Plan against our tool. I saw that some of them were too ambitious versus others could have more points added for the verification. Overall, it was fun mapping non functional requirements against the features of the tool. At the end of it, I was able to deduce which NFR maps to a certain feature of the tool. 
+
+  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}\\ 
+  
+  Writing unit tests turned out to be harder than actual implementation because (1) not only did I come across bugs when testing but also (2) mocking dependencies such as \texttt{vscode.workspace} for our plugin was definitely a learning curve. It is important to mentiont that I don't believe that the course and capstone would have been the same as testing, the team was testing left and right to get the maximum coverage. To resolve the learning curve I referred to multiple tutorials online and eventually the process became getting rid of the syntax errors or bugs in the unit test implementation so that the tests could pass.
+\end{itemize}
+
+\subsubsection*{Group}
+\begin{itemize}
+  \item \textit{Which parts of this document stemmed from speaking to your client(s) or
+  a proxy (e.g. your peers)? Which ones were not, and why?} \\ 
+  
+  Parts of this document stemmed from speaking to users who acted as proxies for clients. Specifically:
+  \begin{itemize}
+      \item \textbf{Usability Testing Findings:} The document details usability testing conducted with student developers, who served as proxies for real-world users. Their feedback on sidebar visibility, refactoring speed, UI clarity, and energy savings feedback directly influenced the report.
+      \item \textbf{Methodology and Results:} The task completion rates, user satisfaction scores, and qualitative insights were derived from these interactions, making them user-driven.
+      \item \textbf{Non-functional Requirements:} This is based on client as some requirements like look and feel is evaluated by client and usability testers since they will be the ones using the application.
+  \end{itemize}
+
+  Parts of the document that did not stem from client or proxy interactions include:
+  \begin{itemize}
+
+  \item \textbf{Functional Requirements Evaluations:} These sections reference predefined specifications/industry standards rather than direct client input.
+  \item \textbf{Implementation and Technical Explanations:} These were formulated based on the development team’s decisions, software documentation, and prior knowledge rather than external feedback.
+
+  \end{itemize}
+  
+
+  \item \textit{In what ways was the Verification and Validation (VnV) Plan different
+  from the activities that were actually conducted for VnV?  If there were
+  differences, what changes required the modification in the plan?  Why did
+  these changes occur?  Would you be able to anticipate these changes in future
+  projects?  If there weren't any differences, how was your team able to clearly
+  predict a feasible amount of effort and the right tasks needed to build the
+  evidence that demonstrates the required quality?  (It is expected that most
+  teams will have had to deviate from their original VnV Plan.)}\\ 
+  
+  There were definitely some differences between what we assumed would happen during 
+  the VnV Plan and the results we actually got during testing. For example, the plan initially assumed that
+  energy measurement times would vary significantly with file size, but the 
+  testing revealed that they were actually decently consistent. This meant we 
+  had to adjust our focus in the report to highlight the fixed overhead of energy 
+  measurement rather than exploring variability.
+
+  For the most part, though, all of the unit testing we planned in the VnV Plan was 
+  written out per spec, and the code was fixed until all of them passed. This 
+  rigorous testing process actually caught a lot of bugs and edge cases that we 
+  hadn't fully anticipated in the plan. For instance, some refactoring operations 
+  worked fine on smaller files but broke on larger ones. Testing also revealed edge cases, 
+  like how the tool handled files with \textbf{multiline whitespace}, \textbf{nested structures}, 
+  \textbf{degenerate/trivial input} (e.g., empty files or files with a single line), and 
+  \textbf{wrong input} (e.g., malformed code or unsupported syntax). These cases weren't 
+  explicitly called out in the original plan, but they became a big part of the testing process 
+  once we realized how critical they were to the tool's reliability.
+
+  For example:
+  \begin{itemize}
+      \item \textbf{Multiline whitespace:} The tool initially struggled with files that had excessive or irregular whitespace, which caused false positives in code smell detection. We had to update the detection logic to handle these cases gracefully.
+      \item \textbf{Nested structures:} Deeply nested code (e.g., loops within loops or functions within functions) exposed performance bottlenecks and sometimes caused the tool to crash. This led to optimizations in the refactoring algorithms.
+      \item \textbf{Degenerate/trivial input:} Empty files or files with minimal content revealed that some refactoring operations weren't properly handling edge cases, so we added checks to ensure the tool behaved correctly in these scenarios.
+      \item \textbf{Wrong input:} Malformed or unsupported code caused unexpected errors, so we improved error handling and added clearer feedback for users.
+  \end{itemize}
+  
+  Fixing these issues required additional effort, but it ultimately made the tool more robust and user-friendly.
+  
+
+  These changes happened because testing revealed patterns in the data 
+   and uncovered bugs that weren't obvious during the planning phase. 
+   The bugs and edge cases we found during testing forced us to 
+   revisit parts of the code and make improvements we hadn't planned for initially. 
+
+   Some of these changes could be anticipated in future projects with more thorough initial testing.
+    If i could do it again I'd build more flexibility into the VnV Plan to account for unexpected results and allocate extra time for debugging and edge-case testing. I’d also include a broader range of test cases (e.g., multiline whitespace, wrong input) in the initial plan to catch these issues sooner.
+
+
+
+\end{itemize}
 
 \end{document}
