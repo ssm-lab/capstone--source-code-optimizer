@@ -896,6 +896,31 @@ All test for the Python backend as well as the individual modules on the TypeScr
 
 \section{Code Coverage Metrics}
 
+The following analyzes the code coverage metrics for the Python backend and frontend (TypeScript) of the VSCode extension. The analysis is based on the coverage data provided in \ref{img:python-cov} (Python backend) and \ref{img:vscode-cov} (frontend). Code coverage is a measure of how well the codebase is tested, and it helps identify areas that may require additional testing.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{../Images/python-coverage.png}
+  \label{img:python-cov}
+  \caption{Coverage Report of the Python Backend Library}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{../Images/vscode-coverage.png}
+  \label{img:vscode-cov}
+  \caption{Coverage Report of the VSCode Extension}
+\end{figure}
+
+\subsection{VSCode Extension}
+The frontend codebase has an overall coverage of 45.43\% for statements, 36.48\% for branches, 42.62\% for functions, and 45.53\% for lines (\ref{img:vscode-cov}). These metrics fall below the global coverage thresholds of 80\% for the following reasons. The file \texttt{extension.ts}, which contains the core logic for the VSCode extension, has 0\% coverage as it is mainly made up of initialization commands with no real logic that can be tested. The file \texttt{refactorView.ts}, responsible for the refactoring view, also has 0\% coverage. This module is a UI component and will be tested for revision 1. Since \texttt{handleEditorChange.ts} is closely related to the UI component, its testing has also been put off.\\
+
+The file \texttt{refactorSmell.ts} has moderate coverage (55.37\% statements, 45.23\% branches), with significant gaps in testing around lines 143–269 and 328–337 (Image 2). This is due to a feature that is not fully implemented and therefore not tested. Finally, \texttt{configManager.ts} has not been tested as yet due to evolving configuration options, but will be tested for revision 1.
+
+\subsection{Python Backend}
+The backend codebase has an overall coverage of 91\% (Image 1) and has been thoroughly tested as it contains the key features of project and the bulk of the logic. The exception is \texttt{show\_logs.py}, which handles the websocket endpoint for logging, due to the complex nature of this module testing has been omitted. Since its function is mainly to broadcast logs it is also relatively simple to verify its functionality manually\\
+
+
 \bibliographystyle{plainnat}
 \bibliography{../../refs/References}
 
