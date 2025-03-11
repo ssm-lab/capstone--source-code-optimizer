@@ -625,6 +625,7 @@ This section will not be appropriate for every project.
   TC\testcount & FR3, FR5 & Test refactoring when `all()` or `any()` calls are nested. & The refactored code should handle nested expressions correctly. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+
 \subsubsection{Long Parameter List}
 
 \begin{longtable}{c 
@@ -661,6 +662,7 @@ This section will not be appropriate for every project.
   \midrule
   TC\testcount & FR3, FR6 & Refactors a standalone function with 8 parameters (1 with default value that is also unused in body) and the call made to it (1 positional arguments) & Declares grouping classes. Updates method call with grouped instantiations. Also updates method signature and body to reflect new used parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
+
 
 \subsection{VS Code Extension}
 
@@ -859,6 +861,7 @@ This section will not be appropriate for every project.
   \midrule
   \endfirsthead
 
+
   \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
@@ -894,6 +897,7 @@ This section will not be appropriate for every project.
   \midrule
   \endfirsthead
 
+
   \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
@@ -904,6 +908,7 @@ This section will not be appropriate for every project.
   \endfoot
 
   \bottomrule
+
   \caption{VS Code Settings Management Module Test Cases}
   \label{table:vs_code_settings_tests}
   \endlastfoot
@@ -915,9 +920,10 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test that cache is not wiped if no changes occur. & No notification or cache wipe should happen. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR10, UHR-PSI1 & Test formatting of kebab-case smell names. & Smell names should be correctly converted to readable format. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR10, UHR-PSI1 & Test formatting with an empty string input. & Function should return an empty string without errors. & All assertions pass. & \cellcolor{green} Pass \\ 
+
 \end{longtable}
 
-
+\subsubsection{Handle Smell Settings Module}
 
 
 \subsubsection{Wipe Workspace Cache Command}
@@ -957,6 +963,7 @@ This section will not be appropriate for every project.
   TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "settings." & Only the smells cache should be cleared. A success message indicating that the cache was wiped due to smell detection settings changes should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error occurs. & An error message should be logged, and an error message indicating failure to wipe the workspace cache should be displayed to the user. & All assertions pass. & \cellcolor{green} Pass \\ 
+
 \end{longtable}
 
 \subsubsection{Backend}
@@ -993,6 +1000,7 @@ This section will not be appropriate for every project.
   \midrule
   TC\testcount & PR-SCR1, PR-RFT2 & Trigger intialize logs call with a valid directory path, and backend responds with a failure. & TThe function should return \texttt{false} indicating failure to initialize logs. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from 
