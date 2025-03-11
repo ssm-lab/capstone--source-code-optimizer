@@ -452,6 +452,21 @@ The expected result was that users would be able to interact with the plugin smo
 \end{enumerate}
 
 
+\subsection{Compliance}
+\begin{enumerate}
+
+\item \textbf{test-CPL-1: Compliance with PIPEDA and CASL} \\[2mm]
+This process was applied to all processes related to data handling and user communication within the local API framework with the objective of assesing whether the tool’s data handling and communication mechanisms align with PIPEDA and CASL requirements, ensuring that no personal information is stored, all processing is local, and communication practices meet regulatory standards.\\
+\noindent Through code review, the team confirmed that all data processing remains local and does not involve external storage. During this time, internal API functionality was also reviewed to ensure that user interactions are transient and not logged externally. By going through the different workflows, the team verified that no personal data collection occurs, eliminating the need for explicit consent mechanisms.\\
+\noindent As a result of this process, it was concluded that the tool does not store any user data. The tool also does not send unsolicited communications, aligning with CASL requirements.
+
+\item \textbf{test-CPL-2: Compliance with ISO 9001 and SSADM Standards} \\[2mm]
+This process evaluated development workflows, documentation practices, and adherence to structured methodologies with the object of assessing whether the tool’s quality management and software development processes align with ISO 9001 standards for quality management and SSADM for structured software development.\\
+\noindent Through an unbiased approach, the team verified the presence of structured documentation, feedback mechanisms, and version tracking. It was also confirmed that a combination of unit testing, informal testing and iteration processes were applied during development. After code review, adherence to structured programming and modular design principles was also confirmed.
+\noindent Our goal was to take a third perspective check on whether these set of practices were applied to our development workflows. Development follows reasonable structured processes and also includes formal documentation of testing and quality assurance procedures. Version control system is present including change tracking and basic project management.
+
+\end{enumerate}
+
 \section{Comparison to Existing Implementation}	
 
 This section will not be appropriate for every project.
