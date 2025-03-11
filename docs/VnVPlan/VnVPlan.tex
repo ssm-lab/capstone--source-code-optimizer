@@ -2090,6 +2090,55 @@ maintains robustness and reliability in identifying problematic lambda expressio
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_repeated_calls.py}{here}.
 
+\subsubsection{Long Parameter List}
+
+\textbf{Goal:} The Long Parameter List refactoring module replaces function definitions and calls involving a large number of parameters with grouped parameter instances. This enhances the efficiency of the code as related parameters are grouped together into instantiated parameters. The validity of the functionality can be ensured through unit tests.\\
+
+\noindent The tests ensure that all cases for function declarations, including constructors, instance methods, static methods and standalone functions are updated with the group parameter instances. Similarly, corresponding calls to these functions as well as references to original parameters are preserved. The refactored result also preserves use of default values in function signature and positional arguments in function calls.x\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Handle Constructor with More Parameters than Configured Limit, All Used}
+    \begin{itemize}
+        \item Verifies that the refactor correctly handles constructors with 8 parameters, including a mix of positional and keyword arguments.
+        \item Confirms that the function signature and instantiation are updated to include all 8 parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Constructor More Parameters than Configured Limit, some of which are Unused}
+    \begin{itemize}
+        \item Ensures the constructor correctly handles unused parameters by excluding them from the updated signature and instantiation.
+        \item Verifies that the refactor updates the constructor and function body to properly reflect the used parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Instance Method More Parameters than Configured Limit (2 Defaults)}
+    \begin{itemize}
+        \item Verifies that the refactor correctly handles instance methods with 8 parameters, including default values for some.
+        \item Ensures that the method signature and instantiation are updated to preserve the default values while reflecting the used parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Instance Method Refactor with More Parameters than Configured Limit, some of which are Unused}
+    \begin{itemize}
+        \item Validates that unused parameters in the instance method are correctly excluded and grouped into new data and config parameter classes.
+        \item Ensures that the refactor maintains the correct structure and that the method now accepts the new class objects instead of individual parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Static Method Refactor with More Parameters than Configured Limit, some of which are Unused and some have Default Values}
+    \begin{itemize}
+        \item Verifies that unused parameters are correctly excluded from the static method signature and instantiation.
+        \item Ensures that parameters with default values are properly maintained in the updated method signature and body.
+    \end{itemize}
+
+    \item \textbf{Handle Standalone Function Refactor with More Parameters than Configured Limit, some of which are Unused}
+    \begin{itemize}
+        \item Validates that the unused parameter is excluded from the function signature after the refactor.
+        \item Confirms that the refactored function uses grouped parameter classes to handle the remaining parameters efficiently.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_parameter_list_refactor.py
+}{here}.
+
 \subsubsection{Long Message Chain}
 
 \textbf{Goal:} The following unit tests verify the correctness of refactoring long element chains into more readable and efficient code while maintaining valid Python syntax.\\
