@@ -83,6 +83,28 @@ This document ...
 		
 \subsection{Performance}
 
+\subsection{Maintainability and Support}
+\begin{enumerate}
+
+\item \textbf{test-MS-1: Extensibility for New Code Smells and Refactorings} \\[2mm]
+To validate the extensibility of our tool, we structured the codebase using a modular design, where new code smell detection and refactoring functions can 
+be easily added as separate components. In simpler terms, each refactoring and each custom detection is placed in its own file. A code walkthrough confirmed that 
+existing modules remain unaffected when adding new detection logic. We successfully integrated a sample code smell and its corresponding refactoring method with 
+minimal changes, ensuring that the new function was accessible through the main interface. This demonstrated that our architecture supports future expansions without 
+disrupting core functionality.
+
+\item \textbf{test-MS-2: Maintainable and Adaptable Codebase} \\[2mm]
+We conducted a static analysis and documentation walkthrough to assess the maintainability of our codebase. The code was reviewed for modular organization, clear separation 
+of concerns, and adherence to coding standards. All modules were correctly seperated and organzied. Documentation will be updated to include detailed descriptions of functions 
+and configuration files, ensuring clarity for future developers. Code comments were refined to enhance readability, and function naming conventions were standardized for 
+consistency. These efforts ensured that the tool remains adaptable to new Python versions and evolving best practices.
+
+\item \textbf{test-MS-3: Easy rollback of updates in case of errors} \\[2mm]
+Once releases are made, each release will be properly tagged and versioned to ensure smooth rollbacks through version control. This will all be handled with Git. done, but 
+this approach guarantees that users will be able to revert to a previous stable version if needed, maintaining system integrity and minimizing disruptions.
+\end{enumerate}
+
+
 \subsection{etc.}
 	
 \section{Comparison to Existing Implementation}	
