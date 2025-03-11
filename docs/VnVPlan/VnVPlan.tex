@@ -2101,38 +2101,38 @@ maintains robustness and reliability in identifying problematic lambda expressio
 \begin{itemize}
     \item \textbf{Handle Constructor with More Parameters than Configured Limit, All Used}
     \begin{itemize}
-        \item Verifies that the refactor correctly handles constructors with 8 parameters, including a mix of positional and keyword arguments.
-        \item Confirms that the function signature and instantiation are updated to include all 8 parameters.
+        \item The refactor correctly handles constructors with 8 parameters, including a mix of positional and keyword arguments.
+        \item Function signature and instantiation are updated to include all 8 parameters.
     \end{itemize}
 
     \item \textbf{Handle Constructor More Parameters than Configured Limit, some of which are Unused}
     \begin{itemize}
-        \item Ensures the constructor correctly handles unused parameters by excluding them from the updated signature and instantiation.
-        \item Verifies that the refactor updates the constructor and function body to properly reflect the used parameters.
+        \item Constructor correctly handles unused parameters by excluding them from the updated signature and instantiation.
+        \item The refactor updates the constructor and function body to properly reflect the used parameters.
     \end{itemize}
 
     \item \textbf{Handle Instance Method More Parameters than Configured Limit (2 Defaults)}
     \begin{itemize}
-        \item Verifies that the refactor correctly handles instance methods with 8 parameters, including default values for some.
-        \item Ensures that the method signature and instantiation are updated to preserve the default values while reflecting the used parameters.
+        \item The refactor correctly handles instance methods with 8 parameters, including default values for some.
+        \item The method signature and instantiation are updated to preserve the default values while reflecting the used parameters.
     \end{itemize}
 
     \item \textbf{Handle Instance Method Refactor with More Parameters than Configured Limit, some of which are Unused}
     \begin{itemize}
-        \item Validates that unused parameters in the instance method are correctly excluded and grouped into new data and config parameter classes.
-        \item Ensures that the refactor maintains the correct structure and that the method now accepts the new class objects instead of individual parameters.
+        \item Unused parameters in the instance method are correctly excluded and grouped into new data and config parameter classes.
+        \item Function maintains the correct structure and that the method now accepts the new class objects instead of individual parameters.
     \end{itemize}
 
     \item \textbf{Handle Static Method Refactor with More Parameters than Configured Limit, some of which are Unused and some have Default Values}
     \begin{itemize}
-        \item Verifies that unused parameters are correctly excluded from the static method signature and instantiation.
-        \item Ensures that parameters with default values are properly maintained in the updated method signature and body.
+        \item Unused parameters are correctly excluded from the static method signature and instantiation.
+        \item Parameters with default values are properly maintained in the updated method signature and body.
     \end{itemize}
 
     \item \textbf{Handle Standalone Function Refactor with More Parameters than Configured Limit, some of which are Unused}
     \begin{itemize}
-        \item Validates that the unused parameter is excluded from the function signature after the refactor.
-        \item Confirms that the refactored function uses grouped parameter classes to handle the remaining parameters efficiently.
+        \item Unused parameter is excluded from the function signature after the refactor.
+        \item Refactored function uses grouped parameter classes to handle the remaining parameters efficiently.
     \end{itemize}
 \end{itemize}
 
@@ -2539,38 +2539,38 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
 \begin{itemize}
     \item \textbf{Wipe Cache with No Reason Provided}
     \begin{itemize}
-        \item Verifies that only the "smells" cache is cleared when no reason is provided.
-        \item Ensures that a success message indicating the workspace cache has been successfully wiped is displayed.
+        \item Only the "smells" cache is cleared when no reason is provided.
+        \item A success message indicating the workspace cache has been successfully wiped is displayed.
     \end{itemize}
 
     \item \textbf{Wipe Cache with Reason "manual"}
     \begin{itemize}
-        \item Confirms that both the "smells" and "file changes" caches are cleared when the reason is "manual."
-        \item Ensures that a success message indicating the workspace cache was manually wiped is shown.
+        \item Both the "smells" and "file changes" caches are cleared when the reason is "manual."
+        \item A success message indicating the workspace cache was manually wiped is shown.
     \end{itemize}
 
     \item \textbf{Wipe Cache When No Files Are Open}
     \begin{itemize}
-        \item Verifies that the command correctly handles the case when there are no open files.
-        \item Ensures a log message is generated indicating that no open files are available to update.
+        \item The command correctly handles the case when there are no open files.
+        \item A log message is generated indicating that no open files are available to update.
     \end{itemize}
 
     \item \textbf{Wipe Cache with Open Files}
     \begin{itemize}
-        \item Confirms that when there are open files, a message indicating the number of visible files is logged.
-        \item Ensures that the hashes for each open file are updated as expected.
+        \item When there are open files, a message indicating the number of visible files is logged.
+        \item The hashes for each open file are updated as expected.
     \end{itemize}
 
     \item \textbf{Wipe Cache with Reason "settings"}
     \begin{itemize}
-        \item Verifies that only the "smells" cache is cleared when the reason is "settings."
-        \item Ensures that a success message is shown indicating the cache was wiped due to changes in smell detection settings.
+        \item Only the "smells" cache is cleared when the reason is "settings."
+        \item A success message is shown indicating the cache was wiped due to changes in smell detection settings.
     \end{itemize}
 
     \item \textbf{Wipe Cache When an Error Occurs}
     \begin{itemize}
-        \item Confirms that an error message is logged when an error occurs during the cache wipe process.
-        \item Ensures that a user-facing error message is displayed, indicating the failure to wipe the workspace cache.
+        \item An error message is logged when an error occurs during the cache wipe process.
+        \item a user-facing error message is displayed, indicating the failure to wipe the workspace cache.
     \end{itemize}
 \end{itemize}
 
