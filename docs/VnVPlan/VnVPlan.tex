@@ -2486,6 +2486,54 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/handleSmellSettings.test.ts}{here}.
 
+\subsubsection{Wipe Workspace Cache}
+
+\textbf{Goal:} The "Wipe Workspace Cache" command is responsible for clearing specific caches related to the workspace in a development environment, primarily to reset the state of stored data such as "smells" and file changes. It can be triggered for different reasons, which determine which caches are cleared and how the command behaves. It also updates file hashes for visible editors when appropriate. Upon successful execution, a corresponding success message is shown to the user. In case of an error, an error message is displayed to the user.\\
+
+\noindent The tests ensure that appropriate caches are being cleared as and when instructed.\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR5, FR8~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Wipe Cache with No Reason Provided}
+    \begin{itemize}
+        \item Verifies that only the "smells" cache is cleared when no reason is provided.
+        \item Ensures that a success message indicating the workspace cache has been successfully wiped is displayed.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache with Reason "manual"}
+    \begin{itemize}
+        \item Confirms that both the "smells" and "file changes" caches are cleared when the reason is "manual."
+        \item Ensures that a success message indicating the workspace cache was manually wiped is shown.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache When No Files Are Open}
+    \begin{itemize}
+        \item Verifies that the command correctly handles the case when there are no open files.
+        \item Ensures a log message is generated indicating that no open files are available to update.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache with Open Files}
+    \begin{itemize}
+        \item Confirms that when there are open files, a message indicating the number of visible files is logged.
+        \item Ensures that the hashes for each open file are updated as expected.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache with Reason "settings"}
+    \begin{itemize}
+        \item Verifies that only the "smells" cache is cleared when the reason is "settings."
+        \item Ensures that a success message is shown indicating the cache was wiped due to changes in smell detection settings.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache When an Error Occurs}
+    \begin{itemize}
+        \item Confirms that an error message is logged when an error occurs during the cache wipe process.
+        \item Ensures that a user-facing error message is displayed, indicating the failure to wipe the workspace cache.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/wipeWorkCache.test.ts}{here}.
+
 \subsection{API Routes}
 
 \subsubsection{Smell Detection Endpoint}
