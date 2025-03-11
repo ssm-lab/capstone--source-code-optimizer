@@ -365,6 +365,16 @@ The **expected result** was that users would be able to interact with the plugin
 
 \end{enumerate}
 
+\subsection{Security}
+
+\textbf{test-SRT-1: Audit Logs for Refactoring Processes} \\[2mm]
+We conducted a combination of code walkthroughs and static analysis of logging mechanisms to validate that the tool maintains a secure log of all refactoring processes, including pattern analysis, energy analysis, and report generation. The objective was to do so while covering the logging mechanisms for refactoring events, ensuring that logs are complete and immutable.\\
+
+\noindent The development team reviewed the codebase to confirm that each refactoring event (pattern analysis, energy analysis, report generation) is logged with accurate timestamps and event description. Missing log entries and/or insufficient details were identified and added to the logging process.\\
+
+\noindent Through this process, all major refactoring processes were correctly logged with accurate timestamps. Logs are stored locally on the user's device, ensuring that unauthorized modifications are prevented by restricting external access.\\
+
+\noindent The team was able to confirm that the tool maintains a secure logging system for refactoring processes, with logs being tamper-resistant due to their local storage on user devices. 
 
 \section{Comparison to Existing Implementation}	
 
