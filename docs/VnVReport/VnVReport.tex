@@ -15,6 +15,7 @@
 \usepackage{colortbl}
 \usepackage{float}
 \usepackage{caption}
+\usepackage{graphicx}
 \captionsetup[table]{width=0.9\textwidth}
 
 \usepackage{listings}
@@ -82,6 +83,144 @@ This document ...
 \subsection{Usability}
 		
 \subsection{Performance}
+
+This testing benchmarks the performance of ecooptimizer across 
+files of varying sizes (250, 1000, and 3000 lines). The data includes detection times, 
+refactoring times for specific smells, and energy measurement times. The goal is to 
+identify scalability patterns, performance bottlenecks, and opportunities for optimization.\\
+
+\textbf{Related Performance Requirement:} PR-1\\
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/benchmarking/benchmark.py}{here}\\
+
+This script benchmarks the following components:
+
+\begin{enumerate}
+  \item \textbf{Detection/Analyzer Runtime} (via \texttt{AnalyzerController.run\_analysis})
+  \item \textbf{Refactoring Runtime} (via \texttt{RefactorerController.run\_refactorer})
+  \item \textbf{Energy Measurement Time} (via \texttt{CodeCarbonEnergyMeter.measure\_energy})
+\end{enumerate}
+
+
+For each detected smell (grouped by smell type), refactoring is run 10 times to compute average times.\\
+
+\noindent The following is for your reference: \\
+
+\begin{tabular}{|l|l|l|}
+  \hline
+  \textbf{Type of Smell} & \textbf{Code} & \textbf{Smell Name} \\
+  \hline
+  Pylint & R0913 & Long Parameter List \\
+  Pylint & R6301 & No Self Use \\
+  Pylint & R1729 & Use a Generator \\
+  \hline
+  Custom & LMC001 & Long Message Chain \\
+  Custom & UVA001 & Unused Variable or Attribute \\
+  Custom & LEC001 & Long Element Chain \\
+  Custom & LLE001 & Long Lambda Expression \\
+  Custom & SCL001 & String Concatenation in Loop \\
+  Custom & CRC001 & Cache Repeated Calls \\
+  \hline
+\end{tabular}
+
+\subsection*{1. Detection Time vs File Size}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{{../Images/detectionTimeVsFileSize.png}}
+  \caption{Detection Time vs File Size}
+\end{figure}
+
+\noindent \textbf{What}: Linear plot showing code smell detection time growth with file size\\
+
+\noindent \textbf{Why}: Understand scalability of detection mechanism\\
+
+The detection time grows non-linearly with file size, suggesting a potential \(O(n^2)\) complexity. 
+For a 250-line file, detection takes 0.38 seconds, while a 1000-line file takes 0.90 seconds (a 2.4× 
+increase). At 3000 lines, the detection time jumps to 2.58 seconds (a 2.9× increase from 1000 lines). 
+This indicates that the detection algorithm scales poorly for larger files, which could become 
+problematic for very large codebases. However, the absolute times remain reasonable, with detection 
+completing in under 3 seconds even for 3000-line files making this not a current critical bottleneck.
+
+\subsection*{2. Refactoring Times by Smell Type (Log Scale)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Images/refactoring\_times\_log\_scale.png}
+    \caption{Refactoring Times by Smell Type (Log Scale)}
+\end{figure}
+
+\noindent \textbf{What}: Logarithmic plot of refactoring times per smell across file sizes\\
+
+\noindent \textbf{Why}: Identify most expensive refactorings and scalability patterns\\
+
+The logarithmic plot reveals a clear hierarchy of refactoring costs. The most expensive smells are \texttt{R6301} and \texttt{R0913}, which take 6.13 seconds and 5.65 seconds, respectively, for a 3000-line file. These smells show exponential growth, with \texttt{R6301} increasing by 14.6× from 250 to 3000 lines. In contrast, low-cost smells like \texttt{LLE001} and \texttt{LMC001} remain consistently fast (0.03 seconds) across all file sizes. This suggests that optimizing \texttt{R6301} and \texttt{R0913} should be a priority, as they dominate the refactoring time for larger files.
+
+\subsection*{3. Refactoring Times Heatmap}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Images/refactoring\_times\_heatmap.png}
+    \caption{Refactoring Times Heatmap}
+\end{figure}
+
+\noindent \textbf{What}: Color-coded matrix of refactoring times by smell/file size\\
+
+\noindent \textbf{Why}: Quick visual identification of hot spots\\
+
+The heatmap provides a quick visual summary of refactoring times across smells and file sizes. The darkest cells correspond to \texttt{R6301} and \texttt{R0913} at 3000 lines, confirming their status as the most expensive operations. In contrast, \texttt{LLE001} and \texttt{LMC001} remain light-colored across all sizes, indicating consistently low costs. The heatmap also highlights the dramatic variation in refactoring times: at 3000 lines, the fastest smell (\texttt{LLE001}) is 200× faster than the slowest (\texttt{R6301}).
+
+\subsection*{4. Energy Measurement Times Distribution}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Images/energy\_measurement\_boxplot.png}
+    \caption{Energy Measurement Times Distribution}
+\end{figure}
+
+\noindent \textbf{What}: Box plot of energy measurement durations\\
+
+\noindent \textbf{Why}: Verify measurement consistency across operations\\
+
+Energy measurement times are remarkably consistent, ranging from 5.54 to 6.14 seconds across all operations and file sizes. 
+The box plot shows no significant variation with file size, suggesting that energy measurement is operation-specific 
+rather than dependent on the size of the file. This stability could indicate that the energy measurement process has a fixed 
+overhead, which could simplify efforts in the future if we were to create our own energy measurement module. 
+
+\subsection*{5. Comparative Refactoring Times per File Size}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Images/refactoring\_times\_comparison.png}
+    \caption{Comparative Refactoring Times per File Size}
+\end{figure}
+
+\noindent \textbf{What}: Side-by-side bar charts per file size\\
+
+\noindent \textbf{Why}: Direct comparison of refactoring costs at different scales\\
+
+The side-by-side bar charts reveal consistent dominance patterns across file sizes. \texttt{R6301} and \texttt{R0913} are always the top two most expensive smells, while \texttt{LLE001} and \texttt{LMC001} remain the cheapest. Notably, the relative cost difference between the most and least expensive smells increases with file size: at 250 lines, the ratio is 100:1, but at 3000 lines, it grows to 200:1. This suggests that the scalability of refactoring operations varies significantly by smell type.
+
+\subsection*{6. Energy vs Refactoring Time Correlation}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{../Images/energy\_refactoring\_correlation.png}
+    \caption{Energy vs Refactoring Time Correlation}
+\end{figure}
+
+\noindent \textbf{What}: Scatter plot comparing refactoring and energy measurement times\\
+
+\noindent \textbf{Why}: Identify potential relationships between effort and energy impact\\
+
+The scatter plot shows no clear correlation between refactoring time and energy measurement time. Fast refactorings like \texttt{LLE001} and slow refactorings like \texttt{R6301} both result in energy measurement times clustered between 5.5 and 6.1 seconds. This makes perfect sense as the refactoring operations and energy measurement are disjoint functionalities in the code. 
+
+\subsection*{Key Insights and Recommendations}
+\begin{itemize}
+    \item \textbf{Bottleneck Identification:} The smells \texttt{R6301} and \texttt{R0913} are the primary bottlenecks, consuming over 50\% of the total refactoring time for 3000-line files. Optimizing these operations should be a top priority.
+    \item \textbf{Scalability Concerns:} Both detection and refactoring times scale poorly with file size, suggesting \(O(n^2)\) complexity. This could become problematic for very large codebases.
+    \item \textbf{Low-Hanging Fruit:} Smells like \texttt{LLE001} and \texttt{LMC001} are consistently fast to refactor, making them ideal candidates for early refactoring efforts.
+    \item \textbf{Energy Measurement Stability:} Energy measurement times seem consistent across operations and file sizes, indicating a fixed overhead. This simplifies efforts to correlate refactoring with energy savings.
+    \item \textbf{Disproportionate Costs:} The cost difference between the most and least expensive smells grows with file size, highlighting the need for targeted optimization.
+\end{itemize}
+
+The analysis reveals significant scalability challenges for both detection and refactoring, particularly for smells like \texttt{R6301} and \texttt{R0913}. While energy measurement times are stable, their lack of correlation with refactoring time suggests that additional metrics may be needed to accurately assess energy savings. Future work should focus on optimizing high-cost operations and improving the scalability of the detection algorithm.
+
 
 \subsection{etc.}
 	
@@ -356,6 +495,87 @@ This section will not be appropriate for every project.
   TC\testcount & FR2 & Test that method calls on different object instances are not flagged. & No repeated calls should be detected. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Long Lambda Element Detection Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Lambda Element Detector Module Test Cases}
+  \label{table:lle_tests}
+  \endlastfoot
+
+  TC\testcount & FR2 & Test code with no lambdas. & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test short single lambda (under thresholds). & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test lambda exceeding expression count threshold. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test lambda exceeding character length threshold (100). & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test lambda exceeding both expression and length thresholds. & At least one smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test nested lambdas. & Two smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test inline lambdas passed to functions. & Two smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test trivial lambda with no body. & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Long Message Chain Detector Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Message Chain Detector Module Test Cases}
+  \label{table:lmc_tests}
+  \endlastfoot
+
+  TC\testcount & FR2 & Test chain with exactly five method calls. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain with six method calls. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain with four method calls. & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain with both attribute and method calls. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain inside a loop. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test multiple chains on the same line. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test separate statements with fewer calls. & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test short chain in a comprehension. & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test long chain in a comprehension. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test five separate long chains in one function. & Five smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain with attribute and index lookups (no calls). & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain with slicing. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test multiline chain. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain inside a lambda. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain with mixed return types. & One smell should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test multiple short chains on the same line. & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chain inside a conditional (ternary). & No smells should be detected. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
 
 \subsection{Refactorer Controller Module}
 
@@ -587,6 +807,85 @@ This section will not be appropriate for every project.
   TC\testcount & FR3, FR5 & Test refactoring when `all()` or `any()` calls are nested. & The refactored code should handle nested expressions correctly. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsubsection{Long Lambda Element Refactorer}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Lambda Element Refactorer Test Cases}
+  \label{table:long_lambda_refactorer_tests}
+  \endlastfoot
+
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor a basic single-line lambda. & Lambda is converted to a named function. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Ensure no print statements are added unnecessarily. & Refactored code contains no print statements. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor a lambda passed as an argument to another function. & Lambda is converted to a named function and used correctly. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor a lambda with multiple parameters. & Lambda is converted to a named function with multiple parameters. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor a lambda used with keyword arguments. & Lambda is converted to a named function and used correctly with keyword arguments. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor a very long lambda spanning multiple lines. & Lambda is converted to a named function preserving the logic. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+\subsubsection{Long Message Chain Refactorer}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Long Message Chain Refactorer Test Cases}
+  \label{table:long_message_chain_refactorer_tests}
+  \endlastfoot
+
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor a basic method chain. & Method chain is split into intermediate variables. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor a long message chain with an f-string. & F-string chain is split into intermediate variables. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Ensure modifications occur even if the method chain isn't long. & Short method chain is split into intermediate variables. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Ensure indentation is preserved after refactoring. & Refactored code maintains proper indentation. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor method chains containing method arguments. & Method chain with arguments is split into intermediate variables. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor print statements with method chains. & Print statement with method chain is split into intermediate variables. & All assertions pass. & \cellcolor{green} Pass \\ 
+  \midrule
+  TC\testcount & FR1, FR2, FR3, FR5, FR6 & Refactor nested method chains. & Nested method chain is split into intermediate variables. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
 
 
 \subsection{VS Code Extension}
