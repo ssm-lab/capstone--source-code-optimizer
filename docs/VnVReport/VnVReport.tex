@@ -15,7 +15,9 @@
 \usepackage{colortbl}
 \usepackage{graphicx} 
 \usepackage{placeins}
+\usepackage{array}
 \usepackage{float}
+\usepackage{colortbl}
 \usepackage{caption}
 \usepackage{graphicx}
 \captionsetup[table]{width=0.9\textwidth}
@@ -25,6 +27,7 @@
     basicstyle=\ttfamily, % Use monospaced font
     breaklines=true,      % Enable line breaks
 }
+\usepackage{csvsimple}
 
 \input{../Comments}
 \input{../Common}
@@ -83,7 +86,75 @@ This document ...
 \section{Nonfunctional Requirements Evaluation}
 
 \subsection{Usability}
-		
+
+\subsection*{Key Findings}
+\begin{itemize}
+    \item The extension demonstrated strong functionality in detecting code smells and providing refactoring suggestions.
+    \item Participants appreciated the \textbf{preview feature} and \textbf{energy savings feedback}.
+    \item Major usability issues included \textbf{sidebar visibility}, \textbf{refactoring speed}, and \textbf{UI clarity}.
+\end{itemize}
+
+\section*{Methodology}
+The usability test involved 5 student developers familiar with VSCode but with no prior experience using the extension. Participants performed tasks such as detecting code smells, refactoring single and multi-file smells, and customizing settings. Metrics included task completion rate, error rate, and user satisfaction scores. Additional qualitative data was collected using surveys that gathered background information of the participants as well as their opinions post testing (\ref{appendix:usability}).
+
+\section*{Results}
+
+The following is an overview of the most significant task that the test participants performed. Information on the tasks themselves can be found in the Appendix (\ref{appendix:usability}).
+
+\subsection*{Quantitative Results}
+\begin{itemize}
+    \item \textbf{Task Completion Rate:}
+        \begin{itemize}
+            \item \textbf{Task 1-3 (Smell Detection):} 100\% success rate.
+            \item \textbf{Task 4 (Initiate Refactoring):} 100\% success rate.
+            \item \textbf{Task 6 (Multi-File Refactoring):} 60\% success rate (participants struggled with identifying clickable file names).
+            \item \textbf{Task 7 (Smell Settings):} 100\% success rate.
+        \end{itemize}
+    \item \textbf{User Satisfaction:}
+        \begin{itemize}
+            \item Confidence in Using the Tool: \textbf{4.2/5}.
+            \item Satisfaction with UI Design: \textbf{4.0/5}.
+            \item Trust in Refactoring Suggestions: \textbf{4.5/5}.
+        \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{../Images/usability-satisfaction-graph.png}
+  \label{img:usability-satisfaction}
+  \caption{User Satisfaction Survey Data}
+\end{figure}
+
+\subsection*{Qualitative Results}
+Participants found the code smell detection intuitive and accurate, and they appreciated the preview feature and Accept/Reject buttons. However, they struggled with sidebar visibility, refactoring speed, and UI clarity. Hover descriptions were overwhelming, and some elements (e.g., ``(6/3)'') were unclear.
+
+\section*{Discussion}
+The usability test revealed that the extension performs well in detecting code smells and providing refactoring suggestions. Participants appreciated the energy savings feedback but requested clearer explanations of how refactoring improves energy efficiency. The sidebar and refactoring process were identified as major pain points, requiring immediate attention.\\
+
+The extension met its core functionality objectives but fell short in UI clarity and performance reliability. Participants expressed interest in using the extension in the future, provided the identified issues are addressed. The test highlighted the need for better onboarding, clearer documentation, and performance optimizations to enhance user satisfaction and adoption.
+
+\section*{Feedback and Implementation Plan}
+The following table summarizes participant feedback and whether the suggested changes will be implemented:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\raggedright\arraybackslash}p{6cm}p{3.2cm}>{\raggedright\arraybackslash}p{5cm}}
+\toprule \textbf{Feedback} & \textbf{Implementation Decision} & \textbf{Reason} \\
+\midrule
+Relocate the sidebar or change its colour for better visibility. & Partial & The relocation of the sidebar is not something that is in scope during the development period. \\
+Make Accept/Reject buttons more prominent and visually distinct. & Yes & High user frustration. \\
+Allow users to customize colours for different types of smells. & Yes & Enhances user experience. \\
+Optimize the refactoring process to reduce wait times. & No & This is a time intensive ask that is not in scope. \\
+Add progress bars or loading messages to manage user expectations. & Yes & Additional messages will be added to the UI.\\
+Provide step-by-step instructions and a tutorial for new users. & Yes & This was already planned and will be implemented for revision 1. \\
+Simplify hover descriptions and provide examples or links to documentation. & Yes & The hover content will be improved for revision 1. \\
+Explain how refactoring saves energy, possibly with visualizations. & Partial & No visualizations will be added, but better explanation of smells will be provided. \\
+\bottomrule
+\end{tabular}
+\caption{Participant Feedback and Implementation Decisions}
+\end{table}
+
+
 \subsection{Performance}
 
 This testing benchmarks the performance of ecooptimizer across 
@@ -245,8 +316,6 @@ Once releases are made, each release will be properly tagged and versioned to en
 this approach guarantees that users will be able to revert to a previous stable version if needed, maintaining system integrity and minimizing disruptions.
 \end{enumerate}
 
-
-\subsection{etc.}
 
 \subsection{Look and Feel}
 \begin{enumerate}
@@ -1381,6 +1450,8 @@ the feedback from the Rev 0 demo to the supervisor (or to potential users)
 should be highlighted.}
 
 \section{Automated Testing}
+
+All test for the Python backend as well as the individual modules on the TypeScript side (for the VSCode extension) are automated. The Python tests are run using Pytest by simply typing \texttt{pytest} in the command line in the root project directory. All the Typescript tests can be run similarly, though they run with Jest and through the command \texttt{npm run test}. The results for both are printed to the console.
 		
 \section{Trace to Requirements}
 		
@@ -1388,8 +1459,222 @@ should be highlighted.}
 
 \section{Code Coverage Metrics}
 
+The following analyzes the code coverage metrics for the Python backend and frontend (TypeScript) of the VSCode extension. The analysis is based on the coverage data provided in \ref{img:python-cov} (Python backend) and \ref{img:vscode-cov} (frontend). Code coverage is a measure of how well the codebase is tested, and it helps identify areas that may require additional testing.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{../Images/python-coverage.png}
+  \label{img:python-cov}
+  \caption{Coverage Report of the Python Backend Library}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{../Images/vscode-coverage.png}
+  \label{img:vscode-cov}
+  \caption{Coverage Report of the VSCode Extension}
+\end{figure}
+
+\subsection{VSCode Extension}
+The frontend codebase has an overall coverage of 45.43\% for statements, 36.48\% for branches, 42.62\% for functions, and 45.53\% for lines (\ref{img:vscode-cov}). These metrics fall below the global coverage thresholds of 80\% for the following reasons. The file \texttt{extension.ts}, which contains the core logic for the VSCode extension, has 0\% coverage as it is mainly made up of initialization commands with no real logic that can be tested. The file \texttt{refactorView.ts}, responsible for the refactoring view, also has 0\% coverage. This module is a UI component and will be tested for revision 1. Since \texttt{handleEditorChange.ts} is closely related to the UI component, its testing has also been put off.\\
+
+The file \texttt{refactorSmell.ts} has moderate coverage (55.37\% statements, 45.23\% branches), with significant gaps in testing around lines 143–269 and 328–337 (Image 2). This is due to a feature that is not fully implemented and therefore not tested. Finally, \texttt{configManager.ts} has not been tested as yet due to evolving configuration options, but will be tested for revision 1.
+
+\subsection{Python Backend}
+The backend codebase has an overall coverage of 91\% (Image 1) and has been thoroughly tested as it contains the key features of project and the bulk of the logic. The exception is \texttt{show\_logs.py}, which handles the websocket endpoint for logging, due to the complex nature of this module testing has been omitted. Since its function is mainly to broadcast logs it is also relatively simple to verify its functionality manually\\
+
+
 \bibliographystyle{plainnat}
 \bibliography{../../refs/References}
+
+\newpage
+\section*{Appendix A -- Usability Testing Data} \label{appendix:usability}
+
+\subsection*{Protocol}
+
+\section*{Purpose}
+The purpose of this usability test is to evaluate the ease of use, efficiency, and overall user experience of the VSCode extension for refactoring Python code to improve energy efficiency. The test will identify usability issues that may hinder adoption by software developers.
+
+\section*{Objective}
+Evaluate the usability of the extension’s \textbf{smell detection}, \textbf{refactoring process}, \textbf{customization settings}, and \textbf{refactoring view}.
+
+\begin{itemize}
+    \item Assess how easily developers can navigate the extension interface.
+    \item Measure the efficiency of the workflow when applying or rejecting refactorings.
+    \item Identify areas of confusion or frustration.
+\end{itemize}
+
+\section*{Methodology}
+\subsection*{Test Type}
+Moderated usability testing.
+
+\subsection*{Participants}
+\begin{itemize}
+    \item \textbf{Target Users:} Python developers who use VSCode.
+    \item \textbf{Number of Participants:} 5–7.
+    \item \textbf{Recruitment Criteria:}
+        \begin{itemize}
+            \item Experience with Python development.
+            \item Familiarity with VSCode.
+            \item No prior experience with this extension.
+        \end{itemize}
+\end{itemize}
+
+\subsection*{Testing Environment}
+\begin{itemize}
+    \item \textbf{Hardware:} Provided computer.
+    \item \textbf{Software:}
+        \begin{itemize}
+            \item VSCode (latest stable release).
+            \item The VSCode extension installed.
+            \item Screen recording software (optional, for post-test analysis).
+            \item A sample project with \textbf{predefined code snippets} containing various \textbf{code smells}.
+        \end{itemize}
+    \item \textbf{Network Requirements:} Stable internet connection for remote testing.
+\end{itemize}
+
+\subsection*{Test Moderator Role}
+\begin{itemize}
+    \item Introduce the test and explain objectives.
+    \item Observe user interactions without providing assistance unless necessary.
+    \item Take notes on usability issues, pain points, and confusion.
+    \item Ask follow-up questions after each task.
+    \item Encourage participants to \textbf{think aloud}.
+\end{itemize}
+
+\section*{Data Collection}
+\subsection*{Metrics}
+\begin{itemize}
+    \item \textbf{Task Success Rate:} Percentage of users who complete tasks without assistance.
+    \item \textbf{Error Rate:} Number of errors or missteps per task.
+    \item \textbf{User Satisfaction:} Post-test rating on a scale of 1–5.
+\end{itemize}
+
+\subsection*{Qualitative Data}
+\begin{itemize}
+    \item Observations of confusion, hesitation, or frustration.
+    \item Participant comments and feedback.
+    \item Follow-up questions about expectations vs. actual experience.
+    \item Pre-test survey.
+    \item Post-test survey.
+\end{itemize}
+
+\section*{Analysis and Reporting}
+\begin{itemize}
+    \item Identify common pain points and recurring issues.
+    \item Categorize usability issues by severity:
+        \begin{itemize}
+            \item \textbf{Critical:} Blocks users from completing tasks.
+            \item \textbf{Major:} Causes significant frustration but has workarounds.
+            \item \textbf{Minor:} Slight inconvenience, but doesn’t impact core functionality.
+        \end{itemize}
+    \item Provide recommendations for UI/UX improvements.
+    \item Summarize key findings and next steps.
+\end{itemize}
+
+\section*{Next Steps}
+\begin{itemize}
+    \item Fix major usability issues before release.
+    \item Conduct follow-up usability tests if significant changes are made.
+    \item Gather further feedback from real users post-release.
+\end{itemize}
+
+\subsection*{Task List}
+
+\section*{Mock Installation Documentation}
+The extension can be installed to detect energy inefficiencies (smells) in your code and refactor them.
+
+\subsection*{Commands}
+Open the VSCode command palette (\texttt{CTRL+SHIFT+P}):
+
+\begin{itemize}
+    \item \textbf{Detect Smells:} \texttt{Eco: Detect Smells}
+    \item \textbf{Refactor Smells:} \texttt{Eco: Refactor Smell} or \texttt{CTRL+SHIFT+R} (or to be discovered).
+\end{itemize}
+
+\section*{Tasks}
+Report your observations \textbf{aloud}!
+
+\subsection*{Task 1: Smell Detection}
+\begin{enumerate}
+    \item Open the \texttt{sample.py} file.
+    \item Detect the smells in the file.
+    \item What do you see?
+\end{enumerate}
+
+\subsection*{Task 2: Line Selection}
+\begin{enumerate}
+    \item In the same \texttt{sample.py} file, select one of the highlighted lines.
+    \item What do you see?
+    \item Select another line.
+\end{enumerate}
+
+\subsection*{Task 3: Hover}
+\begin{enumerate}
+    \item In the same file, hover over a highlighted line.
+    \item What do you see?
+\end{enumerate}
+
+\subsection*{Task 4: Initiate Refactoring (Single)}
+\begin{enumerate}
+    \item In the same file, refactor any smell of your choice.
+    \item What do you observe immediately after?
+    \item Does a sidebar pop up after some time?
+\end{enumerate}
+
+\subsection*{Task 5: Refactor Smell (Sidebar)}
+\begin{enumerate}
+    \item What information do you see in the sidebar?
+    \item Do you understand the information communicated?
+    \item Do you see what was changed in the file?
+    \item Try rejecting a smell. Did the file change?
+    \item Repeat Tasks 1, 4, and 5, but reject a smell. Did the file stay the same?
+\end{enumerate}
+
+\subsection*{Task 6: Refactor Multi-File Smell}
+\begin{enumerate}
+    \item Open the \texttt{main.py} file.
+    \item Detect the smells in the file.
+    \item Refactor any smell of your choice.
+    \item Do you see anything different in the sidebar?
+    \item Try clicking on the new addition to the sidebar. Notice anything?
+    \item Try accepting the refactoring. Did both files change?
+\end{enumerate}
+
+\subsection*{Task 7: Change Smell Settings}
+\begin{enumerate}
+    \item Open the \texttt{sample.py} file.
+    \item Detect the smells in the file.
+    \item Take note of the smells detected.
+    \item Open the settings page (\texttt{CTRL+,}).
+    \item Navigate to the \textbf{Extensions} drop-down and select \textbf{Eco Optimizer}.
+    \item Unselect one of the smells you noticed earlier.
+    \item Navigate back to the \texttt{sample.py} file.
+    \item Detect the smells again. Is the smell you unselected still there?
+\end{enumerate}
+
+\subsection*{Participant Data}
+The following links point to the data collected from each participant:\\
+
+{\noindent
+\href{run:./../Extras/UsabilityTesting/test_data/participant1-data.csv}{Participant 1} \\[2mm]
+\href{run:./../Extras/UsabilityTesting/test_data/participant2-data.csv}{Participant 2} \\[2mm]
+\href{run:./../Extras/UsabilityTesting/test_data/participant3-data.csv}{Participant 3} \\[2mm]
+\href{run:./../Extras/UsabilityTesting/test_data/participant4-data.csv}{Participant 4} \\[2mm]
+\href{run:./../Extras/UsabilityTesting/test_data/participant5-data.csv}{Participant 5}
+}
+
+\subsection*{Pre-Test Survey Data}
+The following link points to a CSV file containing the pre-survey data:\\
+
+\noindent
+\href{run:./../Extras/UsabilityTesting/surveys/pre-test-survey-data.csv}{Click here to access the survey results CSV file}.
+
+\subsection*{Post-Test Survey Data}
+The following link points to a CSV file containing the post-survey data:\\
+
+\noindent
+\href{run:./../Extras/UsabilityTesting/surveys/post-test-survey-data.csv}{Click here to access the survey results CSV file}.
 
 \newpage{}
 \section*{Appendix --- Reflection}
