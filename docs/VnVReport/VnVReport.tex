@@ -48,7 +48,6 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 March 8th, 2025 & 0.0 & Started VnV Report\\
-Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
@@ -62,6 +61,8 @@ Date 2 & 1.1 & Notes\\
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  TC & Test Case\\
+  VSCode & Visual Studio Code\\
   \bottomrule
 \end{tabular}\\
 
@@ -79,7 +80,7 @@ Date 2 & 1.1 & Notes\\
 
 \pagenumbering{arabic}
 
-This document ...
+This Verification and Validation (V\&V) report outlines the testing process used to ensure the accuracy, reliability, and performance of our system. It details our verification approach, test cases, and validation results, demonstrating that the system meets its requirements and functions as intended. Key findings and resolutions are also discussed.
 
 \section{Functional Requirements Evaluation}
 \subsection{Code Input Acceptance Tests}
@@ -474,9 +475,12 @@ We conducted a combination of code walkthroughs and static analysis of logging m
 
 \section{Comparison to Existing Implementation}	
 
-This section will not be appropriate for every project.
+Not applicable.
 
 \section{Unit Testing}
+
+The following section outlines the unit tests created for the python backend modules and the vscode extension.
+
 \newcounter{testcase}
 \newcommand{\testcount}{\stepcounter{testcase}\thetestcase}
 \renewcommand{\arraystretch}{1.2} % Adjust row height for better readability
