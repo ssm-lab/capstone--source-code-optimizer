@@ -11,7 +11,6 @@
     urlcolor=blue
 }
 \usepackage{longtable}
-\usepackage[round]{natbib}
 \usepackage{colortbl}
 \usepackage{graphicx} 
 \usepackage{placeins}
@@ -42,7 +41,7 @@
 
 \pagenumbering{roman}
 
-\section{Revision History}
+\section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
@@ -53,7 +52,7 @@ March 8th, 2025 & 0.0 & Started VnV Report\\
 
 ~\newpage
 
-\section{Symbols, Abbreviations and Acronyms}
+\section*{Symbols, Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
@@ -1621,9 +1620,6 @@ The file \texttt{refactorSmell.ts} has moderate coverage (55.37\% statements, 45
 \subsection{Python Backend}
 The backend codebase has an overall coverage of 91\% (Figure \ref{img:python-cov}) and has been thoroughly tested as it contains the key features of project and the bulk of the logic. The exception is \texttt{show\_logs.py}, which handles the websocket endpoint for logging, due to the complex nature of this module testing has been omitted. Since its function is mainly to broadcast logs it is also relatively simple to verify its functionality manually\\
 
-
-\bibliographystyle{plainnat}
-\bibliography{../../refs/References}
 
 \newpage
 \section*{Appendix A -- Usability Testing Data} \label{appendix:usability}
