@@ -2576,6 +2576,43 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/wipeWorkCache.test.ts}{here}.
 
+\subsubsection{Backend}
+
+\textbf{Goal:} The backend handles interactions with the backend server for tasks such as checking server status, initializing logs, fetching detected smells, and refactoring those smells in the code.\\
+
+\noindentThe tests ensure that the system correctly interacts with the backend to check the server's status, initialize logging, fetch code smells, and perform refactoring tasks. These tests confirm that the server status is accurately updated based on successful or failed responses, that log initialization behaves as expected under different conditions, and that the system correctly handles and processes detected smells for refactoring.\\
+
+
+\noindent \textbf{Target requirement(s):} FR6, PR-SCR1, PR-RFT1, PR-RFT2~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Handle Server Status Check with Successful Response}
+    \begin{itemize}
+        \item When the server responds successfully, the status is set to \texttt{ServerStatusType.UP}.
+        \item The correct update of server status to indicate that the server is operational.
+    \end{itemize}
+
+    \item \textbf{Handle Server Status Check with Error or Failure}
+    \begin{itemize}
+        \item When the server responds with an error or fails to respond, the status is set to \texttt{ServerStatusType.DOWN}.
+        \item Correctly handles a failed server response by ensuring the status reflects the server's downtime.
+    \end{itemize}
+
+    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Success)}
+    \begin{itemize}
+        \item When a valid directory path is provided and the backend responds successfully, the function returns \texttt{true}, indicating successful log initialization.
+        \item System can successfully initialize logs with the backend and sync them.
+    \end{itemize}
+
+    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Failure)}
+    \begin{itemize}
+        \item When the backend fails to initialize logs, the function returns false.
+        \item Properly handles to provide feedback if the log initialization process fails.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/api/backend.test.ts}{here}.
+
 \subsection{API Routes}
 
 \subsubsection{Smell Detection Endpoint}
