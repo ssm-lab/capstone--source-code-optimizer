@@ -893,34 +893,33 @@ The following subsection tests cover all Compliance requirements listed in the S
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-CPL-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Compliance with PIPEDA and CASL} \\[2mm]
-    \textbf{Objective:} Ensure the tool’s data collection, usage, storage, and communication practices are fully compliant with the Personal Information Protection and Electronic Documents Act (PIPEDA) and Canada’s Anti-Spam Legislation (CASL), to avoid legal penalties and enhance user trust. \\[2mm]
-    \textbf{Scope:} This test applies to all processes related to data handling, storage, and user communication to verify compliance with PIPEDA and CASL. \\[2mm]
-    \textbf{Methodology:} Documentation walkthrough and static analysis \\[2mm]
+    \textbf{Objective:} Ensure the tool’s data handling and communication practices align with the Personal Information Protection and Electronic Documents Act (PIPEDA) and Canada’s Anti-Spam Legislation (CASL). The focus is on ensuring compliance through best practices rather than direct data storage verification as no data is locally stored. \\[2mm]
+    \textbf{Scope:} This test applies to all processes related to data handling and user communication to verify compliance with PIPEDA and CASL. \\[2mm]
+    \textbf{Methodology:} Comparison of code data handling processes with compliance best practices \\[2mm]
     \textbf{Process:}
     \begin{itemize}
-      \item Review the tool’s data handling and storage protocols to confirm compliance with PIPEDA, particularly focusing on secure storage, data usage transparency, and privacy rights.
-      \item Verify the presence of a user consent mechanism that informs users of data collection and provides options for managing their data.
-      \item Inspect communication practices to ensure compliance with CASL, confirming that the tool provides users with notification and opt-in options for all communications.
-      \item Document any gaps in compliance and consult with the development team for required adjustments.
+      \item Review the tool’s data handling procedures to confirm all processing remains local and that no user data is stored.
+      \item Verify that no personal data collection occurs, ensuring no explicit user consent is required beyond general software disclaimers.
+      \item Inspect communication practices to ensure compliance with CASL, confirming that the tool does not send unsolicited communications.
     \end{itemize}
-    \textbf{Roles and Responsibilities:} The development team will conduct the compliance review and implement any necessary updates. \\[2mm]
-    \textbf{Tools and Resources:} Access to documentation on PIPEDA and CASL requirements, tool’s data handling and communication protocols, test user accounts for opt-in verification \\[2mm]
-    \textbf{Acceptance Criteria:} The tool complies with all PIPEDA and CASL requirements, with secure data handling, user consent options, and compliant communication practices.
+    \textbf{Roles and Responsibilities:} The development team will review compliance best practices and update documentation as needed. \\[2mm]
+    \textbf{Tools and Resources:} Access to PIPEDA and CASL guidelines \\[2mm]
+    \textbf{Acceptance Criteria:} Compliance is confirmed if no unsolicited communications occur and all best practices are followed. The tool must ensure that all data handling remains local and that no user data is stored or transmitted externally.
 
-\item \textbf{Compliance with ISO 9001 and SSADM Standards} \\[2mm]
-    \textbf{Objective:} Ensure the tool’s quality management and software development processes align with ISO 9001 for quality management and SSADM (Structured Systems Analysis and Design Method) standards for software development, building stakeholder trust and market acceptance. \\[2mm]
-    \textbf{Scope:} This test covers the tool’s adherence to ISO 9001 quality management practices and SSADM methodologies for software development processes. \\[2mm]
-    \textbf{Methodology:} Documentation walkthrough and code walkthrough \\[2mm]
+  \item \textbf{Compliance with ISO 9001 and SSADM Standards} \\[2mm]
+    \textbf{Objective:} Assess whether the tool’s quality management and software development processes follow structured methodologies in line with ISO 9001 quality management principles and SSADM (Structured Systems Analysis and Design Method) best practices. \\[2mm]
+    \textbf{Scope:} This test evaluates development workflows, documentation practices, and adherence to structured methodologies. \\[2mm]
+    \textbf{Methodology:} Documentation review and evaluation of structured development practices \\[2mm]
     \textbf{Process:}
     \begin{itemize}
-      \item Conduct a review of the tool’s quality management procedures to verify alignment with ISO 9001 standards, including documentation, testing, and feedback mechanisms.
-      \item Examine software development workflows to confirm adherence to SSADM standards, focusing on design, analysis, and structured development practices.
-      \item Identify any deviations from ISO 9001 and SSADM requirements, document these findings, and discuss necessary adjustments with the development team.
-      \item Validate improvements in quality management and software development after implementing recommendations.
+      \item Review development documentation to ensure structured workflow practices are followed.
+      \item Evaluate version control and change tracking methods to confirm basic quality assurance measures exist.
+      \item Identify any gaps in structured development adherence and suggest improvements.
+      \item Validate improvements through informal documentation and process reviews.
     \end{itemize}
-    \textbf{Roles and Responsibilities:} The development team will conduct the standards compliance review, and the project supervisor will oversee the review process. \\[2mm]
-    \textbf{Tools and Resources:} Access to ISO 9001 and SSADM standards documentation, project quality management records, and development workflows \\[2mm]
-    \textbf{Acceptance Criteria:} The tool’s quality management and software development processes fully adhere to ISO 9001 and SSADM standards, supporting a high-quality, structured approach to development.
+    \textbf{Roles and Responsibilities:} The development team will conduct an internal workflow assessment, and updates will be made to improve documentation and structured processes. \\[2mm]
+    \textbf{Tools and Resources:} Development documentation, version control records, best practice comparisons \\[2mm]
+    \textbf{Acceptance Criteria:} The tool's development must follow a structured approach with version control, clear documentation, and logical workflow practices. Compliance is met if basic structured development principles are followed, even without formal certification.
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements} \label{trace-sys}
