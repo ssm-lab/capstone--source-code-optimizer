@@ -1535,6 +1535,34 @@ the supervisor (when one exists) shaped the final product.  In particular
 the feedback from the Rev 0 demo to the supervisor (or to potential users) 
 should be highlighted.}
 
+During the testing phase, several changes were made to the tool based on feedback from user testing, supervisor reviews, and edge cases encountered during unit and integration testing. These changes were necessary to improve the tool’s usability, functionality, and robustness.
+
+\subsection{Usability and User Input Adjustments}
+One of the key findings from testing was the balance between \textbf{automating refactorings} and \textbf{allowing user control} over changes. Initially, the tool required users to manually approve every refactoring, which slowed down the workflow. However, after usability testing, it became evident that an \textbf{option to refactor all occurrences of the same smell type} would significantly improve efficiency. This led to the introduction of a \textbf{"Refactor Smell of Same Type"} feature in the VS Code extension, allowing users to apply the same refactoring across multiple instances of a detected smell simultaneously. Additionally, we refined the \textbf{Accept/Reject UI elements} to make them more intuitive and streamlined the workflow for batch refactoring actions.
+
+\subsection{Detection and Refactoring Improvements}
+Heavy modifications were made to the \textbf{detection and refactoring modules}, particularly in handling \textbf{multi-file projects}. Initially, the detectors and refactorers assumed a \textbf{single-file scope}, leading to missed optimizations when function calls or variable dependencies spanned across multiple files. After extensive testing, the detection system was updated to track \textbf{cross-file dependencies}, ensuring that refactoring suggestions accounted for the broader codebase.
+
+\subsection{VS Code Extension Enhancements}
+Through usability testing, it became apparent that \textbf{integrating the tool as a VS Code extension} was a significant improvement over a standalone CLI tool. This led to the following enhancements:
+\begin{itemize}
+    \item \textbf{Enhanced Hover Tooltips} – Descriptions for detected code smells were rewritten to be clearer and more informative.
+    \item \textbf{Smell Filtering Options} – Users can now enable or disable specific code smell detections directly from the VS Code settings menu.
+\end{itemize}
+
+\subsection{Future Revisions and Remaining Work}
+Certain features, including \textbf{report generation and full documentation availability}, have yet to be fully implemented. These components will be finalized in \textbf{Revision 1}, where testing will ensure that:
+\begin{itemize}
+    \item The \textbf{reporting system correctly logs detected smells, applied refactorings, and energy savings}.
+    \item The \textbf{documentation includes detailed installation, usage, and troubleshooting guides}.
+\end{itemize}
+
+Additionally, once all features are complete, the \textbf{VS Code extension will be packaged and tested as a full release} to ensure seamless installation via the VS Code Marketplace.
+
+\bigskip
+Overall, the testing phase played a crucial role in refining the tool’s functionality, optimizing performance, and improving usability. The feedback gathered led to meaningful changes that enhance both the developer experience and the effectiveness of automated refactoring.
+
+
 \section{Automated Testing}
 
 All test for the Python backend as well as the individual modules on the TypeScript side (for the VSCode extension) are automated. The Python tests are run using Pytest by simply typing \texttt{pytest} in the command line in the root project directory. All the Typescript tests can be run similarly, though they run with Jest and through the command \texttt{npm run test}. The results for both are printed to the console.
