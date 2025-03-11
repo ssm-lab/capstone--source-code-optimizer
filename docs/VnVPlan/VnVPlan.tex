@@ -1409,7 +1409,45 @@ maintains robustness and reliability in identifying problematic lambda expressio
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_lambda_element.py}{here}
 
+\subsection{CodeCarbon Measurement Module}
+\textbf{Goal:} The CodeCarbon Measurement module is designed to measure the carbon emissions associated with running a specific piece of code. It integrates with the CodeCarbon library, which calculates the energy consumption based on the execution of a Python script.\\ \\
+\noindent The tests validate the functionality of the system in measuring and handling energy consumption data for code execution. They ensure that the system correctly tracks carbon emissions using the CodeCarbon library, handles both successful and failed subprocess executions, processes emissions data from CSV files, and appropriately logs all relevant events.\\
 
+\noindent \textbf{Target requirement(s):} FR5, FR6,PR-RFT1, PR-SCR1~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Handle CodeCarbon Measurements with a Valid File Path}
+    \begin{itemize}
+        \item When a valid file path is provided, the system correctly invokes the subprocess for CodeCarbon.
+        \item The start and stop API endpoints of the EmissionsTracker are called, and a success message is logged.
+    \end{itemize}
+
+    \item \textbf{Handle CodeCarbon Measurements with a Valid File Path that Causes a Subprocess Failure}
+    \begin{itemize}
+        \item The subprocess is invoked even if an error occurs during the file execution.
+        \item The system logs an error message and the emissions data is set to None when execution fails.
+    \end{itemize}
+
+    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV File Path and Can Be Read}
+    \begin{itemize}
+        \item The emissions data can be read successfully from a valid CSV file produced by CodeCarbon.
+        \item The function returns the last row of emissions data.
+    \end{itemize}
+
+    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV File Path but the File Cannot Be Read}
+    \begin{itemize}
+        \item An error message is logged when the CSV file cannot be read.
+        \item The function returns \texttt{None} if reading the CSV file fails.
+    \end{itemize}
+
+    \item \textbf{Given CSV Path for Results Produced by CodeCarbon Does Not Have a File}
+    \begin{itemize}
+        \item When the given CSV path does not point to an existing file, an error message is logged.
+        \item The function returns \texttt{None} when the file is missing.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/src/ecooptimizer/measurements/codecarbon_energy_meter.py}{here}.
 
 \subsection{Refactoring Module}
 
@@ -1687,6 +1725,55 @@ maintains robustness and reliability in identifying problematic lambda expressio
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_repeated_calls.py}{here}.
 
+\subsubsection{Long Parameter List}
+
+\textbf{Goal:} The Long Parameter List refactoring module replaces function definitions and calls involving a large number of parameters with grouped parameter instances. This enhances the efficiency of the code as related parameters are grouped together into instantiated parameters. The validity of the functionality can be ensured through unit tests.\\
+
+\noindent The tests ensure that all cases for function declarations, including constructors, instance methods, static methods and standalone functions are updated with the group parameter instances. Similarly, corresponding calls to these functions as well as references to original parameters are preserved. The refactored result also preserves use of default values in function signature and positional arguments in function calls.x\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Handle Constructor with More Parameters than Configured Limit, All Used}
+    \begin{itemize}
+        \item The refactor correctly handles constructors with 8 parameters, including a mix of positional and keyword arguments.
+        \item Function signature and instantiation are updated to include all 8 parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Constructor More Parameters than Configured Limit, some of which are Unused}
+    \begin{itemize}
+        \item Constructor correctly handles unused parameters by excluding them from the updated signature and instantiation.
+        \item The refactor updates the constructor and function body to properly reflect the used parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Instance Method More Parameters than Configured Limit (2 Defaults)}
+    \begin{itemize}
+        \item The refactor correctly handles instance methods with 8 parameters, including default values for some.
+        \item The method signature and instantiation are updated to preserve the default values while reflecting the used parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Instance Method Refactor with More Parameters than Configured Limit, some of which are Unused}
+    \begin{itemize}
+        \item Unused parameters in the instance method are correctly excluded and grouped into new data and config parameter classes.
+        \item Function maintains the correct structure and that the method now accepts the new class objects instead of individual parameters.
+    \end{itemize}
+
+    \item \textbf{Handle Static Method Refactor with More Parameters than Configured Limit, some of which are Unused and some have Default Values}
+    \begin{itemize}
+        \item Unused parameters are correctly excluded from the static method signature and instantiation.
+        \item Parameters with default values are properly maintained in the updated method signature and body.
+    \end{itemize}
+
+    \item \textbf{Handle Standalone Function Refactor with More Parameters than Configured Limit, some of which are Unused}
+    \begin{itemize}
+        \item Unused parameter is excluded from the function signature after the refactor.
+        \item Refactored function uses grouped parameter classes to handle the remaining parameters efficiently.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_parameter_list_refactor.py
+}{here}.
+
 \subsubsection{Long Message Chain}
 
 \textbf{Goal:} The following unit tests verify the correctness of refactoring long element chains into more readable and efficient code while maintaining valid Python syntax.\\
@@ -1818,6 +1905,48 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
 \end{itemize}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
+
+\subsubsection{Refactor Smells Command}
+
+\textbf{Goal:} The refactorSmell command is responsible for refactoring code areas identified as "smells" in a project. It works by refactoring areas in code that could benefit from refactoring (smells) that are chosen by the user. The process involves multiple steps, including saving the file, calling a backend refactoring service to refactor the identified smell, updating any relevant data, and initiating a refactor preview to the user.\\
+
+\noindent The tests assess the correct fetching and caching of smells, proper interaction with the highlighting module, handling of missing files or inactive editors, and the system's ability to recover from server downtime. Edge cases such as rapidly changing file hashes and updates to enabled smells are also considered.\\
+
+\noindent\textbf{Target requirement(s):} FR5, FR6, FR10, PR-RFT1, PR-RFT2 ~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{No Active Editor Found}
+    \begin{itemize}
+        \item The command correctly handles the case where there is no active editor open.
+        \item An appropriate error message is shown when no editor or file path is available.
+    \end{itemize}
+
+    \item \textbf{Attempting to Refactor When No Smells Are Detected}
+    \begin{itemize}
+        \item The command does not proceed when no smells are detected in the file.
+        \item An error message is shown indicating that no smells are detected for refactoring.
+    \end{itemize}
+
+    \item \textbf{Attempting to Refactor When Selected Line Doesn’t Match Any Smell}
+    \begin{itemize}
+        \item The command doesn't proceed if the selected line doesn't match any detected smell.
+        \item An error message is shown to inform the user that no matching smell was found for refactoring.
+    \end{itemize}
+
+    \item \textbf{Refactoring a Smell When Found on the Selected Line}
+    \begin{itemize}
+        \item The command successfully saves the current file and triggers the refactoring of a detected smell.
+        \item The \texttt{refactorSmell} method is called with the correct parameters, and the refactored preview is shown to the user.
+    \end{itemize}
+
+    \item \textbf{Handling API Failure During Refactoring}
+    \begin{itemize}
+        \item The command gracefully handles API failures during the refactoring process.
+        \item An error message is displayed to the user if refactoring fails, with the appropriate details logged.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/refactorSmell.test.ts}{here}.
 
 \subsubsection{Document Hashing}
 
@@ -2033,6 +2162,91 @@ refactoring. By covering a wide range of cases, the suite ensures the refactorin
 \end{itemize}
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/handleSmellSettings.test.ts}{here}.
+
+\subsubsection{Wipe Workspace Cache}
+
+\textbf{Goal:} The "Wipe Workspace Cache" command is responsible for clearing specific caches related to the workspace in a development environment, primarily to reset the state of stored data such as "smells" and file changes. It can be triggered for different reasons, which determine which caches are cleared and how the command behaves. It also updates file hashes for visible editors when appropriate. Upon successful execution, a corresponding success message is shown to the user. In case of an error, an error message is displayed to the user.\\
+
+\noindent The tests ensure that appropriate caches are being cleared as and when instructed.\\
+
+\noindent \textbf{Target requirement(s):} FR3, FR5, FR8~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Wipe Cache with No Reason Provided}
+    \begin{itemize}
+        \item Only the "smells" cache is cleared when no reason is provided.
+        \item A success message indicating the workspace cache has been successfully wiped is displayed.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache with Reason "manual"}
+    \begin{itemize}
+        \item Both the "smells" and "file changes" caches are cleared when the reason is "manual."
+        \item A success message indicating the workspace cache was manually wiped is shown.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache When No Files Are Open}
+    \begin{itemize}
+        \item The command correctly handles the case when there are no open files.
+        \item A log message is generated indicating that no open files are available to update.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache with Open Files}
+    \begin{itemize}
+        \item When there are open files, a message indicating the number of visible files is logged.
+        \item The hashes for each open file are updated as expected.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache with Reason "settings"}
+    \begin{itemize}
+        \item Only the "smells" cache is cleared when the reason is "settings."
+        \item A success message is shown indicating the cache was wiped due to changes in smell detection settings.
+    \end{itemize}
+
+    \item \textbf{Wipe Cache When an Error Occurs}
+    \begin{itemize}
+        \item An error message is logged when an error occurs during the cache wipe process.
+        \item a user-facing error message is displayed, indicating the failure to wipe the workspace cache.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/wipeWorkCache.test.ts}{here}.
+
+\subsubsection{Backend}
+
+\textbf{Goal:} The backend handles interactions with the backend server for tasks such as checking server status, initializing logs, fetching detected smells, and refactoring those smells in the code.\\
+
+\noindentThe tests ensure that the system correctly interacts with the backend to check the server's status, initialize logging, fetch code smells, and perform refactoring tasks. These tests confirm that the server status is accurately updated based on successful or failed responses, that log initialization behaves as expected under different conditions, and that the system correctly handles and processes detected smells for refactoring.\\
+
+
+\noindent \textbf{Target requirement(s):} FR6, PR-SCR1, PR-RFT1, PR-RFT2~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Handle Server Status Check with Successful Response}
+    \begin{itemize}
+        \item When the server responds successfully, the status is set to \texttt{ServerStatusType.UP}.
+        \item The correct update of server status to indicate that the server is operational.
+    \end{itemize}
+
+    \item \textbf{Handle Server Status Check with Error or Failure}
+    \begin{itemize}
+        \item When the server responds with an error or fails to respond, the status is set to \texttt{ServerStatusType.DOWN}.
+        \item Correctly handles a failed server response by ensuring the status reflects the server's downtime.
+    \end{itemize}
+
+    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Success)}
+    \begin{itemize}
+        \item When a valid directory path is provided and the backend responds successfully, the function returns \texttt{true}, indicating successful log initialization.
+        \item System can successfully initialize logs with the backend and sync them.
+    \end{itemize}
+
+    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Failure)}
+    \begin{itemize}
+        \item When the backend fails to initialize logs, the function returns false.
+        \item Properly handles to provide feedback if the log initialization process fails.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/api/backend.test.ts}{here}.
 
 \subsection{API Routes}
 
