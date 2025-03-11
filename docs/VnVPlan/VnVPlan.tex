@@ -1812,7 +1812,45 @@ maintains robustness and reliability in identifying problematic lambda expressio
 
 \noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_lambda_element.py}{here}
 
+\subsection{CodeCarbon Measurement Module}
+\textbf{Goal:} The CodeCarbon Measurement module is designed to measure the carbon emissions associated with running a specific piece of code. It integrates with the CodeCarbon library, which calculates the energy consumption based on the execution of a Python script.\\ \\
+\noindent The tests validate the functionality of the system in measuring and handling energy consumption data for code execution. They ensure that the system correctly tracks carbon emissions using the CodeCarbon library, handles both successful and failed subprocess executions, processes emissions data from CSV files, and appropriately logs all relevant events.\\
 
+\noindent \textbf{Target requirement(s):} FR5, FR6,PR-RFT1, PR-SCR1~\cite{SRS} \\
+
+\begin{itemize}
+    \item \textbf{Handle CodeCarbon Measurements with a Valid File Path}
+    \begin{itemize}
+        \item When a valid file path is provided, the system correctly invokes the subprocess for CodeCarbon.
+        \item The start and stop API endpoints of the EmissionsTracker are called, and a success message is logged.
+    \end{itemize}
+
+    \item \textbf{Handle CodeCarbon Measurements with a Valid File Path that Causes a Subprocess Failure}
+    \begin{itemize}
+        \item The subprocess is invoked even if an error occurs during the file execution.
+        \item The system logs an error message and the emissions data is set to None when execution fails.
+    \end{itemize}
+
+    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV File Path and Can Be Read}
+    \begin{itemize}
+        \item The emissions data can be read successfully from a valid CSV file produced by CodeCarbon.
+        \item The function returns the last row of emissions data.
+    \end{itemize}
+
+    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV File Path but the File Cannot Be Read}
+    \begin{itemize}
+        \item An error message is logged when the CSV file cannot be read.
+        \item The function returns \texttt{None} if reading the CSV file fails.
+    \end{itemize}
+
+    \item \textbf{Given CSV Path for Results Produced by CodeCarbon Does Not Have a File}
+    \begin{itemize}
+        \item When the given CSV path does not point to an existing file, an error message is logged.
+        \item The function returns \texttt{None} when the file is missing.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/src/ecooptimizer/measurements/codecarbon_energy_meter.py}{here}.
 
 \subsection{Refactoring Module}
 
