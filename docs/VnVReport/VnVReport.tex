@@ -161,6 +161,43 @@ This section will not be appropriate for every project.
   TC\testcount & FR10, OER-IAS1 & Unexpected error occurs during refactoring. & Status code is 400. Error message contains the exception details. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
+\subsection{Analyzer Controller Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Analyzer Controller Module Test Cases}
+  \label{table:analyzer_controller_tests}
+  \endlastfoot
+
+  TC\testcount & FR2, FR5, PR-PAR3 & Test detection of repeated function calls in AST-based analysis. & One repeated function call should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, FR5, PR-PAR3 & Test detection of repeated method calls on the same object instance. & One repeated method call should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test that no code smells are detected in a clean file. & The system should return an empty list of smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test filtering of smells by analysis method. & The function should return only smells matching the specified method (AST, Pylint, Astroid). & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test generating custom analysis options for AST-based analysis. & The generated options should include callable detection functions. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, FR5, PR-PAR3 & Test correct logging of detected code smells. & Detected smells should be logged with correct details. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, FR5 & Test handling of an empty registry when filtering smells. & The function should return an empty dictionary. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2, PR-PAR2 & Test that smells remain unchanged if no modifications occur. & The function should not modify existing smells if no changes are detected. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
+
 \subsection{Smell Analyzers}
 
 \subsubsection{String Concatenation in Loop}
@@ -734,6 +771,42 @@ This section will not be appropriate for every project.
   TC\testcount & LFR-AP2 & Generate valid hover content. & Generates hover content with correct smell information. & Correct and valid hover content generated for given smell. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & LFR-AP2 & Register refactor commands. & Both commands registered correctly on initialization & Refactor commands registered correctly. & \cellcolor{green} Pass \\
 \end{longtable}
+
+\subsubsection{Handle Smell Settings Module}
+
+\begin{longtable}{c 
+  >{\raggedright\arraybackslash}p{1.5cm} 
+  >{\raggedright\arraybackslash}p{4.5cm} 
+  >{\raggedright\arraybackslash}p{4cm} 
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\ 
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} & \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\ 
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{VS Code Settings Management Module Test Cases}
+  \label{table:vs_code_settings_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells from settings. & Function should return the current enabled smells. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells when no settings exist. & Function should return an empty object. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test enabling a smell and verifying notification. & Notification should be displayed and cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test disabling a smell and verifying notification. & Notification should be displayed and cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test that cache is not wiped if no changes occur. & No notification or cache wipe should happen. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1 & Test formatting of kebab-case smell names. & Smell names should be correctly converted to readable format. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, UHR-PSI1 & Test formatting with an empty string input. & Function should return an empty string without errors. & All assertions pass. & \cellcolor{green} Pass \\ 
+\end{longtable}
+
 
 
 \section{Changes Due to Testing}
