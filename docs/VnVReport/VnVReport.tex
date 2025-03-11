@@ -506,15 +506,15 @@ This section will not be appropriate for every project.
   \label{table:measurement_tests}
   \endlastfoot
 
-  TC\testcount & PR-RFT1, FR6 & Trigger CodeCarbon measurements with a valid file path. & CodeCarbon subprocess for the file should be invoked at least once. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. Success message ``CodeCarbon measurement completed successfully." should be logged. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1, FR6 & Trigger CodeCarbon measurements with a valid file path. & CodeCarbon subprocess for the file should be invoked at least once. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. Success message ``CodeCarbon measurement completed successfully.'' should be logged. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & PR-RFT1 & Trigger CodeCarbon function with a valid file path that causes a subprocess failure. & CodeCarbon subprocess run should still be invoked. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. An error message ``Error executing file" should be logged. Returned emissions data should be \texttt{None} since the execution failed.& All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1 & Trigger CodeCarbon function with a valid file path that causes a subprocess failure. & CodeCarbon subprocess run should still be invoked. \texttt{EmissionsTracker. start} and \texttt{stop} API endpoints should be called. An error message ``Error executing file'' should be logged. Returned emissions data should be \texttt{None} since the execution failed.& All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR5, PR-SCR1 & Results produced by CodeCarbon run are at a valid CSV file path and can be read. & Emissions data should be read successfully from the CSV file. The function should return the last row of emissions data. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & PR-RFT1, FR6 & Results produced by CodeCarbon run are at a valid CSV file path but the file cannot be read. & An error message ``Error reading file" should be logged. The function should return \texttt{None} because the file reading failed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1, FR6 & Results produced by CodeCarbon run are at a valid CSV file path but the file cannot be read. & An error message ``Error reading file'' should be logged. The function should return \texttt{None} because the file reading failed. & All assertions pass. & \cellcolor{green} Pass \\ 
    \midrule
-  TC\testcount & PR-RFT1, FR5 & Given CSV Path for results produced by CodeCarbon does not have a file. & An error message ``File \texttt{file path} does not exist." should be logged.The function should return \texttt{None} since the file does not exist. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & PR-RFT1, FR5 & Given CSV Path for results produced by CodeCarbon does not have a file. & An error message ``File \texttt{file path} does not exist.'' should be logged.The function should return \texttt{None} since the file does not exist. & All assertions pass. & \cellcolor{green} Pass \\ 
 \end{longtable}
 
 \subsection{Smell Analyzers}
@@ -633,10 +633,10 @@ This section will not be appropriate for every project.
   TC\testcount & FR2 & Test that chains on the same line are reported only once. & One chain should be detected at line 4. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR2 & Test chains with different variable types. & Two chains should be detected, one in a list and one in a tuple. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
   TC\testcount & FR2 & Test with a custom threshold value. & No chains detected with threshold 4. One chain detected with threshold 2. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC10 & FR2 & Test the structure of the returned LECSmell object. & Object should have correct type, path, module, symbol, and occurrence details. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC11 & FR2 & Test chains within complex expressions. & Three chains should be detected in different contexts. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC12 & FR2 & Test with an empty file. & No chains should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  DLEC13 & FR2 & Test with threshold of 1 (every subscript reported). & One chain should be detected with message ``Dictionary chain too long (5/5)''. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR2 & Test the structure of the returned LECSmell object. & Object should have correct type, path, module, symbol, and occurrence details. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test chains within complex expressions. & Three chains should be detected in different contexts. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with an empty file. & No chains should be detected. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR2 & Test with threshold of 1 (every subscript reported). & One chain should be detected with message ``Dictionary chain too long (5/5)''. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsubsection{Repeated Calls Detection Module}
@@ -1395,13 +1395,13 @@ This section will not be appropriate for every project.
 
   TC\testcount & FR5, FR8 & Trigger the cache wipe with no reason provided. & The smells cache should be cleared and reset to an empty state. A success message indicating that the workspace cache was successfully wiped should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "manual." & Both the smells cache and file changes cache should be cleared and reset to empty states. A success message indicating that the workspace cache was manually wiped by the user should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason ``manual''. & Both the smells cache and file changes cache should be cleared and reset to empty states. A success message indicating that the workspace cache was manually wiped by the user should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR5, FR8 & Trigger the cache wipe when there are no open files. & A log message indicating that there are no open files to update should be generated. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR5, FR8 & Trigger the cache wipe when there are open files. & A message indicating the number of visible files should be logged, and the hashes for each open file should be updated. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason "settings." & Only the smells cache should be cleared. A success message indicating that the cache was wiped due to smell detection settings changes should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
+  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason ``settings''. & Only the smells cache should be cleared. A success message indicating that the cache was wiped due to smell detection settings changes should be displayed. & All assertions pass. & \cellcolor{green} Pass \\ 
   \midrule
   TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error occurs. & An error message should be logged, and an error message indicating failure to wipe the workspace cache should be displayed to the user. & All assertions pass. & \cellcolor{green} Pass \\ 
 
@@ -1459,29 +1459,29 @@ All test for the Python backend as well as the individual modules on the TypeScr
 
 \section{Code Coverage Metrics}
 
-The following analyzes the code coverage metrics for the Python backend and frontend (TypeScript) of the VSCode extension. The analysis is based on the coverage data provided in \ref{img:python-cov} (Python backend) and \ref{img:vscode-cov} (frontend). Code coverage is a measure of how well the codebase is tested, and it helps identify areas that may require additional testing.
+The following analyzes the code coverage metrics for the Python backend and frontend (TypeScript) of the VSCode extension. The analysis is based on the coverage data provided in Figure \ref{img:python-cov} (Python backend) and Figure \ref{img:vscode-cov} (frontend). Code coverage is a measure of how well the codebase is tested, and it helps identify areas that may require additional testing.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../Images/python-coverage.png}
-  \label{img:python-cov}
   \caption{Coverage Report of the Python Backend Library}
+  \label{img:python-cov}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../Images/vscode-coverage.png}
-  \label{img:vscode-cov}
   \caption{Coverage Report of the VSCode Extension}
+  \label{img:vscode-cov}
 \end{figure}
 
 \subsection{VSCode Extension}
-The frontend codebase has an overall coverage of 45.43\% for statements, 36.48\% for branches, 42.62\% for functions, and 45.53\% for lines (\ref{img:vscode-cov}). These metrics fall below the global coverage thresholds of 80\% for the following reasons. The file \texttt{extension.ts}, which contains the core logic for the VSCode extension, has 0\% coverage as it is mainly made up of initialization commands with no real logic that can be tested. The file \texttt{refactorView.ts}, responsible for the refactoring view, also has 0\% coverage. This module is a UI component and will be tested for revision 1. Since \texttt{handleEditorChange.ts} is closely related to the UI component, its testing has also been put off.\\
+The frontend codebase has an overall coverage of 45.43\% for statements, 36.48\% for branches, 42.62\% for functions, and 45.53\% for lines (Figure \ref{img:vscode-cov}). These metrics fall below the global coverage thresholds of 80\% for the following reasons. The file \texttt{extension.ts}, which contains the core logic for the VSCode extension, has 0\% coverage as it is mainly made up of initialization commands with no real logic that can be tested. The file \texttt{refactorView.ts}, responsible for the refactoring view, also has 0\% coverage. This module is a UI component and will be tested for revision 1. Since \texttt{handleEditorChange.ts} is closely related to the UI component, its testing has also been put off.\\
 
-The file \texttt{refactorSmell.ts} has moderate coverage (55.37\% statements, 45.23\% branches), with significant gaps in testing around lines 143–269 and 328–337 (Image 2). This is due to a feature that is not fully implemented and therefore not tested. Finally, \texttt{configManager.ts} has not been tested as yet due to evolving configuration options, but will be tested for revision 1.
+The file \texttt{refactorSmell.ts} has moderate coverage (55.37\% statements, 45.23\% branches), with significant gaps in testing around lines 143–269 and 328–337 (Figure \ref{img:vscode-cov}). This is due to a feature that is not fully implemented and therefore not tested. Finally, \texttt{configManager.ts} has not been tested as yet due to evolving configuration options, but will be tested for revision 1.
 
 \subsection{Python Backend}
-The backend codebase has an overall coverage of 91\% (Image 1) and has been thoroughly tested as it contains the key features of project and the bulk of the logic. The exception is \texttt{show\_logs.py}, which handles the websocket endpoint for logging, due to the complex nature of this module testing has been omitted. Since its function is mainly to broadcast logs it is also relatively simple to verify its functionality manually\\
+The backend codebase has an overall coverage of 91\% (Figure \ref{img:python-cov}) and has been thoroughly tested as it contains the key features of project and the bulk of the logic. The exception is \texttt{show\_logs.py}, which handles the websocket endpoint for logging, due to the complex nature of this module testing has been omitted. Since its function is mainly to broadcast logs it is also relatively simple to verify its functionality manually\\
 
 
 \bibliographystyle{plainnat}
