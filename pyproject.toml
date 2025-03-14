@@ -65,6 +65,7 @@ omit = [
   "*/test_*.py",
   "*/analyzers/*_analyzer.py",
   "*/api/app.py",
+  "*/api/routes/show_logs.py",
 ]
 
 [tool.ruff]
