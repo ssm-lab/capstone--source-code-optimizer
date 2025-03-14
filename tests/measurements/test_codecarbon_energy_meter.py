@@ -57,7 +57,7 @@ def test_measure_energy_failure(mock_run, mock_stop, mock_start, energy_meter, c
 
 @patch("pandas.read_csv")
 @patch("pathlib.Path.exists", return_value=True)  # mock file existence
-def test_extract_emissions_csv_success(mock_exists, mock_read_csv, energy_meter):
+def test_extract_emissions_csv_success(mock_exists, mock_read_csv, energy_meter):  # noqa: ARG001
     # simulate DataFrame return value
     mock_read_csv.return_value = pd.DataFrame(
         [{"timestamp": "2025-03-01 12:00:00", "emissions": 0.45}]
@@ -73,7 +73,7 @@ def test_extract_emissions_csv_success(mock_exists, mock_read_csv, energy_meter)
 
 @patch("pandas.read_csv", side_effect=Exception("File read error"))
 @patch("pathlib.Path.exists", return_value=True)  # mock file existence
-def test_extract_emissions_csv_failure(mock_exists, mock_read_csv, energy_meter, caplog):
+def test_extract_emissions_csv_failure(mock_exists, mock_read_csv, energy_meter, caplog):  # noqa: ARG001
     csv_path = Path("dummy_path.csv")  # fake path
     with caplog.at_level(logging.INFO):
         result = energy_meter.extract_emissions_csv(csv_path)
@@ -83,7 +83,7 @@ def test_extract_emissions_csv_failure(mock_exists, mock_read_csv, energy_meter,
 
 
 @patch("pathlib.Path.exists", return_value=False)
-def test_extract_emissions_csv_missing_file(mock_exists, energy_meter, caplog):
+def test_extract_emissions_csv_missing_file(mock_exists, energy_meter, caplog):  # noqa: ARG001
     csv_path = Path("dummy_path.csv")  # fake path
     with caplog.at_level(logging.INFO):
         result = energy_meter.extract_emissions_csv(csv_path)

@@ -3,6 +3,7 @@ import libcst.matchers as m
 from libcst.metadata import PositionProvider, MetadataWrapper, ParentNodeProvider
 from pathlib import Path
 from typing import Optional
+from collections.abc import Mapping
 
 from ..multi_file_refactorer import MultiFileRefactorer
 from ...data_types.smell import LPLSmell
@@ -256,7 +257,7 @@ class FunctionCallUpdater:
     @staticmethod
     def update_parameter_usages(
         function_node: cst.FunctionDef, classified_params: dict[str, list[str]]
-    ) -> cst.FunctionDef:
+    ):
         """
         Updates the function body to use encapsulated parameter objects.
         """
@@ -271,7 +272,9 @@ class FunctionCallUpdater:
                         self.param_to_group[param] = group
 
             def leave_Assign(
-                self, original_node: cst.Assign, updated_node: cst.Assign
+                self,
+                original_node: cst.Assign,  # noqa: ARG002
+                updated_node: cst.Assign,
             ) -> cst.Assign:
                 """
                 Transform only right-hand side references to parameters that need to be updated.
@@ -296,12 +299,14 @@ class FunctionCallUpdater:
 
     @staticmethod
     def get_enclosing_class_name(
-        tree: cst.Module, init_node: cst.FunctionDef, parent_metadata
+        tree: cst.Module,  # noqa: ARG004
+        init_node: cst.FunctionDef,
+        parent_metadata: Mapping[cst.CSTNode, cst.CSTNode],
     ) -> Optional[str]:
         """
         Finds the class name enclosing the given __init__ function node.
         """
-        wrapper = MetadataWrapper(tree)
+        # wrapper = MetadataWrapper(tree)
         current_node = init_node
         while current_node in parent_metadata:
             parent = parent_metadata[current_node]
@@ -337,7 +342,7 @@ class FunctionCallUpdater:
             function_name = enclosing_class_name
 
         class FunctionCallTransformer(cst.CSTTransformer):
-            def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:
+            def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:  # noqa: ARG002
                 """Transforms function calls to use grouped parameters."""
                 # Handle both standalone function calls and instance method calls
                 if not isinstance(updated_node.func, (cst.Name, cst.Attribute)):
@@ -412,7 +417,7 @@ class ClassInserter(cst.CSTTransformer):
                 self.insert_index = i
                 break
 
-    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:  # noqa: ARG002
         """
         Insert the generated class definitions before the first function definition.
         """
@@ -433,7 +438,7 @@ class ClassInserter(cst.CSTTransformer):
 class FunctionFinder(cst.CSTVisitor):
     METADATA_DEPENDENCIES = (PositionProvider,)
 
-    def __init__(self, position_metadata, target_line):
+    def __init__(self, position_metadata, target_line):  # noqa: ANN001
         self.position_metadata = position_metadata
         self.target_line = target_line
         self.function_node = None
