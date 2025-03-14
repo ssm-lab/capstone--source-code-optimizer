@@ -1,0 +1,3 @@
+[submodule "plugin/capstone--sco-vs-code-plugin"]
+	path = plugin/capstone--sco-vs-code-plugin
+	url = https://github.com/ssm-lab/capstone--sco-vs-code-plugin.git

@@ -26,18 +26,6 @@ jobs:
               with:
                   token: ${{ steps.app-token.outputs.token }}
 
-            # Get changed .py files
-            - name: Get changed .py files
-              id: changed-py-files
-              uses: tj-actions/changed-files@v45
-              with:
-                  files: |
-                      **/*.py
-                  files_ignore: |
-                      tests/input/**/*.py
-                      tests/_input_copies/**/*.py
-                  diff_relative: true # Get the list of files relative to the repo root
-
             - name: Install Python
               uses: actions/setup-python@v5
               with:
@@ -49,8 +37,6 @@ jobs:
                   pip install ruff
 
             - name: Run Ruff
-              env:
-                  ALL_CHANGED_FILES: ${{ steps.changed-py-files.outputs.all_changed_files }}
               run: |
-                  ruff check $ALL_CHANGED_FILES --output-format=github .
+                  ruff check --output-format=github
             
