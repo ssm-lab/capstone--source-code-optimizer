@@ -52,6 +52,7 @@ def refactor(request: RefactorRqModel):
         CONFIG["refactorLogger"].info(
             f"🔍 Analyzing smell: {request.smell.symbol} in {request.source_dir}"
         )
+        
         refactor_data, updated_smells = perform_refactoring(Path(request.source_dir), request.smell)
 
         while True:
@@ -60,7 +61,7 @@ def refactor(request: RefactorRqModel):
                 break
                 
             currSmell = filtered_smells.pop()
-            refactor_data, updated_smells = perform_refactoring(refactor_data, currSmell)
+            refactor_data, updated_smells = perform_refactoring(Path(refactor_data["tempDir"]), currSmell)
 
 
         CONFIG["refactorLogger"].info(

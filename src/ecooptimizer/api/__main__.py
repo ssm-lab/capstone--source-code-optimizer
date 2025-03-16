@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 from ..config import CONFIG
 
-from .routes import RefactorRouter, DetectRouter, LogRouter
+from .routes import RefactorRouter, RefactorByTypeRouter, DetectRouter, LogRouter
 
 
 class HealthCheckFilter(logging.Filter):
@@ -19,6 +19,7 @@ app = FastAPI(title="Ecooptimizer")
 app.include_router(RefactorRouter)
 app.include_router(DetectRouter)
 app.include_router(LogRouter)
+app.include_router(RefactorByTypeRouter)
 
 
 @app.get("/health")
