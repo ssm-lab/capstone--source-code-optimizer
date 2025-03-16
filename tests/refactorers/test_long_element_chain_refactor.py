@@ -106,25 +106,29 @@ def test_lec_multiple_files(source_files, refactorer):
     file1 = test_dir / "dict_def.py"
     file1.write_text(
         textwrap.dedent("""\
-        app_config = {
-            "server": {
-                "host": "localhost",
-                "port": 8080,
-                "settings": {
-                    "timeout": 30,
-                    "retry": 3
-                }
-            },
-            "database": {
-                "credentials": {
-                    "username": "admin",
-                    "password": "secret"
-                }
-            }
-        }
+        class Utility:
+            def __init__(self):
+                    self.long_chain = {
+                        "level1": {
+                            "level2": {
+                                "level3": {
+                                    "level4": {
+                                        "level5": {
+                                            "level6": {
+                                                "level7": "deeply nested value"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+            
+            def get_last_value(self):
+                return self.long_chain["level1"]["level2"]["level3"]["level4"]["level5"]["level6"]["level7"]
 
-        # Local usage
-        timeout = app_config["server"]["settings"]["timeout"]
+            def get_4th_level_value(self):
+                return self.long_chain["level1"]["level2"]["level3"]["level4"]
         """)
     )
 
@@ -132,37 +136,44 @@ def test_lec_multiple_files(source_files, refactorer):
     file2 = test_dir / "dict_user.py"
     file2.write_text(
         textwrap.dedent("""\
-        from .dict_def import app_config
+        from src.utils import Utility
 
-        # External usage
-        def get_db_credentials():
-            username = app_config["database"]["credentials"]["username"]
-            password = app_config["database"]["credentials"]["password"]
-            return username, password
+        def process_data(data):
+            util = Utility()
+            my_call = util.long_chain["level1"]["level2"]["level3"]["level4"]["level5"]["level6"]["level7"]
+            lastVal = util.get_last_value()
+            fourthLevel = util.get_4th_level_value()   
+            return data.upper()
         """)
     )
 
-    smell = create_smell(occurences=[17])()
+    smell = create_smell(occurences=[20])()
 
     refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
 
     # --- Expected Result for File 1 ---
     expected_file1 = textwrap.dedent("""\
-        app_config = {"server_host": "localhost", "server_port": 8080, "server_settings_timeout": 30, "server_settings_retry": 3, "database_credentials_username": "admin", "database_credentials_password": "secret"}
+        class Utility:
+            def __init__(self):
+                    self.long_chain = {"level1_level2_level3_level4": {"level5": {"level6": {"level7": "deeply nested value"}}}}
 
-        # Local usage
-        timeout = app_config["server_settings_timeout"]
+            def get_last_value(self):
+                return self.long_chain['level1_level2_level3_level4']['level5']['level6']['level7']
+
+            def get_4th_level_value(self):
+                return self.long_chain['level1_level2_level3_level4']
         """)
 
     # --- Expected Result for File 2 ---
     expected_file2 = textwrap.dedent("""\
-        from .dict_def import app_config
+        from src.utils import Utility
 
-        # External usage
-        def get_db_credentials():
-            username = app_config["database_credentials_username"]
-            password = app_config["database_credentials_password"]
-            return username, password
+        def process_data(data):
+            util = Utility()
+            my_call = util.long_chain['level1_level2_level3_level4']['level5']['level6']['level7']
+            lastVal = util.get_last_value()
+            fourthLevel = util.get_4th_level_value()   
+            return data.upper()
         """)
 
     # Check if the refactoring worked
