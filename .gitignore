@@ -287,3 +287,24 @@ TSWLatexianTemp*
 # DRAW.IO files
 *.drawio
 *.drawio.bkp
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+.venv/
+
+# Rope
+.ropeproject
+
+*.egg-info/
+
+# Package files
+outputs/
+build/
+tests/temp_dir/
+tests/benchmarking/output/
+
+# Coverage
+.coverage
+coverage.*

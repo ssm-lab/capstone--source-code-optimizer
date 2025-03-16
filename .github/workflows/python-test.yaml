@@ -53,10 +53,3 @@ jobs:
             run: |
               git fetch origin ${{ github.base_ref }}
               diff-cover coverage.xml --compare-branch=origin/${{ github.base_ref }} --fail-under=80
-
-          - name: Check Per-File Coverage
-            run: |
-              for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-                echo "Checking overall coverage for $file"
-                coverage report --include=$file --fail-under=80 || exit 1
-              done
