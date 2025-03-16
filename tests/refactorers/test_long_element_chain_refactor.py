@@ -123,7 +123,7 @@ def test_lec_multiple_files(source_files, refactorer):
                             }
                         }
                     }
-            
+
             def get_last_value(self):
                 return self.long_chain["level1"]["level2"]["level3"]["level4"]["level5"]["level6"]["level7"]
 
@@ -142,7 +142,7 @@ def test_lec_multiple_files(source_files, refactorer):
             util = Utility()
             my_call = util.long_chain["level1"]["level2"]["level3"]["level4"]["level5"]["level6"]["level7"]
             lastVal = util.get_last_value()
-            fourthLevel = util.get_4th_level_value()   
+            fourthLevel = util.get_4th_level_value()
             return data.upper()
         """)
     )
@@ -172,7 +172,7 @@ def test_lec_multiple_files(source_files, refactorer):
             util = Utility()
             my_call = util.long_chain['level1_level2_level3_level4']['level5']['level6']['level7']
             lastVal = util.get_last_value()
-            fourthLevel = util.get_4th_level_value()   
+            fourthLevel = util.get_4th_level_value()
             return data.upper()
         """)
 
