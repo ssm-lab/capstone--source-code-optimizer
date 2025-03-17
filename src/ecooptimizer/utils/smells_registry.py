@@ -89,11 +89,26 @@ _SMELL_REGISTRY: dict[str, SmellRecord] = {
 }
 
 
-def retrieve_smell_registry(enabled_smells: list[str] | str):
+def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | str):
     """Returns a modified SMELL_REGISTRY based on user preferences (enables/disables smells)."""
+
+    # Ensure enabled_smells is a dictionary (avoid lists)
+    if isinstance(enabled_smells, list):
+        enabled_smells = {smell_name: {} for smell_name in enabled_smells}  # Convert list to dict
     if enabled_smells == "ALL":
         return deepcopy(_SMELL_REGISTRY)
-    return {key: val for (key, val) in _SMELL_REGISTRY.items() if key in enabled_smells}
+
+    updated_registry = {}
+
+    for smell_name, default_smell_data in _SMELL_REGISTRY.items():
+        if smell_name in enabled_smells:
+            updated_registry[smell_name] = deepcopy(default_smell_data)
+
+            # Ensure `enabled_smells[smell_name]` is a dictionary before updating
+            if isinstance(enabled_smells[smell_name], dict):
+                updated_registry[smell_name]["analyzer_options"].update(enabled_smells[smell_name])
+
+    return updated_registry
 
 
 def get_refactorer(symbol: str):

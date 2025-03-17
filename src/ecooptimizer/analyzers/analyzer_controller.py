@@ -22,18 +22,19 @@ class AnalyzerController:
         self.ast_analyzer = ASTAnalyzer()
         self.astroid_analyzer = AstroidAnalyzer()
 
-    def run_analysis(self, file_path: Path, selected_smells: str | list[str] = "ALL"):
+    def run_analysis(self, file_path: Path, enabled_smells: dict[str, dict[str, int | str]]):
         """
         Runs multiple analysis tools on the given Python file and logs the results.
-        Returns a list of detected code smells.
+        Accepts a dictionary with additional options for each smell.
         """
 
         smells_data: list[Smell] = []
 
-        if not selected_smells:
-            raise TypeError("At least 1 smell must be selected for detection")
+        if not enabled_smells:
+            raise TypeError("At least one smell must be selected for detection.")
 
-        SMELL_REGISTRY = retrieve_smell_registry(selected_smells)
+        # Retrieve smells from registry and update their options dynamically
+        SMELL_REGISTRY = retrieve_smell_registry(list(enabled_smells.keys()))
 
         try:
             pylint_smells = self.filter_smells_by_method(SMELL_REGISTRY, "pylint")
@@ -97,41 +98,29 @@ class AnalyzerController:
     def filter_smells_by_method(
         smell_registry: dict[str, SmellRecord], method: str
     ) -> dict[str, SmellRecord]:
-        filtered = {
+        return {
             name: smell
             for name, smell in smell_registry.items()
-            if smell["enabled"] and (method == smell["analyzer_method"])
+            if smell["enabled"] and smell["analyzer_method"] == method
         }
-        return filtered
 
     @staticmethod
     def generate_pylint_options(filtered_smells: dict[str, SmellRecord]) -> list[str]:
-        pylint_smell_symbols = []
-        extra_pylint_options = [
-            "--disable=all",
-        ]
+        pylint_options = ["--disable=all"]
 
-        for symbol, smell in zip(filtered_smells.keys(), filtered_smells.values()):
-            pylint_smell_symbols.append(symbol)
-
+        for _smell_name, smell in filtered_smells.items():
             if len(smell["analyzer_options"]) > 0:
                 for param_data in smell["analyzer_options"].values():
                     flag = param_data["flag"]
                     value = param_data["value"]
                     if value:
-                        extra_pylint_options.append(f"{flag}={value}")
+                        pylint_options.append(f"{flag}={value}")
 
-        extra_pylint_options.append(f"--enable={','.join(pylint_smell_symbols)}")
-        return extra_pylint_options
+        pylint_options.append(f"--enable={','.join(filtered_smells.keys())}")
+        return pylint_options
 
     @staticmethod
     def generate_custom_options(
         filtered_smells: dict[str, SmellRecord],
-    ) -> list[tuple[Callable, dict[str, Any]]]:  # type: ignore
-        ast_options = []
-        for smell in filtered_smells.values():
-            method = smell["checker"]
-            options = smell["analyzer_options"]
-            ast_options.append((method, options))
-
-        return ast_options
+    ) -> list[tuple[Callable, dict[str, Any]]]:
+        return [(smell["checker"], smell["analyzer_options"]) for smell in filtered_smells.values()]

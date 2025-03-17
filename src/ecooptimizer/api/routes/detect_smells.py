@@ -16,7 +16,7 @@ analyzer_controller = AnalyzerController()
 
 class SmellRequest(BaseModel):
     file_path: str
-    enabled_smells: list[str]
+    enabled_smells: dict[str, dict[str, int | str]]  # ✅ Dictionary for smell options
 
 
 @router.post("/smells", response_model=list[Smell])
@@ -32,14 +32,17 @@ def detect_smells(request: SmellRequest):
 
     try:
         file_path_obj = Path(request.file_path)
+        enabled_smells = request.enabled_smells
 
         if not file_path_obj.exists():
             CONFIG["detectLogger"].error(f"❌ File does not exist: {file_path_obj}")
             raise FileNotFoundError(f"File not found: {file_path_obj}")
 
-        CONFIG["detectLogger"].debug(
-            f"🔎 Enabled smells: {', '.join(request.enabled_smells) if request.enabled_smells else 'None'}"
-        )
+        if not isinstance(enabled_smells, dict):
+            CONFIG["detectLogger"].error(
+                f"❌ Invalid enabled_smells format: {type(enabled_smells)}"
+            )
+            raise TypeError("enabled_smells must be a dictionary.")
 
         # Run analysis
         CONFIG["detectLogger"].info(f"🎯 Running analysis on: {file_path_obj}")
