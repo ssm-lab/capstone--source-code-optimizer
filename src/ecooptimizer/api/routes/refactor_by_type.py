@@ -52,16 +52,38 @@ def refactor(request: RefactorRqModel):
         CONFIG["refactorLogger"].info(
             f"🔍 Analyzing smell: {request.smell.symbol} in {request.source_dir}"
         )
-        
-        refactor_data, updated_smells = perform_refactoring(Path(request.source_dir), request.smell)
+        energy_meter = CodeCarbonEnergyMeter()
+        energy_meter.measure_energy(Path(request.smell.path))
+        initial_emissions = energy_meter.emissions
 
+        refactor_data, updated_smells = perform_refactoring(Path(request.source_dir), request.smell, initial_emissions)
+        # counter = 0
+        requestedOccurence = request.smell.occurences[0]
+
+        attempted = [(requestedOccurence.line, requestedOccurence.endLine, requestedOccurence.column, requestedOccurence.endColumn)]
         while True:
-            filtered_smells = [smell for smell in updated_smells if smell.messageId == request.smell.messageId]
+            # counter += 1
+
+            filtered_smells = []
+            for smell in updated_smells:
+                if smell.messageId == request.smell.messageId:
+                    occurence = smell.occurences[0]
+                    hashing = (occurence.line, occurence.endLine, occurence.column, occurence.endColumn)
+                    if hashing not in attempted:
+                        filtered_smells.append(smell)
+
+            # print(filtered_smells)
+            # print(f"Running this : {counter}")
             if not filtered_smells:
                 break
                 
             currSmell = filtered_smells.pop()
-            refactor_data, updated_smells = perform_refactoring(Path(refactor_data["tempDir"]), currSmell)
+
+            # print(attempted)
+            refactor_data, updated_smells = perform_refactoring(Path(refactor_data["tempDir"]), currSmell, initial_emissions)
+            occurence = currSmell.occurences[0]
+            hashing = (occurence.line, occurence.endLine, occurence.column, occurence.endColumn)
+            attempted.append(hashing)
 
 
         CONFIG["refactorLogger"].info(
@@ -82,7 +104,7 @@ def refactor(request: RefactorRqModel):
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
-def perform_refactoring(source_dir: Path, smell: Smell):
+def perform_refactoring(source_dir: Path, smell: Smell, initial_emissions):
     """Executes the refactoring process for a given smell."""
     target_file = Path(smell.path)
 
@@ -95,8 +117,6 @@ def perform_refactoring(source_dir: Path, smell: Smell):
         raise OSError(f"Directory {source_dir} does not exist.")
 
     energy_meter = CodeCarbonEnergyMeter()
-    energy_meter.measure_energy(target_file)
-    initial_emissions = energy_meter.emissions
 
     if not initial_emissions:
         CONFIG["refactorLogger"].error("❌ Could not retrieve initial emissions.")
