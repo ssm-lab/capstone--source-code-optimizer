@@ -19,7 +19,6 @@ class EnumEncoder(json.JSONEncoder):
 class LoggingManager:
     def __init__(self, logs_dir: Path = DEV_OUTPUT / "logs", production: bool = False):
         """Initializes log paths based on mode."""
-
         self.production = production
         self.logs_dir = logs_dir
 
@@ -49,52 +48,50 @@ class LoggingManager:
         """Configures loggers for different EcoOptimizer processes."""
         logging.root.handlers.clear()
 
-        logging.basicConfig(
-            filename=str(self.log_files["main"]),
-            filemode="a",
-            level=logging.INFO,
-            format="%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-            force=True,
-        )
+        self._configure_root_logger()
 
         self.loggers = {
-            "detect": self._create_logger(
-                "detect", self.log_files["detect"], self.log_files["main"]
-            ),
-            "refactor": self._create_logger(
-                "refactor", self.log_files["refactor"], self.log_files["main"]
-            ),
+            "detect": self._create_child_logger("detect", self.log_files["detect"]),
+            "refactor": self._create_child_logger("refactor", self.log_files["refactor"]),
         }
 
         logging.info("📝 Loggers initialized successfully.")
 
-    def _create_logger(self, name: str, log_file: Path, main_log_file: Path):
+    def _configure_root_logger(self):
+        """Configures the root logger to capture all logs."""
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
+
+        main_handler = logging.FileHandler(str(self.log_files["main"]), mode="a", encoding="utf-8")
+        formatter = logging.Formatter(
+            "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S"
+        )
+        main_handler.setFormatter(formatter)
+        main_handler.setLevel(logging.DEBUG)
+        root_logger.addHandler(main_handler)
+
+    def _create_child_logger(self, name: str, log_file: Path) -> logging.Logger:
         """
-        Creates a logger that logs to both its own file and the main log file.
+        Creates a child logger that logs to its own file and propagates to the root logger.
 
         Args:
             name (str): Name of the logger.
             log_file (Path): Path to the specific log file.
-            main_log_file (Path): Path to the main log file.
 
         Returns:
             logging.Logger: Configured logger instance.
         """
         logger = logging.getLogger(name)
-        logger.setLevel(logging.INFO)
-        logger.propagate = False
+        logger.setLevel(logging.DEBUG)
+        logger.propagate = True
 
         file_handler = logging.FileHandler(str(log_file), mode="a", encoding="utf-8")
         formatter = logging.Formatter(
             "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S"
         )
         file_handler.setFormatter(formatter)
+        file_handler.setLevel(logging.DEBUG)
         logger.addHandler(file_handler)
-
-        main_handler = logging.FileHandler(str(main_log_file), mode="a", encoding="utf-8")
-        main_handler.setFormatter(formatter)
-        logger.addHandler(main_handler)
 
         logging.info(f"📝 Logger '{name}' initialized and writing to {log_file}.")
         return logger
