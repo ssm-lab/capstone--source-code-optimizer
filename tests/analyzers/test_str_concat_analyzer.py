@@ -493,7 +493,7 @@ def test_detects_var_type_hint_concat():
     assert smells[0].additionalInfo.innerLoopLine == 4
 
 
-def test_detects_cls_attr_type_hint_concat():
+def test_detects_instance_attr_type_hint_concat():
     """Detects string concats where type is inferred from class attributes."""
     code = """
     class Test:
@@ -518,6 +518,31 @@ def test_detects_cls_attr_type_hint_concat():
     assert len(smells[0].occurences) == 1
     assert smells[0].additionalInfo.concatTarget == "result"
     assert smells[0].additionalInfo.innerLoopLine == 9
+
+
+def test_detects_cls_attr_type_hint_concat():
+    """Detects string concats where type is inferred from class attributes."""
+    code = """
+    class Test:
+        text = "word"
+
+        def test(self, a):
+            result = a
+            for i in range(5):
+                result = result + self.text
+
+    a = Test()
+    a.test("this ")
+    """
+    with patch.object(Path, "read_text", return_value=code):
+        smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
+
+    assert len(smells) == 1
+    assert isinstance(smells[0], SCLSmell)
+
+    assert len(smells[0].occurences) == 1
+    assert smells[0].additionalInfo.concatTarget == "result"
+    assert smells[0].additionalInfo.innerLoopLine == 7
 
 
 def test_detects_inferred_str_type_concat():
