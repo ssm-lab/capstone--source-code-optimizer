@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 from typing import Any
-from astroid import nodes, util, parse, AttributeInferenceError
+from astroid import nodes, util, parse, extract_node, AttributeInferenceError
 
 from ...config import CONFIG
 from ...data_types.custom_fields import Occurence, SCLInfo
@@ -170,35 +170,36 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
         logger.debug(f"Left: {left.as_string()}, Right: {right.as_string()}")
         return is_same_variable(left, target) or is_same_variable(right, target)
 
-    def is_string_type(node: nodes.Assign, visited: set[str] | None = None) -> bool:
+    def is_string_type(
+        node: nodes.Assign, visited: set[tuple[str, nodes.NodeNG]] | None = None
+    ) -> bool:
         """Check if assignment target is inferred to be string type."""
         if visited is None:
             visited = set()
 
         target = node.targets[0]
         target_name = target.as_string()
+        scope = node.scope()
 
-        if target_name in visited:
+        if (target_name, scope) in visited:
             logger.debug(f"Cycle detected for {target_name}")
             return False
-        visited.add(target_name)
 
         logger.debug(f"Checking string type for {target_name}")
 
         # Check explicit type hints first
+        logger.debug("Checking explicit type hints")
         if has_type_hints_str(node, target, visited):
             return True
 
-        # Check string literals
-        if isinstance(node.value, nodes.Const) and isinstance(node.value.value, str):
-            logger.debug(f"String literal found: {node.as_string()}")
+        visited.add((target_name, scope))
+
+        # Check for string format with % operator
+        if has_percent_format(node.value):
+            logger.debug(f"String format with % operator found: {node.as_string()}")
             return True
 
-        # Check string operations
-        if has_str_operation(node.value):
-            logger.debug(f"String operation pattern found: {node.as_string()}")
-            return True
-
+        logger.debug("Checking inferred types")
         # Check inferred type
         try:
             inferred_types = list(node.value.infer())
@@ -217,19 +218,19 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
 
         # Recursive check for RHS variables
         rhs_vars = get_top_level_rhs_vars(node.value)
+        logger.debug(f"RHS Vars: {rhs_vars}")
         for rhs_node in rhs_vars:
             if isinstance(rhs_node, nodes.Const):
-                if rhs_node.pytype() == "str":
+                if rhs_node.pytype() == "builtins.str":
                     logger.debug(f"String literal found in RHS: {rhs_node.as_string()}")
                     return True
                 else:
                     return False
-            if isinstance(rhs_node, nodes.Call):
-                if rhs_node.func.as_string() == "str":
-                    logger.debug(f"str() call found in RHS: {rhs_node.as_string()}")
-                    return True
-                else:
-                    return False
+
+            if has_str_operation(rhs_node):
+                logger.debug(f"String operation found in RHS: {rhs_node.as_string()}")
+                return True
+
             try:
                 inferred_types = list(rhs_node.infer())
             except util.InferenceError:
@@ -237,6 +238,7 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
 
             if not any(isinstance(t, util.UninferableBase) for t in inferred_types):
                 return is_inferred_string(rhs_node, inferred_types)
+
             var_name = rhs_node.as_string()
             if var_name == target_name:
                 continue
@@ -255,7 +257,9 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
             logger.debug(f"Definitively non-string: {node.as_string()}")
             return False
 
-    def has_type_hints_str(context: nodes.NodeNG, target: nodes.NodeNG, visited: set[str]) -> bool:
+    def has_type_hints_str(
+        context: nodes.NodeNG, target: nodes.NodeNG, visited: set[tuple[str, nodes.NodeNG]]
+    ) -> bool:
         """Check for string type hints with simplified subscript handling and scope-aware checks."""
 
         def check_annotation(annotation: nodes.NodeNG) -> bool:
@@ -275,34 +279,26 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
             - var[subscript]
             - simple_var
             """
+            logger.debug(f"Checking if target is allowed: {node}")
+            node_string = node.as_string()
+
+            if node_string.startswith("self."):
+                base_var = extract_node(node_string.removeprefix("self."))
+                if isinstance(base_var, nodes.NodeNG):
+                    return is_allowed_target(base_var)
+
             # Case 1: Simple Name (var)
             if isinstance(node, (nodes.AssignName, nodes.Name)):
                 return True
 
             # Case 2: Direct self attribute (self.var)
             if isinstance(node, (nodes.AssignAttr, nodes.Attribute)):
-                return (
-                    node.attrname.count(".") == 0  # No nested attributes
-                    and node.expr.as_string() == "self"  # Direct self attribute
-                )
+                return node.expr.as_string().count(".") == 0
 
             # Case 3: Simple subscript (var[sub] or self.var[sub])
             if isinstance(node, nodes.Subscript):
-                # Check base is allowed
-                base = node.value
-                return (
-                    is_allowed_target(base)  # Base must be allowed target
-                    and not has_nested_subscript(base)  # No nested subscripts
-                )
+                return isinstance(node.value, nodes.Name)
 
-            return False
-
-        def has_nested_subscript(node: nodes.NodeNG) -> bool:
-            """Check for nested subscript/attribute structures"""
-            if isinstance(node, nodes.Subscript):
-                return not is_allowed_target(node.value)
-            if isinstance(node, nodes.Attribute):
-                return node.expr.as_string() != "self"
             return False
 
         target_name = target.as_string()
@@ -312,8 +308,12 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
             logger.debug(f"Skipping complex target: {target_name}")
             return False
 
-        # Handle simple subscript case (single level)
-        base_name = target.value.as_string() if isinstance(target, nodes.Subscript) else target_name
+        # Get the object name of the subscripted target
+        base_name = (
+            target.value.as_string().partition("[")[0]
+            if isinstance(target, nodes.Subscript)
+            else target_name
+        )
         parent = context.scope()
 
         # 1. Check function parameters
@@ -323,7 +323,7 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                     return True
 
         # 2. Check class attributes for self.* targets
-        if target_name.startswith("self."):
+        if not context.as_string().startswith("self.") and target_name.startswith("self."):
             class_def = next(
                 (n for n in context.node_ancestors() if isinstance(n, nodes.ClassDef)), None
             )
@@ -331,17 +331,22 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                 attr_name = target_name.split("self.", 1)[1].split("[")[0]
                 try:
                     for attr in class_def.instance_attr(attr_name):
-                        if isinstance(attr, nodes.AnnAssign) and check_annotation(attr.annotation):
+                        assign = attr.parent
+                        if isinstance(assign, nodes.AnnAssign) and check_annotation(
+                            assign.annotation
+                        ):
                             return True
-                        else:
+                        elif isinstance(assign, nodes.Assign):
                             try:
-                                inferred_types = list(attr.infer())
+                                inferred_types = list(assign.value.infer())
                             except util.InferenceError:
                                 inferred_types = [util.Uninferable]
 
                             if not any(isinstance(t, util.UninferableBase) for t in inferred_types):
-                                return is_inferred_string(attr, inferred_types)
-                            return has_type_hints_str(attr, target, visited)
+                                return is_inferred_string(assign, inferred_types)
+                            return is_string_type(assign, visited)
+                        else:
+                            return False
                 except AttributeInferenceError:
                     pass
 
@@ -356,46 +361,57 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                     break
                 if isinstance(child, (nodes.For, nodes.While, nodes.If)):
                     nodes_list.extend(get_ordered_scope_nodes(child, target))
-                else:
+                elif isinstance(child, (nodes.Assign, nodes.AnnAssign)):
                     nodes_list.append(child)
             return nodes_list
 
-        try:
-            current_lineno = target.lineno
-            scope_nodes = get_ordered_scope_nodes(parent, target)
+        scope_nodes = get_ordered_scope_nodes(parent, target)
 
-            for child in scope_nodes:
-                if child.lineno >= current_lineno:  # type: ignore
-                    break
+        # Check for type hints in scope
+        for child in scope_nodes:
+            if isinstance(child, nodes.AnnAssign):
+                if (
+                    isinstance(child.target, nodes.AssignName)
+                    and child.target.name == target_name
+                    and check_annotation(child.annotation)
+                ):
+                    return True
 
-                # Check AnnAssigns
-                if isinstance(child, nodes.AnnAssign):
-                    if (
-                        isinstance(child.target, nodes.AssignName)
-                        and child.target.name == target_name
-                        and check_annotation(child.annotation)
-                    ):
-                        return True
+        # Check for Assigns in scope
+        previous_assign = next(
+            (
+                child
+                for child in reversed(scope_nodes)
+                if isinstance(child, nodes.Assign)
+                and any(target.as_string() == target_name for target in child.targets)
+            ),
+            None,
+        )
 
-            for child in scope_nodes:
-                if child.lineno >= current_lineno:  # type: ignore
-                    break
+        if previous_assign:
+            if is_string_type(previous_assign, visited):
+                return True
 
-                # Check Assigns
-                if isinstance(child, nodes.Assign):
-                    if any(
-                        isinstance(t, nodes.AssignName) and t.name == target_name
-                        for t in child.targets
-                    ):
-                        if is_string_type(child, visited):
-                            return True
-        except (ValueError, AttributeError):
-            pass
+        return False
+
+    def has_percent_format(node: nodes.NodeNG) -> bool:
+        """
+        Check if a node contains % string formatting by traversing BinOp structure.
+        Handles nested binary operations and ensures % is found at any level.
+        """
+        if isinstance(node, nodes.BinOp):
+            left = node.left
+            if node.op == "%":
+                if isinstance(left, nodes.Const) and isinstance(left.value, str):
+                    return True
+            if isinstance(node.right, nodes.BinOp):
+                return has_percent_format(node.right)
 
         return False
 
     def has_str_operation(node: nodes.NodeNG) -> bool:
         """Check for string-specific operations."""
+        logger.debug(f"Checking string operation for node: {node}")
         if isinstance(node, nodes.JoinedStr):
             logger.debug(f"Found f-string: {node.as_string()}")
             return True
@@ -405,9 +421,10 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                 logger.debug(f"Found .format() call: {node.as_string()}")
                 return True
 
-        if isinstance(node, nodes.BinOp) and node.op == "%":
-            logger.debug(f"Found % formatting: {node.as_string()}")
-            return True
+        if isinstance(node, nodes.Call) and isinstance(node.func, nodes.Name):
+            if node.func.name == "str":
+                logger.debug(f"Found str() call: {node.as_string()}")
+                return True
 
         return False
 
