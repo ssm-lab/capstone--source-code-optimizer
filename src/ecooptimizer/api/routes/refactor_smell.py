@@ -9,14 +9,12 @@ from pydantic import BaseModel
 from typing import Any, Optional
 
 from ...config import CONFIG
-from ...analyzers.analyzer_controller import AnalyzerController
 from ...exceptions import EnergySavingsError, RefactoringError, remove_readonly
 from ...refactorers.refactorer_controller import RefactorerController
 from ...measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from ...data_types.smell import Smell
 
 router = APIRouter()
-analyzer_controller = AnalyzerController()
 refactorer_controller = RefactorerController()
 energy_meter = CodeCarbonEnergyMeter()
 
@@ -38,12 +36,7 @@ class RefactorRqModel(BaseModel):
     smell: Smell
 
 
-class RefactorResModel(BaseModel):
-    refactoredData: Optional[RefactoredData] = None
-    updatedSmells: list[Smell]
-
-
-@router.post("/refactor", response_model=RefactorResModel)
+@router.post("/refactor", response_model=RefactoredData)
 def refactor(request: RefactorRqModel):
     """Handles the refactoring process for a given smell."""
     CONFIG["refactorLogger"].info(f"{'=' * 100}")
@@ -53,27 +46,36 @@ def refactor(request: RefactorRqModel):
         CONFIG["refactorLogger"].info(
             f"🔍 Analyzing smell: {request.smell.symbol} in {request.source_dir}"
         )
-        refactor_data, updated_smells = perform_refactoring(Path(request.source_dir), request.smell)
+        refactor_data = perform_refactoring(Path(request.source_dir), request.smell)
 
-        CONFIG["refactorLogger"].info(
-            f"✅ Refactoring process completed. Updated smells: {len(updated_smells)}"
-        )
+        CONFIG["refactorLogger"].info("✅ Refactoring process completed.")
 
         if refactor_data:
             refactor_data = clean_refactored_data(refactor_data)
             CONFIG["refactorLogger"].info(f"{'=' * 100}\n")
-            return RefactorResModel(refactoredData=refactor_data, updatedSmells=updated_smells)
+            return refactor_data
 
         CONFIG["refactorLogger"].info(f"{'=' * 100}\n")
-        return RefactorResModel(updatedSmells=updated_smells)
+        return None
 
     except OSError as e:
         CONFIG["refactorLogger"].error(f"❌ OS error: {e!s}")
         raise HTTPException(status_code=404, detail=str(e)) from e
-    except Exception as e:
-        CONFIG["refactorLogger"].error(f"❌ Refactoring error: {e!s}")
-        CONFIG["refactorLogger"].info(f"{'=' * 100}\n")
+    except EnergySavingsError as e:
+        CONFIG["refactorLogger"].error(f"❌ Energy savings error: {e!s}")
         raise HTTPException(status_code=400, detail=str(e)) from e
+    except NotImplementedError as e:
+        CONFIG["refactorLogger"].error(f"❌ Refactoring not implemented: {e!s}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"No refactoring implementation found for smell: {request.smell.symbol}",
+        ) from e
+    except RefactoringError as e:
+        CONFIG["refactorLogger"].error(f"❌ Refactoring error: {e!s}")
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except Exception as e:
+        CONFIG["refactorLogger"].error(f"❌ Unexpected error: {e!s}")
+        raise HTTPException(status_code=400, detail="An unexpected error occurred.") from e
 
 
 def perform_refactoring(source_dir: Path, smell: Smell):
@@ -160,8 +162,7 @@ def perform_refactoring(source_dir: Path, smell: Smell):
         ],
     }
 
-    updated_smells = analyzer_controller.run_analysis(target_file_copy)
-    return refactor_data, updated_smells
+    return refactor_data
 
 
 def measure_energy(file: Path):
