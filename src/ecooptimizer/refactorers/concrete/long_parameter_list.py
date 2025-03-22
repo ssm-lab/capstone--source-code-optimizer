@@ -544,6 +544,83 @@ class FunctionCallUpdater:
         transformer = FunctionCallTransformer()
         return tree.visit(transformer)
 
+    @staticmethod
+    def update_function_calls_unclassified(
+        tree: cst.Module,
+        function_node: cst.FunctionDef,
+        used_params: list[str],
+        enclosing_class_name: str,
+    ) -> cst.Module:
+        """
+        Updates all calls to a given function to only include used parameters.
+        This is used when parameters are removed without being classified into objects.
+
+        Args:
+            tree: CST tree of the code
+            function_node: CST node of the function to update calls for
+            used_params: List of parameter names that are actually used in the function
+            enclosing_class_name: Name of the enclosing class if this is a method
+
+        Returns:
+            Updated CST tree with modified function calls
+        """
+        function_name = function_node.name.value
+        if function_name == "__init__":
+            function_name = enclosing_class_name
+
+        class FunctionCallTransformer(cst.CSTTransformer):
+            def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:  # noqa: ARG002
+                """Transforms function calls to only include used parameters."""
+                # handle both standalone function calls and instance method calls
+                if not isinstance(updated_node.func, (cst.Name, cst.Attribute)):
+                    return updated_node
+
+                # extract the function/method name
+                func_name = (
+                    updated_node.func.attr.value
+                    if isinstance(updated_node.func, cst.Attribute)
+                    else updated_node.func.value
+                )
+
+                # if not the target function, leave unchanged
+                if func_name != function_name:
+                    return updated_node
+
+                # map original parameters to their positions
+                param_positions = {
+                    param.name.value: i for i, param in enumerate(function_node.params.params)
+                }
+
+                # keep track of which positions in the argument list correspond to used parameters
+                used_positions = {i for param, i in param_positions.items() if param in used_params}
+
+                new_args = []
+                pos_arg_count = 0
+
+                # process all arguments
+                for arg in updated_node.args:
+                    if arg.keyword is None:
+                        # handle positional arguments
+                        if pos_arg_count in used_positions:
+                            new_args.append(arg)
+                        pos_arg_count += 1
+                    else:
+                        # handle keyword arguments
+                        if arg.keyword.value in used_params:
+                            # keep keyword arguments for used parameters
+                            new_args.append(arg)
+
+                # ensure the last argument does not have a trailing comma
+                if new_args:
+                    final_args = new_args[:-1]
+                    final_args.append(new_args[-1].with_changes(comma=cst.MaybeSentinel.DEFAULT))
+                    new_args = final_args
+
+                return updated_node.with_changes(args=new_args)
+
+        transformer = FunctionCallTransformer()
+        return tree.visit(transformer)
+
 
 class ClassInserter(cst.CSTTransformer):
     def __init__(self, class_nodes: list[cst.ClassDef]):
@@ -702,6 +779,11 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                     # just remove the unused params if the used parameters are within the max param list
                     updated_function_node = self.function_updater.remove_unused_params(
                         self.function_node, self.used_params, default_value_params
+                    )
+
+                    # update all calls to match the new signature
+                    tree = self.function_updater.update_function_calls_unclassified(
+                        tree, self.function_node, self.used_params, self.enclosing_class_name
                     )
 
                 class FunctionReplacer(cst.CSTTransformer):

@@ -380,6 +380,40 @@ def test_lpl_standalone(refactorer, source_files):
     test_dir.rmdir()
 
 
+def test_lpl_most_unused_params(refactorer, source_files):
+    """Test for function with 8 params that has 5 parameters unused, refactoring should only remove unused parameters"""
+
+    test_dir = source_files / "temp_test_lpl"
+    test_dir.mkdir(parents=True, exist_ok=True)
+
+    test_file = test_dir / "fake.py"
+
+    code = textwrap.dedent("""\
+    def create_partial_report(user_id, username, email, preferences, timezone_config, language, notification_settings, active_status=None):
+        report = {}
+        report.user_id = user_id
+        report.username = username
+
+    create_partial_report(2, "janedoe", "janedoe@example.com", {"theme": "light"}, "PST", "en", notification_settings=False)
+    """)
+
+    expected_modified_code = textwrap.dedent("""\
+    def create_partial_report(user_id, username):
+        report = {}
+        report.user_id = user_id
+        report.username = username
+
+    create_partial_report(2, "janedoe")
+    """)
+    test_file.write_text(code)
+    smell = create_smell([1])()
+    refactorer.refactor(test_file, test_dir, smell, test_file)
+
+    modified_code = test_file.read_text()
+    print(modified_code.strip())
+    assert modified_code.strip() == expected_modified_code.strip()
+
+
 def test_lpl_method_operations(refactorer, source_files):
     """Test for function with 8 params that performs operations on parameters"""
 
