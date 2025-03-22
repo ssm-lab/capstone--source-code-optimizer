@@ -378,3 +378,82 @@ def test_lpl_standalone(refactorer, source_files):
     # cleanup after test
     test_file.unlink()
     test_dir.rmdir()
+
+
+def test_lpl_method_operations(refactorer, source_files):
+    """Test for function with 8 params that performs operations on parameters"""
+
+    test_dir = source_files / "temp_test_lpl"
+    test_dir.mkdir(parents=True, exist_ok=True)
+
+    test_file = test_dir / "fake.py"
+
+    code = textwrap.dedent("""\
+    def process_user_data(username, email, age, address, phone, preferences, settings, notifications):
+        \"\"\"Process user data and return a formatted result.\"\"\"
+        # Process the data
+        full_name = username.strip()
+        contact_email = email.lower()
+        user_age = age + 1
+        formatted_address = address.replace(',', '')
+        clean_phone = phone.replace('-', '')
+        user_prefs = preferences.copy()
+        user_settings = settings.copy()
+        notif_list = notifications.copy()
+        return {
+            'name': full_name,
+            'email': contact_email,
+            'age': user_age,
+            'address': formatted_address,
+            'phone': clean_phone,
+            'preferences': user_prefs,
+            'settings': user_settings,
+            'notifications': notif_list
+        }
+    """)
+
+    expected_modified_code = textwrap.dedent("""\
+    class DataParams_process_user_data_1:
+        def __init__(self, username, email, age, address, phone, preferences, notifications):
+            self.username = username
+            self.email = email
+            self.age = age
+            self.address = address
+            self.phone = phone
+            self.preferences = preferences
+            self.notifications = notifications
+    class ConfigParams_process_user_data_1:
+        def __init__(self, settings):
+            self.settings = settings
+    def process_user_data(data_params, config_params):
+        \"\"\"Process user data and return a formatted result.\"\"\"
+        # Process the data
+        full_name = data_params.username.strip()
+        contact_email = data_params.email.lower()
+        user_age = data_params.age + 1
+        formatted_address = data_params.address.replace(',', '')
+        clean_phone = data_params.phone.replace('-', '')
+        user_prefs = data_params.preferences.copy()
+        user_settings = config_params.settings.copy()
+        notif_list = data_params.notifications.copy()
+        return {
+            'name': full_name,
+            'email': contact_email,
+            'age': user_age,
+            'address': formatted_address,
+            'phone': clean_phone,
+            'preferences': user_prefs,
+            'settings': user_settings,
+            'notifications': notif_list
+        }
+    """)
+    test_file.write_text(code)
+    smell = create_smell([1])()
+    refactorer.refactor(test_file, test_dir, smell, test_file)
+
+    modified_code = test_file.read_text()
+    assert modified_code.strip() == expected_modified_code.strip()
+
+    # cleanup after test
+    test_file.unlink()
+    test_dir.rmdir()

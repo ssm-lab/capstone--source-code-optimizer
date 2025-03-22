@@ -261,41 +261,116 @@ class FunctionCallUpdater:
         """
         Updates the function body to use encapsulated parameter objects.
         """
+        # Create a module with just the function to get metadata
+        module = cst.Module(body=[function_node])
+        wrapper = MetadataWrapper(module)
 
         class ParameterUsageTransformer(cst.CSTTransformer):
-            def __init__(self, classified_params: dict[str, list[str]]):
-                self.param_to_group = {}
+            METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
+            def __init__(
+                self, classified_params: dict[str, list[str]], metadata_wrapper: MetadataWrapper
+            ):
+                super().__init__()
+                self.param_to_group = {}
+                self.parent_provider = metadata_wrapper.resolve(ParentNodeProvider)
                 # flatten classified_params to map each param to its group (dataParams or configParams)
                 for group, params in classified_params.items():
                     for param in params:
                         self.param_to_group[param] = group
 
-            def leave_Assign(
-                self,
-                original_node: cst.Assign,  # noqa: ARG002
-                updated_node: cst.Assign,
-            ) -> cst.Assign:
-                """
-                Transform only right-hand side references to parameters that need to be updated.
-                Ensure left-hand side (self attributes) remain unchanged.
-                """
-                if not isinstance(updated_node.value, cst.Name):
+            def is_in_assignment_target(self, node: cst.CSTNode) -> bool:
+                """Check if a node is part of an assignment target."""
+                current = node
+                while current:
+                    parent = self.parent_provider.get(current)
+                    if isinstance(parent, cst.AssignTarget):
+                        return True
+                    if isinstance(parent, cst.Assign):
+                        # If we reach an Assign node, check if we came from the targets
+                        for target in parent.targets:
+                            if target.target.deep_equals(current):
+                                return True
+                        return False
+                    if isinstance(parent, cst.Module):
+                        return False
+                    current = parent
+                return False
+
+            def leave_Name(
+                self, original_node: cst.Name, updated_node: cst.Name
+            ) -> cst.BaseExpression:
+                """Transform standalone parameter references."""
+                # Don't transform if this is part of an assignment target
+                if self.is_in_assignment_target(original_node):
                     return updated_node
 
-                var_name = updated_node.value.value
+                # Don't transform if this is part of an attribute access (e.g., self.param)
+                parent = self.parent_provider.get(original_node)
+                if isinstance(parent, cst.Attribute) and original_node is parent.attr:
+                    return updated_node
 
-                if var_name in self.param_to_group:
-                    new_value = cst.Attribute(
-                        value=cst.Name(self.param_to_group[var_name]), attr=cst.Name(var_name)
+                name_value = updated_node.value
+                if name_value in self.param_to_group:
+                    return cst.Attribute(
+                        value=cst.Name(self.param_to_group[name_value]), attr=cst.Name(name_value)
                     )
-                    return updated_node.with_changes(value=new_value)
+                return updated_node
+
+            def leave_Attribute(
+                self, original_node: cst.Attribute, updated_node: cst.Attribute
+            ) -> cst.BaseExpression:
+                """Handle method calls and attribute access on parameters."""
+                # Don't transform if this is part of an assignment target
+                if self.is_in_assignment_target(original_node):
+                    # If this is a simple attribute access (e.g., self.x or report.x), don't transform it
+                    if isinstance(updated_node.value, cst.Name) and updated_node.value.value in {
+                        "self",
+                        "report",
+                    }:
+                        return original_node
+                    return updated_node
+
+                # If this is a nested attribute access (e.g., data_params.user_id), don't transform it further
+                if (
+                    isinstance(updated_node.value, cst.Attribute)
+                    and isinstance(updated_node.value.value, cst.Name)
+                    and updated_node.value.value.value in {"data_params", "config_params"}
+                ):
+                    return updated_node
+
+                # If this is a simple attribute access (e.g., self.x or report.x), don't transform it
+                if isinstance(updated_node.value, cst.Name) and updated_node.value.value in {
+                    "self",
+                    "report",
+                }:
+                    # Check if this is part of a subscript target (e.g., self.settings["timezone"])
+                    parent = self.parent_provider.get(original_node)
+                    if isinstance(parent, cst.Subscript):
+                        return original_node
+                    # Check if this is part of a subscript value
+                    if isinstance(parent, cst.SubscriptElement):
+                        return original_node
+                    return original_node
+
+                # If the attribute's value is a parameter name, update it to use the encapsulated parameter object
+                if (
+                    isinstance(updated_node.value, cst.Name)
+                    and updated_node.value.value in self.param_to_group
+                ):
+                    param_name = updated_node.value.value
+                    return cst.Attribute(
+                        value=cst.Name(self.param_to_group[param_name]), attr=updated_node.attr
+                    )
 
                 return updated_node
 
-        # wrap CST node in a MetadataWrapper to enable metadata analysis
-        transformer = ParameterUsageTransformer(classified_params)
-        return function_node.visit(transformer)
+        # Create transformer with metadata wrapper
+        transformer = ParameterUsageTransformer(classified_params, wrapper)
+        # Transform the function body
+        updated_module = module.visit(transformer)
+        # Return the transformed function
+        return updated_module.body[0]
 
     @staticmethod
     def get_enclosing_class_name(
