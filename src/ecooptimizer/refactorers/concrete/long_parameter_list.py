@@ -466,15 +466,7 @@ class FunctionCallUpdater:
         classified_param_names: tuple[str, str],
         enclosing_class_name: str,
     ) -> cst.Module:
-        """
-        Updates all calls to a given function in the provided CST tree to reflect new encapsulated parameters
-        :param tree: CST tree of the code.
-        :param function_node: CST node of the function to update calls for.
-        :param params: A dictionary containing 'data' and 'config' parameters.
-        :return: The updated CST tree
-        """
         param_to_group = {}
-
         for group_name, params in zip(classified_param_names, classified_params.values()):
             for param in params:
                 param_to_group[param] = group_name
@@ -482,6 +474,15 @@ class FunctionCallUpdater:
         function_name = function_node.name.value
         if function_name == "__init__":
             function_name = enclosing_class_name
+
+        # Get all parameter names from the function definition
+        all_param_names = [p.name.value for p in function_node.params.params]
+        # Find where variadic args start (if any)
+        variadic_start = len(all_param_names)
+        for i, param in enumerate(function_node.params.params):
+            if param.star == "*" or param.star == "**":
+                variadic_start = i
+                break
 
         class FunctionCallTransformer(cst.CSTTransformer):
             def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:  # noqa: ARG002
@@ -503,13 +504,27 @@ class FunctionCallUpdater:
 
                 positional_args = []
                 keyword_args = {}
+                variadic_args = []
+                variadic_kwargs = {}
 
-                # Separate positional and keyword arguments
-                for arg in updated_node.args:
-                    if arg.keyword is None:
-                        positional_args.append(arg.value)
-                    else:
-                        keyword_args[arg.keyword.value] = arg.value
+                # Separate positional, keyword, and variadic arguments
+                for i, arg in enumerate(updated_node.args):
+                    if isinstance(arg, cst.Arg):
+                        if arg.keyword is None:
+                            # If this is a positional argument beyond the number of parameters,
+                            # it's a variadic arg
+                            if i >= variadic_start:
+                                variadic_args.append(arg.value)
+                            elif i < len(used_params):
+                                positional_args.append(arg.value)
+                        else:
+                            # If this is a keyword argument for a used parameter, keep it
+                            if arg.keyword.value in param_to_group:
+                                keyword_args[arg.keyword.value] = arg.value
+                            # If this is a keyword argument not in the original parameters,
+                            # it's a variadic kwarg
+                            elif arg.keyword.value not in all_param_names:
+                                variadic_kwargs[arg.keyword.value] = arg.value
 
                 # Group arguments based on classified_params
                 grouped_args = {group: [] for group in classified_param_names}
@@ -538,6 +553,17 @@ class FunctionCallUpdater:
                     for group_name in classified_param_names
                     if grouped_args[group_name]  # Skip empty groups
                 ]
+
+                # Add variadic positional arguments
+                new_args.extend([cst.Arg(value=arg) for arg in variadic_args])
+
+                # Add variadic keyword arguments
+                new_args.extend(
+                    [
+                        cst.Arg(keyword=cst.Name(key), value=value)
+                        for key, value in variadic_kwargs.items()
+                    ]
+                )
 
                 return updated_node.with_changes(args=new_args)
 
