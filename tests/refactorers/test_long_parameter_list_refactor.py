@@ -457,3 +457,136 @@ def test_lpl_method_operations(refactorer, source_files):
     # cleanup after test
     test_file.unlink()
     test_dir.rmdir()
+
+
+def test_lpl_parameter_assignments(refactorer, source_files):
+    """Test for handling parameter assignments and transformations in various contexts"""
+
+    test_dir = source_files / "temp_test_lpl"
+    test_dir.mkdir(parents=True, exist_ok=True)
+
+    test_file = test_dir / "fake.py"
+
+    code = textwrap.dedent("""\
+    class DataProcessor:
+        def process_data(self, input_data, output_format, config_path, temp_path, cache_path, log_path, backup_path, format_options):
+            # Simple parameter assignment
+            backup_path = "/new/backup/path"
+
+            # Parameter used in computation
+            cache_path = temp_path + "/cache"
+
+            # Parameter assigned to attribute
+            self.config = config_path
+
+            # Parameter used in method call
+            output_format = output_format.strip()
+
+            # Parameter used in dictionary
+            paths = {
+                "input": input_data,
+                "output": output_format,
+                "config": config_path,
+                "temp": temp_path,
+                "cache": cache_path,
+                "log": log_path,
+                "backup": backup_path
+            }
+
+            # Parameter used in list
+            all_paths = [
+                input_data,
+                output_format,
+                config_path,
+                temp_path,
+                cache_path,
+                log_path,
+                backup_path
+            ]
+
+            # Use format options
+            formatted = format_options.get("style", "default")
+
+            return paths, all_paths, formatted
+
+    processor = DataProcessor()
+    result = processor.process_data(
+        "/input",
+        "json",
+        "/config",
+        "/temp",
+        "/cache",
+        "/logs",
+        "/backup",
+        {"style": "pretty"}
+    )
+    """)
+
+    expected_modified_code = textwrap.dedent("""\
+    class DataParams_process_data_2:
+        def __init__(self, input_data, output_format):
+            self.input_data = input_data
+            self.output_format = output_format
+    class ConfigParams_process_data_2:
+        def __init__(self, config_path, temp_path, cache_path, log_path, backup_path, format_options):
+            self.config_path = config_path
+            self.temp_path = temp_path
+            self.cache_path = cache_path
+            self.log_path = log_path
+            self.backup_path = backup_path
+            self.format_options = format_options
+    class DataProcessor:
+        def process_data(self, data_params, config_params):
+            # Simple parameter assignment
+            config_params.backup_path = "/new/backup/path"
+
+            # Parameter used in computation
+            config_params.cache_path = config_params.temp_path + "/cache"
+
+            # Parameter assigned to attribute
+            self.config = config_params.config_path
+
+            # Parameter used in method call
+            data_params.output_format = data_params.output_format.strip()
+
+            # Parameter used in dictionary
+            paths = {
+                "input": data_params.input_data,
+                "output": data_params.output_format,
+                "config": config_params.config_path,
+                "temp": config_params.temp_path,
+                "cache": config_params.cache_path,
+                "log": config_params.log_path,
+                "backup": config_params.backup_path
+            }
+
+            # Parameter used in list
+            all_paths = [
+                data_params.input_data,
+                data_params.output_format,
+                config_params.config_path,
+                config_params.temp_path,
+                config_params.cache_path,
+                config_params.log_path,
+                config_params.backup_path
+            ]
+
+            # Use format options
+            formatted = config_params.format_options.get("style", "default")
+
+            return paths, all_paths, formatted
+
+    processor = DataProcessor()
+    result = processor.process_data(
+        DataParams_process_data_2("/input", "json"), ConfigParams_process_data_2("/config", "/temp", "/cache", "/logs", "/backup", {"style": "pretty"}))
+    """)
+    test_file.write_text(code)
+    smell = create_smell([2])()
+    refactorer.refactor(test_file, test_dir, smell, test_file)
+
+    modified_code = test_file.read_text()
+    assert modified_code.strip() == expected_modified_code.strip()
+
+    # cleanup after test
+    test_file.unlink()
+    test_dir.rmdir()

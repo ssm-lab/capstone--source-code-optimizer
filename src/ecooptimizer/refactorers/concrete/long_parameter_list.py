@@ -260,18 +260,33 @@ class FunctionCallUpdater:
     ):
         """
         Updates the function body to use encapsulated parameter objects.
+        This method transforms parameter references in the function body to use new data_params
+        and config_params objects.
+
+        Args:
+            function_node: CST node of the function to transform
+            classified_params: Dictionary mapping parameter groups ('data_params' or 'config_params')
+                            to lists of parameter names in each group
+
+        Returns:
+            The transformed function node with updated parameter usages
         """
         # Create a module with just the function to get metadata
         module = cst.Module(body=[function_node])
         wrapper = MetadataWrapper(module)
 
         class ParameterUsageTransformer(cst.CSTTransformer):
+            """
+            A CST transformer that updates parameter references to use the new parameter objects.
+            """
+
             METADATA_DEPENDENCIES = (ParentNodeProvider,)
 
             def __init__(
                 self, classified_params: dict[str, list[str]], metadata_wrapper: MetadataWrapper
             ):
                 super().__init__()
+                # map each parameter to its group (data_params or config_params)
                 self.param_to_group = {}
                 self.parent_provider = metadata_wrapper.resolve(ParentNodeProvider)
                 # flatten classified_params to map each param to its group (dataParams or configParams)
@@ -280,38 +295,76 @@ class FunctionCallUpdater:
                         self.param_to_group[param] = group
 
             def is_in_assignment_target(self, node: cst.CSTNode) -> bool:
-                """Check if a node is part of an assignment target."""
+                """
+                Check if a node is part of an assignment target (left side of =).
+
+                Args:
+                    node: The CST node to check
+
+                Returns:
+                    True if the node is part of an assignment target that should not be transformed,
+                    False otherwise
+                """
                 current = node
                 while current:
                     parent = self.parent_provider.get(current)
+
+                    # if we're at an AssignTarget, check if it's a simple Name assignment
                     if isinstance(parent, cst.AssignTarget):
+                        if isinstance(current, cst.Name):
+                            # allow transformation for simple parameter assignments
+                            return False
                         return True
+
                     if isinstance(parent, cst.Assign):
-                        # If we reach an Assign node, check if we came from the targets
+                        # if we reach an Assign node, check if we came from the targets
                         for target in parent.targets:
                             if target.target.deep_equals(current):
+                                if isinstance(current, cst.Name):
+                                    # allow transformation for simple parameter assignments
+                                    return False
                                 return True
                         return False
+
                     if isinstance(parent, cst.Module):
                         return False
+
                     current = parent
                 return False
 
             def leave_Name(
                 self, original_node: cst.Name, updated_node: cst.Name
             ) -> cst.BaseExpression:
-                """Transform standalone parameter references."""
-                # Don't transform if this is part of an assignment target
+                """
+                Transform standalone parameter references.
+
+                Skip transformation if:
+                1. The name is part of an attribute access (eg: self.param)
+                2. The name is part of a complex assignment target (eg: self.x = y)
+
+                Transform if:
+                1. The name is a simple parameter being assigned (eg: param1 = value)
+                2. The name is used as a value (eg: x = param1)
+
+                Args:
+                    original_node: The original Name node
+                    updated_node: The current state of the Name node
+
+                Returns:
+                    The transformed node or the original if no transformation is needed
+                """
+                # dont't transform if this is part of a complex assignment target
                 if self.is_in_assignment_target(original_node):
                     return updated_node
 
-                # Don't transform if this is part of an attribute access (e.g., self.param)
+                # dont't transform if this is part of an attribute access (e.g., self.param)
                 parent = self.parent_provider.get(original_node)
                 if isinstance(parent, cst.Attribute) and original_node is parent.attr:
                     return updated_node
 
                 name_value = updated_node.value
                 if name_value in self.param_to_group:
+                    # transform the name into an attribute access on the appropriate parameter object
                     return cst.Attribute(
                         value=cst.Name(self.param_to_group[name_value]), attr=cst.Name(name_value)
                     )
@@ -320,10 +373,26 @@ class FunctionCallUpdater:
             def leave_Attribute(
                 self, original_node: cst.Attribute, updated_node: cst.Attribute
             ) -> cst.BaseExpression:
-                """Handle method calls and attribute access on parameters."""
-                # Don't transform if this is part of an assignment target
+                """
+                Handle method calls and attribute access on parameters.
+                This method handles several cases:
+
+                1. Assignment targets (eg: self.x = y)
+                2. Simple attribute access (eg: self.x or report.x)
+                3. Nested attribute access (eg: data_params.user_id)
+                4. Subscript access (eg: self.settings["timezone"])
+                5. Parameter attribute access (eg: username.strip())
+
+                Args:
+                    original_node: The original Attribute node
+                    updated_node: The current state of the Attribute node
+
+                Returns:
+                    The transformed node or the original if no transformation is needed
+                """
+                # don't transform if this is part of an assignment target
                 if self.is_in_assignment_target(original_node):
-                    # If this is a simple attribute access (e.g., self.x or report.x), don't transform it
+                    # if this is a simple attribute access (eg: self.x or report.x), don't transform it
                     if isinstance(updated_node.value, cst.Name) and updated_node.value.value in {
                         "self",
                         "report",
@@ -331,7 +400,7 @@ class FunctionCallUpdater:
                         return original_node
                     return updated_node
 
-                # If this is a nested attribute access (e.g., data_params.user_id), don't transform it further
+                # if this is a nested attribute access (eg: data_params.user_id), don't transform it further
                 if (
                     isinstance(updated_node.value, cst.Attribute)
                     and isinstance(updated_node.value.value, cst.Name)
@@ -339,21 +408,21 @@ class FunctionCallUpdater:
                 ):
                     return updated_node
 
-                # If this is a simple attribute access (e.g., self.x or report.x), don't transform it
+                # if this is a simple attribute access (eg: self.x or report.x), don't transform it
                 if isinstance(updated_node.value, cst.Name) and updated_node.value.value in {
                     "self",
                     "report",
                 }:
-                    # Check if this is part of a subscript target (e.g., self.settings["timezone"])
+                    # check if this is part of a subscript target (eg: self.settings["timezone"])
                     parent = self.parent_provider.get(original_node)
                     if isinstance(parent, cst.Subscript):
                         return original_node
-                    # Check if this is part of a subscript value
+                    # check if this is part of a subscript value
                     if isinstance(parent, cst.SubscriptElement):
                         return original_node
                     return original_node
 
-                # If the attribute's value is a parameter name, update it to use the encapsulated parameter object
+                # if the attribute's value is a parameter name, update it to use the encapsulated parameter object
                 if (
                     isinstance(updated_node.value, cst.Name)
                     and updated_node.value.value in self.param_to_group
@@ -365,23 +434,21 @@ class FunctionCallUpdater:
 
                 return updated_node
 
-        # Create transformer with metadata wrapper
+        # create transformer with metadata wrapper
         transformer = ParameterUsageTransformer(classified_params, wrapper)
-        # Transform the function body
+        # transform the function body
         updated_module = module.visit(transformer)
-        # Return the transformed function
+        # return the transformed function
         return updated_module.body[0]
 
     @staticmethod
     def get_enclosing_class_name(
-        tree: cst.Module,  # noqa: ARG004
         init_node: cst.FunctionDef,
         parent_metadata: Mapping[cst.CSTNode, cst.CSTNode],
     ) -> Optional[str]:
         """
         Finds the class name enclosing the given __init__ function node.
         """
-        # wrapper = MetadataWrapper(tree)
         current_node = init_node
         while current_node in parent_metadata:
             parent = parent_metadata[current_node]
@@ -574,7 +641,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
             self.is_constructor = self.function_node.name.value == "__init__"
             if self.is_constructor:
                 self.enclosing_class_name = FunctionCallUpdater.get_enclosing_class_name(
-                    tree, self.function_node, parent_metadata
+                    self.function_node, parent_metadata
                 )
             param_names = [
                 param.name.value
