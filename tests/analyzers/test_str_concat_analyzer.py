@@ -109,6 +109,44 @@ def test_detects_object_attribute_concat():
     assert smells[0].additionalInfo.innerLoopLine == 6
 
 
+def test_complex_object_sub_concat():
+    """Detects += modifying a complex subscript object inside a loop."""
+    code = """
+    def update():
+        val = {"key": ["word1", "word2"]}
+        for i in range(5):
+            val["key"][1] += str(i)
+    """
+    with patch.object(Path, "read_text", return_value=code):
+        smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
+
+    assert len(smells) == 1
+    assert isinstance(smells[0], SCLSmell)
+
+    assert len(smells[0].occurences) == 1
+    assert smells[0].additionalInfo.concatTarget == "val['key'][1]"
+    assert smells[0].additionalInfo.innerLoopLine == 4
+
+
+def test_complex_object_attr_concat():
+    """Detects += modifying a complex attribute object inside a loop."""
+    code = """
+    def update():
+        val = RandomeClass()
+        for i in range(5):
+            val.attr1.attr2 += str(i)
+    """
+    with patch.object(Path, "read_text", return_value=code):
+        smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
+
+    assert len(smells) == 1
+    assert isinstance(smells[0], SCLSmell)
+
+    assert len(smells[0].occurences) == 1
+    assert smells[0].additionalInfo.concatTarget == "val.attr1.attr2"
+    assert smells[0].additionalInfo.innerLoopLine == 4
+
+
 def test_detects_dict_value_concat():
     """Detects += modifying a dictionary value inside a loop."""
     code = """
@@ -181,11 +219,10 @@ def test_detects_reset_loop_concat():
 def test_detects_nested_loop_concat():
     """Detects concatenation inside nested loops."""
     code = """
-    def test():
-        result = ""
+    def test(result):
         for i in range(3):
             for j in range(3):
-                result += str(j)
+                result += "hi"
     """
     with patch.object(Path, "read_text", return_value=code):
         smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
@@ -195,7 +232,7 @@ def test_detects_nested_loop_concat():
 
     assert len(smells[0].occurences) == 1
     assert smells[0].additionalInfo.concatTarget == "result"
-    assert smells[0].additionalInfo.innerLoopLine == 5
+    assert smells[0].additionalInfo.innerLoopLine == 4
 
 
 def test_detects_complex_nested_loop_concat():
@@ -250,8 +287,7 @@ def test_detects_if_else_concat():
 def test_detects_f_string_concat():
     """Detects += using f-strings inside a loop."""
     code = """
-    def test():
-        result = ""
+    def test(result):
         for i in range(5):
             result += f"{i}"
     """
@@ -263,14 +299,13 @@ def test_detects_f_string_concat():
 
     assert len(smells[0].occurences) == 1
     assert smells[0].additionalInfo.concatTarget == "result"
-    assert smells[0].additionalInfo.innerLoopLine == 4
+    assert smells[0].additionalInfo.innerLoopLine == 3
 
 
 def test_detects_percent_format_concat():
     """Detects += using % formatting inside a loop."""
     code = """
-    def test():
-        result = ""
+    def test(result):
         for i in range(5):
             result += "%d" % i
     """
@@ -282,14 +317,13 @@ def test_detects_percent_format_concat():
 
     assert len(smells[0].occurences) == 1
     assert smells[0].additionalInfo.concatTarget == "result"
-    assert smells[0].additionalInfo.innerLoopLine == 4
+    assert smells[0].additionalInfo.innerLoopLine == 3
 
 
 def test_detects_str_format_concat():
     """Detects += using .format() inside a loop."""
     code = """
-    def test():
-        result = ""
+    def test(result):
         for i in range(5):
             result += "{}".format(i)
     """
@@ -301,7 +335,7 @@ def test_detects_str_format_concat():
 
     assert len(smells[0].occurences) == 1
     assert smells[0].additionalInfo.concatTarget == "result"
-    assert smells[0].additionalInfo.innerLoopLine == 4
+    assert smells[0].additionalInfo.innerLoopLine == 3
 
 
 # === False Positives (Should NOT Detect) ===
@@ -350,6 +384,19 @@ def test_ignores_number_addition_inside_loop():
     assert len(smells) == 0
 
 
+def test_ignores_inferred_number_addition_inside_loop():
+    """Ensures number operations with the += format are NOT flagged."""
+    code = """
+    def test(num):
+        for i in range(5):
+            num += 1
+    """
+    with patch.object(Path, "read_text", return_value=code):
+        smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
+
+    assert len(smells) == 0
+
+
 def test_ignores_concat_outside_loop():
     """Ensures that string concatenation OUTSIDE a loop is NOT flagged."""
     code = """
@@ -371,8 +418,7 @@ def test_ignores_concat_outside_loop():
 def test_detects_sequential_concat():
     """Detects a variable concatenated multiple times in the same loop iteration."""
     code = """
-    def test():
-        result = ""
+    def test(result):
         for i in range(5):
             result += str(i)
             result += "-"
@@ -385,7 +431,7 @@ def test_detects_sequential_concat():
 
     assert len(smells[0].occurences) == 2
     assert smells[0].additionalInfo.concatTarget == "result"
-    assert smells[0].additionalInfo.innerLoopLine == 4
+    assert smells[0].additionalInfo.innerLoopLine == 3
 
 
 def test_detects_concat_with_prefix_and_suffix():
@@ -493,8 +539,8 @@ def test_detects_var_type_hint_concat():
     assert smells[0].additionalInfo.innerLoopLine == 4
 
 
-def test_detects_cls_attr_type_hint_concat():
-    """Detects string concats where type is inferred from class attributes."""
+def test_detects_instance_attr_inferred_concat():
+    """Detects string concats where type is inferred from instance attributes."""
     code = """
     class Test:
 
@@ -518,6 +564,83 @@ def test_detects_cls_attr_type_hint_concat():
     assert len(smells[0].occurences) == 1
     assert smells[0].additionalInfo.concatTarget == "result"
     assert smells[0].additionalInfo.innerLoopLine == 9
+
+
+def test_detects_inferred_cls_attr_concat():
+    """Detects string concats where type is inferred from class attributes."""
+    code = """
+    class Test:
+        text = "word"
+
+        def test(self, a):
+            result = a
+            for i in range(5):
+                result = result + self.text
+
+    a = Test()
+    a.test("this ")
+    """
+    with patch.object(Path, "read_text", return_value=code):
+        smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
+
+    assert len(smells) == 1
+    assert isinstance(smells[0], SCLSmell)
+
+    assert len(smells[0].occurences) == 1
+    assert smells[0].additionalInfo.concatTarget == "result"
+    assert smells[0].additionalInfo.innerLoopLine == 7
+
+
+def test_detects_instance_attr_type_hint_concat():
+    """Detects string concats where type is taken the instance attribute type hint."""
+    code = """
+    class Test:
+        def __init__(self, word):
+            self.text: str = word
+
+        def test(self, a):
+            result = a
+            for i in range(5):
+                result = result + self.text
+
+    a = Test()
+    a.test("this ")
+    """
+    with patch.object(Path, "read_text", return_value=code):
+        smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
+
+    assert len(smells) == 1
+    assert isinstance(smells[0], SCLSmell)
+
+    assert len(smells[0].occurences) == 1
+    assert smells[0].additionalInfo.concatTarget == "result"
+    assert smells[0].additionalInfo.innerLoopLine == 8
+
+
+def test_detects_inst_attr_init_hint_concat():
+    """Detects string concats where type is taken from constructor attribute type hint."""
+    code = """
+    class Test:
+        def __init__(self, word: str):
+            self.text = word
+
+        def test(self, a):
+            result = a
+            for i in range(5):
+                result = result + self.text
+
+    a = Test()
+    a.test("this ")
+    """
+    with patch.object(Path, "read_text", return_value=code):
+        smells = detect_string_concat_in_loop(Path("fake.py"), parse(code))
+
+    assert len(smells) == 1
+    assert isinstance(smells[0], SCLSmell)
+
+    assert len(smells[0].occurences) == 1
+    assert smells[0].additionalInfo.concatTarget == "result"
+    assert smells[0].additionalInfo.innerLoopLine == 8
 
 
 def test_detects_inferred_str_type_concat():

@@ -124,7 +124,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
                         dict_name, full_access, nesting_level, line_number, col_offset, path, node
                     )
                     self.access_patterns.add(access)
-                    print(self.access_patterns)
+                    # print(self.access_patterns)
                     self.min_value = min(self.min_value, nesting_level)
 
     def extract_full_dict_access(self, node: ast.Subscript):

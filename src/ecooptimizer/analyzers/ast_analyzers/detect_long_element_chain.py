@@ -35,11 +35,9 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 5
             chain_length += 1
             current = current.value
 
-        print(chain_length)
         if chain_length >= threshold:
             # Create a descriptive message for the detected long chain
             message = f"Dictionary chain too long ({chain_length}/{threshold})"
-            print(node.lineno)
             # Instantiate a Smell object with details about the detected issue
             smell = LECSmell(
                 path=str(file_path),
