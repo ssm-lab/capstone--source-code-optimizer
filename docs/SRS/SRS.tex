@@ -711,15 +711,19 @@ overview of the project's tasks.
 \begin{table}[H]
   \centering
   \setlength\extrarowheight{5mm}
-  \begin{tabularx}{\textwidth}{|c|X|l|p{1.5in}|}
+  \begin{tabularx}{\textwidth}{|c|X|l|p{1.5in}|p{1.5in}|}
     \toprule \textbf{Event \#} & \textbf{Event Name} & \textbf{Input}
-    & \textbf{Output(s)} \\
+    & \textbf{Output(s)} & \textbf{Requirements}\\
     \midrule
-    1 & Users submit Python code & Python Code & Refactored Code\\
-    2 & Energy Analysis of code & Python Code & Total Energy Consumed \\
-    3 & Refactoring library produces refactoring & Python Code & Correct Refactoring \\
+    1 & Users submit Python code & Python Code & Refactored Code & 
+    FR1, FR2, FR3, FR4, FR6, PR-SL1, PR-RFT1, PR-CR1, SR-AR1, MS-AD3\\
+    2 & Energy Analysis of code & Python Code & Total Energy Consumed & 
+    FR6, OER-IAS2, SR-AR1, SR-AR2, MS-AD4\\
+    3 & Refactoring library produces refactoring & Python Code & Correct Refactoring & 
+    FR3, FR4, PR-SCR1, PR-PAR2, SR-IR1, CR-SCR1\\
     4 & Viewing Energy consumption metrics & Refactored Code & Energy
-    Consumption Metrics \\
+    Consumption Metrics & 
+    FR6, LFR-AP1, CULT1, SR-PR2 \\
     \bottomrule
   \end{tabularx}
   \caption{Work Partitioning of System}
@@ -882,38 +886,45 @@ users to accept or reject refactored code. Each use case briefly
 describes the interaction between the user and the system.
 
 \setlength\extrarowheight{2mm}
+\renewcommand{\arraystretch}{0.85}
+\begin{longtable}{|c|
+    >{\raggedright\arraybackslash}p{1.5in}|  % Reduced from 1.8in
+    >{\raggedright\arraybackslash}p{1in}|
+    >{\raggedright\arraybackslash}p{1.8in}|
+    >{\raggedright\arraybackslash}p{1.1in}|}  % Increased from 0.8in
+  \caption{Product Use Case Table}
+  \label{tab:puc} \\
+  \hline
+  \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} & \textbf{Requirement} \\
+  \hline
+  \endfirsthead
 
-\begin{table}[H]
-  \centering
-  \renewcommand{\arraystretch}{0.85}
-  \begin{tabularx}{\textwidth}{|c|
-      >{\raggedright\arraybackslash}X|
-      >{\raggedright\arraybackslash}p{1in}|
-      >{\raggedright\arraybackslash}X|
-      >{\raggedright\arraybackslash}p{0.8in}|}
-    \toprule 
-    \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} & \textbf{Functional Requirement} \\
-    \midrule
-    1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) & FR1, FR2, FR11 \\
-    2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) & FR17 \\
-    3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) & FR10 \\
-    4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) & FR14, FR19 \\
-    5 & Configure Smell Display & User & Display Preferences (in), Updated VS Code Settings (out) & FR12 \\
-    6 & Select Code Smell & User & Selected Code Smell (in) & FR13 \\
-    7 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) & FR3, FR4, FR8 \\
-    8 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) & FR6 \\
-    9 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) & FR6 \\
-    10 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) & FR6, FR11 \\
-    11 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) & FR16 \\
-    12 & Clear Smell History & User & Clear Command (in), Reset Cache (out) & FR18 \\
-    13 & Access Documentation & User & Help Request (in), Documentation (out) & FR7 \\
-    14 & Generate System Logs & System & Log Request (in), Log File (out) & FR15 \\
-    \bottomrule
-  \end{tabularx}
-  \caption{Product Use Case Table with FR Coverage}
-  \label{tab:puc-fr}
-  \vspace{-2mm}
-\end{table}
+  \hline
+  \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} & \textbf{Requirement} \\
+  \hline
+  \endhead
+
+  \hline
+  \endfoot
+
+  \hline
+  \endlastfoot
+
+  1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) & FR1, FR2, FR11, PR-SL1, LFR-ST1 \\
+  2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) & FR17, LFR-ST1  \\
+  3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) & FR10, LFR-ST1, UHR-EOU1 \\
+  4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) & FR14, FR19, LFR-ST1 \\
+  5 & Configure Smell Display & User & Display Preferences (in), Updated VS Code Settings (out) & FR12, PR-LR1, OER-RL1 \\
+  6 & Select Code Smell & User & Selected Code Smell (in) & FR13, PR-LR1, OER-RL1\\
+  7 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) & FR3, FR4, FR8, PR-SCR1 \\
+  8 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) & FR6, PR-LR1, OER-RL1, MS-AD5 \\
+  9 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) & FR6, PR-LR1, OER-RL1, MS-AD5 \\
+  10 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) & FR6, FR11, LFR-AP1, CULT1 \\
+  11 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) & FR16, FLR-AP1, PR-SCR1 \\
+  12 & Clear Smell History & User & Clear Command (in), Reset Cache (out) & FR18, PR-LR1, OER-RL1, MS-AD5, MS-AD6, MS-AD7, UHR-EOU1 \\
+  13 & Access Documentation & User & Help Request (in), Documentation (out) & FR7, OER-PR1, MS-AD6 \\
+  14 & Generate System Logs & System & Log Request (in), Log File (out) & FR15, MS-AD6, MS-AD7 \\
+\end{longtable}
 
 \subsection{Individual Product Use Cases (PUC's)}
 This subsection expands on the use cases listed in
@@ -1831,6 +1842,98 @@ The cultural requirements of this project include the following:
     and adheres to Python coding standards, including PEP 8.\\
     {\bf Priority:} Medium
 \end{enumerate}
+
+\section{Traceability from Requirements to Use Cases}
+\begin{longtable}{|p{2.5cm}|p{11cm}|}
+    \toprule
+    \textbf{Requirement} & \textbf{Use Case(s)} \\
+    \midrule
+    \endfirsthead
+    
+    \multicolumn{2}{c}%
+    {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+    \toprule
+    \textbf{Requirement} & \textbf{Use Case(s)} \\
+    \midrule
+    \endhead
+    
+    \midrule
+    \multicolumn{2}{r}{{Continued on next page}} \\
+    \endfoot
+    
+    \bottomrule
+    \endlastfoot
+
+    FR1 & BUC-1, PUC-1 \\
+    FR2 & BUC-1, PUC-1 \\
+    FR3 & BUC-1, PUC-7 \\
+    FR4 & BUC-1, PUC-7 \\
+    FR5 & MD-SL1, MD-EC1 \\
+    FR6 & BUC-1, PUC-8, PUC-9 \\
+    FR7 & PUC-13 \\
+    FR8, FR9 & PUC-7, PUC-11 \\
+    FR10 & PUC-3 \\
+    FR11 & PUC-1, PUC-2 \\
+    FR12 & PUC-5 \\
+    FR13 & PUC-6, PUC-7 \\
+    FR14 & PUC-4 \\
+    FR15 & PUC-14 \\
+    FR16 & PUC-11 \\
+    FR17 & PUC-2 \\
+    FR18 & PUC-12 \\
+    FR19 & PUC-4 \\
+    LFR-AP1 & PUC-10, PUC-11 \\
+    LFR-AP2 & All PUCs \\
+    LFR-ST1 & All PUCs \\
+    UHR-EOU1 & All PUCs \\
+    UHR-EOU2 & PUC-1, PUC-7, PUC-11 \\
+    UHR-PSI1 & PUC-3, PUC-4 \\
+    UHR-PSI2 & PUC-5 \\
+    UHR-LRN1 & PUC-13 \\
+    UHR-LRN2 & PUC-13 \\
+    UHR-UPL1 & All PUCs \\
+    UHR-ACS1 & PUC-5 \\
+    PR-SL1 & BUC-1, PUC-1 \\
+    PR-SL2 & PUC-7 \\
+    PR-SCR1 & PUC-7, PUC-11 \\
+    PR-PAR1 & PUC-1 \\
+    PR-PAR2 & PUC-7 \\
+    PR-RFT1 & BUC-1 \\
+    PR-CR1 & BUC-1 \\
+    PR-SER1 & PUC-7 \\
+    PR-LR1 & All PUCs \\
+    OER-EP1 & All BUCs \\
+    OER-EP2 & All BUCs \\
+    OER-IAS1 & All PUCs \\
+    OER-IAS2 & PUC-8, PUC-9 \\
+    OER-PR1 & PUC-13 \\
+    OER-RL1 & All PUCs \\
+    MS-MNT1 & PUC-7 \\
+    MS-MNT2 & PUC-14 \\
+    MS-MNT3 & PUC-14 \\
+    MS-MNT4 & PUC-14 \\
+    MS-MNT5 & All PUCs \\
+    MS-AD1 & All PUCs \\
+    MS-AD2 & All PUCs \\
+    MS-AD3 & BUC-1 \\
+    MS-AD4 & PUC-8, PUC-9 \\
+    MS-AD5 & All PUCs \\
+    MS-AD6 & All PUCs \\
+    MS-AD7 & All PUCs \\
+    MS-AD8 & All PUCs \\
+    SR-AR1 & BUC-1, PUC-8, PUC-9 \\
+    SR-AR2 & PUC-8, PUC-9 \\
+    SR-IR1 & PUC-7, PUC-11 \\
+    SR-PR1 & All PUCs \\
+    SR-PR2 & All PUCs \\
+    SR-AUR1 & PUC-14 \\
+    SR-AUR2 & PUC-14 \\
+    SR-AUR3 & All PUCs \\
+    CULT1 & PUC-5, PUC-10 \\
+    CULT2 & All PUCs \\
+    CR-LR1 & SR-PR1 \\
+    CR-SCR1 & PUC-7, FR4 \\
+\end{longtable}
 
 \section{Open Issues}
 
