@@ -17,6 +17,9 @@
 \usepackage{pdflscape}
 \usepackage{lipsum} 
 \usepackage{enumitem}
+\usepackage{tikz}
+\usepackage[hang,small]{caption}
+\usetikzlibrary{positioning, shapes.geometric}
 \newcommand{\tabitem}{~~\llap{\textbullet}~~}
 
 \newcounter{hazard}
@@ -61,6 +64,7 @@
 25 October 2024 & All & Created initial revision of Hazard Analysis\\
 29 December 2024 & Tanveer Brar & Updated critical assumptions based on peer review feedback\\
 January 3rd, 2025 & Sevhena Walker & Added Symbolic Constants, clarified boundaries of system, expanded recommended actions for HZ-13, adjusted failure mode for HZ-15 \\
+March 24th, 2025, & Sevhena Walker & Updated system boundary and components\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -142,44 +146,87 @@ consumption and CO2 emissions.
 
 \section{System Boundaries and Components}
 
-The system boundary refers to the library being developed and its core constituent modules. Peripheral tools, as listed below, serve to expand on the system's utility and usability, and may or may not be realized during the development of the system depending on feasibility. Currently, the only peripheral that is definitely in scope is the VS Code extension. As the extension is expected to be a wrapper for the system, any risks are expected to stem from VS Code itself and therefore will not be explored. \\
-
-It is also important to make note of elements not controlled by the development team such as the database, the physical computer that will run the system, and any cloud hosting platforms used to utilize the system on a greater scale.
+The system consists of three core modules integrated through a Visual Studio Code extension that serves as the primary user interface. All components operate locally on the user's machine without external dependencies.
 
 \subsection{Core Modules}
 
-\subsubsection*{Energy Measurement Module}
-This module tracks and analyzes the energy consumption of the software being refactored, providing detailed metrics that help assess the efficiency of the code before and after refactoring. External tools will be used to implement this module with the primary one being pyJoules\footnote{A python library that energies the energy footprint of a host machine.}. Other libraries may be added should the need arise. 
+\subsubsection{Analysis Module}
+\begin{itemize}
+    \item \textbf{Purpose}: Statically analyzes entire Python files to detect energy-inefficient code patterns
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Implements smell detection per requirement FR-2
+        \item Outputs detection results
+    \end{itemize}
+    \item \textbf{Integration}: Receives complete files and smell configuration from VS Code extension
+\end{itemize}
 
-\subsubsection*{Testing Module}
-The testing module runs automated tests on the refactored code to ensure that the functionality remains intact and that no errors are introduced during the refactoring process. Testing will be done through AST\footnote{Abstract Syntax Tree: a data structure used to represent the structure of a program.} parsing and any provided tests from the user.
+\subsubsection{Refactoring Module}
+\begin{itemize}
+    \item \textbf{Purpose}: Applies energy-saving transformations to address detected inefficiencies
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Generates refactored code versions per requirement FR-3
+        \item Coordinates with Energy Measurement Module
+        \item Outputs refactored code and energy metrics
+    \end{itemize}
+\end{itemize}
 
-\subsubsection*{Refactoring module}
-This core module identifies code smells and inefficiencies in the original code and suggests or applies appropriate refactorings to optimize the code for better performance and energy efficiency. Refactoring will be done through a mix of custom-made refactoring strategies and with the help of the python library, Rope.
+\subsubsection{Energy Measurement Module}
+\begin{itemize}
+    \item \textbf{Purpose}: Quantifies energy consumption using \texttt{codecarbon}
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Measures original and refactored code energy use
+    \end{itemize}
+\end{itemize}
 
-\subsubsection*{Reinforcement Learning Model}
-The reinforcement learning model uses data from previous refactorings to improve its suggestions, helping the system learn and refine its refactoring strategies based on outcomes and energy consumption metrics. The model shall be built with the help of the machine learning library, PyTorch.
+\subsection{Visual Studio Code Extension}
+\begin{itemize}
+    \item \textbf{Role}: Primary user interface and system orchestrator
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Receives complete Python files from user workspace
+        \item Displays detected smells with configurable visuals (FR-12)
+        \item Allows triggering of refactoring operations (FR-16)
+        \item Presents side-by-side refactoring comparisons (LFR-AP 1)
+        \item Allows accept/reject decisions for changes (FR-16)
+        \item Displays energy metrics and savings (FR-6)
+    \end{itemize}
+\end{itemize}
 
-\subsection{Peripherals}
-
-\subsubsection*{Visual Studio Code (VS Code) Extension}
-The VS Code extension provides a user-friendly interface within the IDE\footnote{Integrated Development Environment}, allowing developers to interact with the refactoring tool, view energy consumption metrics, and apply refactorings suggestions directly from their development environment.
-
-\subsubsection*{GitHub Action}
-The GitHub Action automates the refactoring process within CI/CD workflows, applying refactoring suggestions and running energy consumption analyzes during code integration, ensuring consistent energy-efficient practices.
-
-\subsubsection*{Web Client}
-The web client offers a user interface that allows users to interact with the refactoring system remotely, enabling them to view energy consumption reports, and track performance metrics from a browser.
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[
+        node distance=2cm,
+        module/.style={rectangle, draw, minimum width=3cm, minimum height=1cm, text centered},
+        user/.style={ellipse, draw, minimum width=2cm, minimum height=1cm}
+    ]
+        % Nodes
+        \node (user) [user] {User};
+        \node (extension) [module, right=of user] {VS Code Extension};
+        \node (analysis) [module, below=of extension] {Analysis Module};
+        \node (refactoring) [module, right=of analysis] {Refactoring Module};
+        \node (energy) [module, right=of refactoring] {Energy Measurement};
+        
+        % Arrows
+        \draw [->] (user) -- node[above] {Python files} (extension);
+        \draw [->] (extension) -- node[right] {File analysis} (analysis);
+        \draw [->] (analysis) -- node[above] {Detected smells} (refactoring);
+        \draw [<->] (refactoring) -- node[above] {Energy metrics} (energy);
+        \draw [->] (refactoring) -- node[below, sloped] {Refactoring options} (extension);
+        \draw [->] (extension) -- node[below] {User decisions} (user);
+    \end{tikzpicture}
+    \caption{System component interaction diagram showing communication pathways}
+    \label{fig:component-interaction}
+\end{figure}
 
 \section{Critical Assumptions}
 
 \begin{itemize}
     \item The Energy Measurement Model will provide accurate and consistent energy consumption metrics across different platforms (Windows, macOS, Linux). There are no discrepancies in measurements due to platform differences that could result in ineffective refactoring.
-    \item The Testing Module is provided with automated tests that include unit tests for core functionalities, integration tests for module interactions and edge case validations. There is no validation for minimum code coverage as it is decided by the user based on their needs and application complexity, but it is assumed that the provided tests effectively test all core functionalities to detect post refactoring bugs and regressions.
     \item The Refactoring Module solely identifies code smells that are validated by the development team's testing to reduce energy consumption. The module will not refactor the code smell if it is determined that the change will not result in measurable energy savings for the specific code being refactored.
-    \item Custom-made refactoring strategies and Rope are capable of generating effective and correct refactoring.
-    \item Sufficient data sets are available for the reinforcement learning model to provide increasingly accurate and efficient refactoring suggestions over time.
-    \item GitHub Actions, which is a third-party dependency for the DevOps integration, is not suspended for a prolonged period of time.
+    \item Custom-made refactoring strategies and Rope are capable of generating effective and correct refactorings.
     \item Users of the tool are experienced Python developers with knowledge of code refactoring and software optimization. Basic proficiency in programming is expected to navigate the tool and its features effectively.
     \item The tool will be used in a development environment, such as individual developer machines or a non-production remote repository, where configurations can be adjusted as needed. Stability and scalability requirements for large-scale production use are not assumed.
     \item The tool assumes that users act in good faith and use the system as intended. Potential hazards from malicious misuse (for example, injecting harmful code or exploiting refactoring logic) are considered out of scope for the current version but may be addressed in future versions.
