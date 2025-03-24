@@ -935,33 +935,32 @@ describes the interaction between the user and the system.
 
 \begin{table}[H]
   \centering
+  \renewcommand{\arraystretch}{0.85} 
   \begin{tabularx}{\textwidth}{|c|
       >{\raggedright\arraybackslash}X|
-      >{\raggedright\arraybackslash}p{1.2in}|
+      >{\raggedright\arraybackslash}p{1.1in}| 
     >{\raggedright\arraybackslash}X|}
     \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} &
     \textbf{Input \& Output(s)} \\
     \midrule
-    1 & Detect Code Smells & VS Code Plugin (via Refactoring Library)
-    & Original Code (in), Identified Code Smells (out) \\
-    2 & Select Code Smell for Refactoring & User & Selected Code Smell (in) \\
-    3 & Refactor Code & VS Code Plugin (via Refactoring Library) &
-    Code Segment (in), Refactored Code (out) \\
-    4 & Measure Energy Consumption Before Refactoring & Refactoring
-    Library (via Energy Measurement Tool) & Original Code (in),
-    Initial Energy Consumption Results (out) \\
-    5 & Measure Energy Consumption After Refactoring & Refactoring
-    Library (via Energy Measurement Tool) & Refactored Code (in),
-    Final Energy Consumption Results (out) \\
-    6 & Show Results & VS Code Plugin & Refactored Code, Performance
-    Metrics (out) \\
-    7 & Accept or Reject Refactoring Results & User & Refactored
-    Code, Energy Consumption Results (in), Accepted or Rejected
-    Decision (out) \\
+    1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) \\
+    2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) \\
+    3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) \\
+    4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) \\
+    5 & Select Code Smell & User & Selected Code Smell (in) \\
+    6 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) \\
+    7 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) \\
+    8 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) \\
+    9 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\
+    10 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) \\
+    11 & Clear Smell History & User & Clear Command (in), Reset Cache (out) \\
+    12 & Access Documentation & User & Help Request (in), Documentation (out) \\
+    13 & Generate System Logs & System & Log Request (in), Log File (out) \\
     \bottomrule
   \end{tabularx}
   \caption{Product Use Case Table of System}
   \label{tab:puc}
+  \vspace{-2mm} 
 \end{table}
 
 \subsection{Individual Product Use Cases (PUC's)}
