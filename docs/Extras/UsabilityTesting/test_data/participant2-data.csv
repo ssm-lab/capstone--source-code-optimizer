@@ -1,0 +1,22 @@
+,Participant ID:,2,,,,
+,,,,,,
+,Task #,Task Description,Completion Time,Success/Failure,Moderator Notes,Participant Feedback
+,1,Run a standalone code smell detection on a Python file.,,Success,"• Most ppl dont know what code smells are
+• didnt know ""detect"" smells meant to run the command and not do it manually",• woah cool
+,2,Click on a detected smell and observe the text decoration.,,Success,"• fast, clicks anythign and everyting that is noticed",• expecting smell label on top not on right side ( dont want to scroll )
+,3,Hover over a detected smell to view additional details and quick refactor options.,,Success,• understood the information for the most part,"• what does the (6/3) stand for?
+• better smell description"
+,4,Initiate Refactoring,,Success,• knew how to do it ,• Pretty slow
+,5,Refactor a single-file smell,,Success,• didnt see multiple smells were identified in the same line,"• git conflict compare is cool
+• why did the side bar have negative energy sometimes?"
+,6,Refactor a multi-file smell that modifies multiple related files.,,Success,• didnt know that the changes have to be Accepted for them to show up in the original files,"• its cool it refactors every file 
+• refactored window went away after clicking out"
+,7,Customize extension settings to enable/disable specific smells.,,Success,• searched up name of extension in settings page to find,"• the enable/disable is pretty cool
+• cant enable or disable in one click"
+,,,,,,
+,,Feedback,• write code smells definitions with examples or at least link a website for explanation in the documentation.,,,
+,,,• good documentation about how to use in the extensions page including step by step,,,
+,,,• show how it gets refactored and why,,,
+,,,• CRC not working,,,
+,,,• show how it saves energy like sonarcube like how does using extra space ([]) save more energy?,,,
+,,,• enable all/ disable all button in settings,,,

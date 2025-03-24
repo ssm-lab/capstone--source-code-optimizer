@@ -1,0 +1,13 @@
+,Participant ID:,,,,,
+,,,,,,
+,Task #,Task Description,Completion Time,Success/Failure,Moderator Notes,Participant Feedback
+,1,Run a standalone code smell detection on a Python file.,,Success,Had some trouble figuring out how to detect the smells,Would like a toggle instead to enable/disable smells
+,2,Click on a detected smell and observe the text decoration.,,Success,Noticed the smell name appear after the line,Liked the lead decoration
+,3,Hover over a detected smell to view additional details and quick refactor options.,,Success,No issues hovering,Liked the smell description
+,4,Initiate Refactoring,,Success,No issues,"Like the loading message, though the wait was a little long"
+,5,Refactor a single-file smell,,Success,No issues,Liked the accept/reject buttons
+,6,Refactor a multi-file smell that modifies multiple related files.,,Success,Had to be prompted to click the second modified file,Liked that they could see all the changes
+,7,Customize extension settings to enable/disable specific smells.,,Success,No issues finding the settings,Didn't know if changes had taken effect or not
+,,,,,,
+,,Feedback:,,,,
+,,,Wished for more information about the smells themselves and what they meant,,,
