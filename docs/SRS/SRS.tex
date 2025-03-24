@@ -1083,32 +1083,17 @@ each use case, emphasizing expected functionality and outcomes for users.
     for the detection and reporting of the following smells: Long
     Parameter List (LPL), Long Message Chain (LMC), Long Element
     Chain (LEC), Long Lambda Function (LLF), Complex List
-    Comprehension (CLC), Member Ignoring Method (MIM), Repeating Chain (RC).\\
-    {\bf Priority:} High
-  \item \emph{The system shall maintain the original functionality of
-    the Python code after refactoring.}\\[2mm]
-    {\bf Rationale:} Ensuring that the refactored code preserves the
-    original behaviour is critical to avoid regressions or unexpected
-    issues in the software.\\
-    {\bf Fit Criterion:} The system runs the original test suite
-    against the refactored code and the amount of test to pass should
-    meet the TEST\_FUNCTION\_THRESH.\\
-    {\bf Priority:} High
-  \item \emph{The system must allow users to input their original
-    test suite as a required argument.}\\[2mm]
-    {\bf Rationale:} Verifying that the refactored code preserves
-    functionality requires the use of the original test suite.\\
-    {\bf Fit Criterion:} Users can specify a path to their test suite
-    that the tool recognizes and utilizes for testing the refactored code.\\
+    Comprehension (CLC), Member Ignoring Method (MIM), Cache Repeated Calls (CRC),
+    String Concat in Loop (SCL).\\
     {\bf Priority:} High
   \item \emph{The system must suggest at least one appropriate
       refactoring for each detected code smell to decrease energy
     consumption or indicate that none can be found.}\\[2mm]
     {\bf Rationale:} For developers to optimize their code, the tool
-    must provide appropriate refactoring suggestions based on
+    must provide an appropriate refactoring suggestion based on
     detected code smells.\\
     {\bf Fit Criterion:} The suggested refactored code demonstrates a
-    measurable improvement in energy consumption as measured in joules.\\
+    measurable improvement in energy consumption as measured in kg.\\
     {\bf Priority:} High
   \item \emph{The system must produce valid refactored Python code as
     output or indicate that no possible refactorings were found.}\\[2mm]
@@ -1128,14 +1113,10 @@ each use case, emphasizing expected functionality and outcomes for users.
     environment and successfully analyzes and refactors code written
     for Python versions 3.8, 3.9, and newer.\\
     {\bf Priority:} Medium
-  \item \emph{The tool must generate comprehensive reports on
-      detected smells, refactorings applied, energy consumption
-    measurements, and testing results.}\\[2mm]
-    {\bf Rationale:} Developers need clear reports to understand the
-    impact of the refactorings and to track changes effectively.\\
-    {\bf Fit Criterion:} Reports are clear, well-structured, and
-    provide actionable insights, allowing users to easily understand
-    the results.\\
+  \item \emph{The system must generate and display energy consumption metrics.}\\[2mm]
+    {\bf Rationale:} Developers need clear metrics as a justification for energy efficient refactorings.\\
+    {\bf Fit Criterion:} Energy consumption metrics are clear, well-structured, and
+    provide actionable insights, allowing users to easily understand the results.\\
     {\bf Priority:} Medium
   \item \emph{The tool must provide comprehensive documentation and
     help resources.}\\[2mm]
@@ -1146,7 +1127,7 @@ each use case, emphasizing expected functionality and outcomes for users.
     completeness from users.\\
     {\bf Priority:} Medium
   \item \emph{The system shall provide developers with refactoring
-      suggestions within an IDE before committing code, allowing them
+      suggestions within an IDE before changing code, allowing them
     to review and approve energy-efficient changes.}\\[2mm]
     {\bf Rationale:} Giving developers control over which
     refactorings are applied ensures that they can maintain the
@@ -1154,18 +1135,66 @@ each use case, emphasizing expected functionality and outcomes for users.
     project requirements.\\
     {\bf Fit Criterion:} The IDE plugin must display at least two
     refactoring options for inefficient code patterns, allowing
-    developers to either apply or reject them before committing the changes.\\
+    developers to either apply or reject them before making any changes.\\
     {\bf Priority:} Medium
-  \item \emph{The system shall allow developers to undo any
-    refactorings applied, restoring the code to its previous state.}\\[2mm]
-    {\bf Rationale:} Developers may want to revert changes if they do
-    not align with specific project goals or introduce performance
-    bottlenecks unrelated to energy consumption.\\
-    {\bf Fit Criterion:} The system must provide an option to revert
-    any refactoring commits applied within the
-    REFACTOR\_REVERT\_LIMIT, restoring both code and energy
-    consumption metrics to their original state.\\
+  \item \emph{The system shall provide developers with refactoring
+      suggestions within an IDE before changing code, allowing them
+    to review and approve energy-efficient changes.}\\[2mm]
+    {\bf Rationale:} Giving developers control over which
+    refactorings are applied ensures that they can maintain the
+    balance between energy efficiency and their coding style or
+    project requirements.\\
+    {\bf Fit Criterion:} The IDE plugin must display at least two
+    refactoring options for inefficient code patterns, allowing
+    developers to either apply or reject them before making any changes.\\
     {\bf Priority:} Medium
+  \item \emph{The system must allow users to filter detected code smells within the IDE plugin.}\\[2mm]
+    {\bf Rationale:} Developers should be able to focus on specific types of inefficiencies based on their 
+    project needs and priorities.\\
+    {\bf Fit Criterion:} The plugin provides a user-friendly interface that enables filtering detected code 
+    smells by category, severity, or type, ensuring a customized refactoring experience.\\
+    {\bf Priority:} Medium
+    \item \emph{The system should indicate code smells within a smell-linted file.}\\[2mm]
+    {\bf Rationale:} Developers need a clear visual representation of detected code smells to efficiently identify problematic areas in their code.\\
+    {\bf Fit Criterion:} The system highlights detected code smells within the source file, for example, by underlining or marking affected lines.\\
+    {\bf Priority:} High
+
+\item \emph{The system must allow for refactoring of specific smells.}\\[2mm]
+    {\bf Rationale:} Developers should have the flexibility to refactor only selected code smells rather than applying all refactorings at once.\\
+    {\bf Fit Criterion:} Users can click on a specific detected smell and choose to refactor only that issue.\\
+    {\bf Priority:} High
+
+\item \emph{The system must allow users to configure specific smell detection parameters.}\\[2mm]
+    {\bf Rationale:} Different projects may have varying definitions of what constitutes a long lambda function or a long message chain, so customizable thresholds improve flexibility.\\
+    {\bf Fit Criterion:} The system provides a configuration interface where users can set thresholds for smell detection (e.g., defining the maximum acceptable length for a lambda function or the number of chained method calls before triggering a warning).\\
+    {\bf Priority:} Medium
+
+\item \emph{The system should generate and allow users to access logs of system processes.}\\[2mm]
+    {\bf Rationale:} Logs provide transparency on system operations, helping users debug issues and track changes.\\
+    {\bf Fit Criterion:} The system generates logs detailing detected smells, applied refactorings, and system errors, accessible through an interface or log file.\\
+    {\bf Priority:} Medium
+
+\item \emph{The system must allow users to accept or reject suggested refactored changes and apply the corresponding action.}\\[2mm]
+    {\bf Rationale:} Developers should have control over the changes made to their code to ensure refactorings align with project requirements.\\
+    {\bf Fit Criterion:} The tool provides an interface where users can review, accept, or reject suggested refactorings before they are applied.\\
+    {\bf Priority:} High
+
+\item \emph{The system must allow users to toggle smell linting on and off within the IDE.}\\[2mm]
+    {\bf Rationale:} Users should be able to control whether code smell detection is actively running, especially to avoid distractions in certain workflows.\\
+    {\bf Fit Criterion:} The system provides a toggle button to turn smell linting on or off. When this is enabled, the tool automatically highlights smells in open files, and when disabled, all highlighting/indications are removed.\\
+    {\bf Priority:} Medium
+
+\item \emph{The system must allow users to remove the history of detected smells and other cached data.}\\[2mm]
+    {\bf Rationale:} Clearing stored data helps users maintain a clean workspace, manage storage, and reset the tool for a fresh start.\\
+    {\bf Fit Criterion:} The system provides an option to delete previously detected smells and cached data, ensuring a reset state when needed.\\
+    {\bf Priority:} Medium
+
+\item \emph{The system should allow for the enabling and disabling of specific smells for detection.}\\[2mm]
+    {\bf Rationale:} Developers may want to focus on certain types of inefficiencies while ignoring others based on project-specific needs.\\
+    {\bf Fit Criterion:} The system provides an interface where users can enable or disable specific code smells from being detected and reported.\\
+    {\bf Priority:} Medium
+
+
 \end{enumerate}
 
 \section{Look and Feel Requirements}
