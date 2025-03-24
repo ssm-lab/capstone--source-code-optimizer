@@ -15,6 +15,8 @@
     linkcolor=red,
     urlcolor=blue
 }
+\usepackage{amsmath}   % For cases/aligned
+\usepackage{enumitem}  % For itemize formatting
 
 \input{../../Comments}
 \input{../../Common}
@@ -425,6 +427,40 @@ This system has no hardware components.
     \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long message chains in Python code.
    
 \end{description}
+
+\textbf{Long Message Chain Formalization}
+\begin{enumerate}
+  \item \textbf{Definitions}
+  \begin{itemize}
+      \item \textit{Input Line}: String \( L \) (e.g., \texttt{obj.a().b().c()})
+      \item \textit{Method Chain}: Sequence \( M = [m_1, m_2, \dots, m_n] \), where \( m_i \) is a method call
+      \item \textit{Intermediate Variables}: Generated variables \( V = [v_0, v_1, \dots, v_{n-1}] \)
+      \item \textit{Indentation}: Leading whitespace \( W \) from \( L \)
+  \end{itemize}
+
+  \item \textbf{Refactoring Function}
+  \begin{itemize}
+      \item For f-strings:
+      \[
+      \begin{aligned}
+          &v_0 = f_{\text{str}} \quad \text{(preserve } W\text{)} \\
+          &v_1 = v_0.m_1 \quad \text{(preserve } W\text{)} \\
+          &\;\;\vdots \\
+          &\text{result} = v_{n-1}.m_n \quad \text{(preserve } W\text{)}
+      \end{aligned}
+      \]
+      \item For regular chains:
+      \[
+      \begin{aligned}
+          &v_0 = m_1 \quad \text{(preserve } W\text{)} \\
+          &v_1 = v_0.m_2 \quad \text{(preserve } W\text{)} \\
+          &\;\;\vdots \\
+          &\text{result} = v_{n-1}.m_n \quad \text{(preserve } W\text{)}
+      \end{aligned}
+      \]
+  \end{itemize}
+\end{enumerate}
+
 
 \subsubsection{Long Lambda Function Refactorer (\mref{mLLF})}
 
