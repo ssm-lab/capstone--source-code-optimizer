@@ -76,7 +76,7 @@ describing software}
   March 24th, 2025 & Mya Hussain & Updated Usability and Humanity Requirements. \\
   March 24th, 2025 & Ayushi Amin & Updated maintainability and support requirements. \\
   March 24th, 2025 & Ayushi Amin & Updated cultural requirements. \\
-  March 24th, 2025 & Sevhena Walker & Updated solution constraints. \\
+  March 24th, 2025 & Sevhena Walker & Updated solution constraints, style requirements, wider environment reqs. \\
   March 24th, 2025 & Mya Hussain & Updated Performance Requirements. \\
   March 24th, 2025 & Mya Hussain & Updated New Problems. \\
   March 24th, 2025 & Ayushi Amin & Updated Scope of Work. \\
@@ -1157,10 +1157,15 @@ each use case, emphasizing expected functionality and outcomes for users.
     {\bf Fit Criterion:} The plugin provides a user-friendly interface that enables filtering detected code 
     smells by category, severity, or type, ensuring a customized refactoring experience.\\
     {\bf Priority:} Medium
-    \item \emph{The system should indicate code smells within a smell-linted file.}\\[2mm]
+  \item \emph{The system should indicate code smells within a smell-linted file.}\\[2mm]
     {\bf Rationale:} Developers need a clear visual representation of detected code smells to efficiently identify problematic areas in their code.\\
     {\bf Fit Criterion:} The system highlights detected code smells within the source file, for example, by underlining or marking affected lines.\\
     {\bf Priority:} High
+  
+  \item \emph{The system should allow users to configure how code smells are displayed within a smell-linted file.}\\[2mm]  
+    {\bf Rationale:} Different developers may have varying preferences for visual indicators (e.g., colors, underlines, icons) to improve readability and accommodate accessibility needs.\\  
+    {\bf Fit Criterion:} The system provides user-adjustable settings (e.g., via a preferences menu) to modify the visual representation of code smells, such as changing highlight colors, toggling line markers, or selecting icon-based annotations.\\  
+    {\bf Priority:} Medium  
 
 \item \emph{The system must allow for refactoring of specific smells.}\\[2mm]
     {\bf Rationale:} Developers should have the flexibility to refactor only selected code smells rather than applying all refactorings at once.\\
@@ -1226,27 +1231,6 @@ each use case, emphasizing expected functionality and outcomes for users.
 \end{enumerate}
 \subsection{Style Requirements}
 \begin{enumerate}[label=LFR-ST \arabic*., wide=0pt, leftmargin=*]
-  \item \emph{The tool shall convey a professional and authoritative
-    appearance to instill confidence in developers.}\\[2mm]
-    {\bf Rationale:} A professional appearance helps build trust and
-    encourages developers to use the tool confidently for
-    energy-efficient refactoring.\\
-    {\bf Fit Criterion:} After their first encounter with the tool,
-    the amount of representative developers that feel that it is a
-    trustworthy and reliable solution for energy-efficient
-    refactoring should be above the MIN\_USER\_CONFIDENCE.\\
-    {\bf Priority:} High
-  \item \emph{The IDE plugin interface shall promote a calm and
-      focused atmosphere, enhancing the developer's ability to
-    concentrate on code improvements.}\\[2mm]
-    {\bf Rationale:} A calm environment reduces distractions and
-    improves productivity, allowing developers to focus on their work
-    effectively.\\
-    {\bf Fit Criterion:} Developers should report feeling less
-    distracted and more productive while using the tool, with the
-    amount of developers indicating a positive change in their coding
-    environment meeting the MIN\_USER\_CONFIDENCE.\\
-    {\bf Priority:} Medium
   \item \emph{The tool design shall be visually appealing and modern,
     aligning with contemporary software development tools.}\\[2mm]
     {\bf Rationale:} A modern design improves user experience and
@@ -1466,17 +1450,7 @@ sustainability in various working environments.
 \end{enumerate}
 
 \subsection{Wider Environment Requirements}
-\begin{enumerate}[label=OER-WE \arabic*., wide=0pt, leftmargin=*]
-  \item \emph{The system must align with widely used emissions
-      standards (e.g., GRI 305, GHG, ISO 14064)
-    ~\citep{GHG,ISO14064,GRI305}.}\\[2mm]
-    {\bf Rationale:} Providing metrics tailored to these standards,
-    makes the library reporting tool more attractive to users part of
-    companies looking to reduce their ecological footprint. \\
-    {\bf Fit Criterion:} The emissions tracked by the standards are
-    present in the reported metrics. \\
-    {\bf Priority:} Medium
-\end{enumerate}
+Not applicable.
 
 \subsection{Requirements for Interfacing with Adjacent Systems}
 \begin{enumerate}[label=OER-IAS \arabic*., wide=0pt, leftmargin=*]
