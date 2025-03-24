@@ -33,6 +33,7 @@
     January 2nd, 2025 & Ayushi Amin & Made TA feedback changes\\
     March 24, 2025 & Tanveer Brar & Update IP section, team meeting plan\\ 
     March 24th, 2025 & Sevhena Walker & Update project link.\\
+    March 24, 2025 & Mya Hussain & Updated Team POC Plan\\ 
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -154,9 +155,6 @@ The average workflow for the project will proceed as follows:
 \noindent
 \hspace{\parindent}\textbf{Milestones} will be used to organize commits and pull requests for major deliverables. Once all working branches associated to the milestone have been merged into the appropriate epic branch, the team will go through the relevant prepared checklist to make sure that all requirements have been met. Once this is done, the epic branch will be merged into main as one pull request along with the checklist. \\
 
-\noindent
-\hspace{\parindent}The \textbf{CI/CD} pipeline will be implemented via GitHub to improve automated testing as well as facilitate the feedback loop for the machine learning models used by the library. More detailed information will be added later.
-
 \section{Project Decomposition and Scheduling}
 
 \noindent
@@ -198,7 +196,7 @@ For context, our POC will consist of roughly the following steps:
 \begin{enumerate}
   \item Determine the code smells we want to address for energy saving.
   \begin{itemize}
-    \item List Comprehension in an \texttt{any} or \texttt{all} statement, Member Ignoring Method, Long Paramter List, Unused Imports, Long Message Chain, Unused Class Attributes and Variables
+    \item Such as but not limited to Long Lambda Function, Member Ignoring Method, Long Paramter List, Unused Imports, Long Message Chain, Unused Class Attributes and Variables
   \end{itemize} 
   \item Determine the detectability of a specific code smell 
   \begin{itemize}
@@ -206,13 +204,9 @@ For context, our POC will consist of roughly the following steps:
   \end{itemize} 
   \item Determine the appropriate refactorings for a particular detected smell that results in decreased energy consumption.
   \begin{itemize}
-    \item We will use codecarbon to measure the emissions of a python code file. This step will involve various phases of trial and error as it is not a 1-1 trivial solution. There could be various refactorings possible for a given situation that all result in different energy consumption levels. We want our tool to choose the most optimal refactoring possible. For our POC this can exist as an algorithm. For our final project we can attempt to implement a neural network to choose between refactorings. There are also prebuilt free to use libraries we can implement to perform simple refactorings.
+    \item We will use codecarbon to measure the emissions of a python code file. This step will involve various phases of trial and error as it is not a 1-1 trivial solution. There could be various refactorings possible for a given situation that all result in different energy consumption levels. We want our tool to choose the most optimal refactoring possible.
   \end{itemize} 
   \item Once we determine preset algorithms mapping detected smells to their appropriate refactorings, we want to then make those changes in the code, measure the energy consumption and test it against the original code ensuring it is less.
-  \item The code must then ensure that the original code functionallity is preserved. If it is not a different refactoring is required. 
-  \begin{itemize}
-    \item This can be done by testing the original test suite for the code against the new one. This original test suite can be a required argument for the user.
-  \end{itemize} 
 \end{enumerate}
 
 \noindent
@@ -226,7 +220,7 @@ The following is a list of primary risks and how potential results from the POC 
 
   \item Energy is decreased but functionality of the code is modified. 
   \begin{itemize}
-    \item If this occurs then the refactoring we applied was incorrect for the given code. A new refactoring should occur. Finding valid refactorings can be implemented iteratively, it is okay for the code to get a couple wrong so long as the final answer is correct. Requiring the user to submit a test suite for the original code can ensure that the code is not modified beyond its purpose. We can also add error handling that lets the user be in charge of the refactorings by making them suggestions instead of absolutes, that allows for the software engineer to have more control over what their final code looks like.
+    \item The onus is placed on the user to identify if a refactoring breaks the functionality of the code as they will either accept or reject each suggestion. This gives the user more control over how their code base develops and allows them to consider other potential tradeoffs for each possible change.
   \end{itemize} 
 
 \end{enumerate}
