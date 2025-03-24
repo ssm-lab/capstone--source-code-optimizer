@@ -281,7 +281,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
         \item Implement parallel processing to measure energy consumption and run code smell detection simultaneously. This can reduce the overall time by allowing energy measurements to be done without holding up other tasks.
         \item Implement a graceful timeout mechanism if CodeCarbon takes too long to respond. 
         \item Provide users with an estimated time for completion so they are aware of ongoing measurements if energy measurement exceeds a set time. 
-    \end{itemize} & SCR-1, SCR-10 & HZ \showmycounter \\
+    \end{itemize} & SCR-1, SCR-8 & HZ \showmycounter \\
     
     \multicolumn{1}{|c|}{\multirow{13}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & The energy measure module does not provide any data at all & Refactoring fails due to no energy metrics available for validation of changes & \begin{itemize}[wide=0pt]
         \item The system does not have the necessary administrative or system-level permissions to access energy-related data, especially in cloud environments
@@ -290,7 +290,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
         \item Ensure the software has sufficient permissions to access low-level system metrics, such as power usage, and grant administrative privileges if needed.
         \item Increase the allowed time frame for measurements to complete
         \item Implement a functionality in the system that allows that prompts the user with a request to pause the refactoring process and restart at the same point when the system is less busy
-    \end{itemize} & SCR-1, SCR-3, SCR-10 & HZ \showmycounter \\ \cline{2-7}
+    \end{itemize} & SCR-1, SCR-3, SCR-7, SCR-8 & HZ \showmycounter \\ \cline{2-7}
 
     \hline
 
@@ -312,7 +312,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \begin{itemize}[wide=0pt]
         \item  Poor memory management during the refactoring process
     \end{itemize}
-    & Implement automatic garbage collection or memory de-allocation after each refactoring step & SCR-8 & HZ \showmycounter \\ \cline{2-7}
+    & Implement automatic garbage collection or memory de-allocation after each refactoring step & SCR-6 & HZ \showmycounter \\ \cline{2-7}
     
 
     
@@ -333,7 +333,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \begin{itemize}[wide=0pt]
         \item Lack of awareness of how certain refactorings impact external dependencies, especially with complex or dynamically loaded libraries.
     \end{itemize}
-    & Implement a detection mechanism that identifies external library dependencies and exempts them from refactorings unless explicitly requested by the user. & SCR-5 & HZ \showmycounter \\ \cline{2-7}
+    & Implement a detection mechanism that identifies external library dependencies and exempts them from refactorings unless explicitly requested by the user. & SCR-4 & HZ \showmycounter \\ \cline{2-7}
 
     & The tool accesses or refactors code that contains sensitive information (e.g., API keys, credentials), which could lead to unintentional exposure or mismanagement of this data. & 
     \begin{itemize}[wide=0pt]
@@ -342,7 +342,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \begin{itemize}[wide=0pt]
         \item Refactorings alter or expose parts of the code that store or transmit sensitive data, without proper checks.
     \end{itemize}
-    & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-6 & HZ \showmycounter \\ \hline 
+    & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-5 & HZ \showmycounter \\ \hline 
 
 
     \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & 
@@ -361,13 +361,13 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \begin{itemize}[wide=0pt]
         \item Lack of synchronization or conflict resolution mechanisms for parallel refactoring
     \end{itemize}
-    & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-13 & HZ \showmycounter \\ \hline
+    & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-9 & HZ \showmycounter \\ \hline
 
     \multicolumn{1}{|c|}{\multirow{12}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
     \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \end{itemize} &
     \begin{itemize}[wide=0pt] \item Hardware failure, power outage or insufficient system resources \item Unhandled software exceptions or errors during the tool's usage \item Prolonged measurement operations that exceed system capacity \end{itemize} &
     \begin{itemize}[wide=0pt] \item Implement a checkpointing mechanism to periodically save intermediate refactoring states \item Enable a recovery workflow to reload saved checkpoints and resume from the last recorded state  \end{itemize} &
-    SCR-1, SCR-14 &
+    SCR-1, SCR-10 &
     HZ-\showmycounter \\ \hline
 \end{longtable}
 
