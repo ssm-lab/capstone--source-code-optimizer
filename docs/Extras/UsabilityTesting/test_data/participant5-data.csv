@@ -1,0 +1,19 @@
+,Participant ID:,5,,,,
+,,,,,,
+,Task #,Task Description,Completion Time,Success/Failure,Moderator Notes,Participant Feedback
+,1,Run a standalone code smell detection on a Python file.,,Success,Able to identify detected smells,Found the use of command for detection easy and intuitive
+,2,Click on a detected smell and observe the text decoration.,,Success,No issues,Has an idea of some of the smell names
+,3,Hover over a detected smell to view additional details and quick refactor options.,,Success,No issues,"Likes the description of the smell, as well as suggested fix for example. Mistook the suggested fix for the fix for the line being hovered. "
+,4,Initiate Refactoring,,Success,No issues,"Noted the time that the refactoring took, commented that it might be for some lookups that are done for refactoring"
+,5,Refactor a single-file smell,,Failure,"Able to identify the preview window. Not able to identify the sidebar and Accept/Refect buttons. On Accept, able to identify the new changes and intuitively chose to detect smells again on the new file",Would like the sidebar to be relocated. Likes the preview section that pops up. Accept/Reject buttons should also be relocated. 
+,6,Refactor a multi-file smell that modifies multiple related files.,,Success,Found difficulty in determining that file names were clickable. Again noted the difficulty in identifying the Accept/Reject buttons.,Would like the color of side bar to be changed. Accept/Reject buttons should appear at the bottom right of the preview window instead of sidebar
+,7,Customize extension settings to enable/disable specific smells.,,Success,"Able to go to the settings page, undesrtsnad disable functionality and note the change on redetection",Liked this feature 
+,,,,,,
+,,Feedback:,Change the color and/or location of the sidebar so it is more easily identifiable,,,
+,,,Relocated Accept/Reject buttons to the bottom of preview window,,,
+,,,"Would likely use the plugin if building a large project in Python, would probably not care for a small one as savings are minimal",,,
+,,,"Would be more interested in a script that runs continuously for an existing project, for a project that is being built from scratch would be more interested in the manual one by one refactoring object",,,
+,,,Key note: VS Code as an IDE is not allowed for use in some enterprise settings such as those for goverment use. In that case this plugin is useless,,,
+,,,"If I am coding from scratch would prefer a mnual refactoring option over script as ""I don't want the plugin to change my coding habits""",,,
+,,,Don't feel the need for a dashboard as I am making changes cumulatively,,,
+,,,Make the plugin more visually appealing and make file names that are clickable easily identifiable,,,
