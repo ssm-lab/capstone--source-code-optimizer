@@ -14,6 +14,8 @@ from ...refactorers.refactorer_controller import RefactorerController
 from ...measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from ...data_types.smell import Smell
 
+logger = CONFIG["refactorLogger"]
+
 router = APIRouter()
 refactorer_controller = RefactorerController()
 energy_meter = CodeCarbonEnergyMeter()
@@ -39,42 +41,38 @@ class RefactorRqModel(BaseModel):
 @router.post("/refactor", response_model=RefactoredData)
 def refactor(request: RefactorRqModel):
     """Handles the refactoring process for a given smell."""
-    CONFIG["refactorLogger"].info(f"{'=' * 100}")
-    CONFIG["refactorLogger"].info("🔄 Received refactor request.")
+    logger.info(f"{'=' * 100}")
+    logger.info("🔄 Received refactor request.")
 
     try:
-        CONFIG["refactorLogger"].info(
-            f"🔍 Analyzing smell: {request.smell.symbol} in {request.source_dir}"
-        )
+        logger.info(f"🔍 Analyzing smell: {request.smell.symbol} in {request.source_dir}")
         refactor_data = perform_refactoring(Path(request.source_dir), request.smell)
-
-        CONFIG["refactorLogger"].info("✅ Refactoring process completed.")
 
         if refactor_data:
             refactor_data = clean_refactored_data(refactor_data)
-            CONFIG["refactorLogger"].info(f"{'=' * 100}\n")
+            logger.info(f"{'=' * 100}\n")
             return refactor_data
 
-        CONFIG["refactorLogger"].info(f"{'=' * 100}\n")
+        logger.info(f"{'=' * 100}\n")
         return None
 
     except OSError as e:
-        CONFIG["refactorLogger"].error(f"❌ OS error: {e!s}")
+        logger.error(f"❌ OS error: {e!s}")
         raise HTTPException(status_code=404, detail=str(e)) from e
     except EnergySavingsError as e:
-        CONFIG["refactorLogger"].error(f"❌ Energy savings error: {e!s}")
+        logger.error(f"❌ Energy savings error: {e!s}")
         raise HTTPException(status_code=400, detail=str(e)) from e
     except NotImplementedError as e:
-        CONFIG["refactorLogger"].error(f"❌ Refactoring not implemented: {e!s}")
+        logger.error(f"❌ Refactoring not implemented: {e!s}")
         raise HTTPException(
             status_code=400,
             detail=f"No refactoring implementation found for smell: {request.smell.symbol}",
         ) from e
     except RefactoringError as e:
-        CONFIG["refactorLogger"].error(f"❌ Refactoring error: {e!s}")
+        logger.error(f"❌ Refactoring error: {e!s}")
         raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
-        CONFIG["refactorLogger"].error(f"❌ Unexpected error: {e!s}")
+        logger.error(f"❌ Unexpected error: {e!s}")
         raise HTTPException(status_code=400, detail="An unexpected error occurred.") from e
 
 
@@ -82,21 +80,21 @@ def perform_refactoring(source_dir: Path, smell: Smell):
     """Executes the refactoring process for a given smell."""
     target_file = Path(smell.path)
 
-    CONFIG["refactorLogger"].info(
+    logger.info(
         f"🚀 Starting refactoring for {smell.symbol} at line {smell.occurences[0].line} in {target_file}"
     )
 
     if not source_dir.is_dir():
-        CONFIG["refactorLogger"].error(f"❌ Directory does not exist: {source_dir}")
+        logger.error(f"❌ Directory does not exist: {source_dir}")
         raise OSError(f"Directory {source_dir} does not exist.")
 
     initial_emissions = measure_energy(target_file)
 
     if not initial_emissions:
-        CONFIG["refactorLogger"].error("❌ Could not retrieve initial emissions.")
+        logger.error("❌ Could not retrieve initial emissions.")
         raise RuntimeError("Could not retrieve initial emissions.")
 
-    CONFIG["refactorLogger"].info(f"📊 Initial emissions: {initial_emissions} kg CO2")
+    logger.info(f"📊 Initial emissions: {initial_emissions} kg CO2")
 
     temp_dir = mkdtemp(prefix="ecooptimizer-")
     source_copy = Path(temp_dir) / source_dir.name
@@ -122,25 +120,21 @@ def perform_refactoring(source_dir: Path, smell: Smell):
     if not final_emissions:
         print("❌ Could not retrieve final emissions. Discarding refactoring.")
 
-        CONFIG["refactorLogger"].error(
-            "❌ Could not retrieve final emissions. Discarding refactoring."
-        )
+        logger.error("❌ Could not retrieve final emissions. Discarding refactoring.")
 
         shutil.rmtree(temp_dir, onerror=remove_readonly)
         raise RuntimeError("Could not retrieve final emissions.")
 
     if CONFIG["mode"] == "production" and final_emissions >= initial_emissions:
-        CONFIG["refactorLogger"].info(f"📊 Final emissions: {final_emissions} kg CO2")
-        CONFIG["refactorLogger"].info("⚠️ No measured energy savings. Discarding refactoring.")
+        logger.info(f"📊 Final emissions: {final_emissions} kg CO2")
+        logger.info("⚠️ No measured energy savings. Discarding refactoring.")
 
         print("❌ Could not retrieve final emissions. Discarding refactoring.")
 
         shutil.rmtree(temp_dir, onerror=remove_readonly)
         raise EnergySavingsError(str(target_file), "Energy was not saved after refactoring.")
 
-    CONFIG["refactorLogger"].info(
-        f"✅ Energy saved! Initial: {initial_emissions}, Final: {final_emissions}"
-    )
+    logger.info(f"✅ Energy saved! Initial: {initial_emissions}, Final: {final_emissions}")
 
     refactor_data = {
         "tempDir": temp_dir,
@@ -189,5 +183,5 @@ def clean_refactored_data(refactor_data: dict[str, Any]):
             ],
         )
     except KeyError as e:
-        CONFIG["refactorLogger"].error(f"❌ Missing expected key in refactored data: {e}")
+        logger.error(f"❌ Missing expected key in refactored data: {e}")
         raise HTTPException(status_code=500, detail=f"Missing key: {e}") from e
