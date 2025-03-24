@@ -30,6 +30,14 @@
     \midrule
     September 18th, 2024 & All & Created first draft of document\\
     September 23rd, 2024 & All & Finalized document\\
+    January 2nd, 2025 & Ayushi Amin & Made TA feedback changes\\
+    March 24th, 2025 & Tanveer Brar & Update section 2,4,5,6\\ 
+    March 24th, 2025 & Sevhena Walker & Update project link.\\
+    March 24th, 2025 & Mya Hussain & Updated Team POC Plan\\ 
+    March 24th, 2025 & Mya Hussain & Updated Performance Benchmarking Tests\\ 
+    March 24th, 2025 & Ayushi Amin & Removed unneccessary sections\\
+    March 24th, 2025 & Ayushi Amin & Updated external tools used\\
+    March 24th, 2025 & Sevhena Walker & Updated linter tools to reflect correct linting tools and removed development tools\\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -43,17 +51,17 @@ team roles, workflow structure, and project scheduling. Additionally, the plan c
 expected technologies, coding standards, and proof of concept demonstrations, providing
 a clear road map for the project's progression.
 
-\section{Confidential Information?}
+\section{Confidential Information}
 
 No confidential information to protect.
 \section{IP to Protect}
 
-\hspace{\parindent}The software and associated documentation files for this project are protected by copyright, can be accessed at this \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/LICENSE}{ link}(referred to as "License"). The License does not grant any party the rights to modify, merge, publish, distribute, sub license, or sell the software without explicit permission .
+\hspace{\parindent}The software and associated documentation files for this project are protected by copyright, can be accessed at this \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/LICENSE}{ link}(referred to as ``License"). The License does not grant any party the rights to modify, merge, publish, distribute, sub license, or sell the software without explicit permission .
 
 Unauthorized use, modification, or distribution of the software is prohibited and may result in legal action.
 \\
 
-\hspace{\parindent} Permission is granted on a case-by-case basis, non-transferable and non-exclusive. No rights to exploit the software commercially or otherwise are granted without prior written consent from the copyright holders.
+\hspace{\parindent} Permission is granted on a case-by-case basis(non-transferable and non-exclusive). No rights to exploit the software commercially or otherwise are granted without prior written consent from the copyright holders.
 
 \section{Copyright License}
 
@@ -61,8 +69,8 @@ See LICENSE file in root of repository, can be accessed at this \href{https://gi
 
 \section{Team Meeting Plan}
 
-\hspace{\parindent} The team will meet multiple times a week, once during Monday tutorial time and throughout the week as issues or concerns arise. The meetings will be conducted either online through a Teams meeting or in-person on campus. The team
-will hold an official meeting with the industry advisor once a week yet the time has not been decided. The meeting with the advisor will be online on Teams for the first three weeks, followed by in-person meetings later on. Meetings itself will be structured as follows:
+\hspace{\parindent} The team will meet multiple times a week, once during Monday tutorial time and throughout the week as issues or concerns arise. The meetings will be conducted either online through a Discord meeting or in-person on campus. The team
+will hold an official meeting with the industry advisor once a week yet the time has not been decided. The meeting with the advisor will be online on Zoom for the first three weeks, followed by in-person meetings later on. Meetings itself will be structured as follows:
 \begin{enumerate}
   \item Each member will take turns giving a short recap of work they have accomplished throughout the week.
   \item Members will voice any concerns or issues they may be facing.
@@ -76,8 +84,8 @@ The team will go ahead and use Issues on GitHub to add anything they may want to
 \begin{itemize}
 
     \item \textbf{Issues}: GitHub 
-    \item \textbf{Meetings}: Microsoft Teams 
-    \item \textbf{Meetings (with advisor)}: Discord Group Chat
+    \item \textbf{Meetings}: Discord
+    \item \textbf{Meetings (with advisor)}: Discord Group Chat, Zoom
     \item \textbf{Informal Project Discussion}: WhatsApp, Discord Server
     \item \textbf{Formal Project Discussion}: Discord Server
     
@@ -86,23 +94,37 @@ The team will go ahead and use Issues on GitHub to add anything they may want to
 
 \section{Team Member Roles}
 
-\hspace{\parindent}As a team, we will all function as developers, sharing responsibilities
-for creating issues, coding, testing, and documentation in the early stages. Specific roles
-will be defined as the project evolves, allowing for flexibility and collaboration. \\
+As a team, we will work collaboratively to develop and refine our Source Code Energy Optimizer project. To ensure clear division 
+of tasks and responsibilities while fostering collaboration, we have defined the following roles for each team member. These roles 
+reflect both individual strengths and shared responsibilities in achieving our project’s goals.
 
-During our scheduled meetings (with the supervisor, within the team, etc.), we will follow
-an Agile Scrum structure, incorporating additional roles such as Scrum Master and Scribe.
-These roles will rotate weekly, with the Scrum Master responsible for organizing and leading
-the meetings, and the Scribe tasked with documenting key details. This approach ensures active
-participation and shared responsibility amongst team members. \\
+\subsection*{Defined Roles for Team Members}
+\begin{itemize}
+    \item \textbf{Sevhena Walker:} \textit{Developer, Scrum Master and DevOps Lead} \\
+    Sevhena will lead the end-to-end development process across the full stack, ensuring seamless integration of all components. As Scrum Master, she will facilitate sprint planning and team coordination. She will also manage the implementation of GitHub Actions for linting, test coverage, and other automated quality checks.
+    
+    \item \textbf{Mya Hussain:} \textit{Developer and Refactoring Library Lead} \\
+    Mya will focus on end-to-end development process across the full stack, including the plugin and the refactoring library. Her specialized focus will be on enhancing the refactoring library, ensuring it provides automated, energy-efficient transformations 
+    while preserving functional behavior. She will also collaborate in 
+    maintaining cross-platform compatibility.
 
-We have chosen not to designate a team leader, as we all possess similar skills and knowledge.
-Instead, we aim to work collaboratively to resolve any challenges that arise.
+    \item \textbf{Tanveer Brar:} \textit{Developer and Testing Lead} \\
+    Tanveer will contribute to end-to-end development of the plugin and the refactoring library. She will be dedicated to writing and executing tests to validate the refactoring library, the plugin and their integration. She will ensure all refactored code maintains its functional integrity and meets energy optimization goals. 
+
+    \item \textbf{Ayushi Amin:} \textit{Developer and Algorithm Optimization Lead} \\
+    Ayushi will contribute to end-to-end development of the plugin and the refactoring library. Her focus will be on implementing the functionality to do multiple refactorings on the same kind in the plugin, as well as refining the algorithms to ensure optimal energy savings and code readability. She will also contribute to enhancing Python-specific refactoring strategies and improving computational efficiency.
+
+    \item \textbf{Nivetha Kuruparan:} \textit{Developer and Plugin UI/UX Lead} \\
+    Nivetha will contibute to the end-to-end development of the plugin and the refactoring library. She will specialize in analyzing the UX of the plugin and ensuring that the user has a seamless experience in the start-to-end process for energy optimization to continuously improve the refactoring process.
+\end{itemize}
+
+\subsection*{Agile Scrum Structure}
+During our scheduled meetings (with the supervisor, within the team, etc.), we will follow an Agile Scrum structure, incorporating roles such as Scrum Master and Scribe. These roles will rotate weekly, with the Scrum Master responsible for organizing  and leading the meetings, and the Scribe tasked with documenting key details. This approach ensures active participation and shared responsibility amongst team members.
 
 \section{Workflow Plan}
 
 \hspace{\parindent}The repository will contain two main persistent branches (branching off main) throughout the project:
-\textbf{dev} and \textbf{documentation}. These branches, that we will henceforth call "epic" branches, will be used for technical
+\textbf{dev} and \textbf{documentation}. These branches, that we will henceforth call ``epic" branches, will be used for technical
 software development and documentation changes respectively. \\
 
 The average workflow for the project will proceed as follows:
@@ -127,13 +149,10 @@ The average workflow for the project will proceed as follows:
 \noindent
 \hspace{\parindent}\textbf{Milestones} will be used to organize commits and pull requests for major deliverables. Once all working branches associated to the milestone have been merged into the appropriate epic branch, the team will go through the relevant prepared checklist to make sure that all requirements have been met. Once this is done, the epic branch will be merged into main as one pull request along with the checklist. \\
 
-\noindent
-\hspace{\parindent}The \textbf{CI/CD} pipeline will be implemented via GitHub to improve automated testing as well as facilitate the feedback loop for the machine learning models used by the library. More detailed information will be added later.
-
 \section{Project Decomposition and Scheduling}
 
 \noindent
-\hspace{\parindent}The project is hosted on GitHub under the organization of Sustainable Systems and Methods (SSM) Lab and can be accessed at this \href{https://github.com/ssm-lab/capstone--source-code-optimizer}{link}.\\
+\hspace{\parindent}The project is hosted on GitHub under the organization of Sustainable Systems and Methods (SSM) Lab and can be accessed at this \href{https://github.com/orgs/ssm-lab/projects/2}{link}.\\
 
 The team currently has one GitHub Project setup to serve as a visual tool not only to track deadlines for all tasks but also for accountability  for assigned tasks. The project can include cards for:
 \begin{itemize}
@@ -171,7 +190,7 @@ For context, our POC will consist of roughly the following steps:
 \begin{enumerate}
   \item Determine the code smells we want to address for energy saving.
   \begin{itemize}
-    \item List Comprehension in an \texttt{any} or \texttt{all} statement, Member Ignoring Method, Long Paramter List, Unused Imports, Long Message Chain, Unused Class Attributes and Variables
+    \item Such as but not limited to Long Lambda Function, Member Ignoring Method, Long Paramter List, Unused Imports, Long Message Chain, Unused Class Attributes and Variables
   \end{itemize} 
   \item Determine the detectability of a specific code smell 
   \begin{itemize}
@@ -179,13 +198,9 @@ For context, our POC will consist of roughly the following steps:
   \end{itemize} 
   \item Determine the appropriate refactorings for a particular detected smell that results in decreased energy consumption.
   \begin{itemize}
-    \item We will use codecarbon to measure the emissions of a python code file. This step will involve various phases of trial and error as it is not a 1-1 trivial solution. There could be various refactorings possible for a given situation that all result in different energy consumption levels. We want our tool to choose the most optimal refactoring possible. For our POC this can exist as an algorithm. For our final project we can attempt to implement a neural network to choose between refactorings. There are also prebuilt free to use libraries we can implement to perform simple refactorings.
+    \item We will use codecarbon to measure the emissions of a python code file. This step will involve various phases of trial and error as it is not a 1-1 trivial solution. There could be various refactorings possible for a given situation that all result in different energy consumption levels. We want our tool to choose the most optimal refactoring possible.
   \end{itemize} 
   \item Once we determine preset algorithms mapping detected smells to their appropriate refactorings, we want to then make those changes in the code, measure the energy consumption and test it against the original code ensuring it is less.
-  \item The code must then ensure that the original code functionallity is preserved. If it is not a different refactoring is required. 
-  \begin{itemize}
-    \item This can be done by testing the original test suite for the code against the new one. This original test suite can be a required argument for the user.
-  \end{itemize} 
 \end{enumerate}
 
 \noindent
@@ -199,7 +214,7 @@ The following is a list of primary risks and how potential results from the POC 
 
   \item Energy is decreased but functionality of the code is modified. 
   \begin{itemize}
-    \item If this occurs then the refactoring we applied was incorrect for the given code. A new refactoring should occur. Finding valid refactorings can be implemented iteratively, it is okay for the code to get a couple wrong so long as the final answer is correct. Requiring the user to submit a test suite for the original code can ensure that the code is not modified beyond its purpose. We can also add error handling that lets the user be in charge of the refactorings by making them suggestions instead of absolutes, that allows for the software engineer to have more control over what their final code looks like.
+    \item The onus is placed on the user to identify if a refactoring breaks the functionality of the code as they will either accept or reject each suggestion. This gives the user more control over how their code base develops and allows them to consider other potential tradeoffs for each possible change.
   \end{itemize} 
 
 \end{enumerate}
@@ -231,7 +246,7 @@ A diverse set of languages is being used to build different components of the pr
     \item \textbf{Refactoring Library: Python}\\
     The library is being built in Python for the following reasons:
     \begin{itemize}
-        \item The language has well-established libraries like `Rope` for refactoring and `PyJoules` for energy analysis, which can be leveraged for the MVP.
+        \item The language has well-established libraries like `Rope` for refactoring and `Code Carbon` for energy analysis, which can be leveraged for the MVP.
         \item The language is widely used in both research and industry, making the library adoptable by a broader community of developers.
     \end{itemize}
     \item \textbf{VS Plugin: TypeScript}\\
@@ -242,41 +257,26 @@ A diverse set of languages is being used to build different components of the pr
 To build an MVP, the team is relying on multiple external libraries to handle the technical detail intensive work. Below is a list of external libraries that we are using along with their purpose. Note that their usage will be replaced with custom implementation once an MVP has been created and tested.
 
 \begin{enumerate}
-    \item \textbf{Code Energy Calculation: PyJoules}\\
-    PyJoules is a well-documented library that calculates the energy consumed on executing a given Python code base. Since the library calculates energy consumption at the hardware level, the calculations are very precise. This makes it an ideal choice for analyzing the energy impact of code refactorings.
+    \item \textbf{Code Energy Calculation: Code Carbon}\\
+    Code Carbon is a well-documented library that calculates the energy consumed on executing a given Python code base. It estimates energy consumption by monitoring CPU, GPU, and RAM usage. Although the measurements are highly unreliable, it was a more ideal choice since this libray is compatible with more operating systems for analyzing energy consumption.
 
-    \item \textbf{Inefficient Code Pattern Detection: PySmells}\\
-    After reviewing PySmells documentation, it can be deduced that a majority of code smells can be detected and resolved using the library.
+    \item \textbf{Inefficient Code Pattern Detection: PyLint}\\
+    After reviewing PyLint documentation, it can be deduced that a majority of code smells can be detected and resolved using this library.
 
     \item \textbf{Refactoring: Rope}\\
     Rope includes a wide range of refactorings, such as renaming, function extraction, and code restructuring. Some of these will be useful when refactoring for inefficient code patterns. Rope is an ideal choice as it simplifies the process of identifying and replacing these code patterns with more optimized versions.
 \end{enumerate}
 
-\subsection{DevOps Integration Framework}
-Since the goal is to integrate with GitHub, GitHub Actions is the natural choice for the CI/CD part of the project. By using GitHub Actions, the library can be configured to be automatically triggered whenever new code is pushed into a branch. This action can be integrated with test suites provided by the user to validate that functional behavior is retained past refactoring.
-
-\subsection{Machine Learning Model}
-The reinforcement learning model needs to be trained on specific refactoring techniques and developer feedback. Since the problem space is unique to this project, the model will be trained by the feedback received through the application of the library.
-
-\subsection{Machine Learning Framework}
-For the learning model, the team has decided to utilize the PyTorch framework for the following two reasons:
-\begin{enumerate}
-    \item The framework is written in Python, so it's easier to integrate with the Python-based library.
-    \item The framework has a less steep learning curve compared to TensorFlow since it’s syntactically similar to PyTorch.
-\end{enumerate}
-
 \subsection{Continuous Integration Plan}
 For automated testing and integration within the GitHub DevOps pipeline, the team has decided to utilize GitHub Actions since they have a wide variety of support articles for initial setup.
-
-\subsection{Additional Tools (for Development Support)}
-To ensure that the plugin, library, and reinforcement learning model run consistently across different environments, Docker containers will be used. Since these can package the entire application with its dependencies, there will be consistency in development, testing, and deployment environments.
 
 \subsection{Linter Tools}
 To ensure best practices, all team members will be using the following combination of linter tools for Python code:
 \begin{enumerate}
-    \item \textbf{Mypy:} This tool enforces type annotations, which helps to detect type-related errors before runtime. Since Python is dynamically typed, Mypy enhances code reliability by making types explicit.
-    \item \textbf{Flake8:} This tool checks code for style guide enforcement (PEP 8) and can catch potential errors early in development, improving code quality and maintainability.
+  \item \textbf{Ruff:} This tool is used for linting and enforcing code quality. It is fast and supports a wide range of linting rules, making it ideal for maintaining consistent and clean code.
+  \item \textbf{Pyright:} This tool is used for static type checking in Python. It ensures type correctness and helps catch potential type-related errors early in the development process.
 \end{enumerate}
+
 
 \subsection{Code Smell Tools}
 To identify code smells during development, the team will include PySmells in the project. In addition to the fact that the tool covers a majority of Python code smells, the team was enthusiastic about the fact that the library itself will be used during implementation of the MVP.
@@ -288,11 +288,7 @@ To ensure systematic testing of our growing codebase, the project will include u
 \texttt{Coverage.py} has been chosen to measure the code coverage. This will be a useful tool to identify areas of the code base that need additional test coverage.
 
 \subsection{Performance Measurement}
-Performance measuring tools have been chosen to target common Python-specific code problems. Here is a list of tools the team plans to integrate into the project:
-\begin{enumerate}
-    \item \textbf{PyTrace:} This tool will be used to trace execution and will be particularly useful in instances that might be prone to race conditions.
-    \item \textbf{cProfile:} This tool will be used to retrieve information on the time spent on each function during execution. This will be particularly useful to identify any performance bottlenecks.
-\end{enumerate}
+The team will perform extensitve performance benchmarking using the benchmarking built-in python library. Files of size 250, 1000, 3000 will be tested and time performance will be measured for each refactorin, smell detection and energy measurement.
 
 \section{Coding Standard}
 
@@ -354,14 +350,14 @@ The team will include PEP 8 as the coding standard in the project. This standard
 
     Without this planning stage, you are essentially going in blind with only a vague understanding and what you need to do. There is
     no way to organize task between team members efficiently either since specific components are sparsely detailed or non-existent. The
-    project will be in a constant state of "debugging" you could say, constantly trying to figure out how this feature will work with the
+    project will be in a constant state of ``debugging" you could say, constantly trying to figure out how this feature will work with the
     next and the next and so on. This would be like trying to build a house while only ever looking at the next couple meters in front of you.
 
   \item \textit{What disagreements did your group have in this deliverable, if any, and how did you resolve them?}
   
   I honestly cannot say that we had any disagreements as yet. Our team tried our best to discuss what our goals for the project were and
   everything was well communicated so that everyone was on the same page. We are at the beginning stages of a project that will implement
-  technology is mostly new to us. We are excited, but also somewhat ignorant to some details which makes it hard to "disagree".
+  technology is mostly new to us. We are excited, but also somewhat ignorant to some details which makes it hard to ``disagree".
 
 \end{enumerate}
 
@@ -494,7 +490,7 @@ Our team has the following expectations regarding the quality of preparation for
     \item \textbf{Accountability and Feedback}:
     \begin{itemize}
         \item Team members are responsible for completing their work to a high standard, communicating any issues early if they need assistance or more time.
-        \item Feedback on deliverables should be welcomed by all members, and revisions should be made promptly to improve the overall quality of the team’s output.
+        \item Feedback on deliverables should be welcomed by all members, and revisions should be made within 7 days to improve the overall quality of the team’s output.
     \end{itemize}
 
 \end{itemize}
@@ -550,9 +546,8 @@ To keep our team on track, we will implement the following methods:
         \item \textit{Commits to the repository}, ensuring steady contributions.
         \item \textit{Task completion rates}, ensuring deadlines are met.
     \end{itemize}
-    \item \textbf{Rewards for High Performers}: To encourage good performance, we will recognize and celebrate team members who meet or
-    exceed expectations. Informal rewards may include public recognition during meetings or assigning leadership roles in future tasks.
-    \item \textbf{Managing Under performance}: If a team member's performance is below expectations:
+    \item \textbf{Rewards for High Performers}: To encourage good performance, we will recognize and celebrate team members who meet or exceed expectations (completing more than the agreed upon work for the week). Informal rewards may include public recognition during meetings or assigning leadership roles in future tasks.
+    \item \textbf{Managing Under performance}: If a team member's performance is below expectations (not completing the same amount of work as every other team member for more than 3 weeks):
     \begin{itemize}
         \item We will start with a \textit{team conversation} to understand any obstacles and offer support.
         \item If under performance continues, consequences may include \textit{more tasks} for milestone or in severe cases, a meeting with
