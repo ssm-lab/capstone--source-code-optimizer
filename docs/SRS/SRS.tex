@@ -892,15 +892,16 @@ describes the interaction between the user and the system.
     2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) \\
     3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) \\
     4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) \\
-    5 & Select Code Smell & User & Selected Code Smell (in) \\
-    6 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) \\
-    7 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) \\
-    8 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) \\
-    9 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\
-    10 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) \\
-    11 & Clear Smell History & User & Clear Command (in), Reset Cache (out) \\
-    12 & Access Documentation & User & Help Request (in), Documentation (out) \\
-    13 & Generate System Logs & System & Log Request (in), Log File (out) \\
+    5 & Configure Smell Display & User & Display Preferences (in), Updated VS Code Settings (out) \\
+    6 & Select Code Smell & User & Selected Code Smell (in) \\
+    7 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) \\
+    8 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) \\
+    9 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) \\
+    10 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\
+    11 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) \\
+    12 & Clear Smell History & User & Clear Command (in), Reset Cache (out) \\
+    13 & Access Documentation & User & Help Request (in), Documentation (out) \\
+    14 & Generate System Logs & System & Log Request (in), Log File (out) \\
     \bottomrule
   \end{tabularx}
   \caption{Product Use Case Table of System}
@@ -964,6 +965,16 @@ each use case, emphasizing expected functionality and outcomes for users.
     \textbf{Input:} Threshold Parameters. \\
     \textbf{Output:} Updated Detection Rules.
 
+    \item \textbf{Configure Smell Display} \\[2mm]
+    \textbf{Trigger:} User accesses settings to modify smell display preferences. \\[2mm]
+    \textbf{Preconditions:}
+    \begin{itemize}
+      \item None.
+    \end{itemize}
+    \textbf{Actors:} User. \\
+    \textbf{Outcome:} Code smells are displayed according to user-configured visual styles. \\
+    \textbf{Input:} Display Preferences (color, design). \\
+    \textbf{Output:} Updated visual representation of smells in linted files.
   \item \textbf{Select Code Smell for Refactoring} \\[2mm]
     \textbf{Trigger:} The user selects a detected code smell to be refactored. \\[2mm]
     \textbf{Preconditions:}
