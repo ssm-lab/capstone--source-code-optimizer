@@ -1,0 +1,266 @@
+[
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "INFERENCE",
+        "message": "Method could be a function",
+        "messageId": "R6301",
+        "module": "input.project_car_stuff.main",
+        "obj": "Test.unused_method",
+        "occurences": [
+            {
+                "column": 4,
+                "endColumn": 21,
+                "endLine": 9,
+                "line": 9
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "no-self-use",
+        "type": "refactor"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Too many arguments (12/6)",
+        "messageId": "R0913",
+        "module": "input.project_car_stuff.main",
+        "obj": "Vehicle.__init__",
+        "occurences": [
+            {
+                "column": 4,
+                "endColumn": 16,
+                "endLine": 15,
+                "line": 15
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "too-many-arguments",
+        "type": "refactor"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Use a generator instead 'all(isinstance(attribute, str) for attribute in [self.make, self.model, self.year, self.color])'",
+        "messageId": "R1729",
+        "module": "input.project_car_stuff.main",
+        "obj": "Vehicle.calculate_price",
+        "occurences": [
+            {
+                "column": 20,
+                "endColumn": 9,
+                "endLine": 61,
+                "line": 56
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "use-a-generator",
+        "type": "refactor"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "INFERENCE",
+        "message": "Method could be a function",
+        "messageId": "R6301",
+        "module": "input.project_car_stuff.main",
+        "obj": "Vehicle.unused_method",
+        "occurences": [
+            {
+                "column": 4,
+                "endColumn": 21,
+                "endLine": 69,
+                "line": 69
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "no-self-use",
+        "type": "refactor"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Too many arguments (12/6)",
+        "messageId": "R0913",
+        "module": "input.project_car_stuff.main",
+        "obj": "Car.__init__",
+        "occurences": [
+            {
+                "column": 4,
+                "endColumn": 16,
+                "endLine": 78,
+                "line": 78
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "too-many-arguments",
+        "type": "refactor"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Method chain too long (6/3)",
+        "messageId": "LMC001",
+        "module": "main",
+        "obj": null,
+        "occurences": [
+            {
+                "column": 14,
+                "endColumn": 84,
+                "endLine": 115,
+                "line": 115
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "long-message-chain",
+        "type": "convention"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Dictionary chain too long (4/3)",
+        "messageId": "LEC001",
+        "module": "main",
+        "obj": null,
+        "occurences": [
+            {
+                "column": 10,
+                "endColumn": 59,
+                "endLine": 146,
+                "line": 146
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "long-element-chain",
+        "type": "convention"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Dictionary chain too long (4/3)",
+        "messageId": "LEC001",
+        "module": "main",
+        "obj": null,
+        "occurences": [
+            {
+                "column": 10,
+                "endColumn": 60,
+                "endLine": 147,
+                "line": 147
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "long-element-chain",
+        "type": "convention"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Dictionary chain too long (4/3)",
+        "messageId": "LEC001",
+        "module": "main",
+        "obj": null,
+        "occurences": [
+            {
+                "column": 10,
+                "endColumn": 59,
+                "endLine": 148,
+                "line": 148
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "long-element-chain",
+        "type": "convention"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Dictionary chain too long (4/3)",
+        "messageId": "LEC001",
+        "module": "main",
+        "obj": null,
+        "occurences": [
+            {
+                "column": 10,
+                "endColumn": 60,
+                "endLine": 149,
+                "line": 149
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "long-element-chain",
+        "type": "convention"
+    },
+    {
+        "additionalInfo": {
+            "callString": null,
+            "concatTarget": null,
+            "innerLoopLine": null,
+            "repetitions": null
+        },
+        "confidence": "UNDEFINED",
+        "message": "Dictionary chain too long (4/3)",
+        "messageId": "LEC001",
+        "module": "main",
+        "obj": null,
+        "occurences": [
+            {
+                "column": 10,
+                "endColumn": 59,
+                "endLine": 150,
+                "line": 150
+            }
+        ],
+        "path": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
+        "symbol": "long-element-chain",
+        "type": "convention"
+    }
+]
