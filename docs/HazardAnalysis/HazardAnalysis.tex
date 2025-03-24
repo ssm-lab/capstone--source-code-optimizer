@@ -432,25 +432,25 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \item \emph{The system shall detect and exempt external library dependencies from refactorings to avoid compatibility issues.}\\
     {\bf Rationale:} Modifying external dependencies could lead to system instability or incompatibility with other tools or frameworks.\\
     {\bf Fit Criterion:} \texttt{DETECT\_ACC} detection accuracy for external library code during refactoring.\\
-    {\bf Associated Hazards:} HZ-10\\
+    {\bf Associated Hazards:} HZ-7\\
     {\bf Priority:} Medium
 
     \item \emph{The system shall not refactor or alter code containing sensitive information (noted by user), ensuring security is maintained.}\\
     {\bf Associated Rationale:} Refactoring sensitive code may introduce vulnerabilities and compromise security.\\
     {\bf Fit Criterion:} \texttt{REFACTOR\_SECURE\_THRESH} of refactorings must pass a security check to avoid tampering with sensitive information.\\
-    {\bf Associated Hazards:} HZ-11\\
+    {\bf Associated Hazards:} HZ-8\\
     {\bf Priority:} High
 
     \item \emph{The system shall implement memory leak detection during refactoring and alert users if any issues are detected.}\\
     {\bf Rationale:} Memory leaks may cause system crashes and reduce performance.\\
     {\bf Fit Criterion:} \texttt{MEM\_ALERT\_THRESH} of memory leak incidents should trigger an error alert and resolution process.\\
-    {\bf Associated Hazards:} HZ-7\\
+    {\bf Associated Hazards:} HZ-5\\
     {\bf Priority:} Medium
 
     \item \emph{The system shall require user approval for high-impact refactorings (those modifying more than 50 lines of code) or low-confidence refactorings (based on a ranked list of code smells), providing visibility and oversight for critical changes.}\\
     {\bf Rationale:} Automated decisions could introduce errors without human oversight, and users should be aware of significant changes.\\
     {\bf Fit Criterion:} \texttt{RISK\_REFACTOR\_THRESH} of refactorings exceeding 50 lines or flagged as low-confidence by the ranked smell list must require user approval before proceeding.\\
-    {\bf Associated Hazards:} HZ-15\\
+    {\bf Associated Hazards:} HZ-3\\
     {\bf Priority:} High
 
     \item \emph{The system shall alert users to any delays or failures in reporting energy consumption, ensuring transparency in reporting.}\\
@@ -459,21 +459,15 @@ The system consists of three core modules integrated through a Visual Studio Cod
     {\bf Associated Hazards:} HZ-2, HZ-3\\
     {\bf Priority:} High
 
-    \item \emph{The system shall validate energy measurement data before using it for refactoring decisions.}\\
-    {\bf Rationale:} Incorrect energy measurements can lead to suboptimal or erroneous refactoring decisions, affecting code efficiency and functionality.\\
-    {\bf Fit Criterion:} \texttt{ENERGY\_VALID\_THRESH} of energy measurement data shall be validated before use in refactoring, and invalid data shall be flagged and not used for optimization.\\
-    {\bf Associated Hazards:} HZ-16\\
-    {\bf Priority:} High
-
     \item \emph{The system shall implement synchronization mechanisms to prevent conflicts during concurrent refactorings, ensuring that refactoring operations do not interfere with each other.}\\
     {\bf Rationale:} Without synchronization, concurrent refactorings could lead to code instability, unintended behavior, or data corruption.\\
-    {\bf Associated Hazards:} HZ-18\\
+    {\bf Associated Hazards:} HZ-10\\
     {\bf Priority:} High
 
     \item \emph{The system shall implement a checkpointing mechanism to periodically save the state of the optimization process, including the refactoring progress, energy measurement data, and provide recovery options in case of a system shutdown or failure.}\\
     {\bf Rationale:} Periodic checkpointing ensures progress is not lost during unexpected system failures, allowing users to resume optimization.\\
     {\bf Fit Criterion:} The system must save progress at least every \texttt{SAVE\_TIME} during optimization and allow recovery with no more than \texttt{MAX\_DATA\_LOSS} in \texttt{FAIL\_SCENARIO\_THRESH} of failure scenarios.\\
-    {\bf Associated Hazards:} HZ-19\\
+    {\bf Associated Hazards:} HZ-11\\
     {\bf Priority:} High
 
 \end{enumerate}
