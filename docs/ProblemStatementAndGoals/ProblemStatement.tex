@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage[letterpaper, portrait, margin=1.2in]{geometry}
 \usepackage[round]{natbib}
 \usepackage{tabularx}
 \usepackage{booktabs}
@@ -36,6 +37,8 @@
     March 24th, 2025 & Tanveer Brar & Updated output section \\
     March 24th, 2025 & Sevhena Walker & Removed mentions of preserving code functionality through testing \\
     March 24th, 2025 & Mya Hussain & Removed mentions of database storing \\
+    March 24th, 2025 & Ayushi Amin & Fixed formatting and grammar/spelling \\
+    March 24th, 2025 & Sevhena Walker & Update the aspects of the plugin \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -111,10 +114,12 @@ Our goal is to reduce the energy consumption of Python codebases during executio
     The library refactors inefficient code patterns to achieve a net reduction in energy consumption of the given codebase. When there are multiple ways to refactor a block of code, it will choose the one with the greatest net reduction in energy consumption.
 
     \item \textbf{Plugin:} \\
-    The plugin will utilize the refactoring library so that developers can get access to a refactored and energy-efficient version of their Python codebase within an IDE. The plugin has two aspects:
+    The plugin will utilize the refactoring library so that developers can get access to a refactored and energy-efficient version of their Python codebase within an IDE. The plugin has three main aspects:
 
     \begin{itemize}
-        \item \textbf{Developer Feedback:} Developers will be able to review the refactoring suggestions and decide whether to apply the changes based on their preferences.
+    \item \textbf{Detecting and Viewing Smells:} The plugin will identify code smells in the Python codebase that contribute to inefficient energy consumption and allow developers to view these smells directly within the IDE.
+    \item \textbf{Initiating Refactoring and Viewing Changes:} The plugin will enable developers to initiate refactoring of the identified code smells and view the resulting changes to the codebase.
+    \item \textbf{Viewing Energy Savings:} Developers will be able to see the cumulative energy savings achieved in the codebase over time as a result of the refactorings.
     \end{itemize}
 \end{enumerate}
 
