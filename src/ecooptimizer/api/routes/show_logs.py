@@ -2,6 +2,7 @@
 
 import asyncio
 from pathlib import Path
+import re
 from fastapi import APIRouter, WebSocketException
 from fastapi.websockets import WebSocketState, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
@@ -68,16 +69,20 @@ async def websocket_log_stream(websocket: WebSocket, log_file: Path):
 
     try:
         with log_file.open(encoding="utf-8") as file:
-            file.seek(0, 2)  # Start at file end
+            file.seek(0, 2)  # Seek to end of the file
             while not listener_task.done():
                 if websocket.application_state != WebSocketState.CONNECTED:
                     raise WebSocketDisconnect(reason="Connection closed")
-
                 line = file.readline()
                 if line:
-                    await websocket.send_text(line)
+                    match = re.search(r"\[\b(ERROR|DEBUG|INFO|WARNING|TRACE)\b]", line)
+                    if match:
+                        level = match.group(1)
+
+                        if level in ("INFO", "WARNING", "ERROR", "CRITICAL"):
+                            await websocket.send_text(line)
                 else:
-                    await asyncio.sleep(0.5)
+                    await asyncio.sleep(0.1)  # Short sleep when no new lines
     except FileNotFoundError:
         await websocket.send_text("Error: Log file not found.")
     except WebSocketDisconnect as e:
