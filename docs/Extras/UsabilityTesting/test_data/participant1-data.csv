@@ -1,0 +1,19 @@
+,Participant ID:,1,,,,
+,,,,,,
+,Task #,Task Description,Completion Time,Success/Failure,Moderator Notes,Participant Feedback
+,1,Run a standalone code smell detection on a Python file.,,Success,"• Confused by the commands at the top
+• noticed pop ups immediately
+• Didn't notice smells detected were highlight
+","• Confused by the highlighted smells underlined, box was confusing to understand"
+,2,Click on a detected smell and observe the text decoration.,,Success,• Able to easily click on smell detected,Pretty cool
+,3,Hover over a detected smell to view additional details and quick refactor options.,,Success,,• Confused about the (6/3) portion of the description
+,4,Initiate Refactoring,,Success,• Used button given to start the refactoring,"• ""Refactor"" button was hard to find so make it more prominent and easy to see"
+,5,Refactor a single-file smell,,Success,"• Cant find ""accept/reject"" buttons","• Long wait time - was confused if it worked
+• Posistion of the accept/reject buttons can be improved"
+,6,Refactor a multi-file smell that modifies multiple related files.,,Success,• Found modified files pretty easily and did the comparison to see the results,"• Add a label saying it has been refactored, here is the result"
+,7,Customize extension settings to enable/disable specific smells.,,Success,• Took some time to find the settings for extension ,"• The file has a lot going on
+• cool feature to limit detecting smells"
+,,,,,,
+,,Feedback,• show shortcuts to getting to extensions in settings page for our ext.,,,
+,,,• Labels for when refactorig is finished,,,
+,,,• save energy usage report,,,

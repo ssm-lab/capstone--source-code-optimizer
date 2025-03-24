@@ -1,0 +1,14 @@
+,Participant ID:,3,,,,
+,,,,,,
+,Task #,Task Description,Completion Time,Success/Failure,Moderator Notes,Participant Feedback
+,1,Run a standalone code smell detection on a Python file.,,Success,Easily able to recognize highlighted smells,"Not sure what the colors mean. Usually orange indicates warning, green indicates success. Would like to either see all smells in one color or be able to customize colors for different smell types"
+,2,Click on a detected smell and observe the text decoration.,,Success,Able to identify smell description,Was not aware that labelled smell could be an issue/impact energy efficiency 
+,3,Hover over a detected smell to view additional details and quick refactor options.,,Success,Able to hover over the smell line and see description,"Too much description in the hover box for smell. ""A little overwhelming, don't know what it does as I have not seen refactoring yet"""
+,4,Initiate Refactoring,,Success,Able to refactor using the button. Also identified the loading bar at the bottom,"Asked why the wait for refactoring was so long, after which we described the process. Also would like to use keyboard shortcut without having a cursor on the line(when shortcut is initiated, plugin should automatically refactor next detected smell)"
+,5,Refactor a single-file smell,,Failure,"Able to see preview and understand the changes in the file. Did not see the side bar for previous right away. Once directed to the sidebar, took a while to see the Accept/Reject buttons at the bottom ",Sidebar should ideally be located on the right and/or have a different color to be easily identifiable. Accept/Reject buttons should not be located at the bottom
+,6,Refactor a multi-file smell that modifies multiple related files.,,Failure,"Able to preview the change in all files through manual opening (first instinct). Not able to detect the change in sidebar, and also not able to deduce that file names are clickable",Change the file names style from plain text to something that indicates that they are clickable 
+,7,Customize extension settings to enable/disable specific smells.,,Success,No trouble finding. the settings ,Liked 
+,,,,,,
+,,Feedback:,"Would like the option to refactor all smells in one go. Could be a problem for maintainablity, so also add the feature to refactor on a case by case basis through arrow buttons on the keyboard for a faster experience",,,
+,,,"Smell colors should have a meaning. Usually green color indicates comments, orange indicates strings. Something similar for smells, or allow customization based on user preferences",,,
+,,,"Change the sidebar location and color, location of Accept/Reject buttons as well as style of file name buttons to be more easily identifiable ",,,
