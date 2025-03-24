@@ -79,10 +79,14 @@ describing software}
   March 24th, 2025 & All & Updated and added functional requirements. \\
   March 24th, 2025 & Mya Hussain & Updated Usability and Humanity Requirements. \\
   March 24th, 2025 & Ayushi Amin & Updated maintainability and support requirements. \\
-  March 24th, 2025 & Ayushi Amin & Updated cultural requirements.\\
-  March 24th, 2025 & Sevhena Walker & Updated solution constraints\\
+  March 24th, 2025 & Ayushi Amin & Updated cultural requirements. \\
+  March 24th, 2025 & Sevhena Walker & Updated solution constraints, style requirements, wider environment reqs, updated MD-EC1 to be less ambiguous. \\
   March 24th, 2025 & Mya Hussain & Updated Performance Requirements. \\
   March 24th, 2025 & Mya Hussain & Updated New Problems. \\
+  March 24th, 2025 & Ayushi Amin & Updated Scope of Work. \\
+  March 24th, 2025 & Ayushi Amin & Updated user documentation and training requirements. \\
+  March 24th, 2025 & Ayushi Amin & Updated migration of new product. \\
+  March 24th, 2025 & Ayushi Amin & Updated Costs section. \\
   \bottomrule 
 \end{tabularx}
 
@@ -552,7 +556,7 @@ are currently no expected maintenance users.
     to a wide range of users without the need for specialized hardware.\\
     {\bf Fit Criterion:} The tool must be installable and functional
     on a standard laptop with Visual Studio Code. It should perform
-    well without requiring excessive processing power or memory.\\
+    effectively on standard developer workstations without surpassing typical processing power or memory capacity limits.\\
     {\bf Priority:} High
 \end{enumerate}
 \subsection{Partner or Collaborative Applications}
@@ -864,7 +868,7 @@ scope of the product and what lies outside its responsibility.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{../Images/use_case_diagram.png}
+  \includegraphics[width=1.1\textwidth]{../Images/product_boundary.png}
   \caption{Product Boundary Diagram of System}
   \label{img:prod-bound}
 \end{figure}
@@ -880,32 +884,34 @@ describes the interaction between the user and the system.
 
 \begin{table}[H]
   \centering
-  \renewcommand{\arraystretch}{0.85} 
+  \renewcommand{\arraystretch}{0.85}
   \begin{tabularx}{\textwidth}{|c|
       >{\raggedright\arraybackslash}X|
-      >{\raggedright\arraybackslash}p{1.1in}| 
-    >{\raggedright\arraybackslash}X|}
-    \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} &
-    \textbf{Input \& Output(s)} \\
+      >{\raggedright\arraybackslash}p{1in}|
+      >{\raggedright\arraybackslash}X|
+      >{\raggedright\arraybackslash}p{0.8in}|}
+    \toprule 
+    \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} & \textbf{Functional Requirement} \\
     \midrule
-    1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) \\
-    2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) \\
-    3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) \\
-    4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) \\
-    5 & Select Code Smell & User & Selected Code Smell (in) \\
-    6 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) \\
-    7 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) \\
-    8 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) \\
-    9 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\
-    10 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) \\
-    11 & Clear Smell History & User & Clear Command (in), Reset Cache (out) \\
-    12 & Access Documentation & User & Help Request (in), Documentation (out) \\
-    13 & Generate System Logs & System & Log Request (in), Log File (out) \\
+    1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) & FR1, FR2, FR11 \\
+    2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) & FR17 \\
+    3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) & FR10 \\
+    4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) & FR14, FR19 \\
+    5 & Configure Smell Display & User & Display Preferences (in), Updated VS Code Settings (out) & FR12 \\
+    6 & Select Code Smell & User & Selected Code Smell (in) & FR13 \\
+    7 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) & FR3, FR4, FR8 \\
+    8 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) & FR6 \\
+    9 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) & FR6 \\
+    10 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) & FR6, FR11 \\
+    11 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) & FR16 \\
+    12 & Clear Smell History & User & Clear Command (in), Reset Cache (out) & FR18 \\
+    13 & Access Documentation & User & Help Request (in), Documentation (out) & FR7 \\
+    14 & Generate System Logs & System & Log Request (in), Log File (out) & FR15 \\
     \bottomrule
   \end{tabularx}
-  \caption{Product Use Case Table of System}
-  \label{tab:puc}
-  \vspace{-2mm} 
+  \caption{Product Use Case Table with FR Coverage}
+  \label{tab:puc-fr}
+  \vspace{-2mm}
 \end{table}
 
 \subsection{Individual Product Use Cases (PUC's)}
@@ -964,6 +970,16 @@ each use case, emphasizing expected functionality and outcomes for users.
     \textbf{Input:} Threshold Parameters. \\
     \textbf{Output:} Updated Detection Rules.
 
+    \item \textbf{Configure Smell Display} \\[2mm]
+    \textbf{Trigger:} User accesses settings to modify smell display preferences. \\[2mm]
+    \textbf{Preconditions:}
+    \begin{itemize}
+      \item None.
+    \end{itemize}
+    \textbf{Actors:} User. \\
+    \textbf{Outcome:} Code smells are displayed according to user-configured visual styles. \\
+    \textbf{Input:} Display Preferences (color, design). \\
+    \textbf{Output:} Updated visual representation of smells in linted files.
   \item \textbf{Select Code Smell for Refactoring} \\[2mm]
     \textbf{Trigger:} The user selects a detected code smell to be refactored. \\[2mm]
     \textbf{Preconditions:}
@@ -1168,10 +1184,15 @@ The following is a state diagram of the system.
     {\bf Fit Criterion:} The plugin provides a user-friendly interface that enables filtering detected code 
     smells by category, severity, or type, ensuring a customized refactoring experience.\\
     {\bf Priority:} Medium
-    \item \emph{The system should indicate code smells within a smell-linted file.}\\[2mm]
+  \item \emph{The system should indicate code smells within a smell-linted file.}\\[2mm]
     {\bf Rationale:} Developers need a clear visual representation of detected code smells to efficiently identify problematic areas in their code.\\
     {\bf Fit Criterion:} The system highlights detected code smells within the source file, for example, by underlining or marking affected lines.\\
     {\bf Priority:} High
+  
+  \item \emph{The system should allow users to configure how code smells are displayed within a smell-linted file.}\\[2mm]  
+    {\bf Rationale:} Different developers may have varying preferences for visual indicators (e.g., colors, underlines, icons) to improve readability and accommodate accessibility needs.\\  
+    {\bf Fit Criterion:} The system provides user-adjustable settings (e.g., via a preferences menu) to modify the visual representation of code smells, such as changing highlight colors, toggling line markers, or selecting icon-based annotations.\\  
+    {\bf Priority:} Medium  
 
 \item \emph{The system must allow for refactoring of specific smells.}\\[2mm]
     {\bf Rationale:} Developers should have the flexibility to refactor only selected code smells rather than applying all refactorings at once.\\
@@ -1237,27 +1258,6 @@ The following is a state diagram of the system.
 \end{enumerate}
 \subsection{Style Requirements}
 \begin{enumerate}[label=LFR-ST \arabic*., wide=0pt, leftmargin=*]
-  \item \emph{The tool shall convey a professional and authoritative
-    appearance to instill confidence in developers.}\\[2mm]
-    {\bf Rationale:} A professional appearance helps build trust and
-    encourages developers to use the tool confidently for
-    energy-efficient refactoring.\\
-    {\bf Fit Criterion:} After their first encounter with the tool,
-    the amount of representative developers that feel that it is a
-    trustworthy and reliable solution for energy-efficient
-    refactoring should be above the MIN\_USER\_CONFIDENCE.\\
-    {\bf Priority:} High
-  \item \emph{The IDE plugin interface shall promote a calm and
-      focused atmosphere, enhancing the developer's ability to
-    concentrate on code improvements.}\\[2mm]
-    {\bf Rationale:} A calm environment reduces distractions and
-    improves productivity, allowing developers to focus on their work
-    effectively.\\
-    {\bf Fit Criterion:} Developers should report feeling less
-    distracted and more productive while using the tool, with the
-    amount of developers indicating a positive change in their coding
-    environment meeting the MIN\_USER\_CONFIDENCE.\\
-    {\bf Priority:} Medium
   \item \emph{The tool design shall be visually appealing and modern,
     aligning with contemporary software development tools.}\\[2mm]
     {\bf Rationale:} A modern design improves user experience and
@@ -1477,17 +1477,7 @@ sustainability in various working environments.
 \end{enumerate}
 
 \subsection{Wider Environment Requirements}
-\begin{enumerate}[label=OER-WE \arabic*., wide=0pt, leftmargin=*]
-  \item \emph{The system must align with widely used emissions
-      standards (e.g., GRI 305, GHG, ISO 14064)
-    ~\citep{GHG,ISO14064,GRI305}.}\\[2mm]
-    {\bf Rationale:} Providing metrics tailored to these standards,
-    makes the library reporting tool more attractive to users part of
-    companies looking to reduce their ecological footprint. \\
-    {\bf Fit Criterion:} The emissions tracked by the standards are
-    present in the reported metrics. \\
-    {\bf Priority:} Medium
-\end{enumerate}
+Not applicable.
 
 \subsection{Requirements for Interfacing with Adjacent Systems}
 \begin{enumerate}[label=OER-IAS \arabic*., wide=0pt, leftmargin=*]
@@ -1738,7 +1728,7 @@ This section is not needed for this project.
     refactoring suggestions without collecting, storing or
     transmitting any personal information about the user.\\
     {\bf Priority:} High
-  \item \emph{Any data related to user submissions, energy reports
+  \item \emph{Any data related to user submissions, energy metrics
       and refactored results must be treated as confidential and
     handled securely throughout processing and transmission.}\\
     {\bf Rationale:} The tool must ensure user trust by safeguarding
@@ -1746,7 +1736,7 @@ This section is not needed for this project.
     or tampering. Secure handling of data during active sessions
     maintains the integrity and reliability of the tool. \\
     {\bf Fit Criterion:} The system processes user submissions,
-    energy reports, and refactored results securely within the active
+    energy metrics, and refactored results securely within the active
     session. No data is stored or retained after processing, ensuring
     all user information remains private and protected.\\
     {\bf Priority:} High
@@ -1761,7 +1751,7 @@ This section is not needed for this project.
     the user to debug or review tool behavior.\\
     {\bf Fit Criterion:} The system generates a log of important
     operational events, such as the start and completion of analysis,
-    energy measurements, and refactoring. \\[2mm]
+    energy measurements, and refactorings. \\[2mm]
     {\bf Priority:} Medium
   \item \emph{The tool should log user-triggered actions, such as
       code submissions and the initiation of refactoring processes,
@@ -1775,7 +1765,7 @@ This section is not needed for this project.
     {\bf Priority:} Medium
 \end{enumerate}
 \subsection{Immunity Requirements}
-\begin{enumerate}[label=SR-AUR \arabic*., wide=0pt, leftmargin=*]
+\begin{enumerate}[label=SR-IMR \arabic*., wide=0pt, leftmargin=*]
   \item \emph{The tool must minimize exposure to external threats,
       ensuring that the refactoring process is protected from
     unauthorized interference.}\\[2mm]
@@ -2113,17 +2103,17 @@ to overhaul existing infrastructure or processes.
     Developers can install the refactoring library directly using pip:
     \verb|pip install ecooptimizer|
     The IDE plugin can be installed by users through the Visual
-    Studio Code marketplace.
+    Studio Code Extensions marketplace.
   \item \textbf{Parallel Running:}
     There is no need for a phased implementation or parallel running
     of old and new systems. The tool can be directly integrated
     without affecting existing code or infrastructure.
   \item \textbf{Manual Backups:}
-    Since the tool does not alter data but rather provides
-    refactoring suggestions, no manual backups are required before installation.
+    Since the tool does not alter data without the user approval, no manual backups are required 
+    before installation.
   \item \textbf{Phased Rollout:}
-    If required, developers can start using the refactoring library
-    first, followed by the IDE plugin.
+    If required, developers can start using the IDE plugin first, followed by the packaged version
+    of the tool which will be installed using pip.
 \end{itemize}
 \subsection{Data That Has to be Modified or Translated for the New System}
 Not Applicable
@@ -2167,7 +2157,6 @@ the team gradually gets a better understanding of the scope.
 
   \item \textbf{Tools and Software:}
     \begin{itemize}
-      \item GitHub (for CI/CD): Free account, with no cost expected.
       \item Open-source libraries: No associated costs.
     \end{itemize}
 
