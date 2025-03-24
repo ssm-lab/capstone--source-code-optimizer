@@ -274,19 +274,6 @@ To build an MVP, the team is relying on multiple external libraries to handle th
     Rope includes a wide range of refactorings, such as renaming, function extraction, and code restructuring. Some of these will be useful when refactoring for inefficient code patterns. Rope is an ideal choice as it simplifies the process of identifying and replacing these code patterns with more optimized versions.
 \end{enumerate}
 
-\subsection{DevOps Integration Framework}
-Since the goal is to integrate with GitHub, GitHub Actions is the natural choice for the CI/CD part of the project. By using GitHub Actions, the library can be configured to be automatically triggered whenever new code is pushed into a branch. This action can be integrated with test suites provided by the user to validate that functional behavior is retained past refactoring.
-
-\subsection{Machine Learning Model}
-The reinforcement learning model needs to be trained on specific refactoring techniques and developer feedback. Since the problem space is unique to this project, the model will be trained by the feedback received through the application of the library.
-
-\subsection{Machine Learning Framework}
-For the learning model, the team has decided to utilize the PyTorch framework for the following two reasons:
-\begin{enumerate}
-    \item The framework is written in Python, so it's easier to integrate with the Python-based library.
-    \item The framework has a less steep learning curve compared to TensorFlow since it’s syntactically similar to PyTorch.
-\end{enumerate}
-
 \subsection{Continuous Integration Plan}
 For automated testing and integration within the GitHub DevOps pipeline, the team has decided to utilize GitHub Actions since they have a wide variety of support articles for initial setup.
 
