@@ -225,11 +225,8 @@ The system consists of three core modules integrated through a Visual Studio Cod
 
 \begin{itemize}
     \item The Energy Measurement Model will provide accurate and consistent energy consumption metrics across different platforms (Windows, macOS, Linux). There are no discrepancies in measurements due to platform differences that could result in ineffective refactoring.
-    \item The Testing Module is provided with automated tests that include unit tests for core functionalities, integration tests for module interactions and edge case validations. There is no validation for minimum code coverage as it is decided by the user based on their needs and application complexity, but it is assumed that the provided tests effectively test all core functionalities to detect post refactoring bugs and regressions.
     \item The Refactoring Module solely identifies code smells that are validated by the development team's testing to reduce energy consumption. The module will not refactor the code smell if it is determined that the change will not result in measurable energy savings for the specific code being refactored.
-    \item Custom-made refactoring strategies and Rope are capable of generating effective and correct refactoring.
-    \item Sufficient data sets are available for the reinforcement learning model to provide increasingly accurate and efficient refactoring suggestions over time.
-    \item GitHub Actions, which is a third-party dependency for the DevOps integration, is not suspended for a prolonged period of time.
+    \item Custom-made refactoring strategies and Rope are capable of generating effective and correct refactorings.
     \item Users of the tool are experienced Python developers with knowledge of code refactoring and software optimization. Basic proficiency in programming is expected to navigate the tool and its features effectively.
     \item The tool will be used in a development environment, such as individual developer machines or a non-production remote repository, where configurations can be adjusted as needed. Stability and scalability requirements for large-scale production use are not assumed.
     \item The tool assumes that users act in good faith and use the system as intended. Potential hazards from malicious misuse (for example, injecting harmful code or exploiting refactoring logic) are considered out of scope for the current version but may be addressed in future versions.
