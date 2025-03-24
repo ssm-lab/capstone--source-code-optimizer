@@ -1,9 +1,0 @@
-{
-    "affectedFiles": [],
-    "energySaved": NaN,
-    "targetFile": {
-        "original": "/Users/mya/Code/Capstone/capstone--source-code-optimizer/tests/input/project_car_stuff/main.py",
-        "refactored": "/var/folders/c6/26y6rhcx6nd7jcwsmdvv82l40000gn/T/tmpirldi2js/project_car_stuff/main.py"
-    },
-    "tempDir": "/var/folders/c6/26y6rhcx6nd7jcwsmdvv82l40000gn/T/tmpirldi2js"
-}
