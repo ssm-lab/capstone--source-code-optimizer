@@ -411,28 +411,22 @@ The system consists of three core modules integrated through a Visual Studio Cod
 
 \begin{enumerate}[label=SCR \arabic*., wide=0pt, leftmargin=*]
 
-    \item \emph{The system shall log all energy consumption measurements with timestamps and indicate which processes were measured to aid in future analysis and troubleshooting.}\\
+    \item \emph{The system shall log all energy consumption metrics with timestamps and indicate which processes were measured to aid in future analysis and troubleshooting.}\\
     {\bf Rationale:} Detailed logging with timestamps and process attribution ensures accurate energy data and helps identify delays or misattributions.\\
     {\bf Fit Criterion:} \texttt{LOG\_THRESH} of energy analysis logs must include timestamps and process-level breakdowns of all measured processes.\\
-    {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3, HZ-19\\
+    {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3, HZ-9, HZ-11\\
     {\bf Priority:} High
 
-    \item \emph{The system shall ensure that all refactored code has comprehensive test coverage and passes performance metrics such as energy efficiency, speed, and memory usage.}\\
-    {\bf Rationale:} Proper test coverage and performance checks prevent faulty code from being introduced and ensure refactorings improve or maintain performance.\\
+    \item \emph{The system shall ensure that all refactored code passes performance metrics such as energy efficiency, speed, and memory usage.}\\
+    {\bf Rationale:} Proper performance checks ensure refactorings improve/maintain performance.\\
     {\bf Fit Criterion:} \texttt{REFACTOR\_TEST\_THRESH} of refactorings must pass tests covering all code paths, and performance must remain within \texttt{PERFORM\_TOL} across energy, speed, and memory metrics.\\
-    {\bf Associated Hazards:} HZ-4, HZ-5, HZ-6, HZ-9\\
+    {\bf Associated Hazards:} HZ-4, HZ-6\\
     {\bf Priority:} High
 
     \item \emph{The system shall check for necessary system-level permissions to access energy consumption data and alert users if permissions are missing.}\\
     {\bf Rationale:} Lack of access may lead to failure in energy data retrieval, which can hinder the accuracy of analysis.\\
     {\bf Fit Criterion:} \texttt{RUNS\_THRESH} of runs shall check for and request permissions if required, and alert the user in case of failures.\\
     {\bf Associated Hazards:} HZ-3\\
-    {\bf Priority:} High
-
-    \item \emph{The system shall ensure version control for each refactoring, allowing changes to be reverted in case of errors.}\\
-    {\bf Rationale:} Version control helps prevent loss of code or data and allows developers to revert refactorings if necessary.\\
-    {\bf Fit Criterion:} \texttt{EDIT\_THRESH} of changes shall be recorded, allowing full reversion with no data loss.\\
-    {\bf Associated Hazards:} HZ-8, HZ-19\\
     {\bf Priority:} High
 
     \item \emph{The system shall detect and exempt external library dependencies from refactorings to avoid compatibility issues.}\\
@@ -446,12 +440,6 @@ The system consists of three core modules integrated through a Visual Studio Cod
     {\bf Fit Criterion:} \texttt{REFACTOR\_SECURE\_THRESH} of refactorings must pass a security check to avoid tampering with sensitive information.\\
     {\bf Associated Hazards:} HZ-11\\
     {\bf Priority:} High
-
-    \item \emph{The reinforcement learning model shall be trained on diverse datasets and periodically audited to avoid bias and prevent degradation.}\\
-    {\bf Rationale:} Overfitting or model degradation can lead to suboptimal or biased refactorings, impacting the system's effectiveness.\\
-    {\bf Fit Criterion:} \texttt{REFACTOR\_EFFECT\_THRESH} of refactorings should be equally effective across different types of projects, and model audits should occur at least quarterly.\\
-    {\bf Associated Hazards:} HZ-12, HZ-13, HZ-14\\
-    {\bf Priority:} Medium
 
     \item \emph{The system shall implement memory leak detection during refactoring and alert users if any issues are detected.}\\
     {\bf Rationale:} Memory leaks may cause system crashes and reduce performance.\\
@@ -477,18 +465,12 @@ The system consists of three core modules integrated through a Visual Studio Cod
     {\bf Associated Hazards:} HZ-16\\
     {\bf Priority:} High
 
-    \item \emph{The system shall ensure that failed test cases are excluded or flagged before being used in training the reinforcement learning model.}\\
-    {\bf Rationale:} If test failures are used in training, the learning model may develop inaccurate or ineffective strategies, reducing its overall performance.\\
-    {\bf Fit Criterion:} \texttt{TEST\_TRIAGE\_THRESH} of failed test cases shall be identified and excluded or flagged for further analysis during model training.\\
-    {\bf Associated Hazards:} HZ-17\\
-    {\bf Priority:} High
-
     \item \emph{The system shall implement synchronization mechanisms to prevent conflicts during concurrent refactorings, ensuring that refactoring operations do not interfere with each other.}\\
     {\bf Rationale:} Without synchronization, concurrent refactorings could lead to code instability, unintended behavior, or data corruption.\\
     {\bf Associated Hazards:} HZ-18\\
     {\bf Priority:} High
 
-    \item \emph{The system shall implement a checkpointing mechanism to periodically save the state of the optimization process, including the refactoring progress, energy measurement data, and reinforcement learning model state, and provide recovery options in case of a system shutdown or failure.}\\
+    \item \emph{The system shall implement a checkpointing mechanism to periodically save the state of the optimization process, including the refactoring progress, energy measurement data, and provide recovery options in case of a system shutdown or failure.}\\
     {\bf Rationale:} Periodic checkpointing ensures progress is not lost during unexpected system failures, allowing users to resume optimization.\\
     {\bf Fit Criterion:} The system must save progress at least every \texttt{SAVE\_TIME} during optimization and allow recovery with no more than \texttt{MAX\_DATA\_LOSS} in \texttt{FAIL\_SCENARIO\_THRESH} of failure scenarios.\\
     {\bf Associated Hazards:} HZ-19\\
