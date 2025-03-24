@@ -678,11 +678,10 @@ aspects characterize the current situation:
 \subsection{The Context of the Work}
 The purpose of this subsection is to illustrate the flow of inputs,
 outputs, and interactions between the refactoring library and its
-external systems, such as developers, energy measurement tools, and
-machine learning frameworks. \hyperref[img:work-context]{Figure 1}
-highlights the connections between the system's components and
-external elements, ensuring a comprehensive understanding of its
-operational environment.
+external systems, such as developers and energy measurement tools.
+\hyperref[img:work-context]{Figure 1} highlights the connections between 
+the system's components and external elements, ensuring a comprehensive 
+understanding of its operational environment.
 
 \begin{figure}[H]
   \centering
@@ -709,13 +708,9 @@ overview of the project's tasks.
     \midrule
     1 & Users submit Python code & Python Code & Refactored Code\\
     2 & Energy Analysis of code & Python Code & Total Energy Consumed \\
-    3 & RI Model produces refactoring & Python Code & Correct Refactoring \\
-    4 & Testing and Validation of refactored code & Refactored Code &
-    Test Results \\
-    5 & Reporting Performance metrics of new code & Refactored Code &
-    Performance Reports \\
-    6 & Viewing Energy consumption reports & Refactored Code & Energy
-    Consumption Statistics \\
+    3 & Refactoring library produces refactoring & Python Code & Correct Refactoring \\
+    4 & Viewing Energy consumption metrics & Refactored Code & Energy
+    Consumption Metrics \\
     \bottomrule
   \end{tabularx}
   \caption{Work Partitioning of System}
@@ -728,35 +723,29 @@ into an individual business use case which describes how the system
 handles specific scenarios.
 
 \begin{enumerate}[label={\bf BUC \arabic*:}, wide=0pt, font=\itshape]
-  \item {\bf Code Submission} \\[2mm]
+  \item {\bf Users submit Python code} \\[2mm]
     \textbf{Input:} Python Code \\
     \textbf{Output:} Refactored Code \\
-    \textbf{Pre-condition:} User uses either GitHub Action or a VS
-    Code plugin to submit code to the refactoring tool \\[2mm]
+    \textbf{Pre-condition:} User uses the VS Code plugin to submit python code to the 
+    refactoring tool \\[2mm]
     \textbf{Scenario:}
     \begin{enumerate}[label=\arabic*.]
       \item Refactoring tool receives the Python code
-      \item PyJoules is used to store energy consumption data for the
+      \item Code Carbon is used to store energy consumption data for the
         original Python code submitted
-      \item Tool analyzes the code for inefficiencies (PySmells)
-      \item Python code is provided to the Re-enforcement learning
-        model to find a refactoring
+      \item Tool analyzes the code for inefficiencies (PyLint)
+      \item Python code is provided to the appropriate refactorer in the library
+      \item Specific refactorer produces the correct refactoring for the code
       \item Energy consumption is measured of refactored code and
         compared to the original data
-      \item Refactored code is tested to ensure functionality is
-        maintained from the original code
       \item Refactored code is received by the user
     \end{enumerate}
     \textbf{Sub Variation: }
     \begin{itemize}
-      \item \textit{4a:} If no PySmells are identified, then code is
-        returned to the user
-      \item \textit{6a:} If energy consumption increases for
-        refactored code, the reinforcement model is asked to find
-        another refactoring
-      \item \textit{7a:} If code functionality is not preserved for
-        refactored code, the reinforcement model is asked to find
-        another refactoring
+      \item \textit{4a:} If no code smells are identified, then user is notified of no code 
+      smells present in the file and code is returned to the user
+      \item \textit{7a:} If energy consumption increases for refactored code, the original 
+      code is returned to user with a description of the issue
     \end{itemize}
 
   \item {\bf Energy Analysis of Code}\\[2mm]
@@ -768,68 +757,35 @@ handles specific scenarios.
     \begin{enumerate}[label=\arabic*.]
       \item Tool receives Python Code
       \item Energy consumed is measured during execution
-      \item The analysis results are compiled into a report
-      \item Report of total energy consumed is received by the refactoring tool
+      \item Results of total energy consumed is received by the refactoring tool
     \end{enumerate}
 
-  \item {\bf Reinforcement Learning Model Produces Refactoring} \\[2mm]
+  \item {\bf Refactoring Library Produces Refactoring} \\[2mm]
     \textbf{Input:} Python Code \\
     \textbf{Output:} Correct Refactoring \\
-    \textbf{Pre-condition:} Request for refactored code from the
-    Reinforcement Learning Model \\[2mm]
+    \textbf{Pre-condition:} Request for refactored code from the specific refactorer 
+    based on code smell\\[2mm]
     \textbf{Scenario: }
     \begin{enumerate}[label=\arabic*.]
-      \item Model receives Python Code
-      \item Analyze Code for potential refactoring
-      \item Generate suggestions based on previous learning and data
-      \item Implement suggested refactorings
+      \item Specific refactorer receives Python Code
+      \item Analyze Code for refactoring
+      \item Implement a refactoring for the given code based on pre-defined strategies
+      \item Return refactored code to user
     \end{enumerate}
     \textbf{Sub Variation: }
     \begin{itemize}
-      \item \textit{2a:} If there are no refactorings found, Model
-        outputs are given code back to the refactoring tool
+      \item \textit{4a:} If refactoring can not be done on given code, the refactorer 
+      will return original code to user
     \end{itemize}
 
-  \item {\bf Testing and Validation of Refactored Code} \\[2mm]
+  \item {\bf Viewing Energy Consumption Metrics} \\[2mm]
     \textbf{Input:} Refactored Code \\
-    \textbf{Output:} Test Results \\
-    \textbf{Pre-condition:} Energy consumed for refactored code is
-    less than the energy consumed for original code \\[2mm]
+    \textbf{Output:} Energy Consumption Metrics \\
+    \textbf{Pre-condition:} Energy consumption of refactored code is less than energy consumption 
+    of original code \\[2mm]
     \textbf{Scenario: }
     \begin{enumerate}[label=\arabic*.]
-      \item Conduct tests on refactored code
-      \item Conduct tests on original code
-      \item Validate results of refactored code to the results of the
-        original code to ensure functionality is intact
-      \item Signal to refactoring tool to send refactored code to the user
-    \end{enumerate}
-    \textbf{Sub Variation: }
-    \begin{itemize}
-      \item \textit{4a:} If functionality is not preserved, signal to
-        the refactoring tool to refactor again
-    \end{itemize}
-
-  \item {\bf Reporting Performance Metrics of New Code} \\[2mm]
-    \textbf{Input:} Refactored Code \\
-    \textbf{Output:} Performance Reports\\
-    \textbf{Pre-condition:} Testing and validation is completed
-    successfully \\[2mm]
-    \textbf{Scenario: }
-    \begin{enumerate}[label=\arabic*.]
-      \item Generate detailed performance report based on testing outcomes
-      \item User receives the performance report
-    \end{enumerate}
-
-  \item {\bf Viewing Energy Consumption Reports} \\[2mm]
-    \textbf{Input:} Refactored Code \\
-    \textbf{Output:} Energy Consumption Statistics \\
-    \textbf{Pre-condition:} Testing and validation is completed
-    successfully \\[2mm]
-    \textbf{Scenario: }
-    \begin{enumerate}[label=\arabic*.]
-      \item Comprehensive statistics are compiled from energy analysis data
-      \item Information is compiled in an accessible format for
-        developers to review
+      \item Metrics are compiled in an accessible format for developers to review
     \end{enumerate}
 \end{enumerate}
 
@@ -2221,38 +2177,18 @@ project progresses.
   \item \textbf{User Manual}
     \begin{itemize}
       \item \textbf{Purpose:} Provide comprehensive guidance on how
-        to use the refactoring library
+        to use the refactoring plugin in VSCode
       \item \textbf{Target Audience:} Software developers integrating
         the library into their projects
       \item \textbf{Content:} Installation instructions, API
-        reference, usage examples, and best practices
-    \end{itemize}
-
-  \item \textbf{Technical Specification}
-    \begin{itemize}
-      \item \textbf{Purpose:} Detail the library's architecture,
-        algorithms, and integration points
-      \item \textbf{Target Audience:} Technical leads and architects
-        evaluating the library
-      \item \textbf{Content:} System design, performance
-        characteristics, and technical limitations
-    \end{itemize}
-
-  \item \textbf{Quick Start Guide}
-    \begin{itemize}
-      \item \textbf{Purpose:} Enable rapid adoption and basic usage
-        of the library
-      \item \textbf{Target Audience:} New users looking to quickly
-        implement the library
-      \item \textbf{Content:} Concise setup instructions and simple
-        usage examples
+        references, usage examples, and best practices
     \end{itemize}
 \end{enumerate}
 
 \subsection{Training Requirements}
 For end-users, formal training is not required. The tool is designed to be simple and intuitive, 
 with the assumption that primary users with experience in Python and software development will 
-have the necessary technical expertise to use the library effectively. The refactoring library 
+have the necessary technical expertise to use the plugin tool effectively. The plugin tool 
 operates through clear, well-documented interfaces and requires minimal setup, allowing users to 
 quickly incorporate it into their workflow without additional training.\\
 
