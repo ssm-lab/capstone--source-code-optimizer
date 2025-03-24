@@ -1,4 +1,5 @@
 from copy import deepcopy
+
 from .smell_enums import CustomSmell, PylintSmell
 
 from ..analyzers.ast_analyzers.detect_long_element_chain import detect_long_element_chain
@@ -88,27 +89,54 @@ _SMELL_REGISTRY: dict[str, SmellRecord] = {
     },
 }
 
+OPTIONS_CONFIG = {
+    "too-many-arguments": {"max_args": 6},
+    "long-lambda-expression": {"threshold_length": 100, "threshold_count": 5},
+    "long-message-chain": {"threshold": 3},
+    "long-element-chain": {"threshold": 3},
+    "cached-repeated-calls": {"threshold": 2},
+}
 
-def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | str):
-    """Returns a modified SMELL_REGISTRY based on user preferences (enables/disables smells)."""
 
-    # Ensure enabled_smells is a dictionary (avoid lists)
+def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | list[str]):
+    """Returns a modified SMELL_REGISTRY based on user preferences."""
+    updated_registry = deepcopy(_SMELL_REGISTRY)
+
     if isinstance(enabled_smells, list):
-        enabled_smells = {smell_name: {} for smell_name in enabled_smells}  # Convert list to dict
-    if enabled_smells == "ALL":
-        return deepcopy(_SMELL_REGISTRY)
+        return {
+            smell_name: config
+            for smell_name, config in updated_registry.items()
+            if smell_name in enabled_smells
+        }
+    else:
+        for smell_name, smell_config in updated_registry.items():
+            if smell_name in enabled_smells:
+                smell_config["enabled"] = True
+                user_options = enabled_smells[smell_name]
+                if not user_options:
+                    continue
 
-    updated_registry = {}
+                analyzer_method = smell_config["analyzer_method"]
+                original_options = smell_config["analyzer_options"]
 
-    for smell_name, default_smell_data in _SMELL_REGISTRY.items():
-        if smell_name in enabled_smells:
-            updated_registry[smell_name] = deepcopy(default_smell_data)
+                if analyzer_method == "pylint":
+                    updated_options = {}
+                    for opt_key, opt_data in original_options.items():
+                        if opt_key in user_options:
+                            updated_options[opt_key] = {
+                                "flag": opt_data["flag"],
+                                "value": user_options[opt_key],
+                            }
+                        else:
+                            updated_options[opt_key] = opt_data
+                    smell_config["analyzer_options"] = updated_options
+                else:
+                    # For non-Pylint smells, merge user options with defaults
+                    smell_config["analyzer_options"] = {**original_options, **user_options}
+            else:
+                smell_config["enabled"] = False
 
-            # Ensure `enabled_smells[smell_name]` is a dictionary before updating
-            if isinstance(enabled_smells[smell_name], dict):
-                updated_registry[smell_name]["analyzer_options"].update(enabled_smells[smell_name])
-
-    return updated_registry
+        return updated_registry
 
 
 def get_refactorer(symbol: str):
