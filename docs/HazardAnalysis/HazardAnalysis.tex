@@ -439,7 +439,6 @@ The system consists of three core modules integrated through a Visual Studio Cod
 
 \end{longtable}
 
-
 \end{landscape}
 
 \newgeometry{margin=1in}
@@ -471,6 +470,9 @@ The system consists of three core modules integrated through a Visual Studio Cod
         SAVE\_TIME & 30 sec \\
         MAX\_DATA\_LOSS & 1\% \\
         FAIL\_SCENARIO\_THRESH & 100\% \\
+        METRIC\_REFRESH\_TIME & 2 sec \\ % Added constant
+        UNDO\_ACTIONS & 5 \\ % Added constant
+        PROGRESS\_UPDATE\_TIME & 5 sec \\ % Added constant
         \bottomrule
     \end{tabular}
     \caption{Symbolic Constants}
@@ -540,19 +542,19 @@ The system consists of three core modules integrated through a Visual Studio Cod
 
     \item \emph{The system shall ensure the UI displays real-time, validated energy metrics.}\\
     {\bf Rationale:} Outdated or incorrect data may lead users to make poor refactoring decisions.\\
-    {\bf Fit Criterion:} All energy metrics must refresh within 2 seconds of measurement completion, and timestamps must be visible.\\
+    {\bf Fit Criterion:} All energy metrics must refresh within \texttt{METRIC\_REFRESH\_TIME} of measurement completion, and timestamps must be visible.\\
     {\bf Associated Hazards:} HZ-12\\
     {\bf Priority:} High
 
     \item \emph{The system shall require user confirmation before applying changes.}\\
     {\bf Rationale:} Prevents accidental code modifications and allows users to revert mistakes.\\
-    {\bf Fit Criterion:} 100\% of refactoring applications require explicit user confirmation; undo functionality supports at least the last 5 actions.\\
+    {\bf Fit Criterion:} 100\% of refactoring applications require explicit user confirmation; undo functionality supports at least the last \texttt{UNDO\_ACTIONS} actions.\\
     {\bf Associated Hazards:} HZ-13\\
     {\bf Priority:} High
 
-    \item \emph{The system shall provide real-time progress feedback for all operations exceeding 5 seconds.}\\
+    \item \emph{The system shall provide real-time progress feedback for all operations exceeding \texttt{PROGRESS\_UPDATE\_TIME}.}\\
     {\bf Rationale:} Transparency during long operations reduces user frustration and prevents premature termination.\\
-    {\bf Fit Criterion:} Progress bars or status messages must update at least every 5 seconds during lengthy tasks.\\
+    {\bf Fit Criterion:} Progress bars or status messages must update at least every \texttt{PROGRESS\_UPDATE\_TIME} during lengthy tasks.\\
     {\bf Associated Hazards:} HZ-14\\
     {\bf Priority:} Medium
 
