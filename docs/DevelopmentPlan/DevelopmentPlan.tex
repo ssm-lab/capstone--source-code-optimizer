@@ -34,6 +34,7 @@
     March 24, 2025 & Tanveer Brar & Update IP section, team meeting plan\\ 
     March 24th, 2025 & Sevhena Walker & Update project link.\\
     March 24, 2025 & Mya Hussain & Updated Team POC Plan\\ 
+    March 24, 2025 & Mya Hussain & Updated Performance Benchmarking Tests\\ 
     March 24th, 2025 & Sevhena Walker & Updated linter tools to reflect correct linting tools and removed development tools\\
     \bottomrule
   \end{tabularx}
@@ -253,7 +254,7 @@ A diverse set of languages is being used to build different components of the pr
     \item \textbf{Refactoring Library: Python}\\
     The library is being built in Python for the following reasons:
     \begin{itemize}
-        \item The language has well-established libraries like `Rope` for refactoring and `PyJoules` for energy analysis, which can be leveraged for the MVP.
+        \item The language has well-established libraries like `Rope` for refactoring and `Code Carbon` for energy analysis, which can be leveraged for the MVP.
         \item The language is widely used in both research and industry, making the library adoptable by a broader community of developers.
     \end{itemize}
     \item \textbf{VS Plugin: TypeScript}\\
@@ -264,27 +265,14 @@ A diverse set of languages is being used to build different components of the pr
 To build an MVP, the team is relying on multiple external libraries to handle the technical detail intensive work. Below is a list of external libraries that we are using along with their purpose. Note that their usage will be replaced with custom implementation once an MVP has been created and tested.
 
 \begin{enumerate}
-    \item \textbf{Code Energy Calculation: PyJoules}\\
-    PyJoules is a well-documented library that calculates the energy consumed on executing a given Python code base. Since the library calculates energy consumption at the hardware level, the calculations are very precise. This makes it an ideal choice for analyzing the energy impact of code refactorings.
+    \item \textbf{Code Energy Calculation: Code Carbon}\\
+    Code Carbon is a well-documented library that calculates the energy consumed on executing a given Python code base. It estimates energy consumption by monitoring CPU, GPU, and RAM usage. Although the measurements are highly unreliable, it was a more ideal choice since this libray is compatible with more operating systems for analyzing energy consumption.
 
-    \item \textbf{Inefficient Code Pattern Detection: PySmells}\\
-    After reviewing PySmells documentation, it can be deduced that a majority of code smells can be detected and resolved using the library.
+    \item \textbf{Inefficient Code Pattern Detection: PyLint}\\
+    After reviewing PyLint documentation, it can be deduced that a majority of code smells can be detected and resolved using this library.
 
     \item \textbf{Refactoring: Rope}\\
     Rope includes a wide range of refactorings, such as renaming, function extraction, and code restructuring. Some of these will be useful when refactoring for inefficient code patterns. Rope is an ideal choice as it simplifies the process of identifying and replacing these code patterns with more optimized versions.
-\end{enumerate}
-
-\subsection{DevOps Integration Framework}
-Since the goal is to integrate with GitHub, GitHub Actions is the natural choice for the CI/CD part of the project. By using GitHub Actions, the library can be configured to be automatically triggered whenever new code is pushed into a branch. This action can be integrated with test suites provided by the user to validate that functional behavior is retained past refactoring.
-
-\subsection{Machine Learning Model}
-The reinforcement learning model needs to be trained on specific refactoring techniques and developer feedback. Since the problem space is unique to this project, the model will be trained by the feedback received through the application of the library.
-
-\subsection{Machine Learning Framework}
-For the learning model, the team has decided to utilize the PyTorch framework for the following two reasons:
-\begin{enumerate}
-    \item The framework is written in Python, so it's easier to integrate with the Python-based library.
-    \item The framework has a less steep learning curve compared to TensorFlow since it’s syntactically similar to PyTorch.
 \end{enumerate}
 
 \subsection{Continuous Integration Plan}
@@ -308,11 +296,7 @@ To ensure systematic testing of our growing codebase, the project will include u
 \texttt{Coverage.py} has been chosen to measure the code coverage. This will be a useful tool to identify areas of the code base that need additional test coverage.
 
 \subsection{Performance Measurement}
-Performance measuring tools have been chosen to target common Python-specific code problems. Here is a list of tools the team plans to integrate into the project:
-\begin{enumerate}
-    \item \textbf{PyTrace:} This tool will be used to trace execution and will be particularly useful in instances that might be prone to race conditions.
-    \item \textbf{cProfile:} This tool will be used to retrieve information on the time spent on each function during execution. This will be particularly useful to identify any performance bottlenecks.
-\end{enumerate}
+The team will perform extensitve performance benchmarking using the benchmarking built-in python library. Files of size 250, 1000, 3000 will be tested and time performance will be measured for each refactorin, smell detection and energy measurement.
 
 \section{Coding Standard}
 
