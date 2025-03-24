@@ -11,6 +11,7 @@
 \usepackage{xcolor}
 \usepackage{blindtext}
 \usepackage{enumitem}
+\usepackage{float}
 
 \usepackage{array,multirow,graphicx}
 \usepackage{float}
@@ -198,7 +199,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \end{itemize}
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{tikzpicture}[
         node distance=2cm,
@@ -297,7 +298,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
 
     \hline
 
-    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & Incorrect refactorings suggestions were given & 
+    \multicolumn{1}{|c|}{\multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & Incorrect refactorings suggestions were given & 
     \begin{itemize}[wide=0pt]
         \item Refactored code increases the energy consumption instead of reducing it.
         \item Functionality of refactored code is not consistent from that of the original code.
@@ -328,7 +329,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \end{itemize}
     & Implement multifactor optimization, balancing energy efficiency with other performance metrics. If this is not possible inform the user of potential degradation when suggesting at-risk refactorings. & SCR-2 & HZ \showmycounter \\ \cline{2-7}
     
-    \multicolumn{1}{|c|}{\multirow{13}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}}& The refactoring tool modifies code that relies on external libraries, causing incompatibility with these libraries. & 
+    \multicolumn{1}{|c|}{\multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}}& The refactoring tool modifies code that relies on external libraries, causing incompatibility with these libraries. & 
 
     \begin{itemize}[wide=0pt]
         \item Code fails to execute or produces unexpected behaviour due to altered interactions with third-party libraries.
@@ -348,7 +349,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-5 & HZ \showmycounter \\ \hline 
 
 
-    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & 
+    \multicolumn{1}{|c|}{\multirow{3}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & 
     \begin{itemize}[wide=0pt]
         \item Incorrect energy measurements leading to suboptimal or erroneous refactoring decisions.
         \item Energy inefficiencies or functional degradation in the refactored code
@@ -356,7 +357,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
 
 
 
-    & Simultaneous refactoring operations without proper synchronization lead to conflicts or inconsistencies, causing code instability or unexpected behavior. & 
+    \multicolumn{1}{|c|}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & Simultaneous refactoring operations without proper synchronization lead to conflicts or inconsistencies, causing code instability or unexpected behavior. & 
     \begin{itemize}[wide=0pt]
         \item Conflicts or inconsistencies arising from multiple refactoring operations executed simultaneously
         \item Code instability or unintended behavior in the refactored codebase
@@ -366,7 +367,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     \end{itemize}
     & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-9 & HZ \showmycounter \\ \hline
 
-    \multicolumn{1}{|c|}{\multirow{12}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
+    \multicolumn{1}{|c|}{\multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
     \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \end{itemize} &
     \begin{itemize}[wide=0pt] \item Hardware failure, power outage or insufficient system resources \item Unhandled software exceptions or errors during the tool's usage \item Prolonged measurement operations that exceed system capacity \end{itemize} &
     \begin{itemize}[wide=0pt] \item Implement a checkpointing mechanism to periodically save intermediate refactoring states \item Enable a recovery workflow to reload saved checkpoints and resume from the last recorded state  \end{itemize} &
@@ -374,7 +375,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
     HZ-\showmycounter \\ \hline
 
 
-    \multicolumn{1}{|c|}{\multirow{15}{*}{\rotatebox[origin=c]{90}{\textbf{Plugin UI}}}} & UI displays outdated or incorrect energy metrics & 
+    \multicolumn{1}{|c|}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\textbf{Plugin UI}}}} & UI displays outdated or incorrect energy metrics & 
     \begin{itemize}[wide=0pt]
         \item Users apply suboptimal refactorings based on inaccurate data.
         \item Reduced trust in tool reliability.
@@ -388,7 +389,7 @@ The system consists of three core modules integrated through a Visual Studio Cod
         \item Display timestamps for last metric update.
     \end{itemize} & SCR-11 & HZ-\showmycounter \\ \cline{2-7}
 
-    & Accidental application of changes without confirmation & 
+    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Plugin UI}}}} & Accidental application of changes without confirmation & 
     \begin{itemize}[wide=0pt]
         \item Unintended code modifications leading to functional errors.
     \end{itemize} & 
