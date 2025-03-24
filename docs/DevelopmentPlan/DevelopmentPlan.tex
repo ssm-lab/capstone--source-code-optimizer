@@ -34,6 +34,7 @@
     March 24, 2025 & Tanveer Brar & Update IP section, team meeting plan\\ 
     March 24th, 2025 & Sevhena Walker & Update project link.\\
     March 24, 2025 & Mya Hussain & Updated Team POC Plan\\ 
+    March 24th, 2025 & Sevhena Walker & Updated linter tools to reflect correct linting tools and removed development tools\\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -289,15 +290,13 @@ For the learning model, the team has decided to utilize the PyTorch framework fo
 \subsection{Continuous Integration Plan}
 For automated testing and integration within the GitHub DevOps pipeline, the team has decided to utilize GitHub Actions since they have a wide variety of support articles for initial setup.
 
-\subsection{Additional Tools (for Development Support)}
-To ensure that the plugin, library, and reinforcement learning model run consistently across different environments, Docker containers will be used. Since these can package the entire application with its dependencies, there will be consistency in development, testing, and deployment environments.
-
 \subsection{Linter Tools}
 To ensure best practices, all team members will be using the following combination of linter tools for Python code:
 \begin{enumerate}
-    \item \textbf{Mypy:} This tool enforces type annotations, which helps to detect type-related errors before runtime. Since Python is dynamically typed, Mypy enhances code reliability by making types explicit.
-    \item \textbf{Flake8:} This tool checks code for style guide enforcement (PEP 8) and can catch potential errors early in development, improving code quality and maintainability.
+  \item \textbf{Ruff:} This tool is used for linting and enforcing code quality. It is fast and supports a wide range of linting rules, making it ideal for maintaining consistent and clean code.
+  \item \textbf{Pyright:} This tool is used for static type checking in Python. It ensures type correctness and helps catch potential type-related errors early in the development process.
 \end{enumerate}
+
 
 \subsection{Code Smell Tools}
 To identify code smells during development, the team will include PySmells in the project. In addition to the fact that the tool covers a majority of Python code smells, the team was enthusiastic about the fact that the library itself will be used during implementation of the MVP.
