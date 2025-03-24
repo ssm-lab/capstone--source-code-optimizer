@@ -253,7 +253,7 @@ A diverse set of languages is being used to build different components of the pr
     \item \textbf{Refactoring Library: Python}\\
     The library is being built in Python for the following reasons:
     \begin{itemize}
-        \item The language has well-established libraries like `Rope` for refactoring and `PyJoules` for energy analysis, which can be leveraged for the MVP.
+        \item The language has well-established libraries like `Rope` for refactoring and `Code Carbon` for energy analysis, which can be leveraged for the MVP.
         \item The language is widely used in both research and industry, making the library adoptable by a broader community of developers.
     \end{itemize}
     \item \textbf{VS Plugin: TypeScript}\\
@@ -264,11 +264,11 @@ A diverse set of languages is being used to build different components of the pr
 To build an MVP, the team is relying on multiple external libraries to handle the technical detail intensive work. Below is a list of external libraries that we are using along with their purpose. Note that their usage will be replaced with custom implementation once an MVP has been created and tested.
 
 \begin{enumerate}
-    \item \textbf{Code Energy Calculation: PyJoules}\\
-    PyJoules is a well-documented library that calculates the energy consumed on executing a given Python code base. Since the library calculates energy consumption at the hardware level, the calculations are very precise. This makes it an ideal choice for analyzing the energy impact of code refactorings.
+    \item \textbf{Code Energy Calculation: Code Carbon}\\
+    Code Carbon is a well-documented library that calculates the energy consumed on executing a given Python code base. It estimates energy consumption by monitoring CPU, GPU, and RAM usage. Although the measurements are highly unreliable, it was a more ideal choice since this libray is compatible with more operating systems for analyzing energy consumption.
 
-    \item \textbf{Inefficient Code Pattern Detection: PySmells}\\
-    After reviewing PySmells documentation, it can be deduced that a majority of code smells can be detected and resolved using the library.
+    \item \textbf{Inefficient Code Pattern Detection: PyLint}\\
+    After reviewing PyLint documentation, it can be deduced that a majority of code smells can be detected and resolved using this library.
 
     \item \textbf{Refactoring: Rope}\\
     Rope includes a wide range of refactorings, such as renaming, function extraction, and code restructuring. Some of these will be useful when refactoring for inefficient code patterns. Rope is an ideal choice as it simplifies the process of identifying and replacing these code patterns with more optimized versions.
