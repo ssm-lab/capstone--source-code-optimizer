@@ -880,33 +880,34 @@ describes the interaction between the user and the system.
 
 \begin{table}[H]
   \centering
-  \renewcommand{\arraystretch}{0.85} 
+  \renewcommand{\arraystretch}{0.85}
   \begin{tabularx}{\textwidth}{|c|
       >{\raggedright\arraybackslash}X|
-      >{\raggedright\arraybackslash}p{1.1in}| 
-    >{\raggedright\arraybackslash}X|}
-    \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} &
-    \textbf{Input \& Output(s)} \\
+      >{\raggedright\arraybackslash}p{1in}|
+      >{\raggedright\arraybackslash}X|
+      >{\raggedright\arraybackslash}p{0.8in}|}
+    \toprule 
+    \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} & \textbf{Input \& Output(s)} & \textbf{Functional Requirement} \\
     \midrule
-    1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) \\
-    2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) \\
-    3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) \\
-    4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) \\
-    5 & Configure Smell Display & User & Display Preferences (in), Updated VS Code Settings (out) \\
-    6 & Select Code Smell & User & Selected Code Smell (in) \\
-    7 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) \\
-    8 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) \\
-    9 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) \\
-    10 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\
-    11 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) \\
-    12 & Clear Smell History & User & Clear Command (in), Reset Cache (out) \\
-    13 & Access Documentation & User & Help Request (in), Documentation (out) \\
-    14 & Generate System Logs & System & Log Request (in), Log File (out) \\
+    1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) & FR1, FR2, FR11 \\
+    2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) & FR17 \\
+    3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) & FR10 \\
+    4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) & FR14, FR19 \\
+    5 & Configure Smell Display & User & Display Preferences (in), Updated VS Code Settings (out) & FR12 \\
+    6 & Select Code Smell & User & Selected Code Smell (in) & FR13 \\
+    7 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) & FR3, FR4, FR8 \\
+    8 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) & FR6 \\
+    9 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) & FR6 \\
+    10 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) & FR6, FR11 \\
+    11 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) & FR16 \\
+    12 & Clear Smell History & User & Clear Command (in), Reset Cache (out) & FR18 \\
+    13 & Access Documentation & User & Help Request (in), Documentation (out) & FR7 \\
+    14 & Generate System Logs & System & Log Request (in), Log File (out) & FR15 \\
     \bottomrule
   \end{tabularx}
-  \caption{Product Use Case Table of System}
-  \label{tab:puc}
-  \vspace{-2mm} 
+  \caption{Product Use Case Table with FR Coverage}
+  \label{tab:puc-fr}
+  \vspace{-2mm}
 \end{table}
 
 \subsection{Individual Product Use Cases (PUC's)}
