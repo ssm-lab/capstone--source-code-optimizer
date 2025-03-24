@@ -28,6 +28,10 @@
 }
 \usepackage{float}
 
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta, shapes, backgrounds} 
+\usepackage{float} % For precise figure placement
+
 \newcommand{\lips}{\textit{Insert your content here.}}
 
 % Test line
@@ -1062,8 +1066,18 @@ each use case, emphasizing expected functionality and outcomes for users.
     \textbf{Outcome:} Log entries are created for system events. \\
     \textbf{Input:} Log Request. \\
     \textbf{Output:} Log File entries.
-
+%   scale=0.5, 
+%   transform shape
 \end{enumerate}
+\subsection{System State Diagram}
+The following is a state diagram of the system.  
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{../Images/State_diagram_srs.png}
+  \caption{System State Diagram}
+  \label{img:state-diagram}
+\end{figure}
+
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
