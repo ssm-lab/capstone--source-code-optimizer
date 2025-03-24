@@ -805,3 +805,122 @@ def test_lpl_with_kwargs_only(refactorer, source_files):
     # cleanup after test
     test_file.unlink()
     test_dir.rmdir()
+
+
+def test_lpl_complex_attribute_access(refactorer, source_files):
+    """Test for complex attribute access and nested parameter usage"""
+
+    test_dir = source_files / "temp_test_lpl"
+    test_dir.mkdir(exist_ok=True)
+
+    test_file = test_dir / "fake.py"
+
+    code = textwrap.dedent("""\
+    class DataProcessor:
+        def process_complex_data(self, user_data, config_data, cache_data, log_data, temp_data, backup_data, format_data, extra_data):
+            # Complex attribute access and assignments
+            self.settings = {
+                "user": user_data,
+                "config": config_data.settings,
+                "cache": cache_data.path,
+                "logs": log_data.directory,
+                "temp": temp_data.location,
+                "backup": backup_data.storage,
+                "format": format_data.options,
+                "extra": extra_data.metadata
+            }
+
+            # Nested attribute access
+            if config_data.settings["enabled"]:
+                user_data.preferences["theme"] = format_data.options["theme"]
+
+            # Complex assignments
+            backup_data.storage["path"] = temp_data.location + "/backup"
+            cache_data.path = temp_data.location + "/cache"
+
+            # Method calls on parameters
+            cleaned_user = user_data.name.strip().lower()
+            formatted_config = config_data.format()
+
+            # Dictionary comprehension using parameters
+            result = {
+                key: value.strip()
+                for key, value in user_data.metadata.items()
+                if key in config_data.allowed_keys
+            }
+
+            return result
+
+    processor = DataProcessor()
+    result = processor.process_complex_data(
+        user_data={"name": "  John  ", "metadata": {"id": "123 ", "role": " admin "}},
+        config_data={"settings": {"enabled": True}, "allowed_keys": ["id"]},
+        cache_data={"path": "/tmp/cache"},
+        log_data={"directory": "/var/log"},
+        temp_data={"location": "/tmp"},
+        backup_data={"storage": {}},
+        format_data={"options": {"theme": "dark"}},
+        extra_data={"metadata": {}}
+    )
+    """)
+
+    expected_modified_code = textwrap.dedent("""\
+    class DataParams_process_complex_data_2:
+        def __init__(self, user_data, config_data, cache_data, log_data, temp_data, backup_data, format_data, extra_data):
+            self.user_data = user_data
+            self.config_data = config_data
+            self.cache_data = cache_data
+            self.log_data = log_data
+            self.temp_data = temp_data
+            self.backup_data = backup_data
+            self.format_data = format_data
+            self.extra_data = extra_data
+    class DataProcessor:
+        def process_complex_data(self, data_params):
+            # Complex attribute access and assignments
+            self.settings = {
+                "user": data_params.user_data,
+                "config": data_params.config_data.settings,
+                "cache": data_params.cache_data.path,
+                "logs": data_params.log_data.directory,
+                "temp": data_params.temp_data.location,
+                "backup": data_params.backup_data.storage,
+                "format": data_params.format_data.options,
+                "extra": data_params.extra_data.metadata
+            }
+
+            # Nested attribute access
+            if data_params.config_data.settings["enabled"]:
+                data_params.user_data.preferences["theme"] = data_params.format_data.options["theme"]
+
+            # Complex assignments
+            data_params.backup_data.storage["path"] = data_params.temp_data.location + "/backup"
+            data_params.cache_data.path = data_params.temp_data.location + "/cache"
+
+            # Method calls on parameters
+            cleaned_user = data_params.user_data.name.strip().lower()
+            formatted_config = data_params.config_data.format()
+
+            # Dictionary comprehension using parameters
+            result = {
+                key: value.strip()
+                for key, value in data_params.user_data.metadata.items()
+                if key in data_params.config_data.allowed_keys
+            }
+
+            return result
+
+    processor = DataProcessor()
+    result = processor.process_complex_data(
+        DataParams_process_complex_data_2(user_data = {"name": "  John  ", "metadata": {"id": "123 ", "role": " admin "}}, config_data = {"settings": {"enabled": True}, "allowed_keys": ["id"]}, cache_data = {"path": "/tmp/cache"}, log_data = {"directory": "/var/log"}, temp_data = {"location": "/tmp"}, backup_data = {"storage": {}}, format_data = {"options": {"theme": "dark"}}, extra_data = {"metadata": {}}))
+    """)
+    test_file.write_text(code)
+    smell = create_smell([2])()
+    refactorer.refactor(test_file, test_dir, smell, test_file)
+
+    modified_code = test_file.read_text()
+    assert modified_code.strip() == expected_modified_code.strip()
+
+    # cleanup after test
+    test_file.unlink()
+    test_dir.rmdir()
