@@ -230,9 +230,9 @@ The web client offers a user interface that allows users to interact with the re
         \item Computational overhead in the Energy Measurement Module
         \item Delays in accessing low level hardware components that are needed for energy measurement
     \end{itemize} & \begin{itemize}[wide=0pt]
-        \item Investigate PyJoules' configuration options to find a balance between accuracy and performance based on the size and complexity of the code being refactored. 
+        \item Investigate CodeCarbon's configuration options to find a balance between accuracy and performance based on the size and complexity of the code being refactored. 
         \item Implement parallel processing to measure energy consumption and run code smell detection simultaneously. This can reduce the overall time by allowing energy measurements to be done without holding up other tasks.
-        \item Implement a graceful timeout mechanism if PyJoules takes too long to respond. 
+        \item Implement a graceful timeout mechanism if CodeCarbon takes too long to respond. 
         \item Provide users with an estimated time for completion so they are aware of ongoing measurements if energy measurement exceeds a set time. 
     \end{itemize} & SCR-1, SCR-10 & HZ \showmycounter \\
     
@@ -247,39 +247,14 @@ The web client offers a user interface that allows users to interact with the re
 
     \hline
 
-    \multicolumn{1}{|c|}{\multirow{11}{*}{\rotatebox[origin=c]{90}{\textbf{Testing}}}} & Test not able to run due to refactoring &
-    \begin{itemize}[wide=0pt]
-        \item Testing coverage not met
-        \item Unable to test business logic of user code
-        \item Unable to complete refactorings
-    \end{itemize}
-    & Test cases dependent on some modules that have been refactored &
-    \begin{itemize}[wide=0pt]
-        \item Use AST as a base for testing
-        \item Ensure that any refactorings that involve variable, class or function name changes are disabled on default and require explicit enabling from the user
-    \end{itemize}
-    & SCR-2 & HZ \showmycounter \\ \cline{2-7}
-    
-    & Provided test suite misses critical scenarios& 
-    \begin{itemize}[wide=0pt]
-        \item The refactored code could fail in production under specific conditions, leading to potential downtime or incorrect behaviour.
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item  Limited test suite or lack of coverage for particular scenarios.
-    \end{itemize}
-    & Implement syntactical analysis in refactoring to mitigate code functionality changes & SCR-2 & HZ \showmycounter \\ \cline{2-7}
-    
-    \hline
-
     \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & Incorrect refactorings suggestions were given & 
     \begin{itemize}[wide=0pt]
         \item Refactored code increases the energy consumption instead of reducing it.
         \item Functionality of refactored code is not consistent from that of the original code.
     \end{itemize} &
     \begin{itemize}[wide=0pt]
-        \item Inadequate training of the reinforcement learning model. 
         \item Refactoring logic misses some edge cases. 
-        \item Reinforcement learning model creates syntactically incorrect code. 
+        \item Refactoring module creates syntactically incorrect code. 
     \end{itemize}
         & Validate the changes by verifying energy consumption statistics before applying changes to the code by adding validation rules & SCR-2 & HZ \showmycounter \\ \cline{2-7}
         
@@ -292,16 +267,7 @@ The web client offers a user interface that allows users to interact with the re
     \end{itemize}
     & Implement automatic garbage collection or memory de-allocation after each refactoring step & SCR-8 & HZ \showmycounter \\ \cline{2-7}
     
-    & Unable to revert refactorings & 
-    \begin{itemize}[wide=0pt]
-        \item User loses confidence in integrity of system
-        \item Unable to pick which refactorings to keep and which to discard based on user input
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item  Faulty version control strategy
-    \end{itemize}
-    & Implement a robust version control system that follows a granular commit system tracking each change with precision & SCR-4 & HZ \showmycounter \\ \cline{2-7}
-    
+
     
     & The refactoring improves energy efficiency but degrades other performance metrics like speed or memory usage & 
     \begin{itemize}[wide=0pt]
@@ -310,9 +276,10 @@ The web client offers a user interface that allows users to interact with the re
     \begin{itemize}[wide=0pt]
         \item Poor trade-offs made by the refactoring algorithm between energy efficiency and other performance factors.
     \end{itemize}
-    & Implement multifactor optimization, balancing energy efficiency with other performance metrics. If this is not possible inform the user of potential degradation when suggesting at-risk refactorings. & SCR-2 & HZ \showmycounter \\
-
+    & Implement multifactor optimization, balancing energy efficiency with other performance metrics. If this is not possible inform the user of potential degradation when suggesting at-risk refactorings. & SCR-2 & HZ \showmycounter \\ \cline{2-7}
+    
     \multicolumn{1}{|c|}{\multirow{13}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}}& The refactoring tool modifies code that relies on external libraries, causing incompatibility with these libraries. & 
+
     \begin{itemize}[wide=0pt]
         \item Code fails to execute or produces unexpected behaviour due to altered interactions with third-party libraries.
     \end{itemize} &
@@ -330,59 +297,13 @@ The web client offers a user interface that allows users to interact with the re
     \end{itemize}
     & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-6 & HZ \showmycounter \\ \hline 
 
-    
-    \multicolumn{1}{|c|}{\rotatebox[origin=c]{90}{\parbox{4cm}{\begin{center}\textbf{Reinforcement} \\ \textbf{Learning}\end{center}}}} & Model overfitting & Less effective when applied to unseen or more diverse codebases resulting in suboptimal and/or incorrect refactorings for new projects. & \begin{itemize}[wide=0pt]
-        \item Over-training model on similar datasets
-    \end{itemize} & Use a diverse and representative dataset for training the model & SCR-7 & HZ \showmycounter \\ \cline{2-7}
 
-    
-    \multicolumn{1}{|c|}{\multirow{22}{*}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning}}}} & Bias in recommendations & Model starts favouring certain types of refactorings or ignoring others that could be more efficient for different scenarios. & \begin{itemize}[wide=0pt]
-        \item Imbalanced reward function
-        \item Not enough exploration actions done by the model
-        \item Unrealistic straining data simulations used
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item The model should be regularly audited for bias. The audit should determine that the model chooses the most efficient refactoring \& is constantly proposing new solutions to learn from.
-        \item Ensure that the model's training data is not biased towards any particular refactoring and/or code pattern. There should an equal (or near equal as possible) emphasis put on each separate category of data.
-        \item Regularly retrain the model.
-    \end{itemize}
-    & SCR-7 & HZ \showmycounter \\ \cline{2-7}
-
-    
-    & Model drift and degradation & The RL model becomes less effective over time due to changes in code styles, and best practices, or the introduction of new refactoring strategies leading to a degradation in performance and accuracy of refactoring suggestions. & Passing of time and evolution of software practices &
-    \begin{itemize}[wide=0pt]
-        \item Regularly retrain the model using up-to-date data and monitor its performance to detect signs of drift.
-        \item Implement a feedback loop to incorporate user corrections into the training data.
-    \end{itemize}
-    & SCR-7 & HZ \showmycounter \\ \cline{2-7}
-
-    
-    & Model generates suboptimal or erroneous refactorings. & 
-    \begin{itemize}[wide=0pt]
-        \item Incorrect or harmful refactorings are applied without proper oversight, leading to system instability.
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item Over-reliance on automated suggestions without sufficient human review or fail-safes.
-    \end{itemize}
-    & Require human approval for significant refactorings or apply thresholds to reject low-confidence suggestions from the model. & SCR-9 & HZ \showmycounter \\ \cline{2-7}\hline
-
-
-    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning \& Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & 
+    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & 
     \begin{itemize}[wide=0pt]
         \item Incorrect energy measurements leading to suboptimal or erroneous refactoring decisions.
         \item Energy inefficiencies or functional degradation in the refactored code
     \end{itemize} & Incorrect measurements of energy usage was validated and used by Reinforcement Learning Model which created incorrect refactorings. & Introduce validation mechanisms for energy data before using it for refactoring decisions. & SCR-1 & HZ \showmycounter \\ \cline{2-7}
 
-
-    & Failed tests result in incorrect data being used for model training, causing the reinforcement learning model to learn from inaccurate or irrelevant data. & 
-    \begin{itemize}[wide=0pt]
-        \item Test failures causing incorrect updates to the learning model's training data
-        \item Reinforcement learning model learns from incorrect outcomes, reducing its effectiveness
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item Failed test cases are not handled sufficiently during model training.
-    \end{itemize}
-    & Implement safeguards to exclude failed test cases from training data or tag them for further analysis. & SCR-7, SCR-12 & HZ \showmycounter \\ \cline{2-7} 
 
 
     & Simultaneous refactoring operations without proper synchronization lead to conflicts or inconsistencies, causing code instability or unexpected behavior. & 
@@ -396,7 +317,7 @@ The web client offers a user interface that allows users to interact with the re
     & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-13 & HZ \showmycounter \\ \hline
 
     \multicolumn{1}{|c|}{\multirow{12}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
-    \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \item Reinforcement Learning: Loss of training data generated during the session can reduce the model's ability to improve optimization recommendations over time. \end{itemize} &
+    \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \end{itemize} &
     \begin{itemize}[wide=0pt] \item Hardware failure, power outage or insufficient system resources \item Unhandled software exceptions or errors during the tool's usage \item Prolonged measurement operations that exceed system capacity \end{itemize} &
     \begin{itemize}[wide=0pt] \item Implement a checkpointing mechanism to periodically save intermediate refactoring states \item Enable a recovery workflow to reload saved checkpoints and resume from the last recorded state  \end{itemize} &
     SCR-1, SCR-4, SCR-14 &
