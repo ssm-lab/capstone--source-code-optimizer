@@ -57,23 +57,27 @@ describing software}
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3.7cm}p{1.8cm}X}
-  \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
+\begin{tabularx}{\textwidth}{p{3.7cm}>{\raggedright\arraybackslash}p{1.8cm}X}
+  \toprule {\textbf{Date}} & {\textbf{Name}} & {\textbf{Notes}}\\
   \midrule
-  October 11th, 2024 & 0 & Created initial revision of SRS\\
-  January 2nd, 2025 & 1 & Added clarification to training requirements\\
-  January 5th, 2025 & 0.1 & Update FR-7, FR-8, Ideas for Solution \\
-  January 6th, 2025 & 0.1 & Fixed link references to tables and
+  October 11th, 2024 & All & Created initial revision of SRS\\
+  January 2nd, 2025 & All & Added clarification to training requirements\\
+  January 5th, 2025 & All & Update FR-7, FR-8, Ideas for Solution \\
+  January 6th, 2025 & All & Fixed link references to tables and
   figures and added preambles to those sections, move glossary
   section, added symbolic constants\\
-  February 8th, 2025 & 0.2 & Removed requirement for interfacing with
+  February 8th, 2025 & All & Removed requirement for interfacing with
   GitHub Actions.\\
-  February 10th, 2025 & 0.2 & Updated the data dictionary and
+  February 10th, 2025 & All & Updated the data dictionary and
   business data model \\
-  February 10th, 2025 & 0.2 & Updated costs, compliance requirements,
+  February 10th, 2025 & All & Updated costs, compliance requirements,
   security requirements and scope of the product. \\
+  March 24th, 2025 & All & Updated and added functional requirements. \\
+  March 24th, 2025 & Mya Hussain & Updated Usability and Humanity Requirements. \\
+  March 24th, 2025 & Ayushi Amin & Updated maintainability and support requirements. \\
+  March 24th, 2025 & Ayushi Amin & Updated cultural requirements.\\
   March 24th, 2025 & Sevhena Walker & Updated solution constraints\\
-  \bottomrule
+  \bottomrule 
 \end{tabularx}
 
 ~\\
@@ -917,33 +921,32 @@ describes the interaction between the user and the system.
 
 \begin{table}[H]
   \centering
+  \renewcommand{\arraystretch}{0.85} 
   \begin{tabularx}{\textwidth}{|c|
       >{\raggedright\arraybackslash}X|
-      >{\raggedright\arraybackslash}p{1.2in}|
+      >{\raggedright\arraybackslash}p{1.1in}| 
     >{\raggedright\arraybackslash}X|}
     \toprule \textbf{PUC \#} & \textbf{PUC Name} & \textbf{Actor/s} &
     \textbf{Input \& Output(s)} \\
     \midrule
-    1 & Detect Code Smells & VS Code Plugin (via Refactoring Library)
-    & Original Code (in), Identified Code Smells (out) \\
-    2 & Select Code Smell for Refactoring & User & Selected Code Smell (in) \\
-    3 & Refactor Code & VS Code Plugin (via Refactoring Library) &
-    Code Segment (in), Refactored Code (out) \\
-    4 & Measure Energy Consumption Before Refactoring & Refactoring
-    Library (via Energy Measurement Tool) & Original Code (in),
-    Initial Energy Consumption Results (out) \\
-    5 & Measure Energy Consumption After Refactoring & Refactoring
-    Library (via Energy Measurement Tool) & Refactored Code (in),
-    Final Energy Consumption Results (out) \\
-    6 & Show Results & VS Code Plugin & Refactored Code, Performance
-    Metrics (out) \\
-    7 & Accept or Reject Refactoring Results & User & Refactored
-    Code, Energy Consumption Results (in), Accepted or Rejected
-    Decision (out) \\
+    1 & Detect Code Smells & VS Code Plugin (via Refactoring Lib.) & Original Code (in), Identified Code Smells (out) \\
+    2 & Toggle Smell Linting & User & Toggle Command (in), Enabled/Disabled Linting (out) \\
+    3 & Filter Code Smells & User & Filter Criteria (in), Filtered Smells (out) \\
+    4 & Configure Smell Detection & User & Threshold Parameters (in), Updated Detection Rules (out) \\
+    5 & Select Code Smell & User & Selected Code Smell (in) \\
+    6 & Refactor Code & VS Code Plugin (via Refactoring Lib.) & Code Segment (in), Refactored Code (out) \\
+    7 & Measure Energy (Before) & Refactoring Library (via Energy Tool) & Original Code (in), Initial Energy Results (out) \\
+    8 & Measure Energy (After) & Refactoring Library (via Energy Tool) & Refactored Code (in), Final Energy Results (out) \\
+    9 & Show Results & VS Code Plugin & Refactored Code, Performance Metrics (out) \\
+    10 & Accept/Reject Results & User & Refactored Code, Energy Results (in), Decision (out) \\
+    11 & Clear Smell History & User & Clear Command (in), Reset Cache (out) \\
+    12 & Access Documentation & User & Help Request (in), Documentation (out) \\
+    13 & Generate System Logs & System & Log Request (in), Log File (out) \\
     \bottomrule
   \end{tabularx}
   \caption{Product Use Case Table of System}
   \label{tab:puc}
+  \vspace{-2mm} 
 \end{table}
 
 \subsection{Individual Product Use Cases (PUC's)}
@@ -1262,15 +1265,17 @@ each use case, emphasizing expected functionality and outcomes for users.
 
 \subsection{Personalization and Internationalization Requirements}
 \begin{enumerate}[label=UHR-PSI \arabic*., wide=0pt, leftmargin=*]
-  \item \emph{The tool shall allow users to customize settings to
-      match their preferences (e.g., refactoring styles, detection
-    sensitivity).}\\[2mm]
-    {\bf Rationale:} Allowing customization improves the user
-    experience by letting developers tailor the tool to their
-    specific needs and workflows.\\
-    {\bf Fit Criterion:} Users should be able to save and load custom
-    configurations easily.\\
-    {\bf Priority:} Medium
+  \item \emph{The tool shall allow users to enable or disable detection of individual code smells.}
+  \\[2mm]
+  {\bf Rationale:} Developers should be able to focus on relevant code smells for their specific project needs.\\
+  {\bf Fit Criterion:} Users can successfully toggle detection of any smell type on or off.\\
+  {\bf Priority:} High
+  
+  \item \emph{The tool shall allow users to customize highlight colors for each detected code smell type.}
+  \\[2mm]
+  {\bf Rationale:} Custom colors improve readability and accommodate different visual preferences.\\
+  {\bf Fit Criterion:} Users can successfully change highlight colors for any smell type.\\
+  {\bf Priority:} Medium
 \end{enumerate}
 
 \subsection{Learning Requirements}
@@ -1548,8 +1553,8 @@ The following are defined as maintainability requirements:
     {\bf Rationale:} Ensuring that new developers can easily
     understand and modify the system reduces dependency on original
     developers and facilitates long-term maintenance.\\
-    {\bf Fit Criteria:} Comprehensive documentation is available,
-    including setup guides and code comments, allowing new developers
+    {\bf Fit Criteria:} Comprehensive documentation is available such
+    as setup guides and code comments, allowing new developers
     to understand and modify the system within COMPREHENSION\_TIME.\\
     {\bf Priority:} High
 
@@ -1583,17 +1588,8 @@ The following are defined as maintainability requirements:
 
 \end{enumerate}
 
-The following are defined as maintainability requirements:
 \subsection{Supportability Requirements}
-\begin{enumerate}[label=MS-SP \arabic*., wide=0pt, leftmargin=*]
-  \item \emph{The tool must offer bilingual support for help documentation.}\\
-    {\bf Rationale:} Bilingual support ensures that users from
-    different regions can understand and use the tool effectively,
-    increasing its accessibility.\\
-    {\bf Fit Criteria:} Help documentation is available in both major
-    languages, English and French.\\
-    {\bf Priority:} Low
-\end{enumerate}
+This section is not needed for this project.
 
 \subsection{Adaptability Requirements}
 \begin{enumerate}[label=MS-AD \arabic*., wide=0pt, leftmargin=*]
@@ -1802,14 +1798,6 @@ The cultural requirements of this project include the following:
     icons and colours used in the tool are neutral and universally acceptable.
     {\bf Priority:} Low
 
-  \item \emph{The tool must support both metric and imperial
-    measurement units.}\\
-    {\bf Rationale:} Users have different preferences and standards
-    for measurement units. Supporting both metric and imperial units
-    ensures accessibility and ease of use for a global audience.\\
-    {\bf Fit Criteria:} Users can toggle between metric and imperial
-    units for any measurements related to energy consumption.
-    {\bf Priority:} Medium
 
   \item \emph{The tool must not include content that could be
     considered culturally insensitive.}\\
