@@ -256,41 +256,51 @@ actually be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
   \item [\refstepcounter{mnum} \mthemnum \label{mRef}:] Smell Refactorer  Module
   \item [\refstepcounter{mnum} \mthemnum \label{mMan}:] Refactor Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCac}:] Cache Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mFil}:] Filter Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mEne}:] Energy Metrics Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mVie}:] View Provider Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mEve}:] Event Manager Module
 \end{description}
 
 
 \begin{table}[h!]
-\centering
-\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Level 1} & \textbf{Level 2}\\
-\midrule
+  \centering
+  \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
+  \toprule
+  \textbf{Level 1} & \textbf{Level 2}\\
+  \midrule
+  
+  {Hardware-Hiding Module} & None \\
+  \midrule
+  
+  \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
+  & BaseRefactorer Module\\
+  & MakeStaticRefactorer Module\\
+  & UseListAccumulationRefactorer Module\\
+  & UseAGeneratorRefactorer Module\\
+  & CacheRepeatedCallsRefactorer Module\\
+  & LongElementChainRefactorer Module\\
+  & LongParameterListRefactorer Module\\
+  & LongMessageChainRefactorer Module\\
+  & LongLambdaFunctionRefactorer Module\\ 
+  & PluginInitiator Module\\
+  & BackendCommunicator Module\\ 
+  & SmellDetector Module\\
+  & FileHighlighter Module\\
+  & HoverManager Module\\
+  & CacheManager Module\\
+  & FilterManager Module\\
+  \midrule
 
-{Hardware-Hiding Module} & None \\
-\midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
-& BaseRefactorer Module\\
-& MakeStaticRefactorer Module\\
-& UseListAccumulationRefactorer Module\\
-& UseAGeneratorRefactorer Module\\
-& CacheRepeatedCallsRefactorer Module\\
-& LongElementChainRefactorer Module\\
-& LongParameterListRefactorer Module\\
-& LongMessageChainRefactorer Module\\
-& LongLambdaFunctionRefactorer Module\\ 
-& PluginInitiator Module\\
-& BackendCommunicator Module\\ 
-& SmellDetector Module\\
-& FileHighlighter Module\\
-& HoverManager Module\\
-\midrule
-
-
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
+  \multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
 & PylintAnalyzer Module\\
 & SmellRefactorer Module\\
 & RefactorManager Module\\
+& EnergyMetrics Module\\
+& ViewProvider Module\\
+& EventManager Module\\
 \bottomrule
 
 \end{tabular}
