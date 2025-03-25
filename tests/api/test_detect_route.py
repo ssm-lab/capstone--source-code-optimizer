@@ -33,7 +33,10 @@ def get_mock_smell():
 def test_detect_smells_success():
     request_data = {
         "file_path": "fake_path.py",
-        "enabled_smells": ["smell1", "smell2"],
+        "enabled_smells": {
+            "smell1": {"threshold": 3},
+            "smell2": {"threshold": 4},
+        },
     }
 
     with patch("pathlib.Path.exists", return_value=True):
@@ -51,7 +54,10 @@ def test_detect_smells_success():
 def test_detect_smells_file_not_found():
     request_data = {
         "file_path": "path/to/nonexistent/file.py",
-        "enabled_smells": ["smell1", "smell2"],
+        "enabled_smells": {
+            "smell1": {"threshold": 3},
+            "smell2": {"threshold": 4},
+        },
     }
 
     response = client.post("/smells", json=request_data)
@@ -66,7 +72,10 @@ def test_detect_smells_file_not_found():
 def test_detect_smells_internal_server_error():
     request_data = {
         "file_path": "fake_path.py",
-        "enabled_smells": ["smell1", "smell2"],
+        "enabled_smells": {
+            "smell1": {"threshold": 3},
+            "smell2": {"threshold": 4},
+        },
     }
 
     with patch("pathlib.Path.exists", return_value=True):

@@ -116,8 +116,7 @@ def do_god_knows_what():
     mystring = "i hate capstone"
     n = 10
 
-    for i in range(n):
-        b = 10
+    for _ in range(n):
         mystring += "word"
 
     return n
@@ -170,7 +169,6 @@ class Vehicle:
 
     def display_info(self):
         # Code Smell: Long Message Chain
-        random_test = self.make.split("")
         print(
             f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(",", "")[
                 ::2
@@ -234,31 +232,31 @@ def longestArithSeqLength5(A: list[int]) -> int:
 
 
 class Calculator:
-    def add(sum):
+    def add(self, sum):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         sum = a + b
         print("The addition of two numbers:", sum)
 
-    def mul(mul):
+    def mul(self, mul):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         mul = a * b
         print("The multiplication of two numbers:", mul)
 
-    def sub(sub):
+    def sub(self, sub):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         sub = a - b
         print("The subtraction of two numbers:", sub)
 
-    def div(div):
+    def div(self, div):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         div = a / b
         print("The division of two numbers: ", div)
 
-    def exp(exp):
+    def exp(self, exp):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         exp = a**b
@@ -266,19 +264,19 @@ class Calculator:
 
 
 class rootop:
-    def sqrt():
+    def sqrt(self):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         print(math.sqrt(a))
         print(math.sqrt(b))
 
-    def cbrt():
+    def cbrt(self):
         a = int(input("Enter number 1: "))
         b = int(input("Enter number 2: "))
         print(a ** (1 / 3))
         print(b ** (1 / 3))
 
-    def ranroot():
+    def ranroot(self):
         a = int(input("Enter the x: "))
         b = int(input("Enter the y: "))
         b_div = 1 / b

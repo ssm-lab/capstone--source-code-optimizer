@@ -22,7 +22,7 @@ SAMPLE_SMELL = {
     "messageId": "smellID",
     "module": "module",
     "obj": "obj",
-    "path": "fake_path.py",
+    "path": "path/to/source_dir/fake_path.py",
     "symbol": "smell-symbol",
     "type": "type",
     "occurences": [
@@ -65,16 +65,19 @@ def test_refactor_success(mock_dependencies):  # noqa: ARG001
 
     with patch("ecooptimizer.api.routes.refactor_smell.measure_energy", side_effect=[10.0, 5.0]):
         request_data = {
-            "source_dir": SAMPLE_SOURCE_DIR,
+            "sourceDir": SAMPLE_SOURCE_DIR,
             "smell": SAMPLE_SMELL,
         }
 
         response = client.post("/refactor", json=request_data)
 
         assert response.status_code == 200
-        assert "refactoredData" in response.json()
-        assert "updatedSmells" in response.json()
-        assert len(response.json()["updatedSmells"]) == 1
+        assert set(response.json().keys()) == {
+            "tempDir",
+            "targetFile",
+            "energySaved",
+            "affectedFiles",
+        }
 
 
 def test_refactor_source_dir_not_found(mock_dependencies):  # noqa: ARG001
@@ -82,14 +85,14 @@ def test_refactor_source_dir_not_found(mock_dependencies):  # noqa: ARG001
     Path.is_dir.return_value = False  # type: ignore
 
     request_data = {
-        "source_dir": SAMPLE_SOURCE_DIR,
+        "sourceDir": SAMPLE_SOURCE_DIR,
         "smell": SAMPLE_SMELL,
     }
 
     response = client.post("/refactor", json=request_data)
 
     assert response.status_code == 404
-    assert f"Directory {SAMPLE_SOURCE_DIR} does not exist" in response.json()["detail"]
+    assert "Folder '/fake/temp/dir' doesn't exist" in response.json()["detail"]
 
 
 def test_refactor_energy_not_saved(mock_dependencies):  # noqa: ARG001
@@ -98,7 +101,7 @@ def test_refactor_energy_not_saved(mock_dependencies):  # noqa: ARG001
 
     with patch("ecooptimizer.api.routes.refactor_smell.measure_energy", side_effect=[10.0, 15.0]):
         request_data = {
-            "source_dir": SAMPLE_SOURCE_DIR,
+            "sourceDir": SAMPLE_SOURCE_DIR,
             "smell": SAMPLE_SMELL,
         }
 
@@ -114,14 +117,14 @@ def test_refactor_initial_energy_not_retrieved(mock_dependencies):  # noqa: ARG0
 
     with patch("ecooptimizer.api.routes.refactor_smell.measure_energy", return_value=None):
         request_data = {
-            "source_dir": SAMPLE_SOURCE_DIR,
+            "sourceDir": SAMPLE_SOURCE_DIR,
             "smell": SAMPLE_SMELL,
         }
 
         response = client.post("/refactor", json=request_data)
 
         assert response.status_code == 400
-        assert "Could not retrieve initial emissions" in response.json()["detail"]
+        assert response.json()["detail"] == "An unexpected error occurred."
 
 
 def test_refactor_final_energy_not_retrieved(mock_dependencies):  # noqa: ARG001
@@ -130,14 +133,14 @@ def test_refactor_final_energy_not_retrieved(mock_dependencies):  # noqa: ARG001
 
     with patch("ecooptimizer.api.routes.refactor_smell.measure_energy", side_effect=[10.0, None]):
         request_data = {
-            "source_dir": SAMPLE_SOURCE_DIR,
+            "sourceDir": SAMPLE_SOURCE_DIR,
             "smell": SAMPLE_SMELL,
         }
 
         response = client.post("/refactor", json=request_data)
 
         assert response.status_code == 400
-        assert "Could not retrieve final emissions" in response.json()["detail"]
+        assert response.json()["detail"] == "An unexpected error occurred."
 
 
 def test_refactor_unexpected_error(mock_dependencies):  # noqa: ARG001
@@ -147,7 +150,7 @@ def test_refactor_unexpected_error(mock_dependencies):  # noqa: ARG001
 
     with patch("ecooptimizer.api.routes.refactor_smell.measure_energy", return_value=10.0):
         request_data = {
-            "source_dir": SAMPLE_SOURCE_DIR,
+            "sourceDir": SAMPLE_SOURCE_DIR,
             "smell": SAMPLE_SMELL,
         }
 
