@@ -21,6 +21,7 @@ class Smell(BaseModel):
         additionalInfo (AddInfo): (Optional) Any custom information m for a type of smell
     """
 
+    id: Optional[str] = ""
     confidence: str
     message: str
     messageId: str
