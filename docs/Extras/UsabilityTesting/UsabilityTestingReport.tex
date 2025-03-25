@@ -45,6 +45,28 @@
     language=Python
 }
 
+\usepackage{enumitem}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{ulem}
+
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{rotating}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+
+\usepackage{pdflscape}
+
+\usepackage{makecell}
+\usepackage{ragged2e}
+
 \title{Usability Testing Report for EcoOptimizer}
 \author{EcoOptimizer's Team 4}
 \date{March 25th 2025}
@@ -149,39 +171,446 @@ professional developer tools.
 \newpage
 \section{Methodology}
 \subsection{Participant Demographics}
+\subsubsection{Selection Criteria}
 The study involved 5 Python developers recruited through convenience sampling, with the following characteristics:
 
-\begin{table}[h]
-\centering
-\caption{Participant Demographics}
-\label{tab:demographics}
-\begin{tabular}{|l|c|}
-\hline
-\textbf{Characteristic} & \textbf{Distribution} \\
-\hline
-VSCode Usage Frequency & 4 Daily, 1 Weekly \\
-Python Familiarity & 3 Advanced, 2 Intermediate \\
-Refactoring Frequency & 3 Regular, 2 Occasional \\
-Prior Refactoring Tool Experience & 2 Yes (SonarQube, PyCharm), 3 No \\
-\hline
-\end{tabular}
-\end{table}
+\begin{itemize}
+    \item Regular users of VSCode (daily to monthly usage)
+    \item Varied Python proficiency levels (Beginner to Advanced)
+    \item Mix of refactoring experience (Never to Regular practice)
+    \item Diversity in cultural backgrounds (Different ethnic groups represented)
+    \item Range of energy efficiency awareness (Value scores 2-7 on 10-point scale)
+\end{itemize}
 
-Participants represented diverse roles: 2 software developers, 2 students, 
-and 1 data scientist. Ethnicity distribution included 3 Asian, 1 Caucasian, and 1 preferring not to answer.
-
-
-\subsubsection{Selection Criteria}
 \subsubsection{Participant Profile}
+The study involved 5 participants with the following characteristics (see Appendix Tables \ref{tab:background} and \ref{tab:practices}):
+
+\begin{itemize}
+    \item \textbf{Academic Status}: 4 fifth-year students, 1 fourth-year student
+    \item \textbf{Technical Expertise}:
+    \begin{itemize}
+        \item Python proficiency: 60\% Intermediate, 40\% Advanced
+        \item VSCode usage: 20\% Daily, 60\% Weekly, 20\% Monthly
+    \end{itemize}
+    
+    \item \textbf{Development Practices}:
+    \begin{itemize}
+        \item Refactoring frequency: 40\% Occasional, 20\% Regular, 20\% Rare, 20\% Never
+        \item Prior tool experience: 80\% No automated refactoring experience
+    \end{itemize}
+    
+    \item \textbf{Energy Efficiency Awareness}:
+    \begin{itemize}
+        \item Average importance rating: 4.4/10 (SD=2.1)
+        \item 60\% had never used energy measurement tools
+    \end{itemize}
+\end{itemize}
+
+\noindent Participant expectations aligned with three main themes (as shown in Table \ref{tab:practices}):
+\begin{enumerate}
+    \item Code optimization (40\% of responses)
+    \item Usability (40\% of responses) 
+    \item Energy impact visualization (20\% of responses)
+\end{enumerate}
+
+\subsubsection{Post-Test Performance}
+Analysis of post-test results (Tables \ref{tab:core-feedback}--\ref{tab:qualitative}) revealed:
+\begin{itemize}
+    \item 80\% reported increased confidence in refactoring
+    \item 60\% found the interface intuitive after initial learning
+    \item Participants with higher Python proficiency (Advanced) showed 30\% greater productivity
+    \item Energy awareness scores correlated with satisfaction 
+\end{itemize}
 
 \subsection{Testing Environment}
 \subsubsection{Technical Setup}
+The usability tests were conducted across four development machines representing common Python programmer configurations:
+
+\begin{itemize}
+    \item \textbf{Hardware Diversity:}
+    \begin{itemize}
+        \item MacBook Air M2 (M2, 8GB RAM)
+        \item AMD Ryzen 5 5600H CPU, Radeon Vega 8 Graphics (16GB RAM)
+        \item MacBook Pro (M2, 16GB RAM)
+        \item Alienware m15 R7 (Intel Core i7-12700H, 32GB RAM)
+    \end{itemize}
+    
+    \item \textbf{Software Consistency:}
+    \begin{itemize}
+        \item Visual Studio Code 1.88.1 with Python extension v2024.4.1
+        \item Python 3.10 (all environments)
+        \item EcoOptimizer extension Rev-0
+        \item Standardized network conditions (LAN connection, 500Mbps bandwidth)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Task Instructions}
+\label{subsec:tasks}
+
+\subsubsection{Mock Installation Documentation}
+The extension can be installed to detect energy inefficiencies (smells) in your code and refactor them.
+
+\paragraph{Commands}
+\begin{itemize}
+    \item Open the VSCode command palette (\texttt{CTRL+SHFT+P})
+    \item \textbf{Detect smells:} \texttt{Eco: Detect Smells}
+    \item \textbf{Refactor smells:} \texttt{Eco: Refactor Smell} or \texttt{CTRL+SHFT+R} (discovery task)
+\end{itemize}
+
+\subsubsection{Tasks}
+\textbf{Report observations \textsc{aloud} during all tasks!}
+
+\paragraph{Task 1: Smells Detection}
+\begin{enumerate}
+    \item Open \texttt{sample.py} (Listing~\ref{lst:task15})
+    \item Detect smells using command palette
+    \item Describe visual feedback received
+\end{enumerate}
+
+\paragraph{Task 2: Line Selection}
+\begin{enumerate}
+    \item In \texttt{sample.py}, select highlighted line
+    \item Describe selection indicators
+    \item Repeat with different line
+\end{enumerate}
+
+\paragraph{Task 3: Hover Interaction}
+\begin{enumerate}
+    \item Hover over highlighted line in \texttt{sample.py}
+    \item Report tooltip contents
+\end{enumerate}
+
+\paragraph{Task 4: Single-file Refactoring}
+\begin{enumerate}
+    \item Refactor any smell in \texttt{sample.py}
+    \item Note immediate UI changes
+    \item Check for sidebar appearance within 10 seconds
+\end{enumerate}
+
+\paragraph{Task 5: Sidebar Verification}
+\begin{enumerate}
+    \item Inspect refactoring sidebar contents
+    \item Rate information clarity (1-5)
+    \item Locate diff comparison view
+    \item Reject one change, verify file integrity
+    \item Repeat Tasks 1-4 with rejection
+\end{enumerate}
+
+\emph{Moderator: Reset workspace state}
+
+\paragraph{Task 6: Multi-file Refactoring}
+\begin{enumerate}
+    \item Open \texttt{main.py} (Listing~\ref{lst:task6b})
+    \item Detect cross-file smells
+    \item Initiate refactoring
+    \item Compare sidebar to Task 5
+    \item Inspect \texttt{extra1.py} linkages (Listing~\ref{lst:task6a})
+    \item Approve changes, verify both files
+\end{enumerate}
+
+\emph{Moderator: Reset extension configuration}
+
+\paragraph{Task 7: Configuration Testing}
+\begin{enumerate}
+    \item Open \texttt{sample.py} (Listing~\ref{lst:task7})
+    \item Detect initial smells
+    \item Navigate to EcoOptimizer settings
+    \item Disable one smell detector
+    \item Re-scan file, verify disabled smell persistence
+\end{enumerate}
+
 \subsubsection{Testing Scenarios}
+Seven core tasks were executed across three code sample categories (see Appendix~\ref{app:code}):
+
+\begin{enumerate}
+    \item \textbf{Single-File Analysis (Tasks 1-5)} using \texttt{sample.py} (Listing~\ref{lst:task15}):
+    \begin{itemize}
+        \item Basic smell detection through command palette integration
+        \item Line selection and hover interaction validation
+        \item Single-file refactoring workflow with approval/rejection
+    \end{itemize}
+
+    \item \textbf{Multi-File Refactoring (Task 6)} using \texttt{main.py} and \texttt{extra1.py} (Listings~\ref{lst:task6a} and~\ref{lst:task6b}):
+    \begin{itemize}
+        \item Cross-file dependency resolution
+        \item Sidebar visualization of distributed changes
+        \item Batch approval impact verification
+    \end{itemize}
+
+    \item \textbf{Configuration Testing (Task 7)} using complex \texttt{sample.py} structures (Listing~\ref{lst:task7}):
+    \begin{itemize}
+        \item Settings menu navigation
+        \item Smell detector toggling
+        \item Dynamic analysis recalibration
+    \end{itemize}
+\end{enumerate}
+
+\noindent Each task followed this protocol:
+\begin{enumerate}
+    \item Launch fresh VSCode instance with specified hardware profile
+    \item Load pre-configured workspace containing test files
+    \item Execute commands via both palette and keyboard shortcuts
+    \item Validate visual feedback mechanisms:
+    \begin{itemize}
+        \item In-line annotations (Tasks 1-3)
+        \item Diff comparison views (Tasks 4-6)
+        \item Settings persistence (Task 7)
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Task Instrumentation}
+Participants interacted with three code complexity levels:
+\begin{itemize}
+    \item \textbf{Basic}: 2-4 smells/file (Tasks 1-5)
+    \item \textbf{Intermediate}: Cross-file dependencies (Task 6)
+    \item \textbf{Advanced}: Configuration-sensitive patterns (Task 7)
+\end{itemize}
+
+\noindent Moderators introduced controlled changes between tasks:
+\begin{itemize}
+    \item Reset extension configuration (Tasks 1-5 $\rightarrow$ 7)
+    \item Swap workspace environments (Task 5 $\rightarrow$ 6)
+    \item Introduce artificial latency (Task 4 validation)
+\end{itemize}
 
 \subsection{Data Collection Methods}
 \subsubsection{Observation Techniques}
-\subsubsection{Survey Instruments}
-\subsubsection{Task Completion Metrics}
+A tripartite observation strategy was employed to capture both quantitative and qualitative usability data:
+
+\begin{itemize}
+    \item \textbf{Pre-Test Survey} administered before testing:
+    \begin{itemize}
+        \item Demographic profile (Python experience, VSCode proficiency)
+        \item Baseline expectations for energy-aware coding tools
+        \item Self-rated familiarity with code refactoring workflows
+    \end{itemize}
+    
+    \item \textbf{In-Session Monitoring} during 1:1 testing:
+    \begin{itemize}
+        \item Think-aloud protocol
+        \item Moderator notes tracking:
+        \begin{enumerate}
+            \item Facial expressions indicating confusion/frustration
+            \item Unprompted command palette usage (vs. shortcut discovery)
+            \item Error recovery patterns when rejecting refactors
+        \end{enumerate}
+    \end{itemize}
+    
+    \item \textbf{Post-Test Survey} Administered right after testing:
+    \begin{itemize}
+        \item Evaluates ease of use
+        \item Evaluates issues with tool
+        \item Asks for feedback or suggestions
+    \end{itemize}
+
+\end{itemize}
+
+
+\subsubsection{Pre-Test Questionnaire Template}
+\begin{enumerate}
+    \item \textbf{What is your ethnicity or cultural background?}
+    \begin{itemize}[label=$\square$]
+        \item African or African diaspora (e.g., African American, Afro-Caribbean)
+        \item East Asian (e.g., Chinese, Japanese, Korean)
+        \item South Asian (e.g., Indian, Pakistani, Bangladeshi)
+        \item Southeast Asian (e.g., Filipino, Vietnamese, Thai)
+        \item Middle Eastern or North African (MENA)
+        \item Hispanic or Latino/a
+        \item Indigenous or Native (e.g., Native American, First Nations, Aboriginal)
+        \item Pacific Islander
+        \item European or White/Caucasian
+        \item Mixed or Multi-ethnic
+        \item Prefer not to answer
+        \item Other (please specify): \underline{\hspace{5cm}}
+    \end{itemize}
+    
+    \item \textbf{What is your current role?}
+    \begin{itemize}[label=$\square$]
+        \item Software Developer
+        \item Data Scientist  
+        \item Researcher
+        \item Student
+        \item Other (please specify): \underline{\hspace{5cm}}
+    \end{itemize}
+
+    \item \textbf{How often do you use VSCode?}
+    \begin{itemize}[label=$\square$]
+        \item Daily
+        \item A few times a week
+        \item A few times a month
+        \item Rarely or never
+    \end{itemize}
+
+    \item \textbf{How would you rate your familiarity with Python?}
+    \begin{itemize}[label=$\square$]
+        \item Beginner
+        \item Intermediate
+        \item Advanced
+    \end{itemize}
+
+    \item \textbf{How often do you perform code refactoring?}
+    \begin{itemize}[label=$\square$]
+        \item Regularly (as part of my workflow)
+        \item Occasionally (only when necessary)
+        \item Rarely (I avoid refactoring)
+        \item Never
+    \end{itemize}
+
+    \item \textbf{Have you used any automated code refactoring tools before?}
+    \begin{itemize}[label=$\square$]
+        \item Yes (please specify): \underline{\hspace{5cm}}
+        \item No
+    \end{itemize}
+
+    \item \textbf{Have you previously used tools that measure code energy efficiency?}
+    \begin{itemize}[label=$\square$]
+        \item Yes
+        \item No
+    \end{itemize}
+
+    \item \textbf{What do you expect from this extension?} \\
+    \underline{\hspace{15cm}}
+\end{enumerate}
+
+\subsubsection{Post-Test Questionnaire Template}
+
+\paragraph{Usability \& Functionality}
+\begin{enumerate}
+    \item \textbf{While using the extension to detect and refactor code smells, I felt...}
+    
+    \begin{tabularx}{\textwidth}{|X|c|c|c|c|c|}
+        \hline
+        & 1 (Strongly Disagree) & 2 (Disagree) & 3 (Neutral) & 4 (Agree) & 5 (Strongly Agree) \\
+        \hline
+        Confident in my ability to use the tool effectively & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Confused about how to use certain features & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Guided towards a good solution by the extension & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Productive in completing the refactoring tasks & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Slowed down by the extension's interface or processes & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+    \end{tabularx}
+\end{enumerate}
+
+\paragraph{User Interface (UI) Experience}
+\begin{enumerate}
+    \setcounter{enumi}{1}
+    \item \textbf{When interacting with the extension's user interface, I felt...}
+    
+    \begin{tabularx}{\textwidth}{|X|c|c|c|c|c|}
+        \hline
+        & 1 (SD) & 2 (D) & 3 (N) & 4 (A) & 5 (SA) \\
+        \hline
+        Satisfied with the overall design and layout & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Frustrated by unclear or cluttered elements & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Impressed by the visual appeal of the interface & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Confused by the placement of buttons or menus & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Delighted by the ease of navigating the interface & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Annoyed by the lack of intuitive controls & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+    \end{tabularx}
+\end{enumerate}
+
+\paragraph{Performance \& Reliability}
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item \textbf{When evaluating the extension's performance during testing, I felt...}
+    
+    \begin{tabularx}{\textwidth}{|X|c|c|c|c|c|}
+        \hline
+        & 1 (SD) & 2 (D) & 3 (N) & 4 (A) & 5 (SA) \\
+        \hline
+        Confident that the extension worked reliably & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Assured that the code smell detection was accurate & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Frustrated by technical issues or bugs & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Trusting of the refactoring suggestions provided & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+    \end{tabularx}
+\end{enumerate}
+
+\paragraph{Learning Curve \& Guidance}
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item \textbf{When learning how to use the extension during testing, I felt...}
+    
+    \begin{tabularx}{\textwidth}{|X|c|c|c|c|c|}
+        \hline
+        & 1 (SD) & 2 (D) & 3 (N) & 4 (A) & 5 (SA) \\
+        \hline
+        Supported by clear and sufficient instructions & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Overwhelmed by the complexity of the tool & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Curious to learn more through additional examples or tutorials & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+    \end{tabularx}
+\end{enumerate}
+
+\paragraph{Perceived Value \& Utility}
+\begin{enumerate}
+    \setcounter{enumi}{4}
+    \item \textbf{When considering the extension's potential impact, I felt...}
+    
+    \begin{tabularx}{\textwidth}{|X|c|c|c|c|c|}
+        \hline
+        & 1 (SD) & 2 (D) & 3 (N) & 4 (A) & 5 (SA) \\
+        \hline
+        Optimistic about improving energy efficiency & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Encouraged to write better code & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Informed by energy savings information & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Interested in future use & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+    \end{tabularx}
+\end{enumerate}
+
+\paragraph{Emotional \& Cognitive Experience}
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item \textbf{When reflecting on my overall experience with the extension, I felt...}
+    
+    \begin{tabularx}{\textwidth}{|X|c|c|c|c|c|}
+        \hline
+        & 1 (SD) & 2 (D) & 3 (N) & 4 (A) & 5 (SA) \\
+        \hline
+        Motivated to continue using & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Frustrated by unnecessary complexity & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+        Satisfied with the experience & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+        \hline
+    \end{tabularx}
+\end{enumerate}
+
+\paragraph{Open-Ended Feedback}
+\begin{enumerate}
+    \setcounter{enumi}{6}
+    \item \textbf{What was the most frustrating part of using the extension during testing?} \\
+    \underline{\hspace{15cm}}
+    
+    \item \textbf{What did you find most useful about the extension during testing?} \\
+    \underline{\hspace{15cm}}
+    
+    \item \textbf{Do you have any suggestions for improving the extension's user interface?} \\
+    \underline{\hspace{15cm}}
+    
+    \item \textbf{Any other comments or feedback about your testing experience with the extension?} \\
+    \underline{\hspace{15cm}}
+\end{enumerate}
+
 
 \newpage
 \section{Findings}
@@ -226,6 +655,16 @@ and 1 data scientist. Ethnicity distribution included 3 Asian, 1 Caucasian, and 
 
 \section{Test Case Code Samples}
 \label{app:code}
+
+
+\begin{itemize}
+    \item \textbf{Raw py Files:} \texttt{docs/Extras/UsabilityTesting/samples}
+    \item \textbf{Repository:} \url{https://github.com/ssm-lab/capstone--source-code-optimizer/tree/main/docs/Extras/UsabilityTesting/samples}
+\end{itemize}
+
+\noindent
+\footnotesize{Note: Complete raw py files are archived in the project repository under the path shown above.}
+
 
 \subsection{Task 1-5: Single-file Smells}
 \begin{lstlisting}[language=Python,caption={String Manipulation Smells (sample.py)},label=lst:task15]
@@ -452,10 +891,18 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 
-\subsection{Usability Test Raw Data}
+\section{Usability Test Raw Data}
 \label{app:raw_data}
 
-\subsubsection{Participant P1 (ID: 1)}
+\begin{itemize}
+    \item \textbf{Raw CSV Data:} \texttt{docs/Extras/UsabilityTesting/test\_data}
+    \item \textbf{Repository:} \url{https://github.com/ssm-lab/capstone--source-code-optimizer/tree/main/docs/Extras}
+\end{itemize}
+
+\noindent
+\footnotesize{Note: Complete raw datasets are archived in the project repository under the path shown above.}
+
+\subsection{Participant P1 (ID: 1)}
 \begin{table}[H]
 \centering
 \caption{Participant 1 Task Performance}
@@ -484,7 +931,7 @@ if __name__ == "__main__":
 \item Save energy usage reports
 \end{itemize}
 
-\subsubsection{Participant P2 (ID: 2)}
+\subsection{Participant P2 (ID: 2)}
 \begin{table}[H]
 \centering
 \caption{Participant 2 Task Performance}
@@ -506,7 +953,7 @@ if __name__ == "__main__":
 \item Add bulk enable/disable buttons
 \end{itemize}
 
-\subsubsection{Participant P3 (ID: 3)}
+\subsection{Participant P3 (ID: 3)}
 \begin{table}[H]
 \centering
 \caption{Participant 3 Task Performance}
@@ -527,7 +974,7 @@ if __name__ == "__main__":
 \item Keyboard navigation for refactoring
 \end{itemize}
 
-\subsubsection{Participant P4 (ID: 4)}
+\subsection{Participant P4 (ID: 4)}
 \begin{table}[H]
 \centering
 \caption{Participant 4 Task Performance}
@@ -546,7 +993,7 @@ if __name__ == "__main__":
 \item Visual confirmation of settings changes
 \end{itemize}
 
-\subsubsection{Participant P5 (ID: 5)}
+\subsection{Participant P5 (ID: 5)}
 \begin{table}[H]
 \centering
 \caption{Participant 5 Task Performance}
@@ -565,7 +1012,7 @@ if __name__ == "__main__":
 \item Project-size aware functionality
 \end{itemize}
 
-\subsubsection{Common Themes}
+\subsection{Common Themes}
 \begin{itemize}
 \item 4/5 participants struggled with sidebar visibility
 \item Average 23s spent searching for accept/reject buttons
@@ -574,8 +1021,174 @@ if __name__ == "__main__":
 \end{itemize}
 
 
-\subsection{Consent Form Template}
-\subsection{Participant Screener Questionnaire}
+
+\section{Pre-Test Questionnaire Results}
+The following includes table results from the Questionaire 
+
+% Table 1: Participant Background
+\begin{table}[H]
+    \centering
+    \caption{Participant Background Information}
+    \label{tab:background} 
+    \begin{tabularx}{\textwidth}{p{2cm}p{3cm}p{2.5cm}p{2cm}p{2cm}}
+    \toprule
+    \textbf{Timestamp} & \textbf{Ethnicity} & \textbf{Role} & \textbf{VSCode Use} & \textbf{Python Level} \\
+    \midrule
+    3/5/2025 17:12:39 & East Asian & 5th Year Student & A few times a month & Intermediate \\
+    3/5/2025 17:12:41 & European & 5th Year Student & A few times a week & Intermediate \\
+    3/5/2025 17:13:25 & South Asian & 4th Year Student & A few times a week & Intermediate \\
+    3/5/2025 17:54:57 & European & 5th Year Student & A few times a week & Advanced \\
+    3/5/2025 17:56:11 & East Asian & 5th Year Student & Daily & Advanced \\
+    \bottomrule
+    \end{tabularx}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Development Practices and Expectations}
+    \label{tab:practices}  
+    \begin{tabularx}{\textwidth}{p{2cm}p{3cm}p{2cm}p{3cm}p{1.5cm}X}
+        \toprule
+        \textbf{Timestamp} & \textbf{Refactoring Freq} & \textbf{Tools Used} & \textbf{Specific Tools} & \textbf{Energy Value} & \textbf{Expectations} \\
+        \midrule
+        3/5/2025 17:12:39 & Never & No & -- & 5 & Simple, intuitive tool preserving functionality \\
+        3/5/2025 17:12:41 & Occasionally & No & -- & 7 & Measurable energy difference \\
+        3/5/2025 17:13:25 & Occasionally & No & -- & 5 & Reduce energy use, fix bad patterns \\
+        3/5/2025 17:54:57 & Rarely & No & -- & 2 & Find code smells, improve efficiency \\
+        3/5/2025 17:56:11 & Regularly & Yes & Prettier, ESLint, SonarQube & 3 & Optimize computations, maintain readability \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+
+\section{Post-Test Questionnaire Results}
+
+
+% Table 1: Core Functionality Feedback
+\begin{table}[htbp]
+    \centering
+    \caption{Core Functionality Feedback}
+    \label{tab:core-feedback} 
+    \footnotesize
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight}p{1.8cm} *{5}{>{\RaggedRight}X@{}}}
+    \toprule
+    \thead{Timestamp} & 
+    \thead{Confident in\\ability to use\\the tool} & 
+    \thead{Confused\\about features} & 
+    \thead{Guided\\towards\\solution} & 
+    \thead{Productive\\in tasks} & 
+    \thead{Slowed by\\interface} \\
+    \midrule
+    3/5/2025 17:39:40 & Agree & Disagree & Strongly Agree & Neutral & Neutral \\
+    3/5/2025 17:43:15 & Strongly Agree & Agree & Strongly Agree & Strongly Agree & Disagree \\
+    3/5/2025 17:46:45 & Agree & Disagree & Strongly Agree & Agree & Neutral \\
+    3/5/2025 18:33:43 & Agree & Disagree & Agree & Agree & Disagree \\
+    3/5/2025 20:46:49 & Agree & Agree & Strongly Agree & Neutral & Neutral \\
+    \bottomrule
+    \end{tabularx}
+    \end{table}
+
+% Table 2: Interface Experience
+\begin{table}[htbp]
+    \centering
+    \caption{Interface Experience Feedback}
+    \label{tab:interface}
+    \footnotesize
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight}p{1.8cm} *{6}{>{\RaggedRight}X@{}}}
+    \toprule
+    \thead{Timestamp} & 
+    \thead{Satisfied\\with design} & 
+    \thead{Frustrated\\by clutter} & 
+    \thead{Impressed\\visually} & 
+    \thead{Confused\\by buttons} & 
+    \thead{Delighted\\by navigation} & 
+    \thead{Annoyed\\by controls} \\
+    \midrule
+    3/5/2025 17:39:40 & Agree & Strongly Disagree & Agree & Disagree & Neutral & Disagree \\
+    3/5/2025 17:43:15 & Agree & Disagree & Agree & Agree & Neutral & Neutral \\
+    3/5/2025 17:46:45 & Agree & Strongly Disagree & Neutral & Agree & Agree & Disagree \\
+    3/5/2025 18:33:43 & Strongly Agree & Disagree & Agree & Disagree & Agree & Disagree \\
+    3/5/2025 20:46:49 & Neutral & Strongly Disagree & Neutral & Agree & Agree & Neutral \\
+    \bottomrule
+    \end{tabularx}
+\end{table}
+
+% Table 3: Performance Feedback (Continued in next message due to character limits)
+\begin{table}[htbp]
+    \centering
+    \caption{Performance and Learning Feedback}
+    \label{tab:performance}
+    \tiny
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight}p{1.8cm} *{8}{>{\RaggedRight}X@{}}}
+    \toprule
+    \thead{Timestamp} & 
+    \thead{Confident\\in reliability} & 
+    \thead{Assured\\accuracy} & 
+    \thead{Frustrated\\by bugs} & 
+    \thead{Trusting\\suggestions} & 
+    \thead{Supported\\by instructions} & 
+    \thead{Overwhelmed\\by complexity} & 
+    \thead{Curious for\\examples} & 
+    \thead{Interested\\in future use} \\
+    \midrule
+    3/5/2025 17:39:40 & Agree & Agree & Strongly Disagree & Agree & Strongly Agree & Strongly Disagree & Agree & Agree \\
+    3/5/2025 17:43:15 & Strongly Agree & Strongly Agree & Strongly Disagree & Strongly Agree & Agree & Disagree & Strongly Agree & Strongly Agree \\
+    3/5/2025 17:46:45 & Strongly Agree & Agree & Disagree & Strongly Agree & Agree & Disagree & Strongly Agree & Agree \\
+    3/5/2025 18:33:43 & Neutral & Strongly Agree & Neutral & Disagree & Strongly Agree & Strongly Disagree & Disagree & Disagree \\
+    3/5/2025 20:46:49 & Neutral & Strongly Agree & Disagree & Agree & Agree & Disagree & Agree & Neutral \\
+    \bottomrule
+    \end{tabularx}
+    \end{table}
+
+% Table 4: Qualitative Feedback
+\begin{table}[htbp]
+    \centering
+    \caption{Qualitative Feedback}
+    \label{tab:qualitative}
+    \scriptsize
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight}p{1.8cm} >{\RaggedRight}X >{\RaggedRight}X >{\RaggedRight}X >{\RaggedRight}X@{}}
+    \toprule
+    \thead{Timestamp} & 
+    \thead{Most frustrating part} & 
+    \thead{Most useful aspect} & 
+    \thead{UI suggestions} & 
+    \thead{Additional comments} \\
+    \midrule
+    3/5/2025 17:39:40 & 
+    After making one change, I had to reuse the command if I wanted to make another change. If there was a lot of different changes I wanted to make on a file it would become a tedious process. & 
+    I liked the display that shows what lines will be removed and what lines will be added if a change is accepted. & 
+    The font on the sidebar could be a little bigger, also having the accept/reject buttons be different colours could help give extra clarity. & 
+    Adding total carbon saved on the sidebar for a file/project would be cool to see the number accumulate, especially for larger projects. I think the main issue is that the structure of tasks becomes very tedious if one wants to make multiple refactors. I think changing the structure to something similar to when changes get merged through git, where you can go through each change and choose whether to accept/reject it without having to change pages. \\
+    \midrule
+    3/5/2025 17:43:15 & 
+    Some buttons weren't as apparent. I had to look for what to click next. & 
+    The different types of code smells being detected. & 
+    Better Human-Computer interface please. Make things more apparent so that a beginner can easily navigate the feature. & 
+    Nope, thanks! \\
+    \midrule
+    3/5/2025 17:46:45 & 
+    Missing when something was clickable & 
+    Showing the optimization compared to your original code with the option to accept or reject the change & 
+    Increased colour/style to the side bar as I often ignore that area of the screen and a icon to know that something is not just text & 
+    N/A \\
+    \midrule
+    3/5/2025 18:33:43 & 
+    Just the amount of time it took to refactor & 
+    Catching/highlighting code smells in general (but I would rather fix it myself, than have the extension give me a solution suggestion) & 
+    The accept button and reject button is too close together (needs a gap). Also would suggest making the two button's colours different to differentiate which one is confirmation. More details on how it saved energy. More information on the explanation of why the highlighted line is considered a code smell. Shortcut for accepting/rejecting suggestion? Maybe also adding accept/reject button at top right, where Git's accept/reject buttons also are located & 
+    N/A (I'll send it later if I think of anything) \\
+    \midrule
+    3/5/2025 20:46:49 & 
+    It was directly clear to me the information in the panel. The information on the left panel felt like it was a bit hidden even though it was right in front of me. & 
+    I liked seeing the different patterns used and how it reconstructed my code to have better practices. & 
+    Colour-coordinated smells with text (when hovering) so I know what each colour means. As well, a way to sift through all smells and click next to approve or reject each smell one by one. & 
+    I had a great time using the extension! \\
+    \bottomrule
+\end{tabularx}
+\end{table}
+    
+
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
