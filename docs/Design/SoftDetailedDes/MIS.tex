@@ -104,9 +104,9 @@ The following table summarizes the primitive data types used by \progname.
     boolean & $\mathbb{B}$ & True or False\\
     code smell & Smell & a collection of data representing a code smell\\
     path & Path & Data object representing a path in a filesystem\\
-    list & list[T] & a collection of objects of type T\\
-    set & set[T] & a collection of \textit{unique} objects of type T\\
-    dictionary & dict & data structure containing multiple key-value pairs\\
+    list & list[T] & an ordered collection of objects of type T\\
+    set & set[T] & an unordered collection of \textit{unique} objects of type T\\
+    dictionary & dict[key] = value & data structure containing multiple key-value pairs\\
     AST Node & AST & AST node representing any AST node\\
     AST Constant & Constant & AST node representing a constant\\
     AST Function Definition & FuncDef & AST node representing a function definition\\
@@ -370,7 +370,7 @@ None
   \item \textbf{Transition}:
     \begin{itemize}
     \item Reads the file at \texttt{file\_path}.
-    \item Identifies the line with a long message chain.
+    \item Identifies the line with a long message chain and uses local function \texttt{remove\_unmatched\_brackets(input\_string: str)}.
     \item Refactors the chain by breaking it into separate statements.
     \item Writes the refactored code to a temporary file.
     \item Evaluates the refactored code’s energy efficiency and functionality.
@@ -461,7 +461,7 @@ None
   \item \textbf{Transition}:
     \begin{itemize}
     \item Reads the file at \texttt{file\_path}.
-    \item Identifies the line with a long lambda function.
+    \item Identifies the line with a long lambda function using local function \texttt{truncate\_at\_top\_level\_comma(body: str)}.
     \item Refactors the lambda into a normal function.
     \item Writes the refactored code to a temporary file.
     \end{itemize}
