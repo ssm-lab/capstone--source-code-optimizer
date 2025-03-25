@@ -949,14 +949,19 @@ requirements and between the modules and the anticipated changes.
     \toprule \textbf{Req.} & \textbf{Modules}\\
     \midrule
     % Performance
-    PR-SL 1 & \mref{mPyA}\\
-    PR-SL 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
-    PR-CR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA} \\ 
-    PR-PAR 2 & \mref{mPyA}\\ 
-    PR-PAR 3 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\ 
+    PR-SL 1 & \mref{mPyA}, \mref{mDet}\\
+    PR-SL 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMan} \\
+    
+    PR-SCR 1 & \mref{mVie}, \mref{mExe} \\ 
+
+    PR-PAR 1 & \mref{mPyA}, \mref{mDet} \\ 
+    
     PR-RFT 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\ 
-    PR-RFT 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
-    PR-SER 1 & \mref{mBR}\\ 
+    
+    PR-CR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA} \\ 
+    
+    PR-SER 1 & \mref{mBR}, \mref{mSmell}\\ 
+
     PR-LR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\
     \bottomrule
   \end{tabular}
@@ -970,15 +975,13 @@ requirements and between the modules and the anticipated changes.
     \toprule \textbf{Req.} & \textbf{Modules}\\
     \midrule
     % Operational and Environmental
-    OER-EP 1 & N/A\\
-    OER-EP 2 & N/A\\
-    OER-WE 1 & \mref{mMeasure}\\
-    OER-IAS 1 & To be removed\\
-    OER-IAS 2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
-    OER-IAS 3 & To be removed\\
-    OER-PR 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\
+    OER-EP 1 & Not implemented in code \\
+    OER-EP 2 & Not implemented in code \\
+    OER-IAS 1 & \mref{mExe}, \mref{mBac} \\
+    OER-IAS 2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}, \mref{mVie} \\
+    OER-PR 1 & Not implemented in code \\
     OER-RL 1 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\
-    OER-RL 2 & N/A\\
+    OER-RL 2 & Not implemented in code \\
     \bottomrule
   \end{tabular}
   \caption{Trace Between Operational \& Environmental Requirements and Modules}
@@ -992,11 +995,10 @@ requirements and between the modules and the anticipated changes.
     \midrule
     % Maintenance and Support
     MS-MNT 1 & \mref{mBR}\\
-    MS-MNT 2 & Not implemented in code\\
-    MS-MNT 3 & None \\
-    MS-MNT 4 & N/A\\
-    MS-MNT 5 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\
-    MS-SP 1 & Not implemented in code\\
+    MS-MNT 2 & Not implemented in code \\
+    MS-MNT 3 & Not implemented in code \\
+    MS-MNT 4 & Not applicable for modules\\
+    MS-MNT 5 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEve}, \mref{mEne} \\
     \bottomrule
   \end{tabular}
   \caption{Trace Between Maintenance \& Support Requirements and Modules}
@@ -1008,15 +1010,30 @@ requirements and between the modules and the anticipated changes.
   \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
     \toprule \textbf{Req.} & \textbf{Modules}\\
     \midrule
+    % Maintenance and Support
+    MS-AD 1 & Not implemented in code \\
+    MS-AD 2 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEve}, \mref{mEne} \\
+    MS-AD 3 & Not implemented in code \\
+    MS-AD 4-5 & \mref{mSmell}, \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEve}, \mref{mEne}, \mref{mVie} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Adaptability Requirements and Modules}
+  \label{tab:MS-mod}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule \textbf{Req.} & \textbf{Modules}\\
+    \midrule
     % Security
-    SR-AR 1 & To be removed\\
-    SR-AR 2 & \mref{mMeasure}\\
-    SR-IR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}\\
-    SR-PR 1 & N/A\\
-    SR-PR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\
-    SR-AUR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\
-    SR-AUR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}\\
-    SR-IM 1 & N/A\\
+    SR-AR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEne}, \mref{mVie} \\
+    SR-AR 2 & \mref{mMeasure}, \mref{mMan} \\
+    SR-IR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC},\mref{mMeasure}, \mref{mPyA}, \mref{mEne} \\
+    SR-PR 1 & Not implemented in code \\
+    SR-PR 2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEne} \\
+    SR-AUR 1-2 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEve} \\
+    SR-IM 1 & Not implemented in code \\
     \bottomrule
   \end{tabular}
   \caption{Trace Between Security Requirements and Modules}
@@ -1029,9 +1046,9 @@ requirements and between the modules and the anticipated changes.
     \toprule \textbf{Req.} & \textbf{Modules}\\
     \midrule
     % Cultural
-    CULT 1-3 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}\\
-    CL-LR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \\
-    CL-SCR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \\ 
+    CULT 1-2 & \mref{mExe}, \mref{mBac}, \mref{mDet}, \mref{mRef}, \mref{mHig}, \mref{mHov}, \mref{mMan}, \mref{mFil}, \mref{mVie} \\
+    CL-LR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEve}, \mref{Ene}, \mref{mVie}, \mref{mExe}, \mref{mBac} \\
+    CL-SCR 1 & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLLF}, \mref{mLPL}, \mref{mLMC}, \mref{mMeasure}, \mref{mPyA}, \mref{mEve}, \mref{Ene}, \mref{mVie}, \mref{mExe}, \mref{mBac}, \mref{mSmell} \\ 
     \bottomrule
   \end{tabular}
   \caption{Trace Between Cultural and Compliance Requirements and Modules}
@@ -1044,9 +1061,9 @@ requirements and between the modules and the anticipated changes.
   \toprule
   \textbf{AC} & \textbf{Modules}\\
   \midrule
-  \acref{acUserInterface} & \mref{mExe}, \mref{mHig} , \mref{mHov}, \mref{mMan} \\
+  \acref{acUserInterface} & \mref{mExe}, \mref{mHig} , \mref{mHov}, \mref{mMan}, \mref{mVie}, \mref{mFil}, \mref{mEve}, \mref{mEne} \\
   \acref{acVSCodePlugin} & \mref{mExe} , \mref{mRef}, \mref{mMan} \\
-  \acref{acRefactorers} & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLPL} \\
+  \acref{acRefactorers} & \mref{mBR}, \mref{mMIMR}, \mref{mSCLR}, \mref{mUGENR}, \mref{mCRC}, \mref{mLEC}, \mref{mLPL}, \mref{mLLF}, \mref{mLMC} \\
   \acref{acSmell} & \mref{mDet}, \mref{mPyA} \\
   \acref{acAnalyzer} & \mref{mMeasure}, \mref{mPyA}, \mref{mDet} \\
   \bottomrule
@@ -1083,16 +1100,16 @@ arrows in the diagram typically correspond to the presence of import statement.}
 \wss{If module A uses module B, the arrow is directed from A to B.}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{../../Images/sco_use_diagram.png}
-\caption{Use hierarchy among modules}
-\label{FigUH}
-\end{figure}
-
+  \centering
+  \includegraphics[width=\textwidth]{../../Images/sco_use_diagram.png}
+  \caption{EcoOptimizer Use Hierarchy among modules}
+  \label{FigUH}
+  \end{figure}
+  
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../../Images/plugin_use_diagram.png}
-  \caption{Use hierarchy among modules}
+  \caption{VS Code Plugin Use Hierarchy among modules(yellow blocks, EcoOptimizer is green block. Note that colors of arrows are only intended for visual distinction)}
   \label{FigUH_Plugin}
   \end{figure}
 

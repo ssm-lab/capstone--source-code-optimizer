@@ -1377,13 +1377,6 @@ The following is a state diagram of the system.
     {\bf Fit Criterion:} Detection accuracy should exceed
     DETECTION\_ACC when validated against a set of known cases.\\
     {\bf Priority:} Medium
-  \item \emph{The tool shall produce valid refactored Python code as
-    output or indicate that no possible refactorings were found.}\\[2mm]
-    {\bf Rationale:} Ensuring that the tool produces valid output is
-    essential for maintaining code quality.\\
-    {\bf Fit Criterion:} The output code is syntactically correct and
-    adheres to Python standards.\\
-    {\bf Priority:} Medium
 \end{enumerate}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
@@ -1480,8 +1473,7 @@ Not applicable.
     in VSCode marketplace.\\
     {\bf Priority:} Medium
   \item \emph{The library should support importing existing codebases
-      and exporting refactored code and energy savings reports in
-    standard formats (e.g., JSON, XML)}\\[2mm]
+      and exporting refactored code in standard formats}\\[2mm]
     {\bf Rationale:} This ensures that users can easily integrate the
     library into their existing workflows without significant disruption.\\
     {\bf Fit Criterion:} Developers are able to refactor existing
@@ -1602,37 +1594,6 @@ This section is not needed for this project.
     performance or functionality\\
     {\bf Priority:} Low
 
-  \item \emph{The system must be able to detect and handle Python
-    version-specific features and syntax.}\\
-    {\bf Rationale:} Depending on the Python version of the source
-    code, the refactorings should be made accordingly to not
-    introduce compatibility errors.\\
-    {\bf Fit Criteria:} The input source code should pass the given
-    test cases.\\
-    {\bf Priority:} High
-
-  \item \emph{The energy measurement module must be adaptable to
-    cloud-based systems.}\\
-    {\bf Rationale:} Many modern applications are hosted and run in
-    cloud environments so, it is essential for the energy measurement
-    module to operate effectively in cloud-based systems. This
-    ensures that developers can accurately measure the energy
-    consumption of their cloud-hosted applications.\\
-    {\bf Fit Criteria:} The energy consumption module returns usable
-    statistics related to the energy consumption of the cloud-application.\\
-    {\bf Priority:} Medium
-
-  \item \emph{The system must be deployable in both cloud-based
-    environments and on-premise infrastructures to meet different user needs.}\\
-    {\bf Rationale:} Whether the system is being used locally or in
-    the cloud, developers still need access to the features offered
-    by the system. Some developers might not even host their
-    applications, and, even if they do, they might want to conduct
-    local testing. \\
-    {\bf Fit Criteria:} The system should be fully functional in both
-    cloud and local environments, with minimal configuration changes.\\
-    {\bf Priority:} Medium
-
   \item \emph{The system must support major operating systems,
     including Windows, macOS, and Linux.}\\
     {\bf Rationale:} Developers may not all use the same operating
@@ -1653,17 +1614,6 @@ This section is not needed for this project.
     {\bf Fit Criteria:} The system runs without errors or crashes
     across multiple versions of Windows, macOS, and Linux, with no
     compatibility issues in handling file systems, dependencies, or libraries.\\
-    {\bf Priority:} Low
-
-  \item \emph{The system must offer consistent performance (e.g.,
-      refactoring speed, energy consumption measurements) regardless of
-    the underlying operating system.}\\
-    {\bf Rationale:} Having the system be OS dependent would
-    invalidate the point of being compatible with multiple OSes and
-    conflict with requirement MS-AD 6.\\
-    {\bf Fit Criteria:} Performance metrics, such as time taken for
-    refactoring and energy measurements, must not vary by more than
-    OS\_PERF\_DIFF\_LIMIT across different operating systems during testing.\\
     {\bf Priority:} Low
 
 \end{enumerate}
@@ -1780,7 +1730,7 @@ The cultural requirements of this project include the following:
     avoid alienating or offending users from diverse backgrounds,
     which is critical for global acceptance and usability.\\
     {\bf Fit Criteria:} Conduct a cultural review to ensure that all
-    icons and colours used in the tool are neutral and universally acceptable.
+    icons and colours used in the tool are neutral and universally acceptable.\\
     {\bf Priority:} Low
 
 
@@ -1790,7 +1740,7 @@ The cultural requirements of this project include the following:
     that the tool is respectful and inclusive, fostering a positive
     user experience across different cultures.\\
     {\bf Fit Criteria:} A cultural sensitivity review is conducted to
-    ensure all content is appropriate for a global audience.
+    ensure all content is appropriate for a global audience.\\
     {\bf Priority:} Medium
 
 \end{enumerate}
