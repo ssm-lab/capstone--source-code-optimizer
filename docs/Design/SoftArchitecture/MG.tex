@@ -364,7 +364,46 @@ This system has no hardware components.
 \item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
 \item[Services:] Refactors the \textit{\textbf{Member Ignoring Method (MIM)}} smell in a provided code file to improve energy efficiency.
 \item[Implemented By:] EcoOptimizer
+\item[Type of Module:] Abstract Object: A transformation component that modifies Python source code to optimize method calls.
 \end{description}
+
+\textbf{Formalization of MakeStaticRefactorer}
+
+\begin{enumerate}
+  \item \textbf{Definitions}
+  \begin{itemize}
+      \item \textit{Source Code}: A Python program \( D \) consisting of a set of statements \( S = \{ s_1, s_2, \dots, s_n \} \).
+      \item \textit{Member Ignoring Method (MIM)}: A function \( f \) defined inside a class \( C \) that does not use instance attributes or methods.
+      \item \textit{Static Method Transformation}: A function \( T \) that converts an instance method \( f \) into a static method \( f' \), where:
+      \[
+      T(f) = f' \text{ such that } \forall x \in C, f(x) = f'
+      \]
+      \item \textit{Refactored Code}: The transformed version of \( D \), denoted as \( D' \), where all applicable \( f \) are replaced by \( f' \).
+  \end{itemize}
+
+  \item \textbf{Transformation Process}
+  \begin{itemize}
+      \item Parse \( D \) into an AST representation.
+      \item Identify functions \( f \) where:
+      \begin{itemize}
+          \item \( f \in C \) (i.e., \( f \) is a method within a class).
+          \item \( f \) does not reference any instance variables.
+      \end{itemize}
+      \item Modify \( f \) by:
+      \begin{itemize}
+          \item Adding a `@staticmethod` decorator.
+          \item Removing the `self` parameter from its signature.
+      \end{itemize}
+      \item Update all relevant method calls in \( D \) to reflect the static method transformation.
+  \end{itemize}
+
+  \item \textbf{Validation and Constraints}
+  \begin{itemize}
+      \item Ensure correctness by preserving method functionality.
+      \item Verify that method calls in \( D \) remain semantically valid after transformation.
+      \item Maintain compatibility with subclasses and inherited methods.
+  \end{itemize}
+\end{enumerate}
 
 \subsubsection{UseListAccumulationRefactorer Module (\mref{mSCLR})}
 
