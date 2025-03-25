@@ -550,6 +550,82 @@ This system has no hardware components.
   \item[Type of Module:] Library: a reusable component that provides functionality for refactoring long lambda functions in Python code.
 \end{description}
 
+\textbf{Long Lambda Function Formalization}
+\begin{enumerate}
+  \item \textbf{Definitions}
+  \begin{itemize}
+      \item \textit{Lambda Expression}: String \( L = \text{``lambda'' }A\text{``:'' }B \) where:
+      \begin{itemize}
+          \item \( A = [a_1, \dots, a_n] \) : Formal parameters
+          \item \( B \) : Body expression
+      \end{itemize}
+      
+      \item \textit{Truncated Body}: \( B' = \begin{cases} 
+          B[0:i] & \text{if top-level comma at } i \\
+          B & \text{otherwise}
+      \end{cases} \)
+      
+      \item \textit{Function Name}: \( F = \text{``converted\_lambda\_''} + \text{line\_num} \)
+      
+      \item \textit{Indentation}:
+      \begin{itemize}
+          \item \( W \) : Original line's whitespace
+          \item \( W_c \) : Parent block indentation
+          \item \( D = 4 \) : Indentation delta (spaces)
+      \end{itemize}
+  \end{itemize}
+
+  \item \textbf{Transformation Rules}
+  \begin{itemize}
+      \item \textbf{Function Generation}:
+      \[
+      \begin{aligned}
+          &\textsc{Definition}: & W_c\text{``def ''}F(A)\text{``:''} \\
+          &\textsc{Body}: & (W_c + D)\text{``result = ''}B' \\
+          &\textsc{Return}: & (W_c + D)\text{``return result''}
+      \end{aligned}
+      \]
+      
+      \item \textbf{Lambda Replacement}:
+      \[
+      W\text{``lambda ''}A\text{``: ''}B \quad \Rightarrow \quad W F
+      \]
+  \end{itemize}
+
+  \item \textbf{Example}
+  \begin{itemize}
+      \item \textit{Before}:
+      \begin{verbatim}
+      # Original lambda (line 42)
+      result = map(lambda x: x**2, data)
+      \end{verbatim}
+      
+      \item \textit{After}:
+      \begin{verbatim}
+def converted_lambda_42(x):    # W_c = ""
+    result = x**2             # W_c + D (D=4)
+    return result
+
+      result = map(converted_lambda_42, data)
+      \end{verbatim}
+  \end{itemize}
+\end{enumerate}
+
+\textit{Key Relationships}:
+\begin{itemize}
+    \item \( F \) uniqueness via \text{line\_num}
+    \item \( D = 4 \) ensures PEP8 compliance
+    \item \( W \) preservation maintains code structure
+\end{itemize}
+
+\textit{Key Relationships}:
+\begin{itemize}
+    \item \( F \) preserves lexical scope via \( W_c \) alignment
+    \item \( B' \) ensures syntactic validity through comma truncation
+    \item \( \Delta = 4 \) enforces PEP8 indentation rules
+    \item \( W \) retention maintains original code structure
+\end{itemize}
+
 \subsubsection{Plugin Initiator Module (\mref{mExe})}
 
 % [Record, Library, Abstract Object, or Abstract Data Type]
