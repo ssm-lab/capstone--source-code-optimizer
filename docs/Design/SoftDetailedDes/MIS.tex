@@ -1216,7 +1216,6 @@ None
 \end{itemize}
 
 \newpage
-
 \section{MIS of Use A Generator Refactorer} \label{mis:UseGen}
 
 \texttt{UseAGeneratorRefactorer}
@@ -1228,14 +1227,15 @@ unnecessary list comprehensions in Python code by converting them to generator e
 
 \subsection{Uses}
 \begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Uses Python's \texttt{ast} module for parsing and manipulating abstract syntax trees
+\item Uses \texttt{Smell} interface for data access
+\item Inherits from \texttt{BaseRefactorer}
+\item Uses Python's \texttt{ast} module for parsing and manipulating abstract syntax trees
 \end{itemize}
 
 \subsection{Syntax}
 \noindent
 \textbf{Exported Constants}: None
+
 
 \noindent
 \textbf{Exported Access Programs}:\\
@@ -1256,8 +1256,8 @@ unnecessary list comprehensions in Python code by converting them to generator e
 
 \subsubsection{State Variables}
 \begin{itemize}
-  \item \texttt{temp\_dir: Path}: Directory path for storing refactored files.
-  \item \texttt{output\_dir: Path}: Directory path for saving final refactored code.
+\item \texttt{temp\_dir: Path}: Directory path for storing refactored files
+\item \texttt{output\_dir: Path}: Directory path for saving final refactored code
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -1265,32 +1265,52 @@ None
 
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
+\item The input file contains valid Python syntax
+\item \texttt{pylint\_smell} provides valid line/column locations
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{UseAGeneratorRefactorer(self, output\_dir: Path)}}
+\paragraph{\texttt{UseAGeneratorRefactorer(output\_dir: Path)}}
 \begin{itemize}
-  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Initializes temporary directory within output directory
+\item \textbf{Output}: \texttt{self}
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
+\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: 
+R
+R)}}
 \begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies unnecessary list comprehensions, modifies the code to use generator expressions, and validates refactoring.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\item \textbf{Transition}:
+\begin{itemize}
+\item Reads source code using \texttt{ListCompInAnyAllTransformer} metadata
+\item Applies AST transformation via \texttt{\_replace\_node} for node substitution
+\item Uses \texttt{leave\_Call} in transformer to identify replacement targets
+\item Validates and writes modified code using generator expressions
+\end{itemize}
+\item \textbf{Output}: None
+\item \textbf{Exception}:
+\begin{itemize}
+\item \texttt{IOError}: File read/write failures
+\item \texttt{TypeError}: CST parsing errors
+\end{itemize}
 \end{itemize}
 
 \subsubsection{Local Functions}
-\paragraph{\texttt{\_replace\_node(self, tree: Module, old\_node: ListComp, new\_node: GeneratorExp)}}
+
+\paragraph{\texttt{\_replace\_node(tree: Module, old\_node: ListComp, new\_node: GeneratorExp)}}
 \begin{itemize}
-  \item \textbf{transition}: Replaces an \texttt{old\_node} in the AST with a \texttt{new\_node}.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: None.
+\item \textbf{Transition}: Replaces list comprehension node with generator expression
+\item \textbf{Output}: Modified AST
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{ListCompInAnyAllTransformer}}
+\begin{itemize}
+\item \textbf{Transition}: Custom CST transformer that identifies and converts list comprehensions in any()/all() calls
+\item \textbf{Output}: Modified syntax tree
+\item \textbf{Exception}: None
 \end{itemize}
 
 \newpage
