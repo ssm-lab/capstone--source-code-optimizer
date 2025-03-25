@@ -536,16 +536,16 @@ None
 
 \paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
 \begin{itemize}
-\item \textbf{Transition}:
-\begin{enumerate}
-\item Reads the file at \texttt{file\_path} and locates the target function using \texttt{pylint\_smell}.
-\item Analyzes function body to remove unused parameters. Updates the function signature and references in the code accordingly.
-\item If number of used parameters also exceeds the maximum configured limit, encapsulates related parameters into classes. Updates the function signature and references in the code accordingly.
-\item Writes the refactored code to a temporary file.
-\end{enumerate}
-\item \textbf{Output}: None.Refactored file is saved if improvements are validated. 
-\item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
+  \item \textbf{Transition}:
+  \begin{enumerate}
+  \item Reads the file at \texttt{file\_path} and locates the target function using \texttt{pylint\_smell}.
+  \item Analyzes function body to group parameters into used and ununsed parameters using \texttt{get\_used\_parameters()} to remove unused parameters. Updates the function signature and references in the code accordingly.
+  \item If number of used parameters also exceeds the maximum configured limit, encapsulates related parameters into classes using \texttt{classify\_parameters()} and \texttt{create\_parameter\_object\_class()}. Updates the function signature using local function \texttt{update\_function\_signature()} and references in the code  using \texttt{update\_function\_calls()} and \texttt{update\_parameter\_usages()}.
+  \item Writes the refactored code to a temporary file.
+  \end{enumerate}
+  \item \textbf{Output}: None. Refactored file is saved if improvements are validated. 
+  \item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+  \end{itemize}
 
 \subsubsection{Local Functions}
 
