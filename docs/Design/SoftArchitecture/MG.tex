@@ -358,7 +358,7 @@ This system has no hardware components.
 % [Record, Library, Abstract Object, or Abstract Data Type]
 
 \begin{description}
-    \item[Secrets:] None
+    \item[Secrets:] How to handle file I/O operations for reading and writing code. How to parse source code into AST/CST representation and convert modified AST/CST back to source code. How to traverse, analyze and modify AST/CST trees.
     \item[Services:] Offers an interface for other refactoring modules to implement.
     \item[Implemented By:] EcoOptimizer
 \end{description}
@@ -367,7 +367,7 @@ This system has no hardware components.
 
 % [Record, Library, Abstract Object, or Abstract Data Type]
 \begin{description}
-\item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
+\item[Secrets:] How to identify method calls that don't use instance attributes, determine class hierarchies and inheritance relationships, transform instance method calls to static method calls and handle method annotations and type hints.
 \item[Services:] Refactors the \textit{\textbf{Member Ignoring Method (MIM)}} smell in a provided code file to improve energy efficiency.
 \item[Implemented By:] EcoOptimizer
 \item[Type of Module:] Abstract Object: A transformation component that modifies Python source code to optimize method calls.
@@ -416,21 +416,21 @@ This system has no hardware components.
 % [Record, Library, Abstract Object, or Abstract Data Type]
 
 \begin{description}
-\item[Secrets:] How to parse a given code file into its AST representation, how to traverse the AST tree, how to find the initializing variable of the string concatenation, how to find the scope of the concatenation, how to modify the given code file in plain text and write it back to an output file.
+\item[Secrets:] How to identify string concatenation operations within loops and find the scope of the concatenation. How to track variable assignments and reassignments across scopes. How to transform string concatenations into list accumulation patterns.
 \item[Services:] Refactors the \textbf{\textit{String Concatenation Inside Loop (SCL)}} smell in a provided code file to improve energy efficiency.
 \item[Implemented By:] EcoOptimizer
 \end{description}
 
 \subsubsection{UseAGeneratorRefactorer Module (\mref{mUGENR})}
 \begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
+    \item[Secrets:] How to identify list comprehensions through operations. How to transform list comprehensions into generator expressions. How to preserve short-circuit evaluation behavior.
     \item[Services:] Refactors the \textbf{\textit{List Comprehension Instead of a Generator}} smell in a provided code file to improve energy efficiency.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
 \subsubsection{CacheRepeatedCallsRefactorer Module (\mref{mCRC})}
 \begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, how to traverse the AST tree, how to modify specific nodes in the AST tree, how to convert the modified AST tree back to source code and write it to an output file.
+    \item[Secrets:] How to identify repeated function calls with same arguments, how to determine appropriate scope for caching. How to implement memoization patterns and handle side effects in cached functions.
     \item[Services:] Refactors the \textbf{\textit{Repeated Function Calls}} smell in a provided code file to improve energy efficiency and performance.
     \item[Implemented By:] EcoOptimizer
 \end{description}
@@ -438,10 +438,7 @@ This system has no hardware components.
 \subsubsection{Long Element Chain Module (\mref{mLEC})}
 
 \begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, traverse the 
-    AST tree to identify dictionary assignments, analyze the structure of nested dictionaries,
-     and flatten them. Additionally, it identifies all access calls associated with these dictionaries
-      in the source code and determines how to update them to reflect the new flattened structure.
+    \item[Secrets:] How to identify dictionary assignments, analyze the structure of nested dictionaries, and flatten them. How to identify all access calls associated with these dictionaries in the source code and determines how to update them to reflect the new flattened structure. How to maintain data structure integrity during transformation.
     \item[Services:] Detects nested dictionaries in the source code using AST parsing, simplifies their 
     structure by flattening them, and updates all associated access calls throughout the file. This improves 
     code readability, reduces complexity, and ensures correctness while maintaining the program's intended behavior.
@@ -485,7 +482,7 @@ This system has no hardware components.
 % [Record, Library, Abstract Object, or Abstract Data Type]
 
 \begin{description}
-    \item[Secrets:] How to parse a given code file to its AST representation, traverse the AST tree to identify functions or methods with long parameter lists, and encapsulate related parameters into objects or structures. Additionally, it identifies all function or method calls associated with these functions and updates their arguments to align with the refactored signature.
+    \item[Secrets:] How to identify functions or methods with long parameter lists, and encapsulate related parameters into objects or structures. How to group related parameters into objects/structures. How to update all call sites with new parameter structures. How to identify all function or method calls associated with these functions and updates their arguments to align with the refactored signature.
     \item[Services:] Detects long parameter lists in functions or methods using AST parsing, simplifies their structure by grouping related parameters into objects or structures, and updates all associated function or method calls throughout the file. This improves code readability, reduces complexity, and ensures correctness while maintaining the program’s intended behavior.
     \item[Implemented By:] EcoOptimizer
 \end{description}
@@ -494,8 +491,7 @@ This system has no hardware components.
 
 
 \begin{description}
-    \item[Secrets:] Understanding the syntax and structure of Python code to identify/classify long message chains, including both f-strings and non-f-string chains. This involves parsing the target file, extracting method calls from identified long chains, and systematically breaking them into separate statements while preserving the original functionality and indentation. Additionally, it ensures unmatched brackets are corrected during refactoring.
-    
+    \item[Secrets:] How to analzye the syntax and structure of Python code to identify/classify long message chains, including both f-strings and non-f-string chains. How to extract method calls from identified long chains, and systematically break them into separate statements while preserving the original functionality and indentation. How to correct unmatched brackets during refactoring.
     \item[Services:] Detects long message chains in Python source code and refactors them by splitting the chain into intermediate variables and a final result. This improves code readability and maintainability while retaining the original program behavior. 
 
     \item[Implemented By:] EcoOptimizer
@@ -541,7 +537,7 @@ This system has no hardware components.
 
 
 \begin{description} 
-  \item[Secrets:] Understanding the syntax and structure of Python code to identify long lambda functions. This includes parsing the target file to locate lambda expressions, extracting their arguments and bodies, and converting them into standard Python function definitions. The module ensures proper handling of nested structures (e.g., parentheses, brackets, and braces) within the lambda body, and truncates overly complex expressions at the first top-level comma for readability.
+  \item[Secrets:] How to analyze the syntax and structure of Python code to identify long lambda functions. How to locate lambda expressions, extract their arguments and bodies, and convert them into standard Python function definitions. How to properly handle nested structures (e.g., parentheses, brackets, and braces) within the lambda body, and truncates overly complex expressions at the first top-level comma for readability.
 
   \item[Services:] Detects components of long lambda functions in Python source code and refactors them by converting the lambda expression into a standalone function with a unique name. This improves code readability, debugging, and maintainability. The module inserts the newly defined function in the appropriate scope, updates the original lambda usage with a function call, and validates the refactored code by maintaining its functionality and measuring energy efficiency improvements.
 
