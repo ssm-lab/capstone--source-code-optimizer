@@ -749,6 +749,7 @@ None
   
 \newpage  
 
+
 \section{MIS of Long Element Chain Refactorer} \label{mis:lec}
 
 \texttt{LongElementChainRefactorer}
@@ -760,8 +761,8 @@ LongElementChainRefactorer is a module that refactors long element chains, speci
 \subsection{Uses}
 
 \begin{itemize}
-    \item Uses \texttt{Smell} interface for data access
-    \item Inherits from \texttt{BaseRefactorer}
+\item Uses \texttt{Smell} interface for data access
+\item Inherits from \texttt{BaseRefactorer}
 \end{itemize}
 
 \subsection{Syntax}
@@ -770,6 +771,7 @@ LongElementChainRefactorer is a module that refactors long element chains, speci
 None
 
 \subsubsection{Exported Access Programs}
+
 
 \begin{center}
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
@@ -788,7 +790,10 @@ None
 \subsubsection{State Variables}
 
 \begin{itemize}
-  \item \textbf{\_reference\_map}: Maps element chain references to their line numbers and corresponding values.
+\item \textbf{\_reference\_map}: Maps element chain references to their line numbers and corresponding values.
+\item \textbf{dict\_name}: Names of target dictionaries to refactor.
+\item \textbf{access\_patterns}: Collection of detected dictionary access patterns.
+\item \textbf{dict\_assignment}: Flattened version of the original nested dictionary.
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -797,9 +802,9 @@ None
 \subsubsection{Assumptions}
 
 \begin{itemize}
-  \item Input files are valid Python scripts.
-  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
-  \item Refactored code must pass the provided test suite.
+\item Input files are valid Python scripts.
+\item Smells identified by \textbf{pylint\_smell} include valid line numbers.
+\item Refactored code must pass the provided test suite.
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
@@ -811,36 +816,111 @@ None
 \item \textbf{Exception}: None.
 \end{itemize}
 
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
+\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: R R)}}
 \begin{itemize}
-  \item \textbf{Transition}:
-    \begin{itemize}
-      \item Reads the file at \texttt{file\_path}.
-      \item Identifies nested dictionary chains for flattening.
-      \item Refactors the identified chain by flattening the dictionary and replacing its occurrences.
-      \item Writes the refactored code to a temporary file.
+\item \textbf{Transition}:
+\begin{itemize}
+\item Reads the file at \texttt{file\_path} and parses its AST.
+\item Identifies dictionary names using \texttt{\_find\_dict\_names} and \texttt{\_extract\_dict\_name}.
+\item Detects nested access patterns via \texttt{\_find\_access\_pattern\_in\_file} and \\ \texttt{extract\_full\_dict\_access}.
+\item Calculates nesting depth with \texttt{\_count\_nested\_subscripts}.
+\item Locates dictionary assignments using \texttt{find\_dict\_assignment\_in\_file} and converts AST nodes with \texttt{extract\_dict\_literal}.
+\item Flattens the dictionary using \texttt{flatten\_dict}.
+\item Generates new access keys via \texttt{generate\_flattened\_access}.
+\item Applies code modifications using \texttt{\_collect\_line\_modifications} and \texttt{\_apply\_modifications}.
+\item Updates the original dictionary assignment with \texttt{\_update\_dict\_assignment}.
+\item Writes the refactored code to a temporary file.
 \end{itemize}
-  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
-  \item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\item \textbf{Output}: None. Refactored file is saved if improvements are validated.
+\item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
 \end{itemize}
 
 \subsubsection{Local Functions}
+
+\paragraph{\texttt{\_find\_dict\_names(tree: ast.AST, line\_number: int)}}
 \begin{itemize}
-    \item \textbf{\_flatten\_dict(d: dict[str, Any], parent\_key?: str)} \\
-    Recursively flattens a nested dictionary by combining keys with underscores.
-
-    \item \textbf{\_extract\_dict\_literal(node: ASTnode)} \\
-    Converts an Abstract Syntax Tree (AST) dictionary literal into a Python dictionary.
-
-    \item \textbf{\_find\_dict\_assignments(tree: ASTnode, name: str)} \\
-    Extracts dictionary assignments given the name of the dictionary from the AST and returns them as a dictionary.
-
-    \item \textbf{\_collect\_dict\_references(tree: ASTnode)} \\
-    Identifies and stores all dictionary access patterns in the `\_reference\_map`.
-
-    \item \textbf{\_generate\_flattened\_access(base\_var: str, access\_chain: list[str])} \\
-    Generates a flattened dictionary key string by combining elements of an access chain with underscores.
+\item \textbf{Transition}: Identifies dictionary names in the AST at the specified line number.
+\item \textbf{Output}: None (updates \texttt{dict\_name} state variable).
+\item \textbf{Exception}: None.
 \end{itemize}
+
+\paragraph{\texttt{\_extract\_dict\_name(node: ast.AST)}}
+\begin{itemize}
+\item \textbf{Transition}: Extracts the dictionary name from attribute/subscript nodes in the AST.
+\item \textbf{Output}: Returns the extracted name as a string or \texttt{None}.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{\_find\_access\_pattern\_in\_file(tree: ast.AST, path: Path)}}
+\begin{itemize}
+\item \textbf{Transition}: Detects all dictionary access patterns in a file's AST.
+\item \textbf{Output}: None (populates \texttt{access\_patterns} state variable).
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{extract\_full\_dict\_access(node: ast.Subscript)}}
+\begin{itemize}
+\item \textbf{Transition}: Extracts the full access chain (e.g., \texttt{dict['key1']['key2']}) from a Subscript node.
+\item \textbf{Output}: Returns tuple containing dictionary name, access chain, line number, and column offset.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{\_count\_nested\_subscripts(node: ast.Subscript)}}
+\begin{itemize}
+\item \textbf{Transition}: Counts the nesting level of subscript accesses.
+\item \textbf{Output}: Returns nesting level as an integer.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{find\_dict\_assignment\_in\_file(tree: ast.AST)}}
+\begin{itemize}
+\item \textbf{Transition}: Locates dictionary assignments in the AST and extracts their values.
+\item \textbf{Output}: None (updates \texttt{dict\_assignment} state variable).
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{extract\_dict\_literal(node: ast.AST)}}
+\begin{itemize}
+\item \textbf{Transition}: Converts an AST dictionary node to a Python dictionary.
+\item \textbf{Output}: Returns the converted dictionary.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{flatten\_dict(d: dict[str, Any], depth: int, parent\_key: str)}}
+\begin{itemize}
+\item \textbf{Transition}: Recursively flattens a nested dictionary by combining keys with underscores.
+\item \textbf{Output}: Returns the flattened dictionary.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{generate\_flattened\_access(access\_chain: list[str])}}
+\begin{itemize}
+\item \textbf{Transition}: Generates a flattened key string from an access chain.
+\item \textbf{Output}: Returns the refactored access string.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{\_collect\_line\_modifications(file\_path: Path)}}
+\begin{itemize}
+\item \textbf{Transition}: Collects required code modifications for detected access patterns.
+\item \textbf{Output}: Returns dictionary mapping line numbers to modifications.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{\_apply\_modifications(lines: list[str], modifications: dict[int, list[tuple[int, str, str]]})}
+\begin{itemize}
+\item \textbf{Transition}: Applies collected modifications to source code lines.
+\item \textbf{Output}: Returns list of modified code lines.
+\item \textbf{Exception}: None.
+\end{itemize}
+
+\paragraph{\texttt{\_update\_dict\_assignment(refactored\_lines: list[str])}}
+\begin{itemize}
+\item \textbf{Transition}: Updates the original nested dictionary assignment with the flattened version.
+\item \textbf{Output}: Returns modified code lines with updated dictionary.
+\item \textbf{Exception}: None.
+\end{itemize}
+
 
 
 
