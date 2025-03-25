@@ -924,3 +924,134 @@ def test_lpl_complex_attribute_access(refactorer, source_files):
     # cleanup after test
     test_file.unlink()
     test_dir.rmdir()
+
+
+def test_lpl_multi_file_refactor(refactorer, source_files):
+    """Test refactoring a function that is called from another file"""
+
+    test_dir = source_files / "temp_test_lpl"
+    test_dir.mkdir(exist_ok=True)
+
+    # Create the main file with function definition
+    main_file = test_dir / "main.py"
+    main_code = textwrap.dedent("""\
+    def process_user_data(user_id, username, email, preferences, timezone_config, language, notification_settings, theme):
+        result = {
+            'id': user_id,
+            'name': username,
+            'email': email,
+            'prefs': preferences,
+            'tz': timezone_config,
+            'lang': language,
+            'notif': notification_settings,
+            'theme': theme
+        }
+        return result
+    """)
+    main_file.write_text(main_code)
+
+    # Create another file that uses this function
+    user_file = test_dir / "user_processor.py"
+    user_code = textwrap.dedent("""\
+    from main import process_user_data
+
+    def handle_user():
+        # Call with positional args
+        result1 = process_user_data(
+            1,
+            "john",
+            "john@example.com",
+            {"theme": "light"},
+            "PST",
+            "en",
+            False,
+            "dark"
+        )
+
+        # Call with keyword args
+        result2 = process_user_data(
+            user_id=2,
+            username="jane",
+            email="jane@example.com",
+            preferences={"theme": "dark"},
+            timezone_config="UTC",
+            language="fr",
+            notification_settings=True,
+            theme="light"
+        )
+
+        return result1, result2
+    """)
+    user_file.write_text(user_code)
+
+    # Expected output for main.py
+    expected_main_code = textwrap.dedent("""\
+    class DataParams_process_user_data_1:
+        def __init__(self, user_id, username, email, preferences, language, theme):
+            self.user_id = user_id
+            self.username = username
+            self.email = email
+            self.preferences = preferences
+            self.language = language
+            self.theme = theme
+    class ConfigParams_process_user_data_1:
+        def __init__(self, timezone_config, notification_settings):
+            self.timezone_config = timezone_config
+            self.notification_settings = notification_settings
+    def process_user_data(data_params, config_params):
+        result = {
+            'id': data_params.user_id,
+            'name': data_params.username,
+            'email': data_params.email,
+            'prefs': data_params.preferences,
+            'tz': config_params.timezone_config,
+            'lang': data_params.language,
+            'notif': config_params.notification_settings,
+            'theme': data_params.theme
+        }
+        return result
+    """)
+
+    # Expected output for user_processor.py
+    expected_user_code = textwrap.dedent("""\
+    from main import process_user_data
+    class DataParams_process_user_data_1:
+        def __init__(self, user_id, username, email, preferences, language, theme):
+            self.user_id = user_id
+            self.username = username
+            self.email = email
+            self.preferences = preferences
+            self.language = language
+            self.theme = theme
+    class ConfigParams_process_user_data_1:
+        def __init__(self, timezone_config, notification_settings):
+            self.timezone_config = timezone_config
+            self.notification_settings = notification_settings
+
+    def handle_user():
+        # Call with positional args
+        result1 = process_user_data(
+            DataParams_process_user_data_1(1, "john", "john@example.com", {"theme": "light"}, "en", "dark"), ConfigParams_process_user_data_1("PST", False))
+
+        # Call with keyword args
+        result2 = process_user_data(
+            DataParams_process_user_data_1(user_id = 2, username = "jane", email = "jane@example.com", preferences = {"theme": "dark"}, language = "fr", theme = "light"), ConfigParams_process_user_data_1(timezone_config = "UTC", notification_settings = True))
+
+        return result1, result2
+    """)
+
+    # Apply the refactoring
+    smell = create_smell([1])()
+    refactorer.refactor(main_file, test_dir, smell, main_file)
+
+    # Verify both files were updated correctly
+    modified_main_code = main_file.read_text()
+    modified_user_code = user_file.read_text()
+
+    assert modified_main_code.strip() == expected_main_code.strip()
+    assert modified_user_code.strip() == expected_user_code.strip()
+
+    # cleanup after test
+    main_file.unlink()
+    user_file.unlink()
+    test_dir.rmdir()
