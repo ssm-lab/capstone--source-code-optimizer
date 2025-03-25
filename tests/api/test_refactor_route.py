@@ -35,7 +35,7 @@ SAMPLE_SMELL = {
     ],
 }
 
-SAMPLE_SOURCE_DIR = "path\\to\\source_dir"
+SAMPLE_SOURCE_DIR = str(Path("path\\to\\source_dir").resolve())
 
 
 @pytest.fixture(scope="module")
