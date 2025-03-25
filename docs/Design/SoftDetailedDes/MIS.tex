@@ -594,102 +594,149 @@ None
   \end{itemize}
   \end{enumerate}
 
-\section{MIS of Use List Accumulation Refactorer} \label{mis:ListAccum}
+  \section{MIS of Use List Accumulation Refactorer} \label{mis:ListAccum}
 
-\texttt{UseListAccumulationRefactorer}
-
-\subsection{Module}
-
-The \texttt{UseListAccumulationRefactorer} module identifies and refactors 
-string concatenations in loops in Python code to improve the performance and energy efficiency of the software. It specifically handles these concatenations by, instead, adding the string for each iteration to a list that is then converted to a string using Python's \texttt{join()} function, ensuring proper refactoring while maintaining the original functionality.
-
-\subsection{Uses}
-\begin{itemize}
+  \texttt{UseListAccumulationRefactorer}
+  
+  \subsection{Module}
+  
+  The \texttt{UseListAccumulationRefactorer} module identifies and refactors 
+  string concatenations in loops in Python code to improve the performance and energy efficiency of the software. It specifically handles these concatenations by, instead, adding the string for each iteration to a list that is then converted to a string, ensuring proper refactoring while maintaining the original functionality.
+  
+  \subsection{Uses}
+  \begin{itemize}
   \item Uses \texttt{Smell} interface for data access
   \item Inherits from \texttt{BaseRefactorer}
-  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
-\end{itemize}
+  \item Uses \texttt{astroid} library for AST manipulation
+  \end{itemize}
   
-\subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None
-
-\noindent
-\textbf{Exported Access Programs}:
+  \subsection{Syntax}
+  \noindent
+  \textbf{Exported Constants}: None
   
-\begin{tabularx}{\linewidth}{|
-    l|
-    >{\raggedright\arraybackslash}X|
-    l|
-    l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  \texttt{UseListAccumulationRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-  \hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: Real} & None & \texttt{TypeError}, \texttt{IOError} \\
-  \hline
-\end{tabularx}
+  \noindent
+  \textbf{Exported Access Programs}:
   
-\subsection{Semantics}
+  \begin{tabularx}{\linewidth}{|
+      l|
+      >{\raggedright\arraybackslash}X|
+      l|
+      l|}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    \texttt{UseListAccumulationRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\
+    \hline
+    \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: Real} & None & \texttt{TypeError}, \texttt{IOError} \\
+    \hline
+  \end{tabularx}
   
-\subsubsection{State Variables}
-\begin{itemize}
-  \item \texttt{target\_line: int}: Line number where refactoring is applied.
-  \item \texttt{target\_node: ASTnode}: Node representing the concatenation variable.
-  \item \texttt{assign\_var: str}: Name of the variable the \texttt{target\_node} represents.
-  \item \texttt{last\_assign\_node: ASTnode}: Last initialization/assignment of the \texttt{assign\_var} prior to the start of the loop.
-  \item \texttt{concat\_node: ASTnode}: Node where concatenation occurs.
-  \item \texttt{scope\_node: ASTnode}: Scope where refactoring is inserted.
-  \item \texttt{outer\_loop: ASTnode}: Outermost loop before the start of the concatenation.
-\end{itemize}
+  \subsection{Semantics}
   
-\subsubsection{Environment Variables}
-None
+  \subsubsection{State Variables}
+  \begin{itemize}
+  \item \texttt{target\_lines: list[int]}: Line numbers requiring refactoring
+  \item \texttt{assign\_var: str}: Target concatenation variable name
+  \item \texttt{target\_node: NodeNG}: AST node of concatenation target
+  \item \texttt{last\_assign\_node: Assign|AugAssign}: Last variable assignment before loop
+  \item \texttt{concat\_nodes: list[Assign|AugAssign]}: Detected concatenation nodes
+  \item \texttt{reassignments: list[Assign]}: Variable reassignments in loop scope
+  \item \texttt{outer\_loop: For|While}: Outermost loop containing concatenations
+  \end{itemize}
   
-\subsubsection{Assumptions}
-\begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
-\end{itemize}
+  \subsubsection{Environment Variables}
+  None
   
-\subsubsection{Access Routine Semantics}
+  \subsubsection{Assumptions}
+  \begin{itemize}
+  \item Input files contain valid Python syntax
+  \item Smell detection provides valid line numbers and variable names
+  \end{itemize}
   
-\paragraph{\texttt{UseListAccumulationRefactorer(self, output\_dir: Path)}}
-\begin{itemize}
-  \item \textbf{transition}: Initializes the refactorer with \texttt{output\_dir} and sets default state variables.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception}: None
-\end{itemize}
+  \subsubsection{Access Routine Semantics}
   
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
-\begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies string concatenations in loops, modifies code for list accumulation, and writes refactored code to a file.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
-\end{itemize}
-
-\subsubsection{Local Functions}
-\paragraph{\texttt{find\_last\_assignment(self, scope: ASTnode)}}
-\begin{itemize}
-  \item \textbf{transition}: Identifies the last assignment of \texttt{assign\_var} within the given \texttt{scope}.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{TypeError} if given scope is null.
-\end{itemize}
-
-\paragraph{\texttt{find\_scope()}}
-\begin{itemize}
-  \item \textbf{transition}: Finds the scope for refactoring based on AST node ancestry.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{TypeError} if \texttt{concat\_node} is not set.
-\end{itemize}
-
-\paragraph{\texttt{add\_node\_to\_body(self, code\_file: str)}}
-\begin{itemize}
-  \item \textbf{transition}: Inserts list accumulation and join statements into \texttt{code\_file}.
-  \item \textbf{output}: Returns the modified source code as a string.
-  \item \textbf{exception}: Raises \texttt{TypeError} if \texttt{target\_node} or \texttt{outer\_loop} is not set.
-\end{itemize}
+  \paragraph{\texttt{UseListAccumulationRefactorer(output\_dir: Path)}}
+  \begin{itemize}
+  \item \textbf{Transition}: Initializes refactorer with output directory
+  \item \textbf{Output}: \texttt{self}
+  \item \textbf{Exception}: None
+  \end{itemize}
+  
+  \paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: 
+  R
+  R)}}
+  \begin{itemize}
+  \item \textbf{Transition}:
+  \begin{itemize}
+  \item Parses code using \texttt{visit} pattern for AST traversal
+  \item Identifies concatenations with \texttt{find\_reassignments}
+  \item Determines scope via \texttt{find\_scope} and \texttt{find\_last\_assignment}
+  \item Generates temp names with \texttt{generate\_temp\_list\_name}
+  \item Modifies code using \texttt{add\_node\_to\_body}
+  \item Validates transformations before writing
+  \end{itemize}
+  \item \textbf{Output}: None
+  \item \textbf{Exception}:
+  \begin{itemize}
+  \item \texttt{IOError}: File read/write failures
+  \item \texttt{TypeError}: AST parsing errors
+  \end{itemize}
+  \end{itemize}
+  
+  \subsubsection{Local Functions}
+  
+  \paragraph{\texttt{visit(node: NodeNG)}}
+  \begin{itemize}
+  \item \textbf{Used in}: \texttt{refactor} during AST traversal
+  \item \textbf{Transition}: Collects concatenation nodes and loop structures
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
+  \end{itemize}
+  
+  \paragraph{\texttt{find\_reassignments()}}
+  \begin{itemize}
+  \item \textbf{Used in}: \texttt{refactor} during analysis
+  \item \textbf{Transition}: Finds variable reassignments in loop scope
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
+  \end{itemize}
+  
+  \paragraph{\texttt{find\_last\_assignment(scope: NodeNG)}}
+  \begin{itemize}
+  \item \textbf{Used in}: \texttt{find\_scope}
+  \item \textbf{Transition}: Locates final variable assignment before loop
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: Raises \texttt{TypeError} for invalid scope
+  \end{itemize}
+  
+  \paragraph{\texttt{find\_scope()}}
+  \begin{itemize}
+  \item \textbf{Used in}: \texttt{refactor} during code modification
+  \item \textbf{Transition}: Determines insertion point for list initialization
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: Requires \texttt{concat\_nodes} to be populated
+  \end{itemize}
+  
+  \paragraph{\texttt{generate\_temp\_list\_name()}}
+  \begin{itemize}
+  \item \textbf{Used in}: \texttt{add\_node\_to\_body}
+  \item \textbf{Transition}: Creates unique list name for complex targets
+  \item \textbf{Output}: Returns generated name string
+  \item \textbf{Exception}: Raises \texttt{TypeError} for unsupported nodes
+  \end{itemize}
+  
+  \paragraph{\texttt{add\_node\_to\_body(code\_file: str, nodes\_to\_change: list[tuple])}}
+  \begin{itemize}
+  \item \textbf{Used in}: \texttt{refactor} final stage
+  \item \textbf{Transition}:
+  \begin{itemize}
+  \item Replaces concatenations with list operations
+  \item Adds join() call and list initialization
+  \end{itemize}
+  \item \textbf{Output}: Returns modified source code
+  \item \textbf{Exception}: Requires valid node references
+  \end{itemize}
+  
   
 \newpage
 
