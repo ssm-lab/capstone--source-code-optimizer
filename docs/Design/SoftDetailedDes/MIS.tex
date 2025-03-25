@@ -1609,42 +1609,90 @@ None
 \texttt{BackendCommunicator} handles all communication between the plugin and the backend service. It sends requests for analysis or refactoring and receives results.
 
 \subsection{Uses}
-Source Code Optimizer executable for energy measurement, smell detection and refactoring of applications.
+\begin{itemize}
+    \item \texttt{EcoOptimizer} for executing backend service operations and health checks
+\end{itemize}
 
 \subsection{Syntax}
 
-\textbf{Exported Constants:} None
+\textbf{Exported Constants:} 
+\begin{itemize}
+    \item \texttt{BASE\_URL}: string - Base URL for backend API endpoints
+\end{itemize}
 
 \noindent \textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  \texttt{sendRequest} & \texttt{requestType: string, data: any} & Promise & Communication Error \\
-  \hline
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ 
+    \hline
+    \texttt{checkServerStatus} & None & Promise<void> & Network Error \\
+    \hline
+    \texttt{initLogs} & \texttt{log\_dir: string} & Promise<boolean> & Network Error \\
+    \hline
+    \texttt{fetchSmells} & \texttt{filePath: string, enabledSmells: Record<string, Record<string, number | string>>} & 
+    Promise<\{smells: Smell[], status: number\}> & Network Error \\
+    \hline
+    \texttt{backendRefactor\allowbreak Smell} & \texttt{smell: Smell, workspacePath: string} & Promise<RefactoredData> & Network Error \\
+    \hline
+    \texttt{backendRefactor\allowbreak SmellType} & \texttt{smell: Smell, workspacePath: string} & Promise<RefactoredData> & Network Error \\
+    \hline
 \end{tabularx}
-
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-None
+\begin{itemize}
+    \item \texttt{serverStatus: ServerStatusType} - Tracks the backend server's current status
+\end{itemize}
 
 \subsubsection{Environment Variables}
-None
+\begin{itemize}
+    \item \texttt{SERVER\_URL: string} - Backend server URL from environment configuration
+\end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item Source Code Optimizer executable is reachable and operational.
-\item Python file with no syntax errors is present in the VS Code editor.
+    \item EcoOptimizer backend service is reachable and operational
+    \item Network connection is available for API communication
+    \item Valid workspace configuration exists for operations requiring paths
+    \item Input files contain valid Python syntax
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
-\texttt{sendRequest(requestType: str, data: Any)}
+
+\noindent\texttt{checkServerStatus()}
 \begin{itemize}
-\item \textbf{Transition}: Sends the provided request to Source Code Optimizer and receives a response.
-\item \textbf{Output}: A promise that resolves with Source Code Optimizer's response.
-\item \textbf{Exception}: Logs any errors encountered during communication.
+    \item \textbf{Transition}: Verifies backend service availability and updates extension status
+    \item \textbf{Output}: Promise resolving to void
+    \item \textbf{Exception}: Logs network errors and updates server status to DOWN
+\end{itemize}
+
+\noindent\texttt{initLogs(log\_dir: string)}
+\begin{itemize}
+    \item \textbf{Transition}: Initializes and synchronizes logs with the backend server
+    \item \textbf{Output}: Promise<boolean> indicating success or failure
+    \item \textbf{Exception}: Logs initialization errors and returns false
+\end{itemize}
+
+\noindent\texttt{fetchSmells(filePath: string, enabledSmells: Record)}
+\begin{itemize}
+    \item \textbf{Transition}: Analyzes source code for code smells using backend detection service
+    \item \textbf{Output}: Promise resolving to smell detection results and HTTP status
+    \item \textbf{Exception}: Throws Error for network failures or invalid responses
+\end{itemize}
+
+\noindent\texttt{backendRefactorSmell(smell: Smell, workspacePath: string)}
+\begin{itemize}
+    \item \textbf{Transition}: Executes code refactoring for a specific detected smell pattern
+    \item \textbf{Output}: Promise resolving to refactoring result data
+    \item \textbf{Exception}: Throws Error for invalid workspace path or refactoring failures
+\end{itemize}
+
+\noindent\texttt{backendRefactorSmellType(smell: Smell, workspacePath: string)}
+\begin{itemize}
+    \item \textbf{Transition}: Refactors all smells of a specific type in a file
+    \item \textbf{Output}: Promise resolving to refactoring result data
+    \item \textbf{Exception}: Throws Error for invalid workspace path or refactoring failures
 \end{itemize}
 
 \subsubsection{Local Functions}
