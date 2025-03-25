@@ -760,19 +760,75 @@ Based on this report's findings the following improvements were made:
         \item Added line style customization
         \item Added line color customization by RGB
     \end{itemize}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.3]{../../Images/old-code-smells-ui.png}
+        \caption{Before: Smell Highlighting, Non-Configurable}
+        \label{img:1}
+    \end{figure}
 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.4]{../../Images/after-smell-customization.png}
+        \caption{After: Smell Highlighting Settings}
+        \label{img:2}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.4]{../../Images/after-smell-highlighting.png}
+        \caption{After: Configured file highlighting}
+        \label{img:2}
+    \end{figure}
     
     \item \textbf{Enhanced Refactoring Sidebar}
     \begin{itemize}
         \item Added smell navigation tree with \texttt{Jump-to-Location} buttons
         \item Loading spinner during smell linting of a file  
         \item Energy impact preview panel when refactoring showing:
+        \item Added settings for filtering smells
         \begin{itemize}
             \item Total carbon saved per file
             \item Total cabon saved per smell
         \end{itemize}
     \end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.3]{../../Images/old-refactoring-view-ui.png}
+        \caption{Before: Energy saved is the only thing in sidebar}
+        \label{img:3}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.6]{../../Images/after-navigation-tree.png}
+        \caption{After: Smell Navigation Tree}
+        \label{img:3}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.5]{../../Images/after-smell-detection-loading.png}
+        \caption{After: Smell Detection Loading}
+        \label{img:3}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.3]{../../Images/after-carbon-metrics.png}
+        \caption{After: Carbon Metrics on bottom left}
+        \label{img:3}
+    \end{figure}
+
     
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.5]{../../Images/after-filter-smells.png}
+        \caption{After: Filter smells in sidebar, can change arguments}
+        \label{img:3}
+    \end{figure}
+
     \item \textbf{Explicit Change Approval UI}
     \begin{itemize}
         \item High-contrast buttons on bottom right. 
@@ -780,6 +836,20 @@ Based on this report's findings the following improvements were made:
             \item Persistent positioning near affected code blocks
         \end{itemize}
     \end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.3]{../../Images/old-refactoring-view-ui.png}
+        \caption{Before: Accept and Reject show up on sidebar, same color}
+        \label{img:3}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.9]{../../Images/after-accept-reject.png}
+        \caption{After: Accept and Reject clear}
+        \label{img:3}
+    \end{figure}
 
     
     
@@ -789,8 +859,14 @@ Based on this report's findings the following improvements were made:
         \item Continuous smell analysis on all opened files and on file save
     \end{itemize}
 
-\end{enumerate}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.9]{../../Images/after-toggle-button.png}
+        \caption{After: New toggle button (leaf)}
+        \label{img:3}
+    \end{figure}
 
+\end{enumerate}
 
 
 \newpage
