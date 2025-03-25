@@ -392,8 +392,6 @@ This system has no hardware components.
 
 \subsubsection{Long Element Chain Module (\mref{mLEC})}
 
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
 \begin{description}
     \item[Secrets:] How to parse a given code file to its AST representation, traverse the 
     AST tree to identify dictionary assignments, analyze the structure of nested dictionaries,
@@ -403,7 +401,39 @@ This system has no hardware components.
     structure by flattening them, and updates all associated access calls throughout the file. This improves 
     code readability, reduces complexity, and ensures correctness while maintaining the program's intended behavior.
     \item[Implemented By:] EcoOptimizer
+    \item[Type of Module:] Library: provides functionality for refactoring nested dictionary structures in Python code.
 \end{description}
+
+\textbf{Long Element Chain Formalization}
+\begin{enumerate}
+  \item \textbf{Definitions}
+  \begin{itemize}
+      \item \textit{Nested Dictionary}: Dictionary \( D = \{k_1: \{k_2: \dots \{k_n: v\}\}\} \)
+      \item \textit{Flattened Dictionary}: \( D' = \{k_1\_k_2\_\dots\_k_n: v\} \)
+      \item \textit{Access Path}: Sequence \( P = [k_1, k_2, \dots, k_n] \)
+      \item \textit{Composite Key}: String \( c_k = \text{join}(P, "\_") \)
+      \item \textit{Indentation}: Leading whitespace \( W \) from original code
+  \end{itemize}
+
+  \item \textbf{Refactoring Function}
+  \begin{itemize}
+      \item Dictionary Flattening:
+      \[
+      \begin{aligned}
+          &\forall\ \text{nested path } P \in D,\ \exists\ c_k \in D' \\
+          &D'[c_k] = D[P_1][P_2]\dots[P_n] \quad \text{(preserve } W\text{)}
+      \end{aligned}
+      \]
+      
+      \item Access Path Update:
+      \[
+      \begin{aligned}
+          &\text{Original Access: } &D[P_1][P_2]\dots[P_n] \\
+          &\text{Refactored Access: } &D'[c_k] \quad \text{where } c_k = \text{join}(P, "\_") 
+      \end{aligned}
+      \]
+  \end{itemize}
+\end{enumerate}
 
 \subsubsection{Long Parameter List Module (\mref{mLPL})}
 
