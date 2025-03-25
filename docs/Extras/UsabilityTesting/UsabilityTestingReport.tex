@@ -1,0 +1,583 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\hypersetup{
+  bookmarks=true,         % show bookmarks bar?
+  colorlinks=true,      % false: boxed links; true: colored links
+  linkcolor=red,          % color of internal links (change box color
+  % with linkbordercolor)
+  citecolor=green,        % color of links to bibliography
+  filecolor=magenta,      % color of file links
+  urlcolor=cyan           % color of external links
+}
+\usepackage{float}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    language=Python
+}
+
+\title{Usability Testing Report for EcoOptimizer}
+\author{EcoOptimizer's Team 4}
+\date{March 25th 2025}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Executive Summary}
+\subsection{Overview of Testing}
+\subsection{Key Findings}
+\subsection{Recommendations Highlights}
+\newpage
+
+\section{Introduction}
+\subsection{Purpose of the Report}
+
+This report presents the findings from the formal usability testing of 
+\textbf{EcoOptimizer}, a Visual Studio Code extension developed for the 
+team's 4G06 Software Engineering Capstone. As Python contributes 
+disproportionately to software C02 consumption 
+(70$\times$ more than C/Rust for equivalent tasks ~\citep{PereiraEtAl2017}), 
+this tool aims to help developers reduce energy waste through automated 
+code smell detection and refactoring suggestions. The report evaluates 
+whether the extension:
+
+\begin{itemize}
+    \item Integrates seamlessly into developer workflows
+    \item Presents clear energy optimization opportunities
+    \item Maintains user agency through its review-and-approve model
+\end{itemize}
+
+By analyzing task success rates, error patterns, and qualitative 
+feedback from 5 Python developers, this document identifies critical 
+UX improvements needed to maximize adoption in professional coding environments.
+
+\subsection{Software Tool Overview}
+\textbf{Eco Optimizer} is a VSCode extension targeting Python's energy 
+inefficiency through three core features:
+
+\begin{enumerate}
+    \item \textbf{Automated Smell Detection}: Identifies energy-wasteful 
+    code patterns (e.g., redundant computations, unoptimized loops) using 
+    static analysis
+    \item \textbf{Context-Aware Refactoring}: Suggests behavior-preserving 
+    code modifications via:
+    \begin{itemize}
+        \item In-line hover tooltips with quick fixes
+        \item Dedicated refactoring sidebar for multi-file changes
+    \end{itemize}
+    \item \textbf{Customizable Workflows}: Allows developers to:
+    \begin{itemize}
+        \item Enable/disable specific smell detectors
+        \item Review diff comparisons before accepting changes
+    \end{itemize}
+\end{enumerate}
+
+The tool operates within developers' existing VSCode environments, 
+requiring no additional setup beyond standard extension installation. 
+Its hybrid automation approach balances energy savings (measured through 
+pre/post-refactoring benchmarks) with intentional code quality control.
+
+\subsection{Testing Objectives}
+The usability tests focused on five key validation criteria:
+
+\begin{table}[h]
+\centering
+\caption{Usability Test Validation Framework}
+\label{tab:objectives}
+\begin{tabular}{|p{0.4\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Objective} & \textbf{Validation Method} \\
+\hline
+Interface intuitiveness & Task completion rates for smell detection (Tasks 1-3) \\
+\hline
+Refactoring workflow efficiency & Time-on-task metrics for single/multi-file fixes (Tasks 4-6) \\
+\hline
+User control preservation & Error rates when rejecting vs. accepting changes (Task 5) \\
+\hline
+Multi-file change transparency & Post-task surveys on cross-file modification clarity (Task 6) \\
+\hline
+Configurability effectiveness & Success rate in customizing smell detectors (Task 7) \\
+\hline
+\end{tabular}
+\end{table}
+
+Testing employed a mixed-methods approach:
+\begin{itemize}
+    \item \textbf{Quantitative}: Completion rates, time metrics, error counts
+    \item \textbf{Qualitative}: Post-test surveys, think-aloud protocols
+\end{itemize}
+
+This structured validation ensures the tool meets both technical 
+energy-saving goals and human-centered design requirements for 
+professional developer tools.
+
+
+\newpage
+\section{Methodology}
+\subsection{Participant Demographics}
+The study involved 5 Python developers recruited through convenience sampling, with the following characteristics:
+
+\begin{table}[h]
+\centering
+\caption{Participant Demographics}
+\label{tab:demographics}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Characteristic} & \textbf{Distribution} \\
+\hline
+VSCode Usage Frequency & 4 Daily, 1 Weekly \\
+Python Familiarity & 3 Advanced, 2 Intermediate \\
+Refactoring Frequency & 3 Regular, 2 Occasional \\
+Prior Refactoring Tool Experience & 2 Yes (SonarQube, PyCharm), 3 No \\
+\hline
+\end{tabular}
+\end{table}
+
+Participants represented diverse roles: 2 software developers, 2 students, 
+and 1 data scientist. Ethnicity distribution included 3 Asian, 1 Caucasian, and 1 preferring not to answer.
+
+
+\subsubsection{Selection Criteria}
+\subsubsection{Participant Profile}
+
+\subsection{Testing Environment}
+\subsubsection{Technical Setup}
+\subsubsection{Testing Scenarios}
+
+\subsection{Data Collection Methods}
+\subsubsection{Observation Techniques}
+\subsubsection{Survey Instruments}
+\subsubsection{Task Completion Metrics}
+
+\newpage
+\section{Findings}
+\subsection{Usability Issues}
+\subsubsection{Critical Issues}
+\subsubsection{Major Issues}
+\subsubsection{Minor Issues}
+
+\subsection{Performance Metrics}
+\subsubsection{Task Completion Rates}
+\subsubsection{Time-on-Task Analysis}
+\subsubsection{Error Frequency}
+
+\subsection{Participant Feedback}
+\subsubsection{Satisfaction Ratings}
+\subsubsection{Feature-Specific Comments}
+\subsubsection{General Impressions}
+
+\newpage
+\section{Analysis}
+\subsection{Severity Assessment}
+\subsection{Frequency of Issues}
+\subsection{Impact on User Experience}
+\subsection{Comparison with Initial Goals}
+
+\newpage
+\section{Recommendations}
+\subsection{High Priority Fixes}
+\subsection{Medium Priority Improvements}
+\subsection{Long-Term Enhancements}
+\subsection{Design Process Adjustments}
+
+\newpage
+\section{Conclusion}
+\subsection{Summary of Insights}
+\subsection{Next Steps}
+\subsection{Final Remarks}
+
+\newpage
+\section*{Appendices}
+\addcontentsline{toc}{section}{Appendices}
+
+\section{Test Case Code Samples}
+\label{app:code}
+
+\subsection{Task 1-5: Single-file Smells}
+\begin{lstlisting}[language=Python,caption={String Manipulation Smells (sample.py)},label=lst:task15]
+def concat_with_for_loop_simple():
+    result = ""
+    for i in range(10):
+        result += str(i)  # Code smell: inefficient string concatenation
+    return result
+
+def show_details():
+    details = "This is a sentence."
+    # Code smell: unnecessary method chaining
+    print(details.upper().lower().upper().capitalize().upper().replace("|", "-"))
+\end{lstlisting}
+
+\subsection{Task 6: Multi-file Smells}
+\begin{lstlisting}[language=Python,caption={Extra1 File (extra1.py)},label=lst:task6a]
+from .main import Example  # Code smell: circular import
+
+example = Example()
+result = example.some_method(5)  # Code smell: unused variable
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={DMain File (main.py)},label=lst:task6b]
+class Example:
+    def __init__(self):
+        self.attr = "something"  # Code smell: unused attribute
+
+    def some_method(self, x):
+        return x * 2  # Code smell: magic number
+
+example = Example()
+num = example.some_method(5)  # Code smell: duplicate instantiation
+\end{lstlisting}
+
+\subsection{Task 7: Configuration-dependent Smells}
+\begin{lstlisting}[language=Python,caption={Complex Class Structures (sample.py)},label=lst:task7]
+class Test:
+    def __init__(self, name) -> None:
+        self.name = name
+        pass
+
+    def unused_method(self):
+        print("Hello World!")
+
+
+# Code Smell: Long Parameter List
+class Vehicle:
+    def __init__(
+        self,
+        make,
+        model,
+        year: int,
+        color,
+        fuel_type,
+        engine_start_stop_option,
+        mileage,
+        suspension_setting,
+        transmission,
+        price,
+        seat_position_setting=None,
+    ):
+        # Code Smell: Long Parameter List in __init__
+        self.make = make  # positional argument
+        self.model = model
+        self.year = year
+        self.color = color
+        self.fuel_type = fuel_type
+        self.engine_start_stop_option = engine_start_stop_option
+        self.mileage = mileage
+        self.suspension_setting = suspension_setting
+        self.transmission = transmission
+        self.price = price
+        self.seat_position_setting = seat_position_setting  # default value
+        self.owner = None  # Unused class attribute, used in constructor
+
+    def display_info(self):
+        # Code Smell: Long Message Chain
+        random_test = self.make.split("")
+        print(
+            f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(
+                ",", ""
+            )[::2]
+        )
+
+    def calculate_price(self):
+        # Code Smell: List Comprehension in an All Statement
+        condition = all(
+            [
+                isinstance(attribute, str)
+                for attribute in [self.make, self.model, self.year, self.color]
+            ]
+        )
+        if condition:
+            return (
+                self.price * 0.9
+            )  # Apply a 10% discount if all attributes are strings (totally arbitrary condition)
+
+        return self.price
+
+    def unused_method(self):
+        # Code Smell: Member Ignoring Method
+        print(
+            "This method doesn't interact with instance attributes, it just prints a statement."
+        )
+
+
+class Car(Vehicle):
+    def __init__(
+        self,
+        make,
+        model,
+        year,
+        color,
+        fuel_type,
+        engine_start_stop_option,
+        mileage,
+        suspension_setting,
+        transmission,
+        price,
+        sunroof=False,
+    ):
+        super().__init__(
+            make,
+            model,
+            year,
+            color,
+            fuel_type,
+            engine_start_stop_option,
+            mileage,
+            suspension_setting,
+            transmission,
+            price,
+        )
+        self.sunroof = sunroof
+        self.engine_size = 2.0  # Unused variable in class
+
+    def add_sunroof(self):
+        # Code Smell: Long Parameter List
+        self.sunroof = True
+        print("Sunroof added!")
+
+    def show_details(self):
+        # Code Smell: Long Message Chain
+        details = f"Car: {self.make} {self.model} ({self.year}) | Mileage: {self.mileage} | Transmission: {self.transmission} | Sunroof: {self.sunroof} | Engine Start Option: {self.engine_start_stop_option} | Suspension Setting: {self.suspension_setting} | Seat Position {self.seat_position_setting}"
+        print(details.upper().lower().upper().capitalize().upper().replace("|", "-"))
+
+
+def process_vehicle(vehicle: Vehicle):
+    # Code Smell: Unused Variables
+    temp_discount = 0.05
+    temp_shipping = 100
+
+    vehicle.display_info()
+    price_after_discount = vehicle.calculate_price()
+    print(f"Price after discount: {price_after_discount}")
+
+    vehicle.unused_method()  # Calls a method that doesn't actually use the class attributes
+
+
+def is_all_string(attributes):
+    # Code Smell: List Comprehension in an All Statement
+    return all(isinstance(attribute, str) for attribute in attributes)
+
+
+def access_nested_dict():
+    nested_dict1 = {"level1": {"level2": {"level3": {"key": "value"}}}}
+
+    nested_dict2 = {
+        "level1": {
+            "level2": {
+                "level3": {"key": "value", "key2": "value2"},
+                "level3a": {"key": "value"},
+            }
+        }
+    }
+    print(nested_dict1["level1"]["level2"]["level3"]["key"])
+    print(nested_dict2["level1"]["level2"]["level3"]["key2"])
+    print(nested_dict2["level1"]["level2"]["level3"]["key"])
+    print(nested_dict2["level1"]["level2"]["level3a"]["key"])
+    print(nested_dict1["level1"]["level2"]["level3"]["key"])
+
+
+# Main loop: Arbitrary use of the classes and demonstrating code smells
+if __name__ == "__main__":
+    car1 = Car(
+        make="Toyota",
+        model="Camry",
+        year=2020,
+        color="Blue",
+        fuel_type="Gas",
+        engine_start_stop_option="no key",
+        mileage=25000,
+        suspension_setting="Sport",
+        transmission="Automatic",
+        price=20000,
+    )
+    process_vehicle(car1)
+    car1.add_sunroof()
+    car1.show_details()
+
+    car1.unused_method()
+
+    # Testing with another vehicle object
+    car2 = Vehicle(
+        "Honda",
+        model="Civic",
+        year=2018,
+        color="Red",
+        fuel_type="Gas",
+        engine_start_stop_option="key",
+        mileage=30000,
+        suspension_setting="Sport",
+        transmission="Manual",
+        price=15000,
+    )
+    process_vehicle(car2)
+
+    test = Test("Anna")
+    test.unused_method()
+
+    print("Hello")
+
+\end{lstlisting}
+
+
+\subsection{Usability Test Raw Data}
+\label{app:raw_data}
+
+\subsubsection{Participant P1 (ID: 1)}
+\begin{table}[H]
+\centering
+\caption{Participant 1 Task Performance}
+\begin{tabular}{|l|p{4cm}|p{4cm}|}
+\hline
+\textbf{Task} & \textbf{Moderator Notes} & \textbf{Participant Feedback} \\ \hline
+1 & \begin{itemize}
+\item Confused by commands at top
+\item Didn't notice highlighted smells
+\end{itemize} & Confused by underlined smell indicators \\ \hline
+2 & Able to click detected smells & "Pretty cool" \\ \hline
+4 & Used button to start refactoring & "Refactor button hard to find" \\ \hline
+5 & Couldn't find accept/reject buttons & \begin{itemize}
+\item Long wait time confusion
+\item Button positioning issues
+\end{itemize} \\ \hline
+6 & Found modified files easily & "Add refactoring completion labels" \\ \hline
+7 & Took time to find settings & "Cool smell limiting feature" \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Feedback:}
+\begin{itemize}
+\item Show settings page shortcuts
+\item Add refactoring completion labels
+\item Save energy usage reports
+\end{itemize}
+
+\subsubsection{Participant P2 (ID: 2)}
+\begin{table}[H]
+\centering
+\caption{Participant 2 Task Performance}
+\begin{tabular}{|l|p{4cm}|p{4cm}|}
+\hline
+\textbf{Task} & \textbf{Moderator Notes} & \textbf{Participant Feedback} \\ \hline
+1 & Unclear about "detect" command & "Woah cool" \\ \hline
+3 & Understood hover information & "What does (6/3) mean?" \\ \hline
+5 & Missed multi-smell detection & "Negative energy values confusing" \\ \hline
+6 & Unaware of accept requirement & "Refactored window disappearance issue" \\ \hline
+7 & Found settings via search & "Enable/disable needs one-click option" \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Feedback:}
+\begin{itemize}
+\item Add code smell documentation
+\item Improve refactoring explanations
+\item Add bulk enable/disable buttons
+\end{itemize}
+
+\subsubsection{Participant P3 (ID: 3)}
+\begin{table}[H]
+\centering
+\caption{Participant 3 Task Performance}
+\begin{tabular}{|l|p{4cm}|p{4cm}|}
+\hline
+\textbf{Task} & \textbf{Moderator Notes} & \textbf{Participant Feedback} \\ \hline
+1 & Recognized highlighted smells & "Color meaning unclear" \\ \hline
+3 & Hover information overwhelming & "Too much pre-refactor detail" \\ \hline
+5 & Failed to find sidebar & "Accept buttons poorly placed" \\ \hline
+6 & Manual file inspection & "Make filenames clickable" \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Feedback:}
+\begin{itemize}
+\item Customizable color schemes
+\item Sidebar relocation
+\item Keyboard navigation for refactoring
+\end{itemize}
+
+\subsubsection{Participant P4 (ID: 4)}
+\begin{table}[H]
+\centering
+\caption{Participant 4 Task Performance}
+\begin{tabular}{|l|p{4cm}|p{4cm}|}
+\hline
+\textbf{Task} & \textbf{Moderator Notes} & \textbf{Participant Feedback} \\ \hline
+1 & Initial detection confusion & "Want smell toggle" \\ \hline
+6 & Needed prompting for multi-file & "Liked change visibility" \\ \hline
+7 & Settings changes unclear & "Uncertain about config impact" \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Feedback:}
+\begin{itemize}
+\item Better smell documentation
+\item Visual confirmation of settings changes
+\end{itemize}
+
+\subsubsection{Participant P5 (ID: 5)}
+\begin{table}[H]
+\centering
+\caption{Participant 5 Task Performance}
+\begin{tabular}{|l|p{4cm}|p{4cm}|}
+\hline
+\textbf{Task} & \textbf{Moderator Notes} & \textbf{Participant Feedback} \\ \hline
+5 & Missed sidebar elements & "Relocate preview buttons" \\ \hline
+6 & Clickable filename issues & "Improve visual indicators" \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Feedback:}
+\begin{itemize}
+\item Enterprise environment limitations
+\item Visual design improvements
+\item Project-size aware functionality
+\end{itemize}
+
+\subsubsection{Common Themes}
+\begin{itemize}
+\item 4/5 participants struggled with sidebar visibility
+\item Average 23s spent searching for accept/reject buttons
+\item 100\% requested better smell documentation
+\item 80\% wanted bulk operations
+\end{itemize}
+
+
+\subsection{Consent Form Template}
+\subsection{Participant Screener Questionnaire}
+
+\bibliographystyle {plainnat}
+\bibliography{../../../refs/References}
+
+\end{document}
