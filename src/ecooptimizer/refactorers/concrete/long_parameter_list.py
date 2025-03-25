@@ -21,7 +21,7 @@ class FunctionCallVisitor(cst.CSTVisitor):
     def visit_Call(self, node: cst.Call):
         """Check if the function/class constructor is called."""
         # handle class constructor call
-        if self.is_constructor and m.matches(node.func, m.Name(self.class_name)):
+        if self.is_constructor and m.matches(node.func, m.Name(self.class_name)):  # type: ignore
             self.found = True
 
         # handle standalone function calls
@@ -805,7 +805,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                     # just remove the unused params if the used parameters are within the max param list
                     updated_function_node = self.function_updater.remove_unused_params(
                         self.function_node,
-                        self.used_params,
+                        self.used_params,  # type: ignore
                         default_value_params,  # type: ignore
                     )
 
@@ -813,7 +813,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                     tree = self.function_updater.update_function_calls_unclassified(
                         tree,
                         self.function_node,
-                        self.used_params,
+                        self.used_params,  # type: ignore
                         self.enclosing_class_name,  # type: ignore
                     )
 
@@ -863,8 +863,8 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         tree = cst.parse_module(file.read_text())
 
         visitor = FunctionCallVisitor(
-            self.function_node.name.value,
-            self.enclosing_class_name,
+            self.function_node.name.value,  # type: ignore
+            self.enclosing_class_name,  # type: ignore
             self.is_constructor,  # type: ignore
         )
         tree.visit(visitor)
