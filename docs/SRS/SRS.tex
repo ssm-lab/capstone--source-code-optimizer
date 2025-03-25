@@ -1594,37 +1594,6 @@ This section is not needed for this project.
     performance or functionality\\
     {\bf Priority:} Low
 
-  \item \emph{The system must be able to detect and handle Python
-    version-specific features and syntax.}\\
-    {\bf Rationale:} Depending on the Python version of the source
-    code, the refactorings should be made accordingly to not
-    introduce compatibility errors.\\
-    {\bf Fit Criteria:} The input source code should pass the given
-    test cases.\\
-    {\bf Priority:} High
-
-  \item \emph{The energy measurement module must be adaptable to
-    cloud-based systems.}\\
-    {\bf Rationale:} Many modern applications are hosted and run in
-    cloud environments so, it is essential for the energy measurement
-    module to operate effectively in cloud-based systems. This
-    ensures that developers can accurately measure the energy
-    consumption of their cloud-hosted applications.\\
-    {\bf Fit Criteria:} The energy consumption module returns usable
-    statistics related to the energy consumption of the cloud-application.\\
-    {\bf Priority:} Medium
-
-  \item \emph{The system must be deployable in both cloud-based
-    environments and on-premise infrastructures to meet different user needs.}\\
-    {\bf Rationale:} Whether the system is being used locally or in
-    the cloud, developers still need access to the features offered
-    by the system. Some developers might not even host their
-    applications, and, even if they do, they might want to conduct
-    local testing. \\
-    {\bf Fit Criteria:} The system should be fully functional in both
-    cloud and local environments, with minimal configuration changes.\\
-    {\bf Priority:} Medium
-
   \item \emph{The system must support major operating systems,
     including Windows, macOS, and Linux.}\\
     {\bf Rationale:} Developers may not all use the same operating
@@ -1645,17 +1614,6 @@ This section is not needed for this project.
     {\bf Fit Criteria:} The system runs without errors or crashes
     across multiple versions of Windows, macOS, and Linux, with no
     compatibility issues in handling file systems, dependencies, or libraries.\\
-    {\bf Priority:} Low
-
-  \item \emph{The system must offer consistent performance (e.g.,
-      refactoring speed, energy consumption measurements) regardless of
-    the underlying operating system.}\\
-    {\bf Rationale:} Having the system be OS dependent would
-    invalidate the point of being compatible with multiple OSes and
-    conflict with requirement MS-AD 6.\\
-    {\bf Fit Criteria:} Performance metrics, such as time taken for
-    refactoring and energy measurements, must not vary by more than
-    OS\_PERF\_DIFF\_LIMIT across different operating systems during testing.\\
     {\bf Priority:} Low
 
 \end{enumerate}
