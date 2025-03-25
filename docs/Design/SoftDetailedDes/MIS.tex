@@ -673,7 +673,7 @@ None
   \item Determines scope via \texttt{find\_scope} and \texttt{find\_last\_assignment}
   \item Generates temp names with \texttt{generate\_temp\_list\_name}
   \item Modifies code using \texttt{add\_node\_to\_body}
-  \item Validates transformations before writing
+  \item Validates transformations before writing to refactored file
   \end{itemize}
   \item \textbf{Output}: None
   \item \textbf{Exception}:
@@ -736,7 +736,7 @@ None
   \item \textbf{Output}: Returns modified source code
   \item \textbf{Exception}: Requires valid node references
   \end{itemize}
-  
+
   
 \newpage
 
@@ -751,18 +751,17 @@ class methods that don't make use of their instance attributes to improve the re
 
 \subsection{Uses}
 \begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Inherits from Python's \texttt{ast} module's \texttt{NodeTransformer}
+\item Uses \texttt{Smell} interface for data access
+\item Inherits from \texttt{MultiFileRefactorer}
+\item Uses \texttt{libcst} and \texttt{astroid} for AST manipulation
 \end{itemize}
-  
+
 \subsection{Syntax}
 \noindent
-\textbf{Exported Constants}: None
+\textbf{Exported Constants}: None \\
 
 \noindent
-\textbf{Exported Access Programs}:
-  
+\textbf{Exported Access Programs}: \\
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
@@ -772,63 +771,110 @@ class methods that don't make use of their instance attributes to improve the re
   \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
   \hline
 \end{tabularx}
-  
+
 \subsection{Semantics}
-  
+
 \subsubsection{State Variables}
 \begin{itemize}
-  \item \texttt{target\_line: int}: Line number where refactoring is applied.
-  \item \texttt{mim\_method\_class: str}: Class name containing the method to refactor.
-  \item \texttt{mim\_method: str}: Method name to refactor.
+\item \texttt{target\_line: int}: Line number of method to refactor
+\item \texttt{mim\_method\_class: str}: Containing class name
+\item \texttt{mim\_method: str}: Target method name
+\item \texttt{valid\_classes: set[str]}: Valid class/subclass names
+\item \texttt{transformer: CallTransformer}: CST modification tool
 \end{itemize}
-  
+
 \subsubsection{Environment Variables}
 None
-  
+
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides a valid line number for the detected code smell.
+\item Input files contain valid Python syntax
+\item Smell detection provides valid method locations
+\item Class hierarchies remain consistent across files
 \end{itemize}
-  
+
 \subsubsection{Access Routine Semantics}
-  
-\paragraph{\texttt{MakeStaticRefactorer(self, output\_dir: Path)}}
+
+\paragraph{\texttt{MakeStaticRefactorer()}}
 \begin{itemize}
-  \item \textbf{transition}: Initializes the refactorer with \texttt{output\_dir} and sets default state variables.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception}: None.
+\item \textbf{Transition}: Initializes refactorer with empty state
+\item \textbf{Output}: \texttt{self}
+\item \textbf{Exception}: None
 \end{itemize}
-  
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
+
+\paragraph{\texttt{refactor(file\_path: Path, smell: MIMSmell, ...)}}
 \begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies the target function, modifies it to be static, and validates refactoring.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\item \textbf{Transition}:
+\begin{itemize}
+\item Identifies target method using \texttt{\_find\_subclasses}
+\item Processes calls with \texttt{find\_valid\_method\_calls}
+\item Modifies method definition via \texttt{leave\_FunctionDef}
+\item Transforms calls using \texttt{CallTransformer}
+\item Validates with \texttt{check\_for\_annotations} and \texttt{check\_for\_initializations}
+\item Writes the refactored code to a temporary file.
+\end{itemize}
+\item \textbf{Output}: None
+\item \textbf{Exception}:
+\begin{itemize}
+\item \texttt{IOError}: File access failures
+\item \texttt{TypeError}: Invalid AST parsing
+\end{itemize}
 \end{itemize}
 
 \subsubsection{Local Functions}
-\paragraph{\texttt{visit\_FunctionDef(self, node: FuncDef)}}
+
+\paragraph{\texttt{\_find\_subclasses(directory: Path)}}
 \begin{itemize}
-  \item \textbf{transition}: Adds the \texttt{staticmethod} decorator to the target method and removes the \texttt{self} parameter if present.
-  \item \textbf{output}: Returns the modified \texttt{FunctionDef} node.
-  \item \textbf{exception}: None
+\item \textbf{Used in}: \texttt{refactor} initialization
+\item \textbf{Transition}: Discovers class hierarchy relationships
+\item \textbf{Output}: Updates \texttt{valid\_classes} state
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{visit\_ClassDef(self, node: ClassDef)}}
+\paragraph{\texttt{find\_valid\_method\_calls(...)}}
 \begin{itemize}
-  \item \textbf{transition}: Identifies the class containing the target method.
-  \item \textbf{output}: Returns the modified \texttt{ClassDef} node.
-  \item \textbf{exception}: None.
+\item \textbf{Used in}: Call transformation preparation
+\item \textbf{Transition}: Identifies call sites needing modification
+\item \textbf{Output}: Returns list of valid call tuples
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{visit\_Call(self, node: Call)}}
+\paragraph{\texttt{check\_for\_initializations(...)}}
 \begin{itemize}
-  \item \textbf{transition}: Updates method call references to use the class name instead of \texttt{self}.
-  \item \textbf{output}: Returns the modified \texttt{Call} node.
-  \item \textbf{exception}: None.
+\item \textbf{Used in}: Call validation
+\item \textbf{Transition}: Verifies variable initialization sources
+\item \textbf{Output}: Returns initialization types list
+\item \textbf{Exception}: None
 \end{itemize}
-  
+
+\paragraph{\texttt{check\_for\_annotations(...)}}
+\begin{itemize}
+\item \textbf{Used in}: Type inference fallback
+\item \textbf{Transition}: Extracts type hints from annotations
+\item \textbf{Output}: Returns annotation node or None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{leave\_FunctionDef(...)}}
+\begin{itemize}
+\item \textbf{Used in}: AST modification
+\item \textbf{Transition}:
+\begin{itemize}
+\item Adds \texttt{@staticmethod} decorator
+\item Removes \texttt{self} parameter
+\end{itemize}
+\item \textbf{Output}: Modified function node
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{CallTransformer}}
+\begin{itemize}
+\item \textbf{Used in}: Cross-file modifications
+\item \textbf{Transition}: Updates instance calls to static calls
+\item \textbf{Output}: Modified call nodes
+\item \textbf{Exception}: Raises \texttt{TypeError} for position errors
+\end{itemize}
+
 \newpage  
 
 
