@@ -1523,38 +1523,81 @@ None
 
 \subsection{Uses}
 \begin{itemize}
-    \item \texttt{Smell Detector} to register the command for detecting code smells.
-    \item \texttt{Smell Refactorer} to register the command for refactoring user's selected code smell.
+    \item \texttt{Smell Detector} to register and manage smell detection functionality.
+    \item \texttt{Refactor Manager} to register and manage refactoring operations.
+    \item \texttt{Filter Manager} to register and manage smell filtering operations.
 \end{itemize}
 
 \subsection{Syntax}
 
-\textbf{Exported Constants:} None\\
-\noindent \textbf{Exported Access Programs:}
-None
+\textbf{Exported Constants:} 
+\begin{itemize}
+    \item \texttt{ecoOutput}: VS Code OutputChannel for logging and information display
+\end{itemize}
 
+\noindent \textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    \texttt{activate} & \texttt{context: vscode.ExtensionContext} & void & None \\
+    \hline
+    \texttt{deactivate} & None & void & None \\
+    \hline
+    \texttt{isSmellLintingEnabled} & None & boolean & None \\
+    \hline
+\end{tabularx}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-None
+\begin{itemize}
+    \item \texttt{smellLintingEnabled: boolean} - Tracks if smell linting is enabled
+    \item \texttt{backendLogManager: LogManager} - Manages backend logging
+\end{itemize}
 
 \subsubsection{Environment Variables}
-None
-
+\begin{itemize}
+    \item VS Code extension context
+    \item Workspace configuration state
+\end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item The plugin is correctly loaded in VS Code.
-\item Source Code Optimizer executable is reachable and operational.
+    \item The plugin is correctly loaded in VS Code
+    \item VS Code APIs are available and accessible
+    \item Required modules (Smell Detector, Refactor Manager, Filter Manager) are properly initialized
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
-\texttt{activate()}
+
+\noindent\texttt{activate(context: vscode.ExtensionContext)}
 \begin{itemize}
-\item \textbf{Transition}: Activates the plugin and registers commands.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
+    \item \textbf{Transition}: 
+    \begin{itemize}
+        \item Initializes output channel for logging
+        \item Initializes Smell Detector module
+        \item Initializes Refactor Manager module
+        \item Initializes Filter Manager module
+        \item Sets up workspace configuration
+        \item Registers plugin commands
+    \end{itemize}
+    \item \textbf{Output}: None
+    \item \textbf{Exception}: None
+\end{itemize}
+
+\noindent\texttt{deactivate()}
+\begin{itemize}
+    \item \textbf{Transition}: Cleans up resources and stops background processes
+    \item \textbf{Output}: None
+    \item \textbf{Exception}: None
+\end{itemize}
+
+\noindent\texttt{isSmellLintingEnabled()}
+\begin{itemize}
+    \item \textbf{Transition}: Returns current state of smell linting
+    \item \textbf{Output}: boolean indicating if smell linting is enabled
+    \item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
