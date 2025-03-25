@@ -2,6 +2,7 @@
 import pytest
 
 import shutil
+from os import path
 from pathlib import Path
 from typing import Any
 from collections.abc import Generator
@@ -35,7 +36,7 @@ SAMPLE_SMELL = {
     ],
 }
 
-SAMPLE_SOURCE_DIR = str(Path("path\\to\\source_dir").resolve())
+SAMPLE_SOURCE_DIR = path.normpath("path\\to\\source_dir")
 
 
 @pytest.fixture(scope="module")
@@ -157,4 +158,4 @@ def test_refactor_unexpected_error(mock_dependencies):  # noqa: ARG001
         response = client.post("/refactor", json=request_data)
 
         assert response.status_code == 400
-        assert "Mock error" in response.json()["detail"]
+        assert "An unexpected error occurred." == response.json()["detail"]
