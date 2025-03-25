@@ -533,7 +533,47 @@ This system has no hardware components.
     \item[Secrets:] How to analyze Python code in active VS Code editor by accessing Source Code Optimizer endpoint.
     \item[Services:] Detects code smells in Python scripts using Source Code Optimizer and provides structured data for further processing based on received output.
     \item[Implemented By:] EcoOptimizer
+    \item[Type of Module:] Abstract Object: A component responsible for code smell detection and classification.
 \end{description}
+
+\textbf{Smell Detection Formalization}
+\begin{enumerate}
+  \item \textbf{Definitions}
+  \begin{itemize}
+      \item \textit{Source Code}: A document \( D \) containing a sequence of statements \( S = \{ s_1, s_2, \dots, s_n \} \).
+      \item \textit{Code Smell}: A property \( C_k \) that signifies a potential issue in \( D \), where:
+      \[
+      C_k = \{ c_1, c_2, \dots, c_m \}
+      \]
+      represents a set of detectable code smells.
+      \item \textit{Detection Function}: A mapping \( F: D \to C_k \), which evaluates \( D \) and returns a set of identified smells.
+      \item \textit{Smell Report}: A structured output \( R \) summarizing detected smells and their locations in \( D \).
+  \end{itemize}
+
+  \item \textbf{Detection Process}
+  \begin{itemize}
+      \item Extract syntactic and semantic features from \( D \).
+      \item Apply detection rules to identify instances of \( C_k \).
+      \item Generate a structured smell report \( R \) containing:
+      \begin{itemize}
+          \item Smell type \( c_i \)
+          \item Line number(s) \( L = \{ l_1, l_2, \dots, l_p \} \)
+          \item Severity level \( \sigma \) based on predefined metrics
+      \end{itemize}
+  \end{itemize}
+
+  \item \textbf{Classification and Output}
+  \begin{itemize}
+      \item Structure \( R \) for further analysis by the refactoring module.
+      \item Ensure results are accessible to downstream processing components.
+  \end{itemize}
+
+  \item \textbf{Validation and Adaptation}
+  \begin{itemize}
+      \item Maintain a feedback loop to refine detection accuracy.
+      \item Adapt detection parameters based on observed refactoring effectiveness.
+  \end{itemize}
+\end{enumerate}
 
 \subsubsection{File Highlighter Module (\mref{mHig})}
 
