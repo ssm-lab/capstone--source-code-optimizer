@@ -630,15 +630,55 @@ This system has no hardware components.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
+
 \subsubsection{Refactor Manager Module (\mref{mMan})}
 
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
 \begin{description}
-    \item[Secrets:] How to manage the sequence of refactorings, coordinate the application of refactoring techniques, validate results after each step and revert at any stage.
-    \item[Services:] Decides if refactored result of Python code should be updated in the code editor window. Determines if refactoring should be reverted if needed by user.
+    \item[Secrets:] How to coordinate the sequence of refactorings, apply transformations to source code while maintaining correctness, validate the impact of each step, and enable reversion when necessary. Ensures that refactoring operations preserve program behavior.
+
+    \item[Services:] Manages the execution of refactorings, determines whether modifications should be committed to the source file, and allows users to revert changes if needed.
+
     \item[Implemented By:] EcoOptimizer
+    \item[Type of Module:] Abstract Object: A conceptual entity that organizes and controls the refactoring process.
 \end{description}
+
+\textbf{Refactoring Execution Formalization}
+\begin{enumerate}
+  \item \textbf{Definitions}
+  \begin{itemize}
+      \item \textit{Source Code}: A document \( D \) consisting of a sequence of statements \( S = \{ s_1, s_2, \dots, s_n \} \).
+      \item \textit{Code Smell}: An identified issue \( \sigma \) in \( D \) that may impact maintainability, readability, or performance.
+      \item \textit{Refactoring Rule}: A transformation function \( R: D \to D' \) that modifies \( S \) while improving energy consumption.
+      \item \textit{Refactoring Sequence}: An ordered set of transformations \( \mathcal{R} = [R_1, R_2, \dots, R_m] \) applied sequentially to \( D \).
+  \end{itemize}
+
+  \item \textbf{Refactoring Process}
+  \begin{itemize}
+      \item Given a detected smell \( \sigma \), identify the corresponding transformation \( R_{\sigma} \).
+      \item Apply \( R_{\sigma} \) to \( D \), producing \( D' \).
+      \item Track all modifications to ensure consistency and correctness.
+  \end{itemize}
+
+  \item \textbf{Modification Tracking}
+  \begin{itemize}
+      \item Maintain a count of applied transformations per smell type:  
+        \[
+        C_{\sigma} = C_{\sigma} + 1
+        \]
+      \item Store modified versions of \( D \) to enable rollback.
+      \item Generate output files when refactoring is applied.
+  \end{itemize}
+
+  \item \textbf{Validation and Reversion}
+  \begin{itemize}
+      \item After applying \( R_{\sigma} \), verify correctness:  
+        \[
+        V(D') \to \{ \text{valid}, \text{invalid} \}
+        \]
+      \item If invalid, restore the previous state \( D \).
+      \item Allow user-driven reversion to the original state if necessary.
+  \end{itemize}
+\end{enumerate}
 
 \section{Traceability Matrix} \label{SecTM}
 
