@@ -1,6 +1,5 @@
 \documentclass{article}
 
-\usepackage[letterpaper, portrait, margin=1.2in]{geometry}
 \usepackage[round]{natbib}
 \usepackage{tabularx}
 \usepackage{booktabs}
@@ -33,12 +32,7 @@
     \midrule
     September 18th, 2024 & All & Created first draft of document\\
     September 23rd, 2024 & All & Finalized document\\
-    March 24th, 2025 & Ayushi Amin & Fixed all grammer and spelling \\
-    March 24th, 2025 & Tanveer Brar & Updated output section \\
-    March 24th, 2025 & Sevhena Walker & Removed mentions of preserving code functionality through testing \\
-    March 24th, 2025 & Mya Hussain & Removed mentions of database storing \\
-    March 24th, 2025 & Ayushi Amin & Fixed formatting and grammar/spelling \\
-    March 24th, 2025 & Sevhena Walker & Update the aspects of the plugin \\
+    ... & ... & ...\\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -49,48 +43,29 @@
 
 \subsection{Problem}
 
-The Information and Communications Technology (ICT) sector is currently 
-responsible for approximately 2-4\% of global CO2 emissions, a figure 
-projected to rise to 14\% by 2040 without intervention ~\citep{BelkhirAndElmeligi2018}. 
-To align with broader economic sustainability goals, 
-the ICT industry must reduce its CO2 emissions by 72\% by 
-2040 ~\citep{FreitagAndBernersLee2021}. Optimizing energy 
-consumption in software systems is a complex task that cannot 
-rely solely on software engineers, who often face strict deadlines 
-and busy schedules. This creates a pressing need for supporting 
-technologies that help automate this process. This project aims 
-to develop a tool that applies automated refactoring techniques 
-to optimize Python code for energy efficiency while preserving its 
-original functionality. 
+The Information and Communications Technology (ICT) sector is currently responsible for approximately 2-4\% of global CO2 emissions, a figure projected to rise to 14\% by 2040 without intervention ~\citep{BelkhirAndElmeligi2018}. To align with broader economic sustainability goals, the ICT industry must reduce its CO2 emissions by 72\% by 2040 ~\citep{FreitagAndBernersLee2021}. Optimizing energy consumption in software systems is a complex task that cannot rely solely on software engineers, who often face strict deadlines and busy schedules. This creates a pressing need for supporting technologies that help automate this process. This project aims to develop a tool that applies automated refactoring techniques to optimize Python code for energy efficiency while preserving its original functionality. 
 
 \subsection{Inputs and Outputs}
 
 \textbf{Inputs:} Source code that requires refactoring for energy efficiency. \\
-\textbf{Outputs:} Refactored code with reduced energy consumption, along with energy consumption metrics.
+\textbf{Outputs:} Refactored code with reduced energy consumption, along with performance and energy consumption reports.
 
 \subsection{Stakeholders}
 \subsubsection*{\color{blue}{Direct Stakeholders}}
 \begin{enumerate}
 
-    \item \textbf{Software Developers}: They will be the primary users of the refactoring library as they will be the ones to integrate the library into their 
-    code for better refactoring.
-    \item \textbf{Dr. Istvan David (Supervisor)}: Dr. David has a vested interest in the development of the system. He will play a crucial role in guiding and mentoring our 
-    team throughout the project. As the project supervisor, he will be the key advisor, offering feedback on technical aspects, project management, and research methodologies. 
-    \item \textbf{Business Sustainability Teams}: These teams are responsible for considering how a company practices affect the environment. They will especially be interested 
-    in viewing the metrics provided by the library on how it improves the energy efficiency of software over time, therefore decreasing the burden on hardware and minimizing the 
-    company's environmental footprint.
+    \item \textbf{Software Developers}: They will be the primary users of the refactoring library as they will be the ones to integrate the library into their code for better refactoring.
+    \item \textbf{Dr. Istvan David (Supervisor)}: Dr. David has a vested interest in the development of the system. He will play a crucial role in guiding and mentoring our team throughout the project. As the project supervisor, he will be the key advisor, offering feedback on technical aspects, project management, and research methodologies. 
+    \item \textbf{Business Sustainability Teams}: These teams are responsible for considering how a companies practices affect the environment. They will especially be interested in viewing the metrics provided by the library on how it improves the energy efficiency of software over time, therefore decreasing the burden on hardware and minimizing the company's environmental footprint.
 
 \end{enumerate}
 
 \subsubsection*{\color{blue}{Indirect Stakeholders}}
 \begin{enumerate}
 
-    \item \textbf{Business Leaders}: They focus on reducing operational costs associated with energy consumption, especially in large-scale or cloud-hosted applications. Use of the 
-    library in their products allows them to better achieve those goals. 
-    \item \textbf{End Users}: While not directly affected by this refactoring library, end users of technology that use the library will benefit from more responsive and efficient 
-    software that consumes less power, especially in mobile, embedded, or battery-dependent applications. 
-    \item \textbf{Regulatory Bodies}: They enforce energy consumption and sustainability standards, and ensure that software adheres to environmental regulations and may certify tools 
-    that meet efficiency requirements. Their oversight promotes the adoption of energy-efficient software practices.
+    \item \textbf{Business Leaders}: They focus on reducing operational costs associated with energy consumption, especially in large-scale or cloud-hosted applications. Use of the library in their products allows them to better achieve those goals. 
+    \item \textbf{End Users}: While not directly affected by this refactoring library, end users of technology that use the library will benefit from more responsive and efficient software that consumes less power, especially in mobile, embedded, or battery-dependent applications. 
+    \item \textbf{Regulatory Bodies}: They enforce energy consumption and sustainability standards, and ensure that software adheres to environmental regulations and may certify tools that meet efficiency requirements. Their oversight promotes the adoption of energy-efficient software practices.
 
 \end{enumerate}
 
@@ -103,7 +78,7 @@ original functionality.
     \item \textit{Visual Studio Code} will be the IDE used.
     
 \end{enumerate} 
-
+\textbf{Database:} A database will be used to store and retrieve data about refactoring and energy consumption metrics.
 
 \section{Goals}
 
@@ -111,15 +86,14 @@ Our goal is to reduce the energy consumption of Python codebases during executio
 
 \begin{enumerate}
     \item \textbf{Refactoring Library:} \\
-    The library refactors inefficient code patterns to achieve a net reduction in energy consumption of the given codebase. When there are multiple ways to refactor a block of code, it will choose the one with the greatest net reduction in energy consumption.
+    The library refactors inefficient code patterns to achieve a net reduction in energy consumption while preserving the functional integrity of the given codebase. When there are multiple ways to refactor a block of code, it will choose the one with the greatest net reduction in energy consumption.
 
     \item \textbf{Plugin:} \\
-    The plugin will utilize the refactoring library so that developers can get access to a refactored and energy-efficient version of their Python codebase within an IDE. The plugin has three main aspects:
+    The plugin will utilize the refactoring library so that developers can get access to a refactored and energy-efficient version of their Python codebase within an IDE. The plugin has two aspects:
 
     \begin{itemize}
-    \item \textbf{Detecting and Viewing Smells:} The plugin will identify code smells in the Python codebase that contribute to inefficient energy consumption and allow developers to view these smells directly within the IDE.
-    \item \textbf{Initiating Refactoring and Viewing Changes:} The plugin will enable developers to initiate refactoring of the identified code smells and view the resulting changes to the codebase.
-    \item \textbf{Viewing Energy Savings:} Developers will be able to see the cumulative energy savings achieved in the codebase over time as a result of the refactorings.
+        \item \textbf{Developer Feedback:} Developers will be able to review the refactoring suggestions and decide whether to apply the changes based on their preferences.
+        \item \textbf{Codebase Compatibility:} By integrating with existing local tests, the plugin will ensure the refactoring suggestions do not alter the behaviour of the codebase. This ensures seamless integration with development workflows.
     \end{itemize}
 \end{enumerate}
 
@@ -143,14 +117,14 @@ Our goal is to reduce the energy consumption of Python codebases during executio
 
 \section{Challenge Level and Extras}
 
-The expected challenge level of our project is general. This is due to the
+The expected challenge level of our project as general. This is due to the
 relatively straightforward technical knowledge required for its completion.
 The project primarily involves applying known software optimization and
 refactoring techniques, which are well-documented and accessible.
 Additionally, the required programming knowledge is in Python which is known
-by all of the team members and was taught in the undergraduate courses.
+by all of the team members and was, taught in our undergraduate courses.
 Although the project does involve substantial development and research components,
-it is anticipated the overall scope and depth of the work is to be manageable within the
+we anticipate the overall scope and depth of work to be manageable within the
 given timeframe. \\
 
 \noindent
