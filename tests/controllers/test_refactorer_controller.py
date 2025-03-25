@@ -61,9 +61,7 @@ def test_run_refactorer_success(mocker, mock_refactorer_class, mock_logger, tmp_
 
     # Assertions
     assert controller.smell_counters["LEC001"] == 1
-    mock_logger.info.assert_called_once_with(
-        "🔄 Running refactoring for long-element-chain using TestRefactorer"
-    )
+    mock_logger.info.assert_called_once_with("🔄 Running TestRefactorer for long-element-chain")
     mock_instance.refactor.assert_called_once_with(
         target_file, source_dir, mock_smell, mocker.ANY, True
     )
@@ -82,10 +80,8 @@ def test_run_refactorer_no_refactorer(mock_logger, mocker, tmp_path, mock_smell)
     with pytest.raises(NotImplementedError) as exc_info:
         controller.run_refactorer(target_file, source_dir, mock_smell)
 
-    mock_logger.error.assert_called_once_with(
-        "❌ No refactorer found for smell: long-element-chain"
-    )
-    assert "No refactorer implemented for smell: long-element-chain" in str(exc_info.value)
+    mock_logger.error.assert_called_once_with("❌ No refactorer for smell: long-element-chain")
+    assert "No refactorer for smell: long-element-chain" in str(exc_info.value)
 
 
 def test_run_refactorer_multiple_calls(mocker, mock_refactorer_class, tmp_path, mock_smell):
