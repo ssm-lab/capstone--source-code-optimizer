@@ -164,7 +164,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
         """find the dictionary assignment from AST based on the dict name"""
 
         class DictVisitor(ast.NodeVisitor):
-            def visit_Assign(self_, node: ast.Assign):
+            def visit_Assign(self_, node: ast.Assign):  # type: ignore
                 if isinstance(node.value, ast.Dict) and len(node.targets) == 1:
                     # dictionary is a varibale
                     if (
@@ -192,7 +192,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
             return {
                 self.extract_dict_literal(k)
                 if isinstance(k, ast.AST)
-                else k: self.extract_dict_literal(v) if isinstance(v, ast.AST) else v
+                else k: self.extract_dict_literal(v) if isinstance(v, ast.AST) else v  # type: ignore
                 for k, v in zip(node.keys, node.values)
             }
         elif isinstance(node, ast.Constant):
@@ -253,7 +253,7 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
         refactored_lines = self._update_dict_assignment(refactored_lines)
 
         # Write changes back to file
-        file_path.write_text("\n".join(refactored_lines))
+        file_path.write_text("\n".join(refactored_lines))  # type: ignore
 
         return True
 
@@ -340,4 +340,4 @@ class LongElementChainRefactorer(MultiFileRefactorer[LECSmell]):
 
         refactored_lines = [line for line in refactored_lines if line.strip() != "Remove this line"]
 
-        return refactored_lines
+        return refactored_lines  # type: ignore
