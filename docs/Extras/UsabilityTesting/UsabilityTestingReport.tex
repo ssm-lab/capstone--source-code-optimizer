@@ -723,10 +723,22 @@ Certain feedback items, while valuable, were not implemented due to feasibility 
 
 
 \newpage
+
 \section{Conclusion}
 \subsection{Summary of Insights}
-\subsection{Next Steps}
-\subsection{Final Remarks}
+Usability testing revealed that EcoOptimizer successfully identifies energy-wasteful patterns and provides actionable refactoring suggestions, aligning with its core sustainability mission. Participants particularly valued:
+\begin{itemize}
+\item Context-aware detection of Python-specific energy smells (80\% success rate in Tasks 1-3)
+\item Clear diff comparisons showing optimization impacts (4.2/5 clarity rating)
+\item Preservation of code ownership through review-and-approve workflows
+\end{itemize}
+
+However, three critical barriers emerged:
+\begin{itemize}
+\item \textbf{Interface Discoverability}: 60\% of participants required moderator guidance to locate key features like cross-file refactoring
+\item \textbf{Feedback Latency}: 12.3s average delay in sidebar updates caused workflow interruptions
+\item \textbf{Cognitive Overload}: Simultaneous smell highlighting overwhelmed novice users (3.1/5 confidence rating vs. 4.7 for experts)
+\end{itemize}
 
 \newpage
 \section*{Appendices}
