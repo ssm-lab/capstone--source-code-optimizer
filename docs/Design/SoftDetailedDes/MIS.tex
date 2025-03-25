@@ -550,14 +550,49 @@ None
 \subsubsection{Local Functions}
 
 \begin{enumerate}
-\item \texttt{get\_used\_parameters(function\_node: FuncDef, params: list[str]) -> set[str]}: Identifies parameters used within the function body.
-\item \texttt{get\_parameters\_with\_default\_value(default\_values: list[Constant], params: list[str]) -> dict}: Maps parameter names to their default values.
-\item \texttt{classify\_parameters(params: list[str]) -> dict}: Classifies parameters into \texttt{data} and \texttt{config} groups based on naming conventions.
-\item \texttt{create\_parameter\_object\_class(param\_names: list[str], default\_value\_params: dict, class\_name: str) -> str}: Generates class definitions for encapsulating parameters.
-\item \texttt{update\_function\_signature(function\_node: FuncDef, params: dict) -> FuncDef}: Updates function signatures to use encapsulated parameter objects.
-\item \texttt{update\_parameter\_usages(function\_node: FuncDef, params: dict) -> FuncDef}: Replaces parameter usages within the function body with attributes of encapsulated objects.
-\item \texttt{update\_function\_calls(tree: Module, function\_node: FuncDef, params: dict) -> Module}: Updates all calls to the refactored function.
-\end{enumerate}
+  \item \texttt{get\_used\_parameters(function\_node: ast.FunctionDef, params: list[str]) -> list[str]}: 
+  \begin{itemize}
+    \item \textbf{transition}: Identifies parameters used within the function body.
+    \item \textbf{output}: List of names of parameters that are actually used in the function.
+    \item \textbf{exception}: None
+  \end{itemize}
+  \item \texttt{get\_parameters\_with\_default\_value(params: list[ast.Param]) -> key-value pairs}: 
+  \begin{itemize}
+    \item \textbf{transition}: Maps parameter names to their default values .
+    \item \textbf{output}: Key-value pairs mapping parameter names to their default values.
+    \item \textbf{exception}: None
+  \end{itemize}
+  \item \texttt{classify\_parameters(params: list[str]) -> key-value pairs}: 
+  \begin{itemize}
+    \item \textbf{transition}: Classifies parameters into \texttt{data} and \texttt{config} groups based on naming conventions.
+    \item \textbf{output}: Key-value pairs with keys "data\_params" and "config\_params" mapping to lists of parameter names.
+    \item \textbf{exception}: None
+  \end{itemize}
+  \item \texttt{create\_parameter\_object\_class(param\_names: list[str], default\_value\_params: key-value pairs, class\_name: str) -> ast.ClassDef}: 
+  \begin{itemize}
+    \item \textbf{transition}: Creates an AST class definition for encapsulating related parameters.
+    \item \textbf{output}: AST ClassDef node representing the parameter object class.
+    \item \textbf{exception}: None
+  \end{itemize}
+  \item \texttt{update\_function\_signature(function\_node: ast.FunctionDef, classified\_params: key-value pairs) -> ast.FunctionDef}:
+  \begin{itemize}
+    \item \textbf{transition}: Updates function signatures to use encapsulated parameter objects.
+    \item \textbf{output}: Updated AST FunctionDef node with new parameter structure.
+    \item \textbf{exception}: None
+  \end{itemize}
+  \item \texttt{update\_parameter\_usages(function\_node: ast.FunctionDef, classified\_params: key-value pairs) -> ast.FunctionDef}: 
+  \begin{itemize}
+    \item \textbf{transition}: Updates parameter references in function body to use encapsulated object attributes.
+    \item \textbf{output}: Updated AST FunctionDef node with transformed parameter usages.
+    \item \textbf{exception}: None
+  \end{itemize}
+  \item \texttt{update\_function\_calls(tree: ast.Module, function\_node: ast.FunctionDef, used\_params: list[str], classified\_params: key-value pairs, classified\_param\_names: tuple[str, str], enclosing\_class\_name: str) -> ast.Module}: 
+  \begin{itemize}
+    \item \textbf{transition}: Updates all calls to the refactored function to use new parameter structure.
+    \item \textbf{output}: Updated AST Module node with transformed function calls.
+    \item \textbf{exception}: None
+  \end{itemize}
+  \end{enumerate}
 
 \section{MIS of Use List Accumulation Refactorer} \label{mis:ListAccum}
 
