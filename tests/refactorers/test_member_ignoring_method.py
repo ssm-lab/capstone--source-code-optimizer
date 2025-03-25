@@ -101,7 +101,6 @@ def test_mim_basic_case(source_files, refactorer):
     result = Example.mim_method(5)
     """)
 
-    # Check if the refactoring worked
     assert file1.read_text().strip() == expected_file1.strip()
     assert file2.read_text().strip() == expected_file2.strip()
 
@@ -169,7 +168,6 @@ def test_mim_inheritence_case(source_files, refactorer):
     result = SubExample.mim_method(5)
     """)
 
-    # Check if the refactoring worked
     assert file1.read_text().strip() == expected_file1.strip()
     assert file2.read_text().strip() == expected_file2.strip()
 
@@ -239,7 +237,6 @@ def test_mim_inheritence_seperate_subclass(source_files, refactorer):
     result = SubExample.mim_method(5)
     """)
 
-    # Check if the refactoring worked
     assert file1.read_text().strip() == expected_file1.strip()
     assert file2.read_text().strip() == expected_file2.strip()
 
@@ -309,7 +306,6 @@ def test_mim_inheritence_subclass_method_override(source_files, refactorer):
     result = example.mim_method(5)
     """)
 
-    # Check if the refactoring worked
     assert file1.read_text().strip() == expected_file1.strip()
     assert file2.read_text().strip() == expected_file2.strip()
 
@@ -360,5 +356,257 @@ def test_mim_type_hint_inferrence(source_files, refactorer):
     num = Example.mim_method(5)
     """)
 
-    # Check if the refactoring worked
+    assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_mim_multiple_classes_same_method_name(source_files, refactorer):
+    """
+    Tests that only the method call from the correct class instance is refactored
+    when there are multiple method calls with the same method name but from
+    instances of different classes.
+    """
+
+    # --- File 1: Defines the methods in different classes ---
+    test_dir = Path(source_files, "temp_multiple_classes_mim")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "class_def.py"
+    file1.write_text(
+        textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+        def mim_method(self, x):
+            return x * 2
+
+    class AnotherExample:
+        def mim_method(self, x):
+            return x + 3
+
+    example = Example()
+    another_example = AnotherExample()
+    num1 = example.mim_method(5)
+    num2 = another_example.mim_method(5)
+    """)
+    )
+
+    smell = create_smell(occurences=[4], obj="Example.mim_method")()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    expected_file1 = textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+        @staticmethod
+        def mim_method(x):
+            return x * 2
+
+    class AnotherExample:
+        def mim_method(self, x):
+            return x + 3
+
+    example = Example()
+    another_example = AnotherExample()
+    num1 = Example.mim_method(5)
+    num2 = another_example.mim_method(5)
+    """)
+
+    assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_mim_ignores_wrong_method_call(source_files, refactorer):
+    """
+    Tests that a different method call from the same class is not refactored.
+    """
+
+    # --- File 1: Defines the method ---
+    test_dir = Path(source_files, "temp_mim_type_hint_mim")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "class_def.py"
+    file1.write_text(
+        textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+
+        def mim_method(self, x):
+            return x * 2
+
+        def other_method(self):
+            print(self.attr)
+
+    example = Example()
+    example.other_method()
+    """)
+    )
+
+    smell = create_smell(occurences=[5], obj="Example.mim_method")()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    expected_file1 = textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+
+        @staticmethod
+        def mim_method(x):
+            return x * 2
+
+        def other_method(self):
+            print(self.attr)
+
+    example = Example()
+    example.other_method()
+    """)
+
+    assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_mim_method_in_class_with_decorator(source_files, refactorer):
+    """
+    Tests that methods in classes with decorators (e.g., @dataclass) are correctly refactored.
+    """
+
+    # --- File 1: Defines the method ---
+    test_dir = Path(source_files, "temp_decorated_class_mim")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "class_def.py"
+    file1.write_text(
+        textwrap.dedent("""\
+    from dataclasses import dataclass
+    @dataclass
+    class Example:
+        attr: str
+
+        def mim_method(self, x):
+            return x * 2
+
+    example = Example(attr="something")
+    num = example.mim_method(5)
+    """)
+    )
+
+    smell = create_smell(occurences=[6], obj="Example.mim_method")()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    expected_file1 = textwrap.dedent("""\
+    from dataclasses import dataclass
+    @dataclass
+    class Example:
+        attr: str
+
+        @staticmethod
+        def mim_method(x):
+            return x * 2
+
+    example = Example(attr="something")
+    num = Example.mim_method(5)
+    """)
+
+    assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_mim_method_with_existing_decorator(source_files, refactorer):
+    """
+    Tests that methods with existing decorators retain those decorators
+    when the @staticmethod decorator is added.
+    """
+
+    # --- File 1: Defines the method ---
+    test_dir = Path(source_files, "temp_existing_decorator_mim")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "class_def.py"
+    file1.write_text(
+        textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+
+        @custom_decorator
+        def mim_method(self, x):
+            return x * 2
+
+    example = Example()
+    num = example.mim_method(5)
+    """)
+    )
+
+    smell = create_smell(occurences=[6], obj="Example.mim_method")()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    expected_file1 = textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+
+        @custom_decorator
+        @staticmethod
+        def mim_method(x):
+            return x * 2
+
+    example = Example()
+    num = Example.mim_method(5)
+    """)
+
+    assert file1.read_text().strip() == expected_file1.strip()
+
+
+def test_mim_method_with_multiple_decorators(source_files, refactorer):
+    """
+    Tests that methods with multiple existing decorators retain all of them
+    when the @staticmethod decorator is added.
+    """
+
+    # --- File 1: Defines the method ---
+    test_dir = Path(source_files, "temp_multiple_decorators_mim")
+    test_dir.mkdir(exist_ok=True)
+
+    file1 = test_dir / "class_def.py"
+    file1.write_text(
+        textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+
+        @decorator_one
+        @decorator_two
+        def mim_method(self, x):
+            return x * 2
+
+    example = Example()
+    num = example.mim_method(5)
+    """)
+    )
+
+    smell = create_smell(occurences=[7], obj="Example.mim_method")()
+
+    refactorer.refactor(file1, test_dir, smell, Path("fake.py"))
+
+    # --- Expected Result for File 1 ---
+    expected_file1 = textwrap.dedent("""\
+    class Example:
+        def __init__(self):
+            self.attr = "something"
+
+        @decorator_one
+        @decorator_two
+        @staticmethod
+        def mim_method(x):
+            return x * 2
+
+    example = Example()
+    num = Example.mim_method(5)
+    """)
+
     assert file1.read_text().strip() == expected_file1.strip()

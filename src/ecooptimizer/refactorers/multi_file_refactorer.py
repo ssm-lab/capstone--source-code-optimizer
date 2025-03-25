@@ -60,7 +60,7 @@ class MultiFileRefactorer(BaseRefactorer[T]):
                     continue
 
                 CONFIG["refactorLogger"].debug(f"Entering directory: {item!s}")
-                self.traverse_and_process(item)
+                self.traverse(item)
             elif item.is_file() and item.suffix == ".py":
                 self.py_files.append(item)
 
