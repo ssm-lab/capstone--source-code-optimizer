@@ -1701,12 +1701,15 @@ None
 \section{MIS of Smell Detector}
 
 \subsection{Module}
-\texttt{Smell Detector} analyzes the active file for code smells and interacts with Source Code Optimizer for detection.
+\texttt{Smell Detector} analyzes Python files for code smells and manages the detection workflow.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{Backend Communicator} for communicating with Source Code Optimizer for smell detection.
-\item \texttt{File Highlighter} for highlighting detected smells in the editor.
+\item \texttt{Backend Communicator} for communicating with Source Code Optimizer
+\item \texttt{Cache Manager} for managing smell detection results
+\item \texttt{File Highlighter} for highlighting detected smells
+\item \texttt{Event Manager} for managing detection events
+\item \texttt{Hover Manager} for displaying smell information
 \end{itemize}
 
 \subsection{Syntax}
@@ -1718,35 +1721,54 @@ None
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
-  \texttt{detect} & None & None & Active file not found \\
+  \texttt{detectSmellsFile} & \texttt{filePath: string, smellsViewProvider: SmellsViewProvider, smellsCacheManager: SmellsCacheManager} & Promise<void> & Analysis Error \\
+  \hline
+  \texttt{detectSmellsFolder} & \texttt{folderPath: string, smellsViewProvider: SmellsViewProvider, smellsCacheManager: SmellsCacheManager} & Promise<void> & Analysis Error \\
   \hline
 \end{tabularx}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-None
+\begin{itemize}
+\item \texttt{serverStatus}: ServerStatusType - Current status of the backend server
+\end{itemize}
 
 \subsubsection{Environment Variables}
-None
-
+\begin{itemize}
+\item \texttt{enabledSmells}: Record<string, SmellConfig> - Configuration of enabled smell detectors
+\end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item There is an active Python file with no syntax error in the editor.
-\item Source Code Optimizer correctly identifies smells.
+\item Target files have valid Python syntax
+\item Backend server is operational for non-cached analysis
+\item At least one smell detector is enabled in settings
+\item Valid workspace configuration exists
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
-\texttt{detect()}
+\texttt{detectSmellsFile(filePath, smellsViewProvider, smellsCacheManager)}
 \begin{itemize}
-\item \textbf{Transition}: Reads the active file, sends it to Source Code Optimizer for analysis, and highlights detected smells in the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: Throws an error if no active file is found.
+\item \textbf{Transition}: Analyzes a single Python file for code smells, updates cache and view
+\item \textbf{Output}: Promise resolving to void
+\item \textbf{Exception}: Throws error if analysis fails
+\end{itemize}
+
+\texttt{detectSmellsFolder(folderPath, smellsViewProvider, smellsCacheManager)}
+\begin{itemize}
+\item \textbf{Transition}: Recursively analyzes Python files in directory, shows progress
+\item \textbf{Output}: Promise resolving to void
+\item \textbf{Exception}: Throws error if folder scanning or analysis fails
 \end{itemize}
 
 \subsubsection{Local Functions}
-None
+\texttt{precheckAndMarkQueued(filePath, smellsViewProvider, smellsCacheManager)}
+\begin{itemize}
+\item \textbf{Transition}: Validates conditions before analysis and manages file status
+\item \textbf{Output}: Promise<boolean> indicating if analysis should proceed
+\item \textbf{Exception}: None
+\end{itemize}
 
 \section{MIS of Smell Refactorer}
 
