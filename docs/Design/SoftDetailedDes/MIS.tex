@@ -1029,7 +1029,6 @@ None
   
   
 \newpage
-
 \section{MIS of Pylint Analyzer} \label{mis:PylintAnalyzer}
 
 \texttt{PylintAnalyzer}
@@ -1040,11 +1039,11 @@ The \texttt{PylintAnalyzer} module performs static code analysis on Python files
 
 \subsection{Uses}
 \begin{itemize}
-  \item Uses Python's \texttt{pylint} library for code analysis
-  \item Uses \texttt{ast} module for parsing and analyzing abstract syntax trees
-  \item Uses \texttt{astor} library for converting AST nodes back to source code
-  \item Integrates with custom checkers, including \texttt{StringConcatInLoopChecker}
-  \item Accesses configuration settings from \texttt{analyzers\_config}
+\item Uses Python's \texttt{pylint} library for code analysis
+\item Uses \texttt{ast} module for parsing and analyzing abstract syntax trees
+\item Uses \texttt{astor} library for converting AST nodes back to source code
+\item Integrates with custom checkers, including \texttt{StringConcatInLoopChecker}
+\item Accesses configuration settings from \texttt{analyzers\_config}
 \end{itemize}
 
 \subsection{Syntax}
@@ -1078,9 +1077,9 @@ The \texttt{PylintAnalyzer} module performs static code analysis on Python files
 
 \subsubsection{State Variables}
 \begin{itemize}
-  \item \texttt{file\_path: Path}: The path to the Python file being analyzed.
-  \item \texttt{source\_code: Module}: The parsed abstract syntax tree of the source file.
-  \item \texttt{smells\_data: list[dict]}: A list of detected code smells, represented as dictionaries.
+\item \texttt{file\_path: Path}: The path to the Python file being analyzed
+\item \texttt{source\_code: Module}: The parsed abstract syntax tree of the source file
+\item \texttt{smells\_data: list[dict]}: List of detected code smells in dictionary format
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -1088,80 +1087,98 @@ None
 
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item The input file is valid Python code and can be parsed into an AST.
-  \item Configuration settings, such as extra Pylint options and custom smell definitions, are valid.
+\item The input file is valid Python code and can be parsed into an AST
+\item Configuration settings (extra Pylint options, custom smell definitions) are valid
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{PylintAnalyzer(self, file\_path: Path, source\_code: Module)}}
+\paragraph{\texttt{PylintAnalyzer(file\_path: Path, source\_code: Module)}}
 \begin{itemize}
-  \item \textbf{transition}: Initializes the analyzer with the provided file path and AST of the source code.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Initializes analyzer with file path and AST
+\item \textbf{Output}: \texttt{self}
+\item \textbf{Exception}: None
 \end{itemize}
 
 \paragraph{\texttt{build\_pylint\_options()}}
 \begin{itemize}
-  \item \textbf{transition}: Constructs the list of Pylint options based on the file path and configuration settings.
-  \item \textbf{output}: Returns a list of strings representing Pylint options.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Constructs Pylint options list from config
+\item \textbf{Output}: List of option strings
+\item \textbf{Exception}: None
 \end{itemize}
 
 \paragraph{\texttt{analyze()}}
 \begin{itemize}
-  \item \textbf{transition}: Executes Pylint analysis and custom checks, populating \texttt{smells\_data} with detected smells.
-  \item \textbf{output}: None.
-  \item \textbf{exception:} Raises \texttt{JSONDecodeError} if Pylint's output cannot be parsed. Raises \texttt{Exception} for other runtime errors.
+\item \textbf{Transition}:
+\begin{itemize}
+\item Executes Pylint analysis with custom checks using the local detect functions
+\item Populates \texttt{smells\_data} with results and uses \texttt{parse\_line}
+\end{itemize}
+\item \textbf{Output}: None
+\item \textbf{Exception}:
+\begin{itemize}
+\item \texttt{JSONDecodeError} for invalid Pylint output
+\item \texttt{Exception} for general runtime errors
+\end{itemize}
 \end{itemize}
 
 \paragraph{\texttt{configure\_smells()}}
 \begin{itemize}
-  \item \textbf{transition}: Filters \texttt{smells\_data} to include only configured smells.
-  \item \textbf{output}: None.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Filters \texttt{smells\_data} to configured smells
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{filter\_for\_one\_code\_smell(self, pylint\_results: list[Smell], code: str)}}
+\paragraph{\texttt{filter\_for\_one\_code\_smell(pylint\_results: list[Smell], code: str)}}
 \begin{itemize}
-  \item \textbf{transition}: Filters the given Pylint results for a specific code smell identified by \texttt{code}.
-  \item \textbf{output}: Returns a list of smells matching the specified code.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Filters results by smell type code
+\item \textbf{Output}: Filtered list of smells
+\item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
-\paragraph{\texttt{detect\_long\_message\_chain(self, threshold?: int)}}
+
+\paragraph{\texttt{detect\_long\_message\_chain(threshold?: int)}}
 \begin{itemize}
-  \item \textbf{transition}: Identifies method chains exceeding the specified \texttt{threshold}.
-  \item \textbf{output}: Returns a list of smells for long method chains.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Identifies method chains exceeding length threshold
+\item \textbf{Output}: List of long chain smells
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{detect\_long\_lambda\_expression(self, threshold\_length?: int, threshold\_count?: int)}}
+\paragraph{\texttt{detect\_long\_lambda\_expression(threshold\_length?: int, threshold\_count?: int)}}
 \begin{itemize}
-  \item \textbf{transition}: Detects lambda expressions exceeding length or expression count thresholds.
-  \item \textbf{output}: Returns a list of smells for long lambda expressions.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Detects oversized lambda expressions
+\item \textbf{Output}: List of lambda smells
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{detect\_long\_element\_chain(self, threshold?: int)}}
+\paragraph{\texttt{detect\_long\_element\_chain(threshold?: int)}}
 \begin{itemize}
-  \item \textbf{transition}: Detects dictionary access chains exceeding the specified \texttt{threshold}.
-  \item \textbf{output}: Returns a list of smells for long dictionary chains.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Finds long dictionary access chains
+\item \textbf{Output}: List of element chain smells
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{detect\_repeated\_calls(self, threshold?: int)}}
+\paragraph{\texttt{detect\_repeated\_calls(threshold?: int)}}
 \begin{itemize}
-  \item \textbf{transition}: Identifies repeated function calls exceeding the \texttt{threshold}.
-  \item \textbf{output}: Returns a list of smells for repeated function calls.
-  \item \textbf{exception:} None.
-\end{itemize}
-\begin{itemize}
-  \item \texttt{parse\_line(file\_path: Path, line: int)}: Parses a specific line of code into an AST node.
-  \item \texttt{get\_lambda\_code(lambda\_node: Lambda)}: Returns the string representation of a lambda expression.
+\item \textbf{Transition}: Identifies excessive repeated calls
+\item \textbf{Output}: List of repetition smells
+\item \textbf{Exception}: None
 \end{itemize}
 
+\paragraph{\texttt{parse\_line(file\_path: Path, line: int)}}
+\begin{itemize}
+\item \textbf{Transition}: Extracts AST node from specific line
+\item \textbf{Output}: Parsed AST node
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{get\_lambda\_code(lambda\_node: Lambda)}}
+\begin{itemize}
+\item \textbf{Transition}: Converts lambda node to source code
+\item \textbf{Output}: String representation of lambda
+\item \textbf{Exception}: None
+\end{itemize}
 
 \newpage
 
