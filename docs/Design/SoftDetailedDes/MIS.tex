@@ -687,7 +687,6 @@ None
   
   \paragraph{\texttt{visit(node: NodeNG)}}
   \begin{itemize}
-  \item \textbf{Used in}: \texttt{refactor} during AST traversal
   \item \textbf{Transition}: Collects concatenation nodes and loop structures
   \item \textbf{Output}: None
   \item \textbf{Exception}: None
@@ -695,7 +694,6 @@ None
   
   \paragraph{\texttt{find\_reassignments()}}
   \begin{itemize}
-  \item \textbf{Used in}: \texttt{refactor} during analysis
   \item \textbf{Transition}: Finds variable reassignments in loop scope
   \item \textbf{Output}: None
   \item \textbf{Exception}: None
@@ -703,7 +701,6 @@ None
   
   \paragraph{\texttt{find\_last\_assignment(scope: NodeNG)}}
   \begin{itemize}
-  \item \textbf{Used in}: \texttt{find\_scope}
   \item \textbf{Transition}: Locates final variable assignment before loop
   \item \textbf{Output}: None
   \item \textbf{Exception}: Raises \texttt{TypeError} for invalid scope
@@ -711,7 +708,6 @@ None
   
   \paragraph{\texttt{find\_scope()}}
   \begin{itemize}
-  \item \textbf{Used in}: \texttt{refactor} during code modification
   \item \textbf{Transition}: Determines insertion point for list initialization
   \item \textbf{Output}: None
   \item \textbf{Exception}: Requires \texttt{concat\_nodes} to be populated
@@ -719,7 +715,6 @@ None
   
   \paragraph{\texttt{generate\_temp\_list\_name()}}
   \begin{itemize}
-  \item \textbf{Used in}: \texttt{add\_node\_to\_body}
   \item \textbf{Transition}: Creates unique list name for complex targets
   \item \textbf{Output}: Returns generated name string
   \item \textbf{Exception}: Raises \texttt{TypeError} for unsupported nodes
@@ -727,7 +722,6 @@ None
   
   \paragraph{\texttt{add\_node\_to\_body(code\_file: str, nodes\_to\_change: list[tuple])}}
   \begin{itemize}
-  \item \textbf{Used in}: \texttt{refactor} final stage
   \item \textbf{Transition}:
   \begin{itemize}
   \item Replaces concatenations with list operations
@@ -825,7 +819,6 @@ None
 
 \paragraph{\texttt{\_find\_subclasses(directory: Path)}}
 \begin{itemize}
-\item \textbf{Used in}: \texttt{refactor} initialization
 \item \textbf{Transition}: Discovers class hierarchy relationships
 \item \textbf{Output}: Updates \texttt{valid\_classes} state
 \item \textbf{Exception}: None
@@ -833,7 +826,6 @@ None
 
 \paragraph{\texttt{find\_valid\_method\_calls(...)}}
 \begin{itemize}
-\item \textbf{Used in}: Call transformation preparation
 \item \textbf{Transition}: Identifies call sites needing modification
 \item \textbf{Output}: Returns list of valid call tuples
 \item \textbf{Exception}: None
@@ -841,7 +833,6 @@ None
 
 \paragraph{\texttt{check\_for\_initializations(...)}}
 \begin{itemize}
-\item \textbf{Used in}: Call validation
 \item \textbf{Transition}: Verifies variable initialization sources
 \item \textbf{Output}: Returns initialization types list
 \item \textbf{Exception}: None
@@ -849,7 +840,6 @@ None
 
 \paragraph{\texttt{check\_for\_annotations(...)}}
 \begin{itemize}
-\item \textbf{Used in}: Type inference fallback
 \item \textbf{Transition}: Extracts type hints from annotations
 \item \textbf{Output}: Returns annotation node or None
 \item \textbf{Exception}: None
@@ -857,7 +847,6 @@ None
 
 \paragraph{\texttt{leave\_FunctionDef(...)}}
 \begin{itemize}
-\item \textbf{Used in}: AST modification
 \item \textbf{Transition}:
 \begin{itemize}
 \item Adds \texttt{@staticmethod} decorator
@@ -869,7 +858,6 @@ None
 
 \paragraph{\texttt{CallTransformer}}
 \begin{itemize}
-\item \textbf{Used in}: Cross-file modifications
 \item \textbf{Transition}: Updates instance calls to static calls
 \item \textbf{Output}: Modified call nodes
 \item \textbf{Exception}: Raises \texttt{TypeError} for position errors
@@ -1413,14 +1401,13 @@ R)}}
 \texttt{CacheRepeatedCallsRefactorer}
 
 \subsection{Module}
-
-The \texttt{CacheRepeatedCallsRefactorer} module identifies repeated function calls in Python code and refactors them by caching the result of the first call to a temporary variable. This refactoring improves performance and energy efficiency while preserving the original functionality.
+The \texttt{CacheRepeatedCallsRefactorer} identifies and caches repeated function calls using temporary variables to improve performance and energy efficiency while preserving functionality.
 
 \subsection{Uses}
 \begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-  \item Uses Python's \texttt{ast} module for parsing and manipulating abstract syntax trees
+\item Uses \texttt{Smell} interface for data access
+\item Inherits from \texttt{BaseRefactorer}
+\item Uses Python's \texttt{ast} module for AST manipulation
 \end{itemize}
 
 \subsection{Syntax}
@@ -1451,32 +1438,80 @@ None
 
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item The input file contains valid Python syntax.
-  \item \texttt{pylint\_smell} provides valid occurrences of repeated calls with line numbers and call strings.
+\item Input files contain valid Python syntax
+\item Smell detection provides valid call patterns
+\item Repeated calls have no side effects
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{CacheRepeatedCallsRefactorer(self, output\_dir: Path)}}
+\paragraph{\texttt{CacheRepeatedCallsRefactorer(output\_dir: Path)}}
 \begin{itemize}
-  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
-  \item \textbf{output}: \texttt{self}.
-  \item \textbf{exception:} None.
+\item \textbf{Transition}: Initializes temp directory
+\item \textbf{Output}: \texttt{self}
+\item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
+\paragraph{\texttt{refactor(file\_path: Path, smell: CRCSmell, ...)}}
 \begin{itemize}
-  \item \textbf{transition}: Parses \texttt{file\_path}, identifies repeated function calls, inserts a cached variable for the first call, updates subsequent calls to use the cached variable, and validates refactoring.
-  \item \textbf{output}: None.
-  \item \textbf{exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+\item \textbf{Transition}:
+\begin{itemize}
+\item Generates cache name via \texttt{extract\_function\_name}
+\item Locates insertion point with \texttt{\_find\_insert\_line}
+\item Determines indentation via \texttt{\_get\_indentation}
+\item Modifies calls using \texttt{\_replace\_call\_in\_line}
+\item Validates scope with \texttt{\_find\_valid\_parent}
+\end{itemize}
+\item \textbf{Output}: None
+\item \textbf{Exception}:
+\begin{itemize}
+\item \texttt{IOError}: File access failures
+\item \texttt{TypeError}: Invalid AST structure
+\end{itemize}
 \end{itemize}
 
 \subsubsection{Local Functions}
+
+\paragraph{\texttt{extract\_function\_name(call\_string: str)}}
 \begin{itemize}
-  \item \texttt{\_get\_indentation(lines, line\_number)}: Determines the indentation of a specific line.
-  \item \texttt{\_replace\_call\_in\_line(line, call\_string, cached\_var\_name)}: Replaces repeated calls with the cached variable.
-  \item \texttt{\_find\_valid\_parent(tree)}: Identifies the valid parent node containing all occurrences of the repeated call.
-  \item \texttt{\_find\_insert\_line(parent\_node)}: Determines the line to insert the cached variable.
+\item \textbf{Transition}: Extracts base name from call pattern
+\item \textbf{Output}: Normalized function name string
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_get\_indentation(lines: list[str], line\_number: int)}}
+\begin{itemize}
+\item \textbf{Transition}: Calculates whitespace for code insertion
+\item \textbf{Output}: Indentation string
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_replace\_call\_in\_line(line: str, call\_string: str, cached\_var\_name: str)}}
+\begin{itemize}
+\item \textbf{Transition}: Replaces function calls with cache variable
+\item \textbf{Output}: Modified source line
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_find\_valid\_parent(tree: ast.Module)}}
+\begin{itemize}
+\item \textbf{Transition}: Locates common parent for all call instances
+\item \textbf{Output}: Parent AST node or None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_find\_insert\_line(parent\_node: ast.AST)}}
+\begin{itemize}
+\item \textbf{Transition}: Determines optimal insertion point
+\item \textbf{Output}: Line number for cache assignment
+\item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_line\_in\_node\_body(node: ast.AST, line: int)}}
+\begin{itemize}
+\item \textbf{Transition}: Verifies line belongs to node body
+\item \textbf{Output}: Boolean existence check
+\item \textbf{Exception}: None
 \end{itemize}
 
 \newpage
