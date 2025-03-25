@@ -257,41 +257,51 @@ actually be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mPyA}:] Pylint Analyzer Module
   \item [\refstepcounter{mnum} \mthemnum \label{mRef}:] Smell Refactorer  Module
   \item [\refstepcounter{mnum} \mthemnum \label{mMan}:] Refactor Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCac}:] Cache Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mFil}:] Filter Manager Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mEne}:] Energy Metrics Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mVie}:] View Provider Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mEve}:] Event Manager Module
 \end{description}
 
 
 \begin{table}[h!]
-\centering
-\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Level 1} & \textbf{Level 2}\\
-\midrule
+  \centering
+  \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
+  \toprule
+  \textbf{Level 1} & \textbf{Level 2}\\
+  \midrule
+  
+  {Hardware-Hiding Module} & None \\
+  \midrule
+  
+  \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
+  & BaseRefactorer Module\\
+  & MakeStaticRefactorer Module\\
+  & UseListAccumulationRefactorer Module\\
+  & UseAGeneratorRefactorer Module\\
+  & CacheRepeatedCallsRefactorer Module\\
+  & LongElementChainRefactorer Module\\
+  & LongParameterListRefactorer Module\\
+  & LongMessageChainRefactorer Module\\
+  & LongLambdaFunctionRefactorer Module\\ 
+  & PluginInitiator Module\\
+  & BackendCommunicator Module\\ 
+  & SmellDetector Module\\
+  & FileHighlighter Module\\
+  & HoverManager Module\\
+  & CacheManager Module\\
+  & FilterManager Module\\
+  \midrule
 
-{Hardware-Hiding Module} & None \\
-\midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & Smell Module\\
-& BaseRefactorer Module\\
-& MakeStaticRefactorer Module\\
-& UseListAccumulationRefactorer Module\\
-& UseAGeneratorRefactorer Module\\
-& CacheRepeatedCallsRefactorer Module\\
-& LongElementChainRefactorer Module\\
-& LongParameterListRefactorer Module\\
-& LongMessageChainRefactorer Module\\
-& LongLambdaFunctionRefactorer Module\\ 
-& PluginInitiator Module\\
-& BackendCommunicator Module\\ 
-& SmellDetector Module\\
-& FileHighlighter Module\\
-& HoverManager Module\\
-\midrule
-
-
-\multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
+  \multirow{3}{0.3\textwidth}{Software Decision Module} & Measurements Module\\
 & PylintAnalyzer Module\\
 & SmellRefactorer Module\\
 & RefactorManager Module\\
+& EnergyMetrics Module\\
+& ViewProvider Module\\
+& EventManager Module\\
 \bottomrule
 
 \end{tabular}
@@ -546,7 +556,7 @@ This system has no hardware components.
 
 \begin{description}
     \item[Secrets:] How to initialize the plugin, set up the environment for interaction, and handle configurations for plugin commands.
-    \item[Services:] Initializes and manages the plugin's setup, enabling its functionality without exposing the underlying initialization logic.
+    \item[Services:] Initializes and manages the plugin's setup including command registration, enabling its functionality without exposing the underlying initialization logic.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
@@ -556,7 +566,7 @@ This system has no hardware components.
 
 \begin{description}
     \item[Secrets:] How to establish communication between the plugin and Source Code Optimizer, handle requests, and process responses.
-    \item[Services:] Provides an interface for sending requests to and receiving responses from Source Code Optimizer. Abstracts the communication details from modules within the plugin.
+    \item[Services:] Provides an interface for sending requests to and receiving responses from Source Code Optimizer. Abstracts the communication details from modules within the plugin. Managers server status checks and handles backend communication errors.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
@@ -662,6 +672,22 @@ This system has no hardware components.
   \end{itemize}
 \end{enumerate}
 
+\subsubsection{Cache Manager Module (\mref{mCac})}
+
+\begin{description}
+    \item[Secrets:] How to persist and retrieve smell detection results, manage cache invalidation, handle cache state transitions and synchronize cache with file system changes. 
+    \item[Services:] Provides persistent storage for smell detection results and the ability to retrieve cached smell data, invalidate cache entries for specific files, clear entire cache.  Coordinates cache updates with file system events. 
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{Filter Manager Module (\mref{mFil})}
+
+\begin{description}
+    \item[Secrets:] How to handle and respond to filter criteria across sessions. How to handle filter combinations concurrently with UI synchronization.
+    \item[Services:] Provides functionality to set and get filter criteria for different smell types and apply filters to smell data. This module can clear all active filters, save filter state to persistent storage, restore filter state from storage and validate filter criteria.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
 \subsection{Software Decision Module}
 
 \subsubsection{Measurements Module (\mref{mMeasure})}
@@ -745,6 +771,30 @@ This system has no hardware components.
       \item Allow user-driven reversion to the original state if necessary.
   \end{itemize}
 \end{enumerate}
+
+\subsubsection{Energy Metrics Module (\mref{mEne})}
+
+\begin{description}
+    \item[Secrets:] How to collect and aggregate code metrics from backend output. How to handle metric collection errors and edge cases. How to manage metric data consistency across sessions
+    \item[Services:] Collects code metrics for specified files and outputs metrics data to suitable formats. Provides functionality to display metrics in the VS Code UI and save metrics data to persistent storage.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{View Provider Module (\mref{mVie})}
+
+\begin{description}
+    \item[Secrets:] How to implement IDE specific views for different data types. How to manage view state and updates efficiently across multiple views. How to handle dynamic content updates based on user interactions. How to coordinate between different views (smells, metrics, filters, refactoring)
+    \item[Services:] Provides view display of detected smells with hierarchical format. Provides energy metrics data visualization and updates. Provides filter selection and management interface. Provides refactoring details and preview display. Provides methods to refresh and update all views.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
+
+\subsubsection{Event Manager Module (\mref{mEve})}
+
+\begin{description}
+    \item[Secrets:] How to implement IDE event handling system. How to manage event propagation and subscription lifecycle. How to handle concurrent event processing and state updates and coordinate between different event types.
+    \item[Services:] Provides event subscription management for workspace changes, file system modifications and UI updates. Provides functionality to register and unregister event listeners, handle event propagation, manage event state and cleanup.
+    \item[Implemented By:] EcoOptimizer
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 
