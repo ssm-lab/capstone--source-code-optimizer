@@ -545,15 +545,47 @@ This system has no hardware components.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
+
 \subsubsection{Hover Manager Module (\mref{mHov})}
 
-% [Record, Library, Abstract Object, or Abstract Data Type]
-
 \begin{description}
-    \item[Secrets:] How to detect hover events, retrieve relevant information dynamically, and present tooltips based on hovered elements.
-    \item[Services:] Manages hover interactions and displays contextual information for elements within the user interface.
+    \item[Secrets:] Understanding how to detect hover events over source code, retrieve relevant contextual information dynamically, and generate structured hover content. This includes identifying code smells at a given position, constructing a `MarkdownString` representation, and embedding interactive refactoring commands.
+
+    \item[Services:] Manages hover interactions within the VSCode extension. When a user hovers over a detected code smell, it dynamically provides a `MarkdownString` containing information about the smell and options to refactor it. The module supports both single-instance and type-wide refactoring actions.
+
     \item[Implemented By:] EcoOptimizer
+    \item[Type of Module:] Library: a reusable component responsible for handling hover events and providing interactive refactoring commands within the extension.
 \end{description}
+
+\textbf{Hover Interaction Formalization}
+\begin{enumerate}
+  \item \textbf{Definitions}
+  \begin{itemize}
+      \item \textit{Interaction Space}: A document \( D \) consisting of discrete positions \( P = \{ p_1, p_2, \dots, p_n \} \) where detected smells can be associated.
+      \item \textit{Smell Data}: A set \( S = \{ s_1, s_2, \dots, s_m \} \), where each \( s_i \) is a detected smell with:
+        \begin{itemize}
+            \item \( s_i.\text{location} \) — position range where the smell occurs
+            \item \( s_i.\text{description} \) — information about the smell
+        \end{itemize}
+      \item \textit{Response Function}: A mapping \( H: P \to S \) that associates positions in \( D \) with detected smells.
+  \end{itemize}
+
+  \item \textbf{Interaction Model}
+  \[
+  H(p) =
+  \begin{cases} 
+      s_i, & \text{if } p \text{ corresponds to a detected smell} \\
+      \varnothing, & \text{otherwise}
+  \end{cases}
+  \]
+
+  \item \textbf{Contextual Response Construction}
+  \begin{itemize}
+      \item Given \( p \in P \), retrieve \( s_i \in S \).
+      \item Construct a structured response containing \( s_i.\text{description} \) and \( s_i.\text{transformationOptions} \).
+      \item Present the response in an interactive format that allows further refinement or transformation.
+  \end{itemize}
+\end{enumerate}
 
 \subsection{Software Decision Module}
 
