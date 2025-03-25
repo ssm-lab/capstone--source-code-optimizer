@@ -1,3 +1,5 @@
+"""Data models for representing different types of code smells."""
+
 from pydantic import BaseModel
 from typing import Optional
 
@@ -5,20 +7,20 @@ from .custom_fields import CRCInfo, Occurence, AdditionalInfo, SCLInfo
 
 
 class Smell(BaseModel):
-    """
-    Represents a code smell detected in a source file, including its location, type, and related metadata.
+    """Base model representing a detected code smell.
 
     Attributes:
-        confidence (str): The level of confidence for the smell detection (e.g., "high", "medium", "low").
-        message (str): A descriptive message explaining the nature of the smell.
-        messageId (str): A unique identifier for the specific message or warning related to the smell.
-        module (str): The name of the module or component in which the smell is located.
-        obj (str): The specific object (e.g., function, class) associated with the smell.
-        path (str): The relative path to the source file from the project root.
-        symbol (str): The symbol or code construct (e.g., variable, method) involved in the smell.
-        type (str): The type or category of the smell (e.g., "complexity", "duplication").
-        occurences (list[Occurence]): A list of individual occurences of a same smell, contains positional info.
-        additionalInfo (AddInfo): (Optional) Any custom information m for a type of smell
+        id: Optional unique identifier
+        confidence: Detection confidence level
+        message: Description of the smell
+        messageId: Unique message identifier
+        module: Module where smell was found
+        obj: Specific object containing the smell
+        path: File path relative to project root
+        symbol: Code symbol involved
+        type: Smell category/type
+        occurences: List of locations where smell appears
+        additionalInfo: Optional smell-specific metadata
     """
 
     id: Optional[str] = ""
@@ -35,17 +37,22 @@ class Smell(BaseModel):
 
 
 class CRCSmell(Smell):
+    """Represents Cache-Related Computation smells with required CRC metadata."""
+
     additionalInfo: CRCInfo  # type: ignore
 
 
 class SCLSmell(Smell):
+    """Represents String Concatenation in Loops smells with required SCL metadata."""
+
     additionalInfo: SCLInfo  # type: ignore
 
 
-LECSmell = Smell
-LLESmell = Smell
-LMCSmell = Smell
-LPLSmell = Smell
-UVASmell = Smell
-MIMSmell = Smell
-UGESmell = Smell
+# Type aliases for other smell categories
+LECSmell = Smell  # Long Element Chain
+LLESmell = Smell  # Long List Expansion
+LMCSmell = Smell  # Long Method Chain
+LPLSmell = Smell  # Long Parameter List
+UVASmell = Smell  # Unused Variable Assignment
+MIMSmell = Smell  # Multiple Items Mutation
+UGESmell = Smell  # Unnecessary Get Element
