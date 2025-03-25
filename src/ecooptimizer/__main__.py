@@ -53,9 +53,15 @@ def main():
         logging.error("Could not retrieve initial emissions. Exiting.")
         exit(1)
 
+    enabled_smells = {
+        "cached-repeated-calls": {"threshold": 2},
+        "no-self-use": {},
+        "use-a-generator": {},
+        "too-many-arguments": {"max_args": 5},
+    }
+
     analyzer_controller = AnalyzerController()
-    # update_smell_registry(["no-self-use"])
-    smells_data = analyzer_controller.run_analysis(SOURCE)
+    smells_data = analyzer_controller.run_analysis(SOURCE, enabled_smells)
     save_json_files("code_smells.json", [smell.model_dump() for smell in smells_data])
 
     copy_file_to_output(SOURCE, "refactored-test-case.py")
