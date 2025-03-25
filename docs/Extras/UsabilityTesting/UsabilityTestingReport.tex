@@ -67,6 +67,30 @@
 \usepackage{makecell}
 \usepackage{ragged2e}
 
+\usepackage{fontawesome5} 
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Define JSON language for listings
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    commentstyle=\color{gray},
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    stringstyle=\color{red},
+    keywordstyle=\color{blue},
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morekeywords={true, false, null}
+}
+
 \title{Usability Testing Report for EcoOptimizer}
 \author{EcoOptimizer's Team 4}
 \date{March 25th 2025}
@@ -725,8 +749,49 @@ Certain feedback items, while valuable, were not implemented due to feasibility 
 \newpage
 \section{Conclusion}
 \subsection{Summary of Insights}
-\subsection{Next Steps}
-\subsection{Final Remarks}
+\subsection{Changes Implemented}
+\label{subsec:changes}
+
+Based on this report's findings the following improvements were made:
+
+\begin{enumerate}
+    \item \textbf{Configurable File Highlighting}
+    \begin{itemize}
+        \item Added line style customization
+        \item Added line color customization by RGB
+    \end{itemize}
+
+    
+    \item \textbf{Enhanced Refactoring Sidebar}
+    \begin{itemize}
+        \item Added smell navigation tree with \texttt{Jump-to-Location} buttons
+        \item Loading spinner during smell linting of a file  
+        \item Energy impact preview panel when refactoring showing:
+        \begin{itemize}
+            \item Total carbon saved per file
+            \item Total cabon saved per smell
+        \end{itemize}
+    \end{itemize}
+    
+    \item \textbf{Explicit Change Approval UI}
+    \begin{itemize}
+        \item High-contrast buttons on bottom right. 
+        \begin{itemize}
+            \item Persistent positioning near affected code blocks
+        \end{itemize}
+    \end{itemize}
+
+    
+    
+    \item \textbf{Real-time Linting Toggle}
+    \begin{itemize}
+        \item Toggle linting button on top right: \texttt{ECO: \faIcon{toggle-on}}
+        \item Continuous smell analysis on all opened files and on file save
+    \end{itemize}
+
+\end{enumerate}
+
+
 
 \newpage
 \section*{Appendices}
