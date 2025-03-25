@@ -105,8 +105,36 @@
 
 \section{Executive Summary}
 \subsection{Overview of Testing}
+The usability testing for EcoOptimizer involved 5 Python developers with diverse technical backgrounds and VSCode proficiency levels. Participants engaged in seven structured tasks across three complexity tiers:
+\begin{itemize}
+\item Single-file analysis (Tasks 1-5) with basic code smells
+\item Multi-file refactoring (Task 6) with cross-file dependencies
+\item Configuration testing (Task 7) with advanced pattern detection
+\end{itemize}
+
+Testing utilized a mixed-methods approach combining:
+\begin{itemize}
+\item \textbf{Quantitative Metrics}: Task completion rates (80\% success in core detection tasks), time-on-task measurements (23s avg. button discovery time)
+\item \textbf{Qualitative Insights}: Think-aloud protocols and post-test surveys revealing cognitive load patterns
+\end{itemize}
+
 \subsection{Key Findings}
-\subsection{Recommendations Highlights}
+The evaluation revealed three critical success factors and corresponding challenges:
+
+\paragraph{Strengths}
+\begin{itemize}
+\item 80\% success rate in detecting energy-wasteful patterns
+\item 4.2/5 clarity rating for diff comparisons
+\item 100\% preservation of code integrity when rejecting changes
+\end{itemize}
+
+\paragraph{Critical Barriers}
+\begin{itemize}
+\item \textbf{Interface Discoverability}: 60\% of users required guidance to locate multi-file refactoring features
+\item \textbf{Feedback Latency}: 12.3s average delay in sidebar updates disrupted workflows
+\item \textbf{Cognitive Overload}: Novice users reported 3.1/5 confidence vs 4.7 for experts
+\end{itemize}
+
 \newpage
 
 \section{Introduction}
@@ -747,8 +775,22 @@ Certain feedback items, while valuable, were not implemented due to feasibility 
 
 
 \newpage
+
 \section{Conclusion}
 \subsection{Summary of Insights}
+Usability testing revealed that EcoOptimizer successfully identifies energy-wasteful patterns and provides actionable refactoring suggestions, aligning with its core sustainability mission. Participants particularly valued:
+\begin{itemize}
+\item Context-aware detection of Python-specific energy smells (80\% success rate in Tasks 1-3)
+\item Clear diff comparisons showing optimization impacts (4.2/5 clarity rating)
+\item Preservation of code ownership through review-and-approve workflows
+\end{itemize}
+
+However, three critical barriers emerged:
+\begin{itemize}
+\item \textbf{Interface Discoverability}: 60\% of participants required moderator guidance to locate key features like cross-file refactoring
+\item \textbf{Feedback Latency}: 12.3s average delay in sidebar updates caused workflow interruptions
+\item \textbf{Cognitive Overload}: Simultaneous smell highlighting overwhelmed novice users (3.1/5 confidence rating vs. 4.7 for experts)
+\end{itemize}
 \subsection{Changes Implemented}
 \label{subsec:changes}
 
