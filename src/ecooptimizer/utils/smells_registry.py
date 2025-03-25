@@ -1,15 +1,15 @@
+"""Registry of code smells with their detection and refactoring configurations."""
+
 from copy import deepcopy
+from typing import Any
 
 from .smell_enums import CustomSmell, PylintSmell
-
 from ..analyzers.ast_analyzers.detect_long_element_chain import detect_long_element_chain
 from ..analyzers.ast_analyzers.detect_long_lambda_expression import detect_long_lambda_expression
 from ..analyzers.ast_analyzers.detect_long_message_chain import detect_long_message_chain
 from ..analyzers.astroid_analyzers.detect_string_concat_in_loop import detect_string_concat_in_loop
 from ..analyzers.ast_analyzers.detect_repeated_calls import detect_repeated_calls
-
 from ..refactorers.concrete.list_comp_any_all import UseAGeneratorRefactorer
-
 from ..refactorers.concrete.long_lambda_function import LongLambdaFunctionRefactorer
 from ..refactorers.concrete.long_element_chain import LongElementChainRefactorer
 from ..refactorers.concrete.long_message_chain import LongMessageChainRefactorer
@@ -17,9 +17,9 @@ from ..refactorers.concrete.member_ignoring_method import MakeStaticRefactorer
 from ..refactorers.concrete.long_parameter_list import LongParameterListRefactorer
 from ..refactorers.concrete.str_concat_in_loop import UseListAccumulationRefactorer
 from ..refactorers.concrete.repeated_calls import CacheRepeatedCallsRefactorer
-
 from ..data_types.smell_record import SmellRecord
 
+# Base registry of all supported code smells
 _SMELL_REGISTRY: dict[str, SmellRecord] = {
     "use-a-generator": {
         "id": PylintSmell.USE_A_GENERATOR.value,
@@ -89,6 +89,7 @@ _SMELL_REGISTRY: dict[str, SmellRecord] = {
     },
 }
 
+# Default configuration values for smell detection
 OPTIONS_CONFIG = {
     "too-many-arguments": {"max_args": 6},
     "long-lambda-expression": {"threshold_length": 100, "threshold_count": 5},
@@ -99,7 +100,15 @@ OPTIONS_CONFIG = {
 
 
 def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | list[str]):
-    """Returns a modified SMELL_REGISTRY based on user preferences."""
+    """Returns a modified smell registry based on user preferences.
+
+    Args:
+        enabled_smells: Either a list of enabled smell names or a dictionary
+                       with smell-specific configurations
+
+    Returns:
+        Dictionary containing only enabled smells with updated configurations
+    """
     updated_registry = deepcopy(_SMELL_REGISTRY)
 
     if isinstance(enabled_smells, list):
@@ -108,36 +117,45 @@ def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | li
             for smell_name, config in updated_registry.items()
             if smell_name in enabled_smells
         }
-    else:
-        for smell_name, smell_config in updated_registry.items():
-            if smell_name in enabled_smells:
-                smell_config["enabled"] = True
-                user_options = enabled_smells[smell_name]
-                if not user_options:
-                    continue
 
-                analyzer_method = smell_config["analyzer_method"]
-                original_options = smell_config["analyzer_options"]
+    # Handle dictionary configuration
+    for smell_name, smell_config in updated_registry.items():
+        if smell_name in enabled_smells:
+            smell_config["enabled"] = True
+            user_options = enabled_smells[smell_name]
+            if not user_options:
+                continue
 
-                if analyzer_method == "pylint":
-                    updated_options = {}
-                    for opt_key, opt_data in original_options.items():
-                        if opt_key in user_options:
-                            updated_options[opt_key] = {
-                                "flag": opt_data["flag"],
-                                "value": user_options[opt_key],
-                            }
-                        else:
-                            updated_options[opt_key] = opt_data
-                    smell_config["analyzer_options"] = updated_options
-                else:
-                    # For non-Pylint smells, merge user options with defaults
-                    smell_config["analyzer_options"] = {**original_options, **user_options}
+            analyzer_method = smell_config["analyzer_method"]
+            original_options = smell_config["analyzer_options"]
+
+            if analyzer_method == "pylint":
+                updated_options = {}
+                for opt_key, opt_data in original_options.items():
+                    if opt_key in user_options:
+                        updated_options[opt_key] = {
+                            "flag": opt_data["flag"],
+                            "value": user_options[opt_key],
+                        }
+                    else:
+                        updated_options[opt_key] = opt_data
+                smell_config["analyzer_options"] = updated_options
             else:
-                smell_config["enabled"] = False
+                # Merge user options with defaults for non-Pylint smells
+                smell_config["analyzer_options"] = {**original_options, **user_options}
+        else:
+            smell_config["enabled"] = False
 
-        return updated_registry
+    return updated_registry
 
 
-def get_refactorer(symbol: str):
-    return _SMELL_REGISTRY[symbol].get("refactorer", None)
+def get_refactorer(symbol: str) -> Any:  # noqa: ANN401
+    """Retrieves the refactorer class for a given smell symbol.
+
+    Args:
+        symbol: The smell identifier (e.g., "long-lambda-expression")
+
+    Returns:
+        The refactorer class associated with the smell, or None if not found
+    """
+    return _SMELL_REGISTRY.get(symbol, {}).get("refactorer")
