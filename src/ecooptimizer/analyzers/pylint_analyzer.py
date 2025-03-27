@@ -65,7 +65,7 @@ class PylintAnalyzer(Analyzer):
             Catches and logs Pylint execution and JSON parsing errors
         """
         smells_data: list[Smell] = []
-        pylint_options = [str(file_path), *extra_options]
+        pylint_options = [str(file_path), *extra_options, "--clear-cache-post-run=True"]
 
         with StringIO() as buffer:
             reporter = JSON2Reporter(buffer)
