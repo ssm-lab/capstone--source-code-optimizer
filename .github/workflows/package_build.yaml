@@ -75,10 +75,10 @@ jobs:
           $entryDev = python -c "from importlib.metadata import entry_points; print([ep.value for ep in entry_points()['console_scripts'] if ep.name == 'eco-ext-dev'][0])"
           $pyPathDev = $entryDev.Split(':')[0].Replace('.', '\') + '.py'
 
-          pyinstaller --onefile --name ecoserver "src/$pyPath"
-          Move-Item dist\ecoserver.exe "dist\ecooptimizer-server-${{ matrix.artifact_name }}"
+          pyinstaller --onefile --name ecooptimizer-server "src/$pyPathProd"
+          Move-Item dist\ecooptimizer-server.exe "dist\ecooptimizer-server-${{ matrix.artifact_name }}"
 
-          pyinstaller --onefile --name ecooptimizer-server-dev "src/$pyPath"
+          pyinstaller --onefile --name ecooptimizer-server-dev "src/$pyPathDev"
           Move-Item dist\ecooptimizer-server-dev.exe "dist\ecooptimizer-server-dev-${{ matrix.artifact_name }}"
 
       - name: Create macOS executable
