@@ -32,25 +32,40 @@ jobs:
           python -m pip install --upgrade pip
           pip install build wheel pyinstaller
 
-      - name: Build package (Windows-safe)
+      - name: Build package
+        run: python -m build --wheel --no-isolation
+        
+      - name: Fix Windows wheel names
+        if: runner.os == 'Windows'
+        shell: cmd
         run: |
-          python -m build --wheel --no-isolation
-          # Windows workaround: Rename wheel to standard format
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            cd dist
-            rename 's/-cp3[0-9]-/-py3-none-/' *.whl
-            cd ..
-          fi
+          cd dist
+          for %%f in (*-cp*-*-*.whl) do (
+            for /f "tokens=1-3* delims=-" %%a in ("%%~nf") do (
+              ren "%%f" "%%a-%%b-py3-none-%%d.whl"
+            )
+          )
 
-      - name: Create executable
+      - name: Create Linux executable
+        if: matrix.os == 'ubuntu-latest'
         run: |
           pip install ./dist/*.whl
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-              pyinstaller --onefile --name ecoserver "$(dirname $(which python))/Scripts/eco-ext.exe"
-          else
-              pyinstaller --onefile --name ecoserver "$(which eco-ext)"
-          fi
-          mv dist/ecoserver${{ matrix.os == 'windows-latest' && '.exe' || '' }} dist/ecoserver-${{ matrix.artifact_name }}
+          pyinstaller --onefile --name ecoserver $(which eco-ext)
+          mv dist/ecoserver dist/ecoserver-${{ matrix.artifact_name }}
+
+      - name: Create Windows executable
+        if: matrix.os == 'windows-latest'
+        run: |
+          pip install ./dist/*.whl
+          pyinstaller --onefile --name ecoserver "$(dirname $(which python))/Scripts/eco-ext.exe"
+          mv dist/ecoserver.exe dist/ecoserver-${{ matrix.artifact_name }}
+
+      - name: Create macOS executable
+        if: matrix.os == 'macos-latest'
+        run: |
+          pip install ./dist/*.whl
+          pyinstaller --onefile --name ecoserver $(which eco-ext)
+          mv dist/ecoserver dist/ecoserver-${{ matrix.artifact_name }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -76,5 +91,6 @@ jobs:
           files: |
             artifacts/**/*.whl
             artifacts/**/ecoserver-*
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
