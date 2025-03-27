@@ -6,7 +6,18 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            suffix: linux-x64
+          - os: windows-latest
+            suffix: windows-x64.exe
+          - os: macos-latest
+            suffix: macos-x64
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,24 +29,45 @@ jobs:
       - name: Install tools
         run: pip install build wheel pyinstaller
 
-      - name: Build package
+      - name: Build wheel
         run: python -m build --wheel --no-isolation
 
       - name: Create executable
         run: |
           pip install ./dist/*.whl
-          pyinstaller --onefile --name ecodevserver $(which eco-ext-dev)
           pyinstaller --onefile --name ecoserver $(which eco-ext)
+          mv dist/ecoserver${{ matrix.os == 'windows-latest' && '.exe' || '' }} dist/ecoserver-${{ matrix.suffix }}
+          pyinstaller --onefile --name ecodevserver $(which eco-ext-dev)
+          mv dist/ecodevserver${{ matrix.os == 'windows-latest' && '.exe' || '' }} dist/ecodevserver-${{ matrix.suffix }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: binaries-${{ matrix.os }}
+          path: |
+            dist/*.whl
+            dist/ecoserver-*
+            dist/ecodevserver-*
+
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          name: "Version ${{ github.ref_name }}"
-          body: "Pre-built package and executable"
+          name: Version ${{ github.ref_name }}
+          body: |
+            ${{ github.event.head_commit.message }}
           files: |
-            dist/*.whl
-            dist/ecodevserver*
-            dist/ecoserver*
+            artifacts/**/*.whl
+            artifacts/**/ecoserver-*
+            artifacts/**/ecodevserver-*
           draft: true
           prerelease: false
         env:
