@@ -2,7 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches: [packaging-test]
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -12,11 +13,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            suffix: linux-x64
+            artifact_name: linux-x64
           - os: windows-latest
-            suffix: windows-x64.exe
+            artifact_name: windows-x64.exe
           - os: macos-latest
-            suffix: macos-x64
+            artifact_name: macos-x64
 
     steps:
       - uses: actions/checkout@v4
@@ -25,20 +26,28 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+          architecture: x64  # Explicitly set for Windows
 
       - name: Install tools
-        run: pip install build wheel pyinstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install build wheel pyinstaller
 
-      - name: Build wheel
-        run: python -m build --wheel --no-isolation
+      - name: Build package (Windows-safe)
+        run: |
+          python -m build --wheel --no-isolation
+          # Windows workaround: Rename wheel to standard format
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            cd dist
+            rename 's/-cp3[0-9]-/-py3-none-/' *.whl
+            cd ..
+          fi
 
       - name: Create executable
         run: |
           pip install ./dist/*.whl
-          pyinstaller --onefile --name ecoserver $(which eco-ext)
-          mv dist/ecoserver${{ matrix.os == 'windows-latest' && '.exe' || '' }} dist/ecoserver-${{ matrix.suffix }}
-          pyinstaller --onefile --name ecodevserver $(which eco-ext-dev)
-          mv dist/ecodevserver${{ matrix.os == 'windows-latest' && '.exe' || '' }} dist/ecodevserver-${{ matrix.suffix }}
+          pyinstaller --onefile --name ecoserver "$(python -c 'import sys; print(sys.executable[:-10])'/Scripts/eco-ext${{ matrix.os == 'windows-latest' && '.exe' || '' }}"
+          mv dist/ecoserver${{ matrix.os == 'windows-latest' && '.exe' || '' }} dist/ecoserver-${{ matrix.artifact_name }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -47,28 +56,23 @@ jobs:
           path: |
             dist/*.whl
             dist/ecoserver-*
-            dist/ecodevserver-*
 
   create-release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download all artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
 
-      - name: Create GitHub Release
+      - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          name: Version ${{ github.ref_name }}
-          body: |
-            ${{ github.event.head_commit.message }}
+          tag_name: ${{ github.ref }}
+          name: ${{ github.ref_name }}
           files: |
             artifacts/**/*.whl
             artifacts/**/ecoserver-*
-            artifacts/**/ecodevserver-*
-          draft: true
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
