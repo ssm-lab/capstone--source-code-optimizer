@@ -60,7 +60,7 @@ jobs:
         shell: pwsh
         run: |
           # 1. Find the exact wheel file
-          $wheelPath = (Get-ChildItem dist -Filter "ecoserver-*.whl" | Select-Object -First 1).FullName
+          $wheelPath = (Get-ChildItem dist -Filter "ecooptimizer-*.whl" | Select-Object -First 1).FullName
           if (-not $wheelPath) { Write-Error "No wheel file found"; exit 1 }
       
           # 2. Install using absolute path
