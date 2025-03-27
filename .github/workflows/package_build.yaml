@@ -125,9 +125,9 @@ jobs:
             - Development Server: `ecooptimizer-server-dev-<platform>`
             - Wheel Package: `ecooptimizer-*.whl`
           files: |
-            artifacts/artifacts-ubuntu-latest/dist/*
-            artifacts/artifacts-windows-latest/dist/*
-            artifacts/artifacts-macos-latest/dist/*
+            artifacts/artifacts-ubuntu-latest/*
+            artifacts/artifacts-windows-latest/*
+            artifacts/artifacts-macos-latest/*
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
