@@ -68,6 +68,7 @@ jobs:
       
           # 3. Locate the installed script
           $pythonDir = (python -c "import os, sys; print(os.path.dirname(sys.executable))")
+          ls "$pythonDir"
           $scriptPath = "$pythonDir\Scripts\eco-ext.exe"
           if (-not (Test-Path $scriptPath)) { Write-Error "Script not found at $scriptPath"; exit 1 }
       
