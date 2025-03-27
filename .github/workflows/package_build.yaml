@@ -68,7 +68,7 @@ jobs:
       
           $entry = python -c "from importlib.metadata import entry_points; print([ep.value for ep in entry_points()['console_scripts'] if ep.name == 'eco-ext'][0])"
           $pyPath = $entry.Split(':')[0].Replace('.', '\') + '.py'
-          pyinstaller --onefile --name ecoserver $pyPath
+          pyinstaller --onefile --name ecoserver "src/$pyPath"
           Move-Item dist\ecoserver.exe "dist\ecoserver-${{ matrix.artifact_name }}"
 
       - name: Create macOS executable
