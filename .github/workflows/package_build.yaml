@@ -24,8 +24,8 @@ jobs:
       - name: Create executable
         run: |
           pip install ./dist/*.whl
-          pyinstaller --onefile --name ecodevserver eco-ext-dev
-          pyinstaller --onefile --name ecoserver eco-ext
+          pyinstaller --onefile --name ecodevserver $(which eco-ext-dev)
+          pyinstaller --onefile --name ecoserver $(which eco-ext)
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -36,7 +36,7 @@ jobs:
             dist/*.whl
             dist/ecodevserver*
             dist/ecoserver*
-          draft: false
+          draft: true
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
