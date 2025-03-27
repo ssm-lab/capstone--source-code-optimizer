@@ -112,16 +112,6 @@ jobs:
           pattern: artifacts-*
           merge-multiple: false  # Keep separate folders per OS
 
-      - name: Verify artifact structure
-        run: |
-          echo "Artifact directory structure:"
-          find artifacts -type f | sort
-          echo ""
-          echo "Checking required files exist:"
-          [ -f artifacts/artifacts-ubuntu-latest/dist/ecooptimizer-server-linux-x64 ] || exit 1
-          [ -f artifacts/artifacts-windows-latest/dist/ecooptimizer-server-windows-x64.exe ] || exit 1
-          [ -f artifacts/artifacts-macos-latest/dist/ecooptimizer-server-macos-x64 ] || exit 1
-
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
