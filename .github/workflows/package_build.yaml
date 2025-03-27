@@ -33,7 +33,9 @@ jobs:
           pip install build wheel pyinstaller
 
       - name: Build package
-        run: python -m build --wheel --no-isolation
+        run: |
+          python -m build --wheel --no-isolation
+          ls dist/
         
       - name: Fix Windows wheel names
         if: runner.os == 'Windows'
