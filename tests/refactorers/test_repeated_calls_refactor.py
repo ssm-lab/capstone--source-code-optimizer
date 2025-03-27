@@ -185,8 +185,8 @@ def test_crc_instance_method_repeated(source_files, refactorer):
 
         def test_case():
             demo1 = Demo(1)
-            cached_demo1_compute = demo1.compute()
             demo2 = Demo(2)
+            cached_demo1_compute = demo1.compute()
             result1 = cached_demo1_compute
             result2 = demo2.compute()
             result3 = cached_demo1_compute

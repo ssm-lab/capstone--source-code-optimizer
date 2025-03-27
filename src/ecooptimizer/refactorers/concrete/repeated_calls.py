@@ -54,17 +54,20 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
         if not parent_node:
             return
 
-        # Determine the insertion point for the cached variable
-        insert_line = self._find_insert_line(parent_node)
-        indent = self._get_indentation(lines, insert_line)
+        # Find the first occurrence line
+        first_occurrence = min(occ.line for occ in self.smell.occurences)
+
+        # Get the indentation of the first occurrence
+        indent = self._get_indentation(lines, first_occurrence)
         cached_assignment = f"{indent}{self.cached_var_name} = {self.call_string}\n"
 
-        # Insert the cached variable into the source lines
-        lines.insert(insert_line - 1, cached_assignment)
+        # Insert the cached variable at the first occurrence line
+        lines.insert(first_occurrence - 1, cached_assignment)
         line_shift = 1  # Track the shift in line numbers caused by the insertion
 
         # Replace calls with the cached variable in the affected lines
         for occurrence in self.smell.occurences:
+            # Adjust line number considering the insertion
             adjusted_line_index = occurrence.line - 1 + line_shift
             original_line = lines[adjusted_line_index]
             updated_line = self._replace_call_in_line(
@@ -102,57 +105,6 @@ class CacheRepeatedCallsRefactorer(BaseRefactorer[CRCSmell]):
                 if all(self._line_in_node_body(node, occ.line) for occ in self.smell.occurences):
                     candidate_parent = node
         return candidate_parent
-
-    def _find_insert_line(self, parent_node: ast.FunctionDef | ast.ClassDef | ast.Module):
-        """
-        Find the line to insert the cached variable assignment.
-
-        - If it's a function, insert at the beginning but **after a docstring** if present.
-        - If it's a method call (`obj.method()`), insert after `obj` is defined.
-        - If it's a lambda assignment (`compute_demo = lambda ...`), insert after it.
-        """
-        if isinstance(parent_node, ast.Module):
-            return 1  # Top of the module
-
-        # Extract variable or function name from call string
-        var_match = re.match(r"(\w+)\.", self.call_string)  # Matches `obj.method()`
-        if var_match:
-            obj_name = var_match.group(1)  # Extract `obj`
-
-            # Find the first assignment of `obj`
-            for node in parent_node.body:
-                if isinstance(node, ast.Assign):
-                    if any(
-                        isinstance(target, ast.Name) and target.id == obj_name
-                        for target in node.targets
-                    ):
-                        return node.lineno + 1  # Insert after the assignment of `obj`
-
-        # Find the first lambda assignment
-        for node in parent_node.body:
-            if isinstance(node, ast.Assign) and isinstance(node.value, ast.Lambda):
-                lambda_var_name = node.targets[0].id  # Extract variable name
-                if lambda_var_name in self.call_string:
-                    return node.lineno + 1  # Insert after the lambda function
-
-        # Check if the first statement is a docstring
-        if (
-            isinstance(parent_node.body[0], ast.Expr)
-            and isinstance(parent_node.body[0].value, ast.Constant)
-            and isinstance(parent_node.body[0].value.value, str)  # Ensures it's a string docstring
-        ):
-            docstring_start = parent_node.body[0].lineno
-            docstring_end = docstring_start
-
-            # Find the last line of the docstring by counting the lines it spans
-            docstring_content = parent_node.body[0].value.value
-            docstring_lines = docstring_content.count("\n")
-            if docstring_lines > 0:
-                docstring_end += docstring_lines
-
-            return docstring_end + 1  # Insert after the last line of the docstring
-
-        return parent_node.body[0].lineno  # Default: insert at function start
 
     def _line_in_node_body(self, node: ast.FunctionDef | ast.ClassDef | ast.Module, line: int):
         """
