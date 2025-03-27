@@ -1,0 +1,42 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [packaging-test]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install tools
+        run: pip install build wheel pyinstaller
+
+      - name: Build package
+        run: python -m build --wheel --no-isolation
+
+      - name: Create executable
+        run: |
+          pip install ./dist/*.whl
+          pyinstaller --onefile --name ecodevserver eco-ext-dev
+          pyinstaller --onefile --name ecoserver eco-ext
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Version ${{ github.ref_name }}"
+          body: "Pre-built package and executable"
+          files: |
+            dist/*.whl
+            dist/ecodevserver*
+            dist/ecoserver*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
