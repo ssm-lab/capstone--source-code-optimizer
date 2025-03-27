@@ -7,14 +7,12 @@
 \usepackage{xcolor}
 \usepackage{blindtext}
 
-
 \title{Problem Statement and Goals\\\progname}
 
 % Test line
 % Test again 1
 
 \author{\authname}
-
 
 \date{}
 
@@ -95,8 +93,9 @@ original functionality.
 \end{enumerate}
 
 \subsection{Environment}
-\textbf{Reinforcement Learning Library:} \textit{Stable Baselines} will be the library to implement reinforcement learning techniques.\\
-\textbf{Development Frameworks and Tools:} 
+\textbf{Reinforcement Learning Library:} \textit{Stable Baselines}
+will be the library to implement reinforcement learning techniques.\\
+\textbf{Development Frameworks and Tools:}
 \begin{enumerate}
 
     \item \textit{GitHub} will be used for version control and for CI/CD integration to automate refactoring processes.
@@ -107,7 +106,8 @@ original functionality.
 
 \section{Goals}
 
-Our goal is to reduce the energy consumption of Python codebases during execution. We plan to achieve this by developing two core components:
+Our goal is to reduce the energy consumption of Python codebases
+during execution. We plan to achieve this by developing two core components:
 
 \begin{enumerate}
     \item \textbf{Refactoring Library:} \\
@@ -126,20 +126,34 @@ Our goal is to reduce the energy consumption of Python codebases during executio
 \section{Stretch Goals}
 
 \begin{enumerate}
-    \item \textbf{GitHub Integration for DevOps Pipelines:}
+  \item \textbf{GitHub Integration for DevOps Pipelines:}
     \begin{itemize}
-        \item \textbf{Automated Refactoring:} We aim to build a feature that can be integrated into GitHub’s DevOps pipelines, which would automatically refactor Python code present in the pipeline to a more energy-efficient version.
-        \item \textbf{Test Compatibility:} This feature will work in tandem with the user's test suites to ensure that the refactored code maintains its original behaviour. This is done to ensure smooth adoption within CI/CD workflows.
+      \item \textbf{Automated Refactoring:} We aim to build a feature
+        that can be integrated into GitHub’s DevOps pipelines, which
+        would automatically refactor Python code present in the
+        pipeline to a more energy-efficient version.
+      \item \textbf{Test Compatibility:} This feature will work in
+        tandem with the user's test suites to ensure that the
+        refactored code maintains its original behaviour. This is
+        done to ensure smooth adoption within CI/CD workflows.
     \end{itemize}
 
-    \item \textbf{Reinforcement Learning Model:} \\
-    The goal is to build a model that evolves its refactoring recommendations over time to maximize energy efficiency while aligning with developer preferences. The model achieves this by:
+  \item \textbf{Reinforcement Learning Model:} \\
+    The goal is to build a model that evolves its refactoring
+    recommendations over time to maximize energy efficiency while
+    aligning with developer preferences. The model achieves this by:
     \begin{itemize}
-        \item Incrementally identifying energy optimization techniques from past refactorings that result in larger net reductions in energy consumption.
-        \item Prioritizing energy-efficient refactorings that align with the developer's personal preferences, such as a preference for fewer lines of code or specific coding styles. The model will account for the acceptance or rejection of refactorings, tailoring future suggestions to suit individual developer styles.
+      \item Incrementally identifying energy optimization techniques
+        from past refactorings that result in larger net reductions
+        in energy consumption.
+      \item Prioritizing energy-efficient refactorings that align
+        with the developer's personal preferences, such as a
+        preference for fewer lines of code or specific coding styles.
+        The model will account for the acceptance or rejection of
+        refactorings, tailoring future suggestions to suit individual
+        developer styles.
     \end{itemize}
 \end{enumerate}
-
 
 \section{Challenge Level and Extras}
 
@@ -154,13 +168,15 @@ it is anticipated the overall scope and depth of the work is to be manageable wi
 given timeframe. \\
 
 \noindent
-To further enhance the project and address any potential gaps in the challenge level,
+To further enhance the project and address any potential gaps in the
+challenge level,
 we propose two additional activities: User Documentation and Usability Testing.
 These extras will allow us to provide support for future users of the tool and
 ensure that the tool meets user expectations and accessibility standards.\\
 
 \noindent
-Approval of the challenge level and extras will be discussed with the instructor,
+Approval of the challenge level and extras will be discussed with the
+instructor,
 and adjustments may be made as needed throughout the term.
 
 \newpage{}
@@ -170,33 +186,89 @@ and adjustments may be made as needed throughout the term.
 \subsubsection*{Mya Hussain Reflection}
 
 \begin{enumerate}
-    \item \textit{What went well while writing this deliverable?}
-    
-    Our team was able to create a clear and concise plan as to what we were trying to achieve and investigate the details as to how we could potentially achieve it. We were able to brainstorm multiple possible routes to take depending on how successful we are while developing. We were also able to reach out to our supervising professor and receive many research papers that helped bring us up to speed as to what this project would require, so that we could set out realistic goals for the project.
-    \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
-    
-    A lot of time was taken for the research papers we requested from our supervisor to actually hit our inboxes. In the meantime, we were on our own to brainstorm solutions for the problem. This was both a positive and a negative as on the positive side we got to do some self-study and think of some new ideas from scratch. While on the downside, we didn’t know if our brainstormed ideas were methodologies our supervisor would want us to use. Learning with mentorship is great because we were able to gain confidence that what we were doing was correct due to our supervisor’s experience. Being able to explore the project on our own was cool because we got to investigate a lot of different technologies surrounding the space regardless of how efficient the solution may be. So, in the end, our pain points were just learning experiences, before we were thrown a life vest.
-    
+  \item \textit{What went well while writing this deliverable?}
 
-    \item \textit{How did you and your team adjust the scope of your goals to ensure they
-    are suitable for a Capstone project (not overly ambitious but also of ap-
+    Our team was able to create a clear and concise plan as to what
+    we were trying to achieve and investigate the details as to how
+    we could potentially achieve it. We were able to brainstorm
+    multiple possible routes to take depending on how successful we
+    are while developing. We were also able to reach out to our
+    supervising professor and receive many research papers that
+    helped bring us up to speed as to what this project would
+    require, so that we could set out realistic goals for the project.
+  \item \textit{What pain points did you experience during this
+    deliverable, and how did you resolve them?}
+
+    A lot of time was taken for the research papers we requested from
+    our supervisor to actually hit our inboxes. In the meantime, we
+    were on our own to brainstorm solutions for the problem. This was
+    both a positive and a negative as on the positive side we got to
+    do some self-study and think of some new ideas from scratch.
+    While on the downside, we didn’t know if our brainstormed ideas
+    were methodologies our supervisor would want us to use. Learning
+    with mentorship is great because we were able to gain confidence
+    that what we were doing was correct due to our supervisor’s
+    experience. Being able to explore the project on our own was cool
+    because we got to investigate a lot of different technologies
+    surrounding the space regardless of how efficient the solution
+    may be. So, in the end, our pain points were just learning
+    experiences, before we were thrown a life vest.
+
+
+  \item \textit{How did you and your team adjust the scope of your
+      goals to ensure they
+      are suitable for a Capstone project (not overly ambitious but also of ap-
     propriate complexity for a senior design project)?}
 
-    My team and I started the project off by getting very familiar with each other’s strengths and weaknesses. We shared resumes, transcripts and highlighted all the former experiences we had before selecting a project that most aligned with our combined skillsets. Once we had a project, setting goals was the easy part as in our goals we ensured that we would have fallbacks if the project was overly ambitious allowing us to jump with a safety net. For example, we initially discussed the potential for developing a neural network that chooses the best refactoring for a given code input. Recognizing that we have low ML experience between us we opted to implement an algorithmic approach for our POC and attempt an ML implementation in the seconf semester if the first one works properly. We also ensured that there would be middlemen libraries we could pull from if we were unsuccessful in writing all the code ourselves. The clearest example of this is there being smell detection code readily available in many online free to use libraries. Planning out these fallbacks between ourselves made sure everyone was comfortable with the project and that we could tweak the difficulty as time went by being that we are trying something new.
+    My team and I started the project off by getting very familiar
+    with each other’s strengths and weaknesses. We shared resumes,
+    transcripts and highlighted all the former experiences we had
+    before selecting a project that most aligned with our combined
+    skillsets. Once we had a project, setting goals was the easy part
+    as in our goals we ensured that we would have fallbacks if the
+    project was overly ambitious allowing us to jump with a safety
+    net. For example, we initially discussed the potential for
+    developing a neural network that chooses the best refactoring for
+    a given code input. Recognizing that we have low ML experience
+    between us we opted to implement an algorithmic approach for our
+    POC and attempt an ML implementation in the seconf semester if
+    the first one works properly. We also ensured that there would be
+    middlemen libraries we could pull from if we were unsuccessful in
+    writing all the code ourselves. The clearest example of this is
+    there being smell detection code readily available in many online
+    free to use libraries. Planning out these fallbacks between
+    ourselves made sure everyone was comfortable with the project and
+    that we could tweak the difficulty as time went by being that we
+    are trying something new.
 
-
-\end{enumerate}  
+\end{enumerate}
 
 \subsubsection*{Ayushi Amin Reflection}
 
 \begin{enumerate}
-    \item \textit{What went well while writing this deliverable?}
+  \item \textit{What went well while writing this deliverable?}
 
-      Writing the deliverable went quite well overall. The project itself was well defined and we were able to meet with the industry supervisor which helped clarify most of the details. Our team worked well together which helped each member to clarify any concerns particularly about the database we decided to use. Our team had some good discussions regarding making decisions on  what languages and tools to use in the project such as our decision to use MySQL for our database.
+    Writing the deliverable went quite well overall. The project
+    itself was well defined and we were able to meet with the
+    industry supervisor which helped clarify most of the details. Our
+    team worked well together which helped each member to clarify any
+    concerns particularly about the database we decided to use. Our
+    team had some good discussions regarding making decisions on
+    what languages and tools to use in the project such as our
+    decision to use MySQL for our database.
 
-    \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+  \item \textit{What pain points did you experience during this
+    deliverable, and how did you resolve them?}
 
-    Not all the information was clarified or given by the supervisor at an early stage so writing this document took some time which caused us to delay working on this for a couple days. The team and I decided to consistently check in with the supervisor to encourage him to provide the required documents and information we needed as soon as possible. We used email as well as discord to directly reach out to the supervisor in which we finally ended up getting the information two days before the deadline and then crammed to finish the milestone documents.
+    Not all the information was clarified or given by the supervisor
+    at an early stage so writing this document took some time which
+    caused us to delay working on this for a couple days. The team
+    and I decided to consistently check in with the supervisor to
+    encourage him to provide the required documents and information
+    we needed as soon as possible. We used email as well as discord
+    to directly reach out to the supervisor in which we finally ended
+    up getting the information two days before the deadline and then
+    crammed to finish the milestone documents.
 
 \end{enumerate}
 
@@ -204,40 +276,76 @@ and adjustments may be made as needed throughout the term.
 \begin{enumerate}
   \item \textit{What went well while writing this deliverable?}
 
-    Right off the bat, I want to say that this deliverable was characterized by a great sense of \textit{discovery}. I learnt more about my team members and what there goals are. I learnt more about the project we had chosen and our supervisor's reasoning behind proposing it. I learnt new information on topics that were novel to me. This deliverable has filled me with a sense of excitement and a budding confidence that I hope will only continue to grow. \\
+    Right off the bat, I want to say that this deliverable was
+    characterized by a great sense of \textit{discovery}. I learnt
+    more about my team members and what there goals are. I learnt
+    more about the project we had chosen and our supervisor's
+    reasoning behind proposing it. I learnt new information on topics
+    that were novel to me. This deliverable has filled me with a
+    sense of excitement and a budding confidence that I hope will
+    only continue to grow. \\
 
-    There is much to learn about the project my team has chosen. Being able to go through the process of breaking it down and identifying what technologies will be used, and what features our system will have makes our project more concrete. Compared to the start of the project when things seemes more vague and daunting, there remains a sense that we will achieve what we have set out to do.
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+    There is much to learn about the project my team has chosen.
+    Being able to go through the process of breaking it down and
+    identifying what technologies will be used, and what features our
+    system will have makes our project more concrete. Compared to the
+    start of the project when things seemes more vague and daunting,
+    there remains a sense that we will achieve what we have set out to do.
+  \item \textit{What pain points did you experience during this
+    deliverable, and how did you resolve them?}
 
-    Of course, not everything is just sunshine and roses. Having to deconstruct a project with concepts that you are only vaguely familiar with can be an overwhelming task. While we were able to seek guidance from our supervisor, the onus was still on us to slowly unravel this new mass of information and piece it together in a coherent and structured manner. Our supervisor has been out of country and in a different time zone which has led to a gap in discourse. There were times when our team was left scratching our heads trying to figure out what the best way or, at the very least, what would be a \textit{suitable} way to plan out our project.
+    Of course, not everything is just sunshine and roses. Having to
+    deconstruct a project with concepts that you are only vaguely
+    familiar with can be an overwhelming task. While we were able to
+    seek guidance from our supervisor, the onus was still on us to
+    slowly unravel this new mass of information and piece it together
+    in a coherent and structured manner. Our supervisor has been out
+    of country and in a different time zone which has led to a gap in
+    discourse. There were times when our team was left scratching our
+    heads trying to figure out what the best way or, at the very
+    least, what would be a \textit{suitable} way to plan out our project.
 
 \end{enumerate}
-
 
 \subsubsection*{Nivetha Kuruparan Reflection}
 \begin{enumerate}
   \item \textit{What went well while writing this deliverable?}
 
-    Writing this deliverable went smoothly and was an important learning experience for the team.
-    Meeting with our project supervisor early on helped us clarify the project’s scope and objectives,
-    making it easier to define the problem and outline the technical aspects. We had many discussions
-    about which tools and technologies to use, and these conversations helped solidify key decisions,
-    like selecting Python for the development language. By collaborating on this deliverable, it gave
-    us a better understanding of our team's strengths and priorities and sets a positive tone for the
+    Writing this deliverable went smoothly and was an important
+    learning experience for the team.
+    Meeting with our project supervisor early on helped us clarify
+    the project’s scope and objectives,
+    making it easier to define the problem and outline the technical
+    aspects. We had many discussions
+    about which tools and technologies to use, and these
+    conversations helped solidify key decisions,
+    like selecting Python for the development language. By
+    collaborating on this deliverable, it gave
+    us a better understanding of our team's strengths and priorities
+    and sets a positive tone for the
     project moving forward.
 
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+  \item \textit{What pain points did you experience during this
+    deliverable, and how did you resolve them?}
 
-    During this deliverable, we faced a few challenges related to efficiently planning a large software
-    project. One of the main pain points was learning how to set realistic goals that aligned with our
-    team's capabilities and timeline. Initially, there was a temptation to create our own refactoring
-    library from scratch in Rust (where no team member has experience in coding), which felt ambitious
+    During this deliverable, we faced a few challenges related to
+    efficiently planning a large software
+    project. One of the main pain points was learning how to set
+    realistic goals that aligned with our
+    team's capabilities and timeline. Initially, there was a
+    temptation to create our own refactoring
+    library from scratch in Rust (where no team member has experience
+    in coding), which felt ambitious
     and overwhelming as we considered the scope of the project.
 
-    To resolve this, we decided to utilize the resources and guidance provided by our supervisor. By using
-    existing tools and libraries, we can focus on ensuring that the refactoring processes work effectively
-    without getting bogged down in the complexities of building everything from the ground up. This
-    experience reinforced the importance of planning when tackling large projects.
+    To resolve this, we decided to utilize the resources and guidance
+    provided by our supervisor. By using
+    existing tools and libraries, we can focus on ensuring that the
+    refactoring processes work effectively
+    without getting bogged down in the complexities of building
+    everything from the ground up. This
+    experience reinforced the importance of planning when tackling
+    large projects.
 
 \end{enumerate}
 
@@ -245,23 +353,40 @@ and adjustments may be made as needed throughout the term.
 \begin{enumerate}
   \item \textit{What went well while writing this deliverable?}
 
-    This deliverable has set a great starting point for us as the prompts instigated multiple discussions among each other. This document will serve as a great point to begin discussing the architecture for our project.
+    This deliverable has set a great starting point for us as the
+    prompts instigated multiple discussions among each other. This
+    document will serve as a great point to begin discussing the
+    architecture for our project.
 
-  \item \textit{What pain points did you experience during this deliverable, and how did you resolve them?}
+  \item \textit{What pain points did you experience during this
+    deliverable, and how did you resolve them?}
 
-    After having had two meetings with our Supervisor and multiple discussions with team members, I had the impression that we have a clear idea of what our goals are. However, when writing down the Goals and Stretch Goals, it was clear that our idea had gaps of ambiguity. While the development plan clarified multiple areas of intial project setup and other logistics for the team, I am glad that this document helped us identify certain aspects of our project that were unclear and needed additional discussion. After listening to everyone's idea abou the ambiguous components and doing additional research, I was able to clearly document the goals.
+    After having had two meetings with our Supervisor and multiple
+    discussions with team members, I had the impression that we have
+    a clear idea of what our goals are. However, when writing down
+    the Goals and Stretch Goals, it was clear that our idea had gaps
+    of ambiguity. While the development plan clarified multiple areas
+    of intial project setup and other logistics for the team, I am
+    glad that this document helped us identify certain aspects of our
+    project that were unclear and needed additional discussion. After
+    listening to everyone's idea abou the ambiguous components and
+    doing additional research, I was able to clearly document the goals.
 
 \end{enumerate}
 
 \subsubsection*{Group Answers Reflection}
 \begin{enumerate}
-  \item \textit{How did you and your team adjust the scope of your goals to ensure they are suitable for a Capstone project (not overly 
-  ambitious but also of appropriate complexity for a senior design project)?}
-  
-  We carefully adjusted our project scope by focusing on the most important goals and prioritizing features that mattered most, while also 
-  setting clear milestones to keep us on track. The feedback we got from our supervisor helped us refine our goals, making sure we were ambitious but
-  also realistic about what we could achieve.
-    
+  \item \textit{How did you and your team adjust the scope of your
+      goals to ensure they are suitable for a Capstone project (not overly
+    ambitious but also of appropriate complexity for a senior design project)?}
+
+    We carefully adjusted our project scope by focusing on the most
+    important goals and prioritizing features that mattered most, while also
+    setting clear milestones to keep us on track. The feedback we got
+    from our supervisor helped us refine our goals, making sure we
+    were ambitious but
+    also realistic about what we could achieve.
+
 \end{enumerate}
 
 \bibliographystyle {plainnat}
