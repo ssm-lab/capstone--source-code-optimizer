@@ -73,6 +73,7 @@ jobs:
       
           # 4. Build and rename executable
           pyinstaller --onefile --name ecoserver "$scriptPath"
+          ls dist/
           Move-Item -Force "dist\ecoserver.exe" "dist\ecoserver-${{ matrix.artifact_name }}"
 
       - name: Create macOS executable
