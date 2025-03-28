@@ -236,9 +236,7 @@ None
 
 \subsubsection{Local Functions}
 None.
-  
 
-\newpage
 
 \section{MIS of BaseRefactorer} \label{mis:baseR}
 
@@ -399,8 +397,6 @@ None
   \item \textbf{Exception}: None
 \end{itemize}
 
-\newpage
-
 \section{MIS of LongMessageChainRefactorer} \label{mis:LMC}
 
 \texttt{LongMessageChainRefactorer}
@@ -523,7 +519,6 @@ Inherits from \texttt{BaseRefactorer}
   \item \textbf{Exception}: None
 \end{itemize}
 
-~\newpage
 
 \section{MIS of LongLambdaFunctionRefactorer} \label{mis:LLF}
 
@@ -549,7 +544,7 @@ None
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
 \texttt{LongLambdaFunctionRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\\hline
-\texttt{refactor} & \texttt{file\_path: Path, smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{IOError} \\\hline
+\texttt{refactor} & \texttt{file\_path: Path, smell: Smell, initial\_emi \allowbreak ssions: $\mathbb{R}$} & None & \texttt{IOError} \\\hline
 \texttt{identify\_lambdas} & \texttt{node: AST} & \texttt{List[Lambda]} & None \\\hline
 \texttt{extract\_lambda\_components} & \texttt{lambda\_node: Lambda} & \texttt{(List[str], str)} & None \\\hline
 \texttt{generate\_function\_name} & \texttt{lambda\_body: str} & \texttt{str} & None \\\hline
@@ -655,7 +650,6 @@ Inherits from \texttt{BaseRefactorer}
   \item \textbf{Exception}: None
 \end{itemize}
 
-~\newpage
 
 \section{MIS of LongParameterListRefactorer} \label{Module} 
 
@@ -923,8 +917,6 @@ None
   \item \textbf{Exception}: Requires valid node references
   \end{itemize}
 
-  
-\newpage
 
 \section{MIS of MakeMethodStaticRefactorer} \label{mis:MakeStatic}
 
@@ -1420,7 +1412,6 @@ None
   \item \textbf{Exception}: None
 \end{itemize}
 
-\newpage
 \section{MIS of UseAGeneratorRefactorer} \label{mis:UseGen}
 
 \texttt{UseAGeneratorRefactorer}
@@ -1483,9 +1474,7 @@ None
 \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: 
-R
-R)}}
+\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
 \begin{itemize}
 \item \textbf{Transition}:
 \begin{itemize}
@@ -1517,8 +1506,6 @@ R)}}
 \item \textbf{Output}: Modified syntax tree
 \item \textbf{Exception}: None
 \end{itemize}
-
-\newpage
 
 \section{MIS of CacheRepeatedCallsRefactorer} \label{mis:CacheCalls}
 
@@ -1638,7 +1625,6 @@ None
   \item \textbf{Exception}: None
 \end{itemize}
 
-\newpage
 
 \section{MIS of PluginInitiator}
 
