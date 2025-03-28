@@ -30,12 +30,11 @@ jobs:
       - name: Install tools
         run: |
           python -m pip install --upgrade pip
-          pip install build wheel pyinstaller
+          pip install pyinstaller
 
       - name: Build package
         run: |
-          python -m build --wheel --no-isolation
-          ls dist/
+          python install .
         
       - name: Fix Windows wheel names
         if: runner.os == 'Windows'
@@ -51,7 +50,6 @@ jobs:
       - name: Create Linux executable
         if: matrix.os == 'ubuntu-latest'
         run: |
-          pip install ./dist/*.whl
           pyinstaller --onefile --name ecooptimizer-server $(which eco-ext)
           mv dist/ecooptimizer-server dist/ecooptimizer-server-${{ matrix.artifact_name }}
 
@@ -84,7 +82,6 @@ jobs:
       - name: Create macOS executable
         if: matrix.os == 'macos-latest'
         run: |
-          pip install ./dist/*.whl
           pyinstaller --onefile --name ecooptimizer-server $(which eco-ext)
           mv dist/ecooptimizer-server dist/ecooptimizer-server-${{ matrix.artifact_name }}
 
@@ -96,7 +93,6 @@ jobs:
         with:
           name: artifacts-${{ matrix.os }}
           path: |
-            dist/*.whl
             dist/ecooptimizer-server-*
             dist/ecooptimizer-server-dev-*
           if-no-files-found: error
@@ -123,7 +119,6 @@ jobs:
             **Included Artifacts:**
             - Production Server: `ecooptimizer-server-<platform>`
             - Development Server: `ecooptimizer-server-dev-<platform>`
-            - Wheel Package: `ecooptimizer-*.whl`
           files: |
             artifacts/artifacts-ubuntu-latest/*
             artifacts/artifacts-windows-latest/*
