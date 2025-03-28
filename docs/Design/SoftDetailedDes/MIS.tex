@@ -1910,7 +1910,7 @@ None
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{File Highlighter} for providing contextual information about highlighted smells.
+\item \texttt{View Provider} for managing hover display and updates
 \end{itemize}
 
 \subsection{Syntax}
@@ -1922,8 +1922,8 @@ None
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
   \hline
-  \texttt{showHover} & \texttt{position: Position} & None & None \\ \hline
-  \texttt{clearHover} & \texttt{None} & None & None \\
+  \texttt{register} & \texttt{context: vscode.ExtensionContext} & void & None \\ \hline
+  \texttt{provideHover} & \texttt{document: TextDocument, position: Position, token: CancellationToken} & ProviderResult<Hover> & None \\
   \hline
 \end{tabularx}
 
@@ -1931,29 +1931,31 @@ None
 
 \subsubsection{State Variables}
 \begin{itemize}
-\item \texttt{currentHover}: Stores the currently displayed hover information.
+\item \texttt{cacheManager}: CacheManager - Reference to the cache manager
 \end{itemize}
 
 \subsubsection{Environment Variables}
 None
 
-
 \subsubsection{Assumptions}
-None
-
-\subsubsection{Access Routine Semantics}
-\texttt{showHover(position: Position)}
 \begin{itemize}
-\item \textbf{Transition}: Displays hover information at the specified position.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
+\item VS Code editor is active with a Python file open
+\item Valid hover position is provided
 \end{itemize}
 
-\texttt{clearHover()}
+\subsubsection{Access Routine Semantics}
+\texttt{register(context: vscode.ExtensionContext)}
 \begin{itemize}
-\item \textbf{Transition}: Clears any active hover information.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
+\item \textbf{Transition}: Registers hover provider for Python files
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{provideHover(document, position, token)}
+\begin{itemize}
+\item \textbf{Transition}: Provides hover content with smell information
+\item \textbf{Output}: Hover content or undefined
+\item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -1965,58 +1967,60 @@ None
 \texttt{Refactor Manager} manages the process of applying refactorings to detected smells.
 
 \subsection{Uses}
-None
+\begin{itemize}
+\item \texttt{EnergyMetrics} for tracking refactoring impact
+\item \texttt{CacheManager} for managing refactoring state
+\item \texttt{EventManager} for handling refactoring events
+\end{itemize}
 
 \subsection{Syntax}
 
 \textbf{Exported Constants:} None
 
 \textbf{Exported Access Programs:}\\
+
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \toprule Name & In & Out & Exceptions \\
-  \midrule
-  \texttt{applyRefactor} & \texttt{refactor: Refactor} & None & Validation error \\ \hline
-  \texttt{previewRefactor} & \texttt{refactor: Refactor} & None & None \\ \hline
-  \texttt{undoRefactor} & None & None & None \\
-  \bottomrule
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
+  \hline
+  \texttt{register} & \texttt{context: vscode.ExtensionContext} & void & None \\ \hline
+  \texttt{provideHover} & \texttt{document: TextDocument, position: Position, token: CancellationToken} & ProviderResult<Hover> & None \\
+  \hline
 \end{tabularx}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 \begin{itemize}
-\item \texttt{appliedRefactors}: Stores a history of applied refactors.
+\item \texttt{serverStatus}: ServerStatusType - Current status of the backend server
 \end{itemize}
 
 \subsubsection{Environment Variables}
-None
-
+\begin{itemize}
+\item \texttt{WORKSPACE\_CONFIGURED\_PATH}: string - Path to workspace configuration
+\end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item The refactoring data is valid and corresponds to detected smells.
+\item Backend server is operational
+\item Valid workspace configuration exists
+\item Smell data is valid and complete
+\item Required view providers are initialized
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
-\texttt{applyRefactor(refactor: Refactor)}
+\texttt{refactor(smellsViewProvider, refactoringDetailsViewProvider, smell, context, isRefactorAllOfType)}
 \begin{itemize}
-\item \textbf{Transition}: Applies the provided refactor to the active editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: Logs validation errors if the refactor cannot be applied.
+\item \textbf{Transition}: Orchestrates complete refactoring workflow
+\item \textbf{Output}: Promise resolving to void
+\item \textbf{Exception}: Throws error for validation failures
 \end{itemize}
 
-\texttt{previewRefactor(refactor: Refactor)}
+\texttt{startRefactorSession(smell, refactoredData, refactoringDetailsViewProvider)}
 \begin{itemize}
-\item \textbf{Transition}: Displays a preview of the refactor in the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\texttt{undoRefactor()}
-\begin{itemize}
-\item \textbf{Transition}: Reverts the most recently applied refactor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
+\item \textbf{Transition}: Initializes and manages refactoring session
+\item \textbf{Output}: Promise resolving to void
+\item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
