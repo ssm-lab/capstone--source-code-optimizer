@@ -32,21 +32,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller
 
-      - name: Build package
+      - name: Install package
         run: |
-          python install .
+          pip install .
         
-      - name: Fix Windows wheel names
-        if: runner.os == 'Windows'
-        shell: cmd
-        run: |
-          cd dist
-          for %%f in (*-cp*-*-*.whl) do (
-            for /f "tokens=1-3* delims=-" %%a in ("%%~nf") do (
-              ren "%%f" "%%a-%%b-py3-none-%%d.whl"
-            )
-          )
-
       - name: Create Linux executable
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -60,13 +49,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
-          # 1. Find the exact wheel file
-          $wheelPath = (Get-ChildItem dist -Filter "ecooptimizer-*.whl" | Select-Object -First 1).FullName
-          if (-not $wheelPath) { Write-Error "No wheel file found"; exit 1 }
-      
-          # 2. Install using absolute path
-          pip install "$wheelPath"
-      
           $entryProd = python -c "from importlib.metadata import entry_points; print([ep.value for ep in entry_points()['console_scripts'] if ep.name == 'eco-ext'][0])"
           $pyPathProd = $entryProd.Split(':')[0].Replace('.', '\') + '.py'
 
