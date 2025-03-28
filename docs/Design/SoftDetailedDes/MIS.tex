@@ -1630,16 +1630,16 @@ None
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\ 
     \hline
-    \texttt{checkServerStatus} & None & Promise<void> & Network Error \\
+    \texttt{checkServerStatus} & None & Promise$<$void$>$ & Network Error \\
     \hline
-    \texttt{initLogs} & \texttt{log\_dir: string} & Promise<boolean> & Network Error \\
+    \texttt{initLogs} & \texttt{log\_dir: string} & Promise$<$boolean$>$ & Network Error \\
     \hline
-    \texttt{fetchSmells} & \texttt{filePath: string, enabledSmells: Record<string, Record<string, number | string>>} & 
-    Promise<\{smells: Smell[], status: number\}> & Network Error \\
+    \texttt{fetchSmells} & \texttt{filePath: string, enabledSmells: Record$<$string, Record$<$string, number | string$>$$>$} &
+    Promise$<$\{smells: Smell[], status: number\}$>$ & Network Error \\
     \hline
-    \texttt{backendRefactor\allowbreak Smell} & \texttt{smell: Smell, workspacePath: string} & Promise<RefactoredData> & Network Error \\
+    \texttt{backendRefactor\allowbreak Smell} & \texttt{smell: Smell, workspacePath: string} & Promise$<$RefactoredData$>$ & Network Error \\
     \hline
-    \texttt{backendRefactor\allowbreak SmellType} & \texttt{smell: Smell, workspacePath: string} & Promise<RefactoredData> & Network Error \\
+    \texttt{backendRefactor\allowbreak SmellType} & \texttt{smell: Smell, workspacePath: string} & Promise$<$RefactoredData$>$ & Network Error \\
     \hline
 \end{tabularx}
 
@@ -1675,7 +1675,7 @@ None
 \noindent\texttt{initLogs(log\_dir: string)}
 \begin{itemize}
     \item \textbf{Transition}: Initialises and synchronises logs with the backend server
-    \item \textbf{Output}: Promise<boolean> indicating success or failure
+    \item \textbf{Output}: Promise$<$boolean$>$ indicating success or failure
     \item \textbf{Exception}: Logs initialisation errors and returns false
 \end{itemize}
 
@@ -1726,9 +1726,9 @@ None
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
-  \texttt{detectSmellsFile} & \texttt{filePath: string, smellsViewProvider: SmellsViewProvider, cacheManager: CacheManager} & Promise<void> & Analysis Error \\
+  \texttt{detectSmellsFile} & \texttt{filePath: string, smellsViewProvider: SmellsViewProvider, cacheManager: CacheManager} & Promise$<$void$>$ & Analysis Error \\
   \hline
-  \texttt{detectSmellsFolder} & \texttt{folderPath: string, smellsViewProvider: SmellsViewProvider, cacheManager: CacheManager} & Promise<void> & Analysis Error \\
+  \texttt{detectSmellsFolder} & \texttt{folderPath: string, smellsViewProvider: SmellsViewProvider, cacheManager: CacheManager} & Promise$<$void$>$ & Analysis Error \\
   \hline
 \end{tabularx}
 
@@ -1741,7 +1741,7 @@ None
 
 \subsubsection{Environment Variables}
 \begin{itemize}
-\item \texttt{enabledSmells}: Record<string, SmellConfig> - Configuration of enabled smell detectors
+\item \texttt{enabledSmells}: Record$<$string, SmellConfig$>$ - Configuration of enabled smell detectors
 \end{itemize}
 
 \subsubsection{Assumptions}
@@ -1755,7 +1755,7 @@ None
 \subsubsection{Access Routine Semantics}
 \texttt{detectSmellsFile(filePath, smellsViewProvider, cacheManager)}
 \begin{itemize}
-\item \textbf{Transition}: Analyses a single Python file for code smells, updates cache and view
+\item \textbf{Transition}: Checks a Python file using \texttt{precheckAndMarkQueued()}, analyses it for code smells, updates cache and view
 \item \textbf{Output}: Promise resolving to void
 \item \textbf{Exception}: Throws error if analysis fails
 \end{itemize}
@@ -1771,7 +1771,7 @@ None
 \texttt{precheckAndMarkQueued(filePath, smellsViewProvider, cacheManager)}
 \begin{itemize}
 \item \textbf{Transition}: Validates conditions before analysis and manages file status
-\item \textbf{Output}: Promise<boolean> indicating if analysis should proceed
+\item \textbf{Output}: Promise$<$boolean$>$ indicating if analysis should proceed
 \item \textbf{Exception}: None
 \end{itemize}
 
@@ -1928,7 +1928,7 @@ None
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
   \hline
   \texttt{register} & \texttt{context: vscode.ExtensionContext} & void & None \\ \hline
-  \texttt{provideHover} & \texttt{document: TextDocument, position: Position, token: CancellationToken} & ProviderResult<Hover> & None \\
+  \texttt{provideHover} & \texttt{document: TextDocument, position: Position, token: CancellationToken} & ProviderResult$<$Hover$>$ & None \\
   \hline
 \end{tabularx}
 
@@ -1989,7 +1989,7 @@ None
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
   \hline
   \texttt{register} & \texttt{context: vscode.ExtensionContext} & void & None \\ \hline
-  \texttt{provideHover} & \texttt{document: TextDocument, position: Position, token: CancellationToken} & ProviderResult<Hover> & None \\
+  \texttt{provideHover} & \texttt{document: TextDocument, position: Position, token: CancellationToken} & ProviderResult$<$Hover$>$ & None \\
   \hline
 \end{tabularx}
 
@@ -2051,10 +2051,10 @@ None
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
   \hline
-  \texttt{setCachedSmells} & \texttt{filePath: string, smells: Smell[]} & Promise<void> & None \\ \hline
-  \texttt{getCachedSmells} & \texttt{filePath: string} & Smell[] \| undefined & None \\ \hline
+  \texttt{setCachedSmells} & \texttt{filePath: string, smells: Smell[]} & Promise$<$void$>$ & None \\ \hline
+  \texttt{getCachedSmells} & \texttt{filePath: string} & Smell[] \| \text{undefined} & None \\ \hline
   \texttt{hasCachedSmells} & \texttt{filePath: string} & boolean & None \\ \hline
-  \texttt{clearAllCachedSmells} & None & Promise<void> & None \\
+  \texttt{clearAllCachedSmells} & None & Promise$<$void$>$ & None \\
   \hline
 \end{tabularx}
 
@@ -2063,8 +2063,8 @@ None
 \subsubsection{State Variables}
 \begin{itemize}
 \item \texttt{cacheUpdatedEmitter}: EventEmitter - Emits cache update events
-\item \texttt{fileStatuses}: Map<string, string> - Tracks file statuses
-\item \texttt{fileSmells}: Map<string, Smell[]> - Stores cached smells
+\item \texttt{fileStatuses}: Map$<$string, string$>$ - Tracks file statuses
+\item \texttt{fileSmells}: Map$<$string, Smell[]$>$ - Stores cached smells
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -2080,14 +2080,14 @@ None
 \subsubsection{Access Routine Semantics}
 \texttt{setCachedSmells(filePath, smells)}
 \begin{itemize}
-\item \textbf{Transition}: Stores smells in cache for specified file
+\item \textbf{Transition}: Stores smells in cache for specified file using \texttt{generateSmellId()}
 \item \textbf{Output}: Promise resolving to void
 \item \textbf{Exception}: None
 \end{itemize}
 
 \texttt{getCachedSmells(filePath)}
 \begin{itemize}
-\item \textbf{Transition}: Retrieves cached smells for file
+\item \textbf{Transition}: Retrieves cached smells for file using \texttt{hasCachedSmells()}
 \item \textbf{Output}: Array of smells or undefined
 \item \textbf{Exception}: None
 \end{itemize}
@@ -2134,7 +2134,7 @@ None
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
   \hline
   \texttt{toggleSmellFilter} & \texttt{smellKey: string} & void & None \\ \hline
-  \texttt{editSmellFilterOption} & \texttt{item: \{smellKey: string, optionKey: string, value: any\}} & Promise<void> & Validation Error \\ \hline
+  \texttt{editSmellFilterOption} & \texttt{item: \{smellKey: string, optionKey: string, value: any\}} & Promise$<$void$>$ & Validation Error \\ \hline
   \texttt{refresh} & None & void & None \\
   \hline
 \end{tabularx}
@@ -2143,8 +2143,8 @@ None
 
 \subsubsection{State Variables}
 \begin{itemize}
-\item \texttt{filterState}: Map<string, boolean> - Tracks filter states
-\item \texttt{filterOptions}: Map<string, any> - Stores filter options
+\item \texttt{filterState}: Map$<$string, boolean$>$ - Tracks filter states
+\item \texttt{filterOptions}: Map$<$string, any$>$ - Stores filter options
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -2211,7 +2211,7 @@ None
 
 \subsubsection{State Variables}
 \begin{itemize}
-\item \texttt{metricsData}: Record<string, MetricsDataItem> - Stores metrics data
+\item \texttt{metricsData}: Record$<$string, MetricsDataItem$>$ - Stores metrics data
 \item \texttt{onDidChangeTreeData}: EventEmitter - Emits tree data change events
 \end{itemize}
 
@@ -2228,14 +2228,14 @@ None
 \subsubsection{Access Routine Semantics}
 \texttt{updateMetrics(filePath, carbonSaved, smellSymbol)}
 \begin{itemize}
-\item \textbf{Transition}: Updates metrics for file and smell
+\item \textbf{Transition}: Updates metrics for file and smell using \texttt{calculateFileMetrics()} 
 \item \textbf{Output}: None
 \item \textbf{Exception}: None
 \end{itemize}
 
 \texttt{refresh()}
 \begin{itemize}
-\item \textbf{Transition}: Updates metrics display
+\item \textbf{Transition}: Updates metrics display using \texttt{formatNumber()}
 \item \textbf{Output}: None
 \item \textbf{Exception}: None
 \end{itemize}
@@ -2249,7 +2249,6 @@ None
 
 \subsubsection{Local Functions}
 \begin{itemize}
-\item \texttt{calculateFolderMetrics(folderPath, metricsData)}: Calculates metrics for folder
 \item \texttt{calculateFileMetrics(filePath, metricsData)}: Calculates metrics for file
 \item \texttt{formatNumber(number)}: Formats number for display
 \end{itemize}
@@ -2282,8 +2281,8 @@ None
 
 \subsubsection{State Variables}
 \begin{itemize}
-\item \texttt{fileStatuses}: Map<string, string> - Tracks file statuses
-\item \texttt{fileSmells}: Map<string, Smell[]> - Stores smell data
+\item \texttt{fileStatuses}: Map$<$string, string$>$ - Tracks file statuses
+\item \texttt{fileSmells}: Map$<$string, Smell[]$>$ - Stores smell data
 \item \texttt{onDidChangeTreeData}: EventEmitter - Emits tree data change events
 \end{itemize}
 
