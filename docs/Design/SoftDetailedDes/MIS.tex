@@ -2031,6 +2031,380 @@ None
 \subsubsection{Local Functions}
 None
 
+\section{MIS of Cache Manager}
+
+\subsection{Module}
+\texttt{Cache Manager} manages caching of detected smells and file states.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{Backend Communicator} for backend communication
+\item \texttt{View Provider} for UI updates
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
+  \hline
+  \texttt{setCachedSmells} & \texttt{filePath: string, smells: Smell[]} & Promise<void> & None \\ \hline
+  \texttt{getCachedSmells} & \texttt{filePath: string} & Smell[] \| undefined & None \\ \hline
+  \texttt{hasCachedSmells} & \texttt{filePath: string} & boolean & None \\ \hline
+  \texttt{clearAllCachedSmells} & None & Promise<void> & None \\
+  \hline
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{cacheUpdatedEmitter}: EventEmitter - Emits cache update events
+\item \texttt{fileStatuses}: Map<string, string> - Tracks file statuses
+\item \texttt{fileSmells}: Map<string, Smell[]> - Stores cached smells
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item VS Code extension context is valid
+\item File paths are normalized
+\item Smell data structure is consistent
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{setCachedSmells(filePath, smells)}
+\begin{itemize}
+\item \textbf{Transition}: Stores smells in cache for specified file
+\item \textbf{Output}: Promise resolving to void
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{getCachedSmells(filePath)}
+\begin{itemize}
+\item \textbf{Transition}: Retrieves cached smells for file
+\item \textbf{Output}: Array of smells or undefined
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{hasCachedSmells(filePath)}
+\begin{itemize}
+\item \textbf{Transition}: Checks if file has cached smells
+\item \textbf{Output}: boolean
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{clearAllCachedSmells()}
+\begin{itemize}
+\item \textbf{Transition}: Removes all cached smells
+\item \textbf{Output}: Promise resolving to void
+\item \textbf{Exception}: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+\item \texttt{generateSmellId(smell)}: Generates unique ID for smell
+\item \texttt{generateFileHash(filePath)}: Generates hash for file content
+\end{itemize}
+
+\section{MIS of Filter Manager}
+
+\subsection{Module}
+\texttt{Filter Manager} manages filtering of detected smells.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{Cache Manager} for accessing smell data
+\item \texttt{Event Manager} for handling filter events
+\item \texttt{Hover Manager} for displaying filtered smells
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
+  \hline
+  \texttt{toggleSmellFilter} & \texttt{smellKey: string} & void & None \\ \hline
+  \texttt{editSmellFilterOption} & \texttt{item: \{smellKey: string, optionKey: string, value: any\}} & Promise<void> & Validation Error \\ \hline
+  \texttt{refresh} & None & void & None \\
+  \hline
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{filterState}: Map<string, boolean> - Tracks filter states
+\item \texttt{filterOptions}: Map<string, any> - Stores filter options
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item Valid smell keys are provided
+\item Filter options are properly configured
+\item Cache manager is initialized
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{toggleSmellFilter(smellKey)}
+\begin{itemize}
+\item \textbf{Transition}: Toggles filter state for smell
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{editSmellFilterOption(item)}
+\begin{itemize}
+\item \textbf{Transition}: Updates filter option value
+\item \textbf{Output}: Promise resolving to void
+\item \textbf{Exception}: Throws validation error for invalid input
+\end{itemize}
+
+\texttt{refresh()}
+\begin{itemize}
+\item \textbf{Transition}: Updates filter display
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Energy Metrics}
+
+\subsection{Module}
+\texttt{Energy Metrics} manages energy consumption measurements and metrics display.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{View Provider} for displaying metrics
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
+  \hline
+  \texttt{updateMetrics} & \texttt{filePath: string, carbonSaved: number, smellSymbol: string} & void & None \\ \hline
+  \texttt{refresh} & None & void & None \\ \hline
+  \texttt{getTreeItem} & \texttt{element: MetricTreeItem} & TreeItem & None \\
+  \hline
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{metricsData}: Record<string, MetricsDataItem> - Stores metrics data
+\item \texttt{onDidChangeTreeData}: EventEmitter - Emits tree data change events
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item Valid file paths are provided
+\item Metrics data is properly formatted
+\item Tree view is initialized
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{updateMetrics(filePath, carbonSaved, smellSymbol)}
+\begin{itemize}
+\item \textbf{Transition}: Updates metrics for file and smell
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{refresh()}
+\begin{itemize}
+\item \textbf{Transition}: Updates metrics display
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{getTreeItem(element)}
+\begin{itemize}
+\item \textbf{Transition}: Creates tree item for metrics display
+\item \textbf{Output}: TreeItem
+\item \textbf{Exception}: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+\item \texttt{calculateFolderMetrics(folderPath, metricsData)}: Calculates metrics for folder
+\item \texttt{calculateFileMetrics(filePath, metricsData)}: Calculates metrics for file
+\item \texttt{formatNumber(number)}: Formats number for display
+\end{itemize}
+
+\section{MIS of View Provider}
+
+\subsection{Module}
+\texttt{View Provider} manages the display of smells and metrics in VS Code.
+
+\subsection{Uses}
+None
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
+  \hline
+  \texttt{refresh} & None & void & None \\ \hline
+  \texttt{setStatus} & \texttt{filePath: string, status: string} & void & None \\ \hline
+  \texttt{setSmells} & \texttt{filePath: string, smells: Smell[]} & void & None \\ \hline
+  \texttt{removeFile} & \texttt{filePath: string} & boolean & None \\
+  \hline
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{fileStatuses}: Map<string, string> - Tracks file statuses
+\item \texttt{fileSmells}: Map<string, Smell[]> - Stores smell data
+\item \texttt{onDidChangeTreeData}: EventEmitter - Emits tree data change events
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item VS Code extension context is valid
+\item File paths are normalized
+\item Smell data structure is consistent
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{refresh()}
+\begin{itemize}
+\item \textbf{Transition}: Updates tree view display
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{setStatus(filePath, status)}
+\begin{itemize}
+\item \textbf{Transition}: Updates file status in view
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{setSmells(filePath, smells)}
+\begin{itemize}
+\item \textbf{Transition}: Updates smell data in view
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{removeFile(filePath)}
+\begin{itemize}
+\item \textbf{Transition}: Removes file from view
+\item \textbf{Output}: boolean indicating success
+\item \textbf{Exception}: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Event Manager}
+
+\subsection{Module}
+\texttt{Event Manager} manages event handling and propagation.
+
+\subsection{Uses}
+\begin{itemize}
+\item \texttt{View Provider} for UI updates
+\end{itemize}
+
+\subsection{Syntax}
+
+\textbf{Exported Constants:} None
+
+\textbf{Exported Access Programs:}\\
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+  \hline
+  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
+  \hline
+  \texttt{getStatus} & None & ServerStatusType & None \\ \hline
+  \texttt{setStatus} & \texttt{newStatus: ServerStatusType} & void & None \\ \hline
+  \texttt{on} & \texttt{event: string, listener: Function} & void & None \\ \hline
+  \texttt{emit} & \texttt{event: string, data: any} & void & None \\
+  \hline
+\end{tabularx}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{status}: ServerStatusType - Current server status
+\item \texttt{eventEmitter}: EventEmitter - Event emitter instance
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+\begin{itemize}
+\item Event listeners are properly registered
+\item Event types are consistent
+\item Server status is valid
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+\texttt{getStatus()}
+\begin{itemize}
+\item \textbf{Transition}: Returns current server status
+\item \textbf{Output}: ServerStatusType
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{setStatus(newStatus)}
+\begin{itemize}
+\item \textbf{Transition}: Updates server status and emits event
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{on(event, listener)}
+\begin{itemize}
+\item \textbf{Transition}: Registers event listener
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{emit(event, data)}
+\begin{itemize}
+\item \textbf{Transition}: Emits event with data
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
 % \bibliographystyle {plainnat}
 % \bibliography {../../../refs/References}
 
