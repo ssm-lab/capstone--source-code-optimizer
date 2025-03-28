@@ -4,8 +4,8 @@ import logging
 import sys
 import uvicorn
 
-from .app import app
-from ..config import CONFIG
+from ecooptimizer.api.app import app
+from ecooptimizer.config import CONFIG
 
 
 class HealthCheckFilter(logging.Filter):
@@ -40,9 +40,9 @@ def start():
     mode_message = f"{CONFIG['mode'].upper()} MODE"
     msg_len = len(mode_message)
 
-    print(f"\n\t\t\t***{'*'*msg_len}***")
+    print(f"\n\t\t\t***{'*' * msg_len}***")
     print(f"\t\t\t*  {BLUE}{mode_message}{RESET}  *")
-    print(f"\t\t\t***{'*'*msg_len}***\n")
+    print(f"\t\t\t***{'*' * msg_len}***\n")
 
     if CONFIG["mode"] == "production":
         print(f"{PURPLE}hint: add --dev flag at the end to ignore energy checks\n")

@@ -4,8 +4,8 @@ from typing import Callable, Any
 from pathlib import Path
 from ast import AST, parse
 
-from .base_analyzer import Analyzer
-from ..data_types.smell import Smell
+from ecooptimizer.analyzers.base_analyzer import Analyzer
+from ecooptimizer.data_types.smell import Smell
 
 
 class ASTAnalyzer(Analyzer):

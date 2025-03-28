@@ -6,9 +6,9 @@ import fnmatch
 from pathlib import Path
 from typing import TypeVar
 
-from ..config import CONFIG
-from .base_refactorer import BaseRefactorer
-from ..data_types.smell import Smell
+from ecooptimizer.config import CONFIG
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_types.smell import Smell
 
 T = TypeVar("T", bound=Smell)
 

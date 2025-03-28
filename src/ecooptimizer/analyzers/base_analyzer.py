@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
-from ..data_types.smell import Smell
+from ecooptimizer.data_types.smell import Smell
 
 
 class Analyzer(ABC):

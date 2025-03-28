@@ -1,7 +1,7 @@
 """Main FastAPI application setup and health check endpoint."""
 
 from fastapi import FastAPI
-from .routes import RefactorRouter, DetectRouter, LogRouter
+from ecooptimizer.api.routes import RefactorRouter, DetectRouter, LogRouter
 
 
 app = FastAPI(

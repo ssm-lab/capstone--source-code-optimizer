@@ -2,8 +2,8 @@ import libcst as cst
 from pathlib import Path
 from libcst.metadata import PositionProvider
 
-from ..base_refactorer import BaseRefactorer
-from ...data_types.smell import UGESmell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_types.smell import UGESmell
 
 
 class ListCompInAnyAllTransformer(cst.CSTTransformer):

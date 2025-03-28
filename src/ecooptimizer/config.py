@@ -4,7 +4,7 @@ from logging import Logger
 import logging
 from typing import TypedDict
 
-from .utils.output_manager import LoggingManager
+from ecooptimizer.utils.output_manager import LoggingManager
 
 
 class Config(TypedDict):

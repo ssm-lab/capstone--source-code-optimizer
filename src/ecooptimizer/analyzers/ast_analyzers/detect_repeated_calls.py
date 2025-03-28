@@ -3,9 +3,9 @@ from collections import defaultdict
 from pathlib import Path
 import astor
 
-from ...data_types.custom_fields import CRCInfo, Occurence
-from ...data_types.smell import CRCSmell
-from ...utils.smell_enums import CustomSmell
+from ecooptimizer.data_types.custom_fields import CRCInfo, Occurence
+from ecooptimizer.data_types.smell import CRCSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
 
 IGNORED_PRIMITIVE_BUILTINS = {"abs", "round"}  # Built-ins safe to ignore when used with primitives

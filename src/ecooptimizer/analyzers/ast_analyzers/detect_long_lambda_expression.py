@@ -1,10 +1,10 @@
 import ast
 from pathlib import Path
 
-from ...utils.smell_enums import CustomSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
-from ...data_types.smell import LLESmell
-from ...data_types.custom_fields import AdditionalInfo, Occurence
+from ecooptimizer.data_types.smell import LLESmell
+from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 
 
 def count_expressions(node: ast.expr) -> int:
@@ -117,7 +117,9 @@ def detect_long_lambda_expression(
         # Convert the lambda function to a string and check its total length in characters
         lambda_code = get_lambda_code(node)
         if len(lambda_code) > threshold_length:
-            message = f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
+            message = (
+                f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
+            )
             smell = LLESmell(
                 path=str(file_path),
                 module=file_path.stem,

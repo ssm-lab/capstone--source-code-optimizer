@@ -3,21 +3,25 @@
 from copy import deepcopy
 from typing import Any
 
-from .smell_enums import CustomSmell, PylintSmell
-from ..analyzers.ast_analyzers.detect_long_element_chain import detect_long_element_chain
-from ..analyzers.ast_analyzers.detect_long_lambda_expression import detect_long_lambda_expression
-from ..analyzers.ast_analyzers.detect_long_message_chain import detect_long_message_chain
-from ..analyzers.astroid_analyzers.detect_string_concat_in_loop import detect_string_concat_in_loop
-from ..analyzers.ast_analyzers.detect_repeated_calls import detect_repeated_calls
-from ..refactorers.concrete.list_comp_any_all import UseAGeneratorRefactorer
-from ..refactorers.concrete.long_lambda_function import LongLambdaFunctionRefactorer
-from ..refactorers.concrete.long_element_chain import LongElementChainRefactorer
-from ..refactorers.concrete.long_message_chain import LongMessageChainRefactorer
-from ..refactorers.concrete.member_ignoring_method import MakeStaticRefactorer
-from ..refactorers.concrete.long_parameter_list import LongParameterListRefactorer
-from ..refactorers.concrete.str_concat_in_loop import UseListAccumulationRefactorer
-from ..refactorers.concrete.repeated_calls import CacheRepeatedCallsRefactorer
-from ..data_types.smell_record import SmellRecord
+from ecooptimizer.utils.smell_enums import CustomSmell, PylintSmell
+from ecooptimizer.analyzers.ast_analyzers.detect_long_element_chain import detect_long_element_chain
+from ecooptimizer.analyzers.ast_analyzers.detect_long_lambda_expression import (
+    detect_long_lambda_expression,
+)
+from ecooptimizer.analyzers.ast_analyzers.detect_long_message_chain import detect_long_message_chain
+from ecooptimizer.analyzers.astroid_analyzers.detect_string_concat_in_loop import (
+    detect_string_concat_in_loop,
+)
+from ecooptimizer.analyzers.ast_analyzers.detect_repeated_calls import detect_repeated_calls
+from ecooptimizer.refactorers.concrete.list_comp_any_all import UseAGeneratorRefactorer
+from ecooptimizer.refactorers.concrete.long_lambda_function import LongLambdaFunctionRefactorer
+from ecooptimizer.refactorers.concrete.long_element_chain import LongElementChainRefactorer
+from ecooptimizer.refactorers.concrete.long_message_chain import LongMessageChainRefactorer
+from ecooptimizer.refactorers.concrete.member_ignoring_method import MakeStaticRefactorer
+from ecooptimizer.refactorers.concrete.long_parameter_list import LongParameterListRefactorer
+from ecooptimizer.refactorers.concrete.str_concat_in_loop import UseListAccumulationRefactorer
+from ecooptimizer.refactorers.concrete.repeated_calls import CacheRepeatedCallsRefactorer
+from ecooptimizer.data_types.smell_record import SmellRecord
 
 # Base registry of all supported code smells
 _SMELL_REGISTRY: dict[str, SmellRecord] = {

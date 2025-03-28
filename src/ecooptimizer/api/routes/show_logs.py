@@ -8,8 +8,8 @@ from fastapi import APIRouter, WebSocketException
 from fastapi.websockets import WebSocketState, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
-from ...utils.output_manager import LoggingManager
-from ...config import CONFIG
+from ecooptimizer.utils.output_manager import LoggingManager
+from ecooptimizer.config import CONFIG
 
 router = APIRouter()
 

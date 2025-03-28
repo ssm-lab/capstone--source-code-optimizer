@@ -3,7 +3,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-from .custom_fields import CRCInfo, Occurence, AdditionalInfo, SCLInfo
+from ecooptimizer.data_types.custom_fields import CRCInfo, Occurence, AdditionalInfo, SCLInfo
 
 
 class Smell(BaseModel):

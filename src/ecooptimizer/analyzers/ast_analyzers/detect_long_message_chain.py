@@ -1,10 +1,10 @@
 import ast
 from pathlib import Path
 
-from ...utils.smell_enums import CustomSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
-from ...data_types.smell import LMCSmell
-from ...data_types.custom_fields import AdditionalInfo, Occurence
+from ecooptimizer.data_types.smell import LMCSmell
+from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 
 
 def compute_chain_length(node: ast.expr) -> int:
@@ -29,9 +29,7 @@ def compute_chain_length(node: ast.expr) -> int:
         return 0
 
 
-def detect_long_message_chain(
-    file_path: Path, tree: ast.AST, threshold: int = 5
-) -> list[LMCSmell]:
+def detect_long_message_chain(file_path: Path, tree: ast.AST, threshold: int = 5) -> list[LMCSmell]:
     """
     Detects long message chains in the given Python code.
 

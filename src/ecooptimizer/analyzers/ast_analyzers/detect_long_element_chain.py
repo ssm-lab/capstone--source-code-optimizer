@@ -1,10 +1,10 @@
 import ast
 from pathlib import Path
 
-from ...utils.smell_enums import CustomSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
-from ...data_types.smell import LECSmell
-from ...data_types.custom_fields import AdditionalInfo, Occurence
+from ecooptimizer.data_types.smell import LECSmell
+from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 
 
 def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 5) -> list[LECSmell]:

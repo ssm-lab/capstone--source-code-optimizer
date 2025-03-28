@@ -3,9 +3,9 @@
 # pyright: reportOptionalMemberAccess=false
 from pathlib import Path
 
-from ..config import CONFIG
-from ..data_types.smell import Smell
-from ..utils.smells_registry import get_refactorer
+from ecooptimizer.config import CONFIG
+from ecooptimizer.data_types.smell import Smell
+from ecooptimizer.utils.smells_registry import get_refactorer
 
 
 class RefactorerController:

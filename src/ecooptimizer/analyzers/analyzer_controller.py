@@ -5,13 +5,13 @@ from pathlib import Path
 import traceback
 from typing import Callable, Any
 
-from ..data_types.smell_record import SmellRecord
-from ..config import CONFIG
-from ..data_types.smell import Smell
-from .pylint_analyzer import PylintAnalyzer
-from .ast_analyzer import ASTAnalyzer
-from .astroid_analyzer import AstroidAnalyzer
-from ..utils.smells_registry import retrieve_smell_registry
+from ecooptimizer.data_types.smell_record import SmellRecord
+from ecooptimizer.config import CONFIG
+from ecooptimizer.data_types.smell import Smell
+from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
+from ecooptimizer.analyzers.ast_analyzer import ASTAnalyzer
+from ecooptimizer.analyzers.astroid_analyzer import AstroidAnalyzer
+from ecooptimizer.utils.smells_registry import retrieve_smell_registry
 
 logger = CONFIG["detectLogger"]
 

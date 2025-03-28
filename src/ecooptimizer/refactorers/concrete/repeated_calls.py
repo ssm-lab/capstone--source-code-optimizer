@@ -2,8 +2,8 @@ import ast
 import re
 from pathlib import Path
 
-from ...data_types.smell import CRCSmell
-from ..base_refactorer import BaseRefactorer
+from ecooptimizer.data_types.smell import CRCSmell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 
 
 def extract_function_name(call_string: str):

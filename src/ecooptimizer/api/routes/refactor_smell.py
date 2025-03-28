@@ -10,12 +10,12 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
-from ...config import CONFIG
-from ...exceptions import EnergySavingsError, RefactoringError, remove_readonly
-from ...refactorers.refactorer_controller import RefactorerController
-from ...analyzers.analyzer_controller import AnalyzerController
-from ...measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
-from ...data_types.smell import Smell
+from ecooptimizer.config import CONFIG
+from ecooptimizer.exceptions import EnergySavingsError, RefactoringError, remove_readonly
+from ecooptimizer.refactorers.refactorer_controller import RefactorerController
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
+from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
+from ecooptimizer.data_types.smell import Smell
 
 logger = CONFIG["refactorLogger"]
 

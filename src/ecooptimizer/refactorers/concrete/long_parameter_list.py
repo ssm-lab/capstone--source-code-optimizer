@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Optional
 from collections.abc import Mapping
 
-from ..multi_file_refactorer import MultiFileRefactorer
-from ...data_types.smell import LPLSmell
+from ecooptimizer.refactorers.multi_file_refactorer import MultiFileRefactorer
+from ecooptimizer.data_types.smell import LPLSmell
 
 
 class FunctionCallVisitor(cst.CSTVisitor):

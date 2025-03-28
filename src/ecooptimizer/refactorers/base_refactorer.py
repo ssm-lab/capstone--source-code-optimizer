@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Generic, TypeVar
 
-from ..data_types.smell import Smell
+from ecooptimizer.data_types.smell import Smell
 
 T = TypeVar("T", bound=Smell)
 

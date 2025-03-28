@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
-from ..base_refactorer import BaseRefactorer
-from ...data_types.smell import LMCSmell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_types.smell import LMCSmell
 
 
 class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
@@ -63,17 +63,17 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
 
                 if i < len(method_calls):
                     refactored_lines.append(
-                        f"{leading_whitespace}intermediate_{i} = " f"intermediate_{i-1}.{method}"
+                        f"{leading_whitespace}intermediate_{i} = intermediate_{i - 1}.{method}"
                     )
                 else:
                     # Final assignment using original variable name
                     if is_print:
                         refactored_lines.append(
-                            f"{leading_whitespace}print(intermediate_{i-1}.{method})"
+                            f"{leading_whitespace}print(intermediate_{i - 1}.{method})"
                         )
                     else:
                         refactored_lines.append(
-                            f"{leading_whitespace}{original_var} = " f"intermediate_{i-1}.{method}"
+                            f"{leading_whitespace}{original_var} = intermediate_{i - 1}.{method}"
                         )
 
             lines[line_number - 1] = "\n".join(refactored_lines) + "\n"
@@ -103,20 +103,19 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
 
                     if i < len(method_calls) - 1:
                         refactored_lines.append(
-                            f"{leading_whitespace}intermediate_{i} = "
-                            f"intermediate_{i-1}.{method}"
+                            f"{leading_whitespace}intermediate_{i} = intermediate_{i - 1}.{method}"
                         )
                     else:
                         # Preserve original assignment/print structure
                         if original_has_print:
                             refactored_lines.append(
-                                f"{leading_whitespace}print(intermediate_{i-1}.{method})"
+                                f"{leading_whitespace}print(intermediate_{i - 1}.{method})"
                             )
                         else:
                             original_assignment = line_with_chain.split("=", 1)[0].strip()
                             refactored_lines.append(
                                 f"{leading_whitespace}{original_assignment} = "
-                                f"intermediate_{i-1}.{method}"
+                                f"intermediate_{i - 1}.{method}"
                             )
 
                 lines[line_number - 1] = "\n".join(refactored_lines) + "\n"

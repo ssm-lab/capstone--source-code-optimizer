@@ -4,8 +4,8 @@ from pathlib import Path
 import re
 from typing import Any, Optional
 
-from ..multi_file_refactorer import MultiFileRefactorer
-from ...data_types.smell import LECSmell
+from ecooptimizer.refactorers.multi_file_refactorer import MultiFileRefactorer
+from ecooptimizer.data_types.smell import LECSmell
 
 
 class DictAccess:

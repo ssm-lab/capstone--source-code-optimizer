@@ -6,10 +6,10 @@ from pathlib import Path
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
-from ..config import CONFIG
-from ..data_types.custom_fields import AdditionalInfo, Occurence
-from .base_analyzer import Analyzer
-from ..data_types.smell import Smell
+from ecooptimizer.config import CONFIG
+from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
+from ecooptimizer.analyzers.base_analyzer import Analyzer
+from ecooptimizer.data_types.smell import Smell
 
 
 class PylintAnalyzer(Analyzer):
