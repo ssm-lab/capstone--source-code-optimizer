@@ -7,8 +7,9 @@ on:
       - "docs/**/*.tex"
 
 jobs:
-  build:
+  format-build:
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'sco-action-commit[bot]' }}  # Only run if the commit is NOT from the bot
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -44,6 +45,11 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: Install tex-fmt
+        run: |
+          sudo apt install cargo
+          cargo install tex-fmt
+
       # Get changed .tex files
       - name: Get changed .tex files
         id: changed-tex-files
@@ -52,18 +58,15 @@ jobs:
           files: |
             **/*.tex
           diff_relative: true # Get the list of files relative to the repo root
-          files_ignore: |
-            docs/Comments.tex
-            docs/Common.tex
-            docs/Reflection.tex
 
-      # Build LaTeX files
-      - name: Build changed tex files
+      # Format and Build LaTeX files
+      - name: Format and Build changed tex files
         if: steps.changed-tex-files.outputs.any_changed == 'true'
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-tex-files.outputs.all_changed_files }}
         run: |
           for file in ${ALL_CHANGED_FILES}; do
+            tex-fmt "$file"
             filename=$(basename -- "$file")
             folder=$(dirname "$file")  # Get the folder of the file
             echo "Building $filename"
@@ -74,13 +77,13 @@ jobs:
           done
           git status
 
-      # Commit the generated PDF back to the repository
+      # Commit the generated PDF and formatted .tex files back to the repository
       - name: Commit & Push changes
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-tex-files.outputs.all_changed_files }}
         uses: EndBug/add-and-commit@v9
         with:
-          add: --force docs/**/*.pdf
+          add: --force docs/**/*.pdf docs/**/*.tex
           author_name: "Github Action"
           author_email: "action@github.com"
-          message: "Add compiled PDF"
+          message: "Formatted and compiled latex files"
