@@ -1169,7 +1169,58 @@ needed. Drawings, Sketches, Figma}
 
 \section{Timeline}
 
-All code and corresponding documentation was aimed to be completed before Jan 6th our Demo date for our supervisor.
+The project development is structured in two main phases. The foundational library phase has been completed, and we are now moving into the plugin implementation phase. The January timeline focuses on implementing the VS Code plugin modules that depend on the existing library functionality.
+
+\subsection{Development Phases}
+
+\begin{enumerate}
+    \item \textbf{Completed Library Phase (September - December 2024)}
+    \begin{itemize}
+        \item Base Refactorer and all specialized refactoring modules
+        \item Core Smell detection and data structures
+        \item Analysis infrastructure and measurement components
+        \item Energy metrics and measurement functionality
+    \end{itemize}
+
+    \item \textbf{Plugin Implementation and Testing Phase (January 2025)}
+    \begin{itemize}
+        \item Development of VS Code plugin modules that interface with the library
+        \item Implementation of user interface components
+        \item Integration of library functionality into the VS Code environment
+        \item Unit and integration testing for library and plugin
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Module Dependencies}
+
+The plugin development schedule considers the following dependencies:
+
+\begin{itemize}
+    \item All plugin modules depend on the completed library components
+    \item Plugin Initiator and Backend Communicator must be completed first as they establish the connection to the library
+    \item UI components (File Highlighter, Hover Manager, View Provider) can be developed in parallel once core communication is established
+    \item Cache Manager and Filter Manager require working UI components
+\end{itemize}
+
+\begin{table}[h!]
+  \centering
+  \caption{Plugin Module Timeline}
+  \begin{tabular}{|l|l|l|l|}
+  \hline
+  \textbf{Module Name} & \textbf{Team Member} & \textbf{Due Date} & \textbf{Dependencies} \\ \hline
+  Plugin Initiator & All & Feb 05, 2025 & Library Modules \\ \hline
+  Backend Communicator & All & Feb 05, 2025 & Library Modules \\ \hline
+  Smell Detector & All & Feb 05, 2025 & Backend Communicator \\ \hline
+  File Highlighter & All & Feb 05, 2025 & Smell Detector \\ \hline
+  Hover Manager & All & Feb 05, 2025 & Smell Detector \\ \hline
+  Cache Manager & All & Feb 20, 2025 & Smell Detector \\ \hline
+  Filter Manager & All & Feb 20, 2025 & Cache Manager \\ \hline
+  View Provider & All & Feb 20, 2025 & File Highlighter, Hover Manager \\ \hline
+  Event Manager & All & Feb 20, 2025 & All Plugin Modules \\ \hline
+  \end{tabular}
+\end{table}
+
+The timeline prioritizes establishing the connection between the plugin and the existing library components, followed by the development of user-facing features. The January 31st deadline for supporting modules allows time for thorough integration testing and refinement of the complete system.
 
 \begin{table}[h!]
   \centering
