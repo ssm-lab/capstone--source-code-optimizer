@@ -171,7 +171,7 @@ change.
       \begin{itemize}
           \item \textbf{Refactoring Suggestions Display}: Updates to how refactoring suggestions are presented, such as side-by-side views of original and refactored code.
           \item \textbf{Theme Support}: Adding compatibility with various VS Code themes, including light and dark modes.
-          \item \textbf{Visual Indicators}: Implementing color-coded indicators to highlight the impact of energy savings for each refactoring suggestion.
+          \item \textbf{Visual Indicators}: Implementing colour-coded indicators to highlight the impact of energy savings for each refactoring suggestion.
           \item \textbf{Interactive Elements}: Introducing interactive components like tooltips or progress indicators to guide users during the refactoring process.
           \item \textbf{Customization Options}: Allowing users to configure UI elements, such as adjusting the sensitivity of code smell detection or selecting preferred refactoring styles.
       \end{itemize}
@@ -197,8 +197,8 @@ change.
       \item \textbf{Long Message Chain} \label{acLongMessageChain}: Extending the module's ability
       to identify and refactor long message chains.
       \item \textbf{Member Ignoring Method} \label{acMemberIgnoringMethod}: Enhancements to the
-      module for detecting methods that ignore members, optimizing the code structure.
-      \item \textbf{Repeated Calls} \label{acRepeatedCalls}: Optimizing detection and handling
+      module for detecting methods that ignore members, optimising the code structure.
+      \item \textbf{Repeated Calls} \label{acRepeatedCalls}: Optimising detection and handling
       of repeated function calls to improve performance.
       \item \textbf{String Concatenation in Loop} \label{acStringConcatenationInLoop}: Adjusting
       the refactorer's logic to improve handling of string concatenation within loops.
@@ -373,7 +373,7 @@ This system has no hardware components.
 \item[Secrets:] How to identify method calls that don't use instance attributes, determine class hierarchies and inheritance relationships, transform instance method calls to static method calls and handle method annotations and type hints.
 \item[Services:] Refactors the \textit{\textbf{Member Ignoring Method (MIM)}} smell in a provided code file to improve energy efficiency.
 \item[Implemented By:] EcoOptimizer
-\item[Type of Module:] Abstract Object: A transformation component that modifies Python source code to optimize method calls.
+\item[Type of Module:] Abstract Object: A transformation component that modifies Python source code to optimise method calls.
 \end{description}
 
 \textbf{Formalization of MakeStaticRefactorer}
@@ -630,8 +630,8 @@ def converted_lambda_42(x):    # W_c = ""
 % [Record, Library, Abstract Object, or Abstract Data Type]
 
 \begin{description}
-    \item[Secrets:] How to initialize the plugin, set up the environment for interaction, and handle configurations for plugin commands.
-    \item[Services:] Initializes and manages the plugin's setup including command registration, enabling its functionality without exposing the underlying initialization logic.
+    \item[Secrets:] How to initialise the plugin, set up the environment for interaction, and handle configurations for plugin commands.
+    \item[Services:] Initialises and manages the plugin's setup including command registration, enabling its functionality without exposing the underlying initialisation logic.
     \item[Implemented By:] EcoOptimizer
 \end{description}
 
@@ -650,7 +650,7 @@ def converted_lambda_42(x):    # W_c = ""
 % [Record, Library, Abstract Object, or Abstract Data Type]
 
 \begin{description}
-    \item[Secrets:] How to analyze Python code in active VS Code editor by accessing Source Code Optimizer endpoint.
+    \item[Secrets:] How to analyse Python code in active VS Code editor by accessing Source Code Optimizer endpoint.
     \item[Services:] Detects code smells in Python scripts using Source Code Optimizer and provides structured data for further processing based on received output.
     \item[Implemented By:] EcoOptimizer
     \item[Type of Module:] Abstract Object: A component responsible for code smell detection and classification.
@@ -792,7 +792,7 @@ def converted_lambda_42(x):    # W_c = ""
 % [Record, Library, Abstract Object, or Abstract Data Type]
 
 \begin{description}
-    \item[Secrets:] How to utilize Source Code Optimizer endpoint for refactoring specific code smells, and how to sanitize received output.
+    \item[Secrets:] How to utilise Source Code Optimizer endpoint for refactoring specific code smells, and how to sanitise received output.
     \item[Services:] Refactors code smells in Python scripts using Source Code Optimizer and determines if received output is valid format.
     \item[Implemented By:] EcoOptimizer
 \end{description}
@@ -1110,7 +1110,7 @@ arrows in the diagram typically correspond to the presence of import statement.}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../../Images/plugin_use_diagram.png}
-  \caption{VS Code Plugin Use Hierarchy among modules(yellow blocks, EcoOptimizer is green block. Note that colors of arrows are only intended for visual distinction)}
+  \caption{VS Code Plugin Use Hierarchy among modules(yellow blocks, EcoOptimizer is green block. Note that colours of arrows are only intended for visual distinction)}
   \label{FigUH_Plugin}
   \end{figure}
 
