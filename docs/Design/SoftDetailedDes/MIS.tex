@@ -246,7 +246,7 @@ None.
 
 \subsection{Module}
 
-The interface that all refactorers of this system will inherit from.
+The base interface that all refactorers inherit from, providing common functionality for file I/O, AST manipulation, code validation, and energy measurement integration.
 
 \subsection{Uses}
 
@@ -260,49 +260,146 @@ None
 \textbf{Exported Access Programs}:
 
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
-  \texttt{BaseRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\\hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: dict, initial\_emissions: $\mathbb{R}$} & None & None \\
-  \hline
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
+\texttt{BaseRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\\hline
+\texttt{refactor} & \texttt{file\_path: Path, smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{IOError} \\\hline
+\texttt{parse\_ast} & \texttt{source: str} & \texttt{AST} & \texttt{SyntaxError} \\\hline
+\texttt{validate\_transformation} & \texttt{original: AST, modified: AST} & \texttt{bool} & None \\\hline
+\texttt{write\_output} & \texttt{path: Path, content: str} & None & \texttt{IOError} \\\hline
+\texttt{measure\_energy} & \texttt{before: float, after: float} & \texttt{float} & None \\\hline
+\texttt{apply\_transformation} & \texttt{node: AST} & \texttt{AST} & None \\\hline
 \end{tabularx}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 \begin{itemize}
-  \item \texttt{temp\_dir: Path}: Directory path for storing refactored files.
+  \item \texttt{output\_dir: Path}: Directory for output files
+  \item \texttt{temp\_dir: Path}: Directory for temporary files during processing
+  \item \texttt{ast\_cache}: Cache for parsed AST trees
+  \item \texttt{transformation\_state}: Tracks current refactoring state
+  \item \texttt{energy\_metrics}: Stores energy consumption measurements
 \end{itemize}
 
 \subsubsection{Environment Variables}
-None
+\begin{itemize}
+  \item \texttt{WORKSPACE\_ROOT}: Root directory of the workspace
+  \item \texttt{FILE\_PERMISSIONS}: Required file access permissions
+  \item \texttt{TEMP\_DIR\_CONFIG}: Configuration for temporary directory
+\end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-  \item \texttt{output\_dir} exists or can be created, and write permissions are available.
+  \item Input files are valid Python scripts
+  \item Output directory exists or can be created
+  \item Write permissions are available for output directory
+  \item AST transformations preserve program semantics
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{BaseRefactorer(self, output\_dir: Path)}}
+\paragraph{\texttt{BaseRefactorer(output\_dir: Path)}}
 \begin{itemize}
-  \item \textbf{transition}: Initializes the \texttt{temp\_dir} variable within \texttt{output\_dir}.
-  \item \textbf{output}: \texttt{self}
-  \item \textbf{exception:} None.
+  \item \textbf{Transition}: 
+    \begin{itemize}
+      \item Initializes temporary directory using \texttt{\_create\_temp\_dir}
+      \item Sets up AST cache using \texttt{\_setup\_ast\_cache}
+      \item Configures transformation state
+      \item Initializes energy metrics
+    \end{itemize}
+  \item \textbf{Output}: \texttt{self}
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{refactor(self, file\_path: Path, pylint\_smell: dict, initial\_emissions: $\mathbb{R}$)}}
+\paragraph{\texttt{refactor(file\_path: Path, smell: Smell, initial\_emissions: $\mathbb{R}$)}}
 \begin{itemize}
-  \item \textbf{transition}: Abstract method. No transition defined.
-  \item \textbf{output}: None.
-  \item \textbf{exception:} None.
+  \item \textbf{Transition}:
+    \begin{itemize}
+      \item Reads and parses source file using \texttt{parse\_ast}
+      \item Applies transformation using \texttt{apply\_transformation}
+      \item Validates changes using \texttt{validate\_transformation}
+      \item Measures energy impact using \texttt{measure\_energy}
+      \item Writes output using \texttt{write\_output} if valid
+      \item Cleans up using \texttt{\_cleanup\_temp\_files}
+    \end{itemize}
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: \texttt{IOError} if file operations fail
+\end{itemize}
+
+\paragraph{\texttt{parse\_ast(source: str)}}
+\begin{itemize}
+  \item \textbf{Transition}: Parses source code into AST representation
+  \item \textbf{Output}: AST object
+  \item \textbf{Exception}: \texttt{SyntaxError} for invalid Python code
+\end{itemize}
+
+\paragraph{\texttt{validate\_transformation(original: AST, modified: AST)}}
+\begin{itemize}
+  \item \textbf{Transition}: Verifies semantic equivalence between ASTs
+  \item \textbf{Output}: Boolean indicating valid transformation
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{write\_output(path: Path, content: str)}}
+\begin{itemize}
+  \item \textbf{Transition}: Writes transformed code after \texttt{\_validate\_permissions}
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: \texttt{IOError} for file system issues
+\end{itemize}
+
+\paragraph{\texttt{measure\_energy(before: float, after: float)}}
+\begin{itemize}
+  \item \textbf{Transition}: Calculates energy consumption difference
+  \item \textbf{Output}: Float representing energy impact
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{apply\_transformation(node: AST)}}
+\begin{itemize}
+  \item \textbf{Transition}: Abstract method for specific refactoring logic
+  \item \textbf{Output}: Modified AST
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
-None.
+
+\paragraph{\texttt{\_create\_temp\_dir()}}
+\begin{itemize}
+  \item \textbf{Transition}: Creates a temporary directory for storing intermediate files
+  \item \textbf{Output}: Path to created directory
+  \item \textbf{Exception}: \texttt{IOError} if directory creation fails
+\end{itemize}
+
+\paragraph{\texttt{\_setup\_ast\_cache()}}
+\begin{itemize}
+  \item \textbf{Transition}: Initializes cache for storing parsed AST nodes
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_cleanup\_temp\_files()}}
+\begin{itemize}
+  \item \textbf{Transition}: Removes all temporary files and directories
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: \texttt{IOError} if cleanup fails
+\end{itemize}
+
+\paragraph{\texttt{\_validate\_permissions()}}
+\begin{itemize}
+  \item \textbf{Transition}: Verifies read/write permissions for target files
+  \item \textbf{Output}: Boolean indicating if permissions are valid
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_update\_energy\_metrics()}}
+\begin{itemize}
+  \item \textbf{Transition}: Updates energy consumption measurements
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
+\end{itemize}
 
 \newpage
-
 
 \section{MIS of LongMessageChainRefactorer} \label{mis:LMC}
 
@@ -329,12 +426,11 @@ None
 \begin{center}
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|p{1in}|p{1in}|}
 \hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{LongMessageChainRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-\hline
-\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
+\texttt{apply\_transformation} & \texttt{node: AST} & \texttt{AST} & None \\\hline
+\texttt{identify\_chains} & \texttt{node: AST} & \texttt{List[Chain]} & None \\\hline
+\texttt{extract\_methods} & \texttt{chain: Chain} & \texttt{List[str]} & None \\\hline
+\texttt{generate\_vars} & \texttt{methods: List[str]} & \texttt{List[str]} & None \\\hline
 \end{tabularx}
 \end{center}
 
@@ -344,49 +440,87 @@ None
 \subsubsection{State Variables}
 
 \begin{itemize}
-  \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
+  \item \texttt{chain\_patterns}: Dictionary mapping chain types to their patterns
+  \item \texttt{intermediate\_vars}: List of generated variable names
+  \item \texttt{indentation\_map}: Mapping of line numbers to indentation levels
 \end{itemize}
 
 \subsubsection{Environment Variables}
-None
-
+Inherits from \texttt{BaseRefactorer}
 
 \subsubsection{Assumptions}
-
 \begin{itemize}
-  \item Input files are valid Python scripts.
-  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
-  \item Refactored code must pass the provided test suite.
+  \item Message chains are properly terminated
+  \item Variable names generated do not conflict with existing ones
+  \item Indentation is consistent within code blocks
 \end{itemize}
+
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{LongMessageChainRefactorer(output\_dir: Path)}}
-\begin{itemize}
-\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
-\item \textbf{Output}: \texttt{self}.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
+\paragraph{\texttt{apply\_transformation(node: AST)}}
 \begin{itemize}
   \item \textbf{Transition}:
     \begin{itemize}
-    \item Reads the file at \texttt{file\_path}.
-    \item Identifies the line with a long message chain and uses local function \texttt{remove\_unmatched\_brackets(input\_string: str)}.
-    \item Refactors the chain by breaking it into separate statements.
-    \item Writes the refactored code to a temporary file.
-    \item Evaluates the refactored code’s energy efficiency and functionality.
+      \item Identifies message chains using \texttt{identify\_chains}
+      \item Extracts methods using \texttt{extract\_methods}
+      \item Generates intermediate variables using \texttt{generate\_vars}
+      \item Validates chain breaks using \texttt{\_validate\_chain\_break}
+      \item Preserves code formatting using \texttt{\_preserve\_indentation}
+      \item Reconstructs code with intermediate assignments
     \end{itemize}
-  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
-  \item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+  \item \textbf{Output}: Modified AST
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{identify\_chains(node: AST)}}
+\begin{itemize}
+  \item \textbf{Transition}: Analyzes AST for message chain patterns using \texttt{\_analyze\_chain\_complexity}
+  \item \textbf{Output}: List of identified chains
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{extract\_methods(chain: Chain)}}
+\begin{itemize}
+  \item \textbf{Transition}: Extracts individual method calls from chain using \texttt{\_preserve\_indentation}
+  \item \textbf{Output}: List of method call strings
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{generate\_vars(methods: List[str])}}
+\begin{itemize}
+  \item \textbf{Transition}: Creates unique variable names using \texttt{\_generate\_unique\_name}
+  \item \textbf{Output}: List of variable names
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
-\paragraph{\texttt{remove\_unmatched\_brackets(input\_string: str)}}
+
+\paragraph{\texttt{\_analyze\_chain\_complexity(chain: Chain)}}
 \begin{itemize}
-\item \textbf{Transition}: Removes unmatched parentheses from the input string.
-\item \textbf{Output}: Returns the string with unmatched parentheses removed.
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}: Analyzes the length and complexity of method call chains
+  \item \textbf{Output}: Integer representing chain complexity
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_preserve\_indentation(line: str)}}
+\begin{itemize}
+  \item \textbf{Transition}: Extracts and preserves the indentation level of code lines
+  \item \textbf{Output}: String containing the indentation spaces
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_validate\_chain\_break(original: str, parts: List[str])}}
+\begin{itemize}
+  \item \textbf{Transition}: Verifies that breaking the chain preserves functionality
+  \item \textbf{Output}: Boolean indicating if chain break is valid
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_generate\_unique\_name(base: str)}}
+\begin{itemize}
+  \item \textbf{Transition}: Creates a unique variable name based on the base string
+  \item \textbf{Output}: String containing unique variable name
+  \item \textbf{Exception}: None
 \end{itemize}
 
 ~\newpage
@@ -401,10 +535,8 @@ long lambda functions in Python code by converting them into normal functions.
 This improves code readability, maintainability, and performance, while reducing potential energy consumption.
 
 \subsection{Uses}
-\begin{itemize}
-  \item Uses \texttt{Smell} interface for data access
-  \item Inherits from \texttt{BaseRefactorer}
-\end{itemize}
+
+\texttt{BaseRefactorer}
 
 \subsection{Syntax}
 
@@ -413,66 +545,114 @@ None
 
 \subsubsection{Exported Access Programs}
 
-\begin{center}
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|p{1in}|p{1in}|}
+\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
 \hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{LongLambdaFunctionRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-\hline
-\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
+\texttt{LongLambdaFunctionRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\\hline
+\texttt{refactor} & \texttt{file\_path: Path, smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{IOError} \\\hline
+\texttt{identify\_lambdas} & \texttt{node: AST} & \texttt{List[Lambda]} & None \\\hline
+\texttt{extract\_lambda\_components} & \texttt{lambda\_node: Lambda} & \texttt{(List[str], str)} & None \\\hline
+\texttt{generate\_function\_name} & \texttt{lambda\_body: str} & \texttt{str} & None \\\hline
 \end{tabularx}
-\end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
 \begin{itemize}
-  \item \textbf{temp\_dir}: Temporary directory for intermediate refactored files.
+  \item \textbf{lambda\_registry}: Dictionary mapping lambda nodes to their locations
+  \item \textbf{function\_counter}: Counter for generating unique function names
+  \item \textbf{scope\_stack}: Stack tracking current scope for function placement
 \end{itemize}
 
 \subsubsection{Environment Variables}
-None
-
+Inherits from \texttt{BaseRefactorer}
 
 \subsubsection{Assumptions}
-
 \begin{itemize}
-  \item Input files are valid Python scripts.
-  \item Smells identified by \textbf{pylint\_smell} include valid line numbers.
-  \item Refactored code must pass the provided test suite.
+  \item Input code contains valid Python syntax
+  \item Lambda functions are properly defined
+  \item Generated function names do not conflict with existing ones
+  \item Scope information is correctly maintained
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
 \paragraph{\texttt{LongLambdaFunctionRefactorer(output\_dir: Path)}}
 \begin{itemize}
-\item \textbf{Transition}: Initializes the refactorer with the specified output directory.
-\item \textbf{Output}: \texttt{self}.
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}: 
+    \begin{itemize}
+      \item Initializes base refactorer
+      \item Sets up lambda registry
+      \item Initializes function counter
+      \item Configures scope tracking
+    \end{itemize}
+  \item \textbf{Output}: \texttt{self}
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$)}}
+\paragraph{\texttt{refactor(file\_path: Path, smell: Smell, initial\_emissions: $\mathbb{R}$)}}
 \begin{itemize}
   \item \textbf{Transition}:
     \begin{itemize}
-    \item Reads the file at \texttt{file\_path}.
-    \item Identifies the line with a long lambda function using local function \texttt{truncate\_at\_top\_level\_comma(body: str)}.
-    \item Refactors the lambda into a normal function.
-    \item Writes the refactored code to a temporary file.
+      \item Reads source file
+      \item Identifies long lambda functions
+      \item Converts lambdas to named functions
+      \item Validates transformation
+      \item Writes refactored code if valid
     \end{itemize}
-  \item \textbf{Output}: None. Refactored file is saved if improvements are validated.
-  \item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: \texttt{IOError} if file operations fail
+\end{itemize}
+
+\paragraph{\texttt{identify\_lambdas(node: AST)}}
+\begin{itemize}
+  \item \textbf{Transition}: Analyzes AST node for lambda function definitions
+  \item \textbf{Output}: List of identified lambda nodes
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{extract\_lambda\_components(lambda\_node: Lambda)}}
+\begin{itemize}
+  \item \textbf{Transition}: Extracts parameters and body from lambda function
+  \item \textbf{Output}: Tuple of parameter list and body string
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{generate\_function\_name(lambda\_body: str)}}
+\begin{itemize}
+  \item \textbf{Transition}: Creates descriptive name based on lambda body
+  \item \textbf{Output}: Generated function name
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
-\paragraph{\texttt{truncate\_at\_top\_level\_comma(body: str)}}
+
+\paragraph{\texttt{\_analyze\_lambda\_complexity(node: Lambda)}}
 \begin{itemize}
-\item \textbf{Transition}: Truncates the lambda body at the first top-level comma, ignoring commas within nested parentheses, brackets, or braces.
-\item \textbf{Output}: Returns the truncated lambda body as a string.
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}: Analyzes lambda function complexity based on length and nesting
+  \item \textbf{Output}: Integer representing complexity score
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_find\_insertion\_point(node: AST)}}
+\begin{itemize}
+  \item \textbf{Transition}: Determines optimal location for new function definition
+  \item \textbf{Output}: AST node indicating insertion point
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_validate\_scope(node: AST)}}
+\begin{itemize}
+  \item \textbf{Transition}: Verifies scope compatibility for function placement
+  \item \textbf{Output}: Boolean indicating valid scope
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_create\_function\_def(name: str, params: List[str], body: str)}}
+\begin{itemize}
+  \item \textbf{Transition}: Generates AST node for new function definition
+  \item \textbf{Output}: FunctionDef AST node
+  \item \textbf{Exception}: None
 \end{itemize}
 
 ~\newpage
@@ -544,8 +724,15 @@ None
   \item \textbf{Transition}:
   \begin{enumerate}
   \item Reads the file at \texttt{file\_path} and locates the target function using \texttt{pylint\_smell}.
-  \item Analyses function body to group parameters into used and ununsed parameters using \texttt{get\_used\_parameters()} to remove unused parameters. Updates the function signature and references in the code accordingly.
-  \item If number of used parameters also exceeds the maximum configured limit, encapsulates related parameters into classes using \texttt{classify\_parameters()} and \texttt{create\_parameter\_object\_class()}. Updates the function signature using local function \texttt{update\_function\_signature()} and references in the code  using \texttt{update\_function\_calls()} and \texttt{update\_parameter\_usages()}.
+  \item Analyzes function body using \texttt{get\_used\_parameters} to identify used parameters and remove unused ones.
+  \item For remaining parameters that exceed the configured limit:
+    \begin{itemize}
+      \item Groups parameters using \texttt{classify\_parameters}
+      \item Creates parameter classes using \texttt{create\_parameter\_object\_class}
+      \item Updates function signature using \texttt{update\_function\_signature}
+      \item Updates parameter usages using \texttt{update\_parameter\_usages}
+      \item Updates function calls using \texttt{update\_function\_calls}
+    \end{itemize}
   \item Writes the refactored code to a temporary file.
   \end{enumerate}
   \item \textbf{Output}: None. Refactored file is saved if improvements are validated. 
@@ -673,11 +860,11 @@ None
   \begin{itemize}
   \item \textbf{Transition}:
   \begin{itemize}
-  \item Parses code using \texttt{visit} pattern for AST traversal
-  \item Identifies concatenations with \texttt{find\_reassignments}
-  \item Determines scope via \texttt{find\_scope} and \texttt{find\_last\_assignment}
-  \item Generates temp names with \texttt{generate\_temp\_list\_name}
-  \item Modifies code using \texttt{add\_node\_to\_body}
+  \item Parses code using \texttt{\_visit} pattern for AST traversal
+  \item Identifies concatenations with \texttt{\_find\_reassignments}
+  \item Determines scope via \texttt{\_find\_scope} and \texttt{\_find\_last\_assignment}
+  \item Generates temp names with \texttt{\_generate\_temp\_list\_name}
+  \item Modifies code using \texttt{\_add\_node\_to\_body}
   \item Validates transformations before writing to refactored file
   \end{itemize}
   \item \textbf{Output}: None
@@ -690,42 +877,42 @@ None
   
   \subsubsection{Local Functions}
   
-  \paragraph{\texttt{visit(node: NodeNG)}}
+  \paragraph{\texttt{\_visit(node: NodeNG)}}
   \begin{itemize}
   \item \textbf{Transition}: Collects concatenation nodes and loop structures
   \item \textbf{Output}: None
   \item \textbf{Exception}: None
   \end{itemize}
   
-  \paragraph{\texttt{find\_reassignments()}}
+  \paragraph{\texttt{\_find\_reassignments()}}
   \begin{itemize}
   \item \textbf{Transition}: Finds variable reassignments in loop scope
   \item \textbf{Output}: None
   \item \textbf{Exception}: None
   \end{itemize}
   
-  \paragraph{\texttt{find\_last\_assignment(scope: NodeNG)}}
+  \paragraph{\texttt{\_find\_last\_assignment(scope: NodeNG)}}
   \begin{itemize}
   \item \textbf{Transition}: Locates final variable assignment before loop
   \item \textbf{Output}: None
   \item \textbf{Exception}: Raises \texttt{TypeError} for invalid scope
   \end{itemize}
   
-  \paragraph{\texttt{find\_scope()}}
+  \paragraph{\texttt{\_find\_scope()}}
   \begin{itemize}
   \item \textbf{Transition}: Determines insertion point for list initialization
   \item \textbf{Output}: None
   \item \textbf{Exception}: Requires \texttt{concat\_nodes} to be populated
   \end{itemize}
   
-  \paragraph{\texttt{generate\_temp\_list\_name()}}
+  \paragraph{\texttt{\_generate\_temp\_list\_name()}}
   \begin{itemize}
   \item \textbf{Transition}: Creates unique list name for complex targets
   \item \textbf{Output}: Returns generated name string
   \item \textbf{Exception}: Raises \texttt{TypeError} for unsupported nodes
   \end{itemize}
   
-  \paragraph{\texttt{add\_node\_to\_body(code\_file: str, nodes\_to\_change: list[tuple])}}
+  \paragraph{\texttt{\_add\_node\_to\_body(code\_file: str, nodes\_to\_change: list[tuple])}}
   \begin{itemize}
   \item \textbf{Transition}:
   \begin{itemize}
@@ -749,123 +936,111 @@ The \texttt{MakeStaticRefactorer} module identifies and refactors
 class methods that don't make use of their instance attributes to improve the readability, performance and energy efficiency of the software. It specifically handles these methods by turning them into static functions and ensuring any calls to this method use the proper calling syntax. This ensures proper refactoring while maintaining the original functionality.
 
 \subsection{Uses}
-\begin{itemize}
-\item Uses \texttt{Smell} interface for data access
-\item Inherits from \texttt{MultiFileRefactorer}
-\item Uses \texttt{libcst} and \texttt{astroid} for AST manipulation
-\end{itemize}
+
+\texttt{BaseRefactorer}
 
 \subsection{Syntax}
-\noindent
-\textbf{Exported Constants}: None \\
 
 \noindent
-\textbf{Exported Access Programs}: \\
+\textbf{Exported Constants}: None\\
+
+\noindent
+\textbf{Exported Access Programs}:\\
+
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
-  \hline
-  \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-  \hline
-  \texttt{MakeStaticRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-  \hline
-  \texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-  \hline
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
+\texttt{apply\_transformation} & \texttt{node: AST} & \texttt{AST} & None \\\hline
+\texttt{identify\_methods} & \texttt{node: AST} & \texttt{List[Method]} & None \\\hline
+\texttt{analyze\_method\_usage} & \texttt{method: Method} & \texttt{bool} & None \\\hline
+\texttt{transform\_to\_static} & \texttt{method: Method} & \texttt{Method} & None \\\hline
 \end{tabularx}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
 \begin{itemize}
-\item \texttt{target\_line: int}: Line number of method to refactor
-\item \texttt{mim\_method\_class: str}: Containing class name
-\item \texttt{mim\_method: str}: Target method name
-\item \texttt{valid\_classes: set[str]}: Valid class/subclass names
-\item \texttt{transformer: CallTransformer}: CST modification tool
+  \item \texttt{class\_hierarchy}: Dictionary mapping classes to their inheritance tree
+  \item \texttt{method\_registry}: Dictionary mapping methods to their usage patterns
+  \item \texttt{static\_candidates}: Set of methods eligible for static conversion
 \end{itemize}
 
 \subsubsection{Environment Variables}
-None
+Inherits from \texttt{BaseRefactorer}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item Input files contain valid Python syntax
-\item Smell detection provides valid method locations
-\item Class hierarchies remain consistent across files
+  \item Class inheritance hierarchies are well-defined
+  \item Method definitions are complete and valid
+  \item No dynamic method creation or modification
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{MakeStaticRefactorer()}}
+\paragraph{\texttt{apply\_transformation(node: AST)}}
 \begin{itemize}
-\item \textbf{Transition}: Initializes refactorer with empty state
-\item \textbf{Output}: \texttt{self}
-\item \textbf{Exception}: None
+  \item \textbf{Transition}:
+    \begin{itemize}
+      \item Identifies candidate methods using \texttt{identify\_methods}
+      \item Analyzes each method using \texttt{analyze\_method\_usage}
+      \item Transforms eligible methods using \texttt{transform\_to\_static}
+      \item Updates method calls using \texttt{\_update\_method\_calls}
+      \item Validates transformation using \texttt{\_validate\_transformation}
+      \item Reconstructs code with static methods
+    \end{itemize}
+  \item \textbf{Output}: Modified AST
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{refactor(file\_path: Path, smell: MIMSmell, ...)}}
+\paragraph{\texttt{identify\_methods(node: AST)}}
 \begin{itemize}
-\item \textbf{Transition}:
-\begin{itemize}
-\item Identifies target method using \texttt{\_find\_subclasses}
-\item Processes calls with \texttt{find\_valid\_method\_calls}
-\item Modifies method definition via \texttt{leave\_FunctionDef}
-\item Transforms calls using \texttt{CallTransformer}
-\item Validates with \texttt{check\_for\_annotations} and \texttt{check\_for\_initializations}
-\item Writes the refactored code to a temporary file.
+  \item \textbf{Transition}: Analyzes AST for instance methods using \texttt{\_build\_class\_hierarchy}
+  \item \textbf{Output}: List of identified methods
+  \item \textbf{Exception}: None
 \end{itemize}
-\item \textbf{Output}: None
-\item \textbf{Exception}:
+
+\paragraph{\texttt{analyze\_method\_usage(method: Method)}}
 \begin{itemize}
-\item \texttt{IOError}: File access failures
-\item \texttt{TypeError}: Invalid AST parsing
+  \item \textbf{Transition}: Evaluates method for static conversion using \texttt{\_check\_inheritance\_safety}
+  \item \textbf{Output}: Boolean indicating if method can be made static
+  \item \textbf{Exception}: None
 \end{itemize}
+
+\paragraph{\texttt{transform\_to\_static(method: Method)}}
+\begin{itemize}
+  \item \textbf{Transition}: Converts instance method to static using \texttt{\_update\_method\_calls} and validates using \texttt{\_validate\_transformation}
+  \item \textbf{Output}: Transformed method
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\paragraph{\texttt{\_find\_subclasses(directory: Path)}}
+\paragraph{\texttt{\_build\_class\_hierarchy(node: AST)}}
 \begin{itemize}
-\item \textbf{Transition}: Discovers class hierarchy relationships
-\item \textbf{Output}: Updates \texttt{valid\_classes} state
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Analyzes class definitions and builds inheritance relationships
+  \item \textbf{Output}: Dictionary mapping classes to their parent classes
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{find\_valid\_method\_calls(...)}}
+\paragraph{\texttt{\_check\_inheritance\_safety(method: Method)}}
 \begin{itemize}
-\item \textbf{Transition}: Identifies call sites needing modification
-\item \textbf{Output}: Returns list of valid call tuples
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Verifies method can be safely made static across inheritance chain
+  \item \textbf{Output}: Boolean indicating if transformation is safe
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{check\_for\_initializations(...)}}
+\paragraph{\texttt{\_update\_method\_calls(old\_method: str, new\_method: str)}}
 \begin{itemize}
-\item \textbf{Transition}: Verifies variable initialization sources
-\item \textbf{Output}: Returns initialization types list
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Updates all call sites to use static method syntax
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{check\_for\_annotations(...)}}
+\paragraph{\texttt{\_validate\_transformation(method: Method)}}
 \begin{itemize}
-\item \textbf{Transition}: Extracts type hints from annotations
-\item \textbf{Output}: Returns annotation node or None
-\item \textbf{Exception}: None
-\end{itemize}
-
-\paragraph{\texttt{leave\_FunctionDef(...)}}
-\begin{itemize}
-\item \textbf{Transition}:
-\begin{itemize}
-\item Adds \texttt{@staticmethod} decorator
-\item Removes \texttt{self} parameter
-\end{itemize}
-\item \textbf{Output}: Modified function node
-\item \textbf{Exception}: None
-\end{itemize}
-
-\paragraph{\texttt{CallTransformer}}
-\begin{itemize}
-\item \textbf{Transition}: Updates instance calls to static calls
-\item \textbf{Output}: Modified call nodes
-\item \textbf{Exception}: Raises \texttt{TypeError} for position errors
+  \item \textbf{Transition}: Verifies the static method transformation maintains functionality
+  \item \textbf{Output}: Boolean indicating if transformation is valid
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \newpage  
@@ -881,10 +1056,7 @@ LongElementChainRefactorer is a module that refactors long element chains, speci
 
 \subsection{Uses}
 
-\begin{itemize}
-\item Uses \texttt{Smell} interface for data access
-\item Inherits from \texttt{BaseRefactorer}
-\end{itemize}
+\texttt{BaseRefactorer}
 
 \subsection{Syntax}
 
@@ -893,153 +1065,100 @@ None
 
 \subsubsection{Exported Access Programs}
 
-
-\begin{center}
 \begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
 \hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\texttt{LongElementChainRefactorer} & \texttt{output\_dir: Path} & \texttt{self} & None \\
-\hline
-\texttt{refactor} & \texttt{file\_path: Path, pylint\_smell: Smell, initial\_emissions: $\mathbb{R}$} & None & \texttt{TypeError}, \texttt{IOError} \\
-\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\\hline
+\texttt{apply\_transformation} & \texttt{node: AST} & \texttt{AST} & None \\\hline
+\texttt{identify\_nested\_dicts} & \texttt{node: AST} & \texttt{List[Dict]} & None \\\hline
+\texttt{flatten\_dict} & \texttt{dict\_node: Dict} & \texttt{Dict} & None \\\hline
+\texttt{update\_access\_calls} & \texttt{old\_path: str, new\_path: str} & None & None \\\hline
 \end{tabularx}
-\end{center}
 
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
 \begin{itemize}
-\item \textbf{\_reference\_map}: Maps element chain references to their line numbers and corresponding values.
-\item \textbf{dict\_name}: Names of target dictionaries to refactor.
-\item \textbf{access\_patterns}: Collection of detected dictionary access patterns.
-\item \textbf{dict\_assignment}: Flattened version of the original nested dictionary.
+  \item \textbf{dict\_patterns}: Dictionary mapping access patterns to their flattened forms
+  \item \textbf{flattened\_keys}: Set of generated flattened key names
+  \item \textbf{reference\_map}: Mapping of original to flattened dictionary paths
 \end{itemize}
 
 \subsubsection{Environment Variables}
-None
+Inherits from \texttt{BaseRefactorer}
 
 \subsubsection{Assumptions}
-
 \begin{itemize}
-\item Input files are valid Python scripts.
-\item Smells identified by \textbf{pylint\_smell} include valid line numbers.
-\item Refactored code must pass the provided test suite.
+  \item Dictionary keys are valid Python identifiers
+  \item No key name conflicts in flattened structure
+  \item Dictionary access patterns are consistent
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
 
-\paragraph{\texttt{LongElementChainRefactorer(output\_dir: Path)}}
+\paragraph{\texttt{apply\_transformation(node: AST)}}
 \begin{itemize}
-\item \textbf{Transition}: Initializes the refactorer with the specified output directory and sets up internal caching structures.
-\item \textbf{Output}: \texttt{self}.
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}:
+    \begin{itemize}
+      \item Identifies nested dictionaries using \texttt{identify\_nested\_dicts}
+      \item Flattens each dictionary using \texttt{flatten\_dict}
+      \item Updates access patterns using \texttt{update\_access\_calls}
+      \item Updates code references using \texttt{\_update\_references}
+      \item Validates dictionary access using \texttt{\_validate\_dict\_access}
+      \item Reconstructs code with flattened structure
+    \end{itemize}
+  \item \textbf{Output}: Modified AST
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{refactor(file\_path: Path, pylint\_smell: Smell, initial\_emissions: R R)}}
+\paragraph{\texttt{identify\_nested\_dicts(node: AST)}}
 \begin{itemize}
-\item \textbf{Transition}:
-\begin{itemize}
-\item Reads the file at \texttt{file\_path} and parses its AST.
-\item Identifies dictionary names using \texttt{\_find\_dict\_names} and \texttt{\_extract\_dict\_name}.
-\item Detects nested access patterns via \texttt{\_find\_access\_pattern\_in\_file} and \\ \texttt{extract\_full\_dict\_access}.
-\item Calculates nesting depth with \texttt{\_count\_nested\_subscripts}.
-\item Locates dictionary assignments using \texttt{find\_dict\_assignment\_in\_file} and converts AST nodes with \texttt{extract\_dict\_literal}.
-\item Flattens the dictionary using \texttt{flatten\_dict}.
-\item Generates new access keys via \texttt{generate\_flattened\_access}.
-\item Applies code modifications using \texttt{\_collect\_line\_modifications} and \texttt{\_apply\_modifications}.
-\item Updates the original dictionary assignment with \texttt{\_update\_dict\_assignment}.
-\item Writes the refactored code to a temporary file.
+  \item \textbf{Transition}: Analyzes AST for nested dictionary patterns using \texttt{\_analyze\_dict\_complexity}
+  \item \textbf{Output}: List of identified dictionaries
+  \item \textbf{Exception}: None
 \end{itemize}
-\item \textbf{Output}: None. Refactored file is saved if improvements are validated.
-\item \textbf{Exception}: Raises \texttt{IOError} if input file cannot be read. Raises \texttt{TypeError} if source file cannot be parsed into an AST.
+
+\paragraph{\texttt{flatten\_dict(dict\_node: Dict)}}
+\begin{itemize}
+  \item \textbf{Transition}: Creates flattened dictionary structure using \texttt{\_generate\_flat\_key}
+  \item \textbf{Output}: Flattened dictionary
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{update\_access\_calls(old\_path: str, new\_path: str)}}
+\begin{itemize}
+  \item \textbf{Transition}: Updates dictionary access patterns using \texttt{\_validate\_dict\_access} and \texttt{\_update\_references}
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-\paragraph{\texttt{\_find\_dict\_names(tree: ast.AST, line\_number: int)}}
+\paragraph{\texttt{\_analyze\_dict\_complexity(node: Dict)}}
 \begin{itemize}
-\item \textbf{Transition}: Identifies dictionary names in the AST at the specified line number.
-\item \textbf{Output}: None (updates \texttt{dict\_name} state variable).
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}: Analyzes the nesting depth and structure of dictionary nodes
+  \item \textbf{Output}: Integer representing complexity score
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{\_extract\_dict\_name(node: ast.AST)}}
+\paragraph{\texttt{\_generate\_flat\_key(path: List[str])}}
 \begin{itemize}
-\item \textbf{Transition}: Extracts the dictionary name from attribute/subscript nodes in the AST.
-\item \textbf{Output}: Returns the extracted name as a string or \texttt{None}.
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}: Concatenates path components into a flattened key name
+  \item \textbf{Output}: String representing the flattened key
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{\_find\_access\_pattern\_in\_file(tree: ast.AST, path: Path)}}
+\paragraph{\texttt{\_validate\_dict\_access(path: str)}}
 \begin{itemize}
-\item \textbf{Transition}: Detects all dictionary access patterns in a file's AST.
-\item \textbf{Output}: None (populates \texttt{access\_patterns} state variable).
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}: Checks if dictionary access path is valid and follows conventions
+  \item \textbf{Output}: Boolean indicating validity
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{extract\_full\_dict\_access(node: ast.Subscript)}}
+\paragraph{\texttt{\_update\_references(old\_ref: str, new\_ref: str)}}
 \begin{itemize}
-\item \textbf{Transition}: Extracts the full access chain (e.g., \texttt{dict['key1']['key2']}) from a Subscript node.
-\item \textbf{Output}: Returns tuple containing dictionary name, access chain, line number, and column offset.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{\_count\_nested\_subscripts(node: ast.Subscript)}}
-\begin{itemize}
-\item \textbf{Transition}: Counts the nesting level of subscript accesses.
-\item \textbf{Output}: Returns nesting level as an integer.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{find\_dict\_assignment\_in\_file(tree: ast.AST)}}
-\begin{itemize}
-\item \textbf{Transition}: Locates dictionary assignments in the AST and extracts their values.
-\item \textbf{Output}: None (updates \texttt{dict\_assignment} state variable).
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{extract\_dict\_literal(node: ast.AST)}}
-\begin{itemize}
-\item \textbf{Transition}: Converts an AST dictionary node to a Python dictionary.
-\item \textbf{Output}: Returns the converted dictionary.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{flatten\_dict(d: dict[str, Any], depth: int, parent\_key: str)}}
-\begin{itemize}
-\item \textbf{Transition}: Recursively flattens a nested dictionary by combining keys with underscores.
-\item \textbf{Output}: Returns the flattened dictionary.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{generate\_flattened\_access(access\_chain: list[str])}}
-\begin{itemize}
-\item \textbf{Transition}: Generates a flattened key string from an access chain.
-\item \textbf{Output}: Returns the refactored access string.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{\_collect\_line\_modifications(file\_path: Path)}}
-\begin{itemize}
-\item \textbf{Transition}: Collects required code modifications for detected access patterns.
-\item \textbf{Output}: Returns dictionary mapping line numbers to modifications.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{\_apply\_modifications(lines: list[str], modifications: dict[int, list[tuple[int, str, str]]})}
-\begin{itemize}
-\item \textbf{Transition}: Applies collected modifications to source code lines.
-\item \textbf{Output}: Returns list of modified code lines.
-\item \textbf{Exception}: None.
-\end{itemize}
-
-\paragraph{\texttt{\_update\_dict\_assignment(refactored\_lines: list[str])}}
-\begin{itemize}
-\item \textbf{Transition}: Updates the original nested dictionary assignment with the flattened version.
-\item \textbf{Output}: Returns modified code lines with updated dictionary.
-\item \textbf{Exception}: None.
+  \item \textbf{Transition}: Updates all references to the old dictionary path with the new flattened path
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \section{MIS of Measurements Module} \label{mis:measure}
@@ -1138,14 +1257,14 @@ None
 
 \paragraph{\texttt{extract\_emissions\_csv(csv\_file\_path: Path)}}
 \begin{itemize}
-\item \textbf{Transition}:
-\begin{itemize}
-\item Attempts to read CSV file using pandas
-\item Extracts last measurement record
-\item Converts DataFrame row to dictionary
-\end{itemize}
-\item \textbf{Output}: Returns dictionary of metrics or \texttt{None} on error
-\item \textbf{Exception}: Logs pandas read errors but does not propagate them
+  \item \textbf{Transition}:
+  \begin{itemize}
+    \item Attempts to read CSV file using pandas
+    \item Extracts last measurement record
+    \item Converts DataFrame row to dictionary
+  \end{itemize}
+  \item \textbf{Output}: Returns dictionary of metrics or \texttt{None} on error
+  \item \textbf{Exception}: Logs pandas read errors but does not propagate them
 \end{itemize}
   
   
@@ -1259,46 +1378,46 @@ None
 
 \subsubsection{Local Functions}
 
-\paragraph{\texttt{detect\_long\_message\_chain(threshold?: int)}}
+\paragraph{\texttt{\_detect\_long\_message\_chain(threshold?: int)}}
 \begin{itemize}
-\item \textbf{Transition}: Identifies method chains exceeding length threshold
-\item \textbf{Output}: List of long chain smells
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Identifies method chains exceeding length threshold
+  \item \textbf{Output}: List of long chain smells
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{detect\_long\_lambda\_expression(threshold\_length?: int, threshold\_count?: int)}}
+\paragraph{\texttt{\_detect\_long\_lambda\_expression(threshold\_length?: int, threshold\_count?: int)}}
 \begin{itemize}
-\item \textbf{Transition}: Detects oversized lambda expressions
-\item \textbf{Output}: List of lambda smells
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Detects oversized lambda expressions
+  \item \textbf{Output}: List of lambda smells
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{detect\_long\_element\_chain(threshold?: int)}}
+\paragraph{\texttt{\_detect\_long\_element\_chain(threshold?: int)}}
 \begin{itemize}
-\item \textbf{Transition}: Finds long dictionary access chains
-\item \textbf{Output}: List of element chain smells
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Finds long dictionary access chains
+  \item \textbf{Output}: List of element chain smells
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{detect\_repeated\_calls(threshold?: int)}}
+\paragraph{\texttt{\_detect\_repeated\_calls(threshold?: int)}}
 \begin{itemize}
-\item \textbf{Transition}: Identifies excessive repeated calls
-\item \textbf{Output}: List of repetition smells
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Identifies excessive repeated calls
+  \item \textbf{Output}: List of repetition smells
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{parse\_line(file\_path: Path, line: int)}}
+\paragraph{\texttt{\_parse\_line(file\_path: Path, line: int)}}
 \begin{itemize}
-\item \textbf{Transition}: Extracts AST node from specific line
-\item \textbf{Output}: Parsed AST node
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Extracts AST node from specific line
+  \item \textbf{Output}: Parsed AST node
+  \item \textbf{Exception}: None
 \end{itemize}
 
-\paragraph{\texttt{get\_lambda\_code(lambda\_node: Lambda)}}
+\paragraph{\texttt{\_get\_lambda\_code(lambda\_node: Lambda)}}
 \begin{itemize}
-\item \textbf{Transition}: Converts lambda node to source code
-\item \textbf{Output}: String representation of lambda
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Converts lambda node to source code
+  \item \textbf{Output}: String representation of lambda
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \newpage
@@ -1461,7 +1580,7 @@ None
 \begin{itemize}
 \item \textbf{Transition}:
 \begin{itemize}
-\item Generates cache name via \texttt{extract\_function\_name}
+\item Generates cache name via \texttt{\_extract\_function\_name}
 \item Locates insertion point with \texttt{\_find\_insert\_line}
 \item Determines indentation via \texttt{\_get\_indentation}
 \item Modifies calls using \texttt{\_replace\_call\_in\_line}
@@ -1477,46 +1596,46 @@ None
 
 \subsubsection{Local Functions}
 
-\paragraph{\texttt{extract\_function\_name(call\_string: str)}}
+\paragraph{\texttt{\_extract\_function\_name(call\_string: str)}}
 \begin{itemize}
-\item \textbf{Transition}: Extracts base name from call pattern
-\item \textbf{Output}: Normalized function name string
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Extracts function name from call expression
+  \item \textbf{Output}: String containing function name
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \paragraph{\texttt{\_get\_indentation(lines: list[str], line\_number: int)}}
 \begin{itemize}
-\item \textbf{Transition}: Calculates whitespace for code insertion
-\item \textbf{Output}: Indentation string
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Calculates whitespace for code insertion
+  \item \textbf{Output}: Indentation string
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \paragraph{\texttt{\_replace\_call\_in\_line(line: str, call\_string: str, cached\_var\_name: str)}}
 \begin{itemize}
-\item \textbf{Transition}: Replaces function calls with cache variable
-\item \textbf{Output}: Modified source line
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Replaces function calls with cache variable
+  \item \textbf{Output}: Modified source line
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \paragraph{\texttt{\_find\_valid\_parent(tree: ast.Module)}}
 \begin{itemize}
-\item \textbf{Transition}: Locates common parent for all call instances
-\item \textbf{Output}: Parent AST node or None
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Locates common parent for all call instances
+  \item \textbf{Output}: Parent AST node or None
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \paragraph{\texttt{\_find\_insert\_line(parent\_node: ast.AST)}}
 \begin{itemize}
-\item \textbf{Transition}: Determines optimal insertion point
-\item \textbf{Output}: Line number for cache assignment
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Determines optimal insertion point
+  \item \textbf{Output}: Line number for cache assignment
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \paragraph{\texttt{\_line\_in\_node\_body(node: ast.AST, line: int)}}
 \begin{itemize}
-\item \textbf{Transition}: Verifies line belongs to node body
-\item \textbf{Output}: Boolean existence check
-\item \textbf{Exception}: None
+  \item \textbf{Transition}: Verifies line belongs to node body
+  \item \textbf{Output}: Boolean existence check
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \newpage
@@ -1883,7 +2002,7 @@ None
 
 \texttt{updateHighlightsForVisibleEditors()}
 \begin{itemize}
-\item \textbf{Transition}: Updates highlights for all visible Python files using \texttt{getDecoration()} and \texttt{updateHighlightsForFile()}
+\item \textbf{Transition}: Updates highlights for all visible Python files using \texttt{\_getDecoration} and \texttt{\_updateHighlightsForFile}
 \item \textbf{Output}: None
 \item \textbf{Exception}: None
 \end{itemize}
@@ -1903,9 +2022,19 @@ None
 \end{itemize}
 
 \subsubsection{Local Functions}
+
+\paragraph{\texttt{\_getDecoration(colour, style)}}
 \begin{itemize}
-\item \texttt{getDecoration(colour, style)}: Creates decoration type based on configuration
-\item \texttt{updateHighlightsForFile(filePath)}: Updates highlights for a specific file
+  \item \textbf{Transition}: Creates decoration type based on configuration
+  \item \textbf{Output}: TextEditorDecorationType object
+  \item \textbf{Exception}: None
+\end{itemize}
+
+\paragraph{\texttt{\_updateHighlightsForFile(filePath)}}
+\begin{itemize}
+  \item \textbf{Transition}: Updates highlights for a specific file
+  \item \textbf{Output}: None
+  \item \textbf{Exception}: None
 \end{itemize}
 
 \section{MIS of HoverManager}
