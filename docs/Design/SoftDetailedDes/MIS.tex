@@ -240,7 +240,7 @@ None.
 
 \newpage
 
-\section{MIS of Base Refactorer} \label{mis:baseR}
+\section{MIS of BaseRefactorer} \label{mis:baseR}
 
 \texttt{BaseRefactorer}
 
@@ -304,7 +304,7 @@ None.
 \newpage
 
 
-\section{MIS of Long Message Chain Refactorer} \label{mis:LMC}
+\section{MIS of LongMessageChainRefactorer} \label{mis:LMC}
 
 \texttt{LongMessageChainRefactorer}
 
@@ -391,7 +391,7 @@ None
 
 ~\newpage
 
-\section{MIS of Long Lambda Function Refactorer} \label{mis:LLF}
+\section{MIS of LongLambdaFunctionRefactorer} \label{mis:LLF}
 
 \texttt{LongLambdaFunctionRefactorer}
 
@@ -477,7 +477,7 @@ None
 
 ~\newpage
 
-\section{MIS of Long Parameter List Refactorer} \label{Module} 
+\section{MIS of LongParameterListRefactorer} \label{Module} 
 
 \texttt{LongParameterListRefactorer}
 
@@ -599,7 +599,7 @@ None
   \end{itemize}
   \end{enumerate}
 
-  \section{MIS of Use List Accumulation Refactorer} \label{mis:ListAccum}
+  \section{MIS of UseListAccumulationRefactorer} \label{mis:ListAccum}
 
   \texttt{UseListAccumulationRefactorer}
   
@@ -739,7 +739,7 @@ None
   
 \newpage
 
-\section{MIS of Make Method Static Refactorer} \label{mis:MakeStatic}
+\section{MIS of MakeMethodStaticRefactorer} \label{mis:MakeStatic}
 
 \texttt{MakeStaticRefactorer}
 
@@ -871,7 +871,7 @@ None
 \newpage  
 
 
-\section{MIS of Long Element Chain Refactorer} \label{mis:lec}
+\section{MIS of LongElementChainRefactorer} \label{mis:lec}
 
 \texttt{LongElementChainRefactorer}
 
@@ -1150,7 +1150,7 @@ None
   
   
 \newpage
-\section{MIS of Pylint Analyzer} \label{mis:PylintAnalyzer}
+\section{MIS of PylintAnalyzer} \label{mis:PylintAnalyzer}
 
 \texttt{PylintAnalyzer}
 
@@ -1302,7 +1302,7 @@ None
 \end{itemize}
 
 \newpage
-\section{MIS of Use A Generator Refactorer} \label{mis:UseGen}
+\section{MIS of UseAGeneratorRefactorer} \label{mis:UseGen}
 
 \texttt{UseAGeneratorRefactorer}
 
@@ -1401,7 +1401,7 @@ R)}}
 
 \newpage
 
-\section{MIS of Cache Repeated Calls Refactorer} \label{mis:CacheCalls}
+\section{MIS of CacheRepeatedCallsRefactorer} \label{mis:CacheCalls}
 
 \texttt{CacheRepeatedCallsRefactorer}
 
@@ -1521,16 +1521,16 @@ None
 
 \newpage
 
-\section{MIS of Plugin Initiator}
+\section{MIS of PluginInitiator}
 
 \subsection{Module}
-\texttt{Plugin Initiator} is a module that initializes the VS Code plugin and registers commands for VS Code Plugin.
+\texttt{PluginInitiator} is a module that initializes the VS Code plugin and registers commands for VS Code Plugin.
 
 \subsection{Uses}
 \begin{itemize}
-    \item \texttt{Smell Detector} to register and manage smell detection functionality.
-    \item \texttt{Refactor Manager} to register and manage refactoring operations.
-    \item \texttt{Filter Manager} to register and manage smell filtering operations.
+    \item \texttt{SmellDetector} to register and manage smell detection functionality.
+    \item \texttt{RefactorManager} to register and manage refactoring operations.
+    \item \texttt{FilterManager} to register and manage smell filtering operations.
 \end{itemize}
 
 \subsection{Syntax}
@@ -1571,7 +1571,7 @@ None
 \begin{itemize}
     \item The plugin is correctly loaded in VS Code
     \item VS Code APIs are available and accessible
-    \item Required modules (Smell Detector, Refactor Manager, Filter Manager) are properly initialized
+    \item Required modules (SmellDetector, RefactorManager, FilterManager) are properly initialized
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
@@ -1581,9 +1581,9 @@ None
     \item \textbf{Transition}: 
     \begin{itemize}
         \item Initializes output channel for logging
-        \item Initializes Smell Detector module
-        \item Initializes Refactor Manager module
-        \item Initializes Filter Manager module
+        \item Initializes SmellDetector module
+        \item Initializes RefactorManager module
+        \item Initializes FilterManager module
         \item Sets up workspace configuration
         \item Registers plugin commands
     \end{itemize}
@@ -1608,7 +1608,7 @@ None
 \subsubsection{Local Functions}
 None
 
-\section{MIS of Backend Communicator}
+\section{MIS of BackendCommunicator}
 
 \subsection{Module}
 \texttt{BackendCommunicator} handles all communication between the plugin and the backend service. It sends requests for analysis or refactoring and receives results.
@@ -1703,18 +1703,18 @@ None
 \subsubsection{Local Functions}
 None
 
-\section{MIS of Smell Detector}
+\section{MIS of SmellDetector}
 
 \subsection{Module}
-\texttt{Smell Detector} analyzes Python files for code smells and manages the detection workflow.
+\texttt{SmellDetector} analyzes Python files for code smells and manages the detection workflow.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{Backend Communicator} for communicating with Source Code Optimizer
-\item \texttt{Cache Manager} for managing smell detection results
-\item \texttt{File Highlighter} for highlighting detected smells
-\item \texttt{Event Manager} for managing detection events
-\item \texttt{Hover Manager} for displaying smell information
+\item \texttt{BackendCommunicator} for communicating with SourceCodeOptimizer
+\item \texttt{CacheManager} for managing smell detection results
+\item \texttt{FileHighlighter} for highlighting detected smells
+\item \texttt{EventManager} for managing detection events
+\item \texttt{HoverManager} for displaying smell information
 \end{itemize}
 
 \subsection{Syntax}
@@ -1726,9 +1726,9 @@ None
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
   \hline
-  \texttt{detectSmellsFile} & \texttt{filePath: string, smellsViewProvider: SmellsViewProvider, smellsCacheManager: SmellsCacheManager} & Promise<void> & Analysis Error \\
+  \texttt{detectSmellsFile} & \texttt{filePath: string, smellsViewProvider: SmellsViewProvider, cacheManager: CacheManager} & Promise<void> & Analysis Error \\
   \hline
-  \texttt{detectSmellsFolder} & \texttt{folderPath: string, smellsViewProvider: SmellsViewProvider, smellsCacheManager: SmellsCacheManager} & Promise<void> & Analysis Error \\
+  \texttt{detectSmellsFolder} & \texttt{folderPath: string, smellsViewProvider: SmellsViewProvider, cacheManager: CacheManager} & Promise<void> & Analysis Error \\
   \hline
 \end{tabularx}
 
@@ -1753,14 +1753,14 @@ None
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
-\texttt{detectSmellsFile(filePath, smellsViewProvider, smellsCacheManager)}
+\texttt{detectSmellsFile(filePath, smellsViewProvider, cacheManager)}
 \begin{itemize}
 \item \textbf{Transition}: Analyzes a single Python file for code smells, updates cache and view
 \item \textbf{Output}: Promise resolving to void
 \item \textbf{Exception}: Throws error if analysis fails
 \end{itemize}
 
-\texttt{detectSmellsFolder(folderPath, smellsViewProvider, smellsCacheManager)}
+\texttt{detectSmellsFolder(folderPath, smellsViewProvider, cacheManager)}
 \begin{itemize}
 \item \textbf{Transition}: Recursively analyzes Python files in directory, shows progress
 \item \textbf{Output}: Promise resolving to void
@@ -1768,22 +1768,22 @@ None
 \end{itemize}
 
 \subsubsection{Local Functions}
-\texttt{precheckAndMarkQueued(filePath, smellsViewProvider, smellsCacheManager)}
+\texttt{precheckAndMarkQueued(filePath, smellsViewProvider, cacheManager)}
 \begin{itemize}
 \item \textbf{Transition}: Validates conditions before analysis and manages file status
 \item \textbf{Output}: Promise<boolean> indicating if analysis should proceed
 \item \textbf{Exception}: None
 \end{itemize}
 
-\section{MIS of Smell Refactorer}
+\section{MIS of SmellRefactorer}
 
 \subsection{Module}
-\texttt{Smell Refactorer} applies a refactoring to a detected smell.
+\texttt{SmellRefactorer} applies a refactoring to a detected smell.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{Backend Communicator} for sending the smell data to Source Code Optimizer for refactoring.
-\item \texttt{Refactor Manager} for managing refactoring workflows.
+\item \texttt{BackendCommunicator} for sending the smell data to Source Code Optimizer for refactoring.
+\item \texttt{RefactorManager} for managing refactoring workflows.
 \end{itemize}
 
 \subsection{Syntax}
@@ -1824,14 +1824,14 @@ None
 \subsubsection{Local Functions}
 None
 
-\section{MIS of File Highlighter}
+\section{MIS of FileHighlighter}
 
 \subsection{Module}
-\texttt{File Highlighter} is a module that manages highlighting of code regions in the VS Code editor.
+\texttt{FileHighlighter} is a module that manages highlighting of code regions in the VS Code editor.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{View Provider} for managing editor decorations and visual updates
+\item \texttt{ViewProvider} for managing editor decorations and visual updates
 \end{itemize}
 
 \subsection{Syntax}
@@ -1856,7 +1856,7 @@ None
 \begin{itemize}
 \item \texttt{instance}: FileHighlighter - Singleton instance of the highlighter
 \item \texttt{decorations}: TextEditorDecorationType[] - Active editor decorations
-\item \texttt{smellsCacheManager}: SmellsCacheManager - Reference to the cache manager
+\item \texttt{cacheManager}:  CacheManager - Reference to the cache manager
 \end{itemize}
 
 \subsubsection{Environment Variables}
@@ -1908,14 +1908,14 @@ None
 \item \texttt{updateHighlightsForFile(filePath)}: Updates highlights for a specific file
 \end{itemize}
 
-\section{MIS of Hover Manager}
+\section{MIS of HoverManager}
 
 \subsection{Module}
-\texttt{Hover Manager} manages hover effects to display contextual information.
+\texttt{HoverManager} manages hover effects to display contextual information.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{View Provider} for managing hover display and updates
+\item \texttt{ViewProvider} for managing hover display and updates
 \end{itemize}
 
 \subsection{Syntax}
@@ -1966,10 +1966,10 @@ None
 \subsubsection{Local Functions}
 None
 
-\section{MIS of Refactor Manager}
+\section{MIS of RefactorManager}
 
 \subsection{Module}
-\texttt{Refactor Manager} manages the process of applying refactorings to detected smells.
+\texttt{RefactorManager} manages the process of applying refactorings to detected smells.
 
 \subsection{Uses}
 \begin{itemize}
@@ -2031,15 +2031,15 @@ None
 \subsubsection{Local Functions}
 None
 
-\section{MIS of Cache Manager}
+\section{MIS of CacheManager}
 
 \subsection{Module}
-\texttt{Cache Manager} manages caching of detected smells and file states.
+\texttt{CacheManager} manages caching of detected smells and file states.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{Backend Communicator} for backend communication
-\item \texttt{View Provider} for UI updates
+\item \texttt{BackendCommunicator} for backend communication
+\item \texttt{ViewProvider} for UI updates
 \end{itemize}
 
 \subsection{Syntax}
@@ -2112,16 +2112,16 @@ None
 \item \texttt{generateFileHash(filePath)}: Generates hash for file content
 \end{itemize}
 
-\section{MIS of Filter Manager}
+\section{MIS of FilterManager}
 
 \subsection{Module}
-\texttt{Filter Manager} manages filtering of detected smells.
+\texttt{FilterManager} manages filtering of detected smells.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{Cache Manager} for accessing smell data
-\item \texttt{Event Manager} for handling filter events
-\item \texttt{Hover Manager} for displaying filtered smells
+\item \texttt{CacheManager} for accessing smell data
+\item \texttt{EventManager} for handling filter events
+\item \texttt{HoverManager} for displaying filtered smells
 \end{itemize}
 
 \subsection{Syntax}
@@ -2182,14 +2182,14 @@ None
 \subsubsection{Local Functions}
 None
 
-\section{MIS of Energy Metrics}
+\section{MIS of EnergyMetrics}
 
 \subsection{Module}
-\texttt{Energy Metrics} manages energy consumption measurements and metrics display.
+\texttt{EnergyMetrics} manages energy consumption measurements and metrics display.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{View Provider} for displaying metrics
+\item \texttt{ViewProvider} for displaying metrics
 \end{itemize}
 
 \subsection{Syntax}
@@ -2254,10 +2254,10 @@ None
 \item \texttt{formatNumber(number)}: Formats number for display
 \end{itemize}
 
-\section{MIS of View Provider}
+\section{MIS of ViewProvider}
 
 \subsection{Module}
-\texttt{View Provider} manages the display of smells and metrics in VS Code.
+\texttt{ViewProvider} manages the display of smells and metrics in VS Code.
 
 \subsection{Uses}
 None
@@ -2329,14 +2329,14 @@ None
 \subsubsection{Local Functions}
 None
 
-\section{MIS of Event Manager}
+\section{MIS of EventManager}
 
 \subsection{Module}
-\texttt{Event Manager} manages event handling and propagation.
+\texttt{EventManager} manages event handling and propagation.
 
 \subsection{Uses}
 \begin{itemize}
-\item \texttt{View Provider} for UI updates
+\item \texttt{ViewProvider} for UI updates
 \end{itemize}
 
 \subsection{Syntax}
@@ -2542,7 +2542,7 @@ graduate attribute of Problem Analysis and Design.
   an actual blueprint of what to do. This made this deliverable easier to write as 
   the code was already present but also made the work feel unnecessarily redundant i.e boring to do.
   It often felt like I was documenting things that were already clear or implemented. 
-  This repetition made the process less engaging and, at times, a bit tedious. 
+  This repetition made the process less engaging and, at times, a bit tedious.
   To resolve this, I focused on framing the document as an opportunity to validate 
   and formalize our design decisions, which helped shift the mindset from simply 
   checking off tasks to reaffirming the thought process behind our choices.
