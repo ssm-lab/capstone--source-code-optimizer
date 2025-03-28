@@ -1,0 +1,113 @@
+name: Build and Release
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [dev]
+    paths:
+    - "src/ecooptimizer/**/*.py"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: linux-x64
+          - os: windows-latest
+            artifact_name: windows-x64.exe
+          - os: macos-latest
+            artifact_name: macos-x64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          architecture: ${{ runner.os == 'Windows' && 'x64' || '' }}
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Install package
+        run: |
+          pip install .
+        
+      - name: Create Linux executable
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          pyinstaller --onefile --name ecooptimizer-server $(which eco-ext)
+          mv dist/ecooptimizer-server dist/ecooptimizer-server-${{ matrix.artifact_name }}
+
+          pyinstaller --onefile --name ecooptimizer-server-dev $(which eco-ext-dev)
+          mv dist/ecooptimizer-server-dev dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}
+
+      - name: Create Windows executable
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          $entryProd = python -c "from importlib.metadata import entry_points; print([ep.value for ep in entry_points()['console_scripts'] if ep.name == 'eco-ext'][0])"
+          $pyPathProd = $entryProd.Split(':')[0].Replace('.', '\') + '.py'
+
+          $entryDev = python -c "from importlib.metadata import entry_points; print([ep.value for ep in entry_points()['console_scripts'] if ep.name == 'eco-ext-dev'][0])"
+          $pyPathDev = $entryDev.Split(':')[0].Replace('.', '\') + '.py'
+
+          pyinstaller --onefile --name ecooptimizer-server "src/$pyPathProd"
+          Move-Item dist\ecooptimizer-server.exe "dist\ecooptimizer-server-${{ matrix.artifact_name }}"
+
+          pyinstaller --onefile --name ecooptimizer-server-dev "src/$pyPathDev"
+          Move-Item dist\ecooptimizer-server-dev.exe "dist\ecooptimizer-server-dev-${{ matrix.artifact_name }}"
+
+      - name: Create macOS executable
+        if: matrix.os == 'macos-latest'
+        run: |
+          pyinstaller --onefile --name ecooptimizer-server $(which eco-ext)
+          mv dist/ecooptimizer-server dist/ecooptimizer-server-${{ matrix.artifact_name }}
+
+          pyinstaller --onefile --name ecooptimizer-server-dev $(which eco-ext-dev)
+          mv dist/ecooptimizer-server-dev dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-${{ matrix.os }}
+          path: |
+            dist/ecooptimizer-server-*
+            dist/ecooptimizer-server-dev-*
+          if-no-files-found: error
+
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: artifacts-*
+          merge-multiple: false  # Keep separate folders per OS
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          name: Version 2 ${{ github.ref_name }}
+          body: |
+            ${{ github.event.head_commit.message }}
+
+            **Included Artifacts:**
+            - Production Server: `ecooptimizer-server-<platform>`
+            - Development Server: `ecooptimizer-server-dev-<platform>`
+          files: |
+            artifacts/artifacts-ubuntu-latest/*
+            artifacts/artifacts-windows-latest/*
+            artifacts/artifacts-macos-latest/*
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
