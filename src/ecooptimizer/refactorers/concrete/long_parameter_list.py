@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Optional
 from collections.abc import Mapping
 
-from ..multi_file_refactorer import MultiFileRefactorer
-from ...data_types.smell import LPLSmell
+from ecooptimizer.refactorers.multi_file_refactorer import MultiFileRefactorer
+from ecooptimizer.data_types.smell import LPLSmell
 
 
 class FunctionCallVisitor(cst.CSTVisitor):
@@ -21,7 +21,7 @@ class FunctionCallVisitor(cst.CSTVisitor):
     def visit_Call(self, node: cst.Call):
         """Check if the function/class constructor is called."""
         # handle class constructor call
-        if self.is_constructor and m.matches(node.func, m.Name(self.class_name)):
+        if self.is_constructor and m.matches(node.func, m.Name(self.class_name)):  # type: ignore
             self.found = True
 
         # handle standalone function calls
@@ -137,7 +137,7 @@ class ParameterEncapsulator:
 
             param_cst = cst.Param(
                 name=cst.Name(param),
-                default=default_value,  # set default value if available
+                default=default_value,  # set default value if available # type: ignore
             )
             constructor_params.append(param_cst)
 
@@ -509,7 +509,7 @@ class FunctionCallUpdater:
 
                 # Separate positional, keyword, and variadic arguments
                 for i, arg in enumerate(updated_node.args):
-                    if isinstance(arg, cst.Arg):
+                    if isinstance(arg, cst.Arg):  # type: ignore
                         if arg.keyword is None:
                             # If this is a positional argument beyond the number of parameters,
                             # it's a variadic arg
@@ -765,10 +765,10 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                     self.function_node, param_names
                 )
 
-                if len(self.used_params) > max_param_limit:
+                if len(self.used_params) > max_param_limit:  # type: ignore
                     # classify used params into data and config types and store the results in a dictionary, if number of used params is beyond the configured limit
                     self.classified_params = self.parameter_analyzer.classify_parameters(
-                        self.used_params
+                        self.used_params  # type: ignore
                     )
                     self.classified_param_names = self._generate_unique_param_class_names(
                         target_line
@@ -788,10 +788,10 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                     tree = self.function_updater.update_function_calls(
                         tree,
                         self.function_node,
-                        self.used_params,
+                        self.used_params,  # type: ignore
                         self.classified_params,
                         self.classified_param_names,
-                        self.enclosing_class_name,
+                        self.enclosing_class_name,  # type: ignore
                     )
                     # next updaate function signature and parameter usages within function body
                     updated_function_node = self.function_updater.update_function_signature(
@@ -804,12 +804,17 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                 else:
                     # just remove the unused params if the used parameters are within the max param list
                     updated_function_node = self.function_updater.remove_unused_params(
-                        self.function_node, self.used_params, default_value_params
+                        self.function_node,
+                        self.used_params,  # type: ignore
+                        default_value_params,  # type: ignore
                     )
 
                     # update all calls to match the new signature
                     tree = self.function_updater.update_function_calls_unclassified(
-                        tree, self.function_node, self.used_params, self.enclosing_class_name
+                        tree,
+                        self.function_node,
+                        self.used_params,  # type: ignore
+                        self.enclosing_class_name,  # type: ignore
                     )
 
                 class FunctionReplacer(cst.CSTTransformer):
@@ -827,7 +832,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                             return self.updated_function  # replace with the modified function
                         return updated_node  # leave other functions unchanged
 
-                tree = tree.visit(FunctionReplacer(self.function_node, updated_function_node))
+                tree = tree.visit(FunctionReplacer(self.function_node, updated_function_node))  # type: ignore
 
         # Write the modified source
         modified_source = tree.code
@@ -846,7 +851,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         Generate unique class names for data params and config params based on function name and line number.
         :return: A tuple containing (DataParams class name, ConfigParams class name).
         """
-        unique_suffix = f"{self.function_node.name.value}_{target_line}"
+        unique_suffix = f"{self.function_node.name.value}_{target_line}"  # type: ignore
         data_class_name = f"DataParams_{unique_suffix}"
         config_class_name = f"ConfigParams_{unique_suffix}"
         return data_class_name, config_class_name
@@ -858,7 +863,9 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         tree = cst.parse_module(file.read_text())
 
         visitor = FunctionCallVisitor(
-            self.function_node.name.value, self.enclosing_class_name, self.is_constructor
+            self.function_node.name.value,  # type: ignore
+            self.enclosing_class_name,  # type: ignore
+            self.is_constructor,  # type: ignore
         )
         tree.visit(visitor)
 
@@ -871,11 +878,11 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         # update function calls/class instantiations
         tree = self.function_updater.update_function_calls(
             tree,
-            self.function_node,
-            self.used_params,
-            self.classified_params,
-            self.classified_param_names,
-            self.enclosing_class_name,
+            self.function_node,  # type: ignore
+            self.used_params,  # type: ignore
+            self.classified_params,  # type: ignore
+            self.classified_param_names,  # type: ignore
+            self.enclosing_class_name,  # type: ignore
         )
 
         modified_source = tree.code

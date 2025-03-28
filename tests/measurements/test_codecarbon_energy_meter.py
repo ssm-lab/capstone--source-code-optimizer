@@ -1,92 +1,143 @@
+import math
 import pytest
-import logging
+from unittest.mock import patch, MagicMock
 from pathlib import Path
-import subprocess
 import pandas as pd
-from unittest.mock import patch
-import sys
+import subprocess
 
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
 
 @pytest.fixture
-def energy_meter():
-    return CodeCarbonEnergyMeter()
+def mock_dependencies():
+    """Fixture to mock all dependencies with proper subprocess mocking"""
+    with (
+        patch("subprocess.run") as mock_subprocess,
+        patch("ecooptimizer.measurements.codecarbon_energy_meter.EmissionsTracker") as mock_tracker,
+        patch(
+            "ecooptimizer.measurements.codecarbon_energy_meter.TemporaryDirectory"
+        ) as mock_tempdir,
+        patch.object(Path, "exists") as mock_exists,
+        patch.object(CodeCarbonEnergyMeter, "_extract_emissions_data"),
+    ):
+        # Setup default successful subprocess mock
+        process_mock = MagicMock()
+        process_mock.returncode = 0
+        mock_subprocess.return_value = process_mock
+
+        # Setup tracker mock
+        tracker_instance = MagicMock()
+        mock_tracker.return_value = tracker_instance
+
+        # Setup tempdir mock
+        mock_tempdir.return_value.__enter__.return_value = "/fake/temp/dir"
+
+        mock_exists.return_value = True
+
+        yield {
+            "subprocess": mock_subprocess,
+            "tracker": mock_tracker,
+            "tracker_instance": tracker_instance,
+            "tempdir": mock_tempdir,
+            "exists": mock_exists,
+        }
 
 
-@patch("codecarbon.EmissionsTracker.start")
-@patch("codecarbon.EmissionsTracker.stop", return_value=0.45)
-@patch("subprocess.run")
-def test_measure_energy_success(mock_run, mock_stop, mock_start, energy_meter, caplog):
-    mock_run.return_value = subprocess.CompletedProcess(
-        args=["python3", "../input/project_car_stuff/main.py"], returncode=0
-    )
-    file_path = Path("../input/project_car_stuff/main.py")
-    with caplog.at_level(logging.INFO):
-        energy_meter.measure_energy(file_path)
+class TestCodeCarbonEnergyMeter:
+    @pytest.fixture
+    def meter(self):
+        return CodeCarbonEnergyMeter()
 
-    assert mock_run.call_count >= 1
-    mock_run.assert_any_call(
-        [sys.executable, file_path],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    mock_start.assert_called_once()
-    mock_stop.assert_called_once()
-    assert "CodeCarbon measurement completed successfully." in caplog.text
-    assert energy_meter.emissions == 0.45
+    def test_measure_energy_success(self, meter, mock_dependencies):
+        """Test successful measurement with float return value."""
+        mock_dependencies["tracker_instance"].stop.return_value = 1.23
 
+        test_file = Path("test.py")
+        meter.measure_energy(test_file)
 
-@patch("codecarbon.EmissionsTracker.start")
-@patch("codecarbon.EmissionsTracker.stop", return_value=0.45)
-@patch("subprocess.run", side_effect=subprocess.CalledProcessError(1, "python3"))
-def test_measure_energy_failure(mock_run, mock_stop, mock_start, energy_meter, caplog):
-    file_path = Path("../input/project_car_stuff/main.py")
-    with caplog.at_level(logging.ERROR):
-        energy_meter.measure_energy(file_path)
+        assert meter.emissions == 1.23
+        mock_dependencies["subprocess"].assert_called_once()
+        mock_dependencies["tracker_instance"].start.assert_called_once()
+        mock_dependencies["tracker_instance"].stop.assert_called_once()
 
-    mock_start.assert_called_once()
-    mock_run.assert_called_once()
-    mock_stop.assert_called_once()
-    assert "Error executing file" in caplog.text
-    assert (
-        energy_meter.emissions_data is None
-    )  # since execution failed, emissions data should be None
+    def test_measure_energy_none_return(self, meter, mock_dependencies):
+        """Test measurement that returns None."""
+        mock_dependencies["tracker_instance"].stop.return_value = None
 
+        test_file = Path("test.py")
+        meter.measure_energy(test_file)
 
-@patch("pandas.read_csv")
-@patch("pathlib.Path.exists", return_value=True)  # mock file existence
-def test_extract_emissions_csv_success(mock_exists, mock_read_csv, energy_meter):  # noqa: ARG001
-    # simulate DataFrame return value
-    mock_read_csv.return_value = pd.DataFrame(
-        [{"timestamp": "2025-03-01 12:00:00", "emissions": 0.45}]
-    )
+        assert meter.emissions is None
+        mock_dependencies["tracker_instance"].stop.assert_called_once()
 
-    csv_path = Path("dummy_path.csv")  # fake path
-    result = energy_meter.extract_emissions_csv(csv_path)
+    def test_measure_energy_unexpected_return_type(self, meter, mock_dependencies, caplog):
+        """Test handling of unexpected return types."""
+        mock_dependencies["tracker_instance"].stop.return_value = "invalid"
 
-    assert isinstance(result, dict)
-    assert "emissions" in result
-    assert result["emissions"] == 0.45
+        test_file = Path("test.py")
+        meter.measure_energy(test_file)
 
+        assert meter.emissions is None
+        assert "Unexpected emissions type" in caplog.text
+        mock_dependencies["tracker_instance"].stop.assert_called_once()
 
-@patch("pandas.read_csv", side_effect=Exception("File read error"))
-@patch("pathlib.Path.exists", return_value=True)  # mock file existence
-def test_extract_emissions_csv_failure(mock_exists, mock_read_csv, energy_meter, caplog):  # noqa: ARG001
-    csv_path = Path("dummy_path.csv")  # fake path
-    with caplog.at_level(logging.INFO):
-        result = energy_meter.extract_emissions_csv(csv_path)
+    def test_measure_energy_nan_return_type(self, meter, mock_dependencies, caplog):
+        """Test handling of unexpected return types."""
+        mock_dependencies["tracker_instance"].stop.return_value = math.nan
 
-    assert result is None  # since reading the CSV fails, result should be None
-    assert "Error reading file" in caplog.text
+        test_file = Path("test.py")
+        meter.measure_energy(test_file)
 
+        assert meter.emissions is None
+        assert "Unexpected emissions type" in caplog.text
+        mock_dependencies["tracker_instance"].stop.assert_called_once()
 
-@patch("pathlib.Path.exists", return_value=False)
-def test_extract_emissions_csv_missing_file(mock_exists, energy_meter, caplog):  # noqa: ARG001
-    csv_path = Path("dummy_path.csv")  # fake path
-    with caplog.at_level(logging.INFO):
-        result = energy_meter.extract_emissions_csv(csv_path)
+    def test_measure_energy_subprocess_failure(
+        self, meter, mock_dependencies: dict[str, MagicMock], caplog
+    ):
+        """Test handling of subprocess failures."""
+        # Configure subprocess to raise error
+        mock_dependencies["subprocess"].side_effect = subprocess.CalledProcessError(
+            returncode=1, cmd=["python", "test.py"], output="Error output", stderr="Error details"
+        )
+        mock_dependencies["tracker_instance"].stop.return_value = 1.23
 
-    assert result is None  # since file path does not exist, result should be None
-    assert "File 'dummy_path.csv' does not exist." in caplog.text
+        test_file = Path("test.py")
+        meter.measure_energy(test_file)
+
+        mock_dependencies["subprocess"].assert_called()
+        assert "Error executing file" in caplog.text
+        assert meter.emissions == 1.23
+
+    def test_extract_emissions_data_success(self, meter, tmp_path):
+        """Test successful extraction of emissions data."""
+        test_data = [
+            {"timestamp": "2023-01-01", "emissions": 1.0},
+            {"timestamp": "2023-01-02", "emissions": 2.0},
+        ]
+        df = pd.DataFrame(test_data)
+        csv_path = tmp_path / "emissions.csv"
+        df.to_csv(csv_path, index=False)
+
+        result = meter._extract_emissions_data(csv_path)
+        assert result == test_data[-1]
+
+    def test_extract_emissions_data_failure(self, meter, tmp_path, caplog):
+        """Test failure to extract emissions data."""
+        csv_path = tmp_path / "nonexistent.csv"
+        result = meter._extract_emissions_data(csv_path)
+
+        assert result is None
+        assert "Failed to read emissions data" in caplog.text
+
+    def test_measure_energy_missing_emissions_file(self, meter, mock_dependencies, caplog):
+        """Test handling when emissions file is missing."""
+        mock_dependencies["tracker_instance"].stop.return_value = 1.23
+        mock_dependencies["exists"].return_value = False
+
+        with patch.object(Path, "exists", return_value=False):
+            test_file = Path("test.py")
+            meter.measure_energy(test_file)
+
+            assert "Emissions file missing" in caplog.text
+            assert meter.emissions_data is None

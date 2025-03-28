@@ -1,11 +1,11 @@
-from .custom_fields import (
+from ecooptimizer.data_types.custom_fields import (
     AdditionalInfo,
     CRCInfo,
     Occurence,
     SCLInfo,
 )
 
-from .smell import (
+from ecooptimizer.data_types.smell import (
     Smell,
     CRCSmell,
     SCLSmell,

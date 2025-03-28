@@ -1,29 +1,45 @@
+"""Enums for code smell classification and identification."""
+
 from enum import Enum
 
 
 class ExtendedEnum(Enum):
+    """Base enum class with additional utility methods."""
+
     @classmethod
     def list(cls) -> list[str]:
+        """Returns all enum values as a list.
+
+        Returns:
+            List of all enum values as strings
+        """
         return [c.value for c in cls]
 
     def __eq__(self, value: object) -> bool:
+        """Compares enum value with string representation.
+
+        Args:
+            value: Value to compare against
+
+        Returns:
+            True if values match, False otherwise
+        """
         return str(self.value) == value
 
 
-# Enum class for standard Pylint code smells
 class PylintSmell(ExtendedEnum):
-    LONG_PARAMETER_LIST = "R0913"  # Pylint code smell for functions with too many parameters
-    NO_SELF_USE = "R6301"  # Pylint code smell for class methods that don't use any self calls
-    USE_A_GENERATOR = (
-        "R1729"  # Pylint code smell for unnecessary list comprehensions inside `any()` or `all()`
-    )
+    """Standard code smells detected by Pylint."""
+
+    LONG_PARAMETER_LIST = "R0913"  # Too many function parameters
+    NO_SELF_USE = "R6301"  # Class methods not using self
+    USE_A_GENERATOR = "R1729"  # Unnecessary list comprehensions in any()/all()
 
 
-# Enum class for custom code smells not detected by Pylint
 class CustomSmell(ExtendedEnum):
-    LONG_MESSAGE_CHAIN = "LMC001"  # Ast code smell for long message chains
-    UNUSED_VAR_OR_ATTRIBUTE = "UVA001"  # Ast code smell for unused variable or attribute
-    LONG_ELEMENT_CHAIN = "LEC001"  # Ast code smell for long element chains
-    LONG_LAMBDA_EXPR = "LLE001"  # Ast code smell for long lambda expressions
-    STR_CONCAT_IN_LOOP = "SCL001"  # Astroid code smell for string concatenation inside loops
-    CACHE_REPEATED_CALLS = "CRC001"  # Ast code smell for repeated calls
+    """Custom code smells not detected by standard Pylint."""
+
+    LONG_MESSAGE_CHAIN = "LMC001"  # Excessive method chaining
+    LONG_ELEMENT_CHAIN = "LEC001"  # Excessive dictionary/object chaining
+    LONG_LAMBDA_EXPR = "LLE001"  # Overly complex lambda expressions
+    STR_CONCAT_IN_LOOP = "SCL001"  # Inefficient string concatenation in loops
+    CACHE_REPEATED_CALLS = "CRC001"  # Repeated expensive function calls

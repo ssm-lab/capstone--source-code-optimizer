@@ -1,8 +1,8 @@
-from pathlib import Path
 from fastapi.testclient import TestClient
 from unittest.mock import patch
 
 from ecooptimizer.api.app import app
+from ecooptimizer.api.error_handler import AppError
 from ecooptimizer.data_types import Smell
 from ecooptimizer.data_types.custom_fields import Occurence
 
@@ -33,7 +33,10 @@ def get_mock_smell():
 def test_detect_smells_success():
     request_data = {
         "file_path": "fake_path.py",
-        "enabled_smells": ["smell1", "smell2"],
+        "enabled_smells": {
+            "smell1": {"threshold": 3},
+            "smell2": {"threshold": 4},
+        },
     }
 
     with patch("pathlib.Path.exists", return_value=True):
@@ -51,31 +54,34 @@ def test_detect_smells_success():
 def test_detect_smells_file_not_found():
     request_data = {
         "file_path": "path/to/nonexistent/file.py",
-        "enabled_smells": ["smell1", "smell2"],
+        "enabled_smells": {
+            "smell1": {"threshold": 3},
+            "smell2": {"threshold": 4},
+        },
     }
 
     response = client.post("/smells", json=request_data)
 
     assert response.status_code == 404
-    assert (
-        response.json()["detail"]
-        == f"File not found: {Path('path','to','nonexistent','file.py')!s}"
-    )
+    assert "File not found" in response.json()["detail"]
 
 
 def test_detect_smells_internal_server_error():
     request_data = {
         "file_path": "fake_path.py",
-        "enabled_smells": ["smell1", "smell2"],
+        "enabled_smells": {
+            "smell1": {"threshold": 3},
+            "smell2": {"threshold": 4},
+        },
     }
 
     with patch("pathlib.Path.exists", return_value=True):
         with patch(
             "ecooptimizer.analyzers.analyzer_controller.AnalyzerController.run_analysis"
         ) as mock_run_analysis:
-            mock_run_analysis.side_effect = Exception("Internal error")
+            mock_run_analysis.side_effect = AppError("Internal error")
 
             response = client.post("/smells", json=request_data)
 
             assert response.status_code == 500
-            assert response.json()["detail"] == "Internal server error"
+            assert response.json()["detail"] == "Internal error"

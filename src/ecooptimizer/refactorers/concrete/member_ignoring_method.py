@@ -5,10 +5,10 @@ from libcst.metadata import PositionProvider, MetadataWrapper
 
 from pathlib import Path
 
-from ...config import CONFIG
+from ecooptimizer.config import CONFIG
 
-from ..multi_file_refactorer import MultiFileRefactorer
-from ...data_types.smell import MIMSmell
+from ecooptimizer.refactorers.multi_file_refactorer import MultiFileRefactorer
+from ecooptimizer.data_types.smell import MIMSmell
 
 logger = CONFIG["refactorLogger"]
 

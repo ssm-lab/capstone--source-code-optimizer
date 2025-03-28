@@ -116,8 +116,7 @@ def do_god_knows_what():
     mystring = "i hate capstone"
     n = 10
 
-    for i in range(n):
-        b = 10
+    for _ in range(n):
         mystring += "word"
 
     return n
@@ -170,7 +169,6 @@ class Vehicle:
 
     def display_info(self):
         # Code Smell: Long Message Chain
-        random_test = self.make.split("")
         print(
             f"Make: {self.make}, Model: {self.model}, Year: {self.year}".upper().replace(",", "")[
                 ::2

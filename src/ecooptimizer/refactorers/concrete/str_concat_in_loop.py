@@ -4,8 +4,8 @@ from pathlib import Path
 import astroid
 from astroid import nodes
 
-from ..base_refactorer import BaseRefactorer
-from ...data_types.smell import SCLSmell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_types.smell import SCLSmell
 
 
 class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):

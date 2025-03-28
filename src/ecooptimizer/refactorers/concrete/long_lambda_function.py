@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
-from ..base_refactorer import BaseRefactorer
-from ...data_types.smell import LLESmell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.data_types.smell import LLESmell
 
 
 class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
@@ -62,9 +62,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
 
         # Find continuation lines only if needed
         if has_parentheses:
-            while current_line < len(lines) - 1 and not lambda_lines[
-                -1
-            ].strip().endswith(")"):
+            while current_line < len(lines) - 1 and not lambda_lines[-1].strip().endswith(")"):
                 current_line += 1
                 lambda_lines.append(lines[current_line].rstrip())
         else:
@@ -82,9 +80,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
 
         # Use different regex based on whether the lambda line starts with a parenthesis
         if has_parentheses:
-            lambda_match = re.search(
-                r"lambda\s+([\w, ]+):\s+(.+?)(?=\s*\))", full_lambda_line
-            )
+            lambda_match = re.search(r"lambda\s+([\w, ]+):\s+(.+?)(?=\s*\))", full_lambda_line)
         else:
             lambda_match = re.search(r"lambda\s+([\w, ]+):\s+(.+)", full_lambda_line)
 

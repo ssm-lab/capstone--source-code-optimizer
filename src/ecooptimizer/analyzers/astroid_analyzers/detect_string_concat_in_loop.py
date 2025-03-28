@@ -3,10 +3,10 @@ import re
 from typing import Any
 from astroid import nodes, util, parse, extract_node, AttributeInferenceError
 
-from ...config import CONFIG
-from ...data_types.custom_fields import Occurence, SCLInfo
-from ...data_types.smell import SCLSmell
-from ...utils.smell_enums import CustomSmell
+from ecooptimizer.config import CONFIG
+from ecooptimizer.data_types.custom_fields import Occurence, SCLInfo
+from ecooptimizer.data_types.smell import SCLSmell
+from ecooptimizer.utils.smell_enums import CustomSmell
 
 logger = CONFIG["detectLogger"]
 
@@ -355,7 +355,11 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
         ) -> list[nodes.NodeNG]:
             """Get all nodes in scope in execution order, flattening nested blocks."""
             nodes_list = []
-            for child in scope.body:
+
+            if not hasattr(scope, "body"):
+                return []
+
+            for child in scope.body:  # type: ignore
                 # Recursively flatten block nodes (loops, ifs, etc)
                 if child.lineno >= target.lineno:  # type: ignore
                     break

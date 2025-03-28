@@ -6,24 +6,24 @@ from tempfile import TemporaryDirectory, mkdtemp  # noqa: F401
 
 import libcst as cst
 
-from .utils.output_manager import LoggingManager
-from .utils.output_manager import save_file, save_json_files, copy_file_to_output
+from ecooptimizer.utils.output_manager import LoggingManager
+from ecooptimizer.utils.output_manager import save_file, save_json_files, copy_file_to_output
 
 
-from .api.routes.refactor_smell import ChangedFile, RefactoredData
+from ecooptimizer.api.routes.refactor_smell import ChangedFile, RefactoredData
 
-from .measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
+from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 
-from .analyzers.analyzer_controller import AnalyzerController
+from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 
-from .refactorers.refactorer_controller import RefactorerController
+from ecooptimizer.refactorers.refactorer_controller import RefactorerController
 
-from . import (
+from ecooptimizer import (
     SAMPLE_PROJ_DIR,
     SOURCE,
 )
 
-from .config import CONFIG
+from ecooptimizer.config import CONFIG
 
 loggingManager = LoggingManager()
 
@@ -53,9 +53,15 @@ def main():
         logging.error("Could not retrieve initial emissions. Exiting.")
         exit(1)
 
+    enabled_smells = {
+        "cached-repeated-calls": {"threshold": 2},
+        "no-self-use": {},
+        "use-a-generator": {},
+        "too-many-arguments": {"max_args": 5},
+    }
+
     analyzer_controller = AnalyzerController()
-    # update_smell_registry(["no-self-use"])
-    smells_data = analyzer_controller.run_analysis(SOURCE)
+    smells_data = analyzer_controller.run_analysis(SOURCE, enabled_smells)
     save_json_files("code_smells.json", [smell.model_dump() for smell in smells_data])
 
     copy_file_to_output(SOURCE, "refactored-test-case.py")

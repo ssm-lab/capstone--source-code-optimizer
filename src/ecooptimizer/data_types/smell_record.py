@@ -1,6 +1,6 @@
 from typing import Any, Callable, TypedDict
 
-from ..refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 
 
 class SmellRecord(TypedDict):
