@@ -1825,19 +1825,23 @@ None
 \texttt{File Highlighter} is a module that manages highlighting of code regions in the VS Code editor.
 
 \subsection{Uses}
-None
+\begin{itemize}
+\item \texttt{View Provider} for managing editor decorations and visual updates
+\end{itemize}
 
 \subsection{Syntax}
 
 \textbf{Exported Constants:} None
 
 \noindent \textbf{Exported Access Programs:}\\
-\begin{tabularx}{\linewidth}{|l|>{\raggedright\arraybackslash}X|l|l|}
+\begin{tabularx}{\linewidth}{|p{5cm}|>{\raggedright\arraybackslash}X|l|l|}
   \hline
   \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exception} \\
   \hline
-  \texttt{highlight} & \texttt{range: range[]} & None & None \\ \hline
-  \texttt{clear} & \texttt{None} & None & None \\
+  \texttt{getInstance} & \texttt{cacheManager: CacheManager} & FileHighlighter & None \\ \hline
+  \texttt{updateHighlightsFor \allowbreak VisibleEditors} & None & void & None \\ \hline
+  \texttt{resetHighlights} & None & void & None \\ \hline
+  \texttt{highlightSmells} & \texttt{editor: vscode.TextEditor} & void & None \\
   \hline
 \end{tabularx}
 
@@ -1845,36 +1849,59 @@ None
 
 \subsubsection{State Variables}
 \begin{itemize}
-\item \texttt{highlightedRanges}: Stores the currently highlighted regions in the editor.
+\item \texttt{instance}: FileHighlighter - Singleton instance of the highlighter
+\item \texttt{decorations}: TextEditorDecorationType[] - Active editor decorations
+\item \texttt{smellsCacheManager}: SmellsCacheManager - Reference to the cache manager
 \end{itemize}
 
 \subsubsection{Environment Variables}
-None
-
+\begin{itemize}
+\item \texttt{smellsColours}: Configuration for smell highlight colors
+\item \texttt{useSingleColour}: Boolean flag for using single highlight color
+\item \texttt{singleHighlightColour}: Color value for single highlight mode
+\item \texttt{highlightStyle}: Style configuration for highlights
+\end{itemize}
 
 \subsubsection{Assumptions}
 \begin{itemize}
-\item The VS Code editor is active and accessible.
-\item Python file with no syntax errors is currently open in the editor.
+\item \texttt{CacheManager} is properly initialized
+\item Valid configuration exists for highlight colors and styles
 \end{itemize}
 
 \subsubsection{Access Routine Semantics}
-\texttt{highlight(ranges: Range[])}
+\texttt{getInstance(cacheManager: CacheManager)}
 \begin{itemize}
-\item \textbf{Transition}: Adds highlights to the specified ranges in the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
+\item \textbf{Transition}: Creates or returns singleton instance of \texttt{FileHighlighter}
+\item \textbf{Output}: \texttt{FileHighlighter} instance
+\item \textbf{Exception}: None
 \end{itemize}
 
-\texttt{clear()}
+\texttt{updateHighlightsForVisibleEditors()}
 \begin{itemize}
-\item \textbf{Transition}: Removes all highlights from the editor.
-\item \textbf{Output}: None.
-\item \textbf{Exception}: None.
+\item \textbf{Transition}: Updates highlights for all visible Python files using \texttt{getDecoration()} and \texttt{updateHighlightsForFile()}
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{resetHighlights()}
+\begin{itemize}
+\item \textbf{Transition}: Removes all active highlights from editors
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
+\end{itemize}
+
+\texttt{highlightSmells(editor: vscode.TextEditor)}
+\begin{itemize}
+\item \textbf{Transition}: Applies highlights for cached smells in the editor
+\item \textbf{Output}: None
+\item \textbf{Exception}: None
 \end{itemize}
 
 \subsubsection{Local Functions}
-None
+\begin{itemize}
+\item \texttt{getDecoration(colour, style)}: Creates decoration type based on configuration
+\item \texttt{updateHighlightsForFile(filePath)}: Updates highlights for a specific file
+\end{itemize}
 
 \section{MIS of Hover Manager}
 
