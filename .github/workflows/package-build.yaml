@@ -1,14 +1,23 @@
 name: Build and Release
 
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-    branches: [dev]
-    paths:
-    - "src/ecooptimizer/**/*.py"
+  push:
+    tags:
+      - "v*"
 
 jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify tag is on main
+        run: |
+          if [ "$(git branch --contains $GITHUB_REF)" != "* main" ]; then
+            echo "Tag $GITHUB_REF is not on main branch"
+            exit 1
+          fi
   build:
+    needs: check-branch
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -97,17 +106,27 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          name: Version 2 ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           body: |
             ${{ github.event.head_commit.message }}
-
-            **Included Artifacts:**
-            - Production Server: `ecooptimizer-server-<platform>`
-            - Development Server: `ecooptimizer-server-dev-<platform>`
+      
+            ## EcoOptimizer Server Executables
+            This release contains the standalone server executables for launching the EcoOptimizer analysis engine. 
+            These are designed to work with the corresponding **EcoOptimizer VS Code Extension**.
+      
+            ### Included Artifacts
+            - **Production Server**: `ecooptimizer-server-<platform>`  
+              (Stable version for production use)
+            - **Development Server**: `ecooptimizer-server-dev-<platform>`  
+              (Development version with debug features)
+      
+            ### Platform Support
+            - Linux (`linux-x64`)
+            - Windows (`windows-x64.exe`)
+            - macOS (`macos-x64`)
           files: |
-            artifacts/artifacts-ubuntu-latest/*
-            artifacts/artifacts-windows-latest/*
-            artifacts/artifacts-macos-latest/*
-          draft: true
+            artifacts/artifacts-ubuntu-latest/dist/*
+            artifacts/artifacts-windows-latest/dist/*
+            artifacts/artifacts-macos-latest/dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
