@@ -1,13 +1,19 @@
 """Main FastAPI application setup and health check endpoint."""
 
 from fastapi import FastAPI
-from ecooptimizer.api.routes import RefactorRouter, DetectRouter, LogRouter
 
+from ecooptimizer.api.error_handler import AppError, global_error_handler
+from ecooptimizer.api.routes import RefactorRouter, DetectRouter, LogRouter
 
 app = FastAPI(
     title="Ecooptimizer",
     description="API for detecting and refactoring energy-inefficient Python code",
 )
+
+
+# Register handlers for all exception types
+app.add_exception_handler(AppError, global_error_handler)
+app.add_exception_handler(Exception, global_error_handler)
 
 # Register all API routers
 app.include_router(RefactorRouter, tags=["refactoring"])

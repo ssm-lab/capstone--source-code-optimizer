@@ -355,7 +355,11 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
         ) -> list[nodes.NodeNG]:
             """Get all nodes in scope in execution order, flattening nested blocks."""
             nodes_list = []
-            for child in scope.body:
+
+            if not hasattr(scope, "body"):
+                return []
+
+            for child in scope.body:  # type: ignore
                 # Recursively flatten block nodes (loops, ifs, etc)
                 if child.lineno >= target.lineno:  # type: ignore
                     break

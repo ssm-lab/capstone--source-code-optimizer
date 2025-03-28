@@ -1,12 +1,14 @@
 """CodeCarbon-based implementation for measuring code energy consumption."""
 
 import logging
+import math
 import os
 from pathlib import Path
 import sys
 import subprocess
 import pandas as pd
 from tempfile import TemporaryDirectory
+from typing import Optional
 from codecarbon import EmissionsTracker
 
 from ecooptimizer.measurements.base_energy_meter import BaseEnergyMeter
@@ -37,7 +39,6 @@ class CodeCarbonEnergyMeter(BaseEnergyMeter):
             os.environ["TEMP"] = custom_temp_dir  # For Windows
             os.environ["TMPDIR"] = custom_temp_dir  # For Unix-based systems
 
-            # TODO: Save to logger so doesn't print to console
             tracker = EmissionsTracker(
                 output_dir=custom_temp_dir,
                 allow_multiple_runs=True,
@@ -54,15 +55,25 @@ class CodeCarbonEnergyMeter(BaseEnergyMeter):
             except subprocess.CalledProcessError as e:
                 logging.error(f"Error executing file '{file_path}': {e}")
             finally:
-                self.emissions = tracker.stop()
-                emissions_file = Path(custom_temp_dir) / "emissions.csv"
+                emissions = tracker.stop()
+                # Only store float or None values
+                if (
+                    isinstance(emissions, float) and not math.isnan(emissions)
+                ) or emissions is None:
+                    self.emissions = emissions
+                else:
+                    logging.warning(
+                        f"Unexpected emissions type {type(emissions)}. Setting to None."
+                    )
+                    self.emissions = None
 
+                emissions_file = Path(custom_temp_dir) / "emissions.csv"
                 if emissions_file.exists():
                     self.emissions_data = self._extract_emissions_data(emissions_file)
                 else:
                     logging.error("Emissions file missing - measurement failed")
 
-    def _extract_emissions_data(self, csv_path: Path):
+    def _extract_emissions_data(self, csv_path: Path) -> Optional[dict]:
         """Extracts emissions data from CodeCarbon output CSV.
 
         Args:
