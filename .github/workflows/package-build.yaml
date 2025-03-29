@@ -74,26 +74,26 @@ jobs:
         run: |
           choco install osslsigncode -y
 
-          - name: Sign Windows binaries
-          if: matrix.os == 'windows-latest'
-          shell: pwsh
-          run: |
-            # Generate cert
-            openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=EcoOptimizer"
-        
-            # Sign in-place using temporary file
-            $TempFile = "dist\temp-signed.exe"
-            osslsigncode sign -certs cert.pem -key key.pem -n "EcoOptimizer" `
-              -t http://timestamp.digicert.com `
-              -in "dist\ecooptimizer-server-${{ matrix.artifact_name }}" `
-              -out $TempFile
-            Move-Item -Path $TempFile -Destination "dist\ecooptimizer-server-${{ matrix.artifact_name }}" -Force
-        
-            osslsigncode sign -certs cert.pem -key key.pem -n "EcoOptimizer" `
-              -t http://timestamp.digicert.com `
-              -in "dist\ecooptimizer-server-dev-${{ matrix.artifact_name }}" `
-              -out $TempFile
-            Move-Item -Path $TempFile -Destination "dist\ecooptimizer-server-dev-${{ matrix.artifact_name }}" -Force
+      - name: Sign Windows binaries
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          # Generate cert
+          openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=EcoOptimizer"
+      
+          # Sign in-place using temporary file
+          $TempFile = "dist\temp-signed.exe"
+          osslsigncode sign -certs cert.pem -key key.pem -n "EcoOptimizer" `
+            -t http://timestamp.digicert.com `
+            -in "dist\ecooptimizer-server-${{ matrix.artifact_name }}" `
+            -out $TempFile
+          Move-Item -Path $TempFile -Destination "dist\ecooptimizer-server-${{ matrix.artifact_name }}" -Force
+      
+          osslsigncode sign -certs cert.pem -key key.pem -n "EcoOptimizer" `
+            -t http://timestamp.digicert.com `
+            -in "dist\ecooptimizer-server-dev-${{ matrix.artifact_name }}" `
+            -out $TempFile
+          Move-Item -Path $TempFile -Destination "dist\ecooptimizer-server-dev-${{ matrix.artifact_name }}" -Force
 
       - name: Sign macOS binaries
         if: matrix.os == 'macos-latest'
