@@ -2,8 +2,7 @@ name: Build and Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [build-sign-test]
 
 jobs:
   build:
@@ -110,5 +109,6 @@ jobs:
             artifacts/artifacts-ubuntu-latest/*
             artifacts/artifacts-windows-latest/*
             artifacts/artifacts-macos-latest/*
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
