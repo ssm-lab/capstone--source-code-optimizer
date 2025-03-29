@@ -153,6 +153,5 @@ jobs:
             artifacts/artifacts-ubuntu-latest/*
             artifacts/artifacts-windows-latest/*
             artifacts/artifacts-macos-latest/*
-          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
