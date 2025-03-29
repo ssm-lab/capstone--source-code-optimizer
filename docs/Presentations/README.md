@@ -1,8 +1,19 @@
-# Presentations/demonstrations about your software
+# Presentations Directory
 
-The folders and files for this folder are as follows:
+This directory contains all presentation materials related to the Source Code Optimizer project, including project updates, technical presentations, and demonstrations.
 
-- D0_ProofOfConceptDemo
-- D1_Rev0Demo
-- D2_FinalPresentation
-- D3_EXPO
+## Directory Contents
+
+### Project Presentations
+- Project overview
+- Progress updates
+- Milestone presentations
+- Sprint reviews
+- Final presentations
+
+### Technical Presentations
+- Architecture overview
+- Technical deep dives
+- Code walkthroughs
+- Design reviews
+- Implementation details
