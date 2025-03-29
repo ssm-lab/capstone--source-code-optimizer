@@ -2,7 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches: [build-sign-test]
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -16,7 +17,7 @@ jobs:
           - os: windows-latest
             artifact_name: win.exe
           - os: macos-latest
-            artifact_name: macos-x64
+            artifact_name: macos
 
     steps:
       - uses: actions/checkout@v4
