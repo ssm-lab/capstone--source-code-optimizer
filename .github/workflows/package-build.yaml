@@ -39,7 +39,11 @@ jobs:
         run: |
           python -m build
           mkdir -p dist_python
-          mv dist/*.whl dist/*.tar.gz dist_python/ 2>/dev/null || true
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            mv dist/*.whl dist/*.tar.gz dist_python/ 2>NUL || true
+          else
+            mv dist/*.whl dist/*.tar.gz dist_python/ 2>/dev/null || true
+          fi
 
       - name: Create Linux executable
         if: matrix.os == 'ubuntu-latest'
