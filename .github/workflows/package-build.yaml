@@ -16,7 +16,7 @@ jobs:
           - os: windows-latest
             artifact_name: win32.exe
           - os: macos-latest
-            artifact_name: darwin
+            artifact_name: macos
 
     steps:
       - uses: actions/checkout@v4
@@ -38,9 +38,8 @@ jobs:
       - name: Build Python package
         run: |
           python -m build
-          mkdir -p dist_python
-          mv dist/*.whl dist_python/
-          mv dist/*.tar.gz dist_python/ || true
+          mv dist/*.whl dist/
+          mv dist/*.tar.gz dist/ || true
 
       - name: Create Linux executable
         if: matrix.os == 'ubuntu-latest'
@@ -84,8 +83,8 @@ jobs:
           path: |
             dist/ecooptimizer-server-*
             dist/ecooptimizer-server-dev-*
-            dist_python/*.whl
-            dist_python/*.tar.gz
+            dist/*.whl
+            dist/*.tar.gz
           if-no-files-found: error
 
   create-release:
