@@ -38,8 +38,6 @@ jobs:
       - name: Build Python package
         run: |
           python -m build
-          mv dist/*.whl dist/
-          mv dist/*.tar.gz dist/ || true
 
       - name: Create Linux executable
         if: matrix.os == 'ubuntu-latest'
