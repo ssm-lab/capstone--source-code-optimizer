@@ -6,40 +6,28 @@ on:
       - "v*"
 
 jobs:
-  check-branch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Verify tag is on main
-        run: |
-          if [ "$(git branch --contains $GITHUB_REF)" != "* main" ]; then
-            echo "Tag $GITHUB_REF is not on main branch"
-            exit 1
-          fi
   build:
-    needs: check-branch
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            artifact_name: linux-x64
+            artifact_name: linux
           - os: windows-latest
-            artifact_name: windows-x64.exe
+            artifact_name: win32.exe
           - os: macos-latest
-            artifact_name: macos-x64
+            artifact_name: macos
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
           architecture: ${{ runner.os == 'Windows' && 'x64' || '' }}
 
-      - name: Install tools
+      - name: Install build tools
         run: |
           python -m pip install --upgrade pip
           pip install pyinstaller
@@ -47,7 +35,7 @@ jobs:
       - name: Install package
         run: |
           pip install .
-        
+
       - name: Create Linux executable
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -91,8 +79,32 @@ jobs:
             dist/ecooptimizer-server-dev-*
           if-no-files-found: error
 
-  create-release:
+  publish-pypi:
     needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      - name: Build source distribution
+        run: |
+          python -m build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
+  create-release:
+    needs: [build, publish-pypi]
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -100,33 +112,23 @@ jobs:
         with:
           path: artifacts
           pattern: artifacts-*
-          merge-multiple: false  # Keep separate folders per OS
+          merge-multiple: false
 
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }} Test 1
           body: |
             ${{ github.event.head_commit.message }}
-      
-            ## EcoOptimizer Server Executables
-            This release contains the standalone server executables for launching the EcoOptimizer analysis engine. 
-            These are designed to work with the corresponding **EcoOptimizer VS Code Extension**.
-      
-            ### Included Artifacts
-            - **Production Server**: `ecooptimizer-server-<platform>`  
-              (Stable version for production use)
-            - **Development Server**: `ecooptimizer-server-dev-<platform>`  
-              (Development version with debug features)
-      
-            ### Platform Support
-            - Linux (`linux-x64`)
-            - Windows (`windows-x64.exe`)
-            - macOS (`macos-x64`)
+
+            **Artifacts:**
+            - Source distribution (.tar.gz) published to PyPI
+            - Executables for Windows, macOS, and Linux
           files: |
-            artifacts/artifacts-ubuntu-latest/dist/*
-            artifacts/artifacts-windows-latest/dist/*
-            artifacts/artifacts-macos-latest/dist/*
+            artifacts/artifacts-ubuntu-latest/*
+            artifacts/artifacts-windows-latest/*
+            artifacts/artifacts-macos-latest/*
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

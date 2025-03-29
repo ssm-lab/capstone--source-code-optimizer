@@ -1,7 +1,7 @@
 """Application entry point and server configuration for EcoOptimizer."""
 
+import argparse
 import logging
-import sys
 import uvicorn
 
 from ecooptimizer.api.app import app
@@ -27,7 +27,7 @@ class HealthCheckFilter(logging.Filter):
 logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
 
 
-def start():
+def start(host: str = "127.0.0.1", port: int = 8000):
     """Starts the Uvicorn server with configured settings.
 
     Displays startup banner and handles different run modes.
@@ -52,8 +52,8 @@ def start():
 
     uvicorn.run(
         app,
-        host="127.0.0.1",
-        port=8000,
+        host=host,
+        port=port,
         log_level="info",
         access_log=True,
         timeout_graceful_shutdown=2,
@@ -62,8 +62,14 @@ def start():
 
 def main():
     """Main entry point that sets mode based on command line arguments."""
-    CONFIG["mode"] = "development" if "--dev" in sys.argv else "production"
-    start()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dev", action="store_true", help="Run in development mode")
+    parser.add_argument("--port", type=int, default=8000, help="Port to run on")
+    parser.add_argument("--host", default="127.0.0.1", help="Host to bind to")
+    args = parser.parse_args()
+
+    CONFIG["mode"] = "development" if args.dev else "production"
+    start(args.host, args.port)
 
 
 def dev():
