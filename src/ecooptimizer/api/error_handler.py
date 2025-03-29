@@ -2,7 +2,6 @@
 import logging
 import os
 import stat
-import traceback
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -69,10 +68,7 @@ async def global_error_handler(request: Request, e: Exception) -> JSONResponse:
             content={"detail": e.message},
         )
     else:
-        logger.error(
-            f"Unexpected error at {request.url.path}\n"
-            f"{''.join(traceback.format_exception(type(e), e, e.__traceback__))}"
-        )
+        logger.error(f"Unexpected error at {request.url.path}", e)
         return JSONResponse(
             status_code=500,
             content={"detail": "Internal server error"},

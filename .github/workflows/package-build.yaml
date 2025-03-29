@@ -2,7 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches: [build-sign-test]
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -100,7 +101,7 @@ jobs:
           packages-dir: dist/
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: 'something'
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
 
   create-release:
     needs: [build, publish-pypi]
