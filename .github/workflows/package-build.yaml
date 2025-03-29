@@ -29,15 +29,11 @@ jobs:
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          pip install build pyinstaller
+          pip install pyinstaller
 
       - name: Install package
         run: |
           pip install .
-
-      - name: Build Python package
-        run: |
-          python -m build
 
       - name: Create Linux executable
         if: matrix.os == 'ubuntu-latest'
@@ -73,7 +69,6 @@ jobs:
           pyinstaller --onefile --name ecooptimizer-server-dev $(which eco-ext-dev)
           mv dist/ecooptimizer-server-dev dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}
 
-      # Upload both Python package artifacts and executables
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -81,12 +76,34 @@ jobs:
           path: |
             dist/ecooptimizer-server-*
             dist/ecooptimizer-server-dev-*
-            dist/*.whl
-            dist/*.tar.gz
           if-no-files-found: error
 
-  create-release:
+  publish-pypi:
     needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      - name: Build source distribution
+        run: |
+          python -m build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: 'something'
+
+  create-release:
+    needs: [build, publish-pypi]
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -105,7 +122,7 @@ jobs:
             ${{ github.event.head_commit.message }}
 
             **Artifacts:**
-            - Python package: .whl and .tar.gz files
+            - Source distribution (.tar.gz) published to PyPI
             - Executables for Windows, macOS, and Linux
           files: |
             artifacts/artifacts-ubuntu-latest/*
