@@ -2,22 +2,10 @@ name: Build and Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [build-sign-test]
 
 jobs:
-  check-branch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Verify tag is on main
-        run: |
-          if [ "$(git branch --contains $GITHUB_REF)" != "* main" ]; then
-            echo "Tag $GITHUB_REF is not on main branch"
-            exit 1
-          fi
   build:
-    needs: check-branch
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -32,7 +20,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -82,6 +69,40 @@ jobs:
           pyinstaller --onefile --name ecooptimizer-server-dev $(which eco-ext-dev)
           mv dist/ecooptimizer-server-dev dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}
 
+      - name: Install signing tools
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install osslsigncode -y
+
+      - name: Sign Windows binaries
+        if: matrix.os == 'windows-latest'
+        run: |
+          openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=EcoOptimizer"
+          osslsigncode sign -certs cert.pem -key key.pem -n "EcoOptimizer" -t http://timestamp.digicert.com -in dist/ecooptimizer-server-${{ matrix.artifact_name }} -out dist/ecooptimizer-server-${{ matrix.artifact_name }}.signed
+          mv dist/ecooptimizer-server-${{ matrix.artifact_name }}.signed dist/ecooptimizer-server-${{ matrix.artifact_name }}
+          osslsigncode sign -certs cert.pem -key key.pem -n "EcoOptimizer" -t http://timestamp.digicert.com -in dist/ecooptimizer-server-dev-${{ matrix.artifact_name }} -out dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}.signed
+          mv dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}.signed dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}
+
+      - name: Sign macOS binaries
+        if: matrix.os == 'macos-latest'
+        run: |
+          codesign --force --deep --sign - dist/ecooptimizer-server-${{ matrix.artifact_name }}
+          codesign --force --deep --sign - dist/ecooptimizer-server-dev-${{ matrix.artifact_name }}
+
+      - name: Set up GPG (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y gpg
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          gpg --list-secret-keys
+
+      - name: Sign Linux binaries
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd dist
+          gpg --detach-sign --armor -u "${{ secrets.GPG_KEY_ID }}" ecooptimizer-server-${{ matrix.artifact_name }}
+          gpg --detach-sign --armor -u "${{ secrets.GPG_KEY_ID }}" ecooptimizer-server-dev-${{ matrix.artifact_name }}
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -89,6 +110,7 @@ jobs:
           path: |
             dist/ecooptimizer-server-*
             dist/ecooptimizer-server-dev-*
+            dist/*.asc  # For Linux GPG signatures
           if-no-files-found: error
 
   create-release:
@@ -100,7 +122,7 @@ jobs:
         with:
           path: artifacts
           pattern: artifacts-*
-          merge-multiple: false  # Keep separate folders per OS
+          merge-multiple: false
 
       - name: Create release
         uses: softprops/action-gh-release@v1
@@ -109,24 +131,15 @@ jobs:
           name: ${{ github.ref_name }}
           body: |
             ${{ github.event.head_commit.message }}
-      
-            ## EcoOptimizer Server Executables
-            This release contains the standalone server executables for launching the EcoOptimizer analysis engine. 
-            These are designed to work with the corresponding **EcoOptimizer VS Code Extension**.
-      
-            ### Included Artifacts
-            - **Production Server**: `ecooptimizer-server-<platform>`  
-              (Stable version for production use)
-            - **Development Server**: `ecooptimizer-server-dev-<platform>`  
-              (Development version with debug features)
-      
-            ### Platform Support
-            - Linux (`linux-x64`)
-            - Windows (`windows-x64.exe`)
-            - macOS (`macos-x64`)
+
+            **Signed Artifacts:**
+            - Windows: Authenticode-signed
+            - macOS: Ad-hoc signed
+            - Linux: GPG-signed (.asc files)
           files: |
-            artifacts/artifacts-ubuntu-latest/dist/*
-            artifacts/artifacts-windows-latest/dist/*
-            artifacts/artifacts-macos-latest/dist/*
+            artifacts/artifacts-ubuntu-latest/*
+            artifacts/artifacts-windows-latest/*
+            artifacts/artifacts-macos-latest/*
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
