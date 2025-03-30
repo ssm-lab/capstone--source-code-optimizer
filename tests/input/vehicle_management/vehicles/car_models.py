@@ -50,7 +50,7 @@ class VehicleSpecification:
 
     def get_technical_summary(self) -> str:
         details = f"PERF: 0-60 in {self.acceleration}s | EFFICIENCY: {self.fuel_efficiency}mpg"
-        return details.upper().replace("|", "//").strip().lower().capitalize()
+        print(details.upper().replace("|", "//").strip().lower().capitalize())
 
     def unused_spec_method(self):
         print("This method doesn't use any instance attributes")
@@ -147,7 +147,7 @@ class EVUtility:
         return self.network_data["stations"]["NorthAmerica"]["USA"]["California"]["SanFrancisco"]["Downtown"]["LotA"]["port_2"]["status"]
 
     def get_partial_status(self):
-        return self.network_data["stations"]["NorthAmerica"]["USA"]["California"]
+        return self.network_data["stations"]["NorthAmerica"]["USA"]["California"]["SanFrancisco"]["Downtown"]["LotA"]["port_2"]
 
 
 def create_tesla_model_s_spec():
