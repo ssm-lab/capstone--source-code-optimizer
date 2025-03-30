@@ -1,10 +1,9 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 61.0", "setuptools_scm[toml]>=6.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "ecooptimizer"
-version = "0.0.1"
 dependencies = [
   "pylint",
   "rope",
@@ -17,6 +16,7 @@ dependencies = [
   "libcst",
   "websockets",
 ]
+version = "0.1.0"
 requires-python = ">=3.9"
 authors = [
   { name = "Sevhena Walker" },
@@ -47,9 +47,21 @@ eco-ext = "ecooptimizer.api.__main__:main"
 eco-ext-dev = "ecooptimizer.api.__main__:dev"
 
 [project.urls]
-Documentation = "https://readthedocs.org"
 Repository = "https://github.com/ssm-lab/capstone--source-code-optimizer"
 "Bug Tracker" = "https://github.com/ssm-lab/capstone--source-code-optimizer/issues"
+
+[tool.setuptools_scm]
+write_to = "src/ecooptimizer/_version.py"
+fallback_version = "0.1.0"
+
+[tool.setuptools]
+packages = ["ecooptimizer"]
+
+[tool.setuptools.package-dir]
+ecooptimizer = "src/ecooptimizer"
+
+[tool.setuptools.exclude-package-data]
+"*" = ["docs/*", "tests/*", ".github/*"]
 
 [tool.pytest.ini_options]
 norecursedirs = ["tests/temp*", "tests/input", "tests/_input_copies"]

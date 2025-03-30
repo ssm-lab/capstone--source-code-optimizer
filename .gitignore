@@ -308,3 +308,5 @@ tests/benchmarking/output/
 # Coverage
 .coverage
 coverage.*
+
+src/ecooptimizer/_version.py

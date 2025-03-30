@@ -11,12 +11,16 @@
 \usepackage{xcolor}
 \usepackage{blindtext}
 \usepackage{enumitem}
+\usepackage{float}
 
 \usepackage{array,multirow,graphicx}
 \usepackage{float}
 \usepackage{pdflscape}
 \usepackage{lipsum} 
 \usepackage{enumitem}
+\usepackage{tikz}
+\usepackage[hang,small]{caption}
+\usetikzlibrary{positioning, shapes.geometric}
 \newcommand{\tabitem}{~~\llap{\textbullet}~~}
 
 \newcounter{hazard}
@@ -54,11 +58,17 @@
 
 \begin{table}[hp]
 \caption{Revision History} \label{TblRevisionHistory}
-\begin{tabularx}{\textwidth}{llX}
+\begin{tabularx}{\textwidth}{ll>{\raggedright\arraybackslash}X}
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 25 October 2024 & All & Created initial revision of Hazard Analysis\\
+29 December 2024 & Tanveer Brar & Updated critical assumptions based on peer review feedback\\
+January 3rd, 2025 & Sevhena Walker & Added Symbolic Constants, clarified boundaries of system, expanded recommended actions for HZ-13, adjusted failure mode for HZ-15 \\
+March 24th, 2025, & Sevhena Walker & Updated system boundary and components\\
+March 24th, 2025, & Mya Hussain & Updated FEMA Table\\
+March 24th, 2025, & Ayushi Amin & Updated SCR Requirements\\
+March 24th, 2025, & Mya Hussain & Added Plugin Hazards\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -140,47 +150,92 @@ consumption and CO2 emissions.
 
 \section{System Boundaries and Components}
 
-The system boundary refers to the library being developed and its core constituent modules, as well as peripheral tools that serve to expand on the system's utility and usability. \\
-
-It is also important to make note of elements not controlled by the development team such as the database, the physical computer that will run the system, and any cloud hosting platforms used to utilize the system on a greater scale.
+The system consists of three core modules integrated through a Visual Studio Code extension that serves as the primary user interface. All components operate locally on the user's machine without external dependencies.
 
 \subsection{Core Modules}
 
-\subsubsection*{Energy Measurement Module}
-This module tracks and analyzes the energy consumption of the software being refactored, providing detailed metrics that help assess the efficiency of the code before and after refactoring. External tools will be used to implement this module with the primary one being pyJoules\footnote{A python library that energies the energy footprint of a host machine.}. Other libraries may be added should the need arise. 
+\subsubsection{Analysis Module}
+\begin{itemize}
+    \item \textbf{Purpose}: Statically analyzes entire Python files to detect energy-inefficient code patterns
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Implements smell detection per requirement FR-2
+        \item Outputs detection results
+    \end{itemize}
+    \item \textbf{Integration}: Receives complete files and smell configuration from VS Code extension
+\end{itemize}
 
-\subsubsection*{Testing Module}
-The testing module runs automated tests on the refactored code to ensure that the functionality remains intact and that no errors are introduced during the refactoring process. Testing will be done through AST\footnote{Abstract Syntax Tree: a data structure used to represent the structure of a program.} parsing and any provided tests from the user.
+\subsubsection{Refactoring Module}
+\begin{itemize}
+    \item \textbf{Purpose}: Applies energy-saving transformations to address detected inefficiencies
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Generates refactored code versions per requirement FR-3
+        \item Coordinates with Energy Measurement Module
+        \item Outputs refactored code and energy metrics
+    \end{itemize}
+\end{itemize}
 
-\subsubsection*{Refactoring module}
-This core module identifies code smells and inefficiencies in the original code and suggests or applies appropriate refactorings to optimize the code for better performance and energy efficiency. Refactoring will be done through a mix of custom-made refactoring strategies and with the help of the python library, Rope.
+\subsubsection{Energy Measurement Module}
+\begin{itemize}
+    \item \textbf{Purpose}: Quantifies energy consumption using \texttt{codecarbon}
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Measures original and refactored code energy use
+    \end{itemize}
+\end{itemize}
 
-\subsubsection*{Reinforcement Learning Model}
-The reinforcement learning model uses data from previous refactorings to improve its suggestions, helping the system learn and refine its refactoring strategies based on outcomes and energy consumption metrics. The model shall be built with the help of the machine learning library, PyTorch.
+\subsection{Visual Studio Code Extension}
+\begin{itemize}
+    \item \textbf{Role}: Primary user interface and system orchestrator
+    \item \textbf{Key Functions}:
+    \begin{itemize}
+        \item Receives complete Python files from user workspace
+        \item Displays detected smells with configurable visuals (FR-12)
+        \item Allows triggering of refactoring operations (FR-16)
+        \item Presents side-by-side refactoring comparisons (LFR-AP 1)
+        \item Allows accept/reject decisions for changes (FR-16)
+        \item Displays energy metrics and savings (FR-6)
+    \end{itemize}
+\end{itemize}
 
-\subsection{Peripherals}
-
-\subsubsection*{Visual Studio Code (VS Code) Extension}
-The VS Code extension provides a user-friendly interface within the IDE\footnote{Integrated Development Environment}, allowing developers to interact with the refactoring tool, view energy consumption metrics, and apply refactorings suggestions directly from their development environment.
-
-\subsubsection*{GitHub Action}
-The GitHub Action automates the refactoring process within CI/CD workflows, applying refactoring suggestions and running energy consumption analyzes during code integration, ensuring consistent energy-efficient practices.
-
-\subsubsection*{Web Client}
-The web client offers a user interface that allows users to interact with the refactoring system remotely, enabling them to view energy consumption reports, and track performance metrics from a browser.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        node distance=2cm,
+        module/.style={rectangle, draw, minimum width=3cm, minimum height=1cm, text centered},
+        user/.style={ellipse, draw, minimum width=2cm, minimum height=1cm}
+    ]
+        % Nodes
+        \node (user) [user] {User};
+        \node (extension) [module, right=of user] {VS Code Extension};
+        \node (analysis) [module, below=of extension] {Analysis Module};
+        \node (refactoring) [module, right=of analysis] {Refactoring Module};
+        \node (energy) [module, right=of refactoring] {Energy Measurement};
+        
+        % Arrows
+        \draw [->] (user) -- node[above] {Python files} (extension);
+        \draw [->] (extension) -- node[right] {File analysis} (analysis);
+        \draw [->] (analysis) -- node[above] {Detected smells} (refactoring);
+        \draw [<->] (refactoring) -- node[above] {Energy metrics} (energy);
+        \draw [->] (refactoring) -- node[below, sloped] {Refactoring options} (extension);
+        \draw [->] (extension) -- node[below] {User decisions} (user);
+    \end{tikzpicture}
+    \caption{System component interaction diagram showing communication pathways}
+    \label{fig:component-interaction}
+\end{figure}
 
 \section{Critical Assumptions}
 
 \begin{itemize}
     \item The Energy Measurement Model will provide accurate and consistent energy consumption metrics across different platforms (Windows, macOS, Linux). There are no discrepancies in measurements due to platform differences that could result in ineffective refactoring.
-    \item The Testing Module is provided with automated tests that have enough coverage to detect post refactoring bugs, functionality regressions, etc.
-    \item Code smells identified by the Refactoring Module always involve code that could be more energy efficient.
-    \item Custom-made refactoring strategies and Rope are capable of generating effective and correct refactoring.
-    \item Sufficient data sets are available for the reinforcement learning model to provide increasingly accurate and efficient refactoring suggestions over time.
-    \item GitHub Actions, which is a third-party dependency for the DevOps integration, is not suspended for a prolonged period of time.
+    \item The Refactoring Module solely identifies code smells that are validated by the development team's testing to reduce energy consumption. The module will not refactor the code smell if it is determined that the change will not result in measurable energy savings for the specific code being refactored.
+    \item Custom-made refactoring strategies and Rope are capable of generating effective and correct refactorings.
+    \item Users of the tool are experienced Python developers with knowledge of code refactoring and software optimization. Basic proficiency in programming is expected to navigate the tool and its features effectively.
+    \item The tool will be used in a development environment, such as individual developer machines or a non-production remote repository, where configurations can be adjusted as needed. Stability and scalability requirements for large-scale production use are not assumed.
+    \item The tool assumes that users act in good faith and use the system as intended. Potential hazards from malicious misuse (for example, injecting harmful code or exploiting refactoring logic) are considered out of scope for the current version but may be addressed in future versions.
+    \item The tool assumes limited concurrent usage during energy measurement operation as simultaneous execution of resource-intensive processes could impact energy consumption metrics.
 \end{itemize}
-
-\section{Failure Mode and Effect Analysis}
 
 \newgeometry{margin=1.5cm}
 
@@ -194,13 +249,19 @@ The web client offers a user interface that allows users to interact with the re
     \renewcommand{\arraystretch}{1.5}
     \setlength\LTleft{0pt}
     \setlength\LTright{0pt}
-    \begin{longtable}{|p{0.6cm}|p{4cm}p{4cm}p{4cm}p{4cm}p{1.5cm}p{1.5cm}|}
+    \begin{longtable}{|
+        >{\centering\arraybackslash}p{0.6cm}|
+        >{\raggedright\arraybackslash}p{4cm}
+        >{\raggedright\arraybackslash}p{4cm}
+        >{\raggedright\arraybackslash}p{4cm}
+        >{\raggedright\arraybackslash}p{4.7cm}
+        >{\centering\arraybackslash}p{1.3cm}
+        >{\centering\arraybackslash}p{1cm}|}
     \caption{FMEA Table}\\\hline
     \toprule \multicolumn{1}{|c}{\textbf{Component}} & \multicolumn{1}{c}{\textbf{Failure Modes}} & \multicolumn{1}{c}{\textbf{Effects of Failure}} & \multicolumn{1}{c}{\textbf{Causes of Failure}} & \multicolumn{1}{c}{\textbf{Recommended Action}} & \multicolumn{1}{c}{\textbf{SR}} & \multicolumn{1}{c|}{\textbf{Ref}}\\\hline
     \endhead
     \hline
-    \multicolumn{7}{|r|}{\textit{Table continues on next page}}\\
-    \bottomrule
+    \multicolumn{7}{|r|}{\textit{Table continues on next page}}\\\hline
     \endfoot
     \bottomrule
     \endlastfoot
@@ -208,10 +269,11 @@ The web client offers a user interface that allows users to interact with the re
     \midrule
     \multicolumn{1}{|c|}{\multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} 
     & Background tasks could be incorrectly included in energy measurement. & 
-    Background tasks that are not to the Python code under refactoring could skew the overall result for consumed energy. This could: \begin{itemize}[wide=0pt]
+    Background tasks that are not related to the Python code under refactoring could skew the overall result for consumed energy. This could: \begin{itemize}[wide=0pt]
         \item skew the energy consumption metrics and mislead users. 
         \item produces refactorings that do not save energy due to faulty measurement. 
     \end{itemize} & The Energy Measurement Module lacks a filtering mechanism to isolate the specific Python code snippet being refactored. This allows unrelated background tasks or idle processes to be included in the overall energy measurement. & Use process-level tracking to distinguish between the Python code under refactoring and unrelated background tasks. & SCR-1 & HZ \showmycounter \\ \cline{2-7}
+    
     \multicolumn{1}{|c|}{\multirow{18}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & The Energy Measurement Module does not provide energy consumption data in a timely manner & \begin{itemize}[wide=0pt]
         \item User experiences delays in receiving energy consumption feedback, which can slow down their refactoring process.
         \item The tool may be considered inefficient by users, potentially causing them to not adopt it. 
@@ -219,53 +281,31 @@ The web client offers a user interface that allows users to interact with the re
         \item Computational overhead in the Energy Measurement Module
         \item Delays in accessing low level hardware components that are needed for energy measurement
     \end{itemize} & \begin{itemize}[wide=0pt]
-        \item Investigate PyJoules' configuration options to find a balance between accuracy and performance based on the size and complexity of the code being refactored. 
+        \item Investigate CodeCarbon's configuration options to find a balance between accuracy and performance based on the size and complexity of the code being refactored. 
         \item Implement parallel processing to measure energy consumption and run code smell detection simultaneously. This can reduce the overall time by allowing energy measurements to be done without holding up other tasks.
-        \item Implement a graceful timeout mechanism if PyJoules takes too long to respond. 
+        \item Implement a graceful timeout mechanism if CodeCarbon takes too long to respond. 
         \item Provide users with an estimated time for completion so they are aware of ongoing measurements if energy measurement exceeds a set time. 
-    \end{itemize} & SCR-1, SCR-10 & HZ \showmycounter \\
-    \multicolumn{1}{|c|}{\multirow{15}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & The energy measure module does not provide any data at all & Refactoring fails due to no energy metrics available for validation of changes & \begin{itemize}[wide=0pt]
+    \end{itemize} & SCR-1, SCR-8 & HZ \showmycounter \\
+    
+    \multicolumn{1}{|c|}{\multirow{13}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & The energy measure module does not provide any data at all & Refactoring fails due to no energy metrics available for validation of changes & \begin{itemize}[wide=0pt]
         \item The system does not have the necessary administrative or system-level permissions to access energy-related data, especially in cloud environments
         \item The energy measurement process might be too slow, resulting in timeouts or delays that cause no metrics to be reported within the expected time frame.
     \end{itemize} & \begin{itemize}[wide=0pt]
         \item Ensure the software has sufficient permissions to access low-level system metrics, such as power usage, and grant administrative privileges if needed.
         \item Increase the allowed time frame for measurements to complete
         \item Implement a functionality in the system that allows that prompts the user with a request to pause the refactoring process and restart at the same point when the system is less busy
-    \end{itemize} & SCR-1, SCR-3, SCR-10 & HZ \showmycounter \\ \cline{2-7}
-    & text &&&&& HZ \showmycounter \\ \hline
-    \multicolumn{1}{|c|}{\multirow{8}{*}{\rotatebox[origin=c]{90}{\textbf{Testing}}}} & Test not able to run due to refactoring &
-    \begin{itemize}[wide=0pt]
-        \item Testing coverage not met
-        \item Unable to test business logic of user code
-        \item Unable to complete refactorings
-    \end{itemize}
-    & Test cases dependent on some modules that have been refactored &
-    \begin{itemize}[wide=0pt]
-        \item Use AST as a base for testing
-        \item Ensure that any refactorings that involve variable, class or function name changes are disabled on default and require explicit enabling from the user
-    \end{itemize}
-    & SCR-2 & HZ \showmycounter \\ 
-    
-    \multicolumn{1}{|c|}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\textbf{Testing}}}} & Provided test suite misses critical scenarios& 
-    \begin{itemize}[wide=0pt]
-        \item The refactored code could fail in production under specific conditions, leading to potential downtime or incorrect behaviour.
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item  Limited test suite or lack of coverage for particular scenarios.
-    \end{itemize}
-    & Implement syntactical analysis in refactoring to mitigate code functionality changes & SCR-2 & HZ \showmycounter \\ \cline{2-7}
-    
+    \end{itemize} & SCR-1, SCR-3, SCR-7, SCR-8 & HZ \showmycounter \\ \cline{2-7}
+
     \hline
 
-    \multicolumn{1}{|c|}{\multirow{18}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & Incorrect refactorings suggestions were given & 
+    \multicolumn{1}{|c|}{\multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & Incorrect refactorings suggestions were given & 
     \begin{itemize}[wide=0pt]
         \item Refactored code increases the energy consumption instead of reducing it.
         \item Functionality of refactored code is not consistent from that of the original code.
     \end{itemize} &
     \begin{itemize}[wide=0pt]
-        \item Inadequate training of the reinforcement learning model. 
         \item Refactoring logic misses some edge cases. 
-        \item Reinforcement learning model creates syntactically incorrect code. 
+        \item Refactoring module creates syntactically incorrect code. 
     \end{itemize}
         & Validate the changes by verifying energy consumption statistics before applying changes to the code by adding validation rules & SCR-2 & HZ \showmycounter \\ \cline{2-7}
         
@@ -276,19 +316,11 @@ The web client offers a user interface that allows users to interact with the re
     \begin{itemize}[wide=0pt]
         \item  Poor memory management during the refactoring process
     \end{itemize}
-    & Implement automatic garbage collection or memory de-allocation after each refactoring step & SCR-8 & HZ \showmycounter \\ \cline{2-7}
-    & Unable to revert refactorings & 
-    \begin{itemize}[wide=0pt]
-        \item User loses confidence in integrity of system
-        \item Unable to pick which refactorings to keep and which to discard based on user input
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item  Faulty version control strategy
-    \end{itemize}
-    & Implement a robust version control system that follows a granular commit system tracking each change with precision & SCR-4 & HZ \showmycounter \\
+    & Implement automatic garbage collection or memory de-allocation after each refactoring step & SCR-6 & HZ \showmycounter \\ \cline{2-7}
     
+
     
-    \multicolumn{1}{|c|}{\multirow{18}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}} & The refactoring improves energy efficiency but degrades other performance metrics like speed or memory usage & 
+    & The refactoring improves energy efficiency but degrades other performance metrics like speed or memory usage & 
     \begin{itemize}[wide=0pt]
         \item The software becomes slower or uses more memory, which could counteract the benefits of energy optimization.
     \end{itemize} &
@@ -296,15 +328,16 @@ The web client offers a user interface that allows users to interact with the re
         \item Poor trade-offs made by the refactoring algorithm between energy efficiency and other performance factors.
     \end{itemize}
     & Implement multifactor optimization, balancing energy efficiency with other performance metrics. If this is not possible inform the user of potential degradation when suggesting at-risk refactorings. & SCR-2 & HZ \showmycounter \\ \cline{2-7}
+    
+    \multicolumn{1}{|c|}{\multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{Refactoring}}}}& The refactoring tool modifies code that relies on external libraries, causing incompatibility with these libraries. & 
 
-    & The refactoring tool modifies code that relies on external libraries, causing incompatibility with these libraries. & 
     \begin{itemize}[wide=0pt]
         \item Code fails to execute or produces unexpected behaviour due to altered interactions with third-party libraries.
     \end{itemize} &
     \begin{itemize}[wide=0pt]
         \item Lack of awareness of how certain refactorings impact external dependencies, especially with complex or dynamically loaded libraries.
     \end{itemize}
-    & Implement a detection mechanism that identifies external library dependencies and exempts them from refactorings unless explicitly requested by the user. & SCR-5 & HZ \showmycounter \\ \cline{2-7}
+    & Implement a detection mechanism that identifies external library dependencies and exempts them from refactorings unless explicitly requested by the user. & SCR-4 & HZ \showmycounter \\ \cline{2-7}
 
     & The tool accesses or refactors code that contains sensitive information (e.g., API keys, credentials), which could lead to unintentional exposure or mismanagement of this data. & 
     \begin{itemize}[wide=0pt]
@@ -313,39 +346,98 @@ The web client offers a user interface that allows users to interact with the re
     \begin{itemize}[wide=0pt]
         \item Refactorings alter or expose parts of the code that store or transmit sensitive data, without proper checks.
     \end{itemize}
-    & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-6 & HZ \showmycounter \\ \hline 
-    
-    \multicolumn{1}{|c|}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning}}} & Model overfitting & Less effective when applied to unseen or more diverse codebases resulting in suboptimal and/or incorrect refactorings for new projects. & \begin{itemize}[wide=0pt]
-        \item Over-training model on similar datasets
-    \end{itemize} & Use a diverse and representative dataset for training the model & SCR-7 & HZ \showmycounter \\ \cline{2-7}
-    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Reinforcement Learning}}}} & Bias in recommendations & Model starts favouring certain types of refactorings or ignoring others that could be more efficient for different scenarios. & \begin{itemize}[wide=0pt]
-        \item Imbalanced reward function
-        \item Not enough exploration actions done by the model
-        \item Unrealistic straining data simulations used
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item Regularly audit the model for bias
-        \item Ensure the training data is balanced across different types of refactorings and code patterns.
-        \item Regularly retrain the model
-    \end{itemize}
-    & SCR-7 & HZ \showmycounter \\ \cline{2-7}
-    & Model drift and degradation & The RL model becomes less effective over time due to changes in code styles, and best practices, or the introduction of new refactoring strategies leading to a degradation in performance and accuracy of refactoring suggestions. & Passing of time and evolution of software practices &
-    \begin{itemize}[wide=0pt]
-        \item Regularly retrain the model using up-to-date data and monitor its performance to detect signs of drift.
-        \item Implement a feedback loop to incorporate user corrections into the training data.
-    \end{itemize}
-    & SCR-7 & HZ \showmycounter \\ \cline{2-7}
-    & Over-reliance on pre-trained models. The reinforcement learning model is overly trusted, even when it generates suboptimal or erroneous refactorings. & 
-    \begin{itemize}[wide=0pt]
-        \item Incorrect or harmful refactorings are applied without proper oversight, leading to system instability.
-    \end{itemize} &
-    \begin{itemize}[wide=0pt]
-        \item Over-reliance on automated suggestions without sufficient human review or fail-safes.
-    \end{itemize}
-    & Require human approval for significant refactorings or apply thresholds to reject low-confidence suggestions from the model. & SCR-9 & HZ \showmycounter \\ \cline{2-7}\hline
-     \bottomrule
-    \end{longtable}
+    & Implement security-focused static analysis tools that identify sensitive code sections and prevent them from being refactored. Warn users when refactoring such areas. & SCR-5 & HZ \showmycounter \\ \hline 
 
+
+    \multicolumn{1}{|c|}{\multirow{3}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} &  Incorrect energy measurements are used for refactoring decisions, leading to poor optimization or functional errors in the refactored code. & 
+    \begin{itemize}[wide=0pt]
+        \item Incorrect energy measurements leading to suboptimal or erroneous refactoring decisions.
+        \item Energy inefficiencies or functional degradation in the refactored code
+    \end{itemize} & Incorrect measurements of energy usage was validated and used by Reinforcement Learning Model which created incorrect refactorings. & Introduce validation mechanisms for energy data before using it for refactoring decisions. & SCR-1 & HZ \showmycounter \\ \cline{2-7}
+
+
+
+    \multicolumn{1}{|c|}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\textbf{Energy Measurement}}}} & Simultaneous refactoring operations without proper synchronization lead to conflicts or inconsistencies, causing code instability or unexpected behavior. & 
+    \begin{itemize}[wide=0pt]
+        \item Conflicts or inconsistencies arising from multiple refactoring operations executed simultaneously
+        \item Code instability or unintended behavior in the refactored codebase
+    \end{itemize} &
+    \begin{itemize}[wide=0pt]
+        \item Lack of synchronization or conflict resolution mechanisms for parallel refactoring
+    \end{itemize}
+    & Introduce locking mechanisms or dependency checks to ensure safe concurrent operations. & SCR-9 & HZ \showmycounter \\ \hline
+
+    \multicolumn{1}{|c|}{\multirow{10}{*}{\rotatebox[origin=c]{90}{\textbf{All Components}}}} & The system shuts down or crashes during an ongoing optimization process. &
+    \begin{itemize}[wide=0pt]\item Energy Measurement: Incomplete energy metrics can result in inaccurate energy savings reporting. \item Refactoring: Loss of progress in ongoing optimization can lead to delays.  \end{itemize} &
+    \begin{itemize}[wide=0pt] \item Hardware failure, power outage or insufficient system resources \item Unhandled software exceptions or errors during the tool's usage \item Prolonged measurement operations that exceed system capacity \end{itemize} &
+    \begin{itemize}[wide=0pt] \item Implement a checkpointing mechanism to periodically save intermediate refactoring states \item Enable a recovery workflow to reload saved checkpoints and resume from the last recorded state  \end{itemize} &
+    SCR-1, SCR-10 &
+    HZ-\showmycounter \\ \hline
+
+
+    \multicolumn{1}{|c|}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\textbf{Plugin UI}}}} & UI displays outdated or incorrect energy metrics & 
+    \begin{itemize}[wide=0pt]
+        \item Users apply suboptimal refactorings based on inaccurate data.
+        \item Reduced trust in tool reliability.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Cached data not refreshed in real-time.
+        \item Validation failures in energy metric updates.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Implement real-time data validation and refresh mechanisms.
+        \item Display timestamps for last metric update.
+    \end{itemize} & SCR-11 & HZ-\showmycounter \\ \cline{2-7}
+
+    \multicolumn{1}{|c|}{\multirow{20}{*}{\rotatebox[origin=c]{90}{\textbf{Plugin UI}}}} & Accidental application of changes without confirmation & 
+    \begin{itemize}[wide=0pt]
+        \item Unintended code modifications leading to functional errors.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Lack of confirmation dialogs or undo functionality.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Require user confirmation before applying changes.
+        \item Implement an undo feature for recent actions.
+    \end{itemize} & SCR-12 & HZ-\showmycounter \\ \cline{2-7}
+
+    & Inadequate progress feedback during long operations & 
+    \begin{itemize}[wide=0pt]
+        \item Users abort processes prematurely, causing incomplete refactoring.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Missing progress indicators or status notifications.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Add progress bars and time estimates for long operations.
+        \item Provide status updates (e.g., "Measuring energy... 75\%").
+    \end{itemize} & SCR-13 & HZ-\showmycounter \\ \cline{2-7}
+
+    & Inaccessible UI for users with disabilities & 
+    \begin{itemize}[wide=0pt]
+        \item Exclusion of users who rely on assistive technologies.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Non-compliance with accessibility standards (e.g., WCAG).
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Ensure keyboard navigation support.
+        \item Add screen reader compatibility and alt-text for visual elements.
+    \end{itemize} & SCR-14 & HZ-\showmycounter \\ \cline{2-7}
+
+    & Misconfiguration due to unclear UI & 
+    \begin{itemize}[wide=0pt]
+        \item Incorrect refactoring settings lead to degraded performance.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Complex configuration options without guidance.
+    \end{itemize} & 
+    \begin{itemize}[wide=0pt]
+        \item Simplify UI with tooltips and inline validation.
+        \item Provide preset configurations for common use cases.
+    \end{itemize} & SCR-15 & HZ-\showmycounter \\ \hline
+
+\end{longtable}
 
 \end{landscape}
 
@@ -356,84 +448,159 @@ The web client offers a user interface that allows users to interact with the re
 
 \section{Safety and Security Requirements}
 
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{|l|c|}
+        \toprule \textbf{Symbol} & \textbf{Value} \\
+        \midrule
+        LOG\_THRESH & 100\% \\
+        REFACTOR\_TEST\_THRESH & 100\% \\
+        REFACTOR\_SECURE\_THRESH & 100\% \\
+        REFACTOR\_EFFECT\_THRESH & 95\% \\
+        PERFORM\_TOL & 5\% \\
+        RUNS\_THRESH & 100\% \\
+        EDIT\_THRESH & 100\% \\
+        DETECT\_ACC & 100\% \\
+        MEM\_ALERT\_THRESH & 100\% \\
+        RISK\_REFACTOR\_THRESH & 100\% \\
+        ENERGY\_DELAYS & 100\% \\
+        ENERGY\_VALID\_THRESH & 100\% \\
+        TEST\_TRIAGE\_THRESH & 100\% \\
+        SAVE\_TIME & 30 sec \\
+        MAX\_DATA\_LOSS & 1\% \\
+        FAIL\_SCENARIO\_THRESH & 100\% \\
+        METRIC\_REFRESH\_TIME & 2 sec \\ % Added constant
+        UNDO\_ACTIONS & 5 \\ % Added constant
+        PROGRESS\_UPDATE\_TIME & 5 sec \\ % Added constant
+        \bottomrule
+    \end{tabular}
+    \caption{Symbolic Constants}
+    \label{tab:sym}
+\end{table}
+
 \begin{enumerate}[label=SCR \arabic*., wide=0pt, leftmargin=*]
 
-    \item \emph{The system shall log all energy consumption measurements with timestamps and indicate which processes were measured to aid in future analysis and troubleshooting.}\\
+    \item \emph{The system shall log all energy consumption metrics with timestamps and indicate which processes were measured to aid in future analysis and troubleshooting.}\\
     {\bf Rationale:} Detailed logging with timestamps and process attribution ensures accurate energy data and helps identify delays or misattributions.\\
-    {\bf Fit Criterion:} 100\% of energy analysis logs must include timestamps and process-level breakdowns of all measured processes.\\
-    {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3\\
+    {\bf Fit Criterion:} \texttt{LOG\_THRESH} of energy analysis logs must include timestamps and process-level breakdowns of all measured processes.\\
+    {\bf Associated Hazards:} HZ-1, HZ-2, HZ-3, HZ-9, HZ-11\\
     {\bf Priority:} High
 
-    \item \emph{The system shall ensure that all refactored code has comprehensive test coverage and passes performance metrics such as energy efficiency, speed, and memory usage.}\\
-    {\bf Rationale:} Proper test coverage and performance checks prevent faulty code from being introduced and ensure refactorings improve or maintain performance.\\
-    {\bf Fit Criterion:} 100\% of refactorings must pass tests covering all code paths, and performance must remain within a 5\% tolerance across energy, speed, and memory metrics.\\
-    {\bf Associated Hazards:} HZ-4, HZ-5, HZ-6, HZ-9\\
+    \item \emph{The system shall ensure that all refactored code passes performance metrics such as energy efficiency, speed, and memory usage.}\\
+    {\bf Rationale:} Proper performance checks ensure refactorings improve/maintain performance.\\
+    {\bf Fit Criterion:} \texttt{REFACTOR\_TEST\_THRESH} of refactorings must pass tests covering all code paths, and performance must remain within \texttt{PERFORM\_TOL} across energy, speed, and memory metrics.\\
+    {\bf Associated Hazards:} HZ-4, HZ-6\\
     {\bf Priority:} High
 
     \item \emph{The system shall check for necessary system-level permissions to access energy consumption data and alert users if permissions are missing.}\\
     {\bf Rationale:} Lack of access may lead to failure in energy data retrieval, which can hinder the accuracy of analysis.\\
-    {\bf Fit Criterion:} 100\% of runs shall check for and request permissions if required, and alert the user in case of failures.\\
+    {\bf Fit Criterion:} \texttt{RUNS\_THRESH} of runs shall check for and request permissions if required, and alert the user in case of failures.\\
     {\bf Associated Hazards:} HZ-3\\
-    {\bf Priority:} High
-
-    \item \emph{The system shall ensure version control for each refactoring, allowing changes to be reverted in case of errors.}\\
-    {\bf Rationale:} Version control helps prevent loss of code or data and allows developers to revert refactorings if necessary.\\
-    {\bf Fit Criterion:} 100\% of changes shall be recorded, allowing full reversion with no data loss.\\
-    {\bf Associated Hazards:} HZ-8\\
     {\bf Priority:} High
 
     \item \emph{The system shall detect and exempt external library dependencies from refactorings to avoid compatibility issues.}\\
     {\bf Rationale:} Modifying external dependencies could lead to system instability or incompatibility with other tools or frameworks.\\
-    {\bf Fit Criterion:} 100\% detection accuracy for external library code during refactoring.\\
-    {\bf Associated Hazards:} HZ-10\\
+    {\bf Fit Criterion:} \texttt{DETECT\_ACC} detection accuracy for external library code during refactoring.\\
+    {\bf Associated Hazards:} HZ-7\\
     {\bf Priority:} Medium
 
     \item \emph{The system shall not refactor or alter code containing sensitive information (noted by user), ensuring security is maintained.}\\
     {\bf Associated Rationale:} Refactoring sensitive code may introduce vulnerabilities and compromise security.\\
-    {\bf Fit Criterion:} 100\% of refactorings must pass a security check to avoid tampering with sensitive information.\\
-    {\bf Associated Hazards:} HZ-11\\
+    {\bf Fit Criterion:} \texttt{REFACTOR\_SECURE\_THRESH} of refactorings must pass a security check to avoid tampering with sensitive information.\\
+    {\bf Associated Hazards:} HZ-8\\
     {\bf Priority:} High
-
-    \item \emph{The reinforcement learning model shall be trained on diverse datasets and periodically audited to avoid bias and prevent degradation.}\\
-    {\bf Rationale:} Overfitting or model degradation can lead to suboptimal or biased refactorings, impacting the system's effectiveness.\\
-    {\bf Fit Criterion:} 95\% of refactorings should be equally effective across different types of projects, and model audits should occur at least quarterly.\\
-    {\bf Associated Hazards:} HZ-12, HZ-13, HZ-14\\
-    {\bf Priority:} Medium
 
     \item \emph{The system shall implement memory leak detection during refactoring and alert users if any issues are detected.}\\
     {\bf Rationale:} Memory leaks may cause system crashes and reduce performance.\\
-    {\bf Fit Criterion:} 100\% of memory leak incidents should trigger an error alert and resolution process.\\
-    {\bf Associated Hazards:} HZ-7\\
+    {\bf Fit Criterion:} \texttt{MEM\_ALERT\_THRESH} of memory leak incidents should trigger an error alert and resolution process.\\
+    {\bf Associated Hazards:} HZ-5\\
     {\bf Priority:} Medium
 
-    \item \emph{The system shall require user approval for high-impact refactorings or those with low confidence, providing visibility and oversight for critical changes.}\\
+    \item \emph{The system shall require user approval for high-impact refactorings (those modifying more than 50 lines of code) or low-confidence refactorings (based on a ranked list of code smells), providing visibility and oversight for critical changes.}\\
     {\bf Rationale:} Automated decisions could introduce errors without human oversight, and users should be aware of significant changes.\\
-    {\bf Fit Criterion:} 100\% of high-risk or low-confidence refactorings must require user approval before proceeding.\\
-    {\bf Associated Hazards:} HZ-15\\
+    {\bf Fit Criterion:} \texttt{RISK\_REFACTOR\_THRESH} of refactorings exceeding 50 lines or flagged as low-confidence by the ranked smell list must require user approval before proceeding.\\
+    {\bf Associated Hazards:} HZ-3\\
     {\bf Priority:} High
 
     \item \emph{The system shall alert users to any delays or failures in reporting energy consumption, ensuring transparency in reporting.}\\
     {\bf Rationale:} Users need to be aware of any issues in energy reporting to troubleshoot and resolve potential problems.\\
-    {\bf Fit Criterion:} 100\% of energy measurement delays or failures must trigger a user alert.\\
+    {\bf Fit Criterion:} \texttt{ENERGY\_DELAYS} of energy measurement delays or failures must trigger a user alert.\\
     {\bf Associated Hazards:} HZ-2, HZ-3\\
     {\bf Priority:} High
+
+    \item \emph{The system shall implement synchronization mechanisms to prevent conflicts during concurrent refactorings, ensuring that refactoring operations do not interfere with each other.}\\
+    {\bf Rationale:} Without synchronization, concurrent refactorings could lead to code instability, unintended behavior, or data corruption.\\
+    {\bf Associated Hazards:} HZ-10\\
+    {\bf Priority:} High
+
+    \item \emph{The system shall implement a checkpointing mechanism to periodically save the state of the optimization process, including the refactoring progress, energy measurement data, and provide recovery options in case of a system shutdown or failure.}\\
+    {\bf Rationale:} Periodic checkpointing ensures progress is not lost during unexpected system failures, allowing users to resume optimization.\\
+    {\bf Fit Criterion:} The system must save progress at least every \texttt{SAVE\_TIME} during optimization and allow recovery with no more than \texttt{MAX\_DATA\_LOSS} in \texttt{FAIL\_SCENARIO\_THRESH} of failure scenarios.\\
+    {\bf Associated Hazards:} HZ-11\\
+    {\bf Priority:} High
+
+    \item \emph{The system shall ensure the UI displays real-time, validated energy metrics.}\\
+    {\bf Rationale:} Outdated or incorrect data may lead users to make poor refactoring decisions.\\
+    {\bf Fit Criterion:} All energy metrics must refresh within \texttt{METRIC\_REFRESH\_TIME} of measurement completion, and timestamps must be visible.\\
+    {\bf Associated Hazards:} HZ-12\\
+    {\bf Priority:} High
+
+    \item \emph{The system shall require user confirmation before applying changes.}\\
+    {\bf Rationale:} Prevents accidental code modifications and allows users to revert mistakes.\\
+    {\bf Fit Criterion:} 100\% of refactoring applications require explicit user confirmation; undo functionality supports at least the last \texttt{UNDO\_ACTIONS} actions.\\
+    {\bf Associated Hazards:} HZ-13\\
+    {\bf Priority:} High
+
+    \item \emph{The system shall provide real-time progress feedback for all operations exceeding \texttt{PROGRESS\_UPDATE\_TIME}.}\\
+    {\bf Rationale:} Transparency during long operations reduces user frustration and prevents premature termination.\\
+    {\bf Fit Criterion:} Progress bars or status messages must update at least every \texttt{PROGRESS\_UPDATE\_TIME} during lengthy tasks.\\
+    {\bf Associated Hazards:} HZ-14\\
+    {\bf Priority:} Medium
+
+    \item \emph{The system shall comply with WCAG 2.1 accessibility standards to ensure usability for individuals with disabilities.}\\
+    {\bf Rationale:} Accessible design ensures equitable access to all users.\\
+    {\bf Fit Criterion:} UI passes automated accessibility audits (e.g., contrast ratios, keyboard navigation).\\
+    {\bf Associated Hazards:} HZ-15\\
+    {\bf Priority:} Medium
+
+    \item \emph{The system shall validate user configurations and provide tooltips/presets to prevent misconfiguration.}\\
+    {\bf Rationale:} Clear guidance reduces configuration errors that impact refactoring outcomes.\\
+    {\bf Fit Criterion:} 100\% of configuration screens include inline validation and tooltips for complex options.\\
+    {\bf Associated Hazards:} HZ-16\\
+    {\bf Priority:} Medium
 
 \end{enumerate}
 
 \section{Roadmap}
 
 Requirements that will be implemented during the capstone timeline:
-\begin{itemize}
-    \item SCR 1
-    \item SCR 2
-    \item SCR 3
-    \item SCR 4
-    \item SCR 5
-    \item SCR 6
-    \item SCR 9
-    \item SCR 10
-\end{itemize}
 
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{0.3\textwidth} p{0.3\textwidth} p{0.3\textwidth}}
+    \begin{itemize}[wide=0pt]
+        \item SCR 1
+        \item SCR 2
+        \item SCR 3
+        \item SCR 4
+    \end{itemize} &
+    \begin{itemize}[wide=0pt]
+        \item SCR 5
+        \item SCR 6
+        \item SCR 9
+        \item SCR 10
+    \end{itemize} &
+    \begin{itemize}[wide=0pt]
+        \item SCR 11
+        \item SCR 12
+        \item SCR 13
+        \item SCR 15
+    \end{itemize} \\
+\end{tabular}
+
+\medskip
+
+\noindent
 Requirements implemented in the future:
 \begin{itemize}
     \item SCR 7: This will be audited on a regular basis which will be a future implementation.
