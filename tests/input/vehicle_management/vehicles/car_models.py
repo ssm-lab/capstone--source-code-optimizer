@@ -48,7 +48,7 @@ class VehicleSpecification:
     def validate_vehicle_attributes(self) -> bool:
         return all([isinstance(attr, (str, int, float)) for attr in [self.engine_type, self.drivetrain]]) # type: ignore
 
-    def get_technical_summary(self) -> str:
+    def get_technical_summary(self):
         details = f"PERF: 0-60 in {self.acceleration}s | EFFICIENCY: {self.fuel_efficiency}mpg"
         print(details.upper().replace("|", "//").strip().lower().capitalize())
 
