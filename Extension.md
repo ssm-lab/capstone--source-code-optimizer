@@ -45,7 +45,7 @@ Watch EcoOptimizers in action:
 
 ## Contribute
 
-EcoOptimizers is open-source! Help improve the extension by contributing to our GitHub repository: [GitHub Repository](#)
+EcoOptimizers is open-source! Help improve the extension by contributing to our GitHub repository: [GitHub Repository](https://github.com/ssm-lab/capstone--source-code-optimizer)
 
 ---
 
