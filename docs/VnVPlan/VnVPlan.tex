@@ -55,7 +55,7 @@
   November 4th, 2024 & All & Created initial revision of VnV Plan\\
 January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarified test-SRT-3\\
   March 10th, 2025 & All & Revised Functional and Non-Functional Requirements\\
-  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools.\\
+  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools.\\
   \bottomrule
 \end{tabularx}
 
@@ -484,49 +484,20 @@ components of this plan include:
 
 \subsection{Automated Testing and Verification Tools}
 
-\textbf{Unit Testing Framework:} Pytest is chosen as the main
-framework for unit testing due to its
-\begin{inparaenum}[(i)]
-\item scalability
-\item integration with other tools
-  (\texttt{pytest-cov}~\cite{pytest-cov} for code coverage)
-\item extensive support for parameterized tests.
-\end{inparaenum} These features make it easy to test the codebase as
-it grows, adapting to changes throughout the project's development.\\
+\textbf{Unit Testing Framework:} The project uses standard testing tools for each part of the system: \texttt{Pytest}~\cite{pytest} for the Python backend and \texttt{Jest}~\cite{jest} for the TypeScript frontend. These tools were chosen because they are widely used in their respective ecosystems, well-documented, and compatible with the project's CI/CD pipeline. Together they provide test coverage for both backend and frontend components.\\
 
-\noindent\textbf{Profiling Tool:} The codebase will be evaluated
-based on results from both time and memory profiling to optimize
-computational speed and resource usage. For time profiling (recording
-  the number of function calls, time spent in each function, and its
-descendants), \texttt{cProfile} will be used, as it is included
-within Python, making it a convenient choice for profiling. For
-memory profiling, \texttt{memory\_profiler}~\cite{memory_profiler}
-will be used, as it is easy to install and includes built-in support
-for visual display of output.\\
+\noindent\textbf{Code Coverage Tools and Plan for Summary:} The codebase will be analyzed to determine the percentage of code executed during tests using language-specific tools:
 
-\noindent\textbf{Static Analyzer:} The codebase will be statically
-analyzed using \texttt{ruff}~\cite{ruff}, as it provides fast
-linting, built-in rule enforcement, and integrates well with modern
-Python projects. \texttt{ruff}~\cite{ruff} enforces both linting and
-formatting rules, reducing the need for multiple tools.\\
+\begin{itemize}
+    \item \textbf{Python:} \texttt{pytest-cov}~\cite{pytest-cov} provides granular-level coverage including branch, line, and path analysis. Its seamless integration with \texttt{pytest}~\cite{pytest} ensures coverage metrics are generated during normal test execution.
+    
+    \item \textbf{TypeScript:} \texttt{Jest}'s~\cite{jest} built-in coverage functionality will track statement, branch, and function coverage for the VS Code extension, with configuration matching the Python tool's output format.
+\end{itemize}
 
-\noindent\textbf{Code Coverage Tools and Plan for Summary:} The
-codebase will be analyzed to determine the percentage of code
-executed during tests. For granular-level coverage,
-\texttt{pytest-cov}~\cite{pytest-cov} will be used, as it supports
-branch, line, and path coverage. Additionally,
-\texttt{pytest-cov}~\cite{pytest-cov} integrates seamlessly with
-\texttt{pytest}~\cite{pytest}, ensuring that test coverage results
-are generated alongside test execution.\\
-
-Initially, the aim is to achieve a 40\% coverage and gradually
-increment the level over time. Weekly reports generated from
-\texttt{pytest-cov}~\cite{pytest-cov} will be used to track coverage
-trends and set goals accordingly to address any gaps in testing in
-the growing codebase.\\
+Initially, the aim is to achieve 40\% coverage across both codebases, gradually incrementing the level over time. Weekly reports generated from both tools will be combined to track coverage trends, identify testing gaps, and set improvement goals as the project evolves. The unified coverage data will ensure consistent quality standards are maintained throughout the full stack.
 
 \noindent\textbf{Linters and Formatters:} To enforce the official
-Python PEP 8 style guide and maintain code quality, the team will use
+Python PEP 8~\cite{pep8} style guide and maintain code quality, the team will use
 \texttt{ruff}~\cite{ruff} for Python code and
 \texttt{eslint}~\cite{eslint} paired with
 \texttt{Prettier}~\cite{prettier} for the TypeScript extension.\\
