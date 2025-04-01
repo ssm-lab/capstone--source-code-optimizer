@@ -1,0 +1,153 @@
+[build-system]
+requires = ["setuptools >= 61.0", "setuptools_scm[toml]>=6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecooptimizer"
+dependencies = [
+  "pylint",
+  "rope",
+  "astor",
+  "codecarbon",
+  "asttokens",
+  "uvicorn",
+  "fastapi",
+  "pydantic",
+  "libcst",
+  "websockets",
+]
+version = "0.1.0"
+requires-python = ">=3.9"
+authors = [
+  { name = "Sevhena Walker" },
+  { name = "Mya Hussain" },
+  { name = "Nivetha Kuruparan" },
+  { name = "Ayushi Amin" },
+  { name = "Tanveer Brar" },
+]
+
+description = "A source code eco optimizer"
+readme = "README.md"
+license = { file = "LICENSE" }
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "pytest-mock",
+  "ruff",
+  "coverage",
+  "pyright",
+  "pre-commit",
+]
+
+[project.scripts]
+eco-local = "ecooptimizer.__main__:main"
+eco-ext = "ecooptimizer.api.__main__:main"
+eco-ext-dev = "ecooptimizer.api.__main__:dev"
+
+[project.urls]
+Repository = "https://github.com/ssm-lab/capstone--source-code-optimizer"
+"Bug Tracker" = "https://github.com/ssm-lab/capstone--source-code-optimizer/issues"
+
+[tool.setuptools_scm]
+write_to = "src/ecooptimizer/_version.py"
+fallback_version = "0.1.0"
+
+[tool.setuptools]
+packages = ["ecooptimizer"]
+
+[tool.setuptools.package-dir]
+ecooptimizer = "src/ecooptimizer"
+
+[tool.setuptools.exclude-package-data]
+"*" = ["docs/*", "tests/*", ".github/*"]
+
+[tool.pytest.ini_options]
+norecursedirs = ["tests/temp*", "tests/input", "tests/_input_copies"]
+addopts = ["--basetemp=tests/temp_dir"]
+testpaths = ["tests"]
+pythonpath = "src"
+
+[tool.coverage.run]
+omit = [
+  "*/__main__.py",
+  '*/__init__.py',
+  '*/utils/*',
+  "*/test_*.py",
+  "*/analyzers/*_analyzer.py",
+  "*/api/app.py",
+  "*/api/routes/show_logs.py",
+]
+
+[tool.ruff]
+extend-exclude = [
+  "*tests/input/**/*.py",
+  "tests/_input_copies",
+  "tests/temp_dir",
+  "tests/benchmarking/test_code/**/*.py",
+]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+  "E",      # Enforce Python Error rules (e.g., syntax errors, exceptions).
+  "UP",     # Check for unnecessary passes and other unnecessary constructs.
+  "ANN001", # Ensure type annotations are present where needed.
+  "ANN002",
+  "ANN003",
+  "ANN401",
+  "INP",    # Flag invalid Python patterns or usage.
+  "PTH",    # Check path-like or import-related issues.
+  "F",      # Enforce function-level checks (e.g., complexity, arguments).
+  "B",      # Enforce best practices for Python coding (general style rules).
+  "PT",     # Enforce code formatting and Pythonic idioms.
+  "W",      # Enforce warnings (e.g., suspicious constructs or behaviours).
+  "A",      # Flag common anti-patterns or bad practices.
+  "RUF",    # Ruff-specific rules.
+  "ARG",    # Check for function argument issues.,
+]
+
+# Avoid enforcing line-length violations (`E501`)
+ignore = ["E501", "RUF003"]
+
+# Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+# Ignore `E402` (import violations) in all `__init__.py` files, and in selected subdirectories.
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+"**/{tests,docs,tools}/*" = ["E402", "ANN", "INP001"]
+
+[tool.ruff.lint.flake8-annotations]
+suppress-none-returning = true
+mypy-init-return = true
+
+[tool.pyright]
+include = ["src", "tests"]
+exclude = ["tests/input", "tests/_input*", "tests/temp_dir"]
+
+disableBytesTypePromotions = true
+reportAttributeAccessIssue = false
+reportPropertyTypeMismatch = true
+reportFunctionMemberAccess = true
+reportMissingImports = true
+reportUnusedVariable = "warning"
+reportDuplicateImport = "warning"
+reportUntypedFunctionDecorator = true
+reportUntypedClassDecorator = true
+reportUntypedBaseClass = true
+reportUntypedNamedTuple = true
+reportPrivateUsage = true
+reportConstantRedefinition = "warning"
+reportDeprecated = "warning"
+reportIncompatibleMethodOverride = true
+reportIncompatibleVariableOverride = true
+reportInconsistentConstructor = true
+reportOverlappingOverload = true
+reportMissingTypeArgument = true
+reportCallInDefaultInitializer = "warning"
+reportUnnecessaryIsInstance = "warning"
+reportUnnecessaryCast = "warning"
+reportUnnecessaryComparison = true
+reportMatchNotExhaustive = "warning"
