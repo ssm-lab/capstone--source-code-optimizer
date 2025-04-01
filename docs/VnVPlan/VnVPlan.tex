@@ -50,12 +50,12 @@
 \section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{4cm}p{2cm}X}
-  \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+  \toprule {\bf Date} & {\bf Name} & {\bf Notes}\\
   \midrule
-  November 4th, 2024 & 0.0 & Created initial revision of VnV Plan\\
-January 3rd, 2025 & 0.1 & Modified template for static tests, clarified test-SRT-3\\
-  March 10th, 2025 & 0.1 & Revised Functional and Non-Functional Requirements\\
-
+  November 4th, 2024 & All & Created initial revision of VnV Plan\\
+January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarified test-SRT-3\\
+  March 10th, 2025 & All & Revised Functional and Non-Functional Requirements\\
+  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools.\\
   \bottomrule
 \end{tabularx}
 
@@ -448,10 +448,10 @@ components of this plan include:
 \begin{itemize}
   \item \textbf{Unit Testing}: A comprehensive suite of unit tests
     will be established to validate the functionality of individual
-    components within the optimizer. These tests will specifically
+    components within the Python backend as well as the VS Code Typescript plugin. These tests will specifically
     focus on the effectiveness of the code refactoring methods
     employed by the optimizer, utilizing
-    \texttt{pytest}~\cite{pytest} for writing and executing these tests.
+    \texttt{pytest}~\cite{pytest} and \texttt{jest}~\cite{jest} for writing and executing these tests for both systems respectively.
 
   \item \textbf{Static Code Analysis}: To maintain high code quality,
     static analysis tools will be employed. These tools will help
