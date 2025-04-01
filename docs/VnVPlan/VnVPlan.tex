@@ -55,7 +55,7 @@
   November 4th, 2024 & All & Created initial revision of VnV Plan\\
 January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarified test-SRT-3\\
   March 10th, 2025 & All & Revised Functional and Non-Functional Requirements\\
-  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools.\\
+  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools. Updated 4.2 to reflect the new tests.\\
   \bottomrule
 \end{tabularx}
 
@@ -1997,50 +1997,46 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \noindent \textbf{Target requirement(s):} FR5, FR6,PR-RFT1,
   PR-SCR1~\cite{SRS} \\
 
-  \begin{itemize}
-    \item \textbf{Handle CodeCarbon Measurements with a Valid File Path}
-      \begin{itemize}
-        \item When a valid file path is provided, the system
-          correctly invokes the subprocess for CodeCarbon.
-        \item The start and stop API endpoints of the
-          EmissionsTracker are called, and a success message is logged.
-      \end{itemize}
+\begin{itemize}
+  \item \textbf{Successful Energy Measurement}
+    \begin{itemize}
+      \item Verifies correct emissions tracking when CodeCarbon returns valid float values
+      \item Confirms proper subprocess execution and tracker API calls
+      \item Ensures emissions value is stored in the meter instance
+    \end{itemize}
 
-    \item \textbf{Handle CodeCarbon Measurements with a Valid File
-      Path that Causes a Subprocess Failure}
-      \begin{itemize}
-        \item The subprocess is invoked even if an error occurs
-          during the file execution.
-        \item The system logs an error message and the emissions data
-          is set to None when execution fails.
-      \end{itemize}
+  \item \textbf{Null Emissions Handling}
+    \begin{itemize}
+      \item Validates system behavior when CodeCarbon returns None
+      \item Confirms meter stores None without errors
+    \end{itemize}
 
-    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV
-      File Path and Can Be Read}
-      \begin{itemize}
-        \item The emissions data can be read successfully from a
-          valid CSV file produced by CodeCarbon.
-        \item The function returns the last row of emissions data.
-      \end{itemize}
+  \item \textbf{Unexpected Emissions Type Handling}
+    \begin{itemize}
+      \item Tests proper logging and null conversion for non-float/non-None returns
+      \item Specifically verifies handling of string and NaN values
+    \end{itemize}
 
-    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV
-      File Path but the File Cannot Be Read}
-      \begin{itemize}
-        \item An error message is logged when the CSV file cannot be read.
-        \item The function returns \texttt{None} if reading the CSV file fails.
-      \end{itemize}
+  \item \textbf{Subprocess Failure Resilience}
+    \begin{itemize}
+      \item Confirms system logs errors but preserves emissions data when subprocess fails
+      \item Verifies tracker still stops properly after subprocess exceptions
+    \end{itemize}
 
-    \item \textbf{Given CSV Path for Results Produced by CodeCarbon
-      Does Not Have a File}
-      \begin{itemize}
-        \item When the given CSV path does not point to an existing
-          file, an error message is logged.
-        \item The function returns \texttt{None} when the file is missing.
-      \end{itemize}
-  \end{itemize}
+  \item \textbf{CSV Data Extraction}
+    \begin{itemize}
+      \item Validates correct parsing of multi-row emissions CSV files
+      \item Ensures last row is properly returned as current emissions
+    \end{itemize}
 
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/src/ecooptimizer/measurements/codecarbon_energy_meter.py}{here}.
+  \item \textbf{Missing Emissions File Handling}
+    \begin{itemize}
+      \item Tests proper error logging when emissions file is missing
+      \item Verifies None is returned and stored in emissions\_data
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/src/ecooptimizer/measurements/codecarbon_energy_meter.py}{here}.
 
   \subsection{Refactoring Module}
 
