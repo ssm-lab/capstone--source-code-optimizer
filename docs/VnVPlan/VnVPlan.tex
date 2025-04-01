@@ -641,40 +641,51 @@ and provides suitable feedback (FR 1).
 
     \noindent
     This area includes tests to verify the detection and refactoring
-    of specified code
-    smells that impact energy efficiency (FR 2). These tests will be
+    of specified code smells that impact energy efficiency. These tests will be
     done through unit testing.
 
-\end{enumerate}
-
-\noindent
-\colorrule
-
-\subsubsection{Output Validation Tests}
-\colorrule
-
-\medskip
-
-\noindent
-The following tests are designed to validate that the functionality
-of the original Python code remains intact after refactoring. Each
-test ensures that the refactored code passes the same test suite as
-the original code, confirming compliance with functional requirement FR 3.
-
-\begin{enumerate}[label={\bf
-    \textcolor{Maroon}{test-FR-OV-\arabic*}}, wide=0pt, font=\itshape]
-    \label{itm:FR-OV-1}
-  \item \textbf{Verification of Valid Python Output}\\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool has processed a file with detected
-    code smells.\\
-    \textbf{Input:} Output refactored Python code.\\
-    \textbf{Output:} Refactored code is syntactically correct and
-    Python-compliant.\\[2mm]
-    \textbf{Test Case Derivation:} Ensures refactored code remains
-    valid and usable, satisfying FR 6.\\[2mm]
-    \textbf{How test will be performed:} Run a linter on the output
-    code and verify it passes without syntax errors.
+    \begin{enumerate}[label={\bf
+    \textcolor{Maroon}{test-FR-IA-\arabic*}}, wide=0pt, font=\itshape]
+    \item \textbf{Successful Refactoring Execution} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file with a detected code smell. \\
+    \textbf{Output:} The system applies the appropriate refactoring and modifies the file. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures that the tool correctly identifies the smell, selects the corresponding refactoring, and applies it successfully, meeting FR 2. \\[2mm]
+    \textbf{How test will be performed:} Provide a valid Python file with an LEC001 smell, execute the refactoring, and confirm the modified file is generated as expected. 
+    
+    \item \textbf{No Available Refactorer Handling} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file with an unsupported code smell. \\
+    \textbf{Output:} The system logs an error message and does not attempt refactoring. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures the tool properly handles cases where a refactorer does not exist for a given smell, per FR 2. \\[2mm]
+    \textbf{How test will be performed:} Provide a valid Python file with an unsupported smell and verify that the system logs an error and does not apply refactoring.
+    
+    \item \textbf{Multiple Refactoring Calls on Same File} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file with a detected code smell, processed twice. \\
+    \textbf{Output:} The system successfully tracks multiple refactoring applications and generates unique output files. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures that repeated refactoring calls incrementally track and apply changes properly, per FR 3. \\[2mm]
+    \textbf{How test will be performed:} Provide a valid Python file, execute refactoring twice, and confirm that distinct modified files are generated with sequential naming.
+    
+    \item \textbf{Refactoring Execution with Overwrite Disabled} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file with a detected code smell, processed with overwrite disabled. \\
+    \textbf{Output:} The system applies refactoring but does not overwrite existing files. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures the tool respects the overwrite flag and does not modify existing files when disabled, per FR 2. \\[2mm]
+    \textbf{How test will be performed:} Provide a valid Python file, execute refactoring with overwrite set to false, and verify that new files are created without modifying the original.
+    
+    \item \textbf{Handling Empty Modified Files List} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file with a detected code smell, but no modifications are made by the refactorer. \\
+    \textbf{Output:} The system does not generate modified files and logs appropriate information. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures the tool correctly handles cases where a refactorer does not produce any modified files, per FR 4. \\[2mm]
+    \textbf{How test will be performed:} Provide a valid Python file, execute refactoring where the tool does not make changes, and confirm that no modified files are generated and appropriate logs are recorded.
+    \end{enumerate}
 
 \end{enumerate}
 
@@ -695,12 +706,12 @@ including detected code smells, refactorings applied, energy
 consumption measurements, and the results of the original test suite.
 This section outlines tests that ensure the reporting feature
 operates correctly and delivers accurate, well-structured information
-as specified in the functional requirements (FR 9).
+as specified in the functional requirements (FR 6, 8, 15).
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-RP-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{A Report With All Components Is Generated}\\[2mm]
-    \textbf{Control:} Manual
+    \textbf{Control:} Manual \\
     \textbf{Initial State:} The tool has completed refactoring a
     Python code file.\\
     \textbf{Input:} The refactoring results, including detected code
@@ -709,7 +720,7 @@ as specified in the functional requirements (FR 9).
     summarizing the refactoring process.\\[2mm]
     \textbf{Test Case Derivation:} This test ensures that the tool
     generates a comprehensive report that includes all necessary
-    information as required by FR 9.\\[2mm]
+    information as required by FR 6, 8 and 15.\\[2mm]
     \textbf{How test will be performed:} After refactoring, the tool
     will invoke the report generation feature and a user can validate
     that the output meets the structure and content specifications.
@@ -723,13 +734,13 @@ as specified in the functional requirements (FR 9).
     detected code smells and the corresponding refactorings applied.\\[2mm]
     \textbf{Test Case Derivation:} This test verifies that the report
     includes correct and complete information about code smells and
-    refactorings, in compliance with FR 9.\\[2mm]
+    refactorings, in compliance with FR 8.\\[2mm]
     \textbf{How test will be performed:} The tool will compare the
     contents of the generated report against the detected code smells
     and refactorings to ensure accuracy.
 
   \item \textbf{Energy Consumption Metrics Included in Report}\\[2mm]
-    \textbf{Control:} Manual
+    \textbf{Control:} Manual\\
     \textbf{Initial State:} The tool has measured energy consumption
     before and after refactoring.\\
     \textbf{Input:} Energy consumption metrics obtained during the
@@ -738,7 +749,7 @@ as specified in the functional requirements (FR 9).
     usage before and after the refactorings.\\[2mm]
     \textbf{Test Case Derivation:} This test confirms that the
     reporting feature effectively communicates energy consumption
-    improvements, aligning with FR 9.\\[2mm]
+    improvements, aligning with FR 6.\\[2mm]
     \textbf{How test will be performed:} A user will analyze the
     energy metrics in the report to ensure they accurately reflect
     the measurements taken during the refactoring.
@@ -752,7 +763,7 @@ as specified in the functional requirements (FR 9).
     indicating which tests passed and failed.\\[2mm]
     \textbf{Test Case Derivation:} This test ensures that the
     reporting functionality accurately reflects the results of the
-    test suite as specified in FR 9.\\[2mm]
+    test suite as specified in FR 8.\\[2mm]
     \textbf{How test will be performed:} The tool will generate the
     report and validate that it contains a summary of test results
     consistent with the actual test outcomes.
@@ -768,7 +779,7 @@ as specified in the functional requirements (FR 9).
 
 \noindent
 The following test is designed to ensure the availability of
-documentation as per FR 10.
+documentation as per FR 7.
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-DA-\arabic*}}, wide=0pt, font=\itshape]
@@ -779,7 +790,7 @@ documentation as per FR 10.
     \textbf{Output:} The documentation is available and covers
     installation, usage, and troubleshooting.\\[2mm]
     \textbf{Test Case Derivation:} Validates that the documentation
-    meets user needs (FR 10).\\[2mm]
+    meets user needs (FR 7).\\[2mm]
     \textbf{How test will be performed:} Review the documentation for
     completeness and clarity.
 \end{enumerate}
@@ -794,7 +805,7 @@ documentation as per FR 10.
 
 \noindent
 The following tests are designed to ensure that the user can
-integrate the tool into VS Code IDE as specified in FR 11 and that
+integrate the tool into VS Code IDE as specified and that
 the tool works as intended as an extension.
 
 \begin{enumerate}[label={\bf
@@ -943,18 +954,6 @@ the system is accessible, user-centred, intuitive and easy to navigate.
     preferences (metric vs. imperial). After each adjustment, the
     tester will observe if the interface and refactoring suggestions
     reflect the changes made.
-
-  \item \textbf{Multilingual support in user guide} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} Bilingual user navigates to system documentation \\
-    \textbf{Input/Condition:} User accesses guide in both English and French \\
-    \textbf{Output/Result:} The guide is accessible in both languages \\[2mm]
-    \textbf{How test will be performed:} The tester will set the
-    tool’s language to French and access the user guide, reviewing
-    each section to ensure accurate translation and readability.
-    After verifying the French version, they will switch the language
-    to English, confirming consistency in content, layout, and
-    clarity between both versions.
 
   \item \textbf{YouTube installation tutorial availability} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
@@ -1420,10 +1419,9 @@ the system is accessible, user-centred, intuitive and easy to navigate.
 
       \midrule
       Input Acceptance Tests & FR 1 \\ \hline
-      Code Smell Detection Tests & FR 2 \\ \hline
+      Code Smell Detection Tests & FR 2,3,4 \\ \hline
       Refactoring Suggestion Tests & FR 4 \\ \hline
-      Output Validation Tests & FR 3, FR 6 \\ \hline
-      Tests for Report Generation & FR 9 \\ \hline
+      Tests for Report Generation & FR 6, 8, 15 \\ \hline
       Documentation Availability Tests & FR 10 \\ \hline
       IDE Integration Tests & FR 11 \\
       \bottomrule
