@@ -55,7 +55,7 @@
   November 4th, 2024 & All & Created initial revision of VnV Plan\\
 January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarified test-SRT-3\\
   March 10th, 2025 & All & Revised Functional and Non-Functional Requirements\\
-  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools. Updated 4.2 to reflect the new tests.\\
+  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools. Updated 4.2 and 4.5.2 to reflect the new tests.\\
   \bottomrule
 \end{tabularx}
 
@@ -3254,38 +3254,84 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{Successful Refactoring Process}
-      \begin{itemize}
-        \item The API endpoint returns a successful response when the
-          refactoring process completes without errors.
-        \item The response includes the refactored data and updated smells.
-        \item Energy measurements are correctly retrieved and
-          compared to ensure energy savings.
-      \end{itemize}
+    \item \textbf{Handling Missing Target File in Refactor Request}
+        \begin{itemize}
+            \item The API returns a 404 error when the target file doesn't exist
+            \item The error message clearly indicates the file was not found
+        \end{itemize}
 
-    \item \textbf{Handling of Source Directory Not Found}
-      \begin{itemize}
-        \item The API endpoint returns an appropriate error response
-          when the specified source directory does not exist.
-        \item The error message clearly indicates that the directory
-          was not found.
-      \end{itemize}
+    \item \textbf{Handling Invalid Source Directory in Refactor Request}
+        \begin{itemize}
+            \item The API returns a 404 error when the source directory is invalid
+            \item The error message specifies the folder was not found
+        \end{itemize}
 
-    \item \textbf{Handling of Energy Measurement Failures}
-      \begin{itemize}
-        \item The API endpoint returns an error response when initial
-          or final energy measurements cannot be retrieved.
-        \item The API endpoint returns an error response when no
-          energy savings are detected after refactoring.
-      \end{itemize}
+    \item \textbf{Detecting No Energy Savings After Refactoring}
+        \begin{itemize}
+            \item The API returns a 400 error when energy measurements show no improvement
+            \item The response indicates energy was not properly saved
+        \end{itemize}
 
-    \item \textbf{Handling of Unexpected Errors}
-      \begin{itemize}
-        \item The API endpoint returns an error response when an
-          unexpected exception occurs during the refactoring process.
-        \item The error message includes details about the exception.
-      \end{itemize}
-  \end{itemize}
+    \item \textbf{Handling Failed Initial Energy Measurement}
+        \begin{itemize}
+            \item The API returns a 400 error when initial energy reading fails
+            \item The error message indicates emissions couldn't be retrieved
+        \end{itemize}
+
+    \item \textbf{Handling Failed Final Energy Measurement}
+        \begin{itemize}
+            \item The API returns a 400 error when final energy reading fails
+            \item The response indicates emissions couldn't be retrieved
+        \end{itemize}
+
+    \item \textbf{Handling Unexpected Refactoring Errors}
+        \begin{itemize}
+            \item The API returns a 500 error for unexpected refactoring failures
+            \item The original error message is included in the response
+        \end{itemize}
+
+    \item \textbf{Successful Single File Refactoring}
+        \begin{itemize}
+            \item The API returns 200 for successful refactoring
+            \item The response includes all required fields with correct energy savings
+        \end{itemize}
+
+    \item \textbf{Successful Refactoring by Smell Type}
+        \begin{itemize}
+            \item The API successfully handles refactoring by smell type
+            \item The energy savings calculation is accurate for single smell cases
+        \end{itemize}
+
+    \item \textbf{Handling Multiple Smells of Same Type}
+        \begin{itemize}
+            \item The API correctly processes multiple instances of the same smell
+            \item Energy savings are properly accumulated across multiple refactors
+        \end{itemize}
+
+    \item \textbf{Handling Missing Directory in Type-Based Refactoring}
+        \begin{itemize}
+            \item The API returns 404 when source directory is invalid
+            \item The error message clearly indicates the folder wasn't found
+        \end{itemize}
+
+    \item \textbf{Handling Refactoring Failures by Type}
+        \begin{itemize}
+            \item The API returns 500 when type-based refactoring fails
+            \item The error details are properly propagated to the response
+        \end{itemize}
+
+    \item \textbf{Direct Refactoring Function Success}
+        \begin{itemize}
+            \item The core refactoring function works with new temporary directories
+            \item All output fields are properly populated including affected files
+        \end{itemize}
+
+    \item \textbf{Refactoring With Existing Temporary Directory}
+        \begin{itemize}
+            \item The core function properly utilizes existing temp directories
+            \item Energy savings are correctly calculated with predefined locations
+        \end{itemize}
+\end{itemize}
 
   \noindent The test cases for this module can be found
   \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_refactoring.py}{here}.
