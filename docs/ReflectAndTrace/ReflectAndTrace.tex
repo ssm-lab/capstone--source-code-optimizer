@@ -3,9 +3,9 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 
-\title{Reflection and Traceability Report on \progname}
+\title{Reflection and Traceability Report on EcoOptimizer}
 
-\author{\authname}
+\author{Ayushi Amin \\ Tanveer Brar \\ Nivetha Kuruparan\\ Sevhena Walker\\ Mya Hussain}
 
 \date{}
 
@@ -115,18 +115,101 @@ users currently exist?}
 team communication plan, team member roles and workflow plan.  Did you use the 
 technology you planned on using?}
 
+We largely followed our development plan regarding team meetings, communication, 
+member roles, and workflow. We adhered to our planned meeting schedule, ensuring regular 
+discussions to track progress, resolve blockers, and align our work with project goals. 
+To keep everything organized, all types of meetings were documented as issues on GitHub. 
+This allowed us to track progress effectively, link discussions to specific tasks, and 
+maintain meeting notes for future reference.
+
+Our communication plan also worked well—whether through scheduled check-ins or ad-hoc 
+discussions, we maintained a steady flow of information via our chosen platforms. Each 
+team member upheld their assigned roles, ensuring a balanced distribution of tasks. Our 
+workflow remained structured, with clear milestones and responsibilities that kept the 
+project on track. While there were some natural adjustments along the way to optimize 
+efficiency, we remained aligned with the overall plan.
+
+Regarding technology, we successfully used the tools and frameworks outlined in our 
+development plan. Our refactoring library was developed in Python, leveraging Rope for 
+refactoring, PyLint for inefficient code pattern detection, and Code Carbon for energy 
+analysis. For code quality, we enforced PEP 8 standards and used Ruff for linting and 
+Pyright for static type checking. Additionally, we incorporated PySmells for detecting 
+code smells.
+
+To ensure robust testing, we wrote unit tests using pytest, integrated with coverage.py 
+to measure code coverage. We also implemented performance benchmarking using Python’s 
+built-in benchmarking tools to measure execution time across different file sizes.
+
+For version control and CI/CD, we relied on GitHub and GitHub Actions, streamlining 
+our development process through automated testing and integration. Our VS Code plugin 
+was built using TypeScript, aligning with the VS Code architecture.
+
+Overall, we effectively used the planned technologies and tools, making only necessary 
+refinements to optimize development.
+
 \subsection{What Went Well?}
 
 \plt{What went well for your project management in terms of processes and 
 technology?}
 
+One of the biggest strengths was how we stayed organized. We used GitHub Issues to track 
+tasks, discussions, and even meeting notes, which made it easy to monitor progress and 
+ensure accountability. This approach helped keep everything transparent and well-documented.
+
+Communication was another strong point. We stuck to our planned check-ins but also had 
+the flexibility to reach out whenever needed. This balance kept things moving without 
+feeling rigid. We also made sure to follow PEP 8 coding standards and used linters, 
+which kept our code consistent and easy to read.
+
+The tools we used made a big difference in keeping things smooth. GitHub Actions handled 
+our automated testing and integration, so we didn’t have to worry about manually running 
+tests every time. PyTest and Coverage.py helped us stay on top of testing, while Ruff and 
+PyLint made sure our code was clean and error-free.
+
+For the actual project, Code Carbon gave us energy consumption insights (even if it 
+wasn’t always perfectly accurate), and Rope made refactoring much easier, saving us a lot of time.
+
+Overall, the combination of good teamwork, clear processes, and the right tools kept us 
+organized and made development a lot more efficient.
+
 \subsection{What Went Wrong?}
 
 \plt{What went wrong in terms of processes and technology?}
 
+One of the main challenges we faced in the project was moving away from using 
+reinforcement learning. Initially, it seemed like a great way to optimize energy 
+consumption, but as we decided not to use it, the direction of the project had to 
+shift. This required us to adjust our approach, which took time and created some 
+uncertainty within the team. Keeping everyone aligned and maintaining clear 
+communication was essential during this transition, especially as we explored 
+alternative methods to achieve our goals.
+
+On the technology side, developing the refactoring library itself turned out to 
+be more complicated than we initially anticipated. Creating a tool that could not 
+only identify energy-saving opportunities but also refactor the code while preserving 
+its intent was a delicate balance. Working with Python's unique performance and 
+dynamic features added another layer of complexity. Despite these challenges, they 
+provided valuable learning experiences that have shaped how we approach the project now.
+
 \subsection{What Would you Do Differently Next Time?}
 
 \plt{What will you do differently for your next project?}
+
+For our next project, one thing we’d do differently is spend more time upfront 
+validating the technical approach before diving into development. With the shift 
+away from reinforcement learning, we had to make adjustments mid-way through, which 
+slowed down progress. In the future, we’d prioritize a more thorough exploration of 
+different technologies and approaches early on to avoid these kinds of pivots. We’d 
+also make sure to keep a closer eye on scope to prevent unnecessary shifts that could 
+affect the timeline.
+
+Additionally, we’d focus on improving team coordination from the start, ensuring that 
+everyone is aligned not just on the technical goals but also on the project’s overall 
+direction. Regular, structured check-ins would be helpful to track progress and address 
+roadblocks quickly. On the technical side, we would invest more time in setting up a robust
+DevOps pipeline earlier in the process, ensuring that continuous integration and testing are 
+seamless from the beginning. Overall, we believe these changes would help streamline both the 
+technical and team dynamics for a smoother project experience.
 
 \section{Reflection on Capstone}
 
