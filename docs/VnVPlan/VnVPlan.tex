@@ -55,10 +55,14 @@
   November 4th, 2024 & All & Created initial revision of VnV Plan\\
 January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarified test-SRT-3\\
   March 10th, 2025 & Nivetha Kuruparan, Sevhena Walker & Revised Functional and Non-Functional Requirements\\
-  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools. Updated 4.2 and 4.5.2 to reflect the new tests. Fixed some links. Fixed table formatting and some grammar.\\
+  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools.\\
+  April 1st, 2025 & Sevhena Walker & Updated Automated testing and Verification Tools to include plugin tools.\\
+  April 1st, 2025 & Sevhena Walker & Updated 4.2 and 4.5.2 to reflect the new tests.\\
+  April 1st, 2025 & Sevhena Walker & Fixed some links. Fixed table formatting and some grammar.\\
   April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for General Information Section\\
   April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Plan Section\\
-  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Functional Requirements Test Plan\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Test Functional Requirements Section\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Test Non-Functional Requirements Section\\
   \bottomrule
 \end{tabularx}
 
@@ -491,14 +495,6 @@ done through unit testing.
 \textbf{Test Case Derivation:} Confirms the system can handle repeated invocations and re-apply applicable refactorings, per \textbf{FR3}. \\[2mm]
 \textbf{How test will be performed:} Refactor a file containing a supported smell multiple times and verify that each run performs valid operations and results in updated outputs.
 
-\item \textbf{Refactoring Execution with Overwrite Disabled} \\[2mm]
-\textbf{Control:} Automated \\
-\textbf{Initial State:} Tool is idle. \\
-\textbf{Input:} A valid Python file with detected code smells and overwrite protection enabled. \\
-\textbf{Output:} The system generates a new version of the refactored file without altering the original. \\[2mm]
-\textbf{Test Case Derivation:} Ensures user data safety by preventing overwrites, fulfilling system expectations from \textbf{FR3}. \\[2mm]
-\textbf{How test will be performed:} Enable overwrite protection, refactor a file, and verify that the original remains unchanged while a new file is created.
-
 \item \textbf{Handling Empty Modified Files List} \\[2mm]
 \textbf{Control:} Automated \\
 \textbf{Initial State:} Tool is idle. \\
@@ -542,14 +538,6 @@ presented, as required by \textbf{FR6} and \textbf{FR15}.
     \textbf{Test Case Derivation:} Ensures transparency of changes and supports informed decision-making by the user, in line with \textbf{FR15}. \\[2mm]
     \textbf{How test will be performed:} Open a code file with detectable smells, trigger a refactor, and inspect the view displaying the summary of changes and available actions.
 
-  \item \textbf{No Report or Feedback Shown if No Changes Are Made} \\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} A file with no smells or refactorings is opened. \\
-    \textbf{Input:} A Python file with no applicable refactorings. \\
-    \textbf{Output:} The system displays a message indicating no issues were found and does not generate further metrics. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures that user feedback is not shown unnecessarily, and the UI is clean when no action is required. \\[2mm]
-    \textbf{How test will be performed:} Open a clean file and observe that no metrics, changes, or visual noise is presented in the extension UI.
-
 \end{enumerate}
 
 \noindent\colorrule
@@ -560,7 +548,7 @@ presented, as required by \textbf{FR6} and \textbf{FR15}.
 \medskip
 
 \noindent
-This section corresponds to features related to the user’s interaction with the Visual Studio Code extension interface, including previewing and toggling smells, customizing the UI, and reviewing code comparisons. These tests verify that the extension enables users to interact with refactorings in an intuitive and informative manner, as outlined in \textbf{FR8}, \textbf{FR13}, \textbf{FR14}, and \textbf{FR16}.\\
+This section corresponds to features related to the user’s interaction with the Visual Studio Code extension interface, including previewing and toggling smells, customizing the UI, and reviewing code comparisons. These tests verify that the extension enables users to interact with refactorings in an intuitive and informative manner, as outlined in \textbf{FR8}, \textbf{FR9}, \textbf{FR10}, \textbf{FR11}, \textbf{FR12}, \textbf{FR13}, \textbf{FR14}, \textbf{FR15}, \textbf{FR16}, and \textbf{FR17}.\\
 
 \noindent These features are primarily tested through automated unit tests integrated in the extension codebase. For implementation and test details, please refer to the unit testing suite.
 
@@ -573,7 +561,7 @@ This section corresponds to features related to the user’s interaction with th
 
 \noindent
 The following test is designed to ensure the availability of
-documentation as per FR 7.
+documentation as per \textbf{FR 7} and \textbf{FR 5}.
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-DA-\arabic*}}, wide=0pt, font=\itshape]
@@ -582,41 +570,11 @@ documentation as per FR 7.
     \textbf{Initial State:} The system may or may not be installed.\\
     \textbf{Input:} User attempts to access the documentation.\\
     \textbf{Output:} The documentation is available and covers
-    installation, usage, and troubleshooting.\\[2mm]
+    installation, usage (\textbf{FR 5}), and troubleshooting.\\[2mm]
     \textbf{Test Case Derivation:} Validates that the documentation
-    meets user needs (FR 7).\\[2mm]
+    meets user needs (\textbf{FR 7}).\\[2mm]
     \textbf{How test will be performed:} Review the documentation for
     completeness and clarity.
-\end{enumerate}
-
-\noindent
-\colorrule
-
-\subsubsection{Installation and Onboarding Tests}
-\colorrule
-
-\medskip
-
-\noindent
-This test ensures that the tool is easy to install and that its documentation supports users in successfully getting started. It addresses \textbf{FR7} and relevant usability metrics like \texttt{MIN USER EOU} and \texttt{MAX TASK CLICKS} from the symbolic constants.
-
-\begin{enumerate}[label={\bf
-    \textcolor{Maroon}{test-FR-IN-\arabic*}}, wide=0pt, font=\itshape]
-  \item \textbf{Extension Installation Flow}\\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} The user has Visual Studio Code installed but has not yet installed the EcoOptimizer extension or accessed the documentation. \\
-    \textbf{Input:} The user attempts to follow the user manual to install the extension and set up the tool. \\
-    \textbf{Output:} The extension installs successfully, and the documentation provides clear steps for setup, usage, and troubleshooting. The user completes onboarding within the \texttt{MAX TASK CLICKS} threshold.\\[2mm]
-    \textbf{Test Case Derivation:} This test verifies the clarity and effectiveness of documentation and installation flow, as well as alignment with usability requirements. \\[2mm]
-    \textbf{How test will be performed:}
-    \begin{enumerate}[label=\arabic*.]
-      \item Open VS Code and access the Extensions view.
-      \item Search for the EcoOptimizer extension and install it.
-      \item Open the user manual and follow the setup instructions.
-      \item Complete installation and verify that the extension appears and is usable in the IDE.
-      \item Record the number of steps/clicks required and compare against \texttt{MAX TASK CLICKS}.
-      \item Ask test users to rate clarity and ease-of-use, checking whether results meet \texttt{MIN USER EOU}.
-    \end{enumerate}
 \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
@@ -1166,26 +1124,26 @@ the system is accessible, user-centred, intuitive and easy to navigate.
       even without formal certification.
   \end{enumerate}
 
-  \subsection{Traceability Between Test Cases and Requirements}
-  \label{trace-sys}
+\subsection{Traceability Between Test Cases and Requirements}
+\label{trace-sys}
 
-  \begin{table}[H]
-    \centering
-    \caption{Functional Requirements and Corresponding Test Sections}
-    \begin{tabular}{p{0.4\textwidth}p{0.4\textwidth}}
-      \toprule \textbf{Section} & \textbf{Functional Requirement} \\
+\begin{table}[H]
+  \centering
+  \caption{Functional Requirements and Corresponding Test Sections}
+  \begin{tabular}{p{0.42\textwidth}p{0.42\textwidth}}
+    \toprule \textbf{Test Section} & \textbf{Functional Requirement(s)} \\
+    \midrule
+    Code Input Acceptance Tests & FR1 \\
+    Code Smell Detection and Refactoring Suggestion Tests & FR2, FR3, FR4 \\
+    Tests for Reporting Functionality & FR6, FR15 \\
+    Visual Studio Code Interactions & FR8, FR9, FR10, FR11, FR12, FR13, FR14, FR15, FR16, FR17 \\
+    Documentation Availability Tests & FR7, FR5 \\
+    Installation and Onboarding Tests & FR7 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:sections_requirements}
+\end{table}
 
-      \midrule
-      Input Acceptance Tests & FR 1 \\
-      Code Smell Detection Tests & FR 2,3,4 \\
-      Refactoring Suggestion Tests & FR 4 \\
-      Tests for Report Generation & FR 6, 8, 15 \\
-      Documentation Availability Tests & FR 10 \\
-      IDE Integration Tests & FR 11 \\
-      \bottomrule
-    \end{tabular}
-    \label{tab:sections_requirements}
-  \end{table}
 
   \label{tab:nfr-trace-reqs}
   \begin{table}[H]
