@@ -45,10 +45,11 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-  \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{4cm}p{4cm}X}
+  \toprule {\bf Date} & {\bf Name} & {\bf Notes}\\
   \midrule
-  March 8th, 2025 & 0.0 & Started VnV Report\\
+  March 8th, 2025 & All & Created initial revision of VnV Report\\
+  April 3rd, 2025 & Nivetha Kuruparan & Heavily Revised VSCode Plugin Unit Tests\\
   \bottomrule
 \end{tabularx}
 
@@ -82,7 +83,7 @@ tables if needed}
 
 \pagenumbering{arabic}
 
-This Verification and Validation (V\&V) report outlines the testing
+\noindent This Verification and Validation (V\&V) report outlines the testing
 process used to ensure the accuracy, reliability, and performance of
 our system. It details our verification approach, test cases, and
 validation results, demonstrating that the system meets its
@@ -1959,15 +1960,14 @@ backend modules and the vscode extension.
   All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsection{VS Code Extension}
+\subsection{VS Code Plugin}
 
-\subsubsection{Detect Smells Command}
-
+\subsubsection{Configure Workspace Command}
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -1985,54 +1985,21 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Detect Smells Command Test Cases}
-  \label{table:plugin_detect_command_tests}
+  \caption{Configure Workspace Command Test Case}
+  \label{table:configure_workspace_command_tests}
   \endlastfoot
 
-  TC\testcount & FR10, OER-IAS1 & No active editor is found. & Shows
-  error message: ``Eco: No active editor found.'' & All assertions
-  pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Active editor has no valid file
-  path. & Shows error message: ``Eco: Active editor has no valid file
-  path.'' & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & No smells are enabled. & Shows
-  warning message: ``Eco: No smells are enabled! Detection skipped.''
-  & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Uses cached smells when hash is
-  unchanged and same smells are enabled. & Shows info message: ``Eco:
-  Using cached smells for fake.path'' & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Fetches new smells when enabled
-  smells change. & Calls \texttt{wipeWorkCache}, \texttt{updateHash},
-  and \texttt{fetchSmells}. Updates workspace data. & All assertions
-  pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Fetches new smells when hash
-  changes but enabled smells remain the same. & Calls
-  \texttt{updateHash} and \texttt{fetchSmells}. Updates workspace
-  data. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & No cached smells and server is
-  down. & Shows warning message: ``Action blocked: Server is down and
-  no cached smells exist for this file version.'' & All assertions
-  pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Highlights smells when smells are
-  found. & Shows info messages and calls \texttt{highlightSmells}. &
-  All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & OER-IAS1, OER-PR1 & User selects a Python project folder using the quick pick. & 
+  The tool scans the workspace for Python files, detects valid folders, and prompts the user with a quick pick. After selection, it updates the workspace state and shows confirmation message. & 
+  Workspace is detected and configured. Workspace state is updated, VS Code context is set, and confirmation message is shown. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Refactor Smell Command}
-
+\subsubsection{Reset Configuration Command}
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2050,44 +2017,465 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Refactor Smell Command Test Cases}
-  \label{table:plugin_refactor_command_tests}
+  \caption{Reset Configuration Command Test Cases}
+  \label{table:reset_configuration_command_tests}
   \endlastfoot
 
-  TC\testcount & PR-RFT1 & No active editor is found. & Shows error
-  message ``Eco: Unable to proceed as no active editor or file path
-  found.'' & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & OER-PR1, UHR-ACS2 & User confirms reset when prompted by warning dialog. & 
+  Workspace configuration is removed from persistent storage, context is cleared, and function returns \texttt{true}. & 
+  Workspace state is cleared, context is reset, and return value is \texttt{true}. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & PR-RFT1, FR6 & Attempting to refactor when no smells
-  are detected in the file & Shows error message ``Eco: No smells
-  detected in the file for refactoring.'' & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR6 & Attempting to refactor when selected line
-  doesn't match any smell & Shows error message ``Eco: No matching
-  smell found for refactoring.'' & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR5, FR6, FR10 & Refactoring a smell when found on
-  the selected line & Saves the current file. Calls
-  \texttt{refactorSmell} method with correct parameters. Shows
-  message ``Refactoring report available in sidebar''. Executes
-  command to focus refactor sidebar. Opens and shows the refactored
-  preview. Highlights updated smells. Updates the UI with new smells
-  & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & PR-RFT2 & Handling API failure during refactoring &
-  Shows error message ``Eco: Refactoring failed. See console for
-  details.'' & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & OER-PR1, UHR-ACS2 & User cancels when prompted by warning dialog. & 
+  No changes made to workspace configuration, and function returns \texttt{false}. & 
+  No state updates or command executions occurred, and return value is \texttt{false}. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{File Highlighter}
+\subsubsection{Detect Smells API}
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Detect Smells API Test Cases}
+  \label{table:detect_smells_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & File URI is not a physical file (e.g., `untitled`). & Smell detection is skipped. & No status or messages are triggered. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & File path is not a Python file. & Smell detection is skipped. & No status or messages are triggered. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Cached smells are available. & Uses cached smells and sets status to `passed`. & Cached smells are returned and UI updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Server is down and no cached smells exist. & Displays warning and sets status to `server_down`. & Warning is shown, status updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No smells are enabled. & Displays warning and skips detection. & Warning is shown. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Enabled smells present and server returns valid results. & Fetches smells, caches them, and updates UI. & Smells are fetched, cached, and UI updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & API returns no smells. & Sets status to \texttt{no\_issues}, caches empty result. & Status and cache updated as expected. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & API returns error (500). & Displays error and sets status to `failed`. & Error message shown and status updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Network error during API call. & Displays error and sets status to `failed`. & Error message and status shown as expected. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Scans folder with no Python files. & Shows warning: “No Python files found.” & Message displayed, no detection performed. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Scans folder with 2 Python files. & Processes only Python files, skips others. & Info message displayed, detection runs on valid files. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & File system throws error during folder scan. & Logs error and skips processing. & Error logged via ecoOutput. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Export Metrics Command}
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Export Metrics Command Test Cases}
+  \label{table:export_metrics_tests}
+  \endlastfoot
+
+  TC\testcount & FR13, OER-IAS2 & No metrics data is found in workspace state. &
+  Displays message ``No metrics data available to export.'' &
+  Info message shown as expected. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & No workspace path is configured. &
+  Shows error ``No configured workspace path found.'' &
+  Error message triggered appropriately. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & Workspace path is a directory. &
+  Saves \texttt{metrics-data.json} inside the directory. &
+  File written and success message shown. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & Workspace path is a file. &
+  Saves \texttt{metrics-data.json} to parent directory. &
+  File written in parent folder as expected. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & Workspace path is of unknown type. &
+  Displays error ``Invalid workspace path type.'' &
+  Error triggered and logged as expected. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & Filesystem stat call fails. &
+  Displays error with ``Failed to access workspace path...'' &
+  Error is caught and message shown. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & File write fails during export. &
+  Displays error with ``Failed to export metrics data...'' &
+  Error is logged and user is notified. &
+  \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Filter Command Registration}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Filter Command Registration Test Cases}
+  \label{table:filter_smell_command_tests}
+  \endlastfoot
+
+  TC\testcount & FR11, UHR-EOU1 & Register and trigger \texttt{toggleSmellFilter}. &
+  Invokes \texttt{toggleSmell} with correct key. &
+  Method called with \texttt{test-smell}. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU1 & Register and trigger \texttt{editSmellFilterOption} with valid input. &
+  Updates option and refreshes filter view. &
+  \texttt{updateOption} and \texttt{refresh} called with correct values. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{editSmellFilterOption} with invalid number. &
+  Does not call update function. &
+  \texttt{updateOption} not triggered. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{editSmellFilterOption} with missing keys. &
+  Displays error message about missing smell or option key. &
+  Error shown as expected. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{selectAllFilterSmells}. &
+  Enables all smell filters. &
+  \texttt{setAllSmellsEnabled(true)} called. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{deselectAllFilterSmells}. &
+  Disables all smell filters. &
+  \texttt{setAllSmellsEnabled(false)} called. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{setFilterDefaults}. &
+  Resets filters to default settings. &
+  \texttt{resetToDefaults()} called. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Register all commands to subscriptions. &
+  All filter commands are added to context. &
+  5 commands registered. &
+  \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Refactor Workflow}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4.3cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Workflow Test Cases}
+  \label{table:refactor_command_tests}
+  \endlastfoot
+
+  TC\testcount & FR12 & Workspace not configured. & Shows error message and aborts refactoring. & Error message shown. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Backend is down. & Displays warning and updates status to \texttt{server\_down}. & Warning shown and status updated. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Refactors a single smell via backend. & Queues status, updates workspace, and logs info. & Refactor completed as expected. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Refactors all smells of a type. & Calls smell-type API and displays appropriate info. & Refactoring succeeds. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Backend refactor call fails. & Displays error and resets state. & Refactor error handled. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Starts refactor session and shows diff. & Updates detail view, opens diff, shows buttons. & Session started with correct UI behavior. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Starts session with missing energy data. & Displays N/A in savings output. & Info message shown with N/A. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, MS-MNT4 & Accepts refactoring with full file updates. & Copies files, updates metrics, clears cache. & Files replaced and data updated. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Accept triggered without refactor data. & Displays error message. & No action taken. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Filesystem copy fails during accept. & Shows error and aborts application. & Error message shown. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Rejects refactoring and clears view. & Updates status, clears state. & Refactor discarded. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Reject cleanup throws error. & Logs error in ecoOutput. & Output error logged. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Wipe Workspace Cache Command}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4.3cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Wipe Workspace Cache Test Cases}
+  \label{table:wipe_workspace_tests}
+  \endlastfoot
+
+  TC\testcount & FR11, UHR-EOU2 & User opens wipe cache command. & Confirmation dialog is shown. & Dialog displayed as expected. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, MS-MNT2 & User confirms wipe action. & Cache cleared, status UI reset, success message shown. & All behaviors executed as expected. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU2 & User cancels confirmation dialog. & Cache remains intact, cancellation message shown. & No clearing occurred. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU2 & User dismisses dialog (no selection). & Tool cancels operation with message. & Cancellation handled gracefully. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU2 & User clicks non-confirm option. & Tool shows cancellation message. & No data lost, message shown. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, MS-MNT2 & Cache cleared without error. & Success message shown after operation. & Message shown only after success. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Dialog closed with no response. & Cancellation message shown. & Message shown, no success triggered. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Workspace File Monitoring}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2.2cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Workspace File Listener Test Cases}
+  \label{table:workspace_listener_tests}
+  \endlastfoot
+
+  TC\testcount & FR12, MS-MNT4 & File changes with cache. & Cache cleared, status marked outdated, notification shown. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & File changes without cache. & Listener skips invalidation, logs trace. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Error during file change cache clearing. & Error is caught and logged. & Error trace logged. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & File deleted and cache existed. & Cache and status removed, UI refreshed. & All behaviors verified. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & File deleted but not cached. & Skips removal, no action taken. & No deletions occurred. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Error during deletion. & Logs error message. & Error handled correctly. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14, OER-IAS2 & Python file is saved. & detectSmellsFile is called. & Auto detection triggered. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Non-Python file is saved. & Listener skips detection. & detectSmellsFile not called. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & MS-MNT4 & dispose() called. & File watcher and save listener are disposed. & Disposables cleaned. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Backend Communication}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2.2cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Backend Communication Test Cases}
+  \label{table:backend_communication_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-INT1 & checkServerStatus returns healthy. & Sets server status to UP. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10 & checkServerStatus gets 500. & Sets server status to DOWN, logs warning. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10, SR-IM 1 & checkServerStatus throws network error. & Sets server status to DOWN, logs error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & OER-IAS1 & initLogs successfully initializes logs. & Returns true. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & OER-IAS1 & initLogs fails server response. & Returns false, logs error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & OER-IAS1 & initLogs throws network error. & Returns false, logs connection error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10 & fetchSmells returns successful detection. & Returns list of smells, logs messages. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10, SR-IM 1 & fetchSmells gets 500 from server. & Throws error with status. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10, SR-IM 1 & fetchSmells throws network error. & Throws error and logs it. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-INT1 & backendRefactorSmell works. & Calls refactor API and returns result. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & backendRefactorSmell with empty path. & Throws error, logs abortion. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, SR-IM 1 & backendRefactorSmell server error. & Throws error with message. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-INT1 & backendRefactorSmellType works. & Calls /refactor-by-type and returns result. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & backendRefactorSmellType no path. & Throws error for missing path. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, SR-IM 1 & backendRefactorSmellType server error. & Throws error for failed refactor. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Smell Highlighting}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2.2cm}
+    >{\raggedright\arraybackslash}p{4.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2106,34 +2494,59 @@ backend modules and the vscode extension.
 
   \bottomrule
   \caption{File Highlighter Test Cases}
-  \label{table:plugin_file_highlighter_tests}
+  \label{table:file_highlighter_tests}
   \endlastfoot
 
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Creates decorations for a
-  given color. & Decoration is created using
-  \lstinline|vscode.window.createTextEditor DecorationType|. & All
-  assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR12, LFR-AP 1 & highlightSmells with valid cache. & Two decorations created and applied. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Highlights smells in the
-  active text editor. & Decorations are set using
-  \texttt{setDecorations}. & All assertions pass. & \cellcolor{green} Pass \\
+
+  TC\testcount & FR12 & highlightSmells with no cache. & Does not apply any highlights. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Does not reset highlight
-  decorations on first initialization. & Decorations are not disposed
-  of on the first call. & All assertions pass. & \cellcolor{green} Pass \\
+
+  TC\testcount & FR12, LFR-AP 1 & highlightSmells with only one smell enabled. & Only matching smells are decorated. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Resets highlight
-  decorations on subsequent calls. & Decorations are disposed of on
-  subsequent calls. & All assertions pass. & \cellcolor{green} Pass \\
+
+  TC\testcount & FR12 & highlightSmells with invalid line. & Skips decoration for that smell. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with underline style. & Returns text underline decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with flashlight style. & Returns whole-line background decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with border-arrow style. & Returns right-arrow styled decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with unknown style. & Falls back to underline decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, UHR-EOU 1 & resetHighlights disposes all active decorations. & Decorations are disposed and cleared. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForVisibleEditors with Python editor. & highlightSmells called once. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForFile with matching Python file. & Triggers highlightSmells. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForFile with non-matching file. & Skips highlighting. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForFile with JS file. & Skips highlighting. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & getInstance returns same instance. & Singleton pattern confirmed. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{File Hashing}
+
+\subsubsection{Smell Hover Display}
 
 \begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.5cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{2.2cm}
+    >{\raggedright\arraybackslash}p{4.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2151,141 +2564,36 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Hashing Tools Test Cases}
-  \label{table:plugin_hashing_tests}
-  \endlastfoot
-
-  TC\testcount & FR10, OER-IAS1 & Document hash has not changed. &
-  Does not update workspace storage. & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Document hash has changed. &
-  Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & No hash exists for the document. &
-  Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\
-\end{longtable}
-
-\subsubsection{Line Selection Manager Module}
-\begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.5cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endfirsthead
-
-  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endhead
-
-  \multicolumn{6}{r}{\textit{Continued on next page}} \\
-  \endfoot
-
-  \bottomrule
-  \caption{Line Selection Module Test Cases}
-  \label{table:line_selection_tests}
-  \endlastfoot
-
-  TC\testcount & UHR-EOU1 & Call the `removeLastComment` method after
-  adding a comment. & The decoration is removed and no comment
-  remains on the line. & The decoration is removed, and no comment
-  appears on the selected line. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` method with null
-  editor. & The method does not throw an error. & The method does not
-  throw an error. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a file with no
-  detected smells. & No comment is added to the line. & No decoration
-  is added, and the line remains unchanged. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a file where the
-  document hash does not match. & The method does not add a comment
-  because the document has changed. & No decoration is added due to
-  the document hash mismatch. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` with a multi-line
-  selection. & The method returns early without adding a comment. &
-  No comment is added to any lines in the selection. &
-  \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with no
-  detected smells. & No comment is added for the line. & No
-  decoration is added, and the line remains unchanged. &
-  \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with a
-  single detected smell. & The comment shows the first smell symbol
-  without a count. & Comment shows the first smell symbol: `Smell:
-  PERF-001`. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with a
-  detected smell. & A comment is added on the selected line in the
-  editor showing the detected smell. & Comment added with the correct
-  smell symbol and count. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with
-  multiple detected smells. & The comment shows the first smell
-  followed by the count of additional smells. & Comment shows `Smell:
-  PERF-001 | (+1)`. & \cellcolor{green} Pass \\
-\end{longtable}
-
-\subsubsection{Hover Manager Module}
-\begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.5cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endfirsthead
-
-  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endhead
-
-  \multicolumn{6}{r}{\textit{Continued on next page}} \\
-  \endfoot
-
-  \bottomrule
-  \caption{Hover Manager Module Test Cases}
+  \caption{Hover Manager Test Cases}
   \label{table:hover_manager_tests}
   \endlastfoot
 
-  TC\testcount & LFR-AP2 & Register hover provider for Python files.
-  & Hover provider registered for Python files. & Hover provider is
-  registered for Python files. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Subscribe hover provider. & Hover provider
-  subscription registered. & Hover provider subscription registered.
-  & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Return hover content with no smells. &
-  Returns null for hover content. & Hover content = null. &
-  \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2, FR2 & Update smells with new data. & Smells
-  updated correctly with new data. & Smells are updated correctly
-  with new smells data. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2, FR2 & Update smells correctly. & Smells
-  updated with new content. & Current smells content updated to new
-  smells content provided.  & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Generate valid hover content. & Generates
-  hover content with correct smell information. & Correct and valid
-  hover content generated for given smell. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Register refactor commands. & Both
-  commands registered correctly on initialization & Refactor commands
-  registered correctly. & \cellcolor{green} Pass \\
+  TC\testcount & FR12 & register() on init. & Registers hover for Python files. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & provideHover for JS file. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & provideHover with no cache. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & provideHover with non-matching line. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, UHR-EOU 1 & provideHover with valid smell. & Returns hover with markdown details. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, LFR-AP 1 & provideHover escapes markdown. & Output safely renders escaped characters. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Handle Smell Settings Module}
+
+\subsubsection{Line Selection Decorations}
 
 \begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.5cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{2.2cm}
+    >{\raggedright\arraybackslash}p{4.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2303,44 +2611,56 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-
-  \caption{VS Code Settings Management Module Test Cases}
-  \label{table:vs_code_settings_tests}
+  \caption{Line Selection Manager Test Cases}
+  \label{table:line_selection_tests}
   \endlastfoot
 
-  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells
-  from settings. & Function should return the current enabled smells.
-  & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells
-  when no settings exist. & Function should return an empty object. &
-  All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test enabling a smell and
-  verifying notification. & Notification should be displayed and
-  cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test disabling a smell
-  and verifying notification. & Notification should be displayed and
-  cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test that cache is not
-  wiped if no changes occur. & No notification or cache wipe should
-  happen. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1 & Test formatting of kebab-case smell
-  names. & Smell names should be correctly converted to readable
-  format. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1 & Test formatting with an empty
-  string input. & Function should return an empty string without
-  errors. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR12 & Construct manager. & Registers callback for smell updates. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
 
+  TC\testcount & FR12 & removeLastComment with decoration. & Disposes and clears decorated line. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & removeLastComment with no decoration. & Does nothing. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with no editor. & Skips decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with multi-line selection. & Skips decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with no cached smells. & Calls removeLastComment. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with mismatched line. & Does not decorate. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, LFR-AP 1 & commentLine with one smell match. & Adds comment with smell type. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, LFR-AP 1 & commentLine with multiple smells. & Adds comment with smell count. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine already decorated. & Skips redecoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & smellsUpdated for 'all'. & Clears comment. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & smellsUpdated for current file. & Clears comment. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & smellsUpdated for unrelated file. & Skips clearing. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Handle Smell Settings Module}
-
-\subsubsection{Wipe Workspace Cache Command}
+\subsubsection{Cache Initialization From Previous Workspace State}
 
 \begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{2.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2358,52 +2678,35 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Wipe Workspace Cache Command Test Cases}
-  \label{table:plugin_wipe_cache_tests}
+  \caption{Cache Initialization Test Cases}
+  \label{table:cache_init_tests}
   \endlastfoot
 
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with no reason
-  provided. & The smells cache should be cleared and reset to an
-  empty state. A success message indicating that the workspace cache
-  was successfully wiped should be displayed. & All assertions pass.
-  & \cellcolor{green} Pass \\
+  TC\testcount & FR11 & No workspace path configured. & Skips initialization and logs warning. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason
-  ``manual''. & Both the smells cache and file changes cache should
-  be cleared and reset to empty states. A success message indicating
-  that the workspace cache was manually wiped by the user should be
-  displayed. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are no
-  open files. & A log message indicating that there are no open files
-  to update should be generated. & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are
-  open files. & A message indicating the number of visible files
-  should be logged, and the hashes for each open file should be
-  updated. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason
-  ``settings''. & Only the smells cache should be cleared. A success
-  message indicating that the cache was wiped due to smell detection
-  settings changes should be displayed. & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error
-  occurs. & An error message should be logged, and an error message
-  indicating failure to wipe the workspace cache should be displayed
-  to the user. & All assertions pass. & \cellcolor{green} Pass \\
 
+  TC\testcount & FR11 & File path outside workspace. & File is removed from cache. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & File no longer exists. & Cache is cleared for missing file. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, PR-RFT 1 & File has smells. & Status is set to \texttt{passed} and smells restored. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, PR-RFT 1 & File is clean. & Status is set to \texttt{no\_issues}. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, MS-MNT 5 & Mixed file scenarios (valid, missing, outside). & Accurate logs of valid, clean, and removed files. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Backend}
+\subsubsection{Refactor Action Button Controls}
 
 \begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{2.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2421,31 +2724,121 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Backend Test Cases}
-  \label{table:plugin_backend_tests}
+  \caption{Refactor Action Button Tests}
+  \label{table:refactor_button_tests}
   \endlastfoot
 
-  TC\testcount & PR-SCR1, PR-RFT1 & Trigger request to check server
-  status when server responds with a successful status. & The set
-  status method should be called with the
-  \texttt{ServerStatusType.UP} status & All assertions pass. &
-  \cellcolor{green} Pass \\
+  TC\testcount & FR12, UHR-EOU 1 & Call \texttt{showRefactorActionButtons()} after initialization. & Accept and Reject buttons appear; refactoring context is set to true. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & PR-SCR1, PR-RFT2 & Trigger request to check server
-  status when server responds with an error status or fails to
-  respond. & The set status method should be called with the
-  \texttt{ServerStatusType.DOWN} status & All assertions pass. &
-  \cellcolor{green} Pass \\
+
+  TC\testcount & FR12, UHR-ACS 2 & Call \texttt{hideRefactorActionButtons()} after initialization. & Buttons are hidden and context is cleared. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+
+\subsubsection{Smell Configuration Management}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
   \midrule
-  TC\testcount & FR-6, PR-RFT1 & Trigger intialize logs call with a
-  valid directory path, and backend responds with success. & The
-  function should return \texttt{true} indicating successful log
-  initialization. & All assertions pass. & \cellcolor{green} Pass \\
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
   \midrule
-  TC\testcount & PR-SCR1, PR-RFT2 & Trigger intialize logs call with
-  a valid directory path, and backend responds with a failure. & TThe
-  function should return \texttt{false} indicating failure to
-  initialize logs. & All assertions pass. & \cellcolor{green} Pass \\
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Smell Configuration Test Cases}
+  \label{table:smells_data_tests}
+  \endlastfoot
+
+  TC\testcount & FR14, MS-MNT 3 & Load smell config file from disk. & JSON is parsed into smell config object. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Config file is missing. & Show error message. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Config file is invalid JSON. & Show error message and log. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Save smells config to disk. & File is written without error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Save fails due to file error. & Show error and log failure. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Call \texttt{getFilterSmells()}. & Returns current loaded smell config. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Call \texttt{getEnabledSmells()}. & Returns enabled smells and options only. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup acronym by known message ID. & Returns correct acronym. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup acronym by unknown ID. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup name by known message ID. & Returns correct name. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup description by known message ID. & Returns correct description. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Tracked Diff Editor Management}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Diff Editor Tracking Test Cases}
+  \label{table:tracked_diff_editor_tests}
+  \endlastfoot
+
+  TC\testcount & FR11, MS-MNT 3 & Register diff editor with URIs. & Diff editor is tracked. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Check unrelated URIs are not tracked. & Returns false. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Check tracked diff editor returns true. & Returns true. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Check unregistered diff returns false. & Returns false. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Check URI comparison is case sensitive. & Uppercase URI not found. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Close all tracked diff editors. & Registered diff tabs are closed. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Clear tracked list after close. & No URIs remain tracked. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Handle case when no tabs exist. & Close is not called, no errors. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \section{Changes Due to Testing}
