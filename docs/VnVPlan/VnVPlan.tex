@@ -58,6 +58,7 @@ January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarifi
   April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools. Updated 4.2 and 4.5.2 to reflect the new tests. Fixed some links. Fixed table formatting and some grammar.\\
   April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for General Information Section\\
   April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Plan Section\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Functional Requirements Test Plan\\
   \bottomrule
 \end{tabularx}
 
@@ -419,111 +420,96 @@ specified requirements. Each functional area has its own subsection for clarity.
 \noindent
 This section covers the tests for ensuring the system correctly
 accepts Python source code files, detects errors in invalid files,
-and provides suitable feedback (FR 1).
+and provides suitable feedback (\textbf{FR1}).
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-IA-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Valid Python File Acceptance} \\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool is idle.  \\
-    \textbf{Input:} A valid Python file (filename.py) with valid
-    standard syntax. \\
-    \textbf{Output:} The system accepts the file without errors.\\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Tool is idle within the VS Code workspace. \\ 
+    \textbf{Input:} A valid Python file (filename.py) containing syntactically correct code. \\ 
+    \textbf{Output:} The system accepts the file without errors and displays any detected code smells if present. \\[2mm]
     \textbf{Test Case Derivation:} Confirming that the system
-    correctly processes a valid Python file as per FR 1.\\[2mm]
-    \textbf{How test will be performed:} Feed a syntactically valid
-    .py file to the tool and observe if it’s accepted without issues.
+    correctly processes valid Python files in the supported environment, as specified in \textbf{FR1}. \\[2mm]
+    \textbf{How test will be performed:} Open a syntactically valid `.py` file in VS Code with the extension enabled. Verify that the tool processes the file and optionally displays code smells if any are present.
 
   \item \textbf{Feedback for Python File with Bad Syntax} \\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool is idle. \\
-    \textbf{Input:} A .py file (badSyntax.py) containing deliberate
-    syntax errors that render the file unrunnable. \\
-    \textbf{Output:} The system rejects the file and provides an
-    error message detailing the syntax issue. \\[2mm]
-    \textbf{Test Case Derivation:} Verifies the tool’s handling of
-    syntactically invalid Python files to ensure user awareness of
-    the syntax issue, meeting FR 1. \\[2mm]
-    \textbf{How test will be performed:} Feed a .py file with syntax
-    errors to the tool and check that the system identifies it as
-    invalid and produces an appropriate error message.
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Tool is idle within the VS Code workspace. \\ 
+    \textbf{Input:} A `.py` file (badSyntax.py) containing deliberate syntax errors that prevent parsing. \\ 
+    \textbf{Output:} The system detects the issue, halts further analysis, and displays an appropriate error message within the editor. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures graceful handling of invalid Python syntax and appropriate user feedback, satisfying \textbf{FR1}. \\[2mm]
+    \textbf{How test will be performed:} Load a Python file with syntax errors in VS Code, then observe whether the extension flags the syntax issue and stops further processing.
 
   \item \textbf{Feedback for Non-Python File}\\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool is idle.\\
-    \textbf{Input:} A non-Python file (document.txt) or a file with
-    an incorrect extension (script.js).\\
-    \textbf{Output:} The system rejects the file and provides an
-    error message indicating the invalid file format.\\[2mm]
-    \textbf{Test Case Derivation:} Ensures the tool detects
-    unsupported file types and provides feedback, satisfying FR 1.\\[2mm]
-    \textbf{How test will be performed:} Attempt to load a .txt or
-    other non-Python file, and verify that the system rejects it with
-    a message indicating an invalid file type.
-
-    \noindent
-    \colorrule
-
-    \subsubsection{Code Smell Detection Tests and Refactoring
-    Suggestion (RS) Tests} \label{4.1.2}
-    \colorrule
-
-    \medskip
-
-    \noindent
-    This area includes tests to verify the detection and refactoring
-    of specified code smells that impact energy efficiency. These tests will be
-    done through unit testing.
-
-    \begin{enumerate}[label={\bf
-    \textcolor{Maroon}{test-FR-IA-\arabic*}}, wide=0pt, font=\itshape]
-    \item \textbf{Successful Refactoring Execution} \\[2mm]
-    \textbf{Control:} Automated \\
-    \textbf{Initial State:} Tool is idle. \\
-    \textbf{Input:} A valid Python file with a detected code smell. \\
-    \textbf{Output:} The system applies the appropriate refactoring and modifies the file. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures that the tool correctly identifies the smell, selects the corresponding refactoring, and applies it successfully, meeting FR 2. \\[2mm]
-    \textbf{How test will be performed:} Provide a valid Python file with an LEC001 smell, execute the refactoring, and confirm the modified file is generated as expected. 
-    
-    \item \textbf{No Available Refactorer Handling} \\[2mm]
-    \textbf{Control:} Automated \\
-    \textbf{Initial State:} Tool is idle. \\
-    \textbf{Input:} A valid Python file with an unsupported code smell. \\
-    \textbf{Output:} The system logs an error message and does not attempt refactoring. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures the tool properly handles cases where a refactorer does not exist for a given smell, per FR 2. \\[2mm]
-    \textbf{How test will be performed:} Provide a valid Python file with an unsupported smell and verify that the system logs an error and does not apply refactoring.
-    
-    \item \textbf{Multiple Refactoring Calls on Same File} \\[2mm]
-    \textbf{Control:} Automated \\
-    \textbf{Initial State:} Tool is idle. \\
-    \textbf{Input:} A valid Python file with a detected code smell, processed twice. \\
-    \textbf{Output:} The system successfully tracks multiple refactoring applications and generates unique output files. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures that repeated refactoring calls incrementally track and apply changes properly, per FR 3. \\[2mm]
-    \textbf{How test will be performed:} Provide a valid Python file, execute refactoring twice, and confirm that distinct modified files are generated with sequential naming.
-    
-    \item \textbf{Refactoring Execution with Overwrite Disabled} \\[2mm]
-    \textbf{Control:} Automated \\
-    \textbf{Initial State:} Tool is idle. \\
-    \textbf{Input:} A valid Python file with a detected code smell, processed with overwrite disabled. \\
-    \textbf{Output:} The system applies refactoring but does not overwrite existing files. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures the tool respects the overwrite flag and does not modify existing files when disabled, per FR 2. \\[2mm]
-    \textbf{How test will be performed:} Provide a valid Python file, execute refactoring with overwrite set to false, and verify that new files are created without modifying the original.
-    
-    \item \textbf{Handling Empty Modified Files List} \\[2mm]
-    \textbf{Control:} Automated \\
-    \textbf{Initial State:} Tool is idle. \\
-    \textbf{Input:} A valid Python file with a detected code smell, but no modifications are made by the refactorer. \\
-    \textbf{Output:} The system does not generate modified files and logs appropriate information. \\[2mm]
-    \textbf{Test Case Derivation:} Ensures the tool correctly handles cases where a refactorer does not produce any modified files, per FR 4. \\[2mm]
-    \textbf{How test will be performed:} Provide a valid Python file, execute refactoring where the tool does not make changes, and confirm that no modified files are generated and appropriate logs are recorded.
-    \end{enumerate}
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Tool is idle within the VS Code workspace. \\ 
+    \textbf{Input:} A non-Python file (e.g., `notes.txt` or `script.js`). \\ 
+    \textbf{Output:} The system ignores the file or displays a message indicating that the file type is unsupported. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that the system filters non-Python files, consistent with the requirement that it must exclusively process `.py` files (\textbf{FR1}). \\[2mm]
+    \textbf{How test will be performed:} Attempt to open a non-Python file in VS Code and check that the extension does not attempt analysis or refactoring and provides clear messaging if applicable.
 
 \end{enumerate}
 
-\newpage
+\noindent\colorrule
+
+
+\subsubsection{Code Smell Detection Tests and Refactoring
+Suggestion (RS) Tests} \label{4.1.2}
+\colorrule
+
+\medskip
 
 \noindent
-\colorrule
+This area includes tests to verify the detection and refactoring
+of specified code smells that impact energy efficiency. These tests will be
+done through unit testing.
+
+\begin{enumerate}[label={\bf
+\textcolor{Maroon}{test-FR-IA-\arabic*}}, wide=0pt, font=\itshape]
+\item \textbf{Successful Refactoring Execution} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle in the VS Code environment. \\
+\textbf{Input:} A valid Python file with a detectable code smell. \\
+\textbf{Output:} The system applies the appropriate refactoring and updates the code view. \\[2mm]
+\textbf{Test Case Derivation:} Ensures the tool correctly identifies a smell (e.g., LEC001), chooses an applicable refactoring, and applies it successfully, per \textbf{FR2} and \textbf{FR3}. \\[2mm]
+\textbf{How test will be performed:} Provide a valid Python file containing a known smell, trigger refactoring via the VS Code interface, and confirm the output includes refactored code as expected.
+
+\item \textbf{No Available Refactorer Handling} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle. \\
+\textbf{Input:} A valid Python file containing a code smell that does not yet have a supported refactorer. \\
+\textbf{Output:} The system does not apply changes and logs or displays an informative message. \\[2mm]
+\textbf{Test Case Derivation:} Verifies that unsupported code smells are gracefully handled without errors, per \textbf{FR2}. \\[2mm]
+\textbf{How test will be performed:} Provide a valid Python file with an unsupported smell and observe that the system notifies the user without attempting modification.
+
+\item \textbf{Multiple Refactoring Calls on Same File} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle. \\
+\textbf{Input:} A valid Python file with a detectable code smell, refactored more than once. \\
+\textbf{Output:} The tool processes the file repeatedly and applies changes incrementally. \\[2mm]
+\textbf{Test Case Derivation:} Confirms the system can handle repeated invocations and re-apply applicable refactorings, per \textbf{FR3}. \\[2mm]
+\textbf{How test will be performed:} Refactor a file containing a supported smell multiple times and verify that each run performs valid operations and results in updated outputs.
+
+\item \textbf{Refactoring Execution with Overwrite Disabled} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle. \\
+\textbf{Input:} A valid Python file with detected code smells and overwrite protection enabled. \\
+\textbf{Output:} The system generates a new version of the refactored file without altering the original. \\[2mm]
+\textbf{Test Case Derivation:} Ensures user data safety by preventing overwrites, fulfilling system expectations from \textbf{FR3}. \\[2mm]
+\textbf{How test will be performed:} Enable overwrite protection, refactor a file, and verify that the original remains unchanged while a new file is created.
+
+\item \textbf{Handling Empty Modified Files List} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle. \\
+\textbf{Input:} A valid Python file where the code smell is detected, but the refactorer makes no modifications. \\
+\textbf{Output:} The system does not generate output files and notifies the user appropriately. \\[2mm]
+\textbf{Test Case Derivation:} Confirms the tool handles no-op refactorers correctly, per \textbf{FR4}. \\[2mm]
+\textbf{How test will be performed:} Supply a file where the refactorer returns an unchanged version of the code and verify that no new files are created and that appropriate feedback is displayed or logged.
+
+\end{enumerate}
+
+\noindent\colorrule
 
 \subsubsection{Tests for Reporting Functionality}
 \colorrule
@@ -532,76 +518,53 @@ and provides suitable feedback (FR 1).
 
 \noindent
 The reporting functionality of the tool is crucial for providing
-users with comprehensive insights into the refactoring process,
-including detected code smells, refactorings applied, energy
-consumption measurements, and the results of the original test suite.
-This section outlines tests that ensure the reporting feature
-operates correctly and delivers accurate, well-structured information
-as specified in the functional requirements (FR 6, 8, 15).
+users with meaningful insights into the energy impact of refactorings
+and the smells being addressed. This section outlines tests that
+ensure the energy metrics and refactoring summaries are accurately
+presented, as required by \textbf{FR6} and \textbf{FR15}.
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-RP-\arabic*}}, wide=0pt, font=\itshape]
-  \item \textbf{A Report With All Components Is Generated}\\[2mm]
+
+  \item \textbf{Energy Consumption Metrics Displayed Post-Refactoring} \\[2mm]
     \textbf{Control:} Manual \\
-    \textbf{Initial State:} The tool has completed refactoring a
-    Python code file.\\
-    \textbf{Input:} The refactoring results, including detected code
-    smells, applied refactorings, and energy consumption metrics.\\
-    \textbf{Output:} A well-structured report is generated,
-    summarizing the refactoring process.\\[2mm]
-    \textbf{Test Case Derivation:} This test ensures that the tool
-    generates a comprehensive report that includes all necessary
-    information as required by FR 6, 8 and 15.\\[2mm]
-    \textbf{How test will be performed:} After refactoring, the tool
-    will invoke the report generation feature and a user can validate
-    that the output meets the structure and content specifications.
+    \textbf{Initial State:} The tool has measured energy usage before and after refactoring. \\
+    \textbf{Input:} Energy data collected for the original and refactored code. \\
+    \textbf{Output:} A clear comparison of energy consumption is displayed in the UI. \\[2mm]
+    \textbf{Test Case Derivation:} Verifies that energy metrics are properly calculated and presented to users, as per \textbf{FR6}. \\[2mm]
+    \textbf{How test will be performed:} Refactor a file and review the visual or textual display of energy usage before and after, ensuring the values match backend logs.
 
-  \item \textbf{Validation of Code Smell and Refactoring Data in Report}\\[2mm]
-    \textbf{Control:} Automatic \\
-    \textbf{Initial State:} The tool has identified code smells and
-    performed refactorings.\\
-    \textbf{Input:} The results of the refactoring process.\\
-    \textbf{Output:} The generated report accurately lists all
-    detected code smells and the corresponding refactorings applied.\\[2mm]
-    \textbf{Test Case Derivation:} This test verifies that the report
-    includes correct and complete information about code smells and
-    refactorings, in compliance with FR 8.\\[2mm]
-    \textbf{How test will be performed:} The tool will compare the
-    contents of the generated report against the detected code smells
-    and refactorings to ensure accuracy.
+  \item \textbf{Detected Code Smells and Refactorings Reflected in UI} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The tool has completed code analysis and refactoring. \\
+    \textbf{Input:} Output of the detection and refactoring modules. \\
+    \textbf{Output:} The user interface displays the detected code smells and associated refactorings clearly. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures transparency of changes and supports informed decision-making by the user, in line with \textbf{FR15}. \\[2mm]
+    \textbf{How test will be performed:} Open a code file with detectable smells, trigger a refactor, and inspect the view displaying the summary of changes and available actions.
 
-  \item \textbf{Energy Consumption Metrics Included in Report}\\[2mm]
-    \textbf{Control:} Manual\\
-    \textbf{Initial State:} The tool has measured energy consumption
-    before and after refactoring.\\
-    \textbf{Input:} Energy consumption metrics obtained during the
-    refactoring process.\\
-    \textbf{Output:} The report presents a clear comparison of energy
-    usage before and after the refactorings.\\[2mm]
-    \textbf{Test Case Derivation:} This test confirms that the
-    reporting feature effectively communicates energy consumption
-    improvements, aligning with FR 6.\\[2mm]
-    \textbf{How test will be performed:} A user will analyze the
-    energy metrics in the report to ensure they accurately reflect
-    the measurements taken during the refactoring.
+  \item \textbf{No Report or Feedback Shown if No Changes Are Made} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} A file with no smells or refactorings is opened. \\
+    \textbf{Input:} A Python file with no applicable refactorings. \\
+    \textbf{Output:} The system displays a message indicating no issues were found and does not generate further metrics. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures that user feedback is not shown unnecessarily, and the UI is clean when no action is required. \\[2mm]
+    \textbf{How test will be performed:} Open a clean file and observe that no metrics, changes, or visual noise is presented in the extension UI.
 
-  \item \textbf{Functionality Test Results Included in Report}\\[2mm]
-    \textbf{Control:} Automatic \\
-    \textbf{Initial State:} The original test suite has been executed
-    against the refactored code.\\
-    \textbf{Input:} The outcomes of the test suite execution.\\
-    \textbf{Output:} The report summarizes the test results,
-    indicating which tests passed and failed.\\[2mm]
-    \textbf{Test Case Derivation:} This test ensures that the
-    reporting functionality accurately reflects the results of the
-    test suite as specified in FR 8.\\[2mm]
-    \textbf{How test will be performed:} The tool will generate the
-    report and validate that it contains a summary of test results
-    consistent with the actual test outcomes.
 \end{enumerate}
 
-\noindent
+\noindent\colorrule
+
+\subsubsection{Visual Studio Code Interactions}
 \colorrule
+
+\medskip
+
+\noindent
+This section corresponds to features related to the user’s interaction with the Visual Studio Code extension interface, including previewing and toggling smells, customizing the UI, and reviewing code comparisons. These tests verify that the extension enables users to interact with refactorings in an intuitive and informative manner, as outlined in \textbf{FR8}, \textbf{FR13}, \textbf{FR14}, and \textbf{FR16}.\\
+
+\noindent These features are primarily tested through automated unit tests integrated in the extension codebase. For implementation and test details, please refer to the unit testing suite.
+
+\noindent\colorrule
 
 \subsubsection{Documentation Availability Tests}
 \colorrule
@@ -629,64 +592,30 @@ documentation as per FR 7.
 \noindent
 \colorrule
 
-\subsubsection{IDE Extension Tests}
+\subsubsection{Installation and Onboarding Tests}
 \colorrule
 
 \medskip
 
 \noindent
-The following tests are designed to ensure that the user can
-integrate the tool into VS Code IDE as specified and that
-the tool works as intended as an extension.
+This test ensures that the tool is easy to install and that its documentation supports users in successfully getting started. It addresses \textbf{FR7} and relevant usability metrics like \texttt{MIN USER EOU} and \texttt{MAX TASK CLICKS} from the symbolic constants.
 
 \begin{enumerate}[label={\bf
-    \textcolor{Maroon}{test-FR-IE-\arabic*}}, wide=0pt, font=\itshape]
-  \item \textbf{Installation of Extension in Visual Studio Code}\\[2mm]
-    \textbf{Control:} Manual\\
-    \textbf{Initial State:} The user has Visual Studio Code installed
-    on their machine.\\
-    \textbf{Input:} The user attempts to install the refactoring tool
-    extension from the Visual Studio Code Marketplace.\\
-    \textbf{Output:} The extension installs successfully, and the
-    user is able to see it listed in the Extensions view.\\[2mm]
-    \textbf{Test Case Derivation:} This test validates the
-    installation process of the extension to ensure that users can
-    easily add the tool to their development environment.\\[2mm]
+    \textcolor{Maroon}{test-FR-IN-\arabic*}}, wide=0pt, font=\itshape]
+  \item \textbf{Extension Installation Flow}\\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The user has Visual Studio Code installed but has not yet installed the EcoOptimizer extension or accessed the documentation. \\
+    \textbf{Input:} The user attempts to follow the user manual to install the extension and set up the tool. \\
+    \textbf{Output:} The extension installs successfully, and the documentation provides clear steps for setup, usage, and troubleshooting. The user completes onboarding within the \texttt{MAX TASK CLICKS} threshold.\\[2mm]
+    \textbf{Test Case Derivation:} This test verifies the clarity and effectiveness of documentation and installation flow, as well as alignment with usability requirements. \\[2mm]
     \textbf{How test will be performed:}
     \begin{enumerate}[label=\arabic*.]
-      \item Open Visual Studio Code.
-      \item Navigate to the Extensions view (Ctrl+Shift+X).
-      \item Search for the refactoring tool extension in the marketplace.
-      \item Click on the "Install" button.
-      \item After installation, verify that the extension appears in
-        the installed extensions list.
-      \item Confirm that the extension is enabled and ready for use
-        by checking its functionality within the editor.
-    \end{enumerate}
-
-  \item \textbf{Running the Extension in Visual Studio Code}\\[2mm]
-    \textbf{Control:} Manual\\
-    \textbf{Initial State:} The user has successfully installed the
-    refactoring tool extension in Visual Studio Code.\\
-    \textbf{Input:} The user opens a Python file and activates the
-    refactoring tool extension.\\
-    \textbf{Output:} The extension runs successfully, and the user
-    can see a list of detected code smells and suggested refactorings.\\[2mm]
-    \textbf{Test Case Derivation:} This test validates that the
-    extension can be executed within the development environment and
-    that it correctly identifies code smells as per the functional
-    requirements in the SRS.\\[2mm]
-    \textbf{How test will be performed:}
-    \begin{enumerate}[label=\arabic*.]
-      \item Open Visual Studio Code.
-      \item Open a valid Python file that contains known code smells.
-      \item Activate the refactoring tool extension using the command
-        palette (Ctrl+Shift+P) and selecting the extension command.
-      \item Observe the output panel for the detection of code smells.
-      \item Verify that the extension lists the identified code
-        smells and provides appropriate refactoring suggestions.
-      \item Confirm that the suggestions are relevant and feasible
-        for the detected code smells.
+      \item Open VS Code and access the Extensions view.
+      \item Search for the EcoOptimizer extension and install it.
+      \item Open the user manual and follow the setup instructions.
+      \item Complete installation and verify that the extension appears and is usable in the IDE.
+      \item Record the number of steps/clicks required and compare against \texttt{MAX TASK CLICKS}.
+      \item Ask test users to rate clarity and ease-of-use, checking whether results meet \texttt{MIN USER EOU}.
     \end{enumerate}
 \end{enumerate}
 
