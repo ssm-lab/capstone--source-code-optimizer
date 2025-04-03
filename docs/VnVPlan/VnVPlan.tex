@@ -49,13 +49,15 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{4cm}p{2cm}X}
+\begin{tabularx}{\textwidth}{p{4cm}p{4cm}X}
   \toprule {\bf Date} & {\bf Name} & {\bf Notes}\\
   \midrule
   November 4th, 2024 & All & Created initial revision of VnV Plan\\
 January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarified test-SRT-3\\
-  March 10th, 2025 & All & Revised Functional and Non-Functional Requirements\\
+  March 10th, 2025 & Nivetha Kuruparan, Sevhena Walker & Revised Functional and Non-Functional Requirements\\
   April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools. Updated Automated testing and Verification Tools to include plugin tools. Updated 4.2 and 4.5.2 to reflect the new tests. Fixed some links. Fixed table formatting and some grammar.\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for General Information Section\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Plan Section\\
   \bottomrule
 \end{tabularx}
 
@@ -110,7 +112,7 @@ in.}
 
 \pagenumbering{arabic}
 
-This document outlines the process and methods to ensure that the
+\noindent This document outlines the process and methods to ensure that the
 software meets its requirements and functions as intended. This
 document provides a structured approach to evaluating the product,
 incorporating both verification (to confirm that the software is
@@ -120,62 +122,30 @@ potential issues, the V\&V process aims to enhance quality, reduce
 risks, and ensure compliance with both functional and non-functional
 requirements.\\
 
-The following sections will go over the approach for verification and
+\noindent The following sections will go over the approach for verification and
 validation, including the team structure, verification strategies at
-various stages and tools to be employed. Furthermore, a detailed list
+various stages, and tools to be employed. Furthermore, a detailed list
 of system and unit tests are also included in this document.
 
 \section{General Information}
 
 \subsection{Summary}
 
-The software being tested is called EcoOptimizer. EcoOptimizer is a
-Python refactoring library that focuses on optimizing code in a way
-that reduces its energy consumption. The system will be capable to
-analyze Python code in order to spot inefficiencies (code smells)
-within, measuring the energy efficiency of the inputted code and, of
-course, apply appropriate refactorings that preserve the initial
-function of the source code. \\
-
-Furthermore, peripheral tools such as a Visual Studio Code (VS Code)
-extension and GitHub Action are also to be tested. The extension will
-integrate the library with Visual Studio Code for a more efficient
-development process and the GitHub Action will allow a proper
-integration of the library into continuous integration (CI) workflows.
+The software being tested is called EcoOptimizer. EcoOptimizer is a Visual Studio Code (VS Code) extension designed to help developers identify and refactor energy-inefficient code in Python. It uses a Python package as its backend to detect code smells and estimate the carbon emissions that can be saved by applying the suggested refactorings. Users are given the option to accept or reject these refactorings directly within the editor. EcoOptimizer aims to promote energy-aware software development by making it easier to write efficient code without altering the original functionality.
 
 \subsection{Objectives}
 
-The primary objective of this project is to build confidence in the
-\textbf{correctness} and \textbf{energy efficiency} of the
-refactoring library, ensuring that it performs as expected in
-improving code efficiency while maintaining functionality. Usability
-is also emphasized, particularly in the user interfaces provided
-through the \textbf{VS Code extension} and \textbf{GitHub Action}
-integrations, as ease of use is critical for adoption by software
-developers. These qualities—correctness, energy efficiency, and
-usability—are central to the project’s success, as they directly
-impact user experience, performance, and the sustainable benefits of the tool.\\
+The primary objective of this project is to build confidence in the correctness and energy efficiency of the EcoOptimizer system, ensuring it reliably identifies and refactors energy-inefficient Python code without altering its original behaviour. Usability is a major focus—particularly within the VS Code extension—as the tool is designed to suggest improvements and keep developers informed while they write code. A core feature of EcoOptimizer is giving users the autonomy to accept or reject refactorings, empowering them to make informed decisions about the changes being applied to their code. These qualities—correctness, energy efficiency, user control, and usability—are essential to the project’s success, as they shape the overall user experience, practical adoption, and sustainable benefits of the tool.\\
 
-Certain objectives are intentionally left out-of-scope due to
-resource constraints. We will not independently verify external
-libraries or dependencies; instead, we assume they have been
-validated by their respective development teams.
+\noindent Certain objectives have been intentionally excluded due to resource constraints. For instance, we will not independently verify third-party libraries or dependencies, and will assume that they are adequately tested and maintained by their original developers.
 
 \subsection{Challenge Level and Extras}
 
-Our project, set at a \textbf{general} challenge level, includes two
-additional focuses: \textbf{user documentation} and \textbf{usability
-testing}. The user documentation aims to provide clear, accessible
-guidance for developers, making it easy to understand the tool’s
-setup, functionality, and integration into existing workflows.
-Usability testing will ensure that the tool is intuitive and meets
-user needs effectively, offering insights to refine the user
-interface and optimize interactions with its features.
+Our project, set at a general challenge level, includes two additional focuses: the creation of a user manual and the completion of a usability report. The user manual provides clear and accessible instructions for developers, covering installation, setup, and usage of both the VS Code extension and the underlying Python package. It is designed to help users quickly integrate the tool into their development workflow. The usability report summarizes findings from a structured usability testing session, offering valuable insights into how effectively the tool meets user needs. These findings are used to refine the user interface and improve the overall user experience, ensuring the tool is both intuitive and practical for real-world use.
 
 \subsection{Relevant Documentation}
 
-The Verification and Validation (VnV) plan relies on three key
-documents to guide testing and assessment:
+The Verification and Validation (VnV) plan relies on three key documents to guide testing and assessment:
 \begin{itemize}
   \item[] \textbf{Software Requirements Specification
     (\SRS)~\cite{SRS}:} The foundation for the VnV plan, as it
@@ -205,8 +175,7 @@ automated tools employed and the approach to software validation.
 
 \subsection{Verification and Validation Team}
 
-The Verification and Validation (VnV) Team for the Source Code
-Optimizer project consists of the following members and their specific roles:
+The Verification and Validation (VnV) Team for the EcoOptimizer project consists of the following members and their specific roles:
 
 \begin{itemize}
   \item \textbf{Sevhena Walker}: Lead Tester. Oversees and
@@ -223,264 +192,158 @@ Optimizer project consists of the following members and their specific roles:
   \item \textbf{Nivetha Kuruparan}: Non-Functional Requirements
     Tester. Ensures that the final product meets user expectations
     regarding user experience and interface intuitiveness.
-  \item \textbf{Istvan David} (supervisor): Supervises the overall
+  \item \textbf{Istvan David} (Supervisor): Supervises the overall
     VnV process, providing feedback and guidance based on industry
     standards and practices.
 \end{itemize}
 
 \subsection{SRS Verification Plan}
 
-\textbf{Function \& Non-Functional Requirements:}
-\begin{itemize}
-  \item A comprehensive test suite that covers all requirements
-    specified in the SRS will be created.
-  \item Each requirement will be mapped to specific test cases to
-    ensure maximum coverage.
-  \item Automated and manual testing will be conducted to verify that
-    the implemented system meets each functional requirement.
-  \item Usability testing with representative users will be carried
-    out to validate user experience requirements and other
-    non-functional requirements.
-  \item Performance tests will be conducted to verify that the system
-    meets specified performance requirements.
+The verification of the Software Requirements Specification will be conducted through a structured four-phase approach encompassing requirements validation, stakeholder review, user acceptance testing, and continuous verification.
+
+\subsubsection{Requirements Validation}
+The validation process will begin with comprehensive test coverage of all functional and non-functional requirements. A suite of test cases will be developed, employing automated testing frameworks such as PyTest~\cite{pytest} for functional requirements while reserving manual testing for edge cases and complex scenarios. To ensure complete traceability, we will maintain a matrix that explicitly links each requirement to its corresponding implementation, test cases, and test results.
+
+\subsubsection{Stakeholder Review}
+A formal review session will be conducted with our project supervisor, Dr. Istvan David, following a structured agenda. Prior to the meeting, we will prepare and distribute a package containing: (1) a summary of key requirements and design decisions, (2) visual aids including requirement diagrams and tables, and (3) specific questions regarding high-risk areas. During the session, we will conduct a detailed walkthrough of critical system components, particularly focusing on the energy measurement module and refactoring logic.
+
+\subsubsection{User Acceptance Testing}
+The verification process will include rigorous user acceptance testing involving 5--10 representative developers from our target user base. These tests will validate both the usability requirements (ensuring tasks can be completed within the \textbf{MAX\_TASK\_CLICKS} threshold of 4) and the effectiveness of energy metrics presentation (as specified in \textbf{FR6}). Feedback from these sessions will be systematically analyzed to identify any discrepancies between the SRS and actual user expectations.
+
+\subsubsection{Continuous Verification}
+To maintain alignment between the SRS and evolving system implementation, we will conduct biweekly review sessions. These sessions will serve to:
+\begin{itemize}[nosep]
+    \item Assess the impact of any requirement changes
+    \item Update documentation to reflect system modifications
+    \item Verify that all changes maintain consistency with the original specifications
 \end{itemize}
 
-\textbf{Traceability Matrix:}
+\begin{table}[H]
+\centering
+\caption{SRS Verification Checklist}
+\begin{tabular}{|p{0.35\textwidth}|p{0.60\textwidth}|}
+\hline
+\textbf{Phase} & \textbf{Verification Activities} \\ \hline
+Requirements Validation & 
 \begin{itemize}
-  \item We will create a requirements traceability matrix that links
-    each SRS requirement to its corresponding implementation, test
-    cases, and test results.
-  \item This matrix will help identify any requirements that may have
-    been overlooked during development.
-\end{itemize}
-
-\textbf{Supervisor Review:}
+    \item[$\square$] Develop comprehensive test suite
+    \item[$\square$] Conduct automated and manual testing
+    \item[$\square$] Maintain traceability matrix
+\end{itemize} \\ \hline
+Stakeholder Review & 
 \begin{itemize}
-  \item After the implementation of the system, we will conduct a
-    formal review session with key stakeholders such as our project
-    supervisor, Dr. Istvan David.
-  \item The stakeholders will be asked to verify that each
-    requirement in the SRS is mapped out to specific expectations of
-    the project.
-  \item Prior to meeting, we will provide a summary of key
-    requirements and design decisions and prepare a list specific
-    questions or areas where we seek guidance.
-  \item During the meeting, we will present an overview of the SRS
-    using tables and other visual aids. We will conduct a walk
-    through of critical section. Finally, we will discuss any
-    potential risks or challenges identified.
-\end{itemize}
-
-\textbf{User Acceptance Testing (UAT):}
+    \item[$\square$] Prepare review materials
+    \item[$\square$] Conduct formal walkthrough
+    \item[$\square$] Address high-risk concerns
+\end{itemize} \\ \hline
+User Acceptance Testing & 
 \begin{itemize}
-  \item We will involve potential end-users in testing the system to
-    ensure it meets real-world usage scenarios.
-  \item Feedback from UAT will be used to identify any discrepancies
-    between the SRS and user expectations.
-\end{itemize}
-
-\textbf{Continuous Verification:}
+    \item[$\square$] Recruit representative users
+    \item[$\square$] Validate usability metrics
+    \item[$\square$] Analyze feedback
+\end{itemize} \\ \hline
+Continuous Verification & 
 \begin{itemize}
-  \item Throughout the development process, we will regularly review
-    and update the SRS to ensure it remains aligned with the evolving system.
-  \item Any changes to requirements will be documented and their
-    impact on the system assessed.
-\end{itemize}
-
-\textbf{\textit{\\Checklist for SRS Verification Plan}}
-\begin{itemize}
-  \item[$\square$] Create comprehensive test suite covering all SRS requirements
-  \item[$\square$] Map each requirement to specific test cases
-  \item[$\square$] Conduct automated testing for functional requirements
-  \item[$\square$] Perform manual testing for functional requirements
-  \item[$\square$] Carry out usability testing with representative users
-  \item[$\square$] Conduct performance tests to verify system meets requirements
-  \item[$\square$] Create requirements traceability matrix
-  \item[$\square$] Link each SRS requirement to implementation in
-    traceability matrix
-  \item[$\square$] Link each SRS requirement to test cases in
-    traceability matrix
-  \item[$\square$] Link each SRS requirement to test results in
-    traceability matrix
-  \item[$\square$] Schedule formal review session with project supervisor
-  \item[$\square$] Prepare summary of key requirements and design
-    decisions for supervisor review
-  \item[$\square$] Prepare list of specific questions for supervisor review
-  \item[$\square$] Create visual aids for SRS overview presentation
-  \item[$\square$] Conduct walkthrough of critical SRS sections during review
-  \item[$\square$] Discuss potential risks and challenges with supervisor
-  \item[$\square$] Organize User Acceptance Testing (UAT) with
-    potential end-users
-  \item[$\square$] Collect and analyze UAT feedback
-  \item[$\square$] Identify discrepancies between SRS and user
-    expectations from UAT
-  \item[$\square$] Establish process for regular SRS review and updates
-  \item[$\square$] Document any changes to requirements
-  \item[$\square$] Assess impact of requirement changes on the system
-\end{itemize}
+    \item[$\square$] Conduct biweekly reviews
+    \item[$\square$] Maintain change documentation
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Design Verification Plan}
 
-\textbf{Peer Review Plan:}
-\begin{itemize}
-  \item Each team member along with other classmates will thoroughly
-    review the entire Design Document.
-  \item A checklist-based approach will be used to ensure all key
-    elements are covered.
-  \item Feedback will be collected and discussed in a dedicated team meeting.
-\end{itemize}
+The design verification will focus exclusively on validating the system architecture and implementation specifications through structured peer and supervisor reviews. Classmates will conduct checklist-driven evaluations of the design document, paying particular attention to the refactoring options and the VS Code extension's interface design. Feedback will be consolidated in GitHub Issues and addressed in design refinement meetings.\\
 
-\textbf{Supervisor Review:}
-\begin{itemize}
-  \item A structured review meeting will be scheduled with our
-    project supervisor, Dr. Istvan David.
-  \item We will present an overview of the design using visual aids
-    (e.g., diagrams, tables).
-  \item We will conduct a walkthrough of critical sections.
-  \item We will use our project's issue tracker to document and
-    follow up on any action items or changes resulting from this review.
-\end{itemize}
+\noindent A formal review with Dr. Istvan David will verify three critical aspects: (1) the energy measurement module's integration, (2) compliance with VS Code extension best practices, and (3) the fault-tolerance of the refactoring pipeline. We will prepare UML sequence diagrams and component specifications to facilitate this technical discussion, documenting all action items in our project board with clear resolution deadlines.
 
-\begin{itemize}
-  \item[$\square$] All functional requirements are mapped to specific
-    design elements
-  \item[$\square$] Each functional requirement is fully addressed by the design
-  \item[$\square$] No functional requirements are overlooked or
-    partially implemented
-  \item[$\square$] Performance requirements are met by the design
-  \item[$\square$] Scalability considerations are incorporated
-  \item[$\square$] Reliability and availability requirements are satisfied
-  \item[$\square$] Usability requirements are reflected in the user
-    interface design
-  \item[$\square$] High-level architecture is clearly defined
-  \item[$\square$] Architectural decisions are justified with rationale
-  \item[$\square$] Architecture aligns with project constraints and goals
-  \item[$\square$] All major components are identified and described
-  \item[$\square$] Interactions between components are clearly specified
-  \item[$\square$] Component responsibilities are well-defined
-  \item[$\square$] Appropriate data structures are chosen for each task
-  \item[$\square$] Efficient algorithms are selected for critical operations
-  \item[$\square$] Rationale for data structure and algorithm choices
-    is provided
-  \item[$\square$] UI design is consistent with usability requirements
-  \item[$\square$] User flow is logical and efficient
-  \item[$\square$] Accessibility considerations are incorporated
-  \item[$\square$] All external interfaces are properly specified
-  \item[$\square$] Interface protocols and data formats are defined
-  \item[$\square$] Error handling for external interfaces is addressed
-  \item[$\square$] Comprehensive error handling strategy is in place
-  \item[$\square$] Exception scenarios are identified and managed
-  \item[$\square$] Error messages are clear and actionable
-  \item[$\square$] Authentication and authorization mechanisms are described
-  \item[$\square$] Data encryption methods are specified where necessary
-  \item[$\square$] Security best practices are followed in the design
-  \item[$\square$] Design allows for future expansion and feature additions
-  \item[$\square$] Code modularity and reusability are considered
-  \item[$\square$] Documentation standards are established for maintainability
-  \item[$\square$] Performance bottlenecks are identified and addressed
-  \item[$\square$] Resource utilization is optimized
-  \item[$\square$] Performance testing strategies are outlined
-  \item[$\square$] Design adheres to established coding standards
-  \item[$\square$] Industry best practices are followed
-  \item[$\square$] Design patterns are appropriately applied
-  \item[$\square$] All major design decisions are justified
-  \item[$\square$] Trade-offs are explained with pros and cons
-  \item[$\square$] Alternative approaches considered are documented
-  \item[$\square$] Documents is clear, concise, and free of ambiguities
-  \item[$\square$] Documents follows a logical structure
-\end{itemize}
+\begin{table}[H]
+\centering
+\caption{Design Verification Checklist}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Focus Area} & \textbf{Verification Tasks} \\ \hline
+Core Architecture & \begin{itemize}
+\item[$\square$] Refactoring engine modularity confirmed
+\end{itemize} \\ \hline
+IDE Integration & \begin{itemize}
+\item[$\square$] VS Code API usage reviewed
+\item[$\square$] UI/UX patterns verified
+\end{itemize} \\ \hline
+Data Integrity & \begin{itemize}
+\item[$\square$] Energy measurement accuracy checked
+\item[$\square$] Code transformation safety ensured
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-The Verification and Validation (V\&V) Plan for the Source Code
-Optimizer project serves as a critical document that requires a
-thorough examination to confirm its validity and effectiveness. To
-achieve this, the following strategies will be implemented:
+The Verification and Validation Plan for EcoOptimizer will be verified through peer reviews and targeted testing strategies. Team members and classmates will evaluate the plan's completeness using a structured checklist, focusing specifically on coverage of Python refactoring scenarios and energy efficiency measurements. Feedback will be tracked through GitHub Issues and incorporated in weekly team meetings.\\
 
-\begin{enumerate}
-  \item \textbf{Peer Review}: Team members and peers will conduct a
-    detailed review of the V\&V plan. This process aims to uncover
-    any gaps or areas that could benefit from enhancement, leveraging
-    the collective insights of the group to strengthen the overall plan.
+\noindent For test effectiveness validation, we will employ mutation testing by introducing faults in sample code containing energy-inefficient patterns. This will quantitatively verify our test cases' ability to detect anomalies. The verification process will measure three key metrics: requirement coverage percentage, test case effectiveness, and issue resolution rate.
 
-  \item \textbf{Fault Injection Testing}: We will utilize mutation
-    testing to assess the capability of our test cases to identify
-    intentionally introduced faults. By generating variations of the
-    original code, we can evaluate whether our testing strategies are
-    robust enough to catch these discrepancies, hence enhancing the
-    reliability of our verification process.
+\begin{table}[H]
+\centering
+\caption{V\&V Plan Verification Checklist}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Criteria} & \textbf{Verification Tasks} \\ \hline
+Coverage & \begin{itemize}
+\item[$\square$] All refactoring cases included
+\item[$\square$] Energy metrics validation specified
+\end{itemize} \\ \hline
+Methodology & \begin{itemize}
+\item[$\square$] Appropriate test levels defined
+\item[$\square$] Fault detection strategy in place
+\end{itemize} \\ \hline
+Process & \begin{itemize}
+\item[$\square$] Feedback mechanism established
+\item[$\square$] Tracking system implemented
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
-  \item \textbf{Feedback Loop Integration}: Continuous feedback from
-    review sessions and testing activities will be systematically
-    integrated to refine the V\&V plan. This ongoing process ensures
-    the plan evolves based on insights gained from practical testing
-    and peer input.
-\end{enumerate}
+\noindent An iterative refinement process will be implemented, where verification findings are documented as GitHub issues and addressed in sprint reviews. This ensures the V\&V plan remains aligned with both the technical requirements of Python code optimization and the project's timeline constraints. Progress will be measured against predefined success metrics, including test coverage percentages and mutation detection rates.
 
-\noindent To comprehensively verify the V\&V plan, we will utilize
-the following checklist:
-
-\begin{itemize}
-  \item[$\square$] Does the V\&V plan include all necessary aspects
-    of software verification and validation?
-  \item[$\square$] Are the roles and responsibilities clearly
-    outlined within the V\&V framework?
-  \item[$\square$] Is there a diversity of testing methodologies
-    included (e.g., unit testing, integration testing, system testing)?
-  \item[$\square$] Does the plan have a clear process for
-    incorporating feedback and gaining continuous improvement?
-  \item[$\square$] Are success criteria established for each phase of testing?
-  \item[$\square$] Is mutation testing considered to evaluate the
-    effectiveness of the test cases?
-  \item[$\square$] Are mechanisms in place to monitor and address any
-    identified issues during the V\&V process?
-  \item[$\square$] Does the V\&V plan align with the project
-    timeline, available resources, and other constraints?
-\end{itemize}
 
 \subsection{Implementation Verification Plan}
 
-The Implementation Verification Plan for the Source Code Optimizer
-project aims to ensure that the software implementation adheres to
-the requirements and design specifications defined in the SRS. Key
-components of this plan include:
+The implementation verification will ensure EcoOptimizer's codebase strictly adheres to the SRS specifications through rigorous testing protocols. Unit testing will validate core functionality using Pytest~\cite{pytest} for Python components (refactoring engine, energy measurement) and Jest~\cite{jest} for the VS Code extension (UI integration). Test cases will specifically target energy-efficient transformations identified in \textbf{FR2-FR4}.\\
 
-\begin{itemize}
-  \item \textbf{Unit Testing}: A comprehensive suite of unit tests
-    will be established to validate the functionality of individual
-    components within the Python backend as well as the VS Code Typescript plugin. These tests will specifically
-    focus on the effectiveness of the code refactoring methods
-    employed by the optimizer, utilizing
-    \texttt{Pytest}~\cite{pytest} and \texttt{Jest}~\cite{jest} for writing and executing these tests for both systems respectively.
-
-  \item \textbf{Static Code Analysis}: To maintain high code quality,
-    static analysis tools will be employed. These tools will help
-    identify potential bugs, security vulnerabilities, and adherence
-    to coding standards in the Python codebase, ensuring that the
-    optimizer is both efficient and secure.
-
-  \item \textbf{Code Walkthroughs and Reviews}: The development team
-    will hold regular code reviews and walkthrough sessions to
-    collaboratively evaluate the implementation of the source code
-    optimizer. These sessions will focus on code quality,
-    readability, and compliance with the project’s design patterns.
-    Additionally, the final presentation will provide an opportunity
-    for a thorough code walkthrough, allowing peers to contribute
-    feedback on usability and functionality.
-
-  \item \textbf{Continuous Integration}: The project will implement
-    continuous integration practices using tools like GitHub Actions.
-    This approach will automate the build and testing processes,
-    allowing the team to verify that each change to the optimizer
-    codebase meets the established quality criteria and integrates
-    smoothly with the overall system.
-
-  \item \textbf{Performance Testing}: The performance of the source
-    code optimizer will be assessed to simulate various usage
-    scenarios. This testing will focus on evaluating how effectively
-    the optimizer processes large codebases and applies refactorings,
-    ensuring that the tool operates efficiently under different workloads.
+\noindent Static analysis will enforce code quality using Python linters to verify compliance with PEP 8~\cite{pep8} standards (per \textbf{CR-SCR1}) and detect security vulnerabilities. Weekly peer code reviews will examine implementation quality, focusing on:
+\begin{itemize}[nosep]
+\item Algorithm efficiency for energy optimization
+\item Correct handling of Python version-specific features \textbf{(MS-AD3})
+\item VS Code extension usability (\textbf{UHR-EOU1})\\
 \end{itemize}
+
+\noindent Performance testing will validate:
+\begin{itemize}[nosep]
+\item Refactoring speed against \textbf{PR-SL1} thresholds
+\item Energy measurement accuracy (\textbf{FR6})
+\item Large codebase handling (\textbf{PR-CR1})
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\caption{Implementation Verification Checklist}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Category} & \textbf{Verification Tasks} \\ \hline
+Functionality & \begin{itemize}
+\item[$\square$] Unit tests for all refactoring methods
+\item[$\square$] Energy measurement validation
+\end{itemize} \\ \hline
+Quality & \begin{itemize}
+\item[$\square$] Static analysis completed
+\item[$\square$] Code reviews conducted
+\end{itemize} \\ \hline
+Performance & \begin{itemize}
+\item[$\square$] Processing time benchmarks
+\item[$\square$] Large codebase tests
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Automated Testing and Verification Tools}
 
@@ -494,7 +357,7 @@ components of this plan include:
     \item \textbf{TypeScript:} \texttt{Jest}'s~\cite{jest} built-in coverage functionality will track statement, branch, and function coverage for the VS Code extension, with configuration matching the Python tool's output format.
 \end{itemize}
 
-Initially, the aim is to achieve 40\% coverage across both codebases, gradually incrementing the level over time. Weekly reports generated from both tools will be combined to track coverage trends, identify testing gaps, and set improvement goals as the project evolves. The unified coverage data will ensure consistent quality standards are maintained throughout the full stack.
+\noindent Initially, the aim is to achieve 40\% coverage across both codebases, gradually incrementing the level over time. Weekly reports generated from both tools will be combined to track coverage trends, identify testing gaps, and set improvement goals as the project evolves. The unified coverage data will ensure consistent quality standards are maintained throughout the full stack.\\
 
 \noindent\textbf{Linters and Formatters:} To enforce the official
 Python PEP 8~\cite{pep8} style guide and maintain code quality, the team will use
@@ -505,32 +368,29 @@ Python PEP 8~\cite{pep8} style guide and maintain code quality, the team will us
 \noindent\textbf{Testing Strategy for the VSCode Extension:} The
 TypeScript extension will be tested using \texttt{Jest}~\cite{jest}.
 Automated tests will verify interactions between the extension and
-the editor, reducing regressions during development.\\
-
-\noindent\textbf{CI Plan:} As mentioned in the Development Plan,
-GitHub Actions will integrate the above tools within the CI pipeline.
-GitHub Actions will be configured to run unit tests written in
-\texttt{Pytest}, perform static analysis using
-\texttt{Ruff}~\cite{ruff}, and execute
-\texttt{pytest-cov}~\cite{pytest-cov} for test coverage. For the
-TypeScript extension, a pre-commit will run
-\texttt{eslint}~\cite{eslint} and \texttt{Prettier}~\cite{prettier},
-and automated tests will be executed as a GitHub Action using
-\texttt{Jest}~\cite{jest}. Through automated testing, any errors,
-code style violations, and regressions will be promptly identified.\\
+the editor, reducing regressions during development.
 
 \subsection{Software Validation Plan}
 
+EcoOptimizer will be validated through:
 \begin{itemize}
-  \item One or more open source Python code bases will be used to
-    test the tool on. Based on its performance in functional and
-    non-functional tests outlined in further sections of the
-    document, the software can be validated against defined requirements.
-  \item In addition to this, the team will reach out to Dr David as
-    well as a group of volunteer Python developers to perform
-    usability testing on the IDE plugin workflow as well as the CI/CD workflow.
-  \item The team will conduct a comprehensive review of the
-    requirements from Dr David through the Rev 0 Demo.
+    \item \textbf{Functional Testing}: Evaluation against open-source Python projects to verify:
+    \begin{itemize}
+        \item Energy efficiency improvements (\textbf{FR3}, \textbf{FR6})
+        \item Refactoring accuracy (\textbf{FR4})
+    \end{itemize}
+    
+    \item \textbf{Usability Testing}: Sessions with Dr. David and Python developers assessing:
+    \begin{itemize}
+        \item VS Code extension workflow (\textbf{UHR-EOU1-2})
+        \item Developer experience metrics
+    \end{itemize}
+    
+    \item \textbf{Formal Review}: Rev 0 demo with Dr. David to validate:
+    \begin{itemize}
+        \item SRS requirement implementation
+        \item System behavior against specifications
+    \end{itemize}
 \end{itemize}
 
 \section{System Tests}
