@@ -583,241 +583,166 @@ The section will cover system tests for the non-functional
 requirements (NFR) listed in the \SRS \hspace{1pt}
 document\cite{SRS}. The goal for these tests is to address the fit
 criteria for the requirements. Each test will be linked back to a
-specific NFR that can be observed in section \ref{trace-sys}.
+specific NFR that can be observed in section \ref{trace-sys}.\\
 
-\noindent
-\colorrule
+\noindent For non-functional requirements that are not linked to a test in the below sections, has either been covered in the functional requirements test plan or unit tests plan. Please see traceability matrix for more details.
+
+\noindent\colorrule
 
 \subsubsection{Look and Feel}
-
 \colorrule
 
 \medskip
 
 \noindent
-The following subsection tests cover all Look and Feel requirements
-listed in the SRS~\cite{SRS}. They seek to validate that the system
-is modern, visually appealing, and supporting of a calm and focused
-user experience.
+The following subsection tests cover all Look and Feel non-functional
+requirements listed in the SRS~\cite{SRS}. They aim to validate that
+the system provides a modern, visually appealing, and calming
+developer experience, with a focus on effective code comparison and
+theme integration within Visual Studio Code.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-LF-\arabic*}},
     wide=0pt, font=\itshape]
-  \item \textbf{Side-by-side code comparison in IDE plugin} \\[2mm]
+    
+  \item \textbf{Side-by-side Code Comparison in IDE Plugin} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open in VS Code, with a sample
-    code file loaded \\
-    \textbf{Input/Condition:} The user initiates a refactoring operation \\
+    \textbf{Initial State:} IDE plugin open in VS Code with a sample
+    code file loaded \\ 
+    \textbf{Input/Condition:} The user initiates a refactoring operation \\ 
     \textbf{Output/Result:} The plugin displays the original and
-    refactored code side by side\\[2mm]
+    refactored code side by side \\[2mm]
     \textbf{How test will be performed:} The tester will open a
-    sample code file within the IDE plugin and apply a refactoring
-    operation. After refactoring, they will verify that the original
-    code appears on one side of the interface and the refactored code
-    on the other, with clear options to accept or reject each change.
-    The tester will interact with the accept/reject buttons to ensure
-    functionality and usability, confirming that users can seamlessly
-    make refactoring decisions with both versions displayed side by side.
+    sample file and apply a refactoring. They will verify that the
+    original and refactored code are shown side by side with
+    functional accept/reject buttons. This confirms users can make
+    informed refactoring decisions in a visually supportive layout.
 
-  \item \textbf{Theme adaptation in VS Code} \\[2mm]
-    \textbf{Type:} Non-functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open in VS Code with either
-    light or dark theme enabled \\
-    \textbf{Input/Condition:} The user switches between light and
-    dark themes in VS Code \\
-    \textbf{Output/Result:} The plugin’s interface adjusts
-    automatically to match the theme \\[2mm]
-    \textbf{How test will be performed:} The tester will open the
-    plugin in both light and dark themes within VS Code by toggling
-    the theme settings in the IDE. They will observe the plugin
-    interface each time the theme is switched, ensuring that the
-    plugin automatically adjusts to match the selected theme without
-    any manual adjustments required.
-
-  \item \textbf{Design Acceptance} \\[2mm]
+  \item \textbf{Theme Adaptation in VS Code} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open \\
-    \textbf{Input/Condition:} User interacts with the plugin \\
-    \textbf{Output/Result:} A survey report \\[2mm]
-    \textbf{How test will be performed:} After a testing session,
-    developers fill out the survey found in \ref{A.2} evaluating
-    their experience with the plugin.
+    \textbf{Initial State:} IDE plugin open in VS Code with either
+    light or dark theme enabled \\ 
+    \textbf{Input/Condition:} The user switches between light and
+    dark themes \\ 
+    \textbf{Output/Result:} The plugin interface adjusts to match the
+    active theme \\[2mm]
+    \textbf{How test will be performed:} The tester will toggle between
+    VS Code's light and dark modes and observe the plugin’s appearance,
+    confirming it adapts seamlessly to each theme without loss of clarity
+    or styling issues.
+
+  \item \textbf{Design Acceptance Survey} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Initial State:} IDE plugin open \\ 
+    \textbf{Input/Condition:} Developer interacts with the plugin \\ 
+    \textbf{Output/Result:} A survey response capturing the user’s
+    perception of the design \\[2mm]
+    \textbf{How test will be performed:} After using the plugin,
+    test participants will complete the design satisfaction survey
+    described in \ref{A.2}. The results will be reviewed to assess
+    whether the plugin meets the project's aesthetic and usability
+    expectations.
+    
 \end{enumerate}
 
-\noindent
-\colorrule
+\noindent\colorrule
 
 \subsubsection{Usability \& Humanity}
-
 \colorrule
 
 \medskip
 
 \noindent
 The following subsection tests cover all Usability \& Humanity
-requirements listed in the SRS~\cite{SRS}. They seek to validate that
-the system is accessible, user-centred, intuitive and easy to navigate.
+requirements listed in the SRS~\cite{SRS}. They aim to validate that
+the system is accessible, user-centred, intuitive, and easy to navigate. Where applicable, data is collected via user surveys and evaluated against quantifiable thresholds (e.g., 80–90\% agreement). Survey results will inform improvements to plugin UI, help content, error messaging, and default settings.
 
 \begin{enumerate}[label={\bf \textcolor{Maroon}{test-UH-\arabic*}},
     wide=0pt, font=\itshape]
-  \item \textbf{Customizable settings for refactoring preferences} \\[2mm]
+    
+  \item \textbf{Customizable Settings for Refactoring Preferences} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
     \textbf{Initial State:} IDE plugin open with settings panel accessible \\
-    \textbf{Input/Condition:} User customizes refactoring style and
-    detection sensitivity \\
-    \textbf{Output/Result:} Custom configurations save and load
-    successfully \\[2mm]
-    \textbf{How test will be performed:} The tester will navigate to
-    the settings menu within the tool and adjust various options,
-    including refactoring style, colour-coded indicators, and unit
-    preferences (metric vs. imperial). After each adjustment, the
-    tester will observe if the interface and refactoring suggestions
-    reflect the changes made.
-
-  \item \textbf{YouTube installation tutorial availability} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} User access documentation resources \\
-    \textbf{Input/Condition:} User follows the provided link to a
-    YouTube tutorial \\
-    \textbf{Output/Result:} Installation tutorial is available and
-    accessible on YouTube, and user successfully installs the system. \\[2mm]
-    \textbf{How test will be performed:} The tester will start with
-    the installation instructions provided in the user guide and
-    follow the link to the YouTube installation tutorial. They will
-    watch the video and proceed with each installation step as
-    demonstrated. Throughout the process, the tester will note the
-    clarity and pacing of the instructions, any gaps between the
-    video and the actual steps, and if the video effectively guides
-    them to a successful installation.
+    \textbf{Input/Condition:} User customizes refactoring style and detection sensitivity \\
+    \textbf{Output/Result:} Custom configurations save and load successfully \\[2mm]
+    \textbf{How test will be performed:} The tester modifies plugin settings (e.g., refactoring behaviour, colours), then verifies that changes persist and affect behaviour as intended.
 
   \item \textbf{High-Contrast Theme Accessibility Check} \\[2mm]
-    \textbf{Objective:} Evaluate the high-contrast themes in the
-    refactoring tool for compliance with accessibility standards to
-    ensure usability for visually impaired users. \\
-    \textbf{Scope:} Focus on UI components that utilize high-contrast
-    themes, including text, buttons, and backgrounds. \\
-    \textbf{Methodology:} Static Analysis \\
-    \textbf{Process:}
-    \begin{itemize}
-      \item Identify all colour codes used in the system and
-        categorize them by their role in the UI (i.e. background,
-        foreground text, buttons, etc.).
-      \item Use tools to measure colour contrast ratios against WCAG
-        thresholds (4.5:1 for normal text, 3:1 for large text~\cite{WCAG}.
-      \end{itemize}
-      \textbf{Roles and Responsibilities:} Developers implement
-      themes that pass the testing process. \\[2mm]
-      \textbf{Tools and Resources:} WebAIM Color Contrast Checker,
-      WCAG guidelines documentation, internal coding standards. \\[2mm]
-      \textbf{Acceptance Criteria:} All UI elements must meet WCAG
-      contrast ratios; documentation must accurately reflect theme usage.
+    \textbf{Type:} Static Analysis \\
+    \textbf{Initial State:} UI elements themed using contrast-compliant colour codes \\
+    \textbf{Input/Condition:} Contrast values are evaluated against WCAG standards \\
+    \textbf{Output/Result:} All UI components pass 4.5:1 (normal) and 3:1 (large text) ratios \\[2mm]
+    \textbf{How test will be performed:} Run automated contrast tools (e.g., WebAIM) on theme palette and manually verify element categories (text, buttons, backgrounds).
 
-    \item \textbf{Intuitive user interface for core functionality} \\[2mm]
-      \textbf{Type:} Non-Functional, User Testing, Dynamic \\
-      \textbf{Initial State:} IDE plugin open with code loaded \\
-      \textbf{Input/Condition:} User interacts with the plugin \\
-      \textbf{Output/Result:} Users can access core functions within
-      three clicks or less \\[2mm]
-      \textbf{How test will be performed:} After a testing session,
-      developers fill out the survey found in \ref{A.2} evaluating
-      their experience with the plugin.
+  \item \textbf{Intuitive User Interface for Core Functionality} \\[2mm]
+    \textbf{Type:} Non-Functional, User Testing \\
+    \textbf{Initial State:} IDE plugin open with code loaded \\
+    \textbf{Input/Condition:} Users interact with plugin features (e.g., run smell analysis, refactor code) \\
+    \textbf{Output/Result:} Users report being able to complete tasks in <= 3 clicks \\[2mm]
+    \textbf{How test will be performed:} During usability testing, record click count per user per task. Post-task surveys will ask: "Could you complete the task in 3 clicks or less?" (Target: 90\% agreement).
 
-    \item \textbf{Clear and concise user prompts} \\[2mm]
-      \textbf{Type:} Non-Functional, User Survey, Dynamic \\
-      \textbf{Initial State:} IDE plugin prompts user for input \\
-      \textbf{Input/Condition:} Users follow on-screen instructions \\
-      \textbf{Output/Result:} 90\% of users report the prompts are
-      straightforward and effective \\[2mm]
-      \textbf{How test will be performed:} Users complete tasks
-      requiring prompts and answer the survey found in \ref{A.2} on
-      the clarity of guidance provided.
+  \item \textbf{Clear and Concise User Prompts} \\[2mm]
+    \textbf{Type:} Non-Functional, Survey-Based \\
+    \textbf{Initial State:} IDE prompts user for interaction \\
+    \textbf{Input/Condition:} Users follow on-screen instructions \\
+    \textbf{Output/Result:} 90\% of users agree that prompts are understandable and actionable \\[2mm]
+    \textbf{How test will be performed:} Users will complete tasks involving prompts and then rate prompt clarity in a post-task survey (Likert scale). Suggestions will be logged and used to refine unclear prompts.
 
-    \item \textbf{Context-sensitive help based on user actions} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} IDE plugin open with help function enabled \\
-      \textbf{Input/Condition:} User engages in various actions,
-      requiring guidance \\
-      \textbf{Output/Result:} Help resources are accessible within
-      1-3 clicks \\[2mm]
-      \textbf{How test will be performed:} The tester will perform a
-      series of tasks within the tool, such as initiating a code
-      analysis, applying a refactoring, and adjusting settings. At
-      each step, they will access the context-sensitive help option
-      to confirm that the information provided is relevant to the
-      current task. The tester will evaluate the ease of accessing
-      help, the relevance and clarity of guidance, and whether the
-      help content effectively supports task completion.
+  \item \textbf{Context-Sensitive Help Based on User Actions} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual \\
+    \textbf{Initial State:} Plugin open with help system enabled \\
+    \textbf{Input/Condition:} User performs various plugin actions \\
+    \textbf{Output/Result:} Help content is accessible within 1–3 clicks and matches the task context \\[2mm]
+    \textbf{How test will be performed:} Tester performs common actions and opens help via hover or shortcut. They assess whether content is relevant and how quickly it appears (clicks/time tracked).
 
-    \item \textbf{Clear and constructive error messaging} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} IDE plugin open with possible error
-      scenarios triggered \\
-      \textbf{Input/Condition:} User encounters an error during use \\
-      \textbf{Output/Result:} 80\% of users report that error
-      messages are helpful and courteous \\[2mm]
-      \textbf{How test will be performed:} After receiving error
-      messages, users fill out the survey found in \ref{A.2} on their
-      clarity and constructiveness.
-  \end{enumerate}
+  \item \textbf{Clear and Constructive Error Messaging} \\[2mm]
+    \textbf{Type:} Non-Functional, Survey-Based \\
+    \textbf{Initial State:} Plugin displays an error condition (e.g., invalid file) \\
+    \textbf{Input/Condition:} User receives error message during task flow \\
+    \textbf{Output/Result:} 80\% of users rate the messages as helpful and courteous \\[2mm]
+    \textbf{How test will be performed:} Trigger error conditions, then ask users to rate clarity, politeness, and usefulness on a 5-point scale. Results will be analyzed and used to improve future error handling language.
+    
+\end{enumerate}
 
   \noindent
   \textcolor{Blue}{\colorrule}
 
-  \subsubsection{Performance}
-  \colorrule
+\subsubsection{Performance}
+\colorrule
 
-  \medskip
+\medskip
 
-  \noindent
-  The following subsection tests cover all Performance requirements
-  listed in the SRS~\cite{SRS}. These tests validate the tool’s
-  efficiency and responsiveness under varying workloads, including
-  code analysis, refactoring, and data reporting.
+\noindent
+The following subsection tests cover the Performance requirements
+listed in the SRS~\cite{SRS}. The goal is to validate that the tool
+can process Python files of varying sizes within acceptable
+performance thresholds. Results from this test will guide future
+optimizations in the refactoring pipeline to ensure responsiveness
+under real-world usage.
 
-  \begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}},
-      wide=0pt, font=\itshape]
-    \item \textbf{Performance and capacity validation for analysis
-      and refactoring} \\[2mm]
-      \textbf{Type:} Non-Functional, Automated, Dynamic \\
-      \textbf{Initial State:} IDE open with multiple Python files of
-      varying sizes ready (250, 1000, 3000 lines of code). \\
-      \textbf{Input/Condition:} Initiate the refactoring process for
-      each file sequentially \\
-      \textbf{Output/Result:} Process completes within 20 seconds for
-      files up to 250 lines of code, 50 seconds for 1000 lines of
-      code and within 2 minutes for 3000 lines of code. \\[2mm]
-      \textbf{How test will be performed:} The tester will use three
-      Python files of different sizes: small (250 lines), medium
-      (1000 lines), and
-      large (3000 lines). For each file, start the refactoring
-      process while running a timer.
-      The scope of the test ends when the system presents the user
-      with the completed refactoring proposal.
-      The time taken for the total detection + refactoring is checked
-      against the expected result.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}},
+    wide=0pt, font=\itshape]
+    
+  \item \textbf{Performance and Capacity Validation for Analysis and Refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Initial State:} IDE open with multiple Python files of
+    varying sizes prepared (small: 250 LOC, medium: 1000 LOC, large: 3000 LOC). \\
+    \textbf{Input/Condition:} Initiate the refactoring process for
+    each file sequentially \\
+    \textbf{Output/Result:} Refactoring completes within:
+    \begin{itemize}
+      \item 20 seconds for small files (<= 250 lines)
+      \item 50 seconds for medium files (<= 1000 lines)
+      \item 2 minutes for large files (<= 3000 lines)
+    \end{itemize}
+    \textbf{How test will be performed:} The tester will use Python files of
+    three different sizes and run the tool’s analysis and refactoring
+    on each. A timer will measure the total time from initiation to
+    when the final refactoring suggestions are presented. If results
+    exceed limits, profiling and optimization work will be scheduled
+    for the bottlenecks identified.
 
-    \item \textbf{Accuracy of code smell detection} \\[2mm]
-      \textbf{Type:} Non-Functional, Automated, Dynamic \\
-      \textbf{Initial State:} Python file containing pre-determined
-      code smells ready for refactoring with proper configurations
-      for the system \\
-      \textbf{Input/Condition:} User initiates refactoring on the code file \\
-      \textbf{Output/Result:} All code smells determined prior to the
-      test are detected. \\[2mm]
-      \textbf{How test will be performed:} see tests in the
-      \hyperref[4.1.2]{Code Smell Detection} section.
+\end{enumerate}
 
-    \item \textbf{Valid syntax and structure in refactored code} \\[2mm]
-      \textbf{Type:} Non-Functional, Automated, Dynamic \\
-      \textbf{Initial State:} A refactored code file is present in
-      the user's workspace \\
-      \textbf{Input/Condition:} A Python linter is run on the
-      refactored Python file \\
-      \textbf{Output/Result:} Refactored code meets Python syntax and
-      structural standards \\[2mm]
-      \textbf{How test will be performed:} see test
-      \hyperref[itm:FR-OV-2]{test-FR-OV-2}
-
-  \end{enumerate}
 
   \noindent
   \colorrule
