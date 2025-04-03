@@ -1546,44 +1546,61 @@ under real-world usage.
   \noindent\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{Detects exact five calls chain} \newline
-      Ensures that a method chain with exactly five calls is flagged.
+    \item \textbf{Detects exact five calls chain}
+        \begin{itemize}
+        \item Ensures that a method chain with exactly five calls is flagged
+        \end{itemize}
 
-    \item \textbf{Detects six calls chain} \newline
-      Verifies that a chain with six method calls is detected as a smell.
+    \item \textbf{Detects six calls chain}
+        \begin{itemize}
+        \item Verifies that a chain with six method calls is detected as a smell
+        \end{itemize}
 
-    \item \textbf{Ignores chain of four calls} \newline
-      Ensures that a chain with only four calls (below threshold) is
-      not flagged.
+    \item \textbf{Ignores chain of four calls}
+        \begin{itemize}
+        \item Ensures that a chain with only four calls (below threshold) is not flagged
+        \end{itemize}
 
-    \item \textbf{Detects chain with attributes and calls} \newline
-      Tests detection of a chain that involves both attribute access
-      and method calls.
+    \item \textbf{Detects chain with attributes and calls}
+        \begin{itemize}
+        \item Tests detection of a chain that involves both attribute access and method calls
+        \end{itemize}
 
-    \item \textbf{Detects chain inside a loop} \newline
-      Ensures detection of a chain meeting the threshold when inside a loop.
+    \item \textbf{Detects chain inside a loop}
+        \begin{itemize}
+        \item Ensures detection of a chain meeting the threshold when inside a loop
+        \end{itemize}
 
-    \item \textbf{Detects multiple chains on one line} \newline
-      Verifies that only the first long chain on a single line is reported.
+    \item \textbf{Detects multiple chains on one line}
+        \begin{itemize}
+        \item Verifies that only the first long chain on a single line is reported
+        \end{itemize}
 
-    \item \textbf{Ignores separate statements} \newline
-      Ensures that separate method calls across multiple statements
-      are not mistakenly combined into a single chain.
+    \item \textbf{Ignores separate statements}
+        \begin{itemize}
+        \item Ensures that separate method calls across multiple statements are not mistakenly combined
+        \end{itemize}
 
-    \item \textbf{Ignores short chain comprehension} \newline
-      Ensures that a short chain within a list comprehension is not flagged.
+    \item \textbf{Ignores short chain comprehension}
+        \begin{itemize}
+        \item Ensures that a short chain within a list comprehension is not flagged
+        \end{itemize}
 
-    \item \textbf{Detects long chain comprehension} \newline
-      Verifies that a list comprehension with a long method chain is detected.
+    \item \textbf{Detects long chain comprehension}
+        \begin{itemize}
+        \item Verifies that a list comprehension with a long method chain is detected
+        \end{itemize}
 
-    \item \textbf{Detects five separate long chains} \newline
-      Ensures that multiple long chains on separate lines within the
-      same function are individually detected.
+    \item \textbf{Detects five separate long chains}
+        \begin{itemize}
+        \item Ensures that multiple long chains on separate lines within the same function are individually detected
+        \end{itemize}
 
-    \item \textbf{Ignores element access chains} \newline
-      Confirms that attribute and index lookups without method calls
-      are not flagged.
-  \end{itemize}
+    \item \textbf{Ignores element access chains}
+        \begin{itemize}
+        \item Confirms that attribute and index lookups without method calls are not flagged
+        \end{itemize}
+\end{itemize}
 
   \noindent The test cases for this module can be found
   \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/analyzers/test_long_message_chain.py}{here}
@@ -1614,39 +1631,46 @@ under real-world usage.
   \noindent\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{No lambdas present} \newline
-      Ensures that when no lambda functions exist in the code, no
-      smells are detected.
+    \item \textbf{No lambdas present}
+        \begin{itemize}
+        \item Ensures that when no lambda functions exist in the code, no smells are detected
+        \end{itemize}
 
-    \item \textbf{Short single lambda} \newline
-      Confirms that a single short lambda (well under the length
-      threshold) with only one expression is not flagged.
+    \item \textbf{Short single lambda}
+        \begin{itemize}
+        \item Confirms that a single short lambda (well under the length threshold) with only one expression is not flagged
+        \end{itemize}
 
-    \item \textbf{Lambda exceeding expression count} \newline
-      Detects a lambda function that contains multiple expressions,
-      exceeding the threshold for complexity.
+    \item \textbf{Lambda exceeding expression count}
+        \begin{itemize}
+        \item Detects a lambda function that contains multiple expressions, exceeding the threshold for complexity
+        \end{itemize}
 
-    \item \textbf{Lambda exceeding character length} \newline
-      Identifies a lambda function that surpasses the maximum allowed
-      character length, making it difficult to read.
+    \item \textbf{Lambda exceeding character length}
+        \begin{itemize}
+        \item Identifies a lambda function that surpasses the maximum allowed character length, making it difficult to read
+        \end{itemize}
 
-    \item \textbf{Lambda exceeding both thresholds} \newline
-      Flags a lambda function that is both too long in character
-      length and contains too many expressions.
+    \item \textbf{Lambda exceeding both thresholds}
+        \begin{itemize}
+        \item Flags a lambda function that is both too long in character length and contains too many expressions
+        \end{itemize}
 
-    \item \textbf{Nested lambda functions} \newline
-      Ensures that both outer and inner nested lambdas are properly
-      detected as long expressions.
+    \item \textbf{Nested lambda functions}
+        \begin{itemize}
+        \item Ensures that both outer and inner nested lambdas are properly detected as long expressions
+        \end{itemize}
 
-    \item \textbf{Inline lambda passed to function} \newline
-      Detects lambda functions that are passed inline to functions
-      like \texttt{map} and \texttt{filter} when they exceed the
-      complexity thresholds.
+    \item \textbf{Inline lambda passed to function}
+        \begin{itemize}
+        \item Detects lambda functions that are passed inline to functions like \texttt{map} and \texttt{filter} when they exceed the complexity thresholds
+        \end{itemize}
 
-    \item \textbf{Trivially short lambda function} \newline
-      Verifies that degenerate cases, such as a lambda with no real
-      body or trivial operations, are not mistakenly flagged.
-  \end{itemize}
+    \item \textbf{Trivially short lambda function}
+        \begin{itemize}
+        \item Verifies that degenerate cases, such as a lambda with no real body or trivial operations, are not mistakenly flagged
+        \end{itemize}
+\end{itemize}
 
   \noindent The test cases for this module can be found
   \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/analyzers/test_long_lambda_element.py}{here}
@@ -2108,7 +2132,7 @@ under real-world usage.
   parameter instances. Similarly, corresponding calls to these
   functions as well as references to original parameters are
   preserved. The refactored result also preserves use of default
-  values in function signature and positional arguments in function calls.x\\
+  values in function signature and positional arguments in function calls.\\
 
   \noindent \textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
 
@@ -2171,8 +2195,7 @@ under real-world usage.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_long_parameter_list_refactor.py
-  }{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_long_parameter_list_refactor.py}{here}.
 
   \subsubsection{Long Message Chain}
 
@@ -2199,34 +2222,40 @@ under real-world usage.
   \noindent \textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{Basic method chain refactoring} \newline
-      Ensures that a simple method chain is refactored correctly into
-      separate intermediate variables.
+    \item \textbf{Basic method chain refactoring}
+        \begin{itemize}
+            \item Ensures that a simple method chain is refactored correctly into separate intermediate variables.
+        \end{itemize}
 
-    \item \textbf{F-string chain refactoring} \newline
-      Verifies that method chains applied to f-strings are properly
-      broken down while preserving correctness.
+    \item \textbf{F-string chain refactoring}
+        \begin{itemize}
+            \item Verifies that method chains applied to f-strings are properly broken down while preserving correctness.
+        \end{itemize}
+      
+    \item \textbf{Modifications even if the chain is not long}
+        \begin{itemize}
+            \item Ensures that method chains are refactored consistently, even if they do not exceed the length threshold.
+        \end{itemize}
+      
+    \item \textbf{Proper indentation preserved}
+        \begin{itemize}
+            \item Confirms that the refactored code maintains the correct indentation when inside a block statement such as an \texttt{if} condition.
+        \end{itemize}
 
-    \item \textbf{Modifications even if the chain is not long} \newline
-      Ensures that method chains are refactored consistently, even if
-      they do not exceed the length threshold.
+    \item \textbf{Method chain with arguments}
+        \begin{itemize}
+            \item Tests that method chains containing arguments (e.g., \texttt{replace("H", "J")}) are correctly refactored.
+        \end{itemize}
 
-    \item \textbf{Proper indentation preserved} \newline
-      Confirms that the refactored code maintains the correct
-      indentation when inside a block statement such as an
-      \texttt{if} condition.
-
-    \item \textbf{Method chain with arguments} \newline
-      Tests that method chains containing arguments (e.g.,
-      \texttt{replace("H", "J")}) are correctly refactored.
-
-    \item \textbf{Print statement preservation} \newline
-      Ensures that method chains within a \texttt{print} statement
-      are refactored without altering their functionality.
-
-    \item \textbf{Nested method chains} \newline
-      Verifies that nested method chains (e.g., method calls on
-      method results) are properly refactored into intermediate variables.
+    \item \textbf{Print statement preservation}
+        \begin{itemize}
+            \item Ensures that method chains within a \texttt{print} statement are refactored without altering their functionality.
+        \end{itemize}
+      
+    \item \textbf{Nested method chains}
+        \begin{itemize}
+            \item Verifies that nested method chains (e.g., method calls on method results) are properly refactored into intermediate variables.
+        \end{itemize}
   \end{itemize}
 
   \noindent The test cases for this module can be found
@@ -2259,752 +2288,789 @@ under real-world usage.
   \noindent \textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{Basic lambda conversion} \newline
-      Verifies that a simple single-line lambda expression is
-      correctly converted into a named function with proper
-      indentation and structure.
-
-    \item \textbf{No extra print statements} \newline
-      Ensures that the refactoring process does not introduce
-      unnecessary print statements when converting lambda expressions.
-
-    \item \textbf{Lambda in function argument} \newline
-      Tests that lambda expressions used as arguments to other
-      functions (e.g., in \texttt{map()} calls) are properly
-      refactored while maintaining the original function call structure.
-
-    \item \textbf{Multi-argument lambda} \newline
-      Verifies that lambda expressions with multiple parameters are
-      correctly converted into named functions with the appropriate
-      parameter list.
-
-    \item \textbf{Lambda with keyword arguments} \newline
-      Ensures that lambda expressions used as keyword arguments in
-      function calls are properly refactored while preserving the
-      original keyword argument syntax and indentation.
-
-    \item \textbf{Very long lambda function} \newline
-      Tests the refactoring of complex, multi-line lambda expressions
-      with extensive mathematical operations, verifying that the
-      converted function maintains the original logic and structure.
+    \item \textbf{Basic lambda conversion}
+        \begin{itemize}
+            \item Verifies that a simple single-line lambda expression is correctly converted into a named function with proper indentation and structure.
+        \end{itemize}
+    
+    \item \textbf{No extra print statements}
+        \begin{itemize}
+            \item Ensures that the refactoring process does not introduce unnecessary print statements when converting lambda expressions.
+        \end{itemize}
+      
+    \item \textbf{Lambda in function argument}
+        \begin{itemize}
+            \item Tests that lambda expressions used as arguments to other functions (e.g., in \texttt{map()} calls) are properly refactored while maintaining the original function call structure.
+        \end{itemize}
+      
+    \item \textbf{Multi-argument lambda}
+        \begin{itemize}
+            \item Verifies that lambda expressions with multiple parameters are correctly converted into named functions with the appropriate parameter list.
+        \end{itemize}
+      
+    \item \textbf{Lambda with keyword arguments}
+        \begin{itemize}
+            \item Ensures that lambda expressions used as keyword arguments in function calls are properly refactored while preserving the original keyword argument syntax and indentation.
+        \end{itemize}
+      
+    \item \textbf{Very long lambda function}
+        \begin{itemize}
+            \item Tests the refactoring of complex, multi-line lambda expressions with extensive mathematical operations, verifying that the converted function maintains the original logic and structure.
+        \end{itemize}
   \end{itemize}
 
   \noindent The test cases for this module can be found
   \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_long_lambda_element_refactoring.py}{here}
 
-  \subsection{VsCode Plugin}
 
-  \subsubsection{Detect Smells Command}
 
-  \textbf{Goal:} The detect smells command is responsible for
-  initiating the smell detection process, retrieving results from the
-  backend, and ensuring proper highlighting in the VS Code editor.
-  The command must handle various scenarios, including caching,
-  missing editor instances, and server failures, while providing
-  meaningful feedback to the user. The following unit tests verify
-  its accuracy.\\
 
-  \noindent The tests assess the correct fetching and caching of
-  smells, proper interaction with the highlighting module, handling
-  of missing files or inactive editors, and the system's ability to
-  recover from server downtime. Edge cases such as rapidly changing
-  file hashes and updates to enabled smells are also considered.\\
 
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
+\subsection{VsCode Plugin}
 
-  \begin{itemize}
-    \item \textbf{Handling of Missing Active Editor}
-      \begin{itemize}
-        \item The command shows an error message when no active editor is found.
-      \end{itemize}
+\subsubsection{Configure Workspace Command}
 
-    \item \textbf{Handling of Missing File Path}
-      \begin{itemize}
-        \item The command shows an error message when the active
-          editor has no valid file path.
-      \end{itemize}
+\textbf{Goal:} The configure workspace command identifies valid workspace folders containing Python files and prompts the user to select one. Upon selection, the workspace is marked as configured and saved to persistent state for future operations.
 
-    \item \textbf{Handling of No Enabled Smells}
-      \begin{itemize}
-        \item The command shows a warning message when no smells are
-          enabled in the configuration.
-      \end{itemize}
+\medskip
 
-    \item \textbf{Using Cached Smells}
-      \begin{itemize}
-        \item The command uses cached smells when the file hash and
-          enabled smells match the cached data.
-        \item The command highlights the cached smells in the editor.
-      \end{itemize}
+\noindent The tests validate that valid workspace folders are detected, Python files are identified correctly, user selections are respected, and appropriate updates are made to both VS Code context and extension state.
 
-    \item \textbf{Fetching New Smells}
-      \begin{itemize}
-        \item The command fetches new smells when the file hash
-          changes or enabled smells are updated.
-        \item The command updates the cache with the new smells and
-          highlights them in the editor.
-      \end{itemize}
+\medskip
 
-    \item \textbf{Handling of Server Downtime}
-      \begin{itemize}
-        \item The command shows a warning message when the server is
-          down and no cached smells are available.
-      \end{itemize}
+\noindent\textbf{Target requirement(s):} FR1, FR2~\cite{SRS}
 
-    \item \textbf{Highlighting Smells}
-      \begin{itemize}
-        \item The command highlights detected smells in the editor
-          when smells are found.
-        \item The command shows a success message with the number of
-          highlighted smells.
-      \end{itemize}
-  \end{itemize}
+\begin{itemize}
+  \item \textbf{Folder Scanning}
+    \begin{itemize}
+      \item Detects top-level and nested directories containing \texttt{.py} files.
+      \item Correctly identifies directories with Python entry points (e.g., \texttt{main.py} or \texttt{\_\_init\_\_.py}).
+    \end{itemize}
 
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
+  \item \textbf{Quick Pick Interaction}
+    \begin{itemize}
+      \item Displays a list of valid Python folders.
+      \item Accepts user selection and confirms configuration.
+    \end{itemize}
 
-  \subsubsection{Refactor Smells Command}
+  \item \textbf{Workspace State Update}
+    \begin{itemize}
+      \item Stores selected folder path under the configured workspace key.
+      \item Sets VS Code context key \texttt{workspaceState.workspaceConfigured} to true.
+    \end{itemize}
 
-  \textbf{Goal:} The refactorSmell command is responsible for
-  refactoring code areas identified as "smells" in a project. It
-  works by refactoring areas in code that could benefit from
-  refactoring (smells) that are chosen by the user. The process
-  involves multiple steps, including saving the file, calling a
-  backend refactoring service to refactor the identified smell,
-  updating any relevant data, and initiating a refactor preview to the user.\\
-
-  \noindent The tests assess the correct fetching and caching of
-  smells, proper interaction with the highlighting module, handling
-  of missing files or inactive editors, and the system's ability to
-  recover from server downtime. Edge cases such as rapidly changing
-  file hashes and updates to enabled smells are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR5, FR6, FR10, PR-RFT1,
-  PR-RFT2 ~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{No Active Editor Found}
-      \begin{itemize}
-        \item The command correctly handles the case where there is
-          no active editor open.
-        \item An appropriate error message is shown when no editor or
-          file path is available.
-      \end{itemize}
-
-    \item \textbf{Attempting to Refactor When No Smells Are Detected}
-      \begin{itemize}
-        \item The command does not proceed when no smells are
-          detected in the file.
-        \item An error message is shown indicating that no smells are
-          detected for refactoring.
-      \end{itemize}
-
-    \item \textbf{Attempting to Refactor When Selected Line Doesn’t
-      Match Any Smell}
-      \begin{itemize}
-        \item The command doesn't proceed if the selected line
-          doesn't match any detected smell.
-        \item An error message is shown to inform the user that no
-          matching smell was found for refactoring.
-      \end{itemize}
-
-    \item \textbf{Refactoring a Smell When Found on the Selected Line}
-      \begin{itemize}
-        \item The command successfully saves the current file and
-          triggers the refactoring of a detected smell.
-        \item The \texttt{refactorSmell} method is called with the
-          correct parameters, and the refactored preview is shown to the user.
-      \end{itemize}
-
-    \item \textbf{Handling API Failure During Refactoring}
-      \begin{itemize}
-        \item The command gracefully handles API failures during the
-          refactoring process.
-        \item An error message is displayed to the user if
-          refactoring fails, with the appropriate details logged.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/refactorSmell.test.ts}{here}.
-
-  \subsubsection{Document Hashing}
-
-  \textbf{Goal:} The document hashing module is responsible for
-  generating and managing document hashes to track changes in files.
-  By ensuring efficient tracking, this module allows caching
-  mechanisms to work correctly and prevents unnecessary reprocessing.
-  The following unit tests validate its correctness.\\
-
-  \noindent The tests verify the module’s ability to detect file
-  modifications, handle new files, and prevent redundant updates when
-  no changes occur. Edge cases such as rapid sequential edits, hash
-  mismatches, and multiple concurrent document updates are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Handling of Unchanged Document Hashes}
-      \begin{itemize}
-        \item The module does not update the workspace storage if the
-          document hash has not changed.
-        \item The existing hash is retained for the document.
-      \end{itemize}
-
-    \item \textbf{Handling of Changed Document Hashes}
-      \begin{itemize}
-        \item The module updates the workspace storage when the
-          document hash changes.
-        \item The new hash is correctly calculated and stored.
-      \end{itemize}
-
-    \item \textbf{Handling of New Documents}
-      \begin{itemize}
-        \item The module updates the workspace storage when no hash
-          exists for the document.
-        \item A new hash is generated and stored for the document.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/hashDocs.test.ts}{here}.
-
-  \subsubsection{File Highlighter}
-
-  \textbf{Goal:} The file highlighter module enhances code visibility
-  by applying visual decorations to highlight detected code smells in
-  the editor. It ensures that identified issues are clearly
-  distinguishable while preserving readability. The following unit
-  tests verify the correctness of this functionality.\\
-
-  \noindent The tests assess the correct creation of decorations,
-  accurate application of highlighting based on detected smells,
-  proper handling of initial and subsequent highlights, and the
-  removal of outdated decorations. Edge cases such as overlapping
-  decorations and incorrect style applications are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1, LFR-AP2~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Creation of Decorations}
-      \begin{itemize}
-        \item Decorations are created with the correct color and
-          style for each type of code smell.
-        \item The decoration type is properly initialized and can be
-          applied to the editor.
-      \end{itemize}
-
-    \item \textbf{Highlighting Smells}
-      \begin{itemize}
-        \item Smells are highlighted in the editor based on their
-          line occurrences.
-        \item The hover content for each smell is correctly
-          associated with the decoration.
-      \end{itemize}
-
-    \item \textbf{Handling of Initial Highlighting}
-      \begin{itemize}
-        \item On the first initialization, decorations are applied
-          without resetting existing ones.
-        \item The decorations are properly stored for future updates.
-      \end{itemize}
-
-    \item \textbf{Resetting Decorations}
-      \begin{itemize}
-        \item On subsequent calls, existing decorations are disposed
-          of before applying new ones.
-        \item The reset process ensures no overlapping or redundant decorations.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
-
-  \subsubsection{Hover Manager}
-
-  \textbf{Goal:} The Hover Manager module manages hover functionality
-  for Python files, providing hover content for detected code smells
-  and allowing refactoring commands. The following unit tests verify
-  the accuracy of this functionality.\\
-
-  \noindent The tests assess the ability of the \texttt{HoverManager}
-  to register hover providers, handle hover content, update smells,
-  generate refactor commands, and ensure correct hover content
-  formatting. Edge cases, such as no smells and the correct
-  propagation of updates to smells, are also considered.\\
-
-  \noindent \textbf{Target requirement(s):} LFR-AP2~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Registers hover provider for Python files}
-      \begin{itemize}
-        \item Verifies that the \texttt{HoverManager} correctly
-          registers a hover provider for Python files.
-      \end{itemize}
-
-    \item \textbf{Subscribes hover provider correctly}
-      \begin{itemize}
-        \item Ensures that the hover provider is correctly subscribed
-          to the context manager.
-      \end{itemize}
-
-    \item \textbf{Returns null for hover content if there are no smells}
-      \begin{itemize}
-        \item Checks that \texttt{getHoverContent} returns
-          \texttt{null} when no smells are detected for a file.
-      \end{itemize}
-
-    \item \textbf{Updates smells when \texttt{getInstance} is called again}
-      \begin{itemize}
-        \item Verifies that when \texttt{getInstance} is called again
-          with new smells, the manager updates the stored smells and
-          returns the same instance.
-      \end{itemize}
-
-    \item \textbf{Updates smells correctly}
-      \begin{itemize}
-        \item Confirms that \texttt{updateSmells} correctly updates
-          the list of smells in the manager.
-      \end{itemize}
-
-    \item \textbf{Generates valid hover content}
-      \begin{itemize}
-        \item Ensures that \texttt{getHoverContent} generates valid
-          hover content with correctly formatted smell details,
-          including refactor commands and proper structure.
-      \end{itemize}
-
-    \item \textbf{Registers refactor commands}
-      \begin{itemize}
-        \item Verifies that the refactor commands are properly
-          registered for individual and all smells of a specific type.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/hoverManager.test.ts}{here}.
-
-  \subsubsection{Line Selection Manager}
-
-  \textbf{Goal:} The Line Selection Manager module provides
-  functionality for detecting and commenting on code smells based on
-  a line selection. The following unit tests verify the correctness
-  of this functionality.\\
-
-  \noindent The tests assess the ability of the
-  \texttt{LineSelectionManager} to handle various scenarios such as
-  missing editor instances, multiple smells on a line, single-line
-  vs. multi-line selections, and correct comment generation. Edge
-  cases, such as mismatched document hashes, non-existent smells, and
-  the absence of selected text, are also considered.\\
-
-  \noindent \textbf{Target requirement(s):} UHR-EOU1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Removes last comment if decoration exists}
-      \begin{itemize}
-        \item Verifies that the last comment decoration is removed
-          correctly if one exists, ensuring that the decoration is
-          disposed of properly.
-      \end{itemize}
-
-    \item \textbf{Does not proceed if no editor is provided}
-      \begin{itemize}
-        \item Ensures that no action is taken when
-          \texttt{commentLine} is called with \texttt{null} as the editor.
-      \end{itemize}
-
-    \item \textbf{Does not add comment if no smells detected for file}
-      \begin{itemize}
-        \item Checks that no comment is added when no smells are
-          detected for the current file, confirming that no
-          unnecessary decorations are applied.
-      \end{itemize}
-
-    \item \textbf{Does not add comment if document hash does not match}
-      \begin{itemize}
-        \item Verifies that no comment is added when the document
-          hash in the workspace data does not match the hash of the
-          document, ensuring that the editor's state remains
-          consistent with the expected data.
-      \end{itemize}
-
-    \item \textbf{Does not add comment for multi-line selections}
-      \begin{itemize}
-        \item Tests that no comment is added when there is a
-          multi-line selection, ensuring that only single-line
-          selections are processed.
-      \end{itemize}
-
-    \item \textbf{Does not add comment when no smells exist at line}
-      \begin{itemize}
-        \item Ensures that no comment is added when no smells are
-          associated with the selected line, preventing unnecessary
-          decorations from being applied.
-      \end{itemize}
-
-    \item \textbf{Displays single smell comment without count}
-      \begin{itemize}
-        \item Verifies that a single smell is displayed correctly
-          without a count, confirming that the decoration is applied
-          with the correct content format.
-      \end{itemize}
-
-    \item \textbf{Adds a single-line comment if a smell is found}
-      \begin{itemize}
-        \item Confirms that a single-line comment is added correctly
-          when a smell is found on the selected line, ensuring proper
-          decoration application.
-      \end{itemize}
-
-    \item \textbf{Displays a combined comment if multiple smells exist}
-      \begin{itemize}
-        \item Verifies that a combined comment is displayed when
-          multiple smells exist on the same line.
-        \item Ensures that the decoration is created with the correct
-          formatting and applied to the correct range.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelection.test.ts}{here}.
-
-  \subsubsection{Handle Smells Settings}
-
-  \textbf{Goal:} The VS Code settings management module enables users
-  to customize detection settings, update enabled smells, and ensure
-  workspace consistency. This module integrates with the IDE to
-  provide real-time updates when settings change. The following unit
-  tests validate the correctness of this functionality.\\
-
-  \noindent The tests ensure that enabled smells are correctly
-  retrieved from user configurations, updates to settings trigger the
-  appropriate notifications, and changes are accurately reflected in
-  the workspace. Additional test cases verify proper handling of
-  missing configurations, format conversions, and cache clearing
-  operations. Edge cases, such as unchanged settings and invalid
-  inputs, are also considered.\\
-
-  \noindent \textbf{Target requirement(s):} FR10, UHR-PSI1, UHR-EOU2,
-  OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Retrieving Enabled Smells}
-      \begin{itemize}
-        \item Ensures that the function retrieves all enabled smells
-          from the user's VS Code settings.
-        \item Validates that the function returns an empty object
-          when no smells are enabled.
-      \end{itemize}
-
-    \item \textbf{Handling Updates to Smell Filters}
-      \begin{itemize}
-        \item Ensures that enabling a smell triggers a notification to the user.
-        \item Confirms that disabling a smell results in a proper
-          update message.
-        \item Validates that when no changes occur, no unnecessary
-          cache updates are performed.
-      \end{itemize}
-
-    \item \textbf{Clearing Cache on Settings Update}
-      \begin{itemize}
-        \item Ensures that enabling or disabling a smell triggers a
-          workspace cache wipe.
-        \item Confirms that cache clearing only occurs when actual
-          changes are made.
-      \end{itemize}
-
-    \item \textbf{Formatting Smell Names}
-      \begin{itemize}
-        \item Ensures that smell names stored in kebab-case are
-          correctly formatted into a readable format.
-        \item Verifies that empty input results in an empty string
-          without errors.
-      \end{itemize}
-
-    \item \textbf{Ensuring User-Friendly Notifications}
-      \begin{itemize}
-        \item Confirms that updates to smell settings provide clear,
-          informative messages.
-        \item Ensures that error handling follows polite and
-          constructive messaging principles.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/handleSmellSettings.test.ts}{here}.
-
-  \subsubsection{Wipe Workspace Cache}
-
-  \textbf{Goal:} The "Wipe Workspace Cache" command is responsible
-  for clearing specific caches related to the workspace in a
-  development environment, primarily to reset the state of stored
-  data such as "smells" and file changes. It can be triggered for
-  different reasons, which determine which caches are cleared and how
-  the command behaves. It also updates file hashes for visible
-  editors when appropriate. Upon successful execution, a
-  corresponding success message is shown to the user. In case of an
-  error, an error message is displayed to the user.\\
-
-  \noindent The tests ensure that appropriate caches are being
-  cleared as and when instructed.\\
-
-  \noindent \textbf{Target requirement(s):} FR3, FR5, FR8~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Wipe Cache with No Reason Provided}
-      \begin{itemize}
-        \item Only the "smells" cache is cleared when no reason is provided.
-        \item A success message indicating the workspace cache has
-          been successfully wiped is displayed.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache with Reason "manual"}
-      \begin{itemize}
-        \item Both the "smells" and "file changes" caches are cleared
-          when the reason is "manual."
-        \item A success message indicating the workspace cache was
-          manually wiped is shown.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache When No Files Are Open}
-      \begin{itemize}
-        \item The command correctly handles the case when there are
-          no open files.
-        \item A log message is generated indicating that no open
-          files are available to update.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache with Open Files}
-      \begin{itemize}
-        \item When there are open files, a message indicating the
-          number of visible files is logged.
-        \item The hashes for each open file are updated as expected.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache with Reason "settings"}
-      \begin{itemize}
-        \item Only the "smells" cache is cleared when the reason is "settings."
-        \item A success message is shown indicating the cache was
-          wiped due to changes in smell detection settings.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache When an Error Occurs}
-      \begin{itemize}
-        \item An error message is logged when an error occurs during
-          the cache wipe process.
-        \item a user-facing error message is displayed, indicating
-          the failure to wipe the workspace cache.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/wipeWorkCache.test.ts}{here}.
-
-  \subsubsection{Backend}
-
-  \textbf{Goal:} The backend handles interactions with the backend
-  server for tasks such as checking server status, initializing logs,
-  fetching detected smells, and refactoring those smells in the code.\\
-
-  \noindent The tests ensure that the system correctly interacts with
-  the backend to check the server's status, initialize logging, fetch
-  code smells, and perform refactoring tasks. These tests confirm
-  that the server status is accurately updated based on successful or
-  failed responses, that log initialization behaves as expected under
-  different conditions, and that the system correctly handles and
-  processes detected smells for refactoring.\\
-
-  \noindent \textbf{Target requirement(s):} FR6, PR-SCR1, PR-RFT1,
-  PR-RFT2~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Handle Server Status Check with Successful Response}
-      \begin{itemize}
-        \item When the server responds successfully, the status is
-          set to \texttt{ServerStatusType.UP}.
-        \item The correct update of server status to indicate that
-          the server is operational.
-      \end{itemize}
-
-    \item \textbf{Handle Server Status Check with Error or Failure}
-      \begin{itemize}
-        \item When the server responds with an error or fails to
-          respond, the status is set to \texttt{ServerStatusType.DOWN}.
-        \item Correctly handles a failed server response by ensuring
-          the status reflects the server's downtime.
-      \end{itemize}
-
-    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Success)}
-      \begin{itemize}
-        \item When a valid directory path is provided and the backend
-          responds successfully, the function returns \texttt{true},
-          indicating successful log initialization.
-        \item System can successfully initialize logs with the
-          backend and sync them.
-      \end{itemize}
-
-    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Failure)}
-      \begin{itemize}
-        \item When the backend fails to initialize logs, the function
-          returns false.
-        \item Properly handles to provide feedback if the log
-          initialization process fails.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/api/backend.test.ts}{here}.
-
-  \subsection{API Routes}
-
-  \subsubsection{Smell Detection Endpoint}
-
-  \textbf{Goal:} The smell detection endpoint provides an API for
-  retrieving detected code smells from the backend. It ensures
-  efficient communication with the smell detection module while
-  handling errors gracefully. The following unit tests verify the
-  accuracy of this functionality.\\
-
-  \noindent The tests assess the correctness of the endpoint’s
-  response structure, error handling for missing files, validation of
-  request data, and handling of internal exceptions. Edge cases, such
-  as malformed requests and empty responses, are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Successful Detection of Smells}
-      \begin{itemize}
-        \item The API endpoint returns a successful response when the
-          file exists and smells are detected.
-        \item The response contains the correct number of detected
-          smells and adheres to the expected data structure.
-      \end{itemize}
-
-    \item \textbf{Handling of File Not Found Errors}
-      \begin{itemize}
-        \item The API endpoint returns an appropriate error response
-          when the specified file does not exist.
-        \item The error message clearly indicates that the file was not found.
-      \end{itemize}
-
-    \item \textbf{Handling of Internal Server Errors}
-      \begin{itemize}
-        \item The API endpoint returns an error response when an
-          unexpected exception occurs during smell detection.
-        \item The error message indicates an internal server error.
-      \end{itemize}
-
-    \item \textbf{Validation of Input Data}
-      \begin{itemize}
-        \item The API validates the presence and correctness of
-          required fields in the request.
-        \item The API rejects invalid input with appropriate error messages.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/api/test_detect_route.py}{here}.
-
-  \subsubsection{Refactoring Endpoint}
-
-  \textbf{Goal:} The refactoring endpoint provides an API for
-  refactoring detected code smells by leveraging the backend
-  refactoring module. It ensures that refactored code is returned
-  efficiently while verifying energy savings. The following unit
-  tests validate the accuracy of this functionality.\\
-
-  \noindent The tests assess the correctness of refactored output,
-  proper retrieval of energy measurements, error handling for missing
-  source directories, and graceful failures when unexpected
-  conditions arise. Edge cases such as unsuccessful refactorings and
-  unchanged energy consumption are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Handling Missing Target File in Refactor Request}
-        \begin{itemize}
-            \item The API returns a 404 error when the target file doesn't exist
-            \item The error message clearly indicates the file was not found
-        \end{itemize}
-
-    \item \textbf{Handling Invalid Source Directory in Refactor Request}
-        \begin{itemize}
-            \item The API returns a 404 error when the source directory is invalid
-            \item The error message specifies the folder was not found
-        \end{itemize}
-
-    \item \textbf{Detecting No Energy Savings After Refactoring}
-        \begin{itemize}
-            \item The API returns a 400 error when energy measurements show no improvement
-            \item The response indicates energy was not properly saved
-        \end{itemize}
-
-    \item \textbf{Handling Failed Initial Energy Measurement}
-        \begin{itemize}
-            \item The API returns a 400 error when initial energy reading fails
-            \item The error message indicates emissions couldn't be retrieved
-        \end{itemize}
-
-    \item \textbf{Handling Failed Final Energy Measurement}
-        \begin{itemize}
-            \item The API returns a 400 error when final energy reading fails
-            \item The response indicates emissions couldn't be retrieved
-        \end{itemize}
-
-    \item \textbf{Handling Unexpected Refactoring Errors}
-        \begin{itemize}
-            \item The API returns a 500 error for unexpected refactoring failures
-            \item The original error message is included in the response
-        \end{itemize}
-
-    \item \textbf{Successful Single File Refactoring}
-        \begin{itemize}
-            \item The API returns 200 for successful refactoring
-            \item The response includes all required fields with correct energy savings
-        \end{itemize}
-
-    \item \textbf{Successful Refactoring by Smell Type}
-        \begin{itemize}
-            \item The API successfully handles refactoring by smell type
-            \item The energy savings calculation is accurate for single smell cases
-        \end{itemize}
-
-    \item \textbf{Handling Multiple Smells of Same Type}
-        \begin{itemize}
-            \item The API correctly processes multiple instances of the same smell
-            \item Energy savings are properly accumulated across multiple refactors
-        \end{itemize}
-
-    \item \textbf{Handling Missing Directory in Type-Based Refactoring}
-        \begin{itemize}
-            \item The API returns 404 when source directory is invalid
-            \item The error message clearly indicates the folder wasn't found
-        \end{itemize}
-
-    \item \textbf{Handling Refactoring Failures by Type}
-        \begin{itemize}
-            \item The API returns 500 when type-based refactoring fails
-            \item The error details are properly propagated to the response
-        \end{itemize}
-
-    \item \textbf{Direct Refactoring Function Success}
-        \begin{itemize}
-            \item The core refactoring function works with new temporary directories
-            \item All output fields are properly populated including affected files
-        \end{itemize}
-
-    \item \textbf{Refactoring With Existing Temporary Directory}
-        \begin{itemize}
-            \item The core function properly utilizes existing temp directories
-            \item Energy savings are correctly calculated with predefined locations
-        \end{itemize}
+  \item \textbf{Feedback to User}
+    \begin{itemize}
+      \item Shows information message indicating selected folder.
+    \end{itemize}
 \end{itemize}
 
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/api/test_refactoring.py}{here}.
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/configureWorkspace.test.ts}{here}.
+
+\subsubsection{Reset Configuration Command}
+
+\textbf{Goal:} The reset configuration command prompts the user for confirmation and, if accepted, clears the stored workspace path and resets the internal plugin context to an unconfigured state.
+
+\medskip
+
+\noindent The tests verify that the workspace state is properly reset only when the user confirms the action. The system must also update the relevant VS Code context key to reflect the unconfigured state.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR3~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{User Confirmation}
+    \begin{itemize}
+      \item Prompts user with a warning message before clearing configuration.
+    \end{itemize}
+
+  \item \textbf{Workspace State Reset}
+    \begin{itemize}
+      \item Clears the stored workspace path from extension state.
+    \end{itemize}
+
+  \item \textbf{Context Reset}
+    \begin{itemize}
+      \item Updates VS Code context key \texttt{workspaceState.workspaceConfigured} to false.
+    \end{itemize}
+
+  \item \textbf{Cancel Handling}
+    \begin{itemize}
+      \item Skips reset process if the user cancels the confirmation dialog.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/resetConfiguration.test.ts}{here}.
+
+\subsubsection{File and Folder Smell Detection Commands}
+
+\textbf{Goal:} The \texttt{detectSmellsFile} and \texttt{detectSmellsFolder} commands are responsible for initiating the detection of code smells in individual files and entire directories, respectively. These commands coordinate the interaction between the cache system, backend smell detection API, and the UI rendering logic within the SmellsViewProvider.
+
+\medskip
+
+\noindent These unit tests ensure robust handling of various scenarios, including invalid input files, empty folders, disabled smell settings, cached data reuse, server downtime, backend errors, and recursive directory scans. They also validate that user-facing messages, caching, and smell highlighting are executed correctly based on system state.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR2, FR3, FR15, OER-IAS2~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Skipping Non-Python and Untitled Files}
+    \begin{itemize}
+      \item The file detection command ignores non-Python files and unsaved/untitled documents.
+    \end{itemize}
+
+  \item \textbf{Using Cached Smells}
+    \begin{itemize}
+      \item Cached smells are reused when the file hash and settings match.
+      \item Cached smells are immediately rendered in the Smells View.
+    \end{itemize}
+
+  \item \textbf{Fetching Smells from Backend}
+    \begin{itemize}
+      \item When no cache is available, the backend is called to fetch smells.
+      \item Retrieved smells are stored in the cache and displayed in the UI.
+    \end{itemize}
+
+  \item \textbf{Handling No Enabled Smells}
+    \begin{itemize}
+      \item A warning message is shown when no smells are enabled in the configuration.
+    \end{itemize}
+
+  \item \textbf{Handling No Smells Found}
+    \begin{itemize}
+      \item The tool displays a message indicating that the file has no detectable smells.
+      \item The cache is updated to reflect the empty result.
+    \end{itemize}
+
+  \item \textbf{Handling API and Server Errors}
+    \begin{itemize}
+      \item Server-down conditions show appropriate warning messages.
+      \item API response failures result in error messages and a "failed" status in the UI.
+      \item Unexpected thrown exceptions are caught and logged to the output channel.
+    \end{itemize}
+
+  \item \textbf{Folder Analysis and Recursion}
+    \begin{itemize}
+      \item The folder command scans recursively to identify `.py` files and shows progress.
+      \item A warning is shown if no Python files are found in the directory.
+      \item The total number of analyzed files is reported to the user.
+    \end{itemize}
+
+  \item \textbf{Handling Folder Access Errors}
+    \begin{itemize}
+      \item Directory scan failures (e.g., permission errors) are caught and logged cleanly without crashing the extension.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/detection.test.ts}{here}.
+
+\subsubsection{Export Metrics Command}
+
+\textbf{Goal:} The export metrics command saves workspace-level energy metrics to a local JSON file. This test suite ensures it handles missing data, invalid paths, file vs. directory distinction, and file system errors gracefully.
+
+\medskip
+
+\noindent The tests validate correct behavior across different workspace path types, proper access to extension state, and informative error messaging for common failure scenarios.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR6, FR15, OER-IAS3~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{No Metrics Data}
+    \begin{itemize}
+      \item The command shows an information message if there is no metrics data available to export.
+    \end{itemize}
+
+  \item \textbf{No Workspace Path Configured}
+    \begin{itemize}
+      \item The command shows an error message if the workspace path is missing or unset.
+    \end{itemize}
+
+  \item \textbf{Export to Workspace Directory}
+    \begin{itemize}
+      \item If the workspace path is a directory, the metrics JSON is saved directly inside it.
+      \item The user is notified of the output file location.
+    \end{itemize}
+
+  \item \textbf{Export to Parent of File Path}
+    \begin{itemize}
+      \item If the workspace path is a file, the parent directory is used for export.
+    \end{itemize}
+
+  \item \textbf{Invalid Path Type Handling}
+    \begin{itemize}
+      \item The command shows an error message if the path type is unknown or unsupported.
+    \end{itemize}
+
+  \item \textbf{Filesystem Access Errors}
+    \begin{itemize}
+      \item The command handles and reports errors when accessing the file system (e.g., stat failures).
+    \end{itemize}
+
+  \item \textbf{File Write Failures}
+    \begin{itemize}
+      \item If the write operation fails, the user is shown an error message indicating export failure.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/exportMetrics.test.ts}{here}.
+
+\subsubsection{Filter Smell Command Registration}
+
+\textbf{Goal:} This command module registers all filter-related UI commands used to configure active smells and their parameters in the EcoOptimizer sidebar. The tests validate command registration, user interaction (e.g., input box), and the proper delegation to `FilterViewProvider`.
+
+\medskip
+
+\noindent The tests ensure that smell toggling, option editing, mass selection, and default resets all call the correct provider methods and handle edge cases such as missing inputs or invalid user values.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR13, FR14, OER-IAS1~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Command Registration}
+    \begin{itemize}
+      \item Each command is correctly registered with VS Code using the expected command IDs.
+      \item All registered disposables are added to the extension context’s subscriptions.
+    \end{itemize}
+
+  \item \textbf{Toggling Individual Smells}
+    \begin{itemize}
+      \item The command toggles a specific smell using \texttt{toggleSmell}.
+    \end{itemize}
+
+  \item \textbf{Editing Smell Options – Valid Input}
+    \begin{itemize}
+      \item The user is prompted for a new value via an input box.
+      \item The new numeric value is passed to \texttt{updateOption} and the filter view is refreshed.
+    \end{itemize}
+
+  \item \textbf{Editing Smell Options – Invalid or Missing Input}
+    \begin{itemize}
+      \item If the user enters a non-numeric value, the option is not updated.
+      \item If the smell or option key is missing, an error message is shown.
+    \end{itemize}
+
+  \item \textbf{Select/Deselect All Smells}
+    \begin{itemize}
+      \item The \texttt{selectAllFilterSmells} and \texttt{deselectAllFilterSmells} commands call \texttt{setAllSmellsEnabled(true/false)} respectively.
+    \end{itemize}
+
+  \item \textbf{Reset to Filter Defaults}
+    \begin{itemize}
+      \item The \texttt{setFilterDefaults} command calls \texttt{resetToDefaults} on the filter provider.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/registerFilterSmellCommands.test.ts}{here}.
+
+\subsubsection{Refactor Workflow Commands}
+
+\textbf{Goal:} The refactoring workflow includes the core commands responsible for initiating, applying, and discarding refactorings. These tests verify that backend communication, session setup, user feedback, and file handling work correctly across both individual and batch refactor scenarios.
+
+\medskip
+
+\noindent This suite ensures refactor commands respect workspace configuration, gracefully handle backend issues, display energy savings, manage diff editors, and correctly update workspace state and metrics. Error handling for edge cases like file system failures and missing data is also validated.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR3, FR4, FR15, OER-IAS4~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Workspace and Server Preconditions}
+    \begin{itemize}
+      \item Shows an error if the workspace is not configured.
+      \item Shows a warning if the backend server is unavailable.
+    \end{itemize}
+
+  \item \textbf{Refactoring Execution – Single Smell}
+    \begin{itemize}
+      \item Initiates refactoring for one smell using the backend.
+      \item Updates internal state and view providers.
+      \item Displays progress and success messages.
+    \end{itemize}
+
+  \item \textbf{Refactoring Execution – All Smells of Same Type}
+    \begin{itemize}
+      \item Calls bulk API endpoint for all smells of the given type.
+      \item Displays type-based success messages.
+    \end{itemize}
+
+  \item \textbf{Refactoring Failure Handling}
+    \begin{itemize}
+      \item Shows an error if the backend fails or throws.
+      \item Resets UI state and hides any open diff editors.
+    \end{itemize}
+
+  \item \textbf{Session Initialization via \texttt{startRefactorSession}}
+    \begin{itemize}
+      \item Opens a VS Code diff editor with original and refactored files.
+      \item Displays energy savings in an information message.
+      \item Handles missing energy savings values gracefully (e.g., N/A).
+    \end{itemize}
+
+  \item \textbf{Accepting Refactorings}
+    \begin{itemize}
+      \item Copies refactored files into the workspace.
+      \item Updates metrics data and clears smell cache for affected files.
+      \item Sets file status to "outdated" in the UI.
+      \item Handles missing session data or filesystem errors.
+    \end{itemize}
+
+  \item \textbf{Rejecting Refactorings}
+    \begin{itemize}
+      \item Cleans up session state and restores file status.
+      \item Handles and logs cleanup failures if they occur.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/refactor.test.ts}{here}.
+
+\subsubsection{Wipe Workspace Cache Command}
+
+\textbf{Goal:} This command allows users to reset all cached smell data and file statuses for the current workspace. The tests ensure correct user confirmation, safe cache clearing, and accurate feedback messaging across all user interaction scenarios.
+
+\medskip
+
+\noindent This module’s functionality is essential for maintaining control over stale or outdated results, especially in long development sessions. The tests verify proper UI messaging, cancellation handling, and full cache cleanup when confirmed.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR10, OER-IAS5~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Confirmation Prompt}
+    \begin{itemize}
+      \item A warning dialog is shown before clearing the workspace cache.
+      \item The dialog must include a modal and an explicit "Confirm" action.
+    \end{itemize}
+
+  \item \textbf{Cache Clearing and UI Refresh}
+    \begin{itemize}
+      \item If the user confirms, all cached smells are deleted.
+      \item The SmellsView is refreshed and statuses are reset.
+      \item A success message is shown after completion.
+    \end{itemize}
+
+  \item \textbf{Cancellation and Dismissal Handling}
+    \begin{itemize}
+      \item If the user cancels or dismisses the dialog, no cache operations are performed.
+      \item A message confirms that the operation was cancelled.
+    \end{itemize}
+
+  \item \textbf{Non-Confirm Input Handling}
+    \begin{itemize}
+      \item If the user clicks any button other than "Confirm", the operation is treated as cancelled.
+    \end{itemize}
+
+  \item \textbf{Message Validity}
+    \begin{itemize}
+      \item Success messages are shown only after the cache is successfully cleared.
+      \item Cancel messages are mutually exclusive with success messages.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/wipeWorkCache.test.ts}{here}.
+
+\subsubsection{Workspace Modified Listener}
+
+\textbf{Goal:} This listener monitors Python file changes and deletions within the configured workspace. Its responsibilities include invalidating outdated cache entries, updating UI statuses, and auto-triggering smell detection if "smell linting" is enabled. It also ensures resource cleanup upon disposal.
+
+\medskip
+
+\noindent The following tests verify correct event handling on file saves, edits, and deletions. They also validate configuration checks, error handling, and the listener's lifecycle management.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR10, FR16, OER-IAS5~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Initialization Behavior}
+    \begin{itemize}
+      \item Skips setup if no workspace path is configured.
+      \item Initializes file watcher for `.py` files when path is configured.
+    \end{itemize}
+
+  \item \textbf{Handling File Changes}
+    \begin{itemize}
+      \item Clears smell cache and marks file as outdated if it exists in the cache.
+      \item Skips files that are not in the cache.
+      \item Logs error messages for cache invalidation failures.
+    \end{itemize}
+
+  \item \textbf{Handling File Deletions}
+    \begin{itemize}
+      \item Clears cache and removes file entry from view if file had cached smells.
+      \item Skips deletion logic if file was not cached.
+      \item Logs error if cache clearing fails.
+    \end{itemize}
+
+  \item \textbf{Smell Detection on Save}
+    \begin{itemize}
+      \item Triggers smell detection when a Python file is saved and smell linting is enabled.
+      \item Ignores non-Python files.
+    \end{itemize}
+
+  \item \textbf{Disposal}
+    \begin{itemize}
+      \item Disposes of both the file watcher and save listener properly.
+      \item Logs disposal confirmation.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/workspaceModifiedListener.test.ts}{here}.
+
+\subsubsection{Backend Service Communication}
+
+\textbf{Goal:} These backend API functions interact with the server for health checks, logging setup, smell detection, and smell refactoring. They must handle network issues gracefully, validate required inputs, and ensure proper feedback is logged in the output console.
+
+\medskip
+
+\noindent The following tests validate success and failure scenarios for each backend endpoint, including malformed requests, network errors, and missing workspace paths. They also verify correct request payloads and logging output.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR2, FR3, FR6, FR10, OER-IAS2~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Server Health Check}
+    \begin{itemize}
+      \item Sets status to \texttt{UP} if `/health` responds successfully.
+      \item Sets status to \texttt{DOWN} on error or network failure, and logs the issue.
+    \end{itemize}
+
+  \item \textbf{Logging Initialization}
+    \begin{itemize}
+      \item Sends proper payload to `/logs/init`.
+      \item Returns success on valid response.
+      \item Handles server or network errors with log messages and fallback.
+    \end{itemize}
+
+  \item \textbf{Smell Detection}
+    \begin{itemize}
+      \item Sends file path and smell configuration to `/smells`.
+      \item Parses and returns detected smells on success.
+      \item Throws clear errors and logs backend-provided details on failure.
+    \end{itemize}
+
+  \item \textbf{Refactor Single Smell}
+    \begin{itemize}
+      \item Sends smell and workspace path to `/refactor`.
+      \item Throws error when workspace path is missing.
+      \item Handles and logs both successful and failed backend responses.
+    \end{itemize}
+
+  \item \textbf{Refactor by Smell Type}
+    \begin{itemize}
+      \item Sends smell type and workspace path to `/refactor-by-type`.
+      \item Validates required fields and logs backend failures.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/api/backend.test.ts}{here}.
+
+\subsubsection{File Highlighter}
+
+\textbf{Goal:} The file highlighter decorates code editor lines based on detected smells using user-defined styling preferences (underline, border, flashlight, etc.). This module ensures that the VS Code UI reflects current cache data and user configuration, applying or clearing decorations dynamically.
+
+\medskip
+
+\noindent The tests verify correct singleton instantiation, dynamic decoration updates, conditional smell filtering, and visual style application across multiple configurations and editor scenarios.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR8, FR13, OER-IAS1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Singleton Instantiation}
+    \begin{itemize}
+      \item Ensures only one instance of the highlighter is created.
+    \end{itemize}
+
+  \item \textbf{Highlight Update Triggers}
+    \begin{itemize}
+      \item Calls \texttt{highlightSmells} only for visible Python editors.
+      \item Filters files correctly in \texttt{updateHighlightsForFile}.
+    \end{itemize}
+
+  \item \textbf{Highlight Rendering}
+    \begin{itemize}
+      \item Applies decorations for all enabled and valid smells.
+      \item Skips rendering if no data is cached or smell is disabled.
+      \item Ignores invalid line numbers.
+    \end{itemize}
+
+  \item \textbf{Custom Decoration Styles}
+    \begin{itemize}
+      \item Supports underline, flashlight, and border-arrow styles.
+      \item Defaults to underline for unknown style keys.
+    \end{itemize}
+
+  \item \textbf{Decoration Disposal}
+    \begin{itemize}
+      \item \texttt{resetHighlights()} clears all decorations and disposes them properly.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
+
+\subsubsection{Hover Manager}
+
+\textbf{Goal:} The hover manager displays contextual smell information when the user hovers over affected lines in Python files. It enriches the user experience by providing inline guidance and actionable links to trigger refactorings.
+
+\medskip
+
+\noindent The tests verify correct registration of the hover provider, graceful degradation when conditions are unmet, and correct Markdown formatting and behavior for smells occurring on the hovered line.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR13, FR16, OER-IAS1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Provider Registration}
+    \begin{itemize}
+      \item Registers hover provider for \texttt{python} language files.
+      \item Adds registration to extension subscriptions.
+    \end{itemize}
+
+  \item \textbf{Hover Preconditions}
+    \begin{itemize}
+      \item Returns nothing for non-Python files.
+      \item Returns nothing when no smells are cached.
+      \item Returns nothing if no smells occur on the hovered line.
+    \end{itemize}
+
+  \item \textbf{Hover Display Logic}
+    \begin{itemize}
+      \item Creates and returns a \texttt{Hover} object with formatted message.
+      \item Displays smell description and a clickable refactor command.
+      \item Escapes special characters in Markdown to prevent formatting issues.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/hoverManager.test.ts}{here}.
+
+\subsubsection{Line Selection Manager}
+
+\textbf{Goal:} The line selection manager adds inline decorations that summarize code smells present on the user's current line selection. It enhances feedback clarity while ensuring only one comment is shown at a time.
+
+\medskip
+
+\noindent The tests ensure that decoration is only applied to valid selections with associated smells, that it updates correctly when switching lines or clearing cache, and that decoration content reflects smell counts accurately.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR13, FR16, OER-IAS1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Initialization}
+    \begin{itemize}
+      \item Registers a callback on smell updates.
+      \item Initializes internal state to null decoration and null last line.
+    \end{itemize}
+
+  \item \textbf{Comment Rendering}
+    \begin{itemize}
+      \item Skips rendering when no editor is active or selection is multiline.
+      \item Skips when no smells are cached or no smells match the selected line.
+      \item Skips if user selects the same line twice.
+      \item Adds a comment with the smell type if one smell is present.
+      \item Adds a comment with count when multiple smells exist.
+      \item Decorations appear as inline text after the selected line.
+    \end{itemize}
+
+  \item \textbf{Comment Removal}
+    \begin{itemize}
+      \item Removes previous decorations before applying a new one.
+      \item Removes comment when cache is cleared for the current file or for all files.
+      \item Skips removal if unrelated file’s cache is cleared.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelectionManager.test.ts}{here}.
+
+\subsubsection{Cache Initialization}
+
+\textbf{Goal:} This module restores file statuses from previously cached analysis results when the extension is activated. It removes entries for deleted or out-of-scope files and updates the UI accordingly.
+
+\medskip
+
+\noindent The tests verify that cache entries outside the workspace or pointing to non-existent files are removed, and that remaining entries are properly restored into the UI. It also validates summary log reporting and gracefully handles missing workspace configuration.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR10, OER-CACHE1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{No Workspace Configured}
+    \begin{itemize}
+      \item Skips initialization and logs a warning if no workspace path is set.
+    \end{itemize}
+
+  \item \textbf{Removing Invalid Cache Entries}
+    \begin{itemize}
+      \item Removes entries for files outside the configured workspace.
+      \item Removes entries for files that are no longer present on disk.
+    \end{itemize}
+
+  \item \textbf{Restoring Valid Cache}
+    \begin{itemize}
+      \item Files with smells get status \texttt{passed} and corresponding smells are injected.
+      \item Clean files are marked with status \texttt{no\_issues}.
+    \end{itemize}
+
+  \item \textbf{Summary Logging}
+    \begin{itemize}
+      \item Logs how many files were restored, how many had smells, and how many were removed from the cache.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/cacheInitialization.test.ts}{here}.
+
+\subsubsection{Smells Data Management}
+
+\textbf{Goal:} This module provides utilities for reading, parsing, and retrieving code smell configurations. It handles loading/saving JSON configurations, filtering enabled smells, and resolving smell metadata for hover/tooltips.
+
+\medskip
+
+\noindent The tests validate the integrity and correctness of the config loading and writing process, proper filtering of enabled smells, and lookup logic for acronyms, names, and descriptions based on message IDs.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR4, FR5, OER-CONFIG1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{loadSmells}
+    \begin{itemize}
+      \item Successfully loads a smells configuration from disk.
+      \item Displays an error message if the file is missing or malformed.
+    \end{itemize}
+
+  \item \textbf{saveSmells}
+    \begin{itemize}
+      \item Writes updated configuration to disk.
+      \item Displays an error message if the save operation fails.
+    \end{itemize}
+
+  \item \textbf{getFilterSmells}
+    \begin{itemize}
+      \item Returns the full dictionary of loaded smells.
+    \end{itemize}
+
+  \item \textbf{getEnabledSmells}
+    \begin{itemize}
+      \item Returns only smells marked as enabled.
+      \item Includes parsed analyzer options with correct types.
+    \end{itemize}
+
+  \item \textbf{Metadata Resolvers}
+    \begin{itemize}
+      \item \texttt{getAcronymByMessageId} resolves acronyms.
+      \item \texttt{getNameByMessageId} resolves full names.
+      \item \texttt{getDescriptionByMessageId} resolves descriptions.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/smellsData.test.ts}{here}.
+
+\subsubsection{Tracked Diff Editors}
+
+\textbf{Goal:} This module maintains a registry of active diff editors created during refactoring sessions. It provides utilities to register, query, and programmatically close diff tabs within the VS Code environment.
+
+\medskip
+
+\noindent The tests validate the correct registration and tracking of diff editors, accurate identification of tracked editors via URI comparison, and complete cleanup of tabs and memory state after closure operations.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR12, OER-IAS2~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{registerDiffEditor}
+    \begin{itemize}
+      \item Adds a URI pair to the tracked diff editors set.
+      \item Supports multiple pairs without interference.
+    \end{itemize}
+
+  \item \textbf{isTrackedDiffEditor}
+    \begin{itemize}
+      \item Returns true only for previously registered URI pairs.
+      \item Fails gracefully for unregistered or mismatched pairs.
+      \item Is case-sensitive when comparing URI strings.
+    \end{itemize}
+
+  \item \textbf{closeAllTrackedDiffEditors}
+    \begin{itemize}
+      \item Closes all diff tabs currently open in the workspace if they match tracked URIs.
+      \item Skips irrelevant tabs or malformed inputs.
+      \item Clears the internal tracked set after execution.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/trackedDiffEditors.test.ts}{here}.
+
+\subsubsection{Refactor Action Buttons}
+
+\textbf{Goal:} These UI buttons provide users with the ability to accept or reject a proposed refactoring. They must be initialized correctly, displayed when a refactoring session is active, and hidden when the session ends. The buttons are tied to a VS Code context key used to control view behavior.
+
+\medskip
+
+\noindent The tests verify that the buttons are properly initialized and registered with the extension context, appear or disappear based on user interaction, and correctly set or reset the \texttt{refactoringInProgress} context variable.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR12~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Button Visibility}
+    \begin{itemize}
+      \item The accept and reject buttons are shown when a refactoring session begins.
+      \item The buttons are hidden when the session ends or is cancelled.
+    \end{itemize}
+
+  \item \textbf{Context Key Updates}
+    \begin{itemize}
+      \item \texttt{refactoringInProgress} is set to \texttt{true} when buttons are shown.
+      \item \texttt{refactoringInProgress} is set to \texttt{false} when buttons are hidden.
+    \end{itemize}
+
+  \item \textbf{Subscription Registration}
+    \begin{itemize}
+      \item Buttons are registered to the extension context upon initialization.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/refactorActionButtons.test.ts}{here}.
+
+
+
+
+
+
+
+
+
+
+  
 
   % \subsection{Unit Testing Scope}
 
