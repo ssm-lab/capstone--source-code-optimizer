@@ -30,7 +30,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
-          sudo apt-get install texlive-latex-extra texlive-science latexmk
+          sudo apt-get install texlive-latex-extra texlive-fonts-extra texlive-science latexmk
 
       - name: Create app access token
         uses: actions/create-github-app-token@v1
