@@ -10,6 +10,11 @@
 \usepackage{float}
 \usepackage{longtable}
 
+
+\usepackage{xurl}
+\usepackage{enumitem}
+
+
 \title{Reflection and Traceability Report on EcoOptimizer}
 
 \author{Ayushi Amin \\ Tanveer Brar \\ Nivetha Kuruparan\\ Sevhena Walker\\ Mya Hussain}
@@ -169,28 +174,51 @@ Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictl
     Make clear which components are in scope & TA & addressed, but removed in later iteration & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/279}{Issue \#279} \\\hline
 \end{longtable}
 
-\subsection{Design and Design Documentation}
 
-\begin{table}[h]
-    \centering
-    \caption{Feedback Responses for MIS, MG, Development Plan}
-    \label{tab:feedback}
-    \begin{tabularx}{\textwidth}{|l|X|X|X|}
+\subsection{MG, MIS and Development PLan}
+
+The following table details all changes made to the MIS, MG and Development Plan. \\
+
+Notable improvements include the formalization of discrete mathematical models for %
+refactoring operations (Issue \#515), abstraction of core optimization logic to work across programming languages %
+logic (Issue \#513), and consolidation of AST security modules (Issue \#510). %
+Additional enhancements focused on documentation rigor through Canadian English %
+standardization (Issue \#512), \LaTeX\ quote correction (Issue \#265), and %
+explicit risk mitigation mapping (Issue \#267). These changes collectively %
+strengthened the system's theoretical foundations while improving team %
+accountability through quantified performance metrics (Issue \#266) and %
+role definitions (Issue \#264).
+
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Feedback Responses for MIS, MG, Development Plan} \label{tab:feedback} \\
     \hline
     \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
     \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/515}{Issue \#515}) & 
     MG/MIS not formalized &
-    \begin{itemize}
-        \item Added math formalizations in MG for different refactorers that lent well to a discrete math implementaiton. 
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added math formalizations in MG for different refactorers that lent well to a discrete math implementation
     \end{itemize} &
     \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/515}{Issue \#515} \\
     \hline
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/513}{Issue \#513}) & 
     MIS needs abstraction &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Removed Python-specific code
         \item Abstracted common functions
     \end{itemize} &
@@ -201,7 +229,7 @@ Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictl
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/512}{Issue \#512}) & 
     Spelling inconsistencies &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Updated to Canadian English
         \item Fixed table references
     \end{itemize} &
@@ -211,7 +239,7 @@ Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictl
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/511}{Issue \#511}) & 
     Diagram orientation issues &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Redesigned hierarchy diagrams
         \item Standardized downward flow
     \end{itemize} &
@@ -220,7 +248,7 @@ Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictl
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/510}{Issue \#510}) & 
     Module secret overlap &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Consolidated AST-related secrets
     \end{itemize} &
     \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/530}{PR \#530} \\
@@ -228,7 +256,7 @@ Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictl
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/267}{Issue \#267}) & 
     Risk identification in PoC &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Added explicit risk section
         \item Mapped mitigations
     \end{itemize} &
@@ -237,16 +265,15 @@ Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictl
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/266}{Issue \#266}) & 
     Vague team charter &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Defined quantitative metrics
-        \item Added performance thresholds
     \end{itemize} &
     \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/663fcd3}{663fcd3} \\
     \hline
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/265}{Issue \#265}) & 
     Incorrect LaTeX quotes &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Replaced all ``quotes''
         \item Added linter rule
     \end{itemize} &
@@ -255,14 +282,14 @@ Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictl
     
     TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/264}{Issue \#264}) & 
     Undefined team roles &
-    \begin{itemize}
+    \begin{itemize}[nosep,leftmargin=*]
         \item Assigned specific responsibilities
         \item Created role descriptions
     \end{itemize} &
     \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/663fcd3}{663fcd3} \\
     \hline
-    \end{tabularx}
-\end{table}
+    
+\end{longtable}
 
 \subsection{VnV Plan and Report}
 something
