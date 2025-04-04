@@ -502,6 +502,8 @@ perfect sense as the refactoring operations and energy measurement
 are disjoint functionalities in the code.
 
 \subsubsection{Key Insights and Recommendations}
+
+\noindent \textbf{Performance Bottlenecks:}
 \begin{itemize}
   \item \textbf{Bottleneck Identification:} The smells \texttt{R6301}
     and \texttt{R0913} are the primary bottlenecks, consuming over
@@ -522,6 +524,7 @@ are disjoint functionalities in the code.
     highlighting the need for targeted optimization.
 \end{itemize}
 
+\noindent \textbf{Optimization Recommendations:}
 The analysis reveals significant scalability challenges for both
 detection and refactoring, particularly for smells like
 \texttt{R6301} and \texttt{R0913}. While energy measurement times are
@@ -677,18 +680,18 @@ analysis, and report generation. The objective was to do so while
 covering the logging mechanisms for refactoring events, ensuring that
 logs are complete and immutable.\\
 
-\noindent The development team reviewed the codebase to confirm that
+\noindent \textbf{Verification Process:} The development team reviewed the codebase to confirm that
 each refactoring event (pattern analysis, energy analysis, report
 generation) is logged with accurate timestamps and event description.
 Missing log entries and/or insufficient details were identified and
 added to the logging process.\\
 
-\noindent Through this process, all major refactoring processes were
+\noindent \textbf{Results:} Through this process, all major refactoring processes were
 correctly logged with accurate timestamps. Logs are stored locally on
 the user's device, ensuring that unauthorized modifications are
 prevented by restricting external access.\\
 
-\noindent The team was able to confirm that the tool maintains a
+\noindent \textbf{Conclusion:} The team was able to confirm that the tool maintains a
 secure logging system for refactoring processes, with logs being
 tamper-resistant due to their local storage on user devices.
 
@@ -703,14 +706,16 @@ tamper-resistant due to their local storage on user devices.
     requirements, ensuring that no personal information is stored,
     all processing is local, and communication practices meet
     regulatory standards.\\
-    \noindent Through code review, the team confirmed that all data
+    
+    \noindent \textbf{Verification Method:} Through code review, the team confirmed that all data
     processing remains local and does not involve external storage.
     During this time, internal API functionality was also reviewed to
     ensure that user interactions are transient and not logged
     externally. By going through the different workflows, the team
     verified that no personal data collection occurs, eliminating the
     need for explicit consent mechanisms.\\
-    \noindent As a result of this process, it was concluded that the
+    
+    \noindent \textbf{Compliance Assessment:} As a result of this process, it was concluded that the
     tool does not store any user data. The tool also does not send
     unsolicited communications, aligning with CASL requirements.
 
@@ -721,13 +726,15 @@ tamper-resistant due to their local storage on user devices.
     object of assessing whether the tool's quality management and
     software development processes align with ISO 9001 standards for
     quality management and SSADM for structured software development.\\
-    \noindent Through an unbiased approach, the team verified the
+    
+    \noindent \textbf{Evaluation Process:} Through an unbiased approach, the team verified the
     presence of structured documentation, feedback mechanisms, and
     version tracking. It was also confirmed that a combination of
     unit testing, informal testing and iteration processes were
     applied during development. After code review, adherence to
     structured programming and modular design principles was also confirmed.
-    \noindent Our goal was to take a third perspective check on
+    
+    \noindent \textbf{Development Practices Assessment:} Our goal was to take a third perspective check on
     whether these set of practices were applied to our development
     workflows. Development follows reasonable structured processes
     and also includes formal documentation of testing and quality
@@ -3302,26 +3309,34 @@ tested, and it helps identify areas that may require additional testing.
 The frontend codebase has an overall coverage of 45.43\% for
 statements, 36.48\% for branches, 42.62\% for functions, and 45.53\%
 for lines (Figure \ref{img:vscode-cov}). These metrics fall below the
-global coverage thresholds of 80\% for the following reasons. The
+global coverage thresholds of 80\% for the following reasons.
+
+\noindent \textbf{Extension Core Logic:} The
 file \texttt{extension.ts}, which contains the core logic for the
 VSCode extension, has 0\% coverage as it is mainly made up of
-initialization commands with no real logic that can be tested. The
+initialization commands with no real logic that can be tested.
+
+\noindent \textbf{UI Components:} The
 file \texttt{refactorView.ts}, responsible for the refactoring view,
 also has 0\% coverage. This module is a UI component and will be
 tested for revision 1. Since \texttt{handleEditorChange.ts} is
 closely related to the UI component, its testing has also been put off.\\
 
-The file \texttt{refactorSmell.ts} has moderate coverage (55.37\%
+\noindent \textbf{Partial Coverage:} The file \texttt{refactorSmell.ts} has moderate coverage (55.37\%
 statements, 45.23\% branches), with significant gaps in testing
 around lines 143–269 and 328–337 (Figure \ref{img:vscode-cov}). This
 is due to a feature that is not fully implemented and therefore not
-tested. Finally, \texttt{configManager.ts} has not been tested as yet
+tested. 
+
+\noindent \textbf{Future Testing:} \texttt{configManager.ts} has not been tested as yet
 due to evolving configuration options, but will be tested for revision 1.
 
 \subsection{Python Backend}
 The backend codebase has an overall coverage of 91\% (Figure
 \ref{img:python-cov}) and has been thoroughly tested as it contains
-the key features of project and the bulk of the logic. The exception
+the key features of project and the bulk of the logic. 
+
+\noindent \textbf{Testing Exceptions:} The exception
 is \texttt{show\_logs.py}, which handles the websocket endpoint for
 logging, due to the complex nature of this module testing has been
 omitted. Since its function is mainly to broadcast logs it is also
