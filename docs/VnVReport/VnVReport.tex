@@ -207,9 +207,9 @@ The following test is designed to ensure the availability of documentation as pe
 
 \section{Nonfunctional Requirements Evaluation}
 
-\subsection{Usability}
+\subsection{Usability \& Humanity}
 
-\subsection*{Key Findings}
+\subsubsection{Key Findings}
 \begin{itemize}
   \item The extension demonstrated strong functionality in detecting
     code smells and providing refactoring suggestions.
@@ -219,7 +219,7 @@ The following test is designed to ensure the availability of documentation as pe
     \textbf{refactoring speed}, and \textbf{UI clarity}.
 \end{itemize}
 
-\section*{Methodology}
+\subsubsection{Methodology}
 The usability test involved 5 student developers familiar with VSCode
 but with no prior experience using the extension. Participants
 performed tasks such as detecting code smells, refactoring single and
@@ -229,13 +229,13 @@ qualitative data was collected using surveys that gathered background
 information of the participants as well as their opinions post
 testing (\ref{appendix:usability}).
 
-\section*{Results}
+\subsubsection{Results}
 
 The following is an overview of the most significant task that the
 test participants performed. Information on the tasks themselves can
 be found in the Appendix (\ref{appendix:usability}).
 
-\subsection*{Quantitative Results}
+\paragraph{Quantitative Results}
 \begin{itemize}
   \item \textbf{Task Completion Rate:}
     \begin{itemize}
@@ -260,14 +260,14 @@ be found in the Appendix (\ref{appendix:usability}).
   \caption{User Satisfaction Survey Data}
 \end{figure}
 
-\subsection*{Qualitative Results}
+\paragraph{Qualitative Results}
 Participants found the code smell detection intuitive and accurate,
 and they appreciated the preview feature and Accept/Reject buttons.
 However, they struggled with sidebar visibility, refactoring speed,
 and UI clarity. Hover descriptions were overwhelming, and some
 elements (e.g., ``(6/3)'') were unclear.
 
-\section*{Discussion}
+\subsubsection{Discussion}
 The usability test revealed that the extension performs well in
 detecting code smells and providing refactoring suggestions.
 Participants appreciated the energy savings feedback but requested
@@ -282,7 +282,7 @@ identified issues are addressed. The test highlighted the need for
 better onboarding, clearer documentation, and performance
 optimizations to enhance user satisfaction and adoption.
 
-\section*{Feedback and Implementation Plan}
+\subsubsection{Feedback and Implementation Plan}
 The following table summarizes participant feedback and whether the
 suggested changes will be implemented:
 
@@ -319,10 +319,8 @@ suggested changes will be implemented:
 
 This testing benchmarks the performance of ecooptimizer across
 files of varying sizes (250, 1000, and 3000 lines). The data includes
-detection times,
-refactoring times for specific smells, and energy measurement times.
-The goal is to
-identify scalability patterns, performance bottlenecks, and
+detection times, refactoring times for specific smells, and energy measurement times.
+The goal is to identify scalability patterns, performance bottlenecks, and
 opportunities for optimization.\\
 
 \textbf{Related Performance Requirement:} PR-1\\
@@ -363,7 +361,7 @@ For each detected smell (grouped by smell type), refactoring is run
   \hline
 \end{tabular}
 
-\subsection*{1. Detection Time vs File Size}
+\subsubsection{Detection Time vs File Size}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{{../Images/detectionTimeVsFileSize.png}}
@@ -388,7 +386,7 @@ remain reasonable, with detection
 completing in under 3 seconds even for 3000-line files making this
 not a current critical bottleneck.
 
-\subsection*{2. Refactoring Times by Smell Type (Log Scale)}
+\subsubsection{Refactoring Times by Smell Type (Log Scale)}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_log\_scale.png}
@@ -411,7 +409,7 @@ remain consistently fast (0.03 seconds) across all file sizes. This
 suggests that optimizing \texttt{R6301} and \texttt{R0913} should be
 a priority, as they dominate the refactoring time for larger files.
 
-\subsection*{3. Refactoring Times Heatmap}
+\subsubsection{Refactoring Times Heatmap}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_heatmap.png}
@@ -432,7 +430,7 @@ consistently low costs. The heatmap also highlights the dramatic
 variation in refactoring times: at 3000 lines, the fastest smell
 (\texttt{LLE001}) is 200× faster than the slowest (\texttt{R6301}).
 
-\subsection*{4. Energy Measurement Times Distribution}
+\subsubsection{Energy Measurement Times Distribution}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/energy\_measurement\_boxplot.png}
@@ -452,7 +450,7 @@ indicate that the energy measurement process has a fixed
 overhead, which could simplify efforts in the future if we were to
 create our own energy measurement module.
 
-\subsection*{5. Comparative Refactoring Times per File Size}
+\subsubsection{Comparative Refactoring Times per File Size}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_comparison.png}
@@ -473,7 +471,7 @@ file size: at 250 lines, the ratio is 100:1, but at 3000 lines, it
 grows to 200:1. This suggests that the scalability of refactoring
 operations varies significantly by smell type.
 
-\subsection*{6. Energy vs Refactoring Time Correlation}
+\subsubsection{Energy vs Refactoring Time Correlation}
 
 \begin{figure}[H]
   \centering
@@ -494,7 +492,7 @@ measurement times clustered between 5.5 and 6.1 seconds. This makes
 perfect sense as the refactoring operations and energy measurement
 are disjoint functionalities in the code.
 
-\subsection*{Key Insights and Recommendations}
+\subsubsection{Key Insights and Recommendations}
 \begin{itemize}
   \item \textbf{Bottleneck Identification:} The smells \texttt{R6301}
     and \texttt{R0913} are the primary bottlenecks, consuming over
@@ -523,7 +521,7 @@ additional metrics may be needed to accurately assess energy savings.
 Future work should focus on optimizing high-cost operations and
 improving the scalability of the detection algorithm.
 
-\subsection{Maintainability and Support}
+\subsection{Maintenance and Support}
 \begin{enumerate}
 
   \item \textbf{test-MS-1: Extensibility for New Code Smells and
