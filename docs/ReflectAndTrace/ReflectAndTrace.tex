@@ -62,10 +62,104 @@ document, and likely the Revision 1 versions of the other documents will be
 low.} 
 
 \subsection{SRS and Hazard Analysis}
-
+something
 \subsection{Design and Design Documentation}
 
+\begin{table}[h]
+    \centering
+    \caption{Feedback Responses for MIS, MG, Development Plan}
+    \label{tab:feedback}
+    \begin{tabularx}{\textwidth}{|l|X|X|X|}
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \hline
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/515}{Issue \#515}) & 
+    MG/MIS not formalized &
+    \begin{itemize}
+        \item Added math formalizations in MG for different refactorers that lent well to a discrete math implementaiton. 
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/515}{Issue \#515} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/513}{Issue \#513}) & 
+    MIS needs abstraction &
+    \begin{itemize}
+        \item Removed Python-specific code
+        \item Abstracted common functions
+    \end{itemize} &
+    Commits: 
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/46fbcc9}{46fbcc9},
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/d1a4506}{d1a4506} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/512}{Issue \#512}) & 
+    Spelling inconsistencies &
+    \begin{itemize}
+        \item Updated to Canadian English
+        \item Fixed table references
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/529}{PR \#529},
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/530}{PR \#530} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/511}{Issue \#511}) & 
+    Diagram orientation issues &
+    \begin{itemize}
+        \item Redesigned hierarchy diagrams
+        \item Standardized downward flow
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/530}{PR \#530} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/510}{Issue \#510}) & 
+    Module secret overlap &
+    \begin{itemize}
+        \item Consolidated AST-related secrets
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/530}{PR \#530} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/267}{Issue \#267}) & 
+    Risk identification in PoC &
+    \begin{itemize}
+        \item Added explicit risk section
+        \item Mapped mitigations
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/9218c22}{9218c22} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/266}{Issue \#266}) & 
+    Vague team charter &
+    \begin{itemize}
+        \item Defined quantitative metrics
+        \item Added performance thresholds
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/663fcd3}{663fcd3} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/265}{Issue \#265}) & 
+    Incorrect LaTeX quotes &
+    \begin{itemize}
+        \item Replaced all ``quotes''
+        \item Added linter rule
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/2572497}{2572497} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/264}{Issue \#264}) & 
+    Undefined team roles &
+    \begin{itemize}
+        \item Assigned specific responsibilities
+        \item Created role descriptions
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/663fcd3}{663fcd3} \\
+    \hline
+    \end{tabularx}
+\end{table}
+
 \subsection{VnV Plan and Report}
+something
 
 \section{Challenge Level and Extras}
 
