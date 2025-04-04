@@ -30,7 +30,6 @@
 
 \usepackage{tikz}
 \usetikzlibrary{automata, positioning, arrows.meta, shapes, backgrounds} 
-\usepackage{float} % For precise figure placement
 
 \newcommand{\lips}{\textit{Insert your content here.}}
 
@@ -67,15 +66,10 @@ describing software}
   October 11th, 2024 & All & Created initial revision of SRS\\
   January 2nd, 2025 & All & Added clarification to training requirements\\
   January 5th, 2025 & All & Update FR-7, FR-8, Ideas for Solution \\
-  January 6th, 2025 & All & Fixed link references to tables and
-  figures and added preambles to those sections, move glossary
-  section, added symbolic constants\\
-  February 8th, 2025 & All & Removed requirement for interfacing with
-  GitHub Actions.\\
-  February 10th, 2025 & All & Updated the data dictionary and
-  business data model \\
-  February 10th, 2025 & All & Updated costs, compliance requirements,
-  security requirements and scope of the product. \\
+  January 6th, 2025 & All & Fixed link references to tables and figures and added preambles to those sections, move glossary section, added symbolic constants\\
+  February 8th, 2025 & All & Removed requirement for interfacing with GitHub Actions.\\
+  February 10th, 2025 & All & Updated the data dictionary and business data model \\
+  February 10th, 2025 & All & Updated costs, compliance requirements, security requirements and scope of the product. \\
   March 24th, 2025 & All & Updated and added functional requirements. \\
   March 24th, 2025 & Mya Hussain & Updated Usability and Humanity Requirements. \\
   March 24th, 2025 & Ayushi Amin & Updated maintainability and support requirements. \\
@@ -88,8 +82,8 @@ describing software}
   March 24th, 2025 & Ayushi Amin & Updated migration of new product. \\
   March 24th, 2025 & Ayushi Amin & Updated Costs section. \\
   March 24th, 2025 & Mya Hussain & Created state diagram closes feedback. \\
-  March 25th, 2025 & Ayushi Amin & Removed Duplicate Requirements. \\
-  \bottomrule 
+  March 25th, 2025 & Ayushi Amin & Removed Duplicate Requirements.\\
+  \bottomrule
 \end{tabularx}
 
 ~\\
@@ -712,7 +706,7 @@ overview of the project's tasks.
 \begin{table}[H]
   \centering
   \setlength\extrarowheight{5mm}
-  \begin{tabularx}{\textwidth}{|c|X|l|p{1.5in}|p{1.5in}|}
+  \begin{tabularx}{\textwidth}{cXlp{1.5in}p{1.5in}}
     \toprule \textbf{Event \#} & \textbf{Event Name} & \textbf{Input}
     & \textbf{Output(s)} & \textbf{Requirements}\\
     \midrule
@@ -835,7 +829,7 @@ reference for development and testing.
 \begin{longtable}[H]{
     >{\raggedright\arraybackslash}p{3.5cm}
     >{\raggedright\arraybackslash}p{9cm}
-  >{\raggedright\arraybackslash}p{2cm}}
+    >{\raggedright\arraybackslash}p{2cm}}
   \toprule
   \textbf{Name} & \textbf{Content} & \textbf{Type} \\
   \midrule
@@ -1772,7 +1766,7 @@ The cultural requirements of this project include the following:
 \end{enumerate}
 
 \section{Traceability from Requirements to Use Cases}
-\begin{longtable}{|p{2.5cm}|p{11cm}|}
+\begin{longtable}{p{2.5cm}p{11cm}}
     \toprule
     \textbf{Requirement} & \textbf{Use Case(s)} \\
     \midrule
@@ -2671,7 +2665,7 @@ having a hard time writing so much about what currently is an empty repository.
 
 ~\newpage
 
-\bibliographystyle {plainnat}
+\bibliographystyle{plainnat}
 \bibliography{../../refs/References}
 
 \end{document}
