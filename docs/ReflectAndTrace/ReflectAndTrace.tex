@@ -101,8 +101,8 @@ These changes collectively reflect an evolution from experimental concepts to a 
     \endfoot
     
     \hline
-    \caption{Feedback Tracking and Implementation}
-    \label{tab:feedback_tracking}
+    \caption{SRS Feedback Tracking and Implementation}
+    \label{tab:srs-feedback-tracking}
     \endlastfoot
     
     Add priority planning to phase in plan & peer & duplicates and discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issue \#136 + \#155} \\ \hline
@@ -123,6 +123,50 @@ These changes collectively reflect an evolution from experimental concepts to a 
     Add traceability & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/273}{Issue \#273} \\ \hline
     Make requirements less ambiguous & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/274}{Issue \#274} \\ \hline
     Formalize document & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/275}{Issue \#275} \\ \hline
+\end{longtable}
+
+\subsubsection{Hazard Analysis}
+
+The revised Hazard Analysis reflects a \textbf{significant simplification and refocusing of the system's scope}, with particular attention to \textbf{user experience, security, and measurable requirements}. Most notably, the team \textbf{eliminated the Reinforcement Learning Model} entirely—a major departure from the original design. This removal streamlined the document, excising associated hazards (like model overfitting and bias) and requirements (such as quarterly model audits), while allowing greater focus on core refactoring functionality. The \textbf{Testing Module was similarly consolidated} into the Analysis and Refactoring Modules, with validation now implicitly handled through smell detection and performance metrics rather than as a standalone component.\\
+
+The energy measurement backend shifted from \textbf{PyJoules to CodeCarbon}, with updated failure mitigations (e.g., cloud-environment permissions in HZ-3) and revised assumptions about cross-platform consistency. The new version also introduces \textbf{robust UI/accessibility safeguards}, adding five previously absent hazards—such as real-time metric display (HZ-12) and WCAG compliance (HZ-15)—backed by quantified requirements like \texttt{METRIC\_REFRESH\_TIME = 2 sec}. Security saw deliberate hardening, with expanded static analysis to \textbf{prevent refactoring of sensitive code} (HZ-8) and detect external library dependencies (HZ-7).\\
+
+Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictly local VS Code extension}, emphasizing tighter integration and reducing external dependencies. New features like \textbf{checkpointing (SCR-10)}—enforcing progress saves every 30 seconds—and \textbf{concurrency controls (SCR-9)} address crash recovery and parallel operation risks, underscored by symbolic constants (\texttt{SAVE\_TIME}, \texttt{MAX\_DATA\_LOSS}) for precision. Together, these changes reflect a \textbf{more pragmatic, user-centric tool} with clearer boundaries, measurable safeguards, and mitigated risks—all while preserving the original goal of energy-efficient Python refactoring.
+
+\begin{longtable}[H]{|p{5cm}|p{2cm}|p{5cm}|p{3cm}|}
+    \hline
+    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}%
+    {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+    \hline
+    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ 
+    \hline
+    \endfoot
+    
+    \hline
+    \caption{Hazard Analysis Feedback Tracking and Implementation}
+    \label{tab:ha-feedback-tracking}
+    \endlastfoot
+    
+    Clarify the terminology used in SCR 9 & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/185}{Issue \#185} \\ \hline
+    Fix referencing between hazards and requirements & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/186}{Issue \#186} \\ \hline
+    Add new hazard related to unexpected system shutdown & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/187}{Issue \#187} \\ \hline
+    Fix clashing hazards & peer & addressed, but component completely removed in later design iteration  & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/189}{Issue \#189} \\ \hline
+    Fix FMEA table formatting & peer and TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/190}{Issue \#190}, \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/278}{Issue \#278} \\
+    \hline
+    Critical assumptions section lacks user and environment context assumptions & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/191}{Issue \#191} \\ \hline
+    FMEA table missing analysis of inter-component hazards and failure modes & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/192}{Issue \#192} \\ \hline
+    Unclear recommended actions point for reinforcement learning component & peer & addressed, but component removed in later design iteration & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/193}{Issue \#193} \\ \hline
+    Unclear critical assumptions & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/194}{Issue \#194} \\ \hline
+    Need symbolic constants & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/277}{Issue \#277} \\\hline
+    Make clear which components are in scope & TA & addressed, but removed in later iteration & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/279}{Issue \#279} \\\hline
 \end{longtable}
 
 \subsection{Design and Design Documentation}
