@@ -3193,6 +3193,54 @@ command \texttt{npm run test}. The results for both are printed to the console.
 
 \section{Trace to Modules}
 
+This section maps test cases to the specific modules they validated, organized by architectural levels to ensure comprehensive verification of our system.
+
+\begin{table}[H]
+  \centering
+  \caption{Tests for Behaviour-Hiding Modules}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (TC-)} & \textbf{Module} \\
+    \midrule
+    TC1-TC10 & M1 (Smell) \\
+    TC11-TC15 & M2 (BaseRefactorer) \\
+    TC16-TC20 & M3 (MakeMethodStaticRefactorer) \\
+    TC21-TC27 & M4 (UseListAccumulationRefactorer) \\
+    TC28-TC35 & M5 (UseAGeneratorRefactorer) \\
+    TC36-TC44 & M6 (CacheRepeatedCallsRefactorer) \\
+    TC45-TC49 & M7 (LongElementChainRefactorer) \\
+    TC50-TC56 & M8 (LongParameterListRefactorer) \\
+    TC57-TC63 & M9 (LongMessageChainRefactorer) \\
+    TC64-TC70 & M10 (LongLambdaFunctionRefactorer) \\
+    TC71-TC75 & M11 (PluginInitiator) \\
+    TC76-TC81 & M12 (BackendCommunicator) \\
+    TC82-TC88 & M13 (SmellDetector) \\
+    TC89-TC93 & M14 (FileHighlighter) \\
+    TC94-TC98 & M15 (HoverManager) \\
+    TC99-TC102 & M20 (CacheManager) \\
+    TC103-TC114 & M21 (FilterManager) \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:behaviour_hiding_modules_tests}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Tests for Software Decision Modules}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (TC-)} & \textbf{Module} \\
+    \midrule
+    TC115-TC120 & M16 (Measurements) \\
+    TC121-TC125 & M17 (PylintAnalyzer) \\
+    TC126-TC132 & M18 (SmellRefactorer) \\
+    TC133-TC138 & M19 (RefactorManager) \\
+    TC139-TC143 & M22 (EnergyMetrics) \\
+    TC144-TC148 & M23 (ViewProvider) \\
+    TC149-TC153 & M24 (EventManager) \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:software_decision_modules_tests}
+\end{table}
+
 \section{Code Coverage Metrics}
 
 The following analyzes the code coverage metrics for the Python
