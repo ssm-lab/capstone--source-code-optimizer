@@ -163,127 +163,46 @@ This area includes tests to verify the detection and refactoring of specified co
     \textbf{How test will be performed:} Supply a file where the refactorer returns an unchanged version of the code and verify that no new files are created and that appropriate feedback is displayed or logged.
 \end{enumerate}
 
-\subsection{Output Validation Tests}
-\begin{enumerate}
-  \item \textbf{test-FR-OV-1 Verification of Valid Python Output} \\[2mm]
-    The \textbf{output validation test} ensures that refactored
-    Python code remains syntactically correct and compliant with
-    Python standards. This validation is crucial for maintaining
-    \textbf{functional requirement FR3}, as it confirms that the
-    refactored code behaves identically to the original but with
-    improved efficiency.
-
-    A Python file with detected code smells was refactored, and the
-    expected result was that the optimized code should pass a syntax
-    check and retain its original functionality. The \textbf{actual
-    result} confirmed that the refactored code was valid, passed
-    linting checks, and maintained correctness.
-\end{enumerate}
-
 \subsection{Tests for Reporting Functionality}
-The reporting functionality of the tool is a critical feature that
-provides comprehensive insights into the refactoring process,
-including detected code smells, applied refactorings, energy
-consumption measurements, and test results. These tests ensure that
-the reporting feature operates correctly and delivers accurate,
-well-structured information as specified in \textbf{functional
-requirement FR9}.\\
 
-\noindent At this stage, the reporting functionality is still under
-development, and testing has not yet been conducted. The tests
-outlined below will be performed in \textbf{Revision 1} once the
-reporting feature is fully implemented.
+The reporting functionality of the tool is crucial for providing users with meaningful insights into the energy impact of refactorings and the smells being addressed. This section outlines tests that ensure the energy metrics and refactoring summaries are accurately presented, as required by FR6 and FR15.
 
 \begin{enumerate}
-  \item \textbf{test-FR-RP-1 A Report With All Components Is Generated} \\[2mm]
-    This test ensures that the tool generates a comprehensive report
-    that includes all necessary information required by \textbf{FR9}.
-    The system should produce a structured summary of the refactoring
-    process, displaying detected code smells, applied refactorings,
-    and energy consumption metrics.
+  \item \textbf{test-FR-RP-1 Energy Consumption Metrics Displayed Post-Refactoring} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The tool has measured energy usage before and after refactoring. \\
+    \textbf{Input:} Energy data collected for the original and refactored code. \\
+    \textbf{Output:} A clear comparison of energy consumption is displayed in the UI. \\
+    \textbf{Test Case Derivation:} Verifies that energy metrics are properly calculated and presented to users, as per FR6. \\
+    \textbf{How test will be performed:} Refactor a file and review the visual or textual display of energy usage before and after, ensuring the values match backend logs.
 
-    \textbf{Planned Test Execution:} After refactoring, the tool will
-    invoke the report generation feature, and a user will validate
-    that the output meets the structure and content specifications.
-
-  \item \textbf{test-FR-RP-2 Validation of Code Smell and Refactoring
-    Data in Report} \\[2mm]
-    This test will verify that the report correctly includes details
-    on detected code smells and refactorings, ensuring compliance
-    with \textbf{FR9}.
-
-    \textbf{Planned Test Execution:} The tool will generate a report,
-    and its contents will be compared with the detected code smells
-    and refactorings to confirm accuracy.
-
-  \item \textbf{test-FR-RP-3 Energy Consumption Metrics Included in
-    Report} \\[2mm]
-    This test will validate that the reporting feature correctly
-    includes energy consumption measurements before and after
-    refactoring, aligning with \textbf{FR9}.
-
-    \textbf{Planned Test Execution:} A user will analyze the energy
-    consumption metrics in the generated report to ensure they
-    accurately reflect the measurements taken during the refactoring process.
-
-  \item \textbf{test-FR-RP-4 Functionality Test Results Included in
-    Report} \\[2mm]
-    This test will ensure that the reporting functionality accurately
-    reflects the results of the test suite, summarizing test
-    pass/fail outcomes after refactoring.
-
-    \textbf{Planned Test Execution:} The tool will generate a report,
-    and validation will be conducted to confirm that it includes a
-    summary of test results matching the actual execution outcomes.
+  \item \textbf{test-FR-RP-2 Detected Code Smells and Refactorings Reflected in UI} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The tool has completed code analysis and refactoring. \\
+    \textbf{Input:} Output of the detection and refactoring modules. \\
+    \textbf{Output:} The user interface displays the detected code smells and associated refactorings clearly. \\
+    \textbf{Test Case Derivation:} Ensures transparency of changes and supports informed decision-making by the user, in line with FR15. \\
+    \textbf{How test will be performed:} Open a code file with detectable smells, trigger a refactor, and inspect the view displaying the summary of changes and available actions.
 \end{enumerate}
+
+\subsection{Visual Studio Code Interactions}
+
+This section corresponds to features related to the user's interaction with the Visual Studio Code extension interface, including previewing and toggling smells, customizing the UI, and reviewing code comparisons. These tests verify that the extension enables users to interact with refactorings in an intuitive and informative manner, as outlined in FR8, FR9, FR10, FR11, FR12, FR13, FR14, FR15, FR16, and FR17.
+
+These features are primarily tested through automated unit tests integrated in the extension codebase. For implementation and test details, please refer to the unit testing suite.
 
 \subsection{Documentation Availability Tests}
-The following tests will ensure that the necessary documentation is
-available as per \textbf{FR10}. Since documentation is still under
-development, these tests have not yet been conducted and will be
-included in \textbf{Revision 1}.
+
+The following test is designed to ensure the availability of documentation as per FR 7 and FR 5.
 
 \begin{enumerate}
   \item \textbf{test-FR-DA-1 Test for Documentation Availability} \\[2mm]
-    This test verifies that the system provides proper documentation
-    covering installation, usage, and troubleshooting.
-
-    \textbf{Planned Test Execution:} Review the documentation for
-    completeness, clarity, and accuracy, ensuring it meets \textbf{FR10}.
-\end{enumerate}
-
-\subsection{IDE Extension Tests}
-The following tests ensure that users can integrate the tool as a VS
-Code extension in compliance with \textbf{FR11}. Local testing has
-been conducted successfully, confirming the extension's ability to
-function within the development environment. Once all features are
-implemented, the extension will be packaged and tested in a deployed
-environment.
-
-\begin{enumerate}
-  \item \textbf{test-FR-IE-1 Installation of Extension in Visual
-    Studio Code} \\[2mm]
-    This test ensures that the refactoring tool extension can be
-    installed from the Visual Studio Marketplace.
-
-    \textbf{Test Execution:} The extension was installed locally, and
-    its presence in the Extensions View was confirmed.
-
-    \textbf{Future Testing:} Once all features are implemented, the
-    extension will be zipped, packaged, and tested as a published extension.
-
-  \item \textbf{test-FR-IE-2 Running the Extension in Visual Studio
-    Code} \\[2mm]
-    This test validates that the extension functions correctly within
-    the development environment, detecting code smells and suggesting
-    refactorings.
-
-    \textbf{Test Execution:} Local tests confirmed that activating
-    the extension successfully detects code smells and applies refactorings.
-
-    \textbf{Future Testing:} Once the extension is packaged,
-    additional tests will be conducted to confirm functionality in a
-    deployed environment.
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The system may or may not be installed. \\
+    \textbf{Input:} User attempts to access the documentation. \\
+    \textbf{Output:} The documentation is available and covers installation, usage (FR 5), and troubleshooting. \\
+    \textbf{Test Case Derivation:} Validates that the documentation meets user needs (FR 7). \\
+    \textbf{How test will be performed:} Review the documentation for completeness and clarity.
 \end{enumerate}
 
 \section{Nonfunctional Requirements Evaluation}
@@ -683,11 +602,11 @@ improving the scalability of the detection algorithm.
   \item \textbf{test-LF-2 Theme Adaptation in VS Code} \\[2mm]
     The theme adaptation feature in the IDE plugin was tested
     manually to confirm that the plugin correctly adjusts to VS
-    Code’s light and dark themes without requiring manual
+    Code's light and dark themes without requiring manual
     configuration. The tester performed the test by opening the
-    plugin in both themes and switching between them using VS Code’s settings.
+    plugin in both themes and switching between them using VS Code's settings.
 
-    The expected result was that the plugin’s interface should
+    The expected result was that the plugin's interface should
     automatically adjust when the theme is changed. The actual result
     confirmed that the plugin seamlessly transitioned between light
     and dark themes while maintaining a consistent interface. The
@@ -718,7 +637,7 @@ improving the scalability of the detection algorithm.
     testing session, where developers and testers interacted with the
     plugin and provided feedback. This test evaluated user
     experience, ease of navigation, and overall satisfaction with the
-    plugin’s interface.
+    plugin's interface.
 
     The expected result was that users would be able to interact with
     the plugin smoothly and provide structured feedback. The actual
@@ -772,7 +691,7 @@ tamper-resistant due to their local storage on user devices.
   \item \textbf{test-CPL-1: Compliance with PIPEDA and CASL} \\[2mm]
     This process was applied to all processes related to data
     handling and user communication within the local API framework
-    with the objective of assesing whether the tool’s data handling
+    with the objective of assesing whether the tool's data handling
     and communication mechanisms align with PIPEDA and CASL
     requirements, ensuring that no personal information is stored,
     all processing is local, and communication practices meet
@@ -792,7 +711,7 @@ tamper-resistant due to their local storage on user devices.
     Standards} \\[2mm]
     This process evaluated development workflows, documentation
     practices, and adherence to structured methodologies with the
-    object of assessing whether the tool’s quality management and
+    object of assessing whether the tool's quality management and
     software development processes align with ISO 9001 standards for
     quality management and SSADM for structured software development.\\
     \noindent Through an unbiased approach, the team verified the
@@ -2016,7 +1935,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{1.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2092,7 +2011,7 @@ backend modules and the vscode extension.
   \midrule
   TC\testcount & FR10, OER-IAS1 & Network error during API call. & Displays error and sets status to `failed`. & Error message and status shown as expected. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR10, OER-IAS1 & Scans folder with no Python files. & Shows warning: “No Python files found.” & Message displayed, no detection performed. & \cellcolor{green} Pass \\
+  TC\testcount & FR10, OER-IAS1 & Scans folder with no Python files. & Shows warning: "No Python files found." & Message displayed, no detection performed. & \cellcolor{green} Pass \\
   \midrule
   TC\testcount & FR10, OER-IAS1 & Scans folder with 2 Python files. & Processes only Python files, skips others. & Info message displayed, detection runs on valid files. & \cellcolor{green} Pass \\
   \midrule
@@ -2105,7 +2024,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{1.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2175,7 +2094,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{1.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2251,7 +2170,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{2cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4.3cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2315,7 +2234,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{2cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4.3cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2364,7 +2283,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{2.2cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2419,7 +2338,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{2.2cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2677,7 +2596,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{2.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2723,7 +2642,7 @@ backend modules and the vscode extension.
     >{\raggedright\arraybackslash}p{2.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
+  >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2868,7 +2787,7 @@ should be highlighted.}
 During the testing phase, several changes were made to the tool based
 on feedback from user testing, supervisor reviews, and edge cases
 encountered during unit and integration testing. These changes were
-necessary to improve the tool’s usability, functionality, and robustness.
+necessary to improve the tool's usability, functionality, and robustness.
 
 \subsection{Usability and User Input Adjustments}
 One of the key findings from testing was the balance between
@@ -2925,7 +2844,7 @@ seamless installation via the VS Code Marketplace.
 
 \bigskip
 Overall, the testing phase played a crucial role in refining the
-tool’s functionality, optimizing performance, and improving
+tool's functionality, optimizing performance, and improving
 usability. The feedback gathered led to meaningful changes that
 enhance both the developer experience and the effectiveness of
 automated refactoring.
@@ -3007,7 +2926,7 @@ refactoring Python code to improve energy efficiency. The test will
 identify usability issues that may hinder adoption by software developers.
 
 \section*{Objective}
-Evaluate the usability of the extension’s \textbf{smell detection},
+Evaluate the usability of the extension's \textbf{smell detection},
 \textbf{refactoring process}, \textbf{customization settings}, and
 \textbf{refactoring view}.
 
@@ -3083,7 +3002,7 @@ Moderated usability testing.
     \begin{itemize}
       \item \textbf{Critical:} Blocks users from completing tasks.
       \item \textbf{Major:} Causes significant frustration but has workarounds.
-      \item \textbf{Minor:} Slight inconvenience, but doesn’t impact
+      \item \textbf{Minor:} Slight inconvenience, but doesn't impact
         core functionality.
     \end{itemize}
   \item Provide recommendations for UI/UX improvements.
@@ -3277,7 +3196,7 @@ graduate attribute of Reflection.
 
     A big win was how much of our work naturally fed into the report.
     Since we had already been refining our verification and
-    validation (V\&V) process throughout development, we weren’t
+    validation (V\&V) process throughout development, we weren't
     starting from scratch, we just had to document what we had done.
     Having clear test cases in place made it easier to describe our
     approach and results, rather than writing purely in the abstract.
@@ -3428,7 +3347,7 @@ graduate attribute of Reflection.
         sections reference predefined specifications/industry
         standards rather than direct client input.
       \item \textbf{Implementation and Technical Explanations:} These
-        were formulated based on the development team’s decisions,
+        were formulated based on the development team's decisions,
         software documentation, and prior knowledge rather than
         external feedback.
 
@@ -3512,7 +3431,7 @@ graduate attribute of Reflection.
     with more thorough initial testing.
     If i could do it again I'd build more flexibility into the VnV
     Plan to account for unexpected results and allocate extra time
-    for debugging and edge-case testing. I’d also include a broader
+    for debugging and edge-case testing. I'd also include a broader
     range of test cases (e.g., multiline whitespace, wrong input) in
     the initial plan to catch these issues sooner.
 
