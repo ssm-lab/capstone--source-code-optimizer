@@ -256,8 +256,8 @@ be found in the Appendix (\ref{appendix:usability}).
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../Images/usability-satisfaction-graph.png}
-  \label{img:usability-satisfaction}
   \caption{User Satisfaction Survey Data}
+  \label{img:usability-satisfaction}
 \end{figure}
 
 \paragraph{Qualitative Results}
@@ -265,7 +265,7 @@ Participants found the code smell detection intuitive and accurate,
 and they appreciated the preview feature and Accept/Reject buttons.
 However, they struggled with sidebar visibility, refactoring speed,
 and UI clarity. Hover descriptions were overwhelming, and some
-elements (e.g., ``(6/3)'') were unclear.
+elements (e.g., ``(6/3)'') were unclear. The overall satisfaction ratings can be seen in Figure \ref{img:usability-satisfaction}.
 
 \subsubsection{Discussion}
 The usability test revealed that the extension performs well in
@@ -313,7 +313,10 @@ suggested changes will be implemented:
     \bottomrule
   \end{tabular}
   \caption{Participant Feedback and Implementation Decisions}
+  \label{tab:participant-feedback}
 \end{table}
+
+Based on the feedback summarized in Table \ref{tab:participant-feedback}, we prioritized improvements to the user interface and documentation, focusing on elements that caused the most frustration during testing.
 
 \subsection{Performance}
 
@@ -366,6 +369,7 @@ For each detected smell (grouped by smell type), refactoring is run
   \centering
   \includegraphics[width=\textwidth]{{../Images/detectionTimeVsFileSize.png}}
   \caption{Detection Time vs File Size}
+  \label{fig:detection_time}
 \end{figure}
 
 \noindent \textbf{What}: Linear plot showing code smell detection
@@ -384,13 +388,14 @@ files, which could become
 problematic for very large codebases. However, the absolute times
 remain reasonable, with detection
 completing in under 3 seconds even for 3000-line files making this
-not a current critical bottleneck.
+not a current critical bottleneck, as shown in Figure \ref{fig:detection_time}.
 
 \subsubsection{Refactoring Times by Smell Type (Log Scale)}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_log\_scale.png}
   \caption{Refactoring Times by Smell Type (Log Scale)}
+  \label{fig:refactoring_log}
 \end{figure}
 
 \noindent \textbf{What}: Logarithmic plot of refactoring times per
@@ -399,7 +404,7 @@ smell across file sizes\\
 \noindent \textbf{Why}: Identify most expensive refactorings and
 scalability patterns\\
 
-The logarithmic plot reveals a clear hierarchy of refactoring costs.
+The logarithmic plot reveals a clear hierarchy of refactoring costs, as shown in Figure \ref{fig:refactoring_log}.
 The most expensive smells are \texttt{R6301} and \texttt{R0913},
 which take 6.13 seconds and 5.65 seconds, respectively, for a
 3000-line file. These smells show exponential growth, with
@@ -414,6 +419,7 @@ a priority, as they dominate the refactoring time for larger files.
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_heatmap.png}
   \caption{Refactoring Times Heatmap}
+  \label{fig:refactoring_heatmap}
 \end{figure}
 
 \noindent \textbf{What}: Color-coded matrix of refactoring times by
@@ -421,7 +427,7 @@ smell/file size\\
 
 \noindent \textbf{Why}: Quick visual identification of hot spots\\
 
-The heatmap provides a quick visual summary of refactoring times
+The heatmap shown in Figure \ref{fig:refactoring_heatmap} provides a quick visual summary of refactoring times
 across smells and file sizes. The darkest cells correspond to
 \texttt{R6301} and \texttt{R0913} at 3000 lines, confirming their
 status as the most expensive operations. In contrast, \texttt{LLE001}
@@ -435,6 +441,7 @@ variation in refactoring times: at 3000 lines, the fastest smell
   \centering
   \includegraphics[width=\textwidth]{../Images/energy\_measurement\_boxplot.png}
   \caption{Energy Measurement Times Distribution}
+  \label{fig:energy_boxplot}
 \end{figure}
 
 \noindent \textbf{What}: Box plot of energy measurement durations\\
@@ -442,7 +449,7 @@ variation in refactoring times: at 3000 lines, the fastest smell
 \noindent \textbf{Why}: Verify measurement consistency across operations\\
 
 Energy measurement times are remarkably consistent, ranging from 5.54
-to 6.14 seconds across all operations and file sizes.
+to 6.14 seconds across all operations and file sizes, as illustrated in Figure \ref{fig:energy_boxplot}.
 The box plot shows no significant variation with file size,
 suggesting that energy measurement is operation-specific
 rather than dependent on the size of the file. This stability could
@@ -455,6 +462,7 @@ create our own energy measurement module.
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_comparison.png}
   \caption{Comparative Refactoring Times per File Size}
+  \label{fig:refactoring_comparison}
 \end{figure}
 
 \noindent \textbf{What}: Side-by-side bar charts per file size\\
@@ -462,7 +470,7 @@ create our own energy measurement module.
 \noindent \textbf{Why}: Direct comparison of refactoring costs at
 different scales\\
 
-The side-by-side bar charts reveal consistent dominance patterns
+The side-by-side bar charts in Figure \ref{fig:refactoring_comparison} reveal consistent dominance patterns
 across file sizes. \texttt{R6301} and \texttt{R0913} are always the
 top two most expensive smells, while \texttt{LLE001} and
 \texttt{LMC001} remain the cheapest. Notably, the relative cost
@@ -477,6 +485,7 @@ operations varies significantly by smell type.
   \centering
   \includegraphics[width=\textwidth]{../Images/energy\_refactoring\_correlation.png}
   \caption{Energy vs Refactoring Time Correlation}
+  \label{fig:energy_correlation}
 \end{figure}
 
 \noindent \textbf{What}: Scatter plot comparing refactoring and
@@ -485,7 +494,7 @@ energy measurement times\\
 \noindent \textbf{Why}: Identify potential relationships between
 effort and energy impact\\
 
-The scatter plot shows no clear correlation between refactoring time
+The scatter plot in Figure \ref{fig:energy_correlation} shows no clear correlation between refactoring time
 and energy measurement time. Fast refactorings like \texttt{LLE001}
 and slow refactorings like \texttt{R6301} both result in energy
 measurement times clustered between 5.5 and 6.1 seconds. This makes
@@ -743,6 +752,7 @@ backend modules and the vscode extension.
 \subsection{API Endpoints}
 
 \subsubsection{Smell Detection Endpoint}
+The following tests in Table \ref{table:detection_endpoint_tests} verify the functionality of the smell detection API endpoint under various conditions.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -782,6 +792,7 @@ backend modules and the vscode extension.
 \end{longtable}
 
 \subsubsection{Refactor Endpoint}
+Table \ref{table:refactor_endpoint_tests} outlines the test cases for the refactor endpoint, covering both successful operations and error handling scenarios.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -832,6 +843,7 @@ backend modules and the vscode extension.
 \end{longtable}
 
 \subsection{Analyzer Controller Module}
+The analyzer controller module was tested extensively to ensure it correctly identifies and processes code smells. Table \ref{table:analyzer_controller_tests} summarizes these test cases.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -891,6 +903,7 @@ backend modules and the vscode extension.
 \end{longtable}
 
 \subsection{CodeCarbon Measurement}
+The following test cases in Table \ref{table:measurement_tests} were executed to verify the functionality of the CodeCarbon measurement module.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -3066,6 +3079,8 @@ command \texttt{npm run test}. The results for both are printed to the console.
 
 \section{Trace to Requirements}
 
+This section maps the tests performed to the requirements they validate, providing traceability between verification activities and project requirements.
+
 \begin{table}[H]
   \centering
   \caption{Functional Requirements and Corresponding Test Sections}
@@ -3083,8 +3098,8 @@ command \texttt{npm run test}. The results for both are printed to the console.
   \label{tab:sections_requirements}
 \end{table}
 
+Table \ref{tab:sections_requirements} shows the functional requirements and their corresponding test sections, ensuring all requirements have been properly tested.
 
-  \label{tab:nfr-trace-reqs}
   \begin{table}[H]
   \centering
   \caption{Look \& Feel Tests and Corresponding Requirements}
@@ -3099,6 +3114,7 @@ command \texttt{npm run test}. The results for both are printed to the console.
   \end{tabular}
 \end{table}
 
+Table \ref{tab:nfr-trace-lf} maps the Look & Feel test cases to their corresponding non-functional requirements.
 
   \begin{table}[H]
   \centering
@@ -3117,6 +3133,7 @@ command \texttt{npm run test}. The results for both are printed to the console.
   \end{tabular}
 \end{table}
 
+The usability and humanity requirements and their corresponding test cases are shown in Table \ref{tab:nfr-trace-uh}.
 
 \begin{table}[H]
   \centering
@@ -3128,8 +3145,10 @@ command \texttt{npm run test}. The results for both are printed to the console.
     PF-1 & PR-SL 1, PR-SL 2, PR-CR 1 \\
     \bottomrule
   \end{tabular}
+  \label{tab:nfr-trace-perf}
 \end{table}
 
+Performance requirements and their test cases are outlined in Table \ref{tab:nfr-trace-perf}.
 
   \begin{table}[H]
     \centering
@@ -3149,7 +3168,10 @@ command \texttt{npm run test}. The results for both are printed to the console.
       Not explicitly tested & OER-RL 2 \\
       \bottomrule
     \end{tabular}
+    \label{tab:nfr-trace-ope}
   \end{table}
+
+Table \ref{tab:nfr-trace-ope} shows the operational and environmental requirements along with their test cases.
 
   \begin{table}[H]
     \centering
@@ -3164,7 +3186,10 @@ command \texttt{npm run test}. The results for both are printed to the console.
       Not explicitly tested & MS-MNT 4 \\
       \bottomrule
     \end{tabular}
+    \label{tab:nfr-trace-ms}
   \end{table}
+
+The maintenance and support requirements and their test cases are shown in Table \ref{tab:nfr-trace-ms}.
 
 \begin{table}[H]
   \centering
@@ -3175,8 +3200,10 @@ command \texttt{npm run test}. The results for both are printed to the console.
     SRT-1 & SR-IM 1 \\
     \bottomrule
   \end{tabular}
+  \label{tab:nfr-trace-sec}
 \end{table}
 
+Table \ref{tab:nfr-trace-sec} outlines the security requirements and their corresponding test cases.
 
   \begin{table}[H]
     \centering
@@ -3189,7 +3216,10 @@ command \texttt{npm run test}. The results for both are printed to the console.
       CPL-2 & CL-SCR 1 \\
       \bottomrule
     \end{tabular}
+    \label{tab:nfr-trace-comp}
   \end{table}
+
+The compliance requirements and their test cases are outlined in Table \ref{tab:nfr-trace-comp}.
 
 \section{Trace to Modules}
 
@@ -3223,6 +3253,8 @@ This section maps test cases to the specific modules they validated, organized b
   \label{tab:behaviour_hiding_modules_tests}
 \end{table}
 
+Table \ref{tab:behaviour_hiding_modules_tests} shows the mapping between test cases and the behavior-hiding modules they verify.
+
 \begin{table}[H]
   \centering
   \caption{Tests for Software Decision Modules}
@@ -3240,6 +3272,8 @@ This section maps test cases to the specific modules they validated, organized b
   \end{tabular}
   \label{tab:software_decision_modules_tests}
 \end{table}
+
+Table \ref{tab:software_decision_modules_tests} maps test cases to the software decision modules they validate.
 
 \section{Code Coverage Metrics}
 
