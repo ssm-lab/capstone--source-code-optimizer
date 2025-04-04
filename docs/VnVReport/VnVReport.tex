@@ -3066,6 +3066,131 @@ command \texttt{npm run test}. The results for both are printed to the console.
 
 \section{Trace to Requirements}
 
+\begin{table}[H]
+  \centering
+  \caption{Functional Requirements and Corresponding Test Sections}
+  \begin{tabular}{p{0.42\textwidth}p{0.42\textwidth}}
+    \toprule \textbf{Test Section} & \textbf{Functional Requirement(s)} \\
+    \midrule
+    Code Input Acceptance Tests & FR1 \\
+    Code Smell Detection and Refactoring Suggestion Tests & FR2, FR3, FR4 \\
+    Tests for Reporting Functionality & FR6, FR15 \\
+    Visual Studio Code Interactions & FR8, FR9, FR10, FR11, FR12, FR13, FR14, FR15, FR16, FR17 \\
+    Documentation Availability Tests & FR7, FR5 \\
+    Installation and Onboarding Tests & FR7 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:sections_requirements}
+\end{table}
+
+
+  \label{tab:nfr-trace-reqs}
+  \begin{table}[H]
+  \centering
+  \caption{Look \& Feel Tests and Corresponding Requirements}
+  \label{tab:nfr-trace-lf}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    LF-1 & LFR-AP 1 \\
+    LF-2 & LFR-ST 1, LFR-AP 2 \\
+    % Note: LFR-AP 2 is tested indirectly in LF-2
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+  \begin{table}[H]
+  \centering
+  \caption{Usability \& Humanity Tests and Corresponding Requirements}
+  \label{tab:nfr-trace-uh}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    UH-1 & UHR-PSI 1, UHR-PSI 2 \\
+    UH-2 & UHR-ACS 1 \\
+    UH-3 & UHR-EOU 1 \\
+    UH-4 & UHR-EOU 2 \\
+    UH-5 & UHR-LRN 1 \\
+    UH-6 & UHR-UPL 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+\begin{table}[H]
+  \centering
+  \caption{Performance Tests and Corresponding Requirements}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Performance
+    PF-1 & PR-SL 1, PR-SL 2, PR-CR 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+  \begin{table}[H]
+    \centering
+    \caption{Operational \& Environmental Tests and Corresponding Requirements}
+    \begin{tabular}{cc}
+      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+      \midrule
+      % Operational and Environmental
+      Not explicitly tested & OER-EP 1 \\
+      Not explicitly tested & OER-EP 2 \\
+      OPE-1 & OER-WE 1 \\
+      OPE-2 & OER-IAS 1 \\
+      OPE-3 & OER-IAS 2 \\
+      OPE-4 & OER-IAS 3 \\
+      OPE-5 & OER-PR 1 \\
+      Tested by FRs & OER-RL 1 \\
+      Not explicitly tested & OER-RL 2 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \begin{table}[H]
+    \centering
+    \caption{Maintenance \& Support Tests and Corresponding Requirements}
+    \begin{tabular}{cc}
+      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+      \midrule
+      % Maintenance and Support
+      MS-1 & MS-MNT 1, PR-SER 1 \\
+      MS-2 & MS-MNT 2 \\
+      MS-3 & MS-MNT 3 \\
+      Not explicitly tested & MS-MNT 4 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Security Tests and Corresponding Requirements}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    SRT-1 & SR-IM 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+  \begin{table}[H]
+    \centering
+    \caption{Compliance Tests and Corresponding Requirements}
+    \begin{tabular}{cc}
+      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+      \midrule
+      % Compliance
+      CPL-1 & CL-LR 1 \\
+      CPL-2 & CL-SCR 1 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
 \section{Trace to Modules}
 
 \section{Code Coverage Metrics}
