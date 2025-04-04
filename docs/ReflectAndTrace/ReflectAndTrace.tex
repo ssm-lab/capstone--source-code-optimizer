@@ -1,7 +1,14 @@
 \documentclass{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{longtable}
 
 \title{Reflection and Traceability Report on EcoOptimizer}
 
@@ -63,6 +70,61 @@ low.}
 
 \subsection{SRS and Hazard Analysis}
 
+\subsubsection{Software Requirement Specification Document (SRS)}
+
+The updated SRS shows a significant shift in technical direction, most notably through the \textbf{complete removal of the reinforcement learning model} that was previously central to the architecture. This change cascaded through multiple sections—the business data model was simplified by eliminating the learning component, related business use cases were deleted, and all associated requirements about algorithmic refactoring optimization were stripped out.\\
+
+Conversely, substantial new functionality was added around \textbf{IDE plugin configuration and user control}. The document now includes detailed requirements for customizable smell displays, selective refactoring of specific issues, and toggleable linting features. These are supported by new product use cases that outline workflows for filtering smells and clearing analysis history.\\
+
+The integration with \textbf{GitHub Actions was completely excised} from the requirements, removing all CI/CD pipeline functionality that appeared in the original version. Security requirements were simultaneously simplified by eliminating authentication needs and privacy compliance mandates.\\
+
+New visualization elements were incorporated, including a \textbf{comprehensive state diagram} that maps the complete refactoring workflow. The code smell taxonomy was refined to focus on more concrete, measurable issues while removing vaguer categories. Throughout the document, qualitative performance targets were replaced with quantified metrics.\\
+
+These changes collectively reflect an evolution from experimental concepts to a more focused tool, with stronger emphasis on \textbf{practical IDE integration} and user-configurable analysis.
+
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}[H]{|p{5cm}|p{2cm}|p{5cm}|p{3cm}|}
+    \hline
+    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}%
+    {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+    \hline
+    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ 
+    \hline
+    \endfoot
+    
+    \hline
+    \caption{Feedback Tracking and Implementation}
+    \label{tab:feedback_tracking}
+    \endlastfoot
+    
+    Add priority planning to phase in plan & peer & duplicates and discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issue \#136 + \#155} \\ \hline
+    Clarify meaning of FR-8 & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/137}{Issue \#137} \\ \hline
+    Clarify definition of ``lowest energy consumption'' & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/138}{Issue \#138} \\ \hline
+    Specify which software developers are considered to be shareholders and how their feedback will be used & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/140}{Issue \#140} \\ \hline
+    Explain why training requirements aren't needed for the project & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/141}{Issue \#141} \\ \hline
+    Expand more of the energy consumption dashboard & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/152}{Issue \#152} \\ \hline
+    Fix labelling for immunity requirements & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\ \hline
+    Add measurable indicators of success to security fit criterion & peer & discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\ \hline
+    Clarify amiguous FR-2 & peer & discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/154}{Issue \#154} \\ \hline
+    Create entity relationship diagram & peer & discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/156}{Issue \#156} \\ \hline
+    Add adaptability requirements & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/157}{Issue \#157} \\ \hline
+    Add symbolic constants & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/269}{Issue \#269} \\ \hline
+    Move glossary up in the document & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/270}{Issue \#270} \\ \hline
+    Reference tables and figures & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/271}{Issue \#271} \\ \hline
+    Make requirements more abstract & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/272}{Issue \#272} \\ \hline
+    Add traceability & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/273}{Issue \#273} \\ \hline
+    Make requirements less ambiguous & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/274}{Issue \#274} \\ \hline
+    Formalize document & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/275}{Issue \#275} \\ \hline
+\end{longtable}
+
 \subsection{Design and Design Documentation}
 
 \subsection{VnV Plan and Report}
@@ -89,6 +151,8 @@ the design evolve from the first version to the final version?}
 client should be part of the explanation.  For example, if you made changes in
 response to usability testing, explain what the testing found and what changes
 it led to.}
+
+
 
 \section{Design Decisions (LO12)}
 
