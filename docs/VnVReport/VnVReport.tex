@@ -2275,6 +2275,293 @@ backend modules and the vscode extension.
   TC\testcount & FR11 & Dialog closed with no response. & Cancellation message shown. & Message shown, no success triggered. & \cellcolor{green} Pass \\
 \end{longtable}
 
+\subsubsection{File Highlighter}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{File Highlighter Test Cases}
+  \label{table:file_highlighter_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, LFR-AP2 & Test creation of decorations with correct color and style. & Decorations are created with proper color and style for each smell type. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, LFR-AP2 & Test highlighting of detected smells in editor. & Smells are highlighted based on their line occurrences with correct hover content. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test initial highlighting without resetting existing decorations. & Decorations are applied and stored without affecting existing ones. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test resetting decorations before applying new ones. & Existing decorations are disposed of and new ones are properly applied. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Hover Manager}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Hover Manager Test Cases}
+  \label{table:hover_manager_tests}
+  \endlastfoot
+
+  TC\testcount & FR12 & Test registration of hover provider for Python files. & Hover provider is correctly registered for Python files. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test hover provider for non-Python files. & Returns undefined for non-Python files. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test hover provider with no cache. & Returns undefined when no cache exists. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test hover provider with non-matching line. & Returns undefined for lines without smells. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test hover provider with valid smell. & Returns hover with markdown details. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, LFR-AP1 & Test hover provider escapes markdown. & Output safely renders escaped characters. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Line Selection Manager}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Line Selection Manager Test Cases}
+  \label{table:line_selection_tests}
+  \endlastfoot
+
+  TC\testcount & FR12 & Test removal of last comment with existing decoration. & Last comment decoration is properly disposed of. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test removal of last comment with no decoration. & No action taken when no decoration exists. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with no editor. & Skips decoration when no editor is provided. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with multi-line selection. & Skips decoration for multi-line selections. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with no cached smells. & Calls removeLastComment when no smells are cached. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with mismatched line. & No decoration is added for non-matching lines. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, LFR-AP1 & Test comment line with one smell match. & Adds comment with correct smell type. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, LFR-AP1 & Test comment line with multiple smells. & Adds comment with correct smell count. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with existing decoration. & Skips redecoration of already decorated lines. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Smells Data Management}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Smells Data Management Test Cases}
+  \label{table:smells_data_management_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells from settings. & Returns all enabled smells from VS Code settings. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, UHR-PSI1 & Test empty settings case. & Returns empty object when no smells are enabled. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, UHR-EOU2 & Test smell filter updates with notifications. & Proper notification shown when enabling/disabling smells. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test cache clearing on settings update. & Cache is cleared when smell settings change. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test smell name formatting. & Correctly formats smell names from kebab-case. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Cache Initialization}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Cache Initialization Test Cases}
+  \label{table:cache_initialization_tests}
+  \endlastfoot
+
+  TC\testcount & FR10 & Test initialization of workspace cache. & Cache is properly initialized with workspace settings. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test initialization with invalid workspace. & Cache initialization fails gracefully. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test cache update on workspace change. & Cache is updated when workspace settings change. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test cache persistence across sessions. & Cache state is preserved between sessions. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test cache cleanup on extension deactivation. & Cache is properly cleared on extension deactivation. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Tracked Diff Editors}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Tracked Diff Editor Test Cases}
+  \label{table:tracked_diff_editor_tests}
+  \endlastfoot
+
+  TC\testcount & FR11, MS-MNT3 & Register diff editor with valid URIs. & Diff editor is properly tracked in the system. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Test unrelated URIs tracking. & System correctly identifies unrelated URIs as not tracked. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Verify tracked diff editor status. & System correctly identifies tracked diff editors. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Test unregistered diff editor status. & System correctly identifies unregistered diff editors. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Test case-sensitive URI comparison. & System properly handles case sensitivity in URI comparison. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Close all tracked diff editors. & All registered diff editors are properly closed. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Clear tracked editor list. & Tracked editor list is properly cleared after closing. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Handle empty tab list. & System gracefully handles case when no tabs exist. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Refactor Action Buttons}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Action Button Test Cases}
+  \label{table:refactor_button_tests}
+  \endlastfoot
+
+  TC\testcount & FR12, UHR-EOU1 & Show refactor action buttons after initialization. & Accept and Reject buttons are displayed and refactoring context is set. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-ACS2 & Hide refactor action buttons after initialization. & Buttons are hidden and context is properly cleared. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test button visibility with no active editor. & Buttons remain hidden when no editor is active. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test button state during refactoring. & Buttons show correct enabled/disabled state during refactoring. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test button actions with invalid refactoring state. & Buttons handle invalid state gracefully with appropriate messages. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
 \subsubsection{Workspace File Monitoring}
 
 \begin{longtable}{c
@@ -2634,40 +2921,6 @@ backend modules and the vscode extension.
   TC\testcount & FR11, MS-MNT 5 & Mixed file scenarios (valid, missing, outside). & Accurate logs of valid, clean, and removed files. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Refactor Action Button Controls}
-
-\begin{longtable}{c
-    >{\raggedright\arraybackslash}p{2.5cm}
-    >{\raggedright\arraybackslash}p{4.5cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endfirsthead
-
-  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endhead
-
-  \multicolumn{6}{r}{\textit{Continued on next page}} \\
-  \endfoot
-
-  \bottomrule
-  \caption{Refactor Action Button Tests}
-  \label{table:refactor_button_tests}
-  \endlastfoot
-
-  TC\testcount & FR12, UHR-EOU 1 & Call \texttt{showRefactorActionButtons()} after initialization. & Accept and Reject buttons appear; refactoring context is set to true. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-
-  TC\testcount & FR12, UHR-ACS 2 & Call \texttt{hideRefactorActionButtons()} after initialization. & Buttons are hidden and context is cleared. & All assertions pass. & \cellcolor{green} Pass \\
-\end{longtable}
-
 
 \subsubsection{Smell Configuration Management}
 
@@ -2728,51 +2981,6 @@ backend modules and the vscode extension.
   \midrule
 
   TC\testcount & FR14 & Lookup description by known message ID. & Returns correct description. & All assertions pass. & \cellcolor{green} Pass \\
-\end{longtable}
-
-\subsubsection{Tracked Diff Editor Management}
-
-\begin{longtable}{c
-    >{\raggedright\arraybackslash}p{2.8cm}
-    >{\raggedright\arraybackslash}p{4.2cm}
-    >{\raggedright\arraybackslash}p{4cm}
-    >{\raggedright\arraybackslash}p{3cm} c}
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endfirsthead
-
-  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endhead
-
-  \multicolumn{6}{r}{\textit{Continued on next page}} \\
-  \endfoot
-
-  \bottomrule
-  \caption{Diff Editor Tracking Test Cases}
-  \label{table:tracked_diff_editor_tests}
-  \endlastfoot
-
-  TC\testcount & FR11, MS-MNT 3 & Register diff editor with URIs. & Diff editor is tracked. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR11 & Check unrelated URIs are not tracked. & Returns false. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR11 & Check tracked diff editor returns true. & Returns true. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR11 & Check unregistered diff returns false. & Returns false. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR11 & Check URI comparison is case sensitive. & Uppercase URI not found. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR11 & Close all tracked diff editors. & Registered diff tabs are closed. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR11 & Clear tracked list after close. & No URIs remain tracked. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR11 & Handle case when no tabs exist. & Close is not called, no errors. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \section{Changes Due to Testing}
