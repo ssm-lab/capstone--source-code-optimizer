@@ -50,6 +50,14 @@
   \midrule
   March 8th, 2025 & All & Created initial revision of VnV Report\\
   April 3rd, 2025 & Nivetha Kuruparan & Heavily Revised VSCode Plugin Unit Tests\\
+  April 10th, 2025 & Tanveer Brar & Updated code detection and refactoring suggestion tests\\
+  April 10th, 2025 & Tanveer Brar & Updated remaining functional requirements tests\\
+  April 10th, 2025 & Tanveer Brar & Updated unit tests for plugin\\
+  April 10th, 2025 & Tanveer Brar & Added trace to requirements\\
+  April 10th, 2025 & Tanveer Brar & Added trace to modules\\
+  April 10th, 2025 & Tanveer Brar & Styling changes\\
+  April 10th, 2025 & Tanveer Brar & Updated coverage metrics with new plugin tests\\
+  April 10th, 2025 & Tanveer Brar & Addressed peer and TA feedback\\
   \bottomrule
 \end{tabularx}
 
@@ -91,7 +99,7 @@ process used to ensure the accuracy, reliability, and performance of
 our system. It details our verification approach, test cases, and
 validation results, demonstrating that the system meets its
 requirements and functions as intended. Key findings and resolutions
-are also discussed.
+are also discussed. Recent updates to this document include comprehensive code coverage metrics for the VSCode extension frontend, improved traceability to requirements and modules, detailed test case descriptions for all functional requirements, and expanded explanations of code smells detection and refactoring.
 
 \noindent For detailed information about the project requirements and test case design methodology, please refer to the Software Requirements Specification (\SRS) document and the Verification and Validation Plan (\VnVPlan). The SRS contains comprehensive definitions of all requirements referenced in this report (including functional, non-functional, and operational requirements like OER-IAS), while the VnVPlan outlines the complete testing strategy and procedures employed during verification and validation activities.
 
@@ -3323,19 +3331,10 @@ Table \ref{tab:software_decision_modules_tests} maps test cases to the software 
 
 \section{Code Coverage Metrics}
 
-The following analyzes the code coverage metrics for the Python
-backend and frontend (TypeScript) of the VSCode extension. The
-analysis is based on the coverage data provided in Figure
-\ref{img:python-cov} (Python backend) and Figure \ref{img:vscode-cov}
+The following analyzes the code coverage metrics for the TypeScript frontend of the VSCode extension. The
+analysis is based on the coverage data provided in Figure \ref{img:vscode-cov}
 (frontend). Code coverage is a measure of how well the codebase is
 tested, and it helps identify areas that may require additional testing.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{../Images/python-coverage.png}
-  \caption{Coverage Report of the Python Backend Library}
-  \label{img:python-cov}
-\end{figure}
 
 \begin{figure}[H]
   \centering
@@ -3345,10 +3344,9 @@ tested, and it helps identify areas that may require additional testing.
 \end{figure}
 
 \subsection{VSCode Extension}
-The frontend codebase has an overall coverage of 87.65\% for
-lines, 87.51\% for statements, 76.84\% for branches, and 84.34\% for functions
-(Figure \ref{img:vscode-cov}). These metrics show significant improvement from previous
-measurements, with several core modules now having complete or near-complete coverage.
+The frontend codebase has an overall coverage of 96.99\% for
+lines, 96.91\% for statements, 82.95\% for branches, and 95.09\% for functions
+(Figure \ref{img:vscode-cov}). These metrics show significant test coverage across the codebase.
 
 \noindent \textbf{Well-Tested Components:} Many critical components have excellent coverage, including:
 \begin{itemize}
@@ -3359,18 +3357,24 @@ measurements, with several core modules now having complete or near-complete cov
   \item \texttt{trackedDiffEditors.ts}: 100\% coverage across all metrics
   \item \texttt{acceptRefactoring.ts}: 100\% line coverage (87.5\% branch coverage)
   \item \texttt{refactor.ts}: 100\% line coverage (84.61\% branch coverage)
+  \item \texttt{normalizePath.ts}: 100\% coverage across all metrics
 \end{itemize}
 
 \noindent \textbf{Areas for Improvement:} The following components still require testing attention:
 \begin{itemize}
-  \item \texttt{generateSmellsReport.ts}: 0\% coverage across all metrics, as this feature is not fully implemented
-  \item \texttt{detectSmells.ts} in the detection commands directory: While having high coverage (98.76\% lines), the overall detection directory has only 52.97\% line coverage, primarily due to the untested report generation feature
-  \item \texttt{workspaceModifiedListener.ts}: 91.3\% line coverage but only 69.23\% branch coverage
-  \item Edge cases in UI components: While most UI components have good coverage, some edge cases and error conditions remain untested
+  \item \texttt{backend.ts}: 98.96\% line coverage with uncovered line 124
+  \item \texttt{configureWorkspace.ts}: 88.09\% line coverage with uncovered lines 59, 79-82, 91-94
+  \item \texttt{detectSmells.ts}: 98.76\% line coverage with uncovered line 103
+  \item \texttt{rejectRefactoring.ts}: 100\% line coverage but only 66.66\% branch coverage, with uncovered line 44
+  \item \texttt{workspaceModifiedListener.ts}: 91.3\% line coverage but only 69.23\% branch coverage, with uncovered lines 58-59, 63-64, 71, 113
+  \item \texttt{fileHighlighter.ts}: 95.08\% line coverage with uncovered lines 17-20
+  \item \texttt{lineSelectionManager.ts}: 100\% line coverage but uncovered line 52
+  \item \texttt{initializeStatusesFromCache.ts}: 97.82\% line coverage with uncovered line 96
+  \item \texttt{refactorActionButtons.ts}: 87.5\% line coverage with uncovered lines 44-47, 61-64
+  \item \texttt{smellsData.ts}: 100\% line coverage but only 62.5\% branch coverage, with uncovered lines 39, 117-120
 \end{itemize}
 
-\noindent \textbf{Future Testing:} The \texttt{generateSmellsReport.ts} module remains unimplemented and will be prioritized for implementation and testing in revision 1.
-
+\noindent \textbf{Future Testing:} While overall code coverage is excellent at 96.99\% for lines, there are still specific uncovered lines and branches in several components that should be addressed in future testing efforts. Improving branch coverage, especially in components with coverage below 70\%, should be prioritized.
 \subsection{Python Backend}
 The backend codebase has an overall coverage of 91\% (Figure
 \ref{img:python-cov}) and has been thoroughly tested as it contains
