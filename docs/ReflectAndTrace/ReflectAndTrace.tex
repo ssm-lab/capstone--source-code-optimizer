@@ -1,20 +1,42 @@
 \documentclass{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{longtable}
 
-\title{Reflection and Traceability Report on \progname}
 
-\author{\authname}
+\usepackage{xurl}
+\usepackage{enumitem}
+
+
+\title{Reflection and Traceability Report on EcoOptimizer}
+
+\author{Ayushi Amin \\ Tanveer Brar \\ Nivetha Kuruparan\\ Sevhena Walker\\ Mya Hussain}
 
 \date{}
 
 \input{../Comments}
 \input{../Common}
 
+
+
 \begin{document}
 
 \maketitle
+
+~\newpage
+
+\tableofcontents
+% This is a test line, please ignore
+
+~\newpage
+
 
 \plt{Reflection is an important component of getting the full benefits from a
 learning experience.  Besides the intrinsic benefits of reflection, this
@@ -63,15 +85,525 @@ low.}
 
 \subsection{SRS and Hazard Analysis}
 
-\subsection{Design and Design Documentation}
+\subsubsection{Software Requirement Specification Document (SRS)}
+
+The SRS underwent significant refinements based on feedback, beginning with peer suggestions to clarify ambiguous requirements including FR-2 (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/154}{Issue \#154}) and FR-8 (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/137}{Issue \#137}), with particular attention given to properly defining ``lowest energy consumption'' (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/138}{Issue \#138}) to ensure measurable outcomes. The documentation around stakeholders was enhanced to explicitly identify which software developers would be considered shareholders (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/140}{Issue \#140}), while training requirement exclusions were properly justified (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/141}{Issue \#141}). Additional details expanded the energy consumption dashboard description (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/152}{Issue \#152}), and new adaptability requirements were added (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/157}{Issue \#157}). Priority planning suggestions were reviewed but ultimately discarded as duplicates (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issues \#136 + \#155}).
+
+Teaching assistant feedback drove structural improvements including moving the glossary section (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/270}{Issue \#270}) and implementing symbolic constants (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/269}{Issue \#269}). All tables and figures were properly referenced throughout (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/271}{Issue \#271}), while requirements were made more abstract (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/272}{Issue \#272}) with improved traceability between sections (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/273}{Issue \#273}). The team formalized the document by standardizing terminology (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/274}{Issue \#274}) and reducing ambiguity in requirement wording (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/275}{Issue \#275}). Immunity requirement labeling corrections (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153}) and security metric additions were implemented, though some suggestions like creating an entity relationship diagram were ultimately discarded (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/156}{Issue \#156}).
+
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{SRS Feedback Tracking and Implementation} \label{tab:srs-feedback-tracking} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
+peer & Add priority planning to phase in plan & None, None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issue \#136 + \#155} \\
+\hline
+
+peer & Clarify meaning of FR-8 & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/137}{Issue \#137} \\
+\hline
+
+peer & Clarify definition of ``lowest energy consumption'' & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/138}{Issue \#138} \\
+\hline
+
+peer & Specify which software developers are considered to be shareholders and how their feedback will be used & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/140}{Issue \#140} \\
+\hline
+
+peer & Explain why training requirements aren't needed for the project & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/141}{Issue \#141} \\
+\hline
+
+peer & Expand more of the energy consumption dashboard & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/152}{Issue \#152} \\
+    \hline
+
+peer & Fix labelling for immunity requirements & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\
+\hline
+
+peer & Add measurable indicators of success to security fit criterion & None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\
+\hline
+
+peer & Clarify ambiguous FR-2 & None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/154}{Issue \#154} \\
+\hline
+
+peer & Create entity relationship diagram & None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/156}{Issue \#156} \\
+\hline
+
+peer & Add adaptability requirements & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/157}{Issue \#157} \\
+\hline
+
+TA & Add symbolic constants & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/269}{Issue \#269} \\
+\hline
+
+TA & Move glossary up in the document & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/270}{Issue \#270} \\
+\hline
+
+TA & Reference tables and figures & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/271}{Issue \#271} \\
+\hline
+
+TA & Make requirements more abstract & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/272}{Issue \#272} \\
+\hline
+
+TA & Add traceability & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/273}{Issue \#273} \\
+\hline
+
+TA & Make requirements less ambiguous & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/274}{Issue \#274} \\
+\hline
+
+TA & Formalize document & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/275}{Issue \#275} \\
+\hline
+\end{longtable}
+
+\subsubsection{Hazard Analysis}
+
+The hazard analysis documentation was substantially improved through multiple feedback iterations. Terminology in SCR-9 was clarified (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/185}{Issue \#185}) and hazard/requirement references were corrected (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/186}{Issue \#186}). A new unexpected system shutdown hazard was added (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/187}{Issue \#187}), while clashing hazards were addressed before some components were later removed (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/189}{Issue \#189}). Both peer and TA feedback improved FMEA table formatting (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/190}{Issue \#190} + \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/278}{Issue \#278}), and the critical assumptions section gained user/environment context (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/191}{Issue \#191}). Additional analysis covered inter-component hazards (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/192}{Issue \#192}), and reinforcement learning component actions were clarified before its removal (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/193}{Issue \#193}). Unclear assumptions were resolved (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/194}{Issue \#194}), while TA feedback ensured proper symbolic constant usage (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/277}{Issue \#277}) and component scope clarification (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/279}{Issue \#279}), though some analyzed components were later excluded during design evolution.
+
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Hazard Analysis Feedback Tracking and Implementation} \label{tab:ha-feedback-tracking} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
+peer & Clarify the terminology used in SCR 9 & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/185}{Issue \#185} \\
+    \hline
+
+peer & Fix referencing between hazards and requirements & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/186}{Issue \#186} \\
+\hline
+
+peer & Add new hazard related to unexpected system shutdown & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/187}{Issue \#187} \\
+\hline
+
+peer & Fix clashing hazards & \begin{itemize}[nosep,leftmargin=*]
+    \item Addressed initially
+    \item Component completely removed in later design iteration
+\end{itemize} & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/189}{Issue \#189} \\
+\hline
+
+peer and TA & Fix FMEA table formatting & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/190}{Issue \#190}, \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/278}{Issue \#278} \\
+\hline
+
+peer & Critical assumptions section lacks user and environment context assumptions & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/191}{Issue \#191} \\
+\hline
+
+peer & FMEA table missing analysis of inter-component hazards and failure modes & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/192}{Issue \#192} \\
+\hline
+
+peer & Unclear recommended actions point for reinforcement learning component & \begin{itemize}[nosep,leftmargin=*]
+    \item Addressed initially
+    \item Component removed in later design iteration
+\end{itemize} & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/193}{Issue \#193} \\
+\hline
+
+peer & Unclear critical assumptions & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/194}{Issue \#194} \\
+\hline
+
+TA & Need symbolic constants & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/277}{Issue \#277} \\
+\hline
+
+TA & Make clear which components are in scope & \begin{itemize}[nosep,leftmargin=*]
+    \item Addressed initially
+    \item Components removed in later iteration
+\end{itemize} & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/279}{Issue \#279} \\
+\hline
+\end{longtable}
+
+
+\subsection{MG, MIS and Development Plan}
+
+The following table details all changes made to the MIS, MG and Development Plan. \\
+
+\noindent Notable improvements include the formalization of discrete mathematical models for %
+refactoring operations (Issue \#515), abstraction of core optimization logic to work across programming languages %
+logic (Issue \#513), and consolidation of AST security modules (Issue \#510). %
+Additional enhancements focused on documentation rigour through Canadian English %
+standardization (Issue \#512), \LaTeX\ quote correction (Issue \#265), and %
+explicit risk mitigation mapping (Issue \#267). These changes collectively %
+strengthened the system's theoretical foundations while improving team %
+accountability through quantified performance metrics (Issue \#266) and %
+role definitions (Issue \#264).
+
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Feedback Responses for MIS, MG, Development Plan} \label{tab:feedback} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/515}{Issue \#515}) & 
+    MG/MIS not formalized &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added math formalizations in MG for different refactorers that lent well to a discrete math implementation
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/515}{Issue \#515} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/513}{Issue \#513}) & 
+    MIS needs abstraction &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Removed Python-specific code
+        \item Abstracted common functions
+    \end{itemize} &
+    Commits: 
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/46fbcc9}{46fbcc9},
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/d1a4506}{d1a4506} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/512}{Issue \#512}) & 
+    Spelling inconsistencies &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Updated to Canadian English
+        \item Fixed table references
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/529}{PR \#529},
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/530}{PR \#530} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/511}{Issue \#511}) & 
+    Diagram orientation issues &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Redesigned hierarchy diagrams
+        \item Standardized downward flow
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/530}{PR \#530} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/510}{Issue \#510}) & 
+    Module secret overlap &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Consolidated AST-related secrets
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/530}{PR \#530} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/267}{Issue \#267}) & 
+    Risk identification in PoC &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added explicit risk section
+        \item Mapped mitigations
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/9218c22}{9218c22} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/266}{Issue \#266}) & 
+    Vague team charter &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Defined quantitative metrics
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/663fcd3}{663fcd3} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/265}{Issue \#265}) & 
+    Incorrect LaTeX quotes &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Replaced all ``quotes''
+        \item Added linter rule
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/2572497}{2572497} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/264}{Issue \#264}) & 
+    Undefined team roles &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Assigned specific responsibilities
+        \item Created role descriptions
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/663fcd3}{663fcd3} \\
+    \hline
+    
+\end{longtable}
 
 \subsection{VnV Plan and Report}
+
+\subsubsection{VnV Plan}
+The VnV Plan underwent significant revisions based on feedback from both TAs and peers, with all addressed feedback items documented in Table~\ref{tab:vnv-feedback}. The most substantial changes involved restructuring our test plans to align with evolving requirements in the SRS (see Section~1.1 for detailed SRS modifications). As the project requirements were refined, we systematically removed obsolete test cases that no longer matched the current specifications and modified existing tests to better verify the updated functional and non-functional requirements. Particular attention was given to ensuring traceability between test cases and requirements through a revised traceability matrix. The automated testing strategy was also enhanced to accommodate new validation scenarios while maintaining comprehensive coverage of the system's core functionality.\\
+
+\noindent More information on changes made to VnV Plan can be found in this \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/528}{issue} where commits are linked.
+
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Feedback Responses for VnV Plan} \label{tab:vnv-feedback} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/222}{Issue \#222}) & 
+    Add development plan to the list of relevant documentation section &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item No changes were made. We did not reference the development plan in the vnv plan.
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/223}{Issue \#223}) & 
+    Clarification on Usability Survey Question &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Surveys were updated for the usability testing session and were moved to the Extras folder.
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/e53b27c6e3f789c699688f6be6bc8be0eb06620e}{e53b27c} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/224}{Issue \#224}) & 
+    Manual vs Automatic Test Control &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Reviewed all tests in plan to make sure whether they are automatic or manual
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/4c5acf71d8f5a05b33241a9b08d3c1c1525a57ae}{4c5acf7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/225}{Issue \#225}) & 
+    Inconsistent Formatting in Test Requirements Section &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Reviewed Test Plan and fixed all formatting
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/4c5acf71d8f5a05b33241a9b08d3c1c1525a57ae}{4c5acf7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/226}{Issue \#226}) & 
+    Unclear definition for unauthorized external modifications &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added clarity to test-SRT-3
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/d71ed8d06018c96abd1e1d932fe8687a835da713}{d71ed8d} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/227}{Issue \#227}) & 
+    Clearer acceptance criteria for maintainable and adaptable codebase &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item More clarification to these terms in provided in the Process. Will not fix.
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/238}{Issue \#238}) & 
+    Inconsistent Fields Used for Requirements &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item It didn't really make sense for static tests to share the same testing template as dynamic ones
+        \item Modified the template slightly so that all tests begin with the type field so that it is more clear that the test is static or dynamic
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/6069c72e491b164f29aeb210f09ef02a9dfd2b78}{6069c72} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/505}{Issue \#505}) & 
+    Additional Citations Needed &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added more citations
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/392d2fed426d09ca5d226ed9bf5661db71c03b45}{392d2fe} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/506}{Issue \#506}) & 
+    Fix Spelling and Format &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Re-read the documentation to fix
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/c88209079443e8c2722190a65d204b4193b426e2}{c882090} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/507}{Issue \#507}) & 
+    State How Survey Data will be Used &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added more clarification and details on how the survey data will be used in testing
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/653e7a3757dadfda6df3a3dce1aa7de512d62029}{653e7a3} \\
+    \hline
+
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/508}{Issue \#508}) & 
+    Need More Quantifiable Metrics for Usability &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added more metrics for usability in related tests
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/653e7a3757dadfda6df3a3dce1aa7de512d62029}{653e7a3} \\
+    \hline
+    
+\end{longtable}
+
+\subsubsection{VnV Report}
+
+We updated the VnV Report to address all the feedback from peers and TAs (see Table~\ref{tab:vnv-report-feedback}), but that wasn’t the only reason for the changes. Since the VnV Plan had evolved—especially with new tests and coverage metrics—we needed to sync the report with those updates. This meant adding results from the newly implemented tests, adjusting the traceability matrix, and expanding our analysis to reflect the current testing approach.\\ 
+
+\noindent Beyond just feedback fixes, we also made general improvements to the report. These included better organization of test results, clearer explanations of our methodology, and updates to match the project’s current state. Many of these unrelated tweaks were tracked in \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/531}{Issue~\#531}, which served as our central hub for report revisions.\\ 
+
+\noindent The biggest changes landed in Sections~7 and~8 (now with proper system/non-functional test coverage) and Section~9 (where we added detailed code coverage analysis). Throughout the report, we focused on keeping everything consistent with both the updated VnV Plan and the project’s actual progress.
+
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Feedback Responses for VnV Report} \label{tab:vnv-report-feedback} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/485}{Issue \#485}) & 
+    Trace to Requirements/Modules &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Duplicate issue of \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/424}{Issue \#424} and \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/423}{Issue \#423}
+        \item We have separate issues that contain these details
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/486}{Issue \#486}) & 
+    Functional Requirements Evaluation Clarity &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Report contains numerous tables that clearly indicate which tests passed or failed for each subsection, and these tables are formatted for visual clarity. No change needed
+    \end{itemize} &
+    N/A\\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/487}{Issue \#487}) & 
+    Hyperlinking to Previous Reports with the term "Code Smell" &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Code smell is a generic programming term. Added reference to the descriptions for code smells in the section.
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/1970f9dd09eec0007f0e4121992356353a52d940}{1970f9d} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/488}{Issue \#488}) & 
+    Definition of Each Code Smell &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added explanation for each code smell 
+    \end{itemize}
+    & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/23a69c71a17c7213af65fb157f7bf75cbef331ba}{23a69c7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/489}{Issue \#489}) & 
+    Missing Table Captions &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added descriptive captions
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/3786f19d94dcc60efd35a35681573bb2851c65fb}{3786f19} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/490}{Issue \#490}) & 
+    Partial in Feedback and Implementation Plan &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Completed all test feedback
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/cf39eb73bbd66b1725e1a25303fe1906b0a7cd38}{cf39eb7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/492}{Issue \#492}) & 
+    Functional requirement; specific syntax errors introduced in the test file are not mentioned &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item The Purpose of this test is to verify the system's ability to detect and handle any Python syntax error, not specific error types. Therefore, there is no need to specify the exact syntax error.
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/493}{Issue \#493}) & 
+    Clear names for sample code smell &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added clarification on extensibility
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/2118fa0bd79ad6c9e09af42395746c01b6b4c771}{2118fa0} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/494}{Issue \#494}) & 
+    Section 9: Code Coverage Metrics &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item No longer relevant as tests were implemented/updated and new coverage was updated in the report
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/41c2c837f4fcd0df130ba5d0fdac084248224494}{41c2c83} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/496}{Issue \#496}) & 
+    Refer users to SRS and VnV Plan &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added cross-reference section
+        \item Included document links
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/6989094e5c0762cf7f3becd5f69a7d91701c1c54}{6989094} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/578}{Issue \#578}) & 
+    Some tests incomplete due to features &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Marked pending tests and completed them
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/2349ee1ce6a5f635fc2c1701a1b638bf4b155521}{2349ee1} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/577}{Issue \#577}) & 
+    Spelling, grammar and style &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Proofread entire document
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/88f1f5d607ee781e9725c3d2fa78ef70782d44a8}{88f1f5d} \\
+    \hline
+    
+\end{longtable}
+
 
 \section{Challenge Level and Extras}
 
 \subsection{Challenge Level}
 
 \plt{State the challenge level (advanced, general, basic) for your project.  Your challenge level should exactly match what is included in your problem statement.  This should be the challenge level agreed on between you and the course instructor.}
+
+The challenge level for this project is \textbf{general}, as agreed upon with the course instructor.
+
+\noindent This project required integrating multiple technical components, including developing a usable VS Code extension from scratch and a Python library to detect, measure and refactor energy-inefficient code patterns.
+ While these aspects were non-trivial, the scope and complexity aligned with a general challenge level rather than advanced.
 
 \subsection{Extras}
 
@@ -80,6 +612,30 @@ can include usability testing, code walkthroughs, user documentation, formal
 proof, GenderMag personas, Design Thinking, etc.  Extras should have already
 been approved by the course instructor as included in your problem statement.}
 
+Two extras were completed as part of this project:
+
+\begin{itemize}
+    \item \textbf{User Onboarding Guide:}  
+    A detailed onboarding guide was developed and made available via the project wiki. It includes:
+    \begin{itemize}
+        \item Setup and installation instructions.
+        \item Explanation of plugin features and functionality.
+        \item Sample workflows for using the plugin.
+        \item Embedded video demonstrations to assist users visually.
+    \end{itemize}
+    The onboarding guide can be accessed \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/wiki}{here}.
+
+
+    \item \textbf{Usability Testing:}  
+    Usability testing was conducted to evaluate the effectiveness and user-friendliness of the plugin. The testing process included:
+    \begin{itemize}
+        \item Scenario-based user walkthroughs.
+        \item Survey responses measuring ease of use and satisfaction.
+        \item Identification of usability issues and areas for improvement.
+    \end{itemize}
+        A full report of the usability testing is available \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/UsabilityTestingReport.pdf}{here}.
+
+\end{itemize}
 \section{Design Iteration (LO11 (PrototypeIterate))}
 
 \plt{Explain how you arrived at your final design and implementation.  How did
@@ -90,11 +646,132 @@ client should be part of the explanation.  For example, if you made changes in
 response to usability testing, explain what the testing found and what changes
 it led to.}
 
+The design of our project underwent several significant iterations throughout its development, each driven by technical considerations, stakeholder feedback, and usability testing results. This evolution reflects our team's commitment to creating a practical solution that effectively addresses user needs while remaining technically feasible within project constraints.\\
+
+
+\noindent \textbf{Initial Project Vision}
+
+\noindent
+The project began as a Python library focused on code optimization, with supplementary components including an IDE plugin, web-based metrics visualization and a GitHub Actions that could fully integrate our library into a workflow as secondary features. Our original technical approach emphasized reinforcement learning (RL) as the core optimization mechanism, based on its potential for adaptive code improvement.\\
+
+
+\noindent \textbf{Pivotal Technical Reassessment}
+
+\noindent
+In January, a crucial meeting with our project supervisor prompted a fundamental redesign. After consultation with one of our supervisor's graduate students who provided both project feedback and a reinforcement learning primer, we collectively determined that:
+
+\begin{itemize}
+    \item The RL approach would be set aside in favour of rule-based refactoring
+    \item The IDE plugin would transition from peripheral feature to primary interface
+\end{itemize}
+
+This strategic shift was motivated by several factors:
+\begin{itemize}
+    \item The complexity and time requirements of implementing effective RL exceeded our project timeline
+    \item Rule-based refactoring offered more predictable, explainable results
+    \item Emphasizing the plugin interface would better serve our target users (developers) in their natural workflow environment
+\end{itemize}
+
+Visual Studio Code was selected as our target IDE early in the process due to its widespread adoption and robust extension capabilities.\\
+
+
+\noindent \textbf{Scope Refinement After Revision 1}
+
+\noindent
+Following our first formal review with course professors, we made the deliberate decision to remove features like a GitHub Actions and web-based metrics from our scope. This simplification allowed us to concentrate our efforts on refining functionality we already had while maintaining a realistic development timeline.\\
+
+
+\noindent \textbf{Usability-Driven Interface Improvements}
+
+\noindent
+In early March, we conducted two structured usability testing sessions that yielded valuable feedback (detailed \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/UsabilityTestingReport.pdf}{here}). These sessions revealed several key pain points and opportunities for enhancement:
+
+\begin{itemize}
+    \item \textbf{Interface Clarity}: Users struggled with sidebar visibility and button distinction, leading us to:
+    \begin{itemize}
+        \item Overhaul the sidebar completely. We went from a sidebar that only populated when a refactoring was in session to a permanent fixture that was an integral part of using accessing the extension's features.
+        \item Add features like constant smell detection.
+    \end{itemize}
+    
+    \item \textbf{User Guidance}: New users required more onboarding support, resulting in:
+    \begin{itemize}
+        \item Development of step-by-step instructions manual
+        \item Addition of progress indicators to manage expectations during refactoring
+    \end{itemize}
+    
+    \item \textbf{Customization Needs}: Users requested more personalization options, prompting us to:
+    \begin{itemize}
+        \item Implement colour customization for different smell types
+        \item Expand explanatory content about energy-saving benefits
+    \end{itemize}
+\end{itemize}
+
+
+\noindent \textbf{Final Implementation Approach}
+
+\noindent
+The current implementation reflects these iterative improvements while respecting project constraints. We prioritized changes that addressed:
+\begin{itemize}
+    \item High-frustration pain points (e.g., button visibility)
+    \item Critical usability gaps (e.g., lack of user guidance)
+    \item Valuable customization options
+    \item Clear communication of system status
+\end{itemize}
+
+This evolutionary process demonstrates our user-centred design philosophy, where technical decisions were continually evaluated against both implementation feasibility and real user needs. The result is a more focused, usable tool that maintains its core value proposition while offering an improved user experience.
+
+
 \section{Design Decisions (LO12)}
 
-\plt{Reflect and justify your design decisions.  How did limitations,
- assumptions, and constraints influence your decisions?  Discuss each of these
- separately.}
+The implementation of EcoOptimizer was shaped by technical limitations, project constraints, and core design principles. The system was built to be modular, extensible, and energy-aware, while remaining usable and performant in a local development environment.
+
+\subsection*{Architectural Decisions}
+
+\begin{itemize}
+    \item \textbf{Refactorer Design Structure:} The refactoring subsystem follows a two-level inheritance hierarchy:
+    \begin{itemize}
+        \item \texttt{BaseRefactorer} defines the interface and shared logic for all refactorers.
+        \item \texttt{MultiFileRefactorer} extends \texttt{BaseRefactorer} to support transformations across multiple files.
+        \item Concrete refactorers subclass either \texttt{BaseRefactorer} or \texttt{MultiFileRefactorer}, depending on their scope.
+    \end{itemize}
+    This structure enforces separation of concerns, encourages reusability, and makes it easy to introduce new refactorers without modifying the core system.
+\end{itemize}
+
+\subsection*{Limitations}
+
+\begin{itemize}
+    \item \textbf{Tooling Limitations for Code Smell Detection:} No single tool could detect all required smells. A strategy-based analyzer system was introduced to combine AST, Astroid, Pylint, and custom analyzers dynamically.
+    
+    \item \textbf{Energy Measurement Accuracy:} Energy readings from CodeCarbon vary with hardware and OS. To reduce variability, measurements are performed in isolated subprocesses and compared under consistent conditions.
+    
+    \item \textbf{File-Level Focus:} While most refactorings are file-scoped, limited multi-file analysis was included for smells requiring cross-file changes. 
+    
+    \item \textbf{Temporary File Refactoring:} All transformations are staged in temporary directories before applying to source files. This protects code integrity but adds complexity to file handling and rollback.
+\end{itemize}
+
+\subsection*{Assumptions}
+
+\begin{itemize}
+    \item \textbf{Valid Python Input:} The system assumes syntactically correct Python files as input to avoid expensive pre-validation routines.
+    
+    \item \textbf{Code Executability:} Energy measurement assumes the input file can be run as a standalone Python script using a main entry point.
+    
+    \item \textbf{Library Availability:} It is assumed that CodeCarbon and its dependencies are installed and operational across user systems.
+\end{itemize}
+
+\subsection*{Constraints}
+
+\begin{itemize}
+    \item \textbf{Performance Trade-offs:} Analyzer and refactorer execution was parallelized and subprocessed to preserve responsiveness, especially on large codebases.
+    
+    \item \textbf{Cross-Platform File Management:} Temporary directories and subprocess logic were adapted for compatibility across Windows (\texttt{TEMP}) and Unix-based systems (\texttt{TMPDIR}).
+    
+    \item \textbf{Security and Stability:} Refactoring operations and energy measurements are isolated to prevent modifications to user files before validation. Logging and error handling ensure graceful degradation on failures.
+    
+    \item \textbf{Ecosystem Fit:} Libraries like FastAPI, Pydantic, and CodeCarbon were selected based on open-source licensing and compatibility with modern Python development practices.
+\end{itemize}
+
+\noindent Overall, the architecture of EcoOptimizer balances security, performance and extensibility. Each design decision reflects a trade-off that prioritizes energy transparency and safe refactoring, while remaining mindful of usability and future expandability.
 
 \section{Economic Considerations (LO23)}
 
@@ -104,6 +781,78 @@ sell?  What would you charge for your product?  How many units would you have to
 sell to make money? If your product isn't something that would be sold, like an 
 open source project, how would you go about attracting users?  How many potential 
 users currently exist?}
+
+
+\subsection{Market Viability}
+There is a growing market for sustainability-focused developer tools, 
+driven by corporate Environmental, Social, and Governance (ESG) goals 
+and rising cloud computing costs. EcoOptimizer targets the 16.7 million 
+active Visual Studio Code users \cite{vscodeUsers}, 
+particularly enterprise developers and organizations seeking to reduce 
+energy consumption in code deployment. Competitors like code linters and 
+performance optimizers exist, but EcoOptimizer 
+uniquely ties refactoring 
+to CO2 reduction metrics, aligning with global net-zero initiatives.
+
+\subsection{Marketing Strategy}
+To promote EcoOptimizer, we propose:
+\begin{itemize}
+    \item \textbf{Community Engagement}: Launch on developer forums (Reddit, HackerNews, Stack Overflow) and open-source platforms (GitHub).
+    \item \textbf{Partnerships}: Collaborate with cloud providers (AWS, Google Cloud).
+    \item \textbf{Content Marketing}: Publish case studies demonstrating energy cost savings (e.g., "Reducing AWS bills by 12\% via loop optimization").
+    \item \textbf{Freemium Model}: Offer basic optimizations for free, with premium features (custom CO2 metrics, CI/CD integration) for paid tiers.
+\end{itemize}
+
+\subsection{Production Costs}  
+Developing a commercially viable version of EcoOptimizer requires strategic allocation of resources across three key areas:  
+
+\begin{itemize}  
+    \item \textbf{Further Development}: We would allocate \$20,000 to further the development 
+    of the tool and add more useful features and better security. The \$20,000 development 
+    cost reflects industry-standard freelance rates for full-stack Python/TypeScript 
+    development. At \$20/hour \cite{upwork2025rates}, this covers 1,000 hours of work.
+
+    \item \textbf{Maintenance}: Monthly costs of \$1,000 are driven primarily by cloud 
+    hosting. Using Google Cloud’s pricing calculator \cite{googlecloud2025pricing}, 
+    we estimate \$500/month for backend servers and \$300/month for API usage, with 
+    \$200 reserved for incremental updates.  
+
+    \item \textbf{Marketing}: We would allocate an initial \$5,000 for marketing 
+    that could change as more users join or time progresses.
+     The \$5,000 upfront investment aligns with HubSpot’s 
+    benchmarks for bootstrapped developer tools \cite{hubspot2025marketing}, 
+    covering SEO optimization, paid ads targeting VS Code users, and content 
+    creation for technical blogs. As we are just starting out we dont have 
+    a ton of money to dump into marketing from the start.
+
+\end{itemize}  
+
+\noindent Total first-year operational costs amount to \$37,000, positioning EcoOptimizer competitively against similar sustainability tools with higher upfront R\&D budgets.  
+
+\subsection{Pricing and Profitability}  
+EcoOptimizer adopts a \textbf{freemium model} to maximize adoption while ensuring sustainability, offering:  
+
+\begin{itemize}  
+    \item \textbf{Free Tier}: Basic code optimization (loop simplification, dead code removal)
+     to build trust and community engagement.   
+
+    \item \textbf{Individual Tier}: Priced at \$5/month or \$50/year, this \textit{paid} 
+    tier unlocks advanced features like CI/CD integration and custom CO2 dashboards. 
+    Aligns with premium VS Code extensions like \textit{CodeGPT} \cite{codeGPTPricing}.
+    To break even on the \$37,000 first-year operational costs, EcoOptimizer requires 
+    \textbf{740 annual subscribers} (\$37,000 / \$50 per user). Given VS Code’s 14M-user 
+    base \cite{vscodeUsers}, this represents just 0.0053\% of the total market—a 
+    feasible target within 12 months.
+
+    \item \textbf{Enterprise Tier}: \$1,000/year per-team licenses include priority 
+    support and multi-repo analysis, reflecting premium ESG tool pricing in the current market.
+
+\end{itemize}  
+
+\noindent Focusing solely on the Individual Tier, EcoOptimizer achieves break-even by 
+acquiring \textbf{740 annual subscribers} (\$37,000 / \$50 per user). This requires 
+converting just \textbf{0.0053\%} of VS Code’s 14M users, a highly attainable target 
+given industry benchmarks for niche developer tools.  
 
 \section{Reflection on Project Management (LO24)}
 
@@ -115,18 +864,101 @@ users currently exist?}
 team communication plan, team member roles and workflow plan.  Did you use the 
 technology you planned on using?}
 
+We largely followed our development plan regarding team meetings, communication, 
+member roles, and workflow. We adhered to our planned meeting schedule, ensuring regular 
+discussions to track progress, resolve blockers, and align our work with project goals. 
+To keep everything organized, all types of meetings were documented as issues on GitHub. 
+This allowed us to track progress effectively, link discussions to specific tasks, and 
+maintain meeting notes for future reference.
+
+Our communication plan also worked well—whether through scheduled check-ins or ad-hoc 
+discussions, we maintained a steady flow of information via our chosen platforms. Each 
+team member upheld their assigned roles, ensuring a balanced distribution of tasks. Our 
+workflow remained structured, with clear milestones and responsibilities that kept the 
+project on track. While there were some natural adjustments along the way to optimize 
+efficiency, we remained aligned with the overall plan.
+
+Regarding technology, we successfully used the tools and frameworks outlined in our 
+development plan. Our refactoring library was developed in Python, leveraging Rope for 
+refactoring, PyLint for inefficient code pattern detection, and Code Carbon for energy 
+analysis. For code quality, we enforced PEP 8 standards and used Ruff for linting and 
+Pyright for static type checking. Additionally, we incorporated PySmells for detecting 
+code smells.
+
+To ensure robust testing, we wrote unit tests using pytest, integrated with coverage.py 
+to measure code coverage. We also implemented performance benchmarking using Python’s 
+built-in benchmarking tools to measure execution time across different file sizes.
+
+For version control and CI/CD, we relied on GitHub and GitHub Actions, streamlining 
+our development process through automated testing and integration. Our VS Code plugin 
+was built using TypeScript, aligning with the VS Code architecture.
+
+Overall, we effectively used the planned technologies and tools, making only necessary 
+refinements to optimize development.
+
 \subsection{What Went Well?}
 
 \plt{What went well for your project management in terms of processes and 
 technology?}
 
+One of the biggest strengths was how we stayed organized. We used GitHub Issues to track 
+tasks, discussions, and even meeting notes, which made it easy to monitor progress and 
+ensure accountability. This approach helped keep everything transparent and well-documented.
+
+Communication was another strong point. We stuck to our planned check-ins but also had 
+the flexibility to reach out whenever needed. This balance kept things moving without 
+feeling rigid. We also made sure to follow PEP 8 coding standards and used linters, 
+which kept our code consistent and easy to read.
+
+The tools we used made a big difference in keeping things smooth. GitHub Actions handled 
+our automated testing and integration, so we didn’t have to worry about manually running 
+tests every time. PyTest and Coverage.py helped us stay on top of testing, while Ruff and 
+PyLint made sure our code was clean and error-free.
+
+For the actual project, Code Carbon gave us energy consumption insights (even if it 
+wasn’t always perfectly accurate), and Rope made refactoring much easier, saving us a lot of time.
+
+Overall, the combination of good teamwork, clear processes, and the right tools kept us 
+organized and made development a lot more efficient.
+
 \subsection{What Went Wrong?}
 
 \plt{What went wrong in terms of processes and technology?}
 
+One of the main challenges we faced in the project was moving away from using 
+reinforcement learning. Initially, it seemed like a great way to optimize energy 
+consumption, but as we decided not to use it, the direction of the project had to 
+shift. This required us to adjust our approach, which took time and created some 
+uncertainty within the team. Keeping everyone aligned and maintaining clear 
+communication was essential during this transition, especially as we explored 
+alternative methods to achieve our goals.
+
+On the technology side, developing the refactoring library itself turned out to 
+be more complicated than we initially anticipated. Creating a tool that could not 
+only identify energy-saving opportunities but also refactor the code while preserving 
+its intent was a delicate balance. Working with Python's unique performance and 
+dynamic features added another layer of complexity. Despite these challenges, they 
+provided valuable learning experiences that have shaped how we approach the project now.
+
 \subsection{What Would you Do Differently Next Time?}
 
 \plt{What will you do differently for your next project?}
+
+For our next project, one thing we’d do differently is spend more time upfront 
+validating the technical approach before diving into development. With the shift 
+away from reinforcement learning, we had to make adjustments mid-way through, which 
+slowed down progress. In the future, we’d prioritize a more thorough exploration of 
+different technologies and approaches early on to avoid these kinds of pivots. We’d 
+also make sure to keep a closer eye on scope to prevent unnecessary shifts that could 
+affect the timeline.
+
+Additionally, we’d focus on improving team coordination from the start, ensuring that 
+everyone is aligned not just on the technical goals but also on the project’s overall 
+direction. Regular, structured check-ins would be helpful to track progress and address 
+roadblocks quickly. On the technical side, we would invest more time in setting up a robust
+DevOps pipeline earlier in the process, ensuring that continuous integration and testing are 
+seamless from the beginning. Overall, we believe these changes would help streamline both the 
+technical and team dynamics for a smoother project experience.
 
 \section{Reflection on Capstone}
 
@@ -135,10 +967,100 @@ technology?}
 \subsection{Which Courses Were Relevant}
 
 \plt{Which of the courses you have taken were relevant for the capstone project?}
+Several courses we’ve taken were highly relevant to our capstone project:
+
+\begin{itemize}
+    \item \textbf{Software Architecture}: This course gave us a solid foundation in designing 
+    scalable, maintainable, and efficient software systems, which was essential when building 
+    the refactoring library and ensuring the overall structure of our tool was optimal.
+    
+    \item \textbf{Data Structures and Algorithms}: The principles from this course helped us 
+    design more efficient algorithms for analyzing and refactoring source code to optimize 
+    energy consumption. Understanding how to work with data structures effectively was key 
+    in handling different code patterns and optimization techniques.
+    
+    \item \textbf{Database Systems}: Although we didn’t directly deal with complex databases 
+    in the capstone, understanding how to efficiently manage and query large datasets was 
+    useful when we considered tracking energy usage metrics or managing configurations within 
+    the system.
+    
+    \item \textbf{Real-Time Systems and Control Applications}: This course provided insights 
+    into managing time-sensitive tasks and the real-time performance of systems, which was 
+    helpful when considering the energy optimization of software execution, particularly in 
+    the context of how different coding choices could impact performance in real-time.
+
+    \item \textbf{Intro to Software Development}: This course was crucial for learning best 
+    practices in documentation and understanding design patterns, which helped us structure 
+    our code and communicate our approach effectively throughout the project.
+    
+    \item \textbf{Object-Oriented Programming}: The concepts from this course were directly 
+    applied when designing our system, especially when managing the relationships between the 
+    different components of our refactoring library.
+    
+    \item \textbf{Human Computer Interfaces}: This course helped us a lot with usability testing 
+    and designing the frontend of our tool in VS Code, ensuring that it was user-friendly and 
+    intuitive for anyone using the software.
+    
+    \item \textbf{Software Engineering Practice and Experience: Binding Theory to Practice}: This 
+    course was instrumental in teaching us how to approach open-ended design problems and apply 
+    both theoretical and practical knowledge to real-world scenarios. It was particularly helpful 
+    in guiding us through the experiential approach to solving computational problems, especially 
+    when considering embedded systems and assembly programming.
+    
+\end{itemize}
+
+These courses equipped us with the necessary technical background to approach the project’s 
+challenges, from system design to algorithm optimization, and they directly informed the decisions 
+we made while building the energy optimization tool.
 
 \subsection{Knowledge/Skills Outside of Courses}
 
 \plt{What skills/knowledge did you need to acquire for your capstone project
 that was outside of the courses you took?}
+
+For our capstone project, we had to acquire several skills and knowledge areas that were not directly 
+covered in our coursework:
+
+\begin{itemize}
+    \item \textbf{Energy-Efficient Software Development}: We had to research and understand techniques 
+    for reducing energy consumption in software, including best practices for writing energy-efficient 
+    code and tools for measuring energy usage.
+    
+    \item \textbf{Static Code Analysis}: Since our project involved analyzing and refactoring code, 
+    we had to learn about static analysis techniques and how to extract meaningful insights from 
+    source code without executing it.
+    
+    \item \textbf{Refactoring Strategies for Energy Optimization}: While we had learned about code 
+    refactoring in some courses, optimizing for energy efficiency was a new challenge. We had to 
+    explore strategies that improve performance while minimizing power consumption.
+    
+    \item \textbf{GitHub DevOps and CI/CD Pipelines}: Although we had experience with version control,
+    setting up automated testing and continuous integration workflows in GitHub required additional 
+    learning.
+    
+    \item \textbf{VS Code Extension Development}: Since our tool was designed to work within VS Code, 
+    we had to learn how to develop and integrate extensions, which was not covered in our coursework.
+    
+    \item \textbf{User Research and Usability Testing}: While our Human-Computer Interfaces course 
+    covered usability principles, we had to go deeper into conducting user research, gathering 
+    feedback, and refining our tool's user experience.
+    
+    \item \textbf{Performance Profiling and Benchmarking}: Measuring the energy impact of different 
+    coding techniques required us to explore profiling tools and benchmarking methods to ensure our 
+    refactorings were actually improving efficiency.
+    
+    \item \textbf{Advanced Python Optimization Techniques}: Since our refactoring library is 
+    Python-based, we needed to learn about Python-specific optimizations, including memory management, 
+    just-in-time compilation techniques, and efficient data structures.
+\end{itemize}
+
+These additional skills allowed us to successfully design and implement our energy optimization tool, 
+bridging the gap between our academic knowledge and the real-world challenges of software efficiency. 
+
+
+~\newpage
+
+\bibliographystyle{plainnat}
+\bibliography{../../refs/References}
 
 \end{document}
