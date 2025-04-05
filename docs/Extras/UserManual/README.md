@@ -1,0 +1,1 @@
+The user manual for our system can be found [here](https://github.com/ssm-lab/capstone--sco-vs-code-plugin/wiki)

@@ -50,4 +50,3 @@ This directory contains the Visual Studio Code plugin implementation for the Sou
 1. From VS Code Marketplace:
    - Search for "Source Code Optimizer"
    - Click Install
-
