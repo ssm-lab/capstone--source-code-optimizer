@@ -192,7 +192,7 @@ The following table details all changes made to the MIS, MG and Development Plan
 Notable improvements include the formalization of discrete mathematical models for %
 refactoring operations (Issue \#515), abstraction of core optimization logic to work across programming languages %
 logic (Issue \#513), and consolidation of AST security modules (Issue \#510). %
-Additional enhancements focused on documentation rigor through Canadian English %
+Additional enhancements focused on documentation rigour through Canadian English %
 standardization (Issue \#512), \LaTeX\ quote correction (Issue \#265), and %
 explicit risk mitigation mapping (Issue \#267). These changes collectively %
 strengthened the system's theoretical foundations while improving team %
@@ -327,6 +327,79 @@ client should be part of the explanation.  For example, if you made changes in
 response to usability testing, explain what the testing found and what changes
 it led to.}
 
+The design of our project underwent several significant iterations throughout its development, each driven by technical considerations, stakeholder feedback, and usability testing results. This evolution reflects our team's commitment to creating a practical solution that effectively addresses user needs while remaining technically feasible within project constraints.\\
+
+
+\noindent \textbf{Initial Project Vision}
+
+\noindent
+The project began as a Python library focused on code optimization, with supplementary components including an IDE plugin, web-based metrics visualization and a GitHub Actions that could fully integrate our library into a workflow as secondary features. Our original technical approach emphasized reinforcement learning (RL) as the core optimization mechanism, based on its potential for adaptive code improvement.\\
+
+
+\noindent \textbf{Pivotal Technical Reassessment}
+
+\noindent
+In January, a crucial meeting with our project supervisor prompted a fundamental redesign. After consultation with one of our supervisor's graduate students who provided both project feedback and a reinforcement learning primer, we collectively determined that:
+
+\begin{itemize}
+    \item The RL approach would be set aside in favour of rule-based refactoring
+    \item The IDE plugin would transition from peripheral feature to primary interface
+\end{itemize}
+
+This strategic shift was motivated by several factors:
+\begin{itemize}
+    \item The complexity and time requirements of implementing effective RL exceeded our project timeline
+    \item Rule-based refactoring offered more predictable, explainable results
+    \item Emphasizing the plugin interface would better serve our target users (developers) in their natural workflow environment
+\end{itemize}
+
+Visual Studio Code was selected as our target IDE early in the process due to its widespread adoption and robust extension capabilities.\\
+
+
+\noindent \textbf{Scope Refinement After Revision 1}
+
+\noindent
+Following our first formal review with course professors, we made the deliberate decision to remove features like a GitHub Actions and web-based metrics from our scope. This simplification allowed us to concentrate our efforts on refining functionality we already had while maintaining a realistic development timeline.\\
+
+
+\noindent \textbf{Usability-Driven Interface Improvements}
+
+\noindent
+In early March, we conducted two structured usability testing sessions that yielded valuable feedback (detailed \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/UsabilityTestingReport.pdf}{here}). These sessions revealed several key pain points and opportunities for enhancement:
+
+\begin{itemize}
+    \item \textbf{Interface Clarity}: Users struggled with sidebar visibility and button distinction, leading us to:
+    \begin{itemize}
+        \item Overhaul the sidebar completely. We went from a sidebar that only populated when a refactoring was in session to a permanent fixture that was an integral part of using accessing the extension's features.
+        \item Add features like constant smell detection.
+    \end{itemize}
+    
+    \item \textbf{User Guidance}: New users required more onboarding support, resulting in:
+    \begin{itemize}
+        \item Development of step-by-step instructions manual
+        \item Addition of progress indicators to manage expectations during refactoring
+    \end{itemize}
+    
+    \item \textbf{Customization Needs}: Users requested more personalization options, prompting us to:
+    \begin{itemize}
+        \item Implement colour customization for different smell types
+        \item Expand explanatory content about energy-saving benefits
+    \end{itemize}
+\end{itemize}
+
+
+\noindent \textbf{Final Implementation Approach}
+
+\noindent
+The current implementation reflects these iterative improvements while respecting project constraints. We prioritized changes that addressed:
+\begin{itemize}
+    \item High-frustration pain points (e.g., button visibility)
+    \item Critical usability gaps (e.g., lack of user guidance)
+    \item Valuable customization options
+    \item Clear communication of system status
+\end{itemize}
+
+This evolutionary process demonstrates our user-centred design philosophy, where technical decisions were continually evaluated against both implementation feasibility and real user needs. The result is a more focused, usable tool that maintains its core value proposition while offering an improved user experience.
 
 
 \section{Design Decisions (LO12)}
@@ -618,8 +691,5 @@ covered in our coursework:
 
 These additional skills allowed us to successfully design and implement our energy optimization tool, 
 bridging the gap between our academic knowledge and the real-world challenges of software efficiency. 
-
-\bibliographystyle{plainnat}
-\bibliography{../../refs/References}
 
 \end{document}
