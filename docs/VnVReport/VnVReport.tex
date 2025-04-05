@@ -3306,30 +3306,31 @@ tested, and it helps identify areas that may require additional testing.
 \end{figure}
 
 \subsection{VSCode Extension}
-The frontend codebase has an overall coverage of 45.43\% for
-statements, 36.48\% for branches, 42.62\% for functions, and 45.53\%
-for lines (Figure \ref{img:vscode-cov}). These metrics fall below the
-global coverage thresholds of 80\% for the following reasons.
+The frontend codebase has an overall coverage of 87.65\% for
+lines, 87.51\% for statements, 76.84\% for branches, and 84.34\% for functions
+(Figure \ref{img:vscode-cov}). These metrics show significant improvement from previous
+measurements, with several core modules now having complete or near-complete coverage.
 
-\noindent \textbf{Extension Core Logic:} The
-file \texttt{extension.ts}, which contains the core logic for the
-VSCode extension, has 0\% coverage as it is mainly made up of
-initialization commands with no real logic that can be tested.
+\noindent \textbf{Well-Tested Components:} Many critical components have excellent coverage, including:
+\begin{itemize}
+  \item \texttt{resetConfiguration.ts}: 100\% coverage across all metrics
+  \item \texttt{wipeWorkCache.ts}: 100\% coverage across all metrics
+  \item \texttt{hoverManager.ts}: 100\% coverage across all metrics
+  \item \texttt{exportMetricsData.ts}: 100\% coverage across all metrics
+  \item \texttt{trackedDiffEditors.ts}: 100\% coverage across all metrics
+  \item \texttt{acceptRefactoring.ts}: 100\% line coverage (87.5\% branch coverage)
+  \item \texttt{refactor.ts}: 100\% line coverage (84.61\% branch coverage)
+\end{itemize}
 
-\noindent \textbf{UI Components:} The
-file \texttt{refactorView.ts}, responsible for the refactoring view,
-also has 0\% coverage. This module is a UI component and will be
-tested for revision 1. Since \texttt{handleEditorChange.ts} is
-closely related to the UI component, its testing has also been put off.\\
+\noindent \textbf{Areas for Improvement:} The following components still require testing attention:
+\begin{itemize}
+  \item \texttt{generateSmellsReport.ts}: 0\% coverage across all metrics, as this feature is not fully implemented
+  \item \texttt{detectSmells.ts} in the detection commands directory: While having high coverage (98.76\% lines), the overall detection directory has only 52.97\% line coverage, primarily due to the untested report generation feature
+  \item \texttt{workspaceModifiedListener.ts}: 91.3\% line coverage but only 69.23\% branch coverage
+  \item Edge cases in UI components: While most UI components have good coverage, some edge cases and error conditions remain untested
+\end{itemize}
 
-\noindent \textbf{Partial Coverage:} The file \texttt{refactorSmell.ts} has moderate coverage (55.37\%
-statements, 45.23\% branches), with significant gaps in testing
-around lines 143–269 and 328–337 (Figure \ref{img:vscode-cov}). This
-is due to a feature that is not fully implemented and therefore not
-tested. 
-
-\noindent \textbf{Future Testing:} \texttt{configManager.ts} has not been tested as yet
-due to evolving configuration options, but will be tested for revision 1.
+\noindent \textbf{Future Testing:} The \texttt{generateSmellsReport.ts} module remains unimplemented and will be prioritized for implementation and testing in revision 1.
 
 \subsection{Python Backend}
 The backend codebase has an overall coverage of 91\% (Figure
