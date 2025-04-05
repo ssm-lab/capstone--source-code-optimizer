@@ -98,19 +98,19 @@ Teaching assistant feedback drove structural improvements including moving the g
     \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endfirsthead
-
+    
     \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
     \hline
     \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endhead
-
+    
     \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
     \endfoot
-
+    
     \hline
     \endlastfoot
-
+    
 peer & Add priority planning to phase in plan & None, None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issue \#136 + \#155} \\
 \hline
 
@@ -127,7 +127,7 @@ peer & Explain why training requirements aren't needed for the project & address
 \hline
 
 peer & Expand more of the energy consumption dashboard & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/152}{Issue \#152} \\
-\hline
+    \hline
 
 peer & Fix labelling for immunity requirements & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\
 \hline
@@ -176,21 +176,21 @@ The hazard analysis documentation was substantially improved through multiple fe
     \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endfirsthead
-
+    
     \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
     \hline
     \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endhead
-
+    
     \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
     \endfoot
-
+    
     \hline
     \endlastfoot
-
+    
 peer & Clarify the terminology used in SCR 9 & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/185}{Issue \#185} \\
-\hline
+    \hline
 
 peer & Fix referencing between hazards and requirements & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/186}{Issue \#186} \\
 \hline
@@ -351,6 +351,7 @@ role definitions (Issue \#264).
 
 \subsection{VnV Plan and Report}
 
+\subsubsection{VnV Plan}
 The VnV Plan underwent significant revisions based on feedback from both TAs and peers, with all addressed feedback items documented in Table~\ref{tab:vnv-feedback}. The most substantial changes involved restructuring our test plans to align with evolving requirements in the SRS (see Section~1.1 for detailed SRS modifications). As the project requirements were refined, we systematically removed obsolete test cases that no longer matched the current specifications and modified existing tests to better verify the updated functional and non-functional requirements. Particular attention was given to ensuring traceability between test cases and requirements through a revised traceability matrix. The automated testing strategy was also enhanced to accommodate new validation scenarios while maintaining comprehensive coverage of the system's core functionality.\\
 
 \noindent More information on changes made to VnV Plan can be found in this \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/528}{issue} where commits are linked.
@@ -461,6 +462,133 @@ The VnV Plan underwent significant revisions based on feedback from both TAs and
         \item Added more metrics for usability in related tests
     \end{itemize} &
     \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/653e7a3757dadfda6df3a3dce1aa7de512d62029}{653e7a3} \\
+    \hline
+    
+\end{longtable}
+
+\subsubsection{VnV Report}
+
+We updated the VnV Report to address all the feedback from peers and TAs (see Table~\ref{tab:vnv-report-feedback}), but that wasn’t the only reason for the changes. Since the VnV Plan had evolved—especially with new tests and coverage metrics—we needed to sync the report with those updates. This meant adding results from the newly implemented tests, adjusting the traceability matrix, and expanding our analysis to reflect the current testing approach.\\ 
+
+\noindent Beyond just feedback fixes, we also made general improvements to the report. These included better organization of test results, clearer explanations of our methodology, and updates to match the project’s current state. Many of these unrelated tweaks were tracked in \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/531}{Issue~\#531}, which served as our central hub for report revisions.\\ 
+
+\noindent The biggest changes landed in Sections~7 and~8 (now with proper system/non-functional test coverage) and Section~9 (where we added detailed code coverage analysis). Throughout the report, we focused on keeping everything consistent with both the updated VnV Plan and the project’s actual progress.
+
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Feedback Responses for VnV Report} \label{tab:vnv-report-feedback} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/485}{Issue \#485}) & 
+    Trace to Requirements/Modules &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Duplicate issue of \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/424}{Issue \#424} and \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/423}{Issue \#423}
+        \item We have separate issues that contain these details
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/486}{Issue \#486}) & 
+    Functional Requirements Evaluation Clarity &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Report contains numerous tables that clearly indicate which tests passed or failed for each subsection, and these tables are formatted for visual clarity. No change needed
+    \end{itemize} &
+    N/A\\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/487}{Issue \#487}) & 
+    Hyperlinking to Previous Reports with the term "Code Smell" &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Code smell is a generic programming term. Added reference to the descriptions for code smells in the section.
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/1970f9dd09eec0007f0e4121992356353a52d940}{1970f9d} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/488}{Issue \#488}) & 
+    Definition of Each Code Smell &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added explanation for each code smell 
+    \end{itemize}
+    & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/23a69c71a17c7213af65fb157f7bf75cbef331ba}{23a69c7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/489}{Issue \#489}) & 
+    Missing Table Captions &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added descriptive captions
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/3786f19d94dcc60efd35a35681573bb2851c65fb}{3786f19} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/490}{Issue \#490}) & 
+    Partial in Feedback and Implementation Plan &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Completed all test feedback
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/cf39eb73bbd66b1725e1a25303fe1906b0a7cd38}{cf39eb7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/492}{Issue \#492}) & 
+    Functional requirement; specific syntax errors introduced in the test file are not mentioned &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item The Purpose of this test is to verify the system's ability to detect and handle any Python syntax error, not specific error types. Therefore, there is no need to specify the exact syntax error.
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/493}{Issue \#493}) & 
+    Clear names for sample code smell &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added clarification on extensibility
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/2118fa0bd79ad6c9e09af42395746c01b6b4c771}{2118fa0} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/494}{Issue \#494}) & 
+    Section 9: Code Coverage Metrics &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item No longer relevant as tests were implemented/updated and new coverage was updated in the report
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/41c2c837f4fcd0df130ba5d0fdac084248224494}{41c2c83} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/496}{Issue \#496}) & 
+    Refer users to SRS and VnV Plan &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added cross-reference section
+        \item Included document links
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/6989094e5c0762cf7f3becd5f69a7d91701c1c54}{6989094} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/578}{Issue \#578}) & 
+    Some tests incomplete due to features &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Marked pending tests and completed them
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/2349ee1ce6a5f635fc2c1701a1b638bf4b155521}{2349ee1} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/577}{Issue \#577}) & 
+    Spelling, grammar and style &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Proofread entire document
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/88f1f5d607ee781e9725c3d2fa78ef70782d44a8}{88f1f5d} \\
     \hline
     
 \end{longtable}
