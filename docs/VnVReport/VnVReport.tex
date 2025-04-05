@@ -894,6 +894,39 @@ Table \ref{table:refactor_endpoint_tests} outlines the test cases for the refact
   TC\testcount & FR10, OER-IAS1 & Unexpected error occurs during
   refactoring. & Status code is 400. Error message contains the
   exception details. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor all smells
+  of a type successfully. & Status code is 200. Response contains
+  refactored data, energy saved, and affected files. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor multiple
+  smells of the same type. & Status code is 200. Response contains
+  accumulated energy savings from all smells refactored. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Initial energy measurement fails for
+  refactor-by-type endpoint. & Status code is 400. Error message indicates
+  emissions could not be retrieved. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor all smells
+  of a type with nonexistent source directory. & Status code is 404. Error message indicates
+  folder not found. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Refactoring error occurs during
+  refactor-by-type. & Status code is 500. Error message contains details
+  about the refactoring failure. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & No energy is saved after refactor-by-type
+  operation. & Status code is 400. Error message indicates energy
+  was not saved. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Perform refactoring in a new temporary
+  directory and validate output. & Temporary directory is created, source is
+  copied, smell is refactored, and energy is measured. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Perform refactoring in an existing
+  temporary directory. & Uses existing directory, performs refactoring, and
+  measures energy without creating new copy. & All assertions pass. &
+  \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsection{Analyzer Controller Module}
@@ -1017,6 +1050,24 @@ The following test cases in Table \ref{table:measurement_tests} were executed to
   \texttt{file path} does not exist.'' should be logged.The function
   should return \texttt{None} since the file does not exist. & All
   assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & PR-RFT1 & Handle unexpected return types from 
+  CodeCarbon emissions tracker. & If the tracker returns a non-float
+  value (e.g., string), a warning should be logged with message
+  ``Unexpected emissions type''. Emissions value should be set to
+  \texttt{None}. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & PR-RFT1 & Handle NaN return values from CodeCarbon
+  emissions tracker. & If the tracker returns NaN, a warning should
+  be logged with message ``Unexpected emissions type''. Emissions
+  value should be set to \texttt{None}. & All assertions pass. &
+  \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & PR-RFT1 & Handle missing emissions file after
+  measurement. & If the emissions CSV file does not exist after 
+  tracking, an error message ``Emissions file missing - measurement
+  failed'' should be logged. Emissions\_data should be \texttt{None}. &
+  All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsection{Smell Analyzers}
