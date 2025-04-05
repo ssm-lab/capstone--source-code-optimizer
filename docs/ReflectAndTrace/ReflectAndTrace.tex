@@ -233,11 +233,11 @@ TA & Make clear which components are in scope & \begin{itemize}[nosep,leftmargin
 \end{longtable}
 
 
-\subsection{MG, MIS and Development PLan}
+\subsection{MG, MIS and Development Plan}
 
 The following table details all changes made to the MIS, MG and Development Plan. \\
 
-Notable improvements include the formalization of discrete mathematical models for %
+\noindent Notable improvements include the formalization of discrete mathematical models for %
 refactoring operations (Issue \#515), abstraction of core optimization logic to work across programming languages %
 logic (Issue \#513), and consolidation of AST security modules (Issue \#510). %
 Additional enhancements focused on documentation rigour through Canadian English %
@@ -350,7 +350,121 @@ role definitions (Issue \#264).
 \end{longtable}
 
 \subsection{VnV Plan and Report}
-something
+
+The VnV Plan underwent significant revisions based on feedback from both TAs and peers, with all addressed feedback items documented in Table~\ref{tab:vnv-feedback}. The most substantial changes involved restructuring our test plans to align with evolving requirements in the SRS (see Section~1.1 for detailed SRS modifications). As the project requirements were refined, we systematically removed obsolete test cases that no longer matched the current specifications and modified existing tests to better verify the updated functional and non-functional requirements. Particular attention was given to ensuring traceability between test cases and requirements through a revised traceability matrix. The automated testing strategy was also enhanced to accommodate new validation scenarios while maintaining comprehensive coverage of the system's core functionality.\\
+
+\noindent More information on changes made to VnV Plan can be found in this \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/528}{issue} where commits are linked.
+
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Feedback Responses for VnV Plan} \label{tab:vnv-feedback} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endfirsthead
+    
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
+    \hline
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
+    \hline
+    \endhead
+    
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
+    \endfoot
+    
+    \hline
+    \endlastfoot
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/222}{Issue \#222}) & 
+    Add development plan to the list of relevant documentation section &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item No changes were made. We did not reference the development plan in the vnv plan.
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/223}{Issue \#223}) & 
+    Clarification on Usability Survey Question &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Surveys were updated for the usability testing session and were moved to the Extras folder.
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/e53b27c6e3f789c699688f6be6bc8be0eb06620e}{e53b27c} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/224}{Issue \#224}) & 
+    Manual vs Automatic Test Control &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Reviewed all tests in plan to make sure whether they are automatic or manual
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/4c5acf71d8f5a05b33241a9b08d3c1c1525a57ae}{4c5acf7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/225}{Issue \#225}) & 
+    Inconsistent Formatting in Test Requirements Section &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Reviewed Test Plan and fixed all formatting
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/4c5acf71d8f5a05b33241a9b08d3c1c1525a57ae}{4c5acf7} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/226}{Issue \#226}) & 
+    Unclear definition for unauthorized external modifications &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added clarity to test-SRT-3
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/d71ed8d06018c96abd1e1d932fe8687a835da713}{d71ed8d} \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/227}{Issue \#227}) & 
+    Clearer acceptance criteria for maintainable and adaptable codebase &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item More clarification to these terms in provided in the Process. Will not fix.
+    \end{itemize} &
+    N/A \\
+    \hline
+    
+    Peer (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/238}{Issue \#238}) & 
+    Inconsistent Fields Used for Requirements &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item It didn't really make sense for static tests to share the same testing template as dynamic ones
+        \item Modified the template slightly so that all tests begin with the type field so that it is more clear that the test is static or dynamic
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/6069c72e491b164f29aeb210f09ef02a9dfd2b78}{6069c72} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/505}{Issue \#505}) & 
+    Additional Citations Needed &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added more citations
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/392d2fed426d09ca5d226ed9bf5661db71c03b45}{392d2fe} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/506}{Issue \#506}) & 
+    Fix Spelling and Format &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Re-read the documentation to fix
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/c88209079443e8c2722190a65d204b4193b426e2}{c882090} \\
+    \hline
+    
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/507}{Issue \#507}) & 
+    State How Survey Data will be Used &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added more clarification and details on how the survey data will be used in testing
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/653e7a3757dadfda6df3a3dce1aa7de512d62029}{653e7a3} \\
+    \hline
+
+    TA (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/508}{Issue \#508}) & 
+    Need More Quantifiable Metrics for Usability &
+    \begin{itemize}[nosep,leftmargin=*]
+        \item Added more metrics for usability in related tests
+    \end{itemize} &
+    \href{https://github.com/ssm-lab/capstone--source-code-optimizer/commit/653e7a3757dadfda6df3a3dce1aa7de512d62029}{653e7a3} \\
+    \hline
+    
+\end{longtable}
+
 
 \section{Challenge Level and Extras}
 
@@ -481,9 +595,55 @@ This evolutionary process demonstrates our user-centred design philosophy, where
 
 \section{Design Decisions (LO12)}
 
-\plt{Reflect and justify your design decisions.  How did limitations,
- assumptions, and constraints influence your decisions?  Discuss each of these
- separately.}
+The implementation of EcoOptimizer was shaped by technical limitations, project constraints, and core design principles. The system was built to be modular, extensible, and energy-aware, while remaining usable and performant in a local development environment.
+
+\subsection*{Architectural Decisions}
+
+\begin{itemize}
+    \item \textbf{Refactorer Design Structure:} The refactoring subsystem follows a two-level inheritance hierarchy:
+    \begin{itemize}
+        \item \texttt{BaseRefactorer} defines the interface and shared logic for all refactorers.
+        \item \texttt{MultiFileRefactorer} extends \texttt{BaseRefactorer} to support transformations across multiple files.
+        \item Concrete refactorers subclass either \texttt{BaseRefactorer} or \texttt{MultiFileRefactorer}, depending on their scope.
+    \end{itemize}
+    This structure enforces separation of concerns, encourages reusability, and makes it easy to introduce new refactorers without modifying the core system.
+\end{itemize}
+
+\subsection*{Limitations}
+
+\begin{itemize}
+    \item \textbf{Tooling Limitations for Code Smell Detection:} No single tool could detect all required smells. A strategy-based analyzer system was introduced to combine AST, Astroid, Pylint, and custom analyzers dynamically.
+    
+    \item \textbf{Energy Measurement Accuracy:} Energy readings from CodeCarbon vary with hardware and OS. To reduce variability, measurements are performed in isolated subprocesses and compared under consistent conditions.
+    
+    \item \textbf{File-Level Focus:} While most refactorings are file-scoped, limited multi-file analysis was included for smells requiring cross-file changes. 
+    
+    \item \textbf{Temporary File Refactoring:} All transformations are staged in temporary directories before applying to source files. This protects code integrity but adds complexity to file handling and rollback.
+\end{itemize}
+
+\subsection*{Assumptions}
+
+\begin{itemize}
+    \item \textbf{Valid Python Input:} The system assumes syntactically correct Python files as input to avoid expensive pre-validation routines.
+    
+    \item \textbf{Code Executability:} Energy measurement assumes the input file can be run as a standalone Python script using a main entry point.
+    
+    \item \textbf{Library Availability:} It is assumed that CodeCarbon and its dependencies are installed and operational across user systems.
+\end{itemize}
+
+\subsection*{Constraints}
+
+\begin{itemize}
+    \item \textbf{Performance Trade-offs:} Analyzer and refactorer execution was parallelized and subprocessed to preserve responsiveness, especially on large codebases.
+    
+    \item \textbf{Cross-Platform File Management:} Temporary directories and subprocess logic were adapted for compatibility across Windows (\texttt{TEMP}) and Unix-based systems (\texttt{TMPDIR}).
+    
+    \item \textbf{Security and Stability:} Refactoring operations and energy measurements are isolated to prevent modifications to user files before validation. Logging and error handling ensure graceful degradation on failures.
+    
+    \item \textbf{Ecosystem Fit:} Libraries like FastAPI, Pydantic, and CodeCarbon were selected based on open-source licensing and compatibility with modern Python development practices.
+\end{itemize}
+
+\noindent Overall, the architecture of EcoOptimizer balances security, performance and extensibility. Each design decision reflects a trade-off that prioritizes energy transparency and safe refactoring, while remaining mindful of usability and future expandability.
 
 \section{Economic Considerations (LO23)}
 
