@@ -1,32 +1,60 @@
-<Please keep the folder structure as given in the template repo.  We will
-discuss each artifact as we get to it in the course.  In some cases, like for
-the SRS, you should have a file of the same name.  For other cases, like the
-design documentation, you are required to document your design, but it may not
-be via a module guide and module interface specification documents.>
+# Documentation Directory
 
-<The files and folders have been set-up with tex files that have external links
-so that cross-referencing is possible between documents.>
+This directory contains all project documentation for the Source Code Optimizer project, including requirements, design documents, plans, and other project artifacts.
 
-<The tex files Common.tex so that they can share definitions.>
+## Directory Contents
 
-<The files use Comments.tex so that the comments package can be used to embed
-comments into the generated pdf.  Comments can be set to false so that they do
-not appear.>
+### Files
+- `README.md` - Documentation overview
+- `Makefile` - Build configuration for documentation generation
+- `Common.tex` - Shared LaTeX definitions and configurations
+- `Comments.tex` - Comments package configuration for documentation
+- `Reflection.tex` - Template for reflection documents
 
-<None of the files are complete templates.  You will need to add extra
-information.  They are just intended to be a starting point.>
+### Directories
+- `Checklists/` - Quality assurance and review checklists
+- `Design/` - System design documentation and architecture
+- `DevelopmentPlan/` - Project development methodology and planning
+- `HazardAnalysis/` - Safety and risk assessment documentation
+- `Images/` - Shared images and diagrams
+- `ProblemStatementAndGoals/` - Project objectives and problem definition
+- `Presentations/` - Project presentations and demos
+- `projMngmnt/` - Project management artifacts
+- `ReflectAndTrace/` - Project reflection and traceability
+- `SRS/` - Software Requirements Specification
+- `UserGuide/` - End-user documentation
+- `VnVPlan/` - Verification and Validation Plan
+- `VnVReport/` - Verification and Validation Reports
 
-<You should select an SRS template.  Three options are available in the repo, or
-you can introduce another template. You should delete any SRS options that you do
-not need. The folder SRS holds a template for Scientific Computing software;
-the folder SRS-Volere holds the Volere template in LaTeX; the folder SRS-Meyer holds
-the template that Dr. Mosser now uses in the third year requirements course.>
+## Major Components
 
-<The Makefile assumes the SRS will be in a folder called SRS.  If you use the Makefile
-with a template other than the Scientific Computing template, you will have to delete
-the unnecessary folders and rename your folder to SRS.>
-# Documentation folders
+1. Core Documentation
+   - Software Requirements Specification
+   - System Design Documentation
+   - User Guide
+   - Verification and Validation
 
-The folders and files for this folder are as follows:
+2. Project Management
+   - Development Planning
+   - Project Management
+   - Problem Statement
+   - Hazard Analysis
 
-Describe ...
+3. Supporting Materials
+   - Quality Checklists
+   - Presentations
+   - Build Configuration
+   - Shared Resources
+
+## Usage Guidelines
+
+1. Each subdirectory contains its own README.md with specific details about its contents
+2. LaTeX files are used for formal documentation with cross-referencing capabilities
+3. Use the Makefile to generate PDF documentation from LaTeX sources
+
+## Documentation Standards
+
+1. All formal documentation should use the provided LaTeX templates
+2. Images should be stored in the Images directory and referenced relatively
+3. Each major document should have its own subdirectory with associated resources
+4. Version control should be maintained for all documentation files
