@@ -45,10 +45,19 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-  \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{4cm}p{4cm}X}
+  \toprule {\bf Date} & {\bf Name} & {\bf Notes}\\
   \midrule
-  March 8th, 2025 & 0.0 & Started VnV Report\\
+  March 8th, 2025 & All & Created initial revision of VnV Report\\
+  April 3rd, 2025 & Nivetha Kuruparan & Heavily Revised VSCode Plugin Unit Tests\\
+  April 10th, 2025 & Tanveer Brar & Updated code detection and refactoring suggestion tests\\
+  April 10th, 2025 & Tanveer Brar & Updated remaining functional requirements tests\\
+  April 10th, 2025 & Tanveer Brar & Updated unit tests for plugin\\
+  April 10th, 2025 & Tanveer Brar & Added trace to requirements\\
+  April 10th, 2025 & Tanveer Brar & Added trace to modules\\
+  April 10th, 2025 & Tanveer Brar & Styling changes\\
+  April 10th, 2025 & Tanveer Brar & Updated coverage metrics with new plugin tests\\
+  April 10th, 2025 & Tanveer Brar & Addressed peer and TA feedback\\
   \bottomrule
 \end{tabularx}
 
@@ -82,12 +91,17 @@ tables if needed}
 
 \pagenumbering{arabic}
 
-This Verification and Validation (V\&V) report outlines the testing
+\newcommand{\SRS}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/SRS/SRS.pdf}{SRS}}
+\newcommand{\VnVPlan}{\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/VnVPlan/VnVPlan.pdf}{VnV Plan}}
+
+\noindent This Verification and Validation (V\&V) report outlines the testing
 process used to ensure the accuracy, reliability, and performance of
 our system. It details our verification approach, test cases, and
 validation results, demonstrating that the system meets its
 requirements and functions as intended. Key findings and resolutions
-are also discussed.
+are also discussed. Recent updates to this document include comprehensive code coverage metrics for the VSCode extension frontend, improved traceability to requirements and modules, detailed test case descriptions for all functional requirements, and expanded explanations of code smells detection and refactoring.
+
+\noindent For detailed information about the project requirements and test case design methodology, please refer to the Software Requirements Specification (\SRS) document and the Verification and Validation Plan (\VnVPlan). The SRS contains comprehensive definitions of all requirements referenced in this report (including functional, non-functional, and operational requirements like OER-IAS), while the VnVPlan outlines the complete testing strategy and procedures employed during verification and validation activities.
 
 \section{Functional Requirements Evaluation}
 \subsection{Code Input Acceptance Tests}
@@ -125,9 +139,9 @@ are also discussed.
 \end{enumerate}
 
 \subsection{Code Smell Detection Tests and Refactoring Suggestion (RS) Tests}
+\label{subsec:code-smells-detection}
 
-This area includes tests to verify the detection and refactoring of specified code smells that impact energy efficiency. These tests will be done through unit testing.
-
+This area includes tests to verify the detection and refactoring of specified code smells that impact energy efficiency. These tests will be done through unit testing. For a comprehensive list and explanation of all code smells supported by the system, see the code smells reference table in Section~\ref{tab:code-smells}.
 \begin{enumerate}
   \item \textbf{test-FR-IA-1 Successful Refactoring Execution} \\[2mm]
     \textbf{Control:} Automated \\
@@ -162,134 +176,54 @@ This area includes tests to verify the detection and refactoring of specified co
     \textbf{How test will be performed:} Supply a file where the refactorer returns an unchanged version of the code and verify that no new files are created and that appropriate feedback is displayed or logged.
 \end{enumerate}
 
-\subsection{Output Validation Tests}
-\begin{enumerate}
-  \item \textbf{test-FR-OV-1 Verification of Valid Python Output} \\[2mm]
-    The \textbf{output validation test} ensures that refactored
-    Python code remains syntactically correct and compliant with
-    Python standards. This validation is crucial for maintaining
-    \textbf{functional requirement FR3}, as it confirms that the
-    refactored code behaves identically to the original but with
-    improved efficiency.
-
-    A Python file with detected code smells was refactored, and the
-    expected result was that the optimized code should pass a syntax
-    check and retain its original functionality. The \textbf{actual
-    result} confirmed that the refactored code was valid, passed
-    linting checks, and maintained correctness.
-\end{enumerate}
-
 \subsection{Tests for Reporting Functionality}
-The reporting functionality of the tool is a critical feature that
-provides comprehensive insights into the refactoring process,
-including detected code smells, applied refactorings, energy
-consumption measurements, and test results. These tests ensure that
-the reporting feature operates correctly and delivers accurate,
-well-structured information as specified in \textbf{functional
-requirement FR9}.\\
 
-\noindent At this stage, the reporting functionality is still under
-development, and testing has not yet been conducted. The tests
-outlined below will be performed in \textbf{Revision 1} once the
-reporting feature is fully implemented.
+The reporting functionality of the tool is crucial for providing users with meaningful insights into the energy impact of refactorings and the smells being addressed. This section outlines tests that ensure the energy metrics and refactoring summaries are accurately presented, as required by FR6 and FR15.
 
 \begin{enumerate}
-  \item \textbf{test-FR-RP-1 A Report With All Components Is Generated} \\[2mm]
-    This test ensures that the tool generates a comprehensive report
-    that includes all necessary information required by \textbf{FR9}.
-    The system should produce a structured summary of the refactoring
-    process, displaying detected code smells, applied refactorings,
-    and energy consumption metrics.
+  \item \textbf{test-FR-RP-1 Energy Consumption Metrics Displayed Post-Refactoring} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The tool has measured energy usage before and after refactoring. \\
+    \textbf{Input:} Energy data collected for the original and refactored code. \\
+    \textbf{Output:} A clear comparison of energy consumption is displayed in the UI. \\
+    \textbf{Test Case Derivation:} Verifies that energy metrics are properly calculated and presented to users, as per FR6. \\
+    \textbf{How test will be performed:} Refactor a file and review the visual or textual display of energy usage before and after, ensuring the values match backend logs.
 
-    \textbf{Planned Test Execution:} After refactoring, the tool will
-    invoke the report generation feature, and a user will validate
-    that the output meets the structure and content specifications.
-
-  \item \textbf{test-FR-RP-2 Validation of Code Smell and Refactoring
-    Data in Report} \\[2mm]
-    This test will verify that the report correctly includes details
-    on detected code smells and refactorings, ensuring compliance
-    with \textbf{FR9}.
-
-    \textbf{Planned Test Execution:} The tool will generate a report,
-    and its contents will be compared with the detected code smells
-    and refactorings to confirm accuracy.
-
-  \item \textbf{test-FR-RP-3 Energy Consumption Metrics Included in
-    Report} \\[2mm]
-    This test will validate that the reporting feature correctly
-    includes energy consumption measurements before and after
-    refactoring, aligning with \textbf{FR9}.
-
-    \textbf{Planned Test Execution:} A user will analyze the energy
-    consumption metrics in the generated report to ensure they
-    accurately reflect the measurements taken during the refactoring process.
-
-  \item \textbf{test-FR-RP-4 Functionality Test Results Included in
-    Report} \\[2mm]
-    This test will ensure that the reporting functionality accurately
-    reflects the results of the test suite, summarizing test
-    pass/fail outcomes after refactoring.
-
-    \textbf{Planned Test Execution:} The tool will generate a report,
-    and validation will be conducted to confirm that it includes a
-    summary of test results matching the actual execution outcomes.
+  \item \textbf{test-FR-RP-2 Detected Code Smells and Refactorings Reflected in UI} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The tool has completed code analysis and refactoring. \\
+    \textbf{Input:} Output of the detection and refactoring modules. \\
+    \textbf{Output:} The user interface displays the detected code smells and associated refactorings clearly. \\
+    \textbf{Test Case Derivation:} Ensures transparency of changes and supports informed decision-making by the user, in line with FR15. \\
+    \textbf{How test will be performed:} Open a code file with detectable smells, trigger a refactor, and inspect the view displaying the summary of changes and available actions.
 \end{enumerate}
+
+
+\subsection{Visual Studio Code Interactions}
+
+This section corresponds to features related to the user's interaction with the Visual Studio Code extension interface, including previewing and toggling smells, customizing the UI, and reviewing code comparisons. These tests verify that the extension enables users to interact with refactorings in an intuitive and informative manner, as outlined in FR8, FR9, FR10, FR11, FR12, FR13, FR14, FR15, FR16, and FR17.
+
+These features are primarily tested through automated unit tests integrated in the extension codebase. For implementation and test details, please refer to the unit testing suite.
 
 \subsection{Documentation Availability Tests}
-The following tests will ensure that the necessary documentation is
-available as per \textbf{FR10}. Since documentation is still under
-development, these tests have not yet been conducted and will be
-included in \textbf{Revision 1}.
+
+The following test is designed to ensure the availability of documentation as per FR 7 and FR 5.
 
 \begin{enumerate}
   \item \textbf{test-FR-DA-1 Test for Documentation Availability} \\[2mm]
-    This test verifies that the system provides proper documentation
-    covering installation, usage, and troubleshooting.
-
-    \textbf{Planned Test Execution:} Review the documentation for
-    completeness, clarity, and accuracy, ensuring it meets \textbf{FR10}.
-\end{enumerate}
-
-\subsection{IDE Extension Tests}
-The following tests ensure that users can integrate the tool as a VS
-Code extension in compliance with \textbf{FR11}. Local testing has
-been conducted successfully, confirming the extension's ability to
-function within the development environment. Once all features are
-implemented, the extension will be packaged and tested in a deployed
-environment.
-
-\begin{enumerate}
-  \item \textbf{test-FR-IE-1 Installation of Extension in Visual
-    Studio Code} \\[2mm]
-    This test ensures that the refactoring tool extension can be
-    installed from the Visual Studio Marketplace.
-
-    \textbf{Test Execution:} The extension was installed locally, and
-    its presence in the Extensions View was confirmed.
-
-    \textbf{Future Testing:} Once all features are implemented, the
-    extension will be zipped, packaged, and tested as a published extension.
-
-  \item \textbf{test-FR-IE-2 Running the Extension in Visual Studio
-    Code} \\[2mm]
-    This test validates that the extension functions correctly within
-    the development environment, detecting code smells and suggesting
-    refactorings.
-
-    \textbf{Test Execution:} Local tests confirmed that activating
-    the extension successfully detects code smells and applies refactorings.
-
-    \textbf{Future Testing:} Once the extension is packaged,
-    additional tests will be conducted to confirm functionality in a
-    deployed environment.
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The system may or may not be installed. \\
+    \textbf{Input:} User attempts to access the documentation. \\
+    \textbf{Output:} The documentation is available and covers installation, usage (FR 5), and troubleshooting. \\
+    \textbf{Test Case Derivation:} Validates that the documentation meets user needs (FR 7). \\
+    \textbf{How test will be performed:} Review the documentation for completeness and clarity.
 \end{enumerate}
 
 \section{Nonfunctional Requirements Evaluation}
 
-\subsection{Usability}
+\subsection{Usability \& Humanity}
 
-\subsection*{Key Findings}
+\subsubsection{Key Findings}
 \begin{itemize}
   \item The extension demonstrated strong functionality in detecting
     code smells and providing refactoring suggestions.
@@ -299,7 +233,7 @@ environment.
     \textbf{refactoring speed}, and \textbf{UI clarity}.
 \end{itemize}
 
-\section*{Methodology}
+\subsubsection{Methodology}
 The usability test involved 5 student developers familiar with VSCode
 but with no prior experience using the extension. Participants
 performed tasks such as detecting code smells, refactoring single and
@@ -309,13 +243,13 @@ qualitative data was collected using surveys that gathered background
 information of the participants as well as their opinions post
 testing (\ref{appendix:usability}).
 
-\section*{Results}
+\subsubsection{Results}
 
 The following is an overview of the most significant task that the
 test participants performed. Information on the tasks themselves can
 be found in the Appendix (\ref{appendix:usability}).
 
-\subsection*{Quantitative Results}
+\paragraph{Quantitative Results}
 \begin{itemize}
   \item \textbf{Task Completion Rate:}
     \begin{itemize}
@@ -336,18 +270,18 @@ be found in the Appendix (\ref{appendix:usability}).
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{../Images/usability-satisfaction-graph.png}
-  \label{img:usability-satisfaction}
   \caption{User Satisfaction Survey Data}
+  \label{img:usability-satisfaction}
 \end{figure}
 
-\subsection*{Qualitative Results}
+\paragraph{Qualitative Results}
 Participants found the code smell detection intuitive and accurate,
 and they appreciated the preview feature and Accept/Reject buttons.
 However, they struggled with sidebar visibility, refactoring speed,
 and UI clarity. Hover descriptions were overwhelming, and some
-elements (e.g., ``(6/3)'') were unclear.
+elements (e.g., ``(6/3)'') were unclear. The overall satisfaction ratings can be seen in Figure \ref{img:usability-satisfaction}.
 
-\section*{Discussion}
+\subsubsection{Discussion}
 The usability test revealed that the extension performs well in
 detecting code smells and providing refactoring suggestions.
 Participants appreciated the energy savings feedback but requested
@@ -362,7 +296,7 @@ identified issues are addressed. The test highlighted the need for
 better onboarding, clearer documentation, and performance
 optimizations to enhance user satisfaction and adoption.
 
-\section*{Feedback and Implementation Plan}
+\subsubsection{Feedback and Implementation Plan}
 The following table summarizes participant feedback and whether the
 suggested changes will be implemented:
 
@@ -393,16 +327,18 @@ suggested changes will be implemented:
     \bottomrule
   \end{tabular}
   \caption{Participant Feedback and Implementation Decisions}
+  \label{tab:participant-feedback}
 \end{table}
+
+Based on the feedback summarized in Table \ref{tab:participant-feedback}, we prioritized improvements to the user interface and documentation, focusing on elements that caused the most frustration during testing.\\
+\noindent \textbf{Note:} In the Implementation Decision column, ``Partial'' indicates that the issue will not be addressed fully but some changes will be added for the feedback. This means we will implement a limited subset of the suggested improvements that align with our current scope and resource constraints.
 
 \subsection{Performance}
 
 This testing benchmarks the performance of ecooptimizer across
 files of varying sizes (250, 1000, and 3000 lines). The data includes
-detection times,
-refactoring times for specific smells, and energy measurement times.
-The goal is to
-identify scalability patterns, performance bottlenecks, and
+detection times, refactoring times for specific smells, and energy measurement times.
+The goal is to identify scalability patterns, performance bottlenecks, and
 opportunities for optimization.\\
 
 \textbf{Related Performance Requirement:} PR-1\\
@@ -426,28 +362,41 @@ For each detected smell (grouped by smell type), refactoring is run
 
 \noindent The following is for your reference: \\
 
-\begin{tabular}{|l|l|l|}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|p{2.5cm}|p{6cm}|}
   \hline
-  \textbf{Type of Smell} & \textbf{Code} & \textbf{Smell Name} \\
+  \textbf{Type of Smell} & \textbf{Code} & \textbf{Smell Name} & \textbf{Brief Explanation} \\
   \hline
-  Pylint & R0913 & Long Parameter List \\
-  Pylint & R6301 & No Self Use \\
-  Pylint & R1729 & Use a Generator \\
+  Pylint & R0913 & Long Parameter List & Functions with excessive parameters (beyond configured limit). Complex to refactor as it requires restructuring function signatures and all call sites. \\
   \hline
-  Custom & LMC001 & Long Message Chain \\
-  Custom & UVA001 & Unused Variable or Attribute \\
-  Custom & LEC001 & Long Element Chain \\
-  Custom & LLE001 & Long Lambda Expression \\
-  Custom & SCL001 & String Concatenation in Loop \\
-  Custom & CRC001 & Cache Repeated Calls \\
+  Pylint & R6301 & No Self Use & Methods that don't use the instance (self). Requires carefully converting to static methods or class methods. \\
+  \hline
+  Pylint & R1729 & Use a Generator & List comprehensions that could be generators. Simple transformation but requires ensuring equivalent behavior. \\
+  \hline
+  Custom & LMC001 & Long Message Chain & Multiple object references chained together (a.b.c.d). Simple to refactor with intermediate variables. \\
+  \hline
+  Custom & UVA001 & Unused Variable or Attribute & Variables or attributes declared but never used. Easy to remove without complex analysis. \\
+  \hline
+  Custom & LEC001 & Long Element Chain & Nested dictionary/list access with multiple indexing operations. Simple to refactor with intermediate variables. \\
+  \hline
+  Custom & LLE001 & Long Lambda Expression & Complex operations in lambda functions. Easy to refactor into named functions. \\
+  \hline
+  Custom & SCL001 & String Concatenation in Loop & Strings built using += in loops. Simple to refactor to join() or ''.join(). \\
+  \hline
+  Custom & CRC001 & Cache Repeated Calls & Same function calls made repeatedly with identical parameters. Simple to refactor with caching. \\
   \hline
 \end{tabular}
+\caption{Code Smells Used in Performance Testing}
+\label{tab:code-smells}
+\end{table}
 
-\subsection*{1. Detection Time vs File Size}
+\subsubsection{Detection Time vs File Size}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{{../Images/detectionTimeVsFileSize.png}}
   \caption{Detection Time vs File Size}
+  \label{fig:detection_time}
 \end{figure}
 
 \noindent \textbf{What}: Linear plot showing code smell detection
@@ -466,13 +415,14 @@ files, which could become
 problematic for very large codebases. However, the absolute times
 remain reasonable, with detection
 completing in under 3 seconds even for 3000-line files making this
-not a current critical bottleneck.
+not a current critical bottleneck, as shown in Figure \ref{fig:detection_time}.
 
-\subsection*{2. Refactoring Times by Smell Type (Log Scale)}
+\subsubsection{Refactoring Times by Smell Type (Log Scale)}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_log\_scale.png}
   \caption{Refactoring Times by Smell Type (Log Scale)}
+  \label{fig:refactoring_log}
 \end{figure}
 
 \noindent \textbf{What}: Logarithmic plot of refactoring times per
@@ -481,7 +431,7 @@ smell across file sizes\\
 \noindent \textbf{Why}: Identify most expensive refactorings and
 scalability patterns\\
 
-The logarithmic plot reveals a clear hierarchy of refactoring costs.
+The logarithmic plot reveals a clear hierarchy of refactoring costs, as shown in Figure \ref{fig:refactoring_log}.
 The most expensive smells are \texttt{R6301} and \texttt{R0913},
 which take 6.13 seconds and 5.65 seconds, respectively, for a
 3000-line file. These smells show exponential growth, with
@@ -491,11 +441,12 @@ remain consistently fast (0.03 seconds) across all file sizes. This
 suggests that optimizing \texttt{R6301} and \texttt{R0913} should be
 a priority, as they dominate the refactoring time for larger files.
 
-\subsection*{3. Refactoring Times Heatmap}
+\subsubsection{Refactoring Times Heatmap}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_heatmap.png}
   \caption{Refactoring Times Heatmap}
+  \label{fig:refactoring_heatmap}
 \end{figure}
 
 \noindent \textbf{What}: Color-coded matrix of refactoring times by
@@ -503,7 +454,7 @@ smell/file size\\
 
 \noindent \textbf{Why}: Quick visual identification of hot spots\\
 
-The heatmap provides a quick visual summary of refactoring times
+The heatmap shown in Figure \ref{fig:refactoring_heatmap} provides a quick visual summary of refactoring times
 across smells and file sizes. The darkest cells correspond to
 \texttt{R6301} and \texttt{R0913} at 3000 lines, confirming their
 status as the most expensive operations. In contrast, \texttt{LLE001}
@@ -512,11 +463,12 @@ consistently low costs. The heatmap also highlights the dramatic
 variation in refactoring times: at 3000 lines, the fastest smell
 (\texttt{LLE001}) is 200× faster than the slowest (\texttt{R6301}).
 
-\subsection*{4. Energy Measurement Times Distribution}
+\subsubsection{Energy Measurement Times Distribution}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/energy\_measurement\_boxplot.png}
   \caption{Energy Measurement Times Distribution}
+  \label{fig:energy_boxplot}
 \end{figure}
 
 \noindent \textbf{What}: Box plot of energy measurement durations\\
@@ -524,7 +476,7 @@ variation in refactoring times: at 3000 lines, the fastest smell
 \noindent \textbf{Why}: Verify measurement consistency across operations\\
 
 Energy measurement times are remarkably consistent, ranging from 5.54
-to 6.14 seconds across all operations and file sizes.
+to 6.14 seconds across all operations and file sizes, as illustrated in Figure \ref{fig:energy_boxplot}.
 The box plot shows no significant variation with file size,
 suggesting that energy measurement is operation-specific
 rather than dependent on the size of the file. This stability could
@@ -532,11 +484,12 @@ indicate that the energy measurement process has a fixed
 overhead, which could simplify efforts in the future if we were to
 create our own energy measurement module.
 
-\subsection*{5. Comparative Refactoring Times per File Size}
+\subsubsection{Comparative Refactoring Times per File Size}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/refactoring\_times\_comparison.png}
   \caption{Comparative Refactoring Times per File Size}
+  \label{fig:refactoring_comparison}
 \end{figure}
 
 \noindent \textbf{What}: Side-by-side bar charts per file size\\
@@ -544,7 +497,7 @@ create our own energy measurement module.
 \noindent \textbf{Why}: Direct comparison of refactoring costs at
 different scales\\
 
-The side-by-side bar charts reveal consistent dominance patterns
+The side-by-side bar charts in Figure \ref{fig:refactoring_comparison} reveal consistent dominance patterns
 across file sizes. \texttt{R6301} and \texttt{R0913} are always the
 top two most expensive smells, while \texttt{LLE001} and
 \texttt{LMC001} remain the cheapest. Notably, the relative cost
@@ -553,12 +506,13 @@ file size: at 250 lines, the ratio is 100:1, but at 3000 lines, it
 grows to 200:1. This suggests that the scalability of refactoring
 operations varies significantly by smell type.
 
-\subsection*{6. Energy vs Refactoring Time Correlation}
+\subsubsection{Energy vs Refactoring Time Correlation}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{../Images/energy\_refactoring\_correlation.png}
   \caption{Energy vs Refactoring Time Correlation}
+  \label{fig:energy_correlation}
 \end{figure}
 
 \noindent \textbf{What}: Scatter plot comparing refactoring and
@@ -567,14 +521,16 @@ energy measurement times\\
 \noindent \textbf{Why}: Identify potential relationships between
 effort and energy impact\\
 
-The scatter plot shows no clear correlation between refactoring time
+The scatter plot in Figure \ref{fig:energy_correlation} shows no clear correlation between refactoring time
 and energy measurement time. Fast refactorings like \texttt{LLE001}
 and slow refactorings like \texttt{R6301} both result in energy
 measurement times clustered between 5.5 and 6.1 seconds. This makes
 perfect sense as the refactoring operations and energy measurement
 are disjoint functionalities in the code.
 
-\subsection*{Key Insights and Recommendations}
+\subsubsection{Key Insights and Recommendations}
+
+\noindent \textbf{Performance Bottlenecks:}
 \begin{itemize}
   \item \textbf{Bottleneck Identification:} The smells \texttt{R6301}
     and \texttt{R0913} are the primary bottlenecks, consuming over
@@ -595,6 +551,7 @@ are disjoint functionalities in the code.
     highlighting the need for targeted optimization.
 \end{itemize}
 
+\noindent \textbf{Optimization Recommendations:}
 The analysis reveals significant scalability challenges for both
 detection and refactoring, particularly for smells like
 \texttt{R6301} and \texttt{R0913}. While energy measurement times are
@@ -603,7 +560,7 @@ additional metrics may be needed to accurately assess energy savings.
 Future work should focus on optimizing high-cost operations and
 improving the scalability of the detection algorithm.
 
-\subsection{Maintainability and Support}
+\subsection{Maintenance and Support}
 \begin{enumerate}
 
   \item \textbf{test-MS-1: Extensibility for New Code Smells and
@@ -621,6 +578,26 @@ improving the scalability of the detection algorithm.
     through the main interface. This demonstrated that our
     architecture supports future expansions without
     disrupting core functionality.
+    
+    Specifically, we tested the extensibility by implementing the "DUP001" (duplicated list comprehensions) code smell. This smell occurs when the same list comprehension is used multiple times in close proximity, causing unnecessary repeat calculations. The corresponding refactoring method extracts the list comprehension to a variable and reuses the variable. For example:
+    
+    \begin{verbatim}
+    # Original code (with DUP001 smell)
+    total_a = sum([x*2 for x in values])
+    count_a = len([x*2 for x in values])
+    
+    # Refactored code
+    computed_values = [x*2 for x in values]
+    total_a = sum(computed_values)
+    count_a = len(computed_values)
+    \end{verbatim}
+    
+    The implementation required:
+    1. Adding a new detection module file \texttt{dup001\_detector.py} that scans for repeated list comprehensions
+    2. Creating a new refactoring module file \texttt{dup001\_refactor.py} that implements the extraction logic
+    3. Registering the new smell and refactoring in the configuration system
+    
+    The entire process was completed in less than one day, confirming the tool's extensibility target.
 
   \item \textbf{test-MS-2: Maintainable and Adaptable Codebase} \\[2mm]
     We conducted a static analysis and documentation walkthrough to
@@ -682,11 +659,11 @@ improving the scalability of the detection algorithm.
   \item \textbf{test-LF-2 Theme Adaptation in VS Code} \\[2mm]
     The theme adaptation feature in the IDE plugin was tested
     manually to confirm that the plugin correctly adjusts to VS
-    Code’s light and dark themes without requiring manual
+    Code's light and dark themes without requiring manual
     configuration. The tester performed the test by opening the
-    plugin in both themes and switching between them using VS Code’s settings.
+    plugin in both themes and switching between them using VS Code's settings.
 
-    The expected result was that the plugin’s interface should
+    The expected result was that the plugin's interface should
     automatically adjust when the theme is changed. The actual result
     confirmed that the plugin seamlessly transitioned between light
     and dark themes while maintaining a consistent interface. The
@@ -717,7 +694,7 @@ improving the scalability of the detection algorithm.
     testing session, where developers and testers interacted with the
     plugin and provided feedback. This test evaluated user
     experience, ease of navigation, and overall satisfaction with the
-    plugin’s interface.
+    plugin's interface.
 
     The expected result was that users would be able to interact with
     the plugin smoothly and provide structured feedback. The actual
@@ -750,18 +727,18 @@ analysis, and report generation. The objective was to do so while
 covering the logging mechanisms for refactoring events, ensuring that
 logs are complete and immutable.\\
 
-\noindent The development team reviewed the codebase to confirm that
+\noindent \textbf{Verification Process:} The development team reviewed the codebase to confirm that
 each refactoring event (pattern analysis, energy analysis, report
 generation) is logged with accurate timestamps and event description.
 Missing log entries and/or insufficient details were identified and
 added to the logging process.\\
 
-\noindent Through this process, all major refactoring processes were
+\noindent \textbf{Results:} Through this process, all major refactoring processes were
 correctly logged with accurate timestamps. Logs are stored locally on
 the user's device, ensuring that unauthorized modifications are
 prevented by restricting external access.\\
 
-\noindent The team was able to confirm that the tool maintains a
+\noindent \textbf{Conclusion:} The team was able to confirm that the tool maintains a
 secure logging system for refactoring processes, with logs being
 tamper-resistant due to their local storage on user devices.
 
@@ -771,19 +748,21 @@ tamper-resistant due to their local storage on user devices.
   \item \textbf{test-CPL-1: Compliance with PIPEDA and CASL} \\[2mm]
     This process was applied to all processes related to data
     handling and user communication within the local API framework
-    with the objective of assesing whether the tool’s data handling
+    with the objective of assesing whether the tool's data handling
     and communication mechanisms align with PIPEDA and CASL
     requirements, ensuring that no personal information is stored,
     all processing is local, and communication practices meet
     regulatory standards.\\
-    \noindent Through code review, the team confirmed that all data
+    
+    \noindent \textbf{Verification Method:} Through code review, the team confirmed that all data
     processing remains local and does not involve external storage.
     During this time, internal API functionality was also reviewed to
     ensure that user interactions are transient and not logged
     externally. By going through the different workflows, the team
     verified that no personal data collection occurs, eliminating the
     need for explicit consent mechanisms.\\
-    \noindent As a result of this process, it was concluded that the
+    
+    \noindent \textbf{Compliance Assessment:} As a result of this process, it was concluded that the
     tool does not store any user data. The tool also does not send
     unsolicited communications, aligning with CASL requirements.
 
@@ -791,16 +770,18 @@ tamper-resistant due to their local storage on user devices.
     Standards} \\[2mm]
     This process evaluated development workflows, documentation
     practices, and adherence to structured methodologies with the
-    object of assessing whether the tool’s quality management and
+    object of assessing whether the tool's quality management and
     software development processes align with ISO 9001 standards for
     quality management and SSADM for structured software development.\\
-    \noindent Through an unbiased approach, the team verified the
+    
+    \noindent \textbf{Evaluation Process:} Through an unbiased approach, the team verified the
     presence of structured documentation, feedback mechanisms, and
     version tracking. It was also confirmed that a combination of
     unit testing, informal testing and iteration processes were
     applied during development. After code review, adherence to
     structured programming and modular design principles was also confirmed.
-    \noindent Our goal was to take a third perspective check on
+    
+    \noindent \textbf{Development Practices Assessment:} Our goal was to take a third perspective check on
     whether these set of practices were applied to our development
     workflows. Development follows reasonable structured processes
     and also includes formal documentation of testing and quality
@@ -825,6 +806,7 @@ backend modules and the vscode extension.
 \subsection{API Endpoints}
 
 \subsubsection{Smell Detection Endpoint}
+The following tests in Table \ref{table:detection_endpoint_tests} verify the functionality of the smell detection API endpoint under various conditions.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -864,6 +846,7 @@ backend modules and the vscode extension.
 \end{longtable}
 
 \subsubsection{Refactor Endpoint}
+Table \ref{table:refactor_endpoint_tests} outlines the test cases for the refactor endpoint, covering both successful operations and error handling scenarios.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -911,9 +894,43 @@ backend modules and the vscode extension.
   TC\testcount & FR10, OER-IAS1 & Unexpected error occurs during
   refactoring. & Status code is 400. Error message contains the
   exception details. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor all smells
+  of a type successfully. & Status code is 200. Response contains
+  refactored data, energy saved, and affected files. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor multiple
+  smells of the same type. & Status code is 200. Response contains
+  accumulated energy savings from all smells refactored. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Initial energy measurement fails for
+  refactor-by-type endpoint. & Status code is 400. Error message indicates
+  emissions could not be retrieved. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & User requests to refactor all smells
+  of a type with nonexistent source directory. & Status code is 404. Error message indicates
+  folder not found. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Refactoring error occurs during
+  refactor-by-type. & Status code is 500. Error message contains details
+  about the refactoring failure. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & No energy is saved after refactor-by-type
+  operation. & Status code is 400. Error message indicates energy
+  was not saved. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Perform refactoring in a new temporary
+  directory and validate output. & Temporary directory is created, source is
+  copied, smell is refactored, and energy is measured. & All assertions pass. &
+  \cellcolor{green} Pass \\ \midrule
+  TC\testcount & FR10, OER-IAS1 & Perform refactoring in an existing
+  temporary directory. & Uses existing directory, performs refactoring, and
+  measures energy without creating new copy. & All assertions pass. &
+  \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsection{Analyzer Controller Module}
+The analyzer controller module was tested extensively to ensure it correctly identifies and processes code smells. Table \ref{table:analyzer_controller_tests} summarizes these test cases.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -973,6 +990,7 @@ backend modules and the vscode extension.
 \end{longtable}
 
 \subsection{CodeCarbon Measurement}
+The following test cases in Table \ref{table:measurement_tests} were executed to verify the functionality of the CodeCarbon measurement module.
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -1032,6 +1050,24 @@ backend modules and the vscode extension.
   \texttt{file path} does not exist.'' should be logged.The function
   should return \texttt{None} since the file does not exist. & All
   assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & PR-RFT1 & Handle unexpected return types from 
+  CodeCarbon emissions tracker. & If the tracker returns a non-float
+  value (e.g., string), a warning should be logged with message
+  ``Unexpected emissions type''. Emissions value should be set to
+  \texttt{None}. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & PR-RFT1 & Handle NaN return values from CodeCarbon
+  emissions tracker. & If the tracker returns NaN, a warning should
+  be logged with message ``Unexpected emissions type''. Emissions
+  value should be set to \texttt{None}. & All assertions pass. &
+  \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & PR-RFT1 & Handle missing emissions file after
+  measurement. & If the emissions CSV file does not exist after 
+  tracking, an error message ``Emissions file missing - measurement
+  failed'' should be logged. Emissions\_data should be \texttt{None}. &
+  All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsection{Smell Analyzers}
@@ -1658,7 +1694,7 @@ backend modules and the vscode extension.
   TC\testcount & PR-PAR3, FR6, FR3 & Test the long element chain
   refactorer across multiple files & Dictionary access across
   multiple files should be updated & Refactoring applied successfully
-  across multiple files & \cellcolor{yellow} TBD \\ \midrule
+  across multiple files & \cellcolor{green} Pass \\ \midrule
   TC\testcount & PR-PAR3, FR6, FR3 & Test the refactorer on
   dictionary access via class attributes & Class attributes should be
   flattened and access updated & Refactoring applied successfully on
@@ -1976,15 +2012,14 @@ backend modules and the vscode extension.
   All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsection{VS Code Extension}
+\subsection{VS Code Plugin}
 
-\subsubsection{Detect Smells Command}
-
+\subsubsection{Configure Workspace Command}
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
     >{\raggedright\arraybackslash}p{4.5cm}
     >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
+    >{\raggedright\arraybackslash}p{3cm} c}
   \toprule
   \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
   \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
@@ -2002,48 +2037,104 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Detect Smells Command Test Cases}
-  \label{table:plugin_detect_command_tests}
+  \caption{Configure Workspace Command Test Case}
+  \label{table:configure_workspace_command_tests}
   \endlastfoot
 
-  TC\testcount & FR10, OER-IAS1 & No active editor is found. & Shows
-  error message: ``Eco: No active editor found.'' & All assertions
-  pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Active editor has no valid file
-  path. & Shows error message: ``Eco: Active editor has no valid file
-  path.'' & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & No smells are enabled. & Shows
-  warning message: ``Eco: No smells are enabled! Detection skipped.''
-  & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Uses cached smells when hash is
-  unchanged and same smells are enabled. & Shows info message: ``Eco:
-  Using cached smells for fake.path'' & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Fetches new smells when enabled
-  smells change. & Calls \texttt{wipeWorkCache}, \texttt{updateHash},
-  and \texttt{fetchSmells}. Updates workspace data. & All assertions
-  pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Fetches new smells when hash
-  changes but enabled smells remain the same. & Calls
-  \texttt{updateHash} and \texttt{fetchSmells}. Updates workspace
-  data. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & No cached smells and server is
-  down. & Shows warning message: ``Action blocked: Server is down and
-  no cached smells exist for this file version.'' & All assertions
-  pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Highlights smells when smells are
-  found. & Shows info messages and calls \texttt{highlightSmells}. &
-  All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & OER-IAS1, OER-PR1 & User selects a Python project folder using the quick pick. & 
+  The tool scans the workspace for Python files, detects valid folders, and prompts the user with a quick pick. After selection, it updates the workspace state and shows confirmation message. & 
+  Workspace is detected and configured. Workspace state is updated, VS Code context is set, and confirmation message is shown. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Refactor Smell Command}
+\subsubsection{Reset Configuration Command}
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Reset Configuration Command Test Cases}
+  \label{table:reset_configuration_command_tests}
+  \endlastfoot
+
+  TC\testcount & OER-PR1, UHR-ACS2 & User confirms reset when prompted by warning dialog. & 
+  Workspace configuration is removed from persistent storage, context is cleared, and function returns \texttt{true}. & 
+  Workspace state is cleared, context is reset, and return value is \texttt{true}. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & OER-PR1, UHR-ACS2 & User cancels when prompted by warning dialog. & 
+  No changes made to workspace configuration, and function returns \texttt{false}. & 
+  No state updates or command executions occurred, and return value is \texttt{false}. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Detect Smells API}
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+    >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Detect Smells API Test Cases}
+  \label{table:detect_smells_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-IAS1 & File URI is not a physical file (e.g., `untitled'). & Smell detection is skipped. & No status or messages are triggered. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & File path is not a Python file. & Smell detection is skipped. & No status or messages are triggered. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Cached smells are available. & Uses cached smells and sets status to `passed'. & Cached smells are returned and UI updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Server is down and no cached smells exist. & Displays warning and sets status to `server\_down'. & Warning is shown, status updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & No smells are enabled. & Displays warning and skips detection. & Warning is shown. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Enabled smells present and server returns valid results. & Fetches smells, caches them, and updates UI. & Smells are fetched, cached, and UI updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & API returns no smells. & Sets status to \texttt{no\_issues}, caches empty result. & Status and cache updated as expected. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & API returns error (500). & Displays error and sets status to `failed'. & Error message shown and status updated. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Network error during API call. & Displays error and sets status to `failed`. & Error message and status shown as expected. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Scans folder with no Python files. & Shows warning: ``No Python files found.'' & Message displayed, no detection performed. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & Scans folder with 2 Python files. & Processes only Python files, skips others. & Info message displayed, detection runs on valid files. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10, OER-IAS1 & File system throws error during folder scan. & Logs error and skips processing. & Error logged via ecoOutput. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Export Metrics Command}
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -2067,35 +2158,239 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Refactor Smell Command Test Cases}
-  \label{table:plugin_refactor_command_tests}
+  \caption{Export Metrics Command Test Cases}
+  \label{table:export_metrics_tests}
   \endlastfoot
 
-  TC\testcount & PR-RFT1 & No active editor is found. & Shows error
-  message ``Eco: Unable to proceed as no active editor or file path
-  found.'' & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & PR-RFT1, FR6 & Attempting to refactor when no smells
-  are detected in the file & Shows error message ``Eco: No smells
-  detected in the file for refactoring.'' & All assertions pass. &
+  TC\testcount & FR13, OER-IAS2 & No metrics data is found in workspace state. &
+  Displays message ``No metrics data available to export.'' &
+  Info message shown as expected. &
   \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR6 & Attempting to refactor when selected line
-  doesn't match any smell & Shows error message ``Eco: No matching
-  smell found for refactoring.'' & All assertions pass. &
+
+  TC\testcount & FR13, OER-IAS2 & No workspace path is configured. &
+  Shows error ``No configured workspace path found.'' &
+  Error message triggered appropriately. &
   \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR5, FR6, FR10 & Refactoring a smell when found on
-  the selected line & Saves the current file. Calls
-  \texttt{refactorSmell} method with correct parameters. Shows
-  message ``Refactoring report available in sidebar''. Executes
-  command to focus refactor sidebar. Opens and shows the refactored
-  preview. Highlights updated smells. Updates the UI with new smells
-  & All assertions pass. & \cellcolor{green} Pass \\
+
+  TC\testcount & FR13, OER-IAS2 & Workspace path is a directory. &
+  Saves \texttt{metrics-data.json} inside the directory. &
+  File written and success message shown. &
+  \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & PR-RFT2 & Handling API failure during refactoring &
-  Shows error message ``Eco: Refactoring failed. See console for
-  details.'' & All assertions pass. & \cellcolor{green} Pass \\
+
+  TC\testcount & FR13, OER-IAS2 & Workspace path is a file. &
+  Saves \texttt{metrics-data.json} to parent directory. &
+  File written in parent folder as expected. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & Workspace path is of unknown type. &
+  Displays error ``Invalid workspace path type.'' &
+  Error triggered and logged as expected. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & Filesystem stat call fails. &
+  Displays error with ``Failed to access workspace path...'' &
+  Error is caught and message shown. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-IAS2 & File write fails during export. &
+  Displays error with ``Failed to export metrics data...'' &
+  Error is logged and user is notified. &
+  \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Filter Command Registration}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Filter Command Registration Test Cases}
+  \label{table:filter_smell_command_tests}
+  \endlastfoot
+
+  TC\testcount & FR11, UHR-EOU1 & Register and trigger \texttt{toggleSmellFilter}. &
+  Invokes \texttt{toggleSmell} with correct key. &
+  Method called with \texttt{test-smell}. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU1 & Register and trigger \texttt{editSmellFilterOption} with valid input. &
+  Updates option and refreshes filter view. &
+  \texttt{updateOption} and \texttt{refresh} called with correct values. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{editSmellFilterOption} with invalid number. &
+  Does not call update function. &
+  \texttt{updateOption} not triggered. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{editSmellFilterOption} with missing keys. &
+  Displays error message about missing smell or option key. &
+  Error shown as expected. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{selectAllFilterSmells}. &
+  Enables all smell filters. &
+  \texttt{setAllSmellsEnabled(true)} called. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{deselectAllFilterSmells}. &
+  Disables all smell filters. &
+  \texttt{setAllSmellsEnabled(false)} called. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Trigger \texttt{setFilterDefaults}. &
+  Resets filters to default settings. &
+  \texttt{resetToDefaults()} called. &
+  \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Register all commands to subscriptions. &
+  All filter commands are added to context. &
+  5 commands registered. &
+  \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Refactor Workflow}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4.3cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Workflow Test Cases}
+  \label{table:refactor_command_tests}
+  \endlastfoot
+
+  TC\testcount & FR12 & Workspace not configured. & Shows error message and aborts refactoring. & Error message shown. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Backend is down. & Displays warning and updates status to \texttt{server\_down}. & Warning shown and status updated. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Refactors a single smell via backend. & Queues status, updates workspace, and logs info. & Refactor completed as expected. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Refactors all smells of a type. & Calls smell-type API and displays appropriate info. & Refactoring succeeds. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Backend refactor call fails. & Displays error and resets state. & Refactor error handled. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Starts refactor session and shows diff. & Updates detail view, opens diff, shows buttons. & Session started with correct UI behavior. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Starts session with missing energy data. & Displays N/A in savings output. & Info message shown with N/A. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, MS-MNT4 & Accepts refactoring with full file updates. & Copies files, updates metrics, clears cache. & Files replaced and data updated. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Accept triggered without refactor data. & Displays error message. & No action taken. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Filesystem copy fails during accept. & Shows error and aborts application. & Error message shown. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Rejects refactoring and clears view. & Updates status, clears state. & Refactor discarded. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & Reject cleanup throws error. & Logs error in ecoOutput. & Output error logged. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Wipe Workspace Cache Command}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{2cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4.3cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Wipe Workspace Cache Test Cases}
+  \label{table:wipe_workspace_tests}
+  \endlastfoot
+
+  TC\testcount & FR11, UHR-EOU2 & User opens wipe cache command. & Confirmation dialog is shown. & Dialog displayed as expected. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, MS-MNT2 & User confirms wipe action. & Cache cleared, status UI reset, success message shown. & All behaviors executed as expected. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU2 & User cancels confirmation dialog. & Cache remains intact, cancellation message shown. & No clearing occurred. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU2 & User dismisses dialog (no selection). & Tool cancels operation with message. & Cancellation handled gracefully. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, UHR-EOU2 & User clicks non-confirm option. & Tool shows cancellation message. & No data lost, message shown. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, MS-MNT2 & Cache cleared without error. & Success message shown after operation. & Message shown only after success. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & Dialog closed with no response. & Cancellation message shown. & Message shown, no success triggered. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \subsubsection{File Highlighter}
@@ -2123,28 +2418,19 @@ backend modules and the vscode extension.
 
   \bottomrule
   \caption{File Highlighter Test Cases}
-  \label{table:plugin_file_highlighter_tests}
+  \label{table:file_highlighter_tests}
   \endlastfoot
 
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Creates decorations for a
-  given color. & Decoration is created using
-  \lstinline|vscode.window.createTextEditor DecorationType|. & All
-  assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10, LFR-AP2 & Test creation of decorations with correct color and style. & Decorations are created with proper color and style for each smell type. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Highlights smells in the
-  active text editor. & Decorations are set using
-  \texttt{setDecorations}. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10, LFR-AP2 & Test highlighting of detected smells in editor. & Smells are highlighted based on their line occurrences with correct hover content. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Does not reset highlight
-  decorations on first initialization. & Decorations are not disposed
-  of on the first call. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10 & Test initial highlighting without resetting existing decorations. & Decorations are applied and stored without affecting existing ones. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR10, OER-IAS1, LFR-AP2 & Resets highlight
-  decorations on subsequent calls. & Decorations are disposed of on
-  subsequent calls. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10 & Test resetting decorations before applying new ones. & Existing decorations are disposed of and new ones are properly applied. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{File Hashing}
+\subsubsection{Hover Manager}
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -2168,135 +2454,24 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Hashing Tools Test Cases}
-  \label{table:plugin_hashing_tests}
-  \endlastfoot
-
-  TC\testcount & FR10, OER-IAS1 & Document hash has not changed. &
-  Does not update workspace storage. & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & Document hash has changed. &
-  Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR10, OER-IAS1 & No hash exists for the document. &
-  Updates workspace storage. & All assertions pass. & \cellcolor{green} Pass \\
-\end{longtable}
-
-\subsubsection{Line Selection Manager Module}
-\begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.5cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endfirsthead
-
-  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endhead
-
-  \multicolumn{6}{r}{\textit{Continued on next page}} \\
-  \endfoot
-
-  \bottomrule
-  \caption{Line Selection Module Test Cases}
-  \label{table:line_selection_tests}
-  \endlastfoot
-
-  TC\testcount & UHR-EOU1 & Call the `removeLastComment` method after
-  adding a comment. & The decoration is removed and no comment
-  remains on the line. & The decoration is removed, and no comment
-  appears on the selected line. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` method with null
-  editor. & The method does not throw an error. & The method does not
-  throw an error. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a file with no
-  detected smells. & No comment is added to the line. & No decoration
-  is added, and the line remains unchanged. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a file where the
-  document hash does not match. & The method does not add a comment
-  because the document has changed. & No decoration is added due to
-  the document hash mismatch. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` with a multi-line
-  selection. & The method returns early without adding a comment. &
-  No comment is added to any lines in the selection. &
-  \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with no
-  detected smells. & No comment is added for the line. & No
-  decoration is added, and the line remains unchanged. &
-  \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with a
-  single detected smell. & The comment shows the first smell symbol
-  without a count. & Comment shows the first smell symbol: `Smell:
-  PERF-001`. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with a
-  detected smell. & A comment is added on the selected line in the
-  editor showing the detected smell. & Comment added with the correct
-  smell symbol and count. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & UHR-EOU1 & Call `commentLine` on a line with
-  multiple detected smells. & The comment shows the first smell
-  followed by the count of additional smells. & Comment shows `Smell:
-  PERF-001 | (+1)`. & \cellcolor{green} Pass \\
-\end{longtable}
-
-\subsubsection{Hover Manager Module}
-\begin{longtable}{c
-    >{\raggedright\arraybackslash}p{1.5cm}
-    >{\raggedright\arraybackslash}p{4.5cm}
-    >{\raggedright\arraybackslash}p{4cm}
-  >{\raggedright\arraybackslash}p{3cm} c}
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endfirsthead
-
-  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
-  \toprule
-  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
-  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
-  \midrule
-  \endhead
-
-  \multicolumn{6}{r}{\textit{Continued on next page}} \\
-  \endfoot
-
-  \bottomrule
-  \caption{Hover Manager Module Test Cases}
+  \caption{Hover Manager Test Cases}
   \label{table:hover_manager_tests}
   \endlastfoot
 
-  TC\testcount & LFR-AP2 & Register hover provider for Python files.
-  & Hover provider registered for Python files. & Hover provider is
-  registered for Python files. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Subscribe hover provider. & Hover provider
-  subscription registered. & Hover provider subscription registered.
-  & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Return hover content with no smells. &
-  Returns null for hover content. & Hover content = null. &
-  \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2, FR2 & Update smells with new data. & Smells
-  updated correctly with new data. & Smells are updated correctly
-  with new smells data. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2, FR2 & Update smells correctly. & Smells
-  updated with new content. & Current smells content updated to new
-  smells content provided.  & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Generate valid hover content. & Generates
-  hover content with correct smell information. & Correct and valid
-  hover content generated for given smell. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & LFR-AP2 & Register refactor commands. & Both
-  commands registered correctly on initialization & Refactor commands
-  registered correctly. & \cellcolor{green} Pass \\
+  TC\testcount & FR12 & Test registration of hover provider for Python files. & Hover provider is correctly registered for Python files. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test hover provider for non-Python files. & Returns undefined for non-Python files. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test hover provider with no cache. & Returns undefined when no cache exists. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test hover provider with non-matching line. & Returns undefined for lines without smells. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test hover provider with valid smell. & Returns hover with markdown details. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, LFR-AP1 & Test hover provider escapes markdown. & Output safely renders escaped characters. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Handle Smell Settings Module}
+\subsubsection{Line Selection Manager}
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -2320,38 +2495,30 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-
-  \caption{VS Code Settings Management Module Test Cases}
-  \label{table:vs_code_settings_tests}
+  \caption{Line Selection Manager Test Cases}
+  \label{table:line_selection_tests}
   \endlastfoot
 
-  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells
-  from settings. & Function should return the current enabled smells.
-  & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells
-  when no settings exist. & Function should return an empty object. &
-  All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test enabling a smell and
-  verifying notification. & Notification should be displayed and
-  cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test disabling a smell
-  and verifying notification. & Notification should be displayed and
-  cache wiped. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1, UHR-EOU2 & Test that cache is not
-  wiped if no changes occur. & No notification or cache wipe should
-  happen. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1 & Test formatting of kebab-case smell
-  names. & Smell names should be correctly converted to readable
-  format. & All assertions pass. & \cellcolor{green} Pass \\ \midrule
-  TC\testcount & FR10, UHR-PSI1 & Test formatting with an empty
-  string input. & Function should return an empty string without
-  errors. & All assertions pass. & \cellcolor{green} Pass \\
-
+  TC\testcount & FR12 & Test removal of last comment with existing decoration. & Last comment decoration is properly disposed of. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test removal of last comment with no decoration. & No action taken when no decoration exists. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with no editor. & Skips decoration when no editor is provided. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with multi-line selection. & Skips decoration for multi-line selections. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with no cached smells. & Calls removeLastComment when no smells are cached. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with mismatched line. & No decoration is added for non-matching lines. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, LFR-AP1 & Test comment line with one smell match. & Adds comment with correct smell type. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, LFR-AP1 & Test comment line with multiple smells. & Adds comment with correct smell count. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12 & Test comment line with existing decoration. & Skips redecoration of already decorated lines. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Handle Smell Settings Module}
-
-\subsubsection{Wipe Workspace Cache Command}
+\subsubsection{Smells Data Management}
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -2375,46 +2542,22 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Wipe Workspace Cache Command Test Cases}
-  \label{table:plugin_wipe_cache_tests}
+  \caption{Smells Data Management Test Cases}
+  \label{table:smells_data_management_tests}
   \endlastfoot
 
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with no reason
-  provided. & The smells cache should be cleared and reset to an
-  empty state. A success message indicating that the workspace cache
-  was successfully wiped should be displayed. & All assertions pass.
-  & \cellcolor{green} Pass \\
+  TC\testcount & FR10, UHR-PSI1 & Test retrieval of enabled smells from settings. & Returns all enabled smells from VS Code settings. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason
-  ``manual''. & Both the smells cache and file changes cache should
-  be cleared and reset to empty states. A success message indicating
-  that the workspace cache was manually wiped by the user should be
-  displayed. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10, UHR-PSI1 & Test empty settings case. & Returns empty object when no smells are enabled. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are no
-  open files. & A log message indicating that there are no open files
-  to update should be generated. & All assertions pass. &
-  \cellcolor{green} Pass \\
+  TC\testcount & FR10, UHR-EOU2 & Test smell filter updates with notifications. & Proper notification shown when enabling/disabling smells. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe when there are
-  open files. & A message indicating the number of visible files
-  should be logged, and the hashes for each open file should be
-  updated. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10 & Test cache clearing on settings update. & Cache is cleared when smell settings change. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR5, FR8 & Trigger the cache wipe with the reason
-  ``settings''. & Only the smells cache should be cleared. A success
-  message indicating that the cache was wiped due to smell detection
-  settings changes should be displayed. & All assertions pass. &
-  \cellcolor{green} Pass \\
-  \midrule
-  TC\testcount & FR3, FR5, FR8 & Trigger the cache wipe when an error
-  occurs. & An error message should be logged, and an error message
-  indicating failure to wipe the workspace cache should be displayed
-  to the user. & All assertions pass. & \cellcolor{green} Pass \\
-
+  TC\testcount & FR10 & Test smell name formatting. & Correctly formats smell names from kebab-case. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
-\subsubsection{Backend}
+\subsubsection{Cache Initialization}
 
 \begin{longtable}{c
     >{\raggedright\arraybackslash}p{1.5cm}
@@ -2438,31 +2581,524 @@ backend modules and the vscode extension.
   \endfoot
 
   \bottomrule
-  \caption{Backend Test Cases}
-  \label{table:plugin_backend_tests}
+  \caption{Cache Initialization Test Cases}
+  \label{table:cache_initialization_tests}
   \endlastfoot
 
-  TC\testcount & PR-SCR1, PR-RFT1 & Trigger request to check server
-  status when server responds with a successful status. & The set
-  status method should be called with the
-  \texttt{ServerStatusType.UP} status & All assertions pass. &
-  \cellcolor{green} Pass \\
+  TC\testcount & FR10 & Test initialization of workspace cache. & Cache is properly initialized with workspace settings. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & PR-SCR1, PR-RFT2 & Trigger request to check server
-  status when server responds with an error status or fails to
-  respond. & The set status method should be called with the
-  \texttt{ServerStatusType.DOWN} status & All assertions pass. &
-  \cellcolor{green} Pass \\
+  TC\testcount & FR10 & Test initialization with invalid workspace. & Cache initialization fails gracefully. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & FR-6, PR-RFT1 & Trigger intialize logs call with a
-  valid directory path, and backend responds with success. & The
-  function should return \texttt{true} indicating successful log
-  initialization. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10 & Test cache update on workspace change. & Cache is updated when workspace settings change. & All assertions pass. & \cellcolor{green} Pass \\
   \midrule
-  TC\testcount & PR-SCR1, PR-RFT2 & Trigger intialize logs call with
-  a valid directory path, and backend responds with a failure. & TThe
-  function should return \texttt{false} indicating failure to
-  initialize logs. & All assertions pass. & \cellcolor{green} Pass \\
+  TC\testcount & FR10 & Test cache persistence across sessions. & Cache state is preserved between sessions. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR10 & Test cache cleanup on extension deactivation. & Cache is properly cleared on extension deactivation. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Tracked Diff Editors}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Tracked Diff Editor Test Cases}
+  \label{table:tracked_diff_editor_tests}
+  \endlastfoot
+
+  TC\testcount & FR11, MS-MNT3 & Register diff editor with valid URIs. & Diff editor is properly tracked in the system. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Test unrelated URIs tracking. & System correctly identifies unrelated URIs as not tracked. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Verify tracked diff editor status. & System correctly identifies tracked diff editors. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Test unregistered diff editor status. & System correctly identifies unregistered diff editors. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Test case-sensitive URI comparison. & System properly handles case sensitivity in URI comparison. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Close all tracked diff editors. & All registered diff editors are properly closed. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Clear tracked editor list. & Tracked editor list is properly cleared after closing. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR11 & Handle empty tab list. & System gracefully handles case when no tabs exist. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Refactor Action Buttons}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.5cm}
+    >{\raggedright\arraybackslash}p{4.5cm}
+    >{\raggedright\arraybackslash}p{4cm}
+  >{\raggedright\arraybackslash}p{3cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Refactor Action Button Test Cases}
+  \label{table:refactor_button_tests}
+  \endlastfoot
+
+  TC\testcount & FR12, UHR-EOU1 & Show refactor action buttons after initialization. & Accept and Reject buttons are displayed and refactoring context is set. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-ACS2 & Hide refactor action buttons after initialization. & Buttons are hidden and context is properly cleared. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test button visibility with no active editor. & Buttons remain hidden when no editor is active. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test button state during refactoring. & Buttons show correct enabled/disabled state during refactoring. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+  TC\testcount & FR12, UHR-EOU1 & Test button actions with invalid refactoring state. & Buttons handle invalid state gracefully with appropriate messages. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Workspace File Monitoring}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+  >{\raggedright\arraybackslash}p{2.8cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Workspace File Listener Test Cases}
+  \label{table:workspace_listener_tests}
+  \endlastfoot
+
+  TC\testcount & FR12, MS-MNT4 & File changes with cache. & Cache cleared, status marked outdated, notification shown. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & File changes without cache. & Listener skips invalidation, logs trace. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Error during file change cache clearing. & Error is caught and logged. & Error trace logged. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & File deleted and cache existed. & Cache and status removed, UI refreshed. & All behaviors verified. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & File deleted but not cached. & Skips removal, no action taken. & No deletions occurred. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & Error during deletion. & Logs error message. & Error handled correctly. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14, OER-IAS2 & Python file is saved. & detectSmellsFile is called. & Auto detection triggered. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Non-Python file is saved. & Listener skips detection. & detectSmellsFile not called. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & MS-MNT4 & dispose() called. & File watcher and save listener are disposed. & Disposables cleaned. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Backend Communication}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+  >{\raggedright\arraybackslash}p{2.8cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Backend Communication Test Cases}
+  \label{table:backend_communication_tests}
+  \endlastfoot
+
+  TC\testcount & FR10, OER-INT1 & checkServerStatus returns healthy. & Sets server status to UP. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10 & checkServerStatus gets 500. & Sets server status to DOWN, logs warning. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10, SR-IM 1 & checkServerStatus throws network error. & Sets server status to DOWN, logs error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & OER-IAS1 & initLogs successfully initializes logs. & Returns true. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & OER-IAS1 & initLogs fails server response. & Returns false, logs error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & OER-IAS1 & initLogs throws network error. & Returns false, logs connection error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10 & fetchSmells returns successful detection. & Returns list of smells, logs messages. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10, SR-IM 1 & fetchSmells gets 500 from server. & Throws error with status. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR10, SR-IM 1 & fetchSmells throws network error. & Throws error and logs it. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-INT1 & backendRefactorSmell works. & Calls refactor API and returns result. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & backendRefactorSmell with empty path. & Throws error, logs abortion. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, SR-IM 1 & backendRefactorSmell server error. & Throws error with message. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, OER-INT1 & backendRefactorSmellType works. & Calls /refactor-by-type and returns result. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13 & backendRefactorSmellType no path. & Throws error for missing path. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR13, SR-IM 1 & backendRefactorSmellType server error. & Throws error for failed refactor. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Smell Highlighting}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{2.8cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{File Highlighter Test Cases}
+  \label{table:file_highlighter_tests}
+  \endlastfoot
+
+  TC\testcount & FR12, LFR-AP 1 & highlightSmells with valid cache. & Two decorations created and applied. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & highlightSmells with no cache. & Does not apply any highlights. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, LFR-AP 1 & highlightSmells with only one smell enabled. & Only matching smells are decorated. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & highlightSmells with invalid line. & Skips decoration for that smell. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with underline style. & Returns text underline decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with flashlight style. & Returns whole-line background decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with border-arrow style. & Returns right-arrow styled decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & LFR-AP 2 & getDecoration with unknown style. & Falls back to underline decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, UHR-EOU 1 & resetHighlights disposes all active decorations. & Decorations are disposed and cleared. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForVisibleEditors with Python editor. & highlightSmells called once. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForFile with matching Python file. & Triggers highlightSmells. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForFile with non-matching file. & Skips highlighting. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & updateHighlightsForFile with JS file. & Skips highlighting. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & getInstance returns same instance. & Singleton pattern confirmed. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+
+\subsubsection{Smell Hover Display}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{2.8cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Hover Manager Test Cases}
+  \label{table:hover_manager_tests}
+  \endlastfoot
+
+  TC\testcount & FR12 & register() on init. & Registers hover for Python files. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & provideHover for JS file. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & provideHover with no cache. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & provideHover with non-matching line. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, UHR-EOU 1 & provideHover with valid smell. & Returns hover with markdown details. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, LFR-AP 1 & provideHover escapes markdown. & Output safely renders escaped characters. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+
+\subsubsection{Line Selection Decorations}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{2.8cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Line Selection Manager Test Cases}
+  \label{table:line_selection_tests}
+  \endlastfoot
+
+  TC\testcount & FR12 & Construct manager. & Registers callback for smell updates. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & removeLastComment with decoration. & Disposes and clears decorated line. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & removeLastComment with no decoration. & Does nothing. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with no editor. & Skips decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with multi-line selection. & Skips decoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with no cached smells. & Calls removeLastComment. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine with mismatched line. & Does not decorate. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, LFR-AP 1 & commentLine with one smell match. & Adds comment with smell type. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12, LFR-AP 1 & commentLine with multiple smells. & Adds comment with smell count. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & commentLine already decorated. & Skips redecoration. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & smellsUpdated for 'all'. & Clears comment. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & smellsUpdated for current file. & Clears comment. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR12 & smellsUpdated for unrelated file. & Skips clearing. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+\subsubsection{Cache Initialization From Previous Workspace State}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+  >{\raggedright\arraybackslash}p{2.8cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Cache Initialization Test Cases}
+  \label{table:cache_init_tests}
+  \endlastfoot
+
+  TC\testcount & FR11 & No workspace path configured. & Skips initialization and logs warning. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & File path outside workspace. & File is removed from cache. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11 & File no longer exists. & Cache is cleared for missing file. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, PR-RFT 1 & File has smells. & Status is set to \texttt{passed} and smells restored. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, PR-RFT 1 & File is clean. & Status is set to \texttt{no\_issues}. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR11, MS-MNT 5 & Mixed file scenarios (valid, missing, outside). & Accurate logs of valid, clean, and removed files. & All assertions pass. & \cellcolor{green} Pass \\
+\end{longtable}
+
+
+\subsubsection{Smell Configuration Management}
+
+\begin{longtable}{c
+    >{\raggedright\arraybackslash}p{1.8cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{4.2cm}
+    >{\raggedright\arraybackslash}p{2.8cm} c}
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endfirsthead
+
+  \multicolumn{6}{l}{\textit{(Continued from previous page)}} \\
+  \toprule
+  \textbf{ID} & \textbf{Ref. Req.} & \textbf{Action} &
+  \textbf{Expected Result} & \textbf{Actual Result} & \textbf{Result} \\
+  \midrule
+  \endhead
+
+  \multicolumn{6}{r}{\textit{Continued on next page}} \\
+  \endfoot
+
+  \bottomrule
+  \caption{Smell Configuration Test Cases}
+  \label{table:smells_data_tests}
+  \endlastfoot
+
+  TC\testcount & FR14, MS-MNT 3 & Load smell config file from disk. & JSON is parsed into smell config object. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Config file is missing. & Show error message. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Config file is invalid JSON. & Show error message and log. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Save smells config to disk. & File is written without error. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Save fails due to file error. & Show error and log failure. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Call \texttt{getFilterSmells()}. & Returns current loaded smell config. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Call \texttt{getEnabledSmells()}. & Returns enabled smells and options only. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup acronym by known message ID. & Returns correct acronym. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup acronym by unknown ID. & Returns undefined. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup name by known message ID. & Returns correct name. & All assertions pass. & \cellcolor{green} Pass \\
+  \midrule
+
+  TC\testcount & FR14 & Lookup description by known message ID. & Returns correct description. & All assertions pass. & \cellcolor{green} Pass \\
 \end{longtable}
 
 \section{Changes Due to Testing}
@@ -2475,7 +3111,7 @@ should be highlighted.}
 During the testing phase, several changes were made to the tool based
 on feedback from user testing, supervisor reviews, and edge cases
 encountered during unit and integration testing. These changes were
-necessary to improve the tool’s usability, functionality, and robustness.
+necessary to improve the tool's usability, functionality, and robustness.
 
 \subsection{Usability and User Input Adjustments}
 One of the key findings from testing was the balance between
@@ -2532,7 +3168,7 @@ seamless installation via the VS Code Marketplace.
 
 \bigskip
 Overall, the testing phase played a crucial role in refining the
-tool’s functionality, optimizing performance, and improving
+tool's functionality, optimizing performance, and improving
 usability. The feedback gathered led to meaningful changes that
 enhance both the developer experience and the effectiveness of
 automated refactoring.
@@ -2548,23 +3184,208 @@ command \texttt{npm run test}. The results for both are printed to the console.
 
 \section{Trace to Requirements}
 
+This section maps the tests performed to the requirements they validate, providing traceability between verification activities and project requirements.
+
+\begin{table}[H]
+  \centering
+  \caption{Functional Requirements and Corresponding Test Sections}
+  \begin{tabular}{p{0.42\textwidth}p{0.42\textwidth}}
+    \toprule \textbf{Test Section} & \textbf{Functional Requirement(s)} \\
+    \midrule
+    Code Input Acceptance Tests & FR1 \\
+    Code Smell Detection and Refactoring Suggestion Tests & FR2, FR3, FR4 \\
+    Tests for Reporting Functionality & FR6, FR15 \\
+    Visual Studio Code Interactions & FR8, FR9, FR10, FR11, FR12, FR13, FR14, FR15, FR16, FR17 \\
+    Documentation Availability Tests & FR7, FR5 \\
+    Installation and Onboarding Tests & FR7 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:sections_requirements}
+\end{table}
+
+Table \ref{tab:sections_requirements} shows the functional requirements and their corresponding test sections, ensuring all requirements have been properly tested.
+
+  \begin{table}[H]
+  \centering
+  \caption{Look \& Feel Tests and Corresponding Requirements}
+  \label{tab:nfr-trace-lf}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    LF-1 & LFR-AP 1 \\
+    LF-2 & LFR-ST 1, LFR-AP 2 \\
+    % Note: LFR-AP 2 is tested indirectly in LF-2
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table \ref{tab:nfr-trace-lf} maps the Look \& Feel test cases to their corresponding non-functional requirements.
+
+  \begin{table}[H]
+  \centering
+  \caption{Usability \& Humanity Tests and Corresponding Requirements}
+  \label{tab:nfr-trace-uh}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    UH-1 & UHR-PSI 1, UHR-PSI 2 \\
+    UH-2 & UHR-ACS 1 \\
+    UH-3 & UHR-EOU 1 \\
+    UH-4 & UHR-EOU 2 \\
+    UH-5 & UHR-LRN 1 \\
+    UH-6 & UHR-UPL 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The usability and humanity requirements and their corresponding test cases are shown in Table \ref{tab:nfr-trace-uh}.
+
+\begin{table}[H]
+  \centering
+  \caption{Performance Tests and Corresponding Requirements}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Performance
+    PF-1 & PR-SL 1, PR-SL 2, PR-CR 1 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:nfr-trace-perf}
+\end{table}
+
+Performance requirements and their test cases are outlined in Table \ref{tab:nfr-trace-perf}.
+
+  \begin{table}[H]
+    \centering
+    \caption{Operational \& Environmental Tests and Corresponding Requirements}
+    \begin{tabular}{cc}
+      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+      \midrule
+      % Operational and Environmental
+      Not explicitly tested & OER-EP 1 \\
+      Not explicitly tested & OER-EP 2 \\
+      OPE-1 & OER-WE 1 \\
+      OPE-2 & OER-IAS 1 \\
+      OPE-3 & OER-IAS 2 \\
+      OPE-4 & OER-IAS 3 \\
+      OPE-5 & OER-PR 1 \\
+      Tested by FRs & OER-RL 1 \\
+      Not explicitly tested & OER-RL 2 \\
+      \bottomrule
+    \end{tabular}
+    \label{tab:nfr-trace-ope}
+  \end{table}
+
+Table \ref{tab:nfr-trace-ope} shows the operational and environmental requirements along with their test cases.
+
+  \begin{table}[H]
+    \centering
+    \caption{Maintenance \& Support Tests and Corresponding Requirements}
+    \begin{tabular}{cc}
+      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+      \midrule
+      % Maintenance and Support
+      MS-1 & MS-MNT 1, PR-SER 1 \\
+      MS-2 & MS-MNT 2 \\
+      MS-3 & MS-MNT 3 \\
+      Not explicitly tested & MS-MNT 4 \\
+      \bottomrule
+    \end{tabular}
+    \label{tab:nfr-trace-ms}
+  \end{table}
+
+The maintenance and support requirements and their test cases are shown in Table \ref{tab:nfr-trace-ms}.
+
+\begin{table}[H]
+  \centering
+  \caption{Security Tests and Corresponding Requirements}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    SRT-1 & SR-IM 1 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:nfr-trace-sec}
+\end{table}
+
+Table \ref{tab:nfr-trace-sec} outlines the security requirements and their corresponding test cases.
+
+  \begin{table}[H]
+    \centering
+    \caption{Compliance Tests and Corresponding Requirements}
+    \begin{tabular}{cc}
+      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+      \midrule
+      % Compliance
+      CPL-1 & CL-LR 1 \\
+      CPL-2 & CL-SCR 1 \\
+      \bottomrule
+    \end{tabular}
+    \label{tab:nfr-trace-comp}
+  \end{table}
+
+The compliance requirements and their test cases are outlined in Table \ref{tab:nfr-trace-comp}.
+
 \section{Trace to Modules}
+
+This section maps test cases to the specific modules they validated, organized by architectural levels to ensure comprehensive verification of our system.
+
+\begin{table}[H]
+  \centering
+  \caption{Tests for Behaviour-Hiding Modules}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (TC-)} & \textbf{Module} \\
+    \midrule
+    TC1-TC10 & M1 (Smell) \\
+    TC11-TC15 & M2 (BaseRefactorer) \\
+    TC16-TC20 & M3 (MakeMethodStaticRefactorer) \\
+    TC21-TC27 & M4 (UseListAccumulationRefactorer) \\
+    TC28-TC35 & M5 (UseAGeneratorRefactorer) \\
+    TC36-TC44 & M6 (CacheRepeatedCallsRefactorer) \\
+    TC45-TC49 & M7 (LongElementChainRefactorer) \\
+    TC50-TC56 & M8 (LongParameterListRefactorer) \\
+    TC57-TC63 & M9 (LongMessageChainRefactorer) \\
+    TC64-TC70 & M10 (LongLambdaFunctionRefactorer) \\
+    TC71-TC75 & M11 (PluginInitiator) \\
+    TC76-TC81 & M12 (BackendCommunicator) \\
+    TC82-TC88 & M13 (SmellDetector) \\
+    TC89-TC93 & M14 (FileHighlighter) \\
+    TC94-TC98 & M15 (HoverManager) \\
+    TC99-TC102 & M20 (CacheManager) \\
+    TC103-TC114 & M21 (FilterManager) \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:behaviour_hiding_modules_tests}
+\end{table}
+
+Table \ref{tab:behaviour_hiding_modules_tests} shows the mapping between test cases and the behavior-hiding modules they verify.
+
+\begin{table}[H]
+  \centering
+  \caption{Tests for Software Decision Modules}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (TC-)} & \textbf{Module} \\
+    \midrule
+    TC115-TC120 & M16 (Measurements) \\
+    TC121-TC125 & M17 (PylintAnalyzer) \\
+    TC126-TC132 & M18 (SmellRefactorer) \\
+    TC133-TC138 & M19 (RefactorManager) \\
+    TC139-TC143 & M22 (EnergyMetrics) \\
+    TC144-TC148 & M23 (ViewProvider) \\
+    TC149-TC153 & M24 (EventManager) \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:software_decision_modules_tests}
+\end{table}
+
+Table \ref{tab:software_decision_modules_tests} maps test cases to the software decision modules they validate.
 
 \section{Code Coverage Metrics}
 
-The following analyzes the code coverage metrics for the Python
-backend and frontend (TypeScript) of the VSCode extension. The
-analysis is based on the coverage data provided in Figure
-\ref{img:python-cov} (Python backend) and Figure \ref{img:vscode-cov}
+The following analyzes the code coverage metrics for the TypeScript frontend of the VSCode extension. The
+analysis is based on the coverage data provided in Figure \ref{img:vscode-cov}
 (frontend). Code coverage is a measure of how well the codebase is
 tested, and it helps identify areas that may require additional testing.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{../Images/python-coverage.png}
-  \caption{Coverage Report of the Python Backend Library}
-  \label{img:python-cov}
-\end{figure}
 
 \begin{figure}[H]
   \centering
@@ -2574,29 +3395,43 @@ tested, and it helps identify areas that may require additional testing.
 \end{figure}
 
 \subsection{VSCode Extension}
-The frontend codebase has an overall coverage of 45.43\% for
-statements, 36.48\% for branches, 42.62\% for functions, and 45.53\%
-for lines (Figure \ref{img:vscode-cov}). These metrics fall below the
-global coverage thresholds of 80\% for the following reasons. The
-file \texttt{extension.ts}, which contains the core logic for the
-VSCode extension, has 0\% coverage as it is mainly made up of
-initialization commands with no real logic that can be tested. The
-file \texttt{refactorView.ts}, responsible for the refactoring view,
-also has 0\% coverage. This module is a UI component and will be
-tested for revision 1. Since \texttt{handleEditorChange.ts} is
-closely related to the UI component, its testing has also been put off.\\
+The frontend codebase has an overall coverage of 96.99\% for
+lines, 96.91\% for statements, 82.95\% for branches, and 95.09\% for functions
+(Figure \ref{img:vscode-cov}). These metrics show significant test coverage across the codebase.
 
-The file \texttt{refactorSmell.ts} has moderate coverage (55.37\%
-statements, 45.23\% branches), with significant gaps in testing
-around lines 143–269 and 328–337 (Figure \ref{img:vscode-cov}). This
-is due to a feature that is not fully implemented and therefore not
-tested. Finally, \texttt{configManager.ts} has not been tested as yet
-due to evolving configuration options, but will be tested for revision 1.
+\noindent \textbf{Well-Tested Components:} Many critical components have excellent coverage, including:
+\begin{itemize}
+  \item \texttt{resetConfiguration.ts}: 100\% coverage across all metrics
+  \item \texttt{wipeWorkCache.ts}: 100\% coverage across all metrics
+  \item \texttt{hoverManager.ts}: 100\% coverage across all metrics
+  \item \texttt{exportMetricsData.ts}: 100\% coverage across all metrics
+  \item \texttt{trackedDiffEditors.ts}: 100\% coverage across all metrics
+  \item \texttt{acceptRefactoring.ts}: 100\% line coverage (87.5\% branch coverage)
+  \item \texttt{refactor.ts}: 100\% line coverage (84.61\% branch coverage)
+  \item \texttt{normalizePath.ts}: 100\% coverage across all metrics
+\end{itemize}
 
+\noindent \textbf{Areas for Improvement:} The following components still require testing attention:
+\begin{itemize}
+  \item \texttt{backend.ts}: 98.96\% line coverage with uncovered line 124
+  \item \texttt{configureWorkspace.ts}: 88.09\% line coverage with uncovered lines 59, 79-82, 91-94
+  \item \texttt{detectSmells.ts}: 98.76\% line coverage with uncovered line 103
+  \item \texttt{rejectRefactoring.ts}: 100\% line coverage but only 66.66\% branch coverage, with uncovered line 44
+  \item \texttt{workspaceModifiedListener.ts}: 91.3\% line coverage but only 69.23\% branch coverage, with uncovered lines 58-59, 63-64, 71, 113
+  \item \texttt{fileHighlighter.ts}: 95.08\% line coverage with uncovered lines 17-20
+  \item \texttt{lineSelectionManager.ts}: 100\% line coverage but uncovered line 52
+  \item \texttt{initializeStatusesFromCache.ts}: 97.82\% line coverage with uncovered line 96
+  \item \texttt{refactorActionButtons.ts}: 87.5\% line coverage with uncovered lines 44-47, 61-64
+  \item \texttt{smellsData.ts}: 100\% line coverage but only 62.5\% branch coverage, with uncovered lines 39, 117-120
+\end{itemize}
+
+\noindent \textbf{Future Testing:} While overall code coverage is excellent at 96.99\% for lines, there are still specific uncovered lines and branches in several components that should be addressed in future testing efforts. Improving branch coverage, especially in components with coverage below 70\%, should be prioritized.
 \subsection{Python Backend}
 The backend codebase has an overall coverage of 91\% (Figure
 \ref{img:python-cov}) and has been thoroughly tested as it contains
-the key features of project and the bulk of the logic. The exception
+the key features of project and the bulk of the logic. 
+
+\noindent \textbf{Testing Exceptions:} The exception
 is \texttt{show\_logs.py}, which handles the websocket endpoint for
 logging, due to the complex nature of this module testing has been
 omitted. Since its function is mainly to broadcast logs it is also
@@ -2614,7 +3449,7 @@ refactoring Python code to improve energy efficiency. The test will
 identify usability issues that may hinder adoption by software developers.
 
 \section*{Objective}
-Evaluate the usability of the extension’s \textbf{smell detection},
+Evaluate the usability of the extension's \textbf{smell detection},
 \textbf{refactoring process}, \textbf{customization settings}, and
 \textbf{refactoring view}.
 
@@ -2690,7 +3525,7 @@ Moderated usability testing.
     \begin{itemize}
       \item \textbf{Critical:} Blocks users from completing tasks.
       \item \textbf{Major:} Causes significant frustration but has workarounds.
-      \item \textbf{Minor:} Slight inconvenience, but doesn’t impact
+      \item \textbf{Minor:} Slight inconvenience, but doesn't impact
         core functionality.
     \end{itemize}
   \item Provide recommendations for UI/UX improvements.
@@ -2787,15 +3622,15 @@ Report your observations \textbf{aloud}!
 The following links point to the data collected from each participant:\\
 
 {\noindent
-  \href{run:./../Extras/UsabilityTesting/test_data/participant1-data.csv}{Participant
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/test_data/participant1-data.csv}{Participant
   1} \\[2mm]
-  \href{run:./../Extras/UsabilityTesting/test_data/participant2-data.csv}{Participant
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/test_data/participant2-data.csv}{Participant
   2} \\[2mm]
-  \href{run:./../Extras/UsabilityTesting/test_data/participant3-data.csv}{Participant
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/test_data/participant3-data.csv}{Participant
   3} \\[2mm]
-  \href{run:./../Extras/UsabilityTesting/test_data/participant4-data.csv}{Participant
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/test_data/participant4-data.csv}{Participant
   4} \\[2mm]
-  \href{run:./../Extras/UsabilityTesting/test_data/participant5-data.csv}{Participant
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/test_data/participant5-data.csv}{Participant
   5}
 }
 
@@ -2803,14 +3638,14 @@ The following links point to the data collected from each participant:\\
 The following link points to a CSV file containing the pre-survey data:\\
 
 \noindent
-\href{run:./../Extras/UsabilityTesting/surveys/pre-test-survey-data.csv}{Click
+\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/surveys/pre-test-survey-data.csv}{Click
 here to access the survey results CSV file}.
 
 \subsection*{Post-Test Survey Data}
 The following link points to a CSV file containing the post-survey data:\\
 
 \noindent
-\href{run:./../Extras/UsabilityTesting/surveys/post-test-survey-data.csv}{Click
+\href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/docs/Extras/UsabilityTesting/surveys/post-test-survey-data.csv}{Click
 here to access the survey results CSV file}.
 
 \newpage{}
@@ -2884,7 +3719,7 @@ graduate attribute of Reflection.
 
     A big win was how much of our work naturally fed into the report.
     Since we had already been refining our verification and
-    validation (V\&V) process throughout development, we weren’t
+    validation (V\&V) process throughout development, we weren't
     starting from scratch, we just had to document what we had done.
     Having clear test cases in place made it easier to describe our
     approach and results, rather than writing purely in the abstract.
@@ -3035,7 +3870,7 @@ graduate attribute of Reflection.
         sections reference predefined specifications/industry
         standards rather than direct client input.
       \item \textbf{Implementation and Technical Explanations:} These
-        were formulated based on the development team’s decisions,
+        were formulated based on the development team's decisions,
         software documentation, and prior knowledge rather than
         external feedback.
 
@@ -3119,7 +3954,7 @@ graduate attribute of Reflection.
     with more thorough initial testing.
     If i could do it again I'd build more flexibility into the VnV
     Plan to account for unexpected results and allocate extra time
-    for debugging and edge-case testing. I’d also include a broader
+    for debugging and edge-case testing. I'd also include a broader
     range of test cases (e.g., multiline whitespace, wrong input) in
     the initial plan to catch these issues sooner.
 
