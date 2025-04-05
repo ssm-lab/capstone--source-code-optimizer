@@ -50,35 +50,34 @@ jobs:
           sudo apt install cargo
           cargo install tex-fmt
 
-      # Get changed .tex files
-      - name: Get changed .tex files
-        id: changed-tex-files
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            **/*.tex
-          diff_relative: true # Get the list of files relative to the repo root
+      # # Get changed .tex files
+      # - name: Get changed .tex files
+      #   id: changed-tex-files
+      #   uses: tj-actions/changed-files@v45
+      #   with:
+      #     files: |
+      #       **/*.tex
+      #     diff_relative: true # Get the list of files relative to the repo root
 
       # Format and Build LaTeX files
-      - name: Format and Build changed tex files
-        if: steps.changed-tex-files.outputs.any_changed == 'true'
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-tex-files.outputs.all_changed_files }}
-        run: |
-          for file in ${ALL_CHANGED_FILES}; do
-            tex-fmt "$file"
-            filename=$(basename -- "$file")
-            folder=$(dirname "$file")  # Get the folder of the file
-            echo "Building $filename"
-            cd "$folder"  # Change to the folder where the tex file is located
-            make 
-            make clean
-            cd -  # Go back to root folder
-          done
-          git status
+      # - name: Format and Build changed tex files
+      #   if: steps.changed-tex-files.outputs.any_changed == 'true'
+      #   env:
+      #     ALL_CHANGED_FILES: ${{ steps.changed-tex-files.outputs.all_changed_files }}
+      #   run: |
+      #     for file in ${ALL_CHANGED_FILES}; do
+      #       tex-fmt "$file"
+      #       filename=$(basename -- "$file")
+      #       folder=$(dirname "$file")  # Get the folder of the file
+      #       echo "Building $filename"
+      #       cd "$folder"  # Change to the folder where the tex file is located
+      #       make 
+      #       make clean
+      #       cd -  # Go back to root folder
+      #     done
+      #     git status
       
       - name: Build All Files
-        if: ${{ contains(github.event.head_commit.message, '[DOCS] [ALL]') }}
         run: |
           cd docs
           make
