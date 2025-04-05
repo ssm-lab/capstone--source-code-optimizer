@@ -355,20 +355,27 @@ For each detected smell (grouped by smell type), refactoring is run
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|p{2.5cm}|p{6cm}|}
   \hline
-  \textbf{Type of Smell} & \textbf{Code} & \textbf{Smell Name} \\
+  \textbf{Type of Smell} & \textbf{Code} & \textbf{Smell Name} & \textbf{Brief Explanation} \\
   \hline
-  Pylint & R0913 & Long Parameter List \\
-  Pylint & R6301 & No Self Use \\
-  Pylint & R1729 & Use a Generator \\
+  Pylint & R0913 & Long Parameter List & Functions with excessive parameters (beyond configured limit). Complex to refactor as it requires restructuring function signatures and all call sites. \\
   \hline
-  Custom & LMC001 & Long Message Chain \\
-  Custom & UVA001 & Unused Variable or Attribute \\
-  Custom & LEC001 & Long Element Chain \\
-  Custom & LLE001 & Long Lambda Expression \\
-  Custom & SCL001 & String Concatenation in Loop \\
-  Custom & CRC001 & Cache Repeated Calls \\
+  Pylint & R6301 & No Self Use & Methods that don't use the instance (self). Requires carefully converting to static methods or class methods. \\
+  \hline
+  Pylint & R1729 & Use a Generator & List comprehensions that could be generators. Simple transformation but requires ensuring equivalent behavior. \\
+  \hline
+  Custom & LMC001 & Long Message Chain & Multiple object references chained together (a.b.c.d). Simple to refactor with intermediate variables. \\
+  \hline
+  Custom & UVA001 & Unused Variable or Attribute & Variables or attributes declared but never used. Easy to remove without complex analysis. \\
+  \hline
+  Custom & LEC001 & Long Element Chain & Nested dictionary/list access with multiple indexing operations. Simple to refactor with intermediate variables. \\
+  \hline
+  Custom & LLE001 & Long Lambda Expression & Complex operations in lambda functions. Easy to refactor into named functions. \\
+  \hline
+  Custom & SCL001 & String Concatenation in Loop & Strings built using += in loops. Simple to refactor to join() or ''.join(). \\
+  \hline
+  Custom & CRC001 & Cache Repeated Calls & Same function calls made repeatedly with identical parameters. Simple to refactor with caching. \\
   \hline
 \end{tabular}
 \caption{Code Smells Used in Performance Testing}
