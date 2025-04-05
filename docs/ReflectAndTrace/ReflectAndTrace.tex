@@ -433,9 +433,55 @@ This evolutionary process demonstrates our user-centred design philosophy, where
 
 \section{Design Decisions (LO12)}
 
-\plt{Reflect and justify your design decisions.  How did limitations,
- assumptions, and constraints influence your decisions?  Discuss each of these
- separately.}
+The implementation of EcoOptimizer was shaped by technical limitations, project constraints, and core design principles. The system was built to be modular, extensible, and energy-aware, while remaining usable and performant in a local development environment.
+
+\subsection*{Architectural Decisions}
+
+\begin{itemize}
+    \item \textbf{Refactorer Design Structure:} The refactoring subsystem follows a two-level inheritance hierarchy:
+    \begin{itemize}
+        \item \texttt{BaseRefactorer} defines the interface and shared logic for all refactorers.
+        \item \texttt{MultiFileRefactorer} extends \texttt{BaseRefactorer} to support transformations across multiple files.
+        \item Concrete refactorers subclass either \texttt{BaseRefactorer} or \texttt{MultiFileRefactorer}, depending on their scope.
+    \end{itemize}
+    This structure enforces separation of concerns, encourages reusability, and makes it easy to introduce new refactorers without modifying the core system.
+\end{itemize}
+
+\subsection*{Limitations}
+
+\begin{itemize}
+    \item \textbf{Tooling Limitations for Code Smell Detection:} No single tool could detect all required smells. A strategy-based analyzer system was introduced to combine AST, Astroid, Pylint, and custom analyzers dynamically.
+    
+    \item \textbf{Energy Measurement Accuracy:} Energy readings from CodeCarbon vary with hardware and OS. To reduce variability, measurements are performed in isolated subprocesses and compared under consistent conditions.
+    
+    \item \textbf{File-Level Focus:} While most refactorings are file-scoped, limited multi-file analysis was included for smells requiring cross-file changes. 
+    
+    \item \textbf{Temporary File Refactoring:} All transformations are staged in temporary directories before applying to source files. This protects code integrity but adds complexity to file handling and rollback.
+\end{itemize}
+
+\subsection*{Assumptions}
+
+\begin{itemize}
+    \item \textbf{Valid Python Input:} The system assumes syntactically correct Python files as input to avoid expensive pre-validation routines.
+    
+    \item \textbf{Code Executability:} Energy measurement assumes the input file can be run as a standalone Python script using a main entry point.
+    
+    \item \textbf{Library Availability:} It is assumed that CodeCarbon and its dependencies are installed and operational across user systems.
+\end{itemize}
+
+\subsection*{Constraints}
+
+\begin{itemize}
+    \item \textbf{Performance Trade-offs:} Analyzer and refactorer execution was parallelized and subprocessed to preserve responsiveness, especially on large codebases.
+    
+    \item \textbf{Cross-Platform File Management:} Temporary directories and subprocess logic were adapted for compatibility across Windows (\texttt{TEMP}) and Unix-based systems (\texttt{TMPDIR}).
+    
+    \item \textbf{Security and Stability:} Refactoring operations and energy measurements are isolated to prevent modifications to user files before validation. Logging and error handling ensure graceful degradation on failures.
+    
+    \item \textbf{Ecosystem Fit:} Libraries like FastAPI, Pydantic, and CodeCarbon were selected based on open-source licensing and compatibility with modern Python development practices.
+\end{itemize}
+
+\noindent Overall, the architecture of EcoOptimizer balances security, performance and extensibility. Each design decision reflects a trade-off that prioritizes energy transparency and safe refactoring, while remaining mindful of usability and future expandability.
 
 \section{Economic Considerations (LO23)}
 
