@@ -87,101 +87,149 @@ low.}
 
 \subsubsection{Software Requirement Specification Document (SRS)}
 
-The updated SRS shows a significant shift in technical direction, most notably through the \textbf{complete removal of the reinforcement learning model} that was previously central to the architecture. This change cascaded through multiple sections—the business data model was simplified by eliminating the learning component, related business use cases were deleted, and all associated requirements about algorithmic refactoring optimization were stripped out.\\
+The SRS underwent significant refinements based on feedback, beginning with peer suggestions to clarify ambiguous requirements including FR-2 (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/154}{Issue \#154}) and FR-8 (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/137}{Issue \#137}), with particular attention given to properly defining ``lowest energy consumption'' (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/138}{Issue \#138}) to ensure measurable outcomes. The documentation around stakeholders was enhanced to explicitly identify which software developers would be considered shareholders (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/140}{Issue \#140}), while training requirement exclusions were properly justified (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/141}{Issue \#141}). Additional details expanded the energy consumption dashboard description (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/152}{Issue \#152}), and new adaptability requirements were added (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/157}{Issue \#157}). Priority planning suggestions were reviewed but ultimately discarded as duplicates (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issues \#136 + \#155}).
 
-Conversely, substantial new functionality was added around \textbf{IDE plugin configuration and user control}. The document now includes detailed requirements for customizable smell displays, selective refactoring of specific issues, and toggleable linting features. These are supported by new product use cases that outline workflows for filtering smells and clearing analysis history.\\
-
-The integration with \textbf{GitHub Actions was completely excised} from the requirements, removing all CI/CD pipeline functionality that appeared in the original version. Security requirements were simultaneously simplified by eliminating authentication needs and privacy compliance mandates.\\
-
-New visualization elements were incorporated, including a \textbf{comprehensive state diagram} that maps the complete refactoring workflow. The code smell taxonomy was refined to focus on more concrete, measurable issues while removing vaguer categories. Throughout the document, qualitative performance targets were replaced with quantified metrics.\\
-
-These changes collectively reflect an evolution from experimental concepts to a more focused tool, with stronger emphasis on \textbf{practical IDE integration} and user-configurable analysis.
+Teaching assistant feedback drove structural improvements including moving the glossary section (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/270}{Issue \#270}) and implementing symbolic constants (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/269}{Issue \#269}). All tables and figures were properly referenced throughout (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/271}{Issue \#271}), while requirements were made more abstract (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/272}{Issue \#272}) with improved traceability between sections (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/273}{Issue \#273}). The team formalized the document by standardizing terminology (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/274}{Issue \#274}) and reducing ambiguity in requirement wording (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/275}{Issue \#275}). Immunity requirement labeling corrections (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153}) and security metric additions were implemented, though some suggestions like creating an entity relationship diagram were ultimately discarded (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/156}{Issue \#156}).
 
 \renewcommand{\arraystretch}{1.5}
-\begin{longtable}[H]{|p{5cm}|p{2cm}|p{5cm}|p{3cm}|}
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{SRS Feedback Tracking and Implementation} \label{tab:srs-feedback-tracking} \\
     \hline
-    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endfirsthead
-    
-    \multicolumn{4}{c}%
-    {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
     \hline
-    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endhead
-    
-    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ 
-    \hline
+
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
     \endfoot
-    
+
     \hline
-    \caption{SRS Feedback Tracking and Implementation}
-    \label{tab:srs-feedback-tracking}
     \endlastfoot
-    
-    Add priority planning to phase in plan & peer & duplicates and discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issue \#136 + \#155} \\ \hline
-    Clarify meaning of FR-8 & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/137}{Issue \#137} \\ \hline
-    Clarify definition of ``lowest energy consumption'' & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/138}{Issue \#138} \\ \hline
-    Specify which software developers are considered to be shareholders and how their feedback will be used & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/140}{Issue \#140} \\ \hline
-    Explain why training requirements aren't needed for the project & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/141}{Issue \#141} \\ \hline
-    Expand more of the energy consumption dashboard & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/152}{Issue \#152} \\ \hline
-    Fix labelling for immunity requirements & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\ \hline
-    Add measurable indicators of success to security fit criterion & peer & discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\ \hline
-    Clarify amiguous FR-2 & peer & discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/154}{Issue \#154} \\ \hline
-    Create entity relationship diagram & peer & discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/156}{Issue \#156} \\ \hline
-    Add adaptability requirements & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/157}{Issue \#157} \\ \hline
-    Add symbolic constants & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/269}{Issue \#269} \\ \hline
-    Move glossary up in the document & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/270}{Issue \#270} \\ \hline
-    Reference tables and figures & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/271}{Issue \#271} \\ \hline
-    Make requirements more abstract & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/272}{Issue \#272} \\ \hline
-    Add traceability & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/273}{Issue \#273} \\ \hline
-    Make requirements less ambiguous & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/274}{Issue \#274} \\ \hline
-    Formalize document & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/275}{Issue \#275} \\ \hline
+
+peer & Add priority planning to phase in plan & None, None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/155}{Issue \#136 + \#155} \\
+\hline
+
+peer & Clarify meaning of FR-8 & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/137}{Issue \#137} \\
+\hline
+
+peer & Clarify definition of ``lowest energy consumption'' & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/138}{Issue \#138} \\
+\hline
+
+peer & Specify which software developers are considered to be shareholders and how their feedback will be used & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/140}{Issue \#140} \\
+\hline
+
+peer & Explain why training requirements aren't needed for the project & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/141}{Issue \#141} \\
+\hline
+
+peer & Expand more of the energy consumption dashboard & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/152}{Issue \#152} \\
+\hline
+
+peer & Fix labelling for immunity requirements & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\
+\hline
+
+peer & Add measurable indicators of success to security fit criterion & None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/153}{Issue \#153} \\
+\hline
+
+peer & Clarify ambiguous FR-2 & None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/154}{Issue \#154} \\
+\hline
+
+peer & Create entity relationship diagram & None, discarded & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/156}{Issue \#156} \\
+\hline
+
+peer & Add adaptability requirements & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/157}{Issue \#157} \\
+\hline
+
+TA & Add symbolic constants & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/269}{Issue \#269} \\
+\hline
+
+TA & Move glossary up in the document & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/270}{Issue \#270} \\
+\hline
+
+TA & Reference tables and figures & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/271}{Issue \#271} \\
+\hline
+
+TA & Make requirements more abstract & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/272}{Issue \#272} \\
+\hline
+
+TA & Add traceability & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/273}{Issue \#273} \\
+\hline
+
+TA & Make requirements less ambiguous & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/274}{Issue \#274} \\
+\hline
+
+TA & Formalize document & addressed in issue & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/275}{Issue \#275} \\
+\hline
 \end{longtable}
 
 \subsubsection{Hazard Analysis}
 
-The revised Hazard Analysis reflects a \textbf{significant simplification and refocusing of the system's scope}, with particular attention to \textbf{user experience, security, and measurable requirements}. Most notably, the team \textbf{eliminated the Reinforcement Learning Model} entirely—a major departure from the original design. This removal streamlined the document, excising associated hazards (like model overfitting and bias) and requirements (such as quarterly model audits), while allowing greater focus on core refactoring functionality. The \textbf{Testing Module was similarly consolidated} into the Analysis and Refactoring Modules, with validation now implicitly handled through smell detection and performance metrics rather than as a standalone component.\\
+The hazard analysis documentation was substantially improved through multiple feedback iterations. Terminology in SCR-9 was clarified (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/185}{Issue \#185}) and hazard/requirement references were corrected (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/186}{Issue \#186}). A new unexpected system shutdown hazard was added (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/187}{Issue \#187}), while clashing hazards were addressed before some components were later removed (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/189}{Issue \#189}). Both peer and TA feedback improved FMEA table formatting (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/190}{Issue \#190} + \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/278}{Issue \#278}), and the critical assumptions section gained user/environment context (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/191}{Issue \#191}). Additional analysis covered inter-component hazards (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/192}{Issue \#192}), and reinforcement learning component actions were clarified before its removal (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/193}{Issue \#193}). Unclear assumptions were resolved (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/194}{Issue \#194}), while TA feedback ensured proper symbolic constant usage (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/277}{Issue \#277}) and component scope clarification (\href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/279}{Issue \#279}), though some analyzed components were later excluded during design evolution.
 
-The energy measurement backend shifted from \textbf{PyJoules to CodeCarbon}, with updated failure mitigations (e.g., cloud-environment permissions in HZ-3) and revised assumptions about cross-platform consistency. The new version also introduces \textbf{robust UI/accessibility safeguards}, adding five previously absent hazards—such as real-time metric display (HZ-12) and WCAG compliance (HZ-15)—backed by quantified requirements like \texttt{METRIC\_REFRESH\_TIME = 2 sec}. Security saw deliberate hardening, with expanded static analysis to \textbf{prevent refactoring of sensitive code} (HZ-8) and detect external library dependencies (HZ-7).\\
-
-Peripherals (GitHub Action and Web Client), were replaced with a \textbf{strictly local VS Code extension}, emphasizing tighter integration and reducing external dependencies. New features like \textbf{checkpointing (SCR-10)}—enforcing progress saves every 30 seconds—and \textbf{concurrency controls (SCR-9)} address crash recovery and parallel operation risks, underscored by symbolic constants (\texttt{SAVE\_TIME}, \texttt{MAX\_DATA\_LOSS}) for precision. Together, these changes reflect a \textbf{more pragmatic, user-centric tool} with clearer boundaries, measurable safeguards, and mitigated risks—all while preserving the original goal of energy-efficient Python refactoring.
-
-\begin{longtable}[H]{|p{5cm}|p{2cm}|p{5cm}|p{3cm}|}
+\begin{longtable}{|p{2cm}|p{3.5cm}|p{4.5cm}|p{3cm}|}
+    \caption{Hazard Analysis Feedback Tracking and Implementation} \label{tab:ha-feedback-tracking} \\
     \hline
-    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endfirsthead
-    
-    \multicolumn{4}{c}%
-    {{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+
+    \multicolumn{4}{c}{{\bfseries Table \thetable\ continued from previous page}} \\
     \hline
-    \textbf{Feedback Description} & \textbf{Source} & \textbf{Implementation} & \textbf{Issue/Commit Links} \\ 
+    \textbf{Feedback Source} & \textbf{Feedback Summary} & \textbf{Changes Made} & \textbf{Related Commits/Issues} \\
     \hline
     \endhead
-    
-    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ 
-    \hline
+
+    \hline \multicolumn{4}{|r|}{{Continued on next page}} \\ \hline
     \endfoot
-    
+
     \hline
-    \caption{Hazard Analysis Feedback Tracking and Implementation}
-    \label{tab:ha-feedback-tracking}
     \endlastfoot
-    
-    Clarify the terminology used in SCR 9 & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/185}{Issue \#185} \\ \hline
-    Fix referencing between hazards and requirements & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/186}{Issue \#186} \\ \hline
-    Add new hazard related to unexpected system shutdown & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/187}{Issue \#187} \\ \hline
-    Fix clashing hazards & peer & addressed, but component completely removed in later design iteration  & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/189}{Issue \#189} \\ \hline
-    Fix FMEA table formatting & peer and TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/190}{Issue \#190}, \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/278}{Issue \#278} \\
-    \hline
-    Critical assumptions section lacks user and environment context assumptions & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/191}{Issue \#191} \\ \hline
-    FMEA table missing analysis of inter-component hazards and failure modes & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/192}{Issue \#192} \\ \hline
-    Unclear recommended actions point for reinforcement learning component & peer & addressed, but component removed in later design iteration & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/193}{Issue \#193} \\ \hline
-    Unclear critical assumptions & peer & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/194}{Issue \#194} \\ \hline
-    Need symbolic constants & TA & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/277}{Issue \#277} \\\hline
-    Make clear which components are in scope & TA & addressed, but removed in later iteration & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/279}{Issue \#279} \\\hline
+
+peer & Clarify the terminology used in SCR 9 & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/185}{Issue \#185} \\
+\hline
+
+peer & Fix referencing between hazards and requirements & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/186}{Issue \#186} \\
+\hline
+
+peer & Add new hazard related to unexpected system shutdown & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/187}{Issue \#187} \\
+\hline
+
+peer & Fix clashing hazards & \begin{itemize}[nosep,leftmargin=*]
+    \item Addressed initially
+    \item Component completely removed in later design iteration
+\end{itemize} & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/189}{Issue \#189} \\
+\hline
+
+peer and TA & Fix FMEA table formatting & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/190}{Issue \#190}, \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/278}{Issue \#278} \\
+\hline
+
+peer & Critical assumptions section lacks user and environment context assumptions & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/191}{Issue \#191} \\
+\hline
+
+peer & FMEA table missing analysis of inter-component hazards and failure modes & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/192}{Issue \#192} \\
+\hline
+
+peer & Unclear recommended actions point for reinforcement learning component & \begin{itemize}[nosep,leftmargin=*]
+    \item Addressed initially
+    \item Component removed in later design iteration
+\end{itemize} & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/193}{Issue \#193} \\
+\hline
+
+peer & Unclear critical assumptions & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/194}{Issue \#194} \\
+\hline
+
+TA & Need symbolic constants & addressed & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/277}{Issue \#277} \\
+\hline
+
+TA & Make clear which components are in scope & \begin{itemize}[nosep,leftmargin=*]
+    \item Addressed initially
+    \item Components removed in later iteration
+\end{itemize} & \href{https://github.com/ssm-lab/capstone--source-code-optimizer/issues/279}{Issue \#279} \\
+\hline
 \end{longtable}
 
 
