@@ -49,12 +49,22 @@
 
 \section*{Revision History}
 
-\begin{tabularx}{\textwidth}{p{4cm}p{2cm}X}
-  \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\begin{tabularx}{\textwidth}{p{4cm}p{4cm}X}
+  \toprule {\bf Date} & {\bf Name} & {\bf Notes}\\
   \midrule
-  November 4th, 2024 & 0.0 & Created initial revision of VnV Plan\\
-  March 10th, 2025 & 0.1 & Revised Functional and Non-Functional Requirements\\
-
+  November 4th, 2024 & All & Created initial revision of VnV Plan\\
+January 3rd, 2025 & Sevhena Walker & Modified template for static tests, clarified test-SRT-3\\
+  March 10th, 2025 & Nivetha Kuruparan, Sevhena Walker & Revised Functional and Non-Functional Requirements\\
+  April 1st, 2025 & Sevhena Walker & Modified Implementation Verification plan: refined unit testing tools.\\
+  April 1st, 2025 & Sevhena Walker & Updated Automated testing and Verification Tools to include plugin tools.\\
+  April 1st, 2025 & Sevhena Walker & Updated 4.2 and 4.5.2 to reflect the new tests.\\
+  April 1st, 2025 & Sevhena Walker & Fixed some links. Fixed table formatting and some grammar.\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for General Information Section\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Plan Section\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Test Functional Requirements Section\\
+  April 3rd, 2025 & Nivetha Kuruparan & Major Revisions for Test Non-Functional Requirements Section\\
+  April 3rd, 2025 & Nivetha Kuruparan & Heavily Revised VSCode Plugin Unit Tests\\
+  April 3rd, 2025 & Nivetha Kuruparan & Fixed Links\\
   \bottomrule
 \end{tabularx}
 
@@ -109,7 +119,7 @@ in.}
 
 \pagenumbering{arabic}
 
-This document outlines the process and methods to ensure that the
+\noindent This document outlines the process and methods to ensure that the
 software meets its requirements and functions as intended. This
 document provides a structured approach to evaluating the product,
 incorporating both verification (to confirm that the software is
@@ -119,62 +129,30 @@ potential issues, the V\&V process aims to enhance quality, reduce
 risks, and ensure compliance with both functional and non-functional
 requirements.\\
 
-The following sections will go over the approach for verification and
+\noindent The following sections will go over the approach for verification and
 validation, including the team structure, verification strategies at
-various stages and tools to be employed. Furthermore, a detailed list
+various stages, and tools to be employed. Furthermore, a detailed list
 of system and unit tests are also included in this document.
 
 \section{General Information}
 
 \subsection{Summary}
 
-The software being tested is called EcoOptimizer. EcoOptimizer is a
-python refactoring library that focuses on optimizing code in a way
-that reduces its energy consumption. The system will be capable to
-analyze python code in order to spot inefficiencies (code smells)
-within, measuring the energy efficiency of the inputted code and, of
-course, apply appropriate refactorings that preserve the initial
-function of the source code. \\
-
-Furthermore, peripheral tools such as a Visual Studio Code (VS Code)
-extension and GitHub Action are also to be tested. The extension will
-integrate the library with Visual Studio Code for a more efficient
-development process and the GitHub Action will allow a proper
-integration of the library into continuous integration (CI) workflows.
+The software being tested is called EcoOptimizer. EcoOptimizer is a Visual Studio Code (VS Code) extension designed to help developers identify and refactor energy-inefficient code in Python. It uses a Python package as its backend to detect code smells and estimate the carbon emissions that can be saved by applying the suggested refactorings. Users are given the option to accept or reject these refactorings directly within the editor. EcoOptimizer aims to promote energy-aware software development by making it easier to write efficient code without altering the original functionality.
 
 \subsection{Objectives}
 
-The primary objective of this project is to build confidence in the
-\textbf{correctness} and \textbf{energy efficiency} of the
-refactoring library, ensuring that it performs as expected in
-improving code efficiency while maintaining functionality. Usability
-is also emphasized, particularly in the user interfaces provided
-through the \textbf{VS Code extension} and \textbf{GitHub Action}
-integrations, as ease of use is critical for adoption by software
-developers. These qualities—correctness, energy efficiency, and
-usability—are central to the project’s success, as they directly
-impact user experience, performance, and the sustainable benefits of the tool.\\
+The primary objective of this project is to build confidence in the correctness and energy efficiency of the EcoOptimizer system, ensuring it reliably identifies and refactors energy-inefficient Python code without altering its original behaviour. Usability is a major focus—particularly within the VS Code extension—as the tool is designed to suggest improvements and keep developers informed while they write code. A core feature of EcoOptimizer is giving users the autonomy to accept or reject refactorings, empowering them to make informed decisions about the changes being applied to their code. These qualities—correctness, energy efficiency, user control, and usability—are essential to the project’s success, as they shape the overall user experience, practical adoption, and sustainable benefits of the tool.\\
 
-Certain objectives are intentionally left out-of-scope due to
-resource constraints. We will not independently verify external
-libraries or dependencies; instead, we assume they have been
-validated by their respective development teams.
+\noindent Certain objectives have been intentionally excluded due to resource constraints. For instance, we will not independently verify third-party libraries or dependencies, and will assume that they are adequately tested and maintained by their original developers.
 
 \subsection{Challenge Level and Extras}
 
-Our project, set at a \textbf{general} challenge level, includes two
-additional focuses: \textbf{user documentation} and \textbf{usability
-testing}. The user documentation aims to provide clear, accessible
-guidance for developers, making it easy to understand the tool’s
-setup, functionality, and integration into existing workflows.
-Usability testing will ensure that the tool is intuitive and meets
-user needs effectively, offering insights to refine the user
-interface and optimize interactions with its features.
+Our project, set at a general challenge level, includes two additional focuses: the creation of a user manual and the completion of a usability report. The user manual provides clear and accessible instructions for developers, covering installation, setup, and usage of both the VS Code extension and the underlying Python package. It is designed to help users quickly integrate the tool into their development workflow. The usability report summarizes findings from a structured usability testing session, offering valuable insights into how effectively the tool meets user needs. These findings are used to refine the user interface and improve the overall user experience, ensuring the tool is both intuitive and practical for real-world use.
 
 \subsection{Relevant Documentation}
 
-The Verification and Validation (VnV) plan relies on three key
-documents to guide testing and assessment:
+The Verification and Validation (VnV) plan relies on three key documents to guide testing and assessment:
 \begin{itemize}
   \item[] \textbf{Software Requirements Specification
     (\SRS)~\cite{SRS}:} The foundation for the VnV plan, as it
@@ -194,7 +172,7 @@ documents to guide testing and assessment:
     dependencies within the system.
 \end{itemize}
 
-\section{Plan}
+\newpage\section{Plan}
 
 The following section outlines the comprehensive Verification and
 Validation (VnV) strategy, detailing the team structure, specific
@@ -204,8 +182,7 @@ automated tools employed and the approach to software validation.
 
 \subsection{Verification and Validation Team}
 
-The Verification and Validation (VnV) Team for the Source Code
-Optimizer project consists of the following members and their specific roles:
+The Verification and Validation (VnV) Team for the EcoOptimizer project consists of the following members and their specific roles:
 
 \begin{itemize}
   \item \textbf{Sevhena Walker}: Lead Tester. Oversees and
@@ -222,346 +199,208 @@ Optimizer project consists of the following members and their specific roles:
   \item \textbf{Nivetha Kuruparan}: Non-Functional Requirements
     Tester. Ensures that the final product meets user expectations
     regarding user experience and interface intuitiveness.
-  \item \textbf{Istvan David} (supervisor): Supervises the overall
+  \item \textbf{Istvan David} (Supervisor): Supervises the overall
     VnV process, providing feedback and guidance based on industry
     standards and practices.
 \end{itemize}
 
 \subsection{SRS Verification Plan}
 
-\textbf{Function \& Non-Functional Requirements:}
-\begin{itemize}
-  \item A comprehensive test suite that covers all requirements
-    specified in the SRS will be created.
-  \item Each requirement will be mapped to specific test cases to
-    ensure maximum coverage.
-  \item Automated and manual testing will be conducted to verify that
-    the implemented system meets each functional requirement.
-  \item Usability testing with representative users will be carried
-    out to validate user experience requirements and other
-    non-functional requirements.
-  \item Performance tests will be conducted to verify that the system
-    meets specified performance requirements.
+The verification of the Software Requirements Specification will be conducted through a structured four-phase approach encompassing requirements validation, stakeholder review, user acceptance testing, and continuous verification.
+
+\subsubsection{Requirements Validation}
+The validation process will begin with comprehensive test coverage of all functional and non-functional requirements. A suite of test cases will be developed, employing automated testing frameworks such as PyTest~\cite{pytest} for functional requirements while reserving manual testing for edge cases and complex scenarios. To ensure complete traceability, we will maintain a matrix that explicitly links each requirement to its corresponding implementation, test cases, and test results.
+
+\subsubsection{Stakeholder Review}
+A formal review session will be conducted with our project supervisor, Dr. Istvan David, following a structured agenda. Prior to the meeting, we will prepare and distribute a package containing: (1) a summary of key requirements and design decisions, (2) visual aids including requirement diagrams and tables, and (3) specific questions regarding high-risk areas. During the session, we will conduct a detailed walkthrough of critical system components, particularly focusing on the energy measurement module and refactoring logic.
+
+\subsubsection{User Acceptance Testing}
+The verification process will include rigorous user acceptance testing involving 5--10 representative developers from our target user base. These tests will validate both the usability requirements (ensuring tasks can be completed within the \textbf{MAX\_TASK\_CLICKS} threshold of 4) and the effectiveness of energy metrics presentation (as specified in \textbf{FR6}). Feedback from these sessions will be systematically analyzed to identify any discrepancies between the SRS and actual user expectations.
+
+\subsubsection{Continuous Verification}
+To maintain alignment between the SRS and evolving system implementation, we will conduct biweekly review sessions. These sessions will serve to:
+\begin{itemize}[nosep]
+    \item Assess the impact of any requirement changes
+    \item Update documentation to reflect system modifications
+    \item Verify that all changes maintain consistency with the original specifications
 \end{itemize}
 
-\textbf{Traceability Matrix:}
+\begin{table}[H]
+\centering
+\caption{SRS Verification Checklist}
+\begin{tabular}{|p{0.35\textwidth}|p{0.60\textwidth}|}
+\hline
+\textbf{Phase} & \textbf{Verification Activities} \\ \hline
+Requirements Validation & 
 \begin{itemize}
-  \item We will create a requirements traceability matrix that links
-    each SRS requirement to its corresponding implementation, test
-    cases, and test results.
-  \item This matrix will help identify any requirements that may have
-    been overlooked during development.
-\end{itemize}
-
-\textbf{Supervisor Review:}
+    \item[$\square$] Develop comprehensive test suite
+    \item[$\square$] Conduct automated and manual testing
+    \item[$\square$] Maintain traceability matrix
+\end{itemize} \\ \hline
+Stakeholder Review & 
 \begin{itemize}
-  \item After the implementation of the system, we will conduct a
-    formal review session with key stakeholders such as our project
-    supervisor, Dr. Istvan David.
-  \item The stakeholders will be asked to verify that each
-    requirement in the SRS is mapped out to specific expectations of
-    the project.
-  \item Prior to meeting, we will provide a summary of key
-    requirements and design decisions and prepare a list specific
-    questions or areas where we seek guidance.
-  \item During the meeting, we will present an overview of the SRS
-    using tables and other visual aids. We will conduct a walk
-    through of critical section. Finally, we will discuss any
-    potential risks or challenges identified.
-\end{itemize}
-
-\textbf{User Acceptance Testing (UAT):}
+    \item[$\square$] Prepare review materials
+    \item[$\square$] Conduct formal walkthrough
+    \item[$\square$] Address high-risk concerns
+\end{itemize} \\ \hline
+User Acceptance Testing & 
 \begin{itemize}
-  \item We will involve potential end-users in testing the system to
-    ensure it meets real-world usage scenarios.
-  \item Feedback from UAT will be used to identify any discrepancies
-    between the SRS and user expectations.
-\end{itemize}
-
-\textbf{Continuous Verification:}
+    \item[$\square$] Recruit representative users
+    \item[$\square$] Validate usability metrics
+    \item[$\square$] Analyze feedback
+\end{itemize} \\ \hline
+Continuous Verification & 
 \begin{itemize}
-  \item Throughout the development process, we will regularly review
-    and update the SRS to ensure it remains aligned with the evolving system.
-  \item Any changes to requirements will be documented and their
-    impact on the system assessed.
-\end{itemize}
-
-\textbf{\textit{\\Checklist for SRS Verification Plan}}
-\begin{itemize}
-  \item[$\square$] Create comprehensive test suite covering all SRS requirements
-  \item[$\square$] Map each requirement to specific test cases
-  \item[$\square$] Conduct automated testing for functional requirements
-  \item[$\square$] Perform manual testing for functional requirements
-  \item[$\square$] Carry out usability testing with representative users
-  \item[$\square$] Conduct performance tests to verify system meets requirements
-  \item[$\square$] Create requirements traceability matrix
-  \item[$\square$] Link each SRS requirement to implementation in
-    traceability matrix
-  \item[$\square$] Link each SRS requirement to test cases in
-    traceability matrix
-  \item[$\square$] Link each SRS requirement to test results in
-    traceability matrix
-  \item[$\square$] Schedule formal review session with project supervisor
-  \item[$\square$] Prepare summary of key requirements and design
-    decisions for supervisor review
-  \item[$\square$] Prepare list of specific questions for supervisor review
-  \item[$\square$] Create visual aids for SRS overview presentation
-  \item[$\square$] Conduct walkthrough of critical SRS sections during review
-  \item[$\square$] Discuss potential risks and challenges with supervisor
-  \item[$\square$] Organize User Acceptance Testing (UAT) with
-    potential end-users
-  \item[$\square$] Collect and analyze UAT feedback
-  \item[$\square$] Identify discrepancies between SRS and user
-    expectations from UAT
-  \item[$\square$] Establish process for regular SRS review and updates
-  \item[$\square$] Document any changes to requirements
-  \item[$\square$] Assess impact of requirement changes on the system
-\end{itemize}
+    \item[$\square$] Conduct biweekly reviews
+    \item[$\square$] Maintain change documentation
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Design Verification Plan}
 
-\textbf{Peer Review Plan:}
-\begin{itemize}
-  \item Each team member along with other classmates will thoroughly
-    review the entire Design Document.
-  \item A checklist-based approach will be used to ensure all key
-    elements are covered.
-  \item Feedback will be collected and discussed in a dedicated team meeting.
-\end{itemize}
+The design verification will focus exclusively on validating the system architecture and implementation specifications through structured peer and supervisor reviews. Classmates will conduct checklist-driven evaluations of the design document, paying particular attention to the refactoring options and the VS Code extension's interface design. Feedback will be consolidated in GitHub Issues and addressed in design refinement meetings.\\
 
-\textbf{Supervisor Review:}
-\begin{itemize}
-  \item A structured review meeting will be scheduled with our
-    project supervisor, Dr. Istvan David.
-  \item We will present an overview of the design using visual aids
-    (e.g., diagrams, tables).
-  \item We will conduct a walkthrough of critical sections.
-  \item We will use our project's issue tracker to document and
-    follow up on any action items or changes resulting from this review.
-\end{itemize}
+\noindent A formal review with Dr. Istvan David will verify three critical aspects: (1) the energy measurement module's integration, (2) compliance with VS Code extension best practices, and (3) the fault-tolerance of the refactoring pipeline. We will prepare UML sequence diagrams and component specifications to facilitate this technical discussion, documenting all action items in our project board with clear resolution deadlines.
 
-\begin{itemize}
-  \item[$\square$] All functional requirements are mapped to specific
-    design elements
-  \item[$\square$] Each functional requirement is fully addressed by the design
-  \item[$\square$] No functional requirements are overlooked or
-    partially implemented
-  \item[$\square$] Performance requirements are met by the design
-  \item[$\square$] Scalability considerations are incorporated
-  \item[$\square$] Reliability and availability requirements are satisfied
-  \item[$\square$] Usability requirements are reflected in the user
-    interface design
-  \item[$\square$] High-level architecture is clearly defined
-  \item[$\square$] Architectural decisions are justified with rationale
-  \item[$\square$] Architecture aligns with project constraints and goals
-  \item[$\square$] All major components are identified and described
-  \item[$\square$] Interactions between components are clearly specified
-  \item[$\square$] Component responsibilities are well-defined
-  \item[$\square$] Appropriate data structures are chosen for each task
-  \item[$\square$] Efficient algorithms are selected for critical operations
-  \item[$\square$] Rationale for data structure and algorithm choices
-    is provided
-  \item[$\square$] UI design is consistent with usability requirements
-  \item[$\square$] User flow is logical and efficient
-  \item[$\square$] Accessibility considerations are incorporated
-  \item[$\square$] All external interfaces are properly specified
-  \item[$\square$] Interface protocols and data formats are defined
-  \item[$\square$] Error handling for external interfaces is addressed
-  \item[$\square$] Comprehensive error handling strategy is in place
-  \item[$\square$] Exception scenarios are identified and managed
-  \item[$\square$] Error messages are clear and actionable
-  \item[$\square$] Authentication and authorization mechanisms are described
-  \item[$\square$] Data encryption methods are specified where necessary
-  \item[$\square$] Security best practices are followed in the design
-  \item[$\square$] Design allows for future expansion and feature additions
-  \item[$\square$] Code modularity and reusability are considered
-  \item[$\square$] Documentation standards are established for maintainability
-  \item[$\square$] Performance bottlenecks are identified and addressed
-  \item[$\square$] Resource utilization is optimized
-  \item[$\square$] Performance testing strategies are outlined
-  \item[$\square$] Design adheres to established coding standards
-  \item[$\square$] Industry best practices are followed
-  \item[$\square$] Design patterns are appropriately applied
-  \item[$\square$] All major design decisions are justified
-  \item[$\square$] Trade-offs are explained with pros and cons
-  \item[$\square$] Alternative approaches considered are documented
-  \item[$\square$] Documents is clear, concise, and free of ambiguities
-  \item[$\square$] Documents follows a logical structure
-\end{itemize}
+\begin{table}[H]
+\centering
+\caption{Design Verification Checklist}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Focus Area} & \textbf{Verification Tasks} \\ \hline
+Core Architecture & \begin{itemize}
+\item[$\square$] Refactoring engine modularity confirmed
+\end{itemize} \\ \hline
+IDE Integration & \begin{itemize}
+\item[$\square$] VS Code API usage reviewed
+\item[$\square$] UI/UX patterns verified
+\end{itemize} \\ \hline
+Data Integrity & \begin{itemize}
+\item[$\square$] Energy measurement accuracy checked
+\item[$\square$] Code transformation safety ensured
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-The Verification and Validation (V\&V) Plan for the Source Code
-Optimizer project serves as a critical document that requires a
-thorough examination to confirm its validity and effectiveness. To
-achieve this, the following strategies will be implemented:
+The Verification and Validation Plan for EcoOptimizer will be verified through peer reviews and targeted testing strategies. Team members and classmates will evaluate the plan's completeness using a structured checklist, focusing specifically on coverage of Python refactoring scenarios and energy efficiency measurements. Feedback will be tracked through GitHub Issues and incorporated in weekly team meetings.\\
 
-\begin{enumerate}
-  \item \textbf{Peer Review}: Team members and peers will conduct a
-    detailed review of the V\&V plan. This process aims to uncover
-    any gaps or areas that could benefit from enhancement, leveraging
-    the collective insights of the group to strengthen the overall plan.
+\noindent For test effectiveness validation, we will employ mutation testing by introducing faults in sample code containing energy-inefficient patterns. This will quantitatively verify our test cases' ability to detect anomalies. The verification process will measure three key metrics: requirement coverage percentage, test case effectiveness, and issue resolution rate.
 
-  \item \textbf{Fault Injection Testing}: We will utilize mutation
-    testing to assess the capability of our test cases to identify
-    intentionally introduced faults. By generating variations of the
-    original code, we can evaluate whether our testing strategies are
-    robust enough to catch these discrepancies, hence enhancing the
-    reliability of our verification process.
+\begin{table}[H]
+\centering
+\caption{V\&V Plan Verification Checklist}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Criteria} & \textbf{Verification Tasks} \\ \hline
+Coverage & \begin{itemize}
+\item[$\square$] All refactoring cases included
+\item[$\square$] Energy metrics validation specified
+\end{itemize} \\ \hline
+Methodology & \begin{itemize}
+\item[$\square$] Appropriate test levels defined
+\item[$\square$] Fault detection strategy in place
+\end{itemize} \\ \hline
+Process & \begin{itemize}
+\item[$\square$] Feedback mechanism established
+\item[$\square$] Tracking system implemented
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
-  \item \textbf{Feedback Loop Integration}: Continuous feedback from
-    review sessions and testing activities will be systematically
-    integrated to refine the V\&V plan. This ongoing process ensures
-    the plan evolves based on insights gained from practical testing
-    and peer input.
-\end{enumerate}
+\noindent An iterative refinement process will be implemented, where verification findings are documented as GitHub issues and addressed in sprint reviews. This ensures the V\&V plan remains aligned with both the technical requirements of Python code optimization and the project's timeline constraints. Progress will be measured against predefined success metrics, including test coverage percentages and mutation detection rates.
 
-\noindent To comprehensively verify the V\&V plan, we will utilize
-the following checklist:
-
-\begin{itemize}
-  \item[$\square$] Does the V\&V plan include all necessary aspects
-    of software verification and validation?
-  \item[$\square$] Are the roles and responsibilities clearly
-    outlined within the V\&V framework?
-  \item[$\square$] Is there a diversity of testing methodologies
-    included (e.g., unit testing, integration testing, system testing)?
-  \item[$\square$] Does the plan have a clear process for
-    incorporating feedback and gaining continuous improvement?
-  \item[$\square$] Are success criteria established for each phase of testing?
-  \item[$\square$] Is mutation testing considered to evaluate the
-    effectiveness of the test cases?
-  \item[$\square$] Are mechanisms in place to monitor and address any
-    identified issues during the V\&V process?
-  \item[$\square$] Does the V\&V plan align with the project
-    timeline, available resources, and other constraints?
-\end{itemize}
 
 \subsection{Implementation Verification Plan}
 
-The Implementation Verification Plan for the Source Code Optimizer
-project aims to ensure that the software implementation adheres to
-the requirements and design specifications defined in the SRS. Key
-components of this plan include:
+The implementation verification will ensure EcoOptimizer's codebase strictly adheres to the SRS specifications through rigorous testing protocols. Unit testing will validate core functionality using Pytest~\cite{pytest} for Python components (refactoring engine, energy measurement) and Jest~\cite{jest} for the VS Code extension (UI integration). Test cases will specifically target energy-efficient transformations identified in \textbf{FR2-FR4}.\\
 
-\begin{itemize}
-  \item \textbf{Unit Testing}: A comprehensive suite of unit tests
-    will be established to validate the functionality of individual
-    components within the optimizer. These tests will specifically
-    focus on the effectiveness of the code refactoring methods
-    employed by the optimizer, utilizing
-    \texttt{pytest}~\cite{pytest} for writing and executing these tests.
-
-  \item \textbf{Static Code Analysis}: To maintain high code quality,
-    static analysis tools will be employed. These tools will help
-    identify potential bugs, security vulnerabilities, and adherence
-    to coding standards in the Python codebase, ensuring that the
-    optimizer is both efficient and secure.
-
-  \item \textbf{Code Walkthroughs and Reviews}: The development team
-    will hold regular code reviews and walkthrough sessions to
-    collaboratively evaluate the implementation of the source code
-    optimizer. These sessions will focus on code quality,
-    readability, and compliance with the project’s design patterns.
-    Additionally, the final presentation will provide an opportunity
-    for a thorough code walkthrough, allowing peers to contribute
-    feedback on usability and functionality.
-
-  \item \textbf{Continuous Integration}: The project will implement
-    continuous integration practices using tools like GitHub Actions.
-    This approach will automate the build and testing processes,
-    allowing the team to verify that each change to the optimizer
-    codebase meets the established quality criteria and integrates
-    smoothly with the overall system.
-
-  \item \textbf{Performance Testing}: The performance of the source
-    code optimizer will be assessed to simulate various usage
-    scenarios. This testing will focus on evaluating how effectively
-    the optimizer processes large codebases and applies refactorings,
-    ensuring that the tool operates efficiently under different workloads.
+\noindent Static analysis will enforce code quality using Python linters to verify compliance with PEP 8~\cite{pep8} standards (per \textbf{CR-SCR1}) and detect security vulnerabilities. Weekly peer code reviews will examine implementation quality, focusing on:
+\begin{itemize}[nosep]
+\item Algorithm efficiency for energy optimization
+\item Correct handling of Python version-specific features \textbf{(MS-AD3})
+\item VS Code extension usability (\textbf{UHR-EOU1})\\
 \end{itemize}
+
+\noindent Performance testing will validate:
+\begin{itemize}[nosep]
+\item Refactoring speed against \textbf{PR-SL1} thresholds
+\item Energy measurement accuracy (\textbf{FR6})
+\item Large codebase handling (\textbf{PR-CR1})
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\caption{Implementation Verification Checklist}
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Category} & \textbf{Verification Tasks} \\ \hline
+Functionality & \begin{itemize}
+\item[$\square$] Unit tests for all refactoring methods
+\item[$\square$] Energy measurement validation
+\end{itemize} \\ \hline
+Quality & \begin{itemize}
+\item[$\square$] Static analysis completed
+\item[$\square$] Code reviews conducted
+\end{itemize} \\ \hline
+Performance & \begin{itemize}
+\item[$\square$] Processing time benchmarks
+\item[$\square$] Large codebase tests
+\end{itemize} \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Automated Testing and Verification Tools}
 
-\textbf{Unit Testing Framework:} Pytest is chosen as the main
-framework for unit testing due to its
-\begin{inparaenum}[(i)]
-\item scalability
-\item integration with other tools
-  (\texttt{pytest-cov}~\cite{pytest-cov} for code coverage)
-\item extensive support for parameterized tests.
-\end{inparaenum} These features make it easy to test the codebase as
-it grows, adapting to changes throughout the project's development.\\
+\textbf{Unit Testing Framework:} The project uses standard testing tools for each part of the system: \texttt{Pytest}~\cite{pytest} for the Python backend and \texttt{Jest}~\cite{jest} for the TypeScript frontend. These tools were chosen because they are widely used in their respective ecosystems, well-documented, and compatible with the project's CI/CD pipeline. Together they provide test coverage for both backend and frontend components.\\
 
-\noindent\textbf{Profiling Tool:} The codebase will be evaluated
-based on results from both time and memory profiling to optimize
-computational speed and resource usage. For time profiling (recording
-  the number of function calls, time spent in each function, and its
-descendants), \texttt{cProfile} will be used, as it is included
-within Python, making it a convenient choice for profiling. For
-memory profiling, \texttt{memory\_profiler}~\cite{memory_profiler}
-will be used, as it is easy to install and includes built-in support
-for visual display of output.\\
+\noindent\textbf{Code Coverage Tools and Plan for Summary:} The codebase will be analyzed to determine the percentage of code executed during tests using language-specific tools:
 
-\noindent\textbf{Static Analyzer:} The codebase will be statically
-analyzed using \texttt{ruff}~\cite{ruff}, as it provides fast
-linting, built-in rule enforcement, and integrates well with modern
-Python projects. \texttt{ruff}~\cite{ruff} enforces both linting and
-formatting rules, reducing the need for multiple tools.\\
+\begin{itemize}
+    \item \textbf{Python:} \texttt{pytest-cov}~\cite{pytest-cov} provides granular-level coverage including branch, line, and path analysis. Its seamless integration with \texttt{Pytest}~\cite{pytest} ensures coverage metrics are generated during normal test execution.
+    
+    \item \textbf{TypeScript:} \texttt{Jest}'s~\cite{jest} built-in coverage functionality will track statement, branch, and function coverage for the VS Code extension, with configuration matching the Python tool's output format.
+\end{itemize}
 
-\noindent\textbf{Code Coverage Tools and Plan for Summary:} The
-codebase will be analyzed to determine the percentage of code
-executed during tests. For granular-level coverage,
-\texttt{pytest-cov}~\cite{pytest-cov} will be used, as it supports
-branch, line, and path coverage. Additionally,
-\texttt{pytest-cov}~\cite{pytest-cov} integrates seamlessly with
-\texttt{pytest}~\cite{pytest}, ensuring that test coverage results
-are generated alongside test execution.\\
-
-Initially, the aim is to achieve a 40\% coverage and gradually
-increment the level over time. Weekly reports generated from
-\texttt{pytest-cov}~\cite{pytest-cov} will be used to track coverage
-trends and set goals accordingly to address any gaps in testing in
-the growing codebase.\\
+\noindent Initially, the aim is to achieve 40\% coverage across both codebases, gradually incrementing the level over time. Weekly reports generated from both tools will be combined to track coverage trends, identify testing gaps, and set improvement goals as the project evolves. The unified coverage data will ensure consistent quality standards are maintained throughout the full stack.\\
 
 \noindent\textbf{Linters and Formatters:} To enforce the official
-Python PEP 8 style guide and maintain code quality, the team will use
-\texttt{ruff}~\cite{ruff} for Python code and
+Python PEP 8~\cite{pep8} style guide and maintain code quality, the team will use
+\texttt{Ruff}~\cite{ruff} for Python code and
 \texttt{eslint}~\cite{eslint} paired with
 \texttt{Prettier}~\cite{prettier} for the TypeScript extension.\\
 
 \noindent\textbf{Testing Strategy for the VSCode Extension:} The
-TypeScript extension will be tested using \texttt{jest}~\cite{jest}.
+TypeScript extension will be tested using \texttt{Jest}~\cite{jest}.
 Automated tests will verify interactions between the extension and
-the editor, reducing regressions during development.\\
-
-\noindent\textbf{CI Plan:} As mentioned in the Development Plan,
-GitHub Actions will integrate the above tools within the CI pipeline.
-GitHub Actions will be configured to run unit tests written in
-\texttt{pytest}, perform static analysis using
-\texttt{ruff}~\cite{ruff}, and execute
-\texttt{pytest-cov}~\cite{pytest-cov} for test coverage. For the
-TypeScript extension, a pre-commit will run
-\texttt{eslint}~\cite{eslint} and \texttt{Prettier}~\cite{prettier},
-and automated tests will be executed as a GitHub Action using
-\texttt{jest}~\cite{jest}. Through automated testing, any errors,
-code style violations, and regressions will be promptly identified.\\
+the editor, reducing regressions during development.
 
 \subsection{Software Validation Plan}
 
+EcoOptimizer will be validated through:
 \begin{itemize}
-  \item One or more open source Python code bases will be used to
-    test the tool on. Based on its performance in functional and
-    non-functional tests outlined in further sections of the
-    document, the software can be validated against defined requirements.
-  \item In addition to this, the team will reach out to Dr David as
-    well as a group of volunteer Python developers to perform
-    usability testing on the IDE plugin workflow as well as the CI/CD workflow.
-  \item The team will conduct a comprehensive review of the
-    requirements from Dr David through the Rev 0 Demo.
+    \item \textbf{Functional Testing}: Evaluation against open-source Python projects to verify:
+    \begin{itemize}
+        \item Energy efficiency improvements (\textbf{FR3}, \textbf{FR6})
+        \item Refactoring accuracy (\textbf{FR4})
+    \end{itemize}
+    
+    \item \textbf{Usability Testing}: Sessions with Dr. David and Python developers assessing:
+    \begin{itemize}
+        \item VS Code extension workflow (\textbf{UHR-EOU1-2})
+        \item Developer experience metrics
+    \end{itemize}
+    
+    \item \textbf{Formal Review}: Rev 0 demo with Dr. David to validate:
+    \begin{itemize}
+        \item SRS requirement implementation
+        \item System behavior against specifications
+    \end{itemize}
 \end{itemize}
 
-\section{System Tests}
+\newpage\section{System Tests}
 
 This section outlines the tests for verifying both functional and
 nonfunctional requirements of the software, ensuring it meets user
@@ -587,100 +426,88 @@ specified requirements. Each functional area has its own subsection for clarity.
 \noindent
 This section covers the tests for ensuring the system correctly
 accepts Python source code files, detects errors in invalid files,
-and provides suitable feedback (FR 1).
+and provides suitable feedback (\textbf{FR1}).
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-IA-\arabic*}}, wide=0pt, font=\itshape]
   \item \textbf{Valid Python File Acceptance} \\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool is idle.  \\
-    \textbf{Input:} A valid Python file (filename.py) with valid
-    standard syntax. \\
-    \textbf{Output:} The system accepts the file without errors.\\[2mm]
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Tool is idle within the VS Code workspace. \\ 
+    \textbf{Input:} A valid Python file (filename.py) containing syntactically correct code. \\ 
+    \textbf{Output:} The system accepts the file without errors and displays any detected code smells if present. \\[2mm]
     \textbf{Test Case Derivation:} Confirming that the system
-    correctly processes a valid Python file as per FR 1.\\[2mm]
-    \textbf{How test will be performed:} Feed a syntactically valid
-    .py file to the tool and observe if it’s accepted without issues.
+    correctly processes valid Python files in the supported environment, as specified in \textbf{FR1}. \\[2mm]
+    \textbf{How test will be performed:} Open a syntactically valid `.py` file in VS Code with the extension enabled. Verify that the tool processes the file and optionally displays code smells if any are present.
 
   \item \textbf{Feedback for Python File with Bad Syntax} \\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool is idle. \\
-    \textbf{Input:} A .py file (badSyntax.py) containing deliberate
-    syntax errors that render the file unrunnable. \\
-    \textbf{Output:} The system rejects the file and provides an
-    error message detailing the syntax issue. \\[2mm]
-    \textbf{Test Case Derivation:} Verifies the tool’s handling of
-    syntactically invalid Python files to ensure user awareness of
-    the syntax issue, meeting FR 1. \\[2mm]
-    \textbf{How test will be performed:} Feed a .py file with syntax
-    errors to the tool and check that the system identifies it as
-    invalid and produces an appropriate error message.
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Tool is idle within the VS Code workspace. \\ 
+    \textbf{Input:} A `.py` file (badSyntax.py) containing deliberate syntax errors that prevent parsing. \\ 
+    \textbf{Output:} The system detects the issue, halts further analysis, and displays an appropriate error message within the editor. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures graceful handling of invalid Python syntax and appropriate user feedback, satisfying \textbf{FR1}. \\[2mm]
+    \textbf{How test will be performed:} Load a Python file with syntax errors in VS Code, then observe whether the extension flags the syntax issue and stops further processing.
 
   \item \textbf{Feedback for Non-Python File}\\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool is idle.\\
-    \textbf{Input:} A non-Python file (document.txt) or a file with
-    an incorrect extension (script.js).\\
-    \textbf{Output:} The system rejects the file and provides an
-    error message indicating the invalid file format.\\[2mm]
-    \textbf{Test Case Derivation:} Ensures the tool detects
-    unsupported file types and provides feedback, satisfying FR 1.\\[2mm]
-    \textbf{How test will be performed:} Attempt to load a .txt or
-    other non-Python file, and verify that the system rejects it with
-    a message indicating an invalid file type.
-
-    \noindent
-    \colorrule
-
-    \subsubsection{Code Smell Detection Tests and Refactoring
-    Suggestion (RS) Tests} \label{4.1.2}
-    \colorrule
-
-    \medskip
-
-    \noindent
-    This area includes tests to verify the detection and refactoring
-    of specified code
-    smells that impact energy efficiency (FR 2). These tests will be
-    done through unit testing.
+    \textbf{Control:} Manual \\ 
+    \textbf{Initial State:} Tool is idle within the VS Code workspace. \\ 
+    \textbf{Input:} A non-Python file (e.g., `notes.txt` or `script.js`). \\ 
+    \textbf{Output:} The system ignores the file or displays a message indicating that the file type is unsupported. \\[2mm]
+    \textbf{Test Case Derivation:} Validates that the system filters non-Python files, consistent with the requirement that it must exclusively process `.py` files (\textbf{FR1}). \\[2mm]
+    \textbf{How test will be performed:} Attempt to open a non-Python file in VS Code and check that the extension does not attempt analysis or refactoring and provides clear messaging if applicable.
 
 \end{enumerate}
 
-\noindent
-\colorrule
+\noindent\colorrule
 
-\subsubsection{Output Validation Tests}
+
+\subsubsection{Code Smell Detection Tests and Refactoring
+Suggestion (RS) Tests} \label{4.1.2}
 \colorrule
 
 \medskip
 
 \noindent
-The following tests are designed to validate that the functionality
-of the original Python code remains intact after refactoring. Each
-test ensures that the refactored code passes the same test suite as
-the original code, confirming compliance with functional requirement FR 3.
+This area includes tests to verify the detection and refactoring
+of specified code smells that impact energy efficiency. These tests will be
+done through unit testing.
 
 \begin{enumerate}[label={\bf
-    \textcolor{Maroon}{test-FR-OV-\arabic*}}, wide=0pt, font=\itshape]
-    \label{itm:FR-OV-1}
-  \item \textbf{Verification of Valid Python Output}\\[2mm]
-    \textbf{Control:} Manual \\
-    \textbf{Initial State:} Tool has processed a file with detected
-    code smells.\\
-    \textbf{Input:} Output refactored Python code.\\
-    \textbf{Output:} Refactored code is syntactically correct and
-    Python-compliant.\\[2mm]
-    \textbf{Test Case Derivation:} Ensures refactored code remains
-    valid and usable, satisfying FR 6.\\[2mm]
-    \textbf{How test will be performed:} Run a linter on the output
-    code and verify it passes without syntax errors.
+\textcolor{Maroon}{test-FR-IA-\arabic*}}, wide=0pt, font=\itshape]
+\item \textbf{Successful Refactoring Execution} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle in the VS Code environment. \\
+\textbf{Input:} A valid Python file with a detectable code smell. \\
+\textbf{Output:} The system applies the appropriate refactoring and updates the code view. \\[2mm]
+\textbf{Test Case Derivation:} Ensures the tool correctly identifies a smell (e.g., LEC001), chooses an applicable refactoring, and applies it successfully, per \textbf{FR2} and \textbf{FR3}. \\[2mm]
+\textbf{How test will be performed:} Provide a valid Python file containing a known smell, trigger refactoring via the VS Code interface, and confirm the output includes refactored code as expected.
+
+\item \textbf{No Available Refactorer Handling} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle. \\
+\textbf{Input:} A valid Python file containing a code smell that does not yet have a supported refactorer. \\
+\textbf{Output:} The system does not apply changes and logs or displays an informative message. \\[2mm]
+\textbf{Test Case Derivation:} Verifies that unsupported code smells are gracefully handled without errors, per \textbf{FR2}. \\[2mm]
+\textbf{How test will be performed:} Provide a valid Python file with an unsupported smell and observe that the system notifies the user without attempting modification.
+
+\item \textbf{Multiple Refactoring Calls on Same File} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle. \\
+\textbf{Input:} A valid Python file with a detectable code smell, refactored more than once. \\
+\textbf{Output:} The tool processes the file repeatedly and applies changes incrementally. \\[2mm]
+\textbf{Test Case Derivation:} Confirms the system can handle repeated invocations and re-apply applicable refactorings, per \textbf{FR3}. \\[2mm]
+\textbf{How test will be performed:} Refactor a file containing a supported smell multiple times and verify that each run performs valid operations and results in updated outputs.
+
+\item \textbf{Handling Empty Modified Files List} \\[2mm]
+\textbf{Control:} Automated \\
+\textbf{Initial State:} Tool is idle. \\
+\textbf{Input:} A valid Python file where the code smell is detected, but the refactorer makes no modifications. \\
+\textbf{Output:} The system does not generate output files and notifies the user appropriately. \\[2mm]
+\textbf{Test Case Derivation:} Confirms the tool handles no-op refactorers correctly, per \textbf{FR4}. \\[2mm]
+\textbf{How test will be performed:} Supply a file where the refactorer returns an unchanged version of the code and verify that no new files are created and that appropriate feedback is displayed or logged.
 
 \end{enumerate}
 
-\newpage
-
-\noindent
-\colorrule
+\noindent\colorrule
 
 \subsubsection{Tests for Reporting Functionality}
 \colorrule
@@ -689,76 +516,45 @@ the original code, confirming compliance with functional requirement FR 3.
 
 \noindent
 The reporting functionality of the tool is crucial for providing
-users with comprehensive insights into the refactoring process,
-including detected code smells, refactorings applied, energy
-consumption measurements, and the results of the original test suite.
-This section outlines tests that ensure the reporting feature
-operates correctly and delivers accurate, well-structured information
-as specified in the functional requirements (FR 9).
+users with meaningful insights into the energy impact of refactorings
+and the smells being addressed. This section outlines tests that
+ensure the energy metrics and refactoring summaries are accurately
+presented, as required by \textbf{FR6} and \textbf{FR15}.
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-RP-\arabic*}}, wide=0pt, font=\itshape]
-  \item \textbf{A Report With All Components Is Generated}\\[2mm]
-    \textbf{Control:} Manual
-    \textbf{Initial State:} The tool has completed refactoring a
-    Python code file.\\
-    \textbf{Input:} The refactoring results, including detected code
-    smells, applied refactorings, and energy consumption metrics.\\
-    \textbf{Output:} A well-structured report is generated,
-    summarizing the refactoring process.\\[2mm]
-    \textbf{Test Case Derivation:} This test ensures that the tool
-    generates a comprehensive report that includes all necessary
-    information as required by FR 9.\\[2mm]
-    \textbf{How test will be performed:} After refactoring, the tool
-    will invoke the report generation feature and a user can validate
-    that the output meets the structure and content specifications.
 
-  \item \textbf{Validation of Code Smell and Refactoring Data in Report}\\[2mm]
-    \textbf{Control:} Automatic \\
-    \textbf{Initial State:} The tool has identified code smells and
-    performed refactorings.\\
-    \textbf{Input:} The results of the refactoring process.\\
-    \textbf{Output:} The generated report accurately lists all
-    detected code smells and the corresponding refactorings applied.\\[2mm]
-    \textbf{Test Case Derivation:} This test verifies that the report
-    includes correct and complete information about code smells and
-    refactorings, in compliance with FR 9.\\[2mm]
-    \textbf{How test will be performed:} The tool will compare the
-    contents of the generated report against the detected code smells
-    and refactorings to ensure accuracy.
+  \item \textbf{Energy Consumption Metrics Displayed Post-Refactoring} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The tool has measured energy usage before and after refactoring. \\
+    \textbf{Input:} Energy data collected for the original and refactored code. \\
+    \textbf{Output:} A clear comparison of energy consumption is displayed in the UI. \\[2mm]
+    \textbf{Test Case Derivation:} Verifies that energy metrics are properly calculated and presented to users, as per \textbf{FR6}. \\[2mm]
+    \textbf{How test will be performed:} Refactor a file and review the visual or textual display of energy usage before and after, ensuring the values match backend logs.
 
-  \item \textbf{Energy Consumption Metrics Included in Report}\\[2mm]
-    \textbf{Control:} Manual
-    \textbf{Initial State:} The tool has measured energy consumption
-    before and after refactoring.\\
-    \textbf{Input:} Energy consumption metrics obtained during the
-    refactoring process.\\
-    \textbf{Output:} The report presents a clear comparison of energy
-    usage before and after the refactorings.\\[2mm]
-    \textbf{Test Case Derivation:} This test confirms that the
-    reporting feature effectively communicates energy consumption
-    improvements, aligning with FR 9.\\[2mm]
-    \textbf{How test will be performed:} A user will analyze the
-    energy metrics in the report to ensure they accurately reflect
-    the measurements taken during the refactoring.
+  \item \textbf{Detected Code Smells and Refactorings Reflected in UI} \\[2mm]
+    \textbf{Control:} Manual \\
+    \textbf{Initial State:} The tool has completed code analysis and refactoring. \\
+    \textbf{Input:} Output of the detection and refactoring modules. \\
+    \textbf{Output:} The user interface displays the detected code smells and associated refactorings clearly. \\[2mm]
+    \textbf{Test Case Derivation:} Ensures transparency of changes and supports informed decision-making by the user, in line with \textbf{FR15}. \\[2mm]
+    \textbf{How test will be performed:} Open a code file with detectable smells, trigger a refactor, and inspect the view displaying the summary of changes and available actions.
 
-  \item \textbf{Functionality Test Results Included in Report}\\[2mm]
-    \textbf{Control:} Automatic \\
-    \textbf{Initial State:} The original test suite has been executed
-    against the refactored code.\\
-    \textbf{Input:} The outcomes of the test suite execution.\\
-    \textbf{Output:} The report summarizes the test results,
-    indicating which tests passed and failed.\\[2mm]
-    \textbf{Test Case Derivation:} This test ensures that the
-    reporting functionality accurately reflects the results of the
-    test suite as specified in FR 9.\\[2mm]
-    \textbf{How test will be performed:} The tool will generate the
-    report and validate that it contains a summary of test results
-    consistent with the actual test outcomes.
 \end{enumerate}
 
-\noindent
+\noindent\colorrule
+
+\subsubsection{Visual Studio Code Interactions}
 \colorrule
+
+\medskip
+
+\noindent
+This section corresponds to features related to the user’s interaction with the Visual Studio Code extension interface, including previewing and toggling smells, customizing the UI, and reviewing code comparisons. These tests verify that the extension enables users to interact with refactorings in an intuitive and informative manner, as outlined in \textbf{FR8}, \textbf{FR9}, \textbf{FR10}, \textbf{FR11}, \textbf{FR12}, \textbf{FR13}, \textbf{FR14}, \textbf{FR15}, \textbf{FR16}, and \textbf{FR17}.\\
+
+\noindent These features are primarily tested through automated unit tests integrated in the extension codebase. For implementation and test details, please refer to the unit testing suite.
+
+\noindent\colorrule
 
 \subsubsection{Documentation Availability Tests}
 \colorrule
@@ -767,7 +563,7 @@ as specified in the functional requirements (FR 9).
 
 \noindent
 The following test is designed to ensure the availability of
-documentation as per FR 10.
+documentation as per \textbf{FR 7} and \textbf{FR 5}.
 
 \begin{enumerate}[label={\bf
     \textcolor{Maroon}{test-FR-DA-\arabic*}}, wide=0pt, font=\itshape]
@@ -776,538 +572,313 @@ documentation as per FR 10.
     \textbf{Initial State:} The system may or may not be installed.\\
     \textbf{Input:} User attempts to access the documentation.\\
     \textbf{Output:} The documentation is available and covers
-    installation, usage, and troubleshooting.\\[2mm]
+    installation, usage (\textbf{FR 5}), and troubleshooting.\\[2mm]
     \textbf{Test Case Derivation:} Validates that the documentation
-    meets user needs (FR 10).\\[2mm]
+    meets user needs (\textbf{FR 7}).\\[2mm]
     \textbf{How test will be performed:} Review the documentation for
     completeness and clarity.
 \end{enumerate}
 
-\noindent
-\colorrule
-
-\subsubsection{IDE Extension Tests}
-\colorrule
-
-\medskip
-
-\noindent
-The following tests are designed to ensure that the user can
-integrate the tool into VS Code IDE as specified in FR 11 and that
-the tool works as intended as an extension.
-
-\begin{enumerate}[label={\bf
-    \textcolor{Maroon}{test-FR-IE-\arabic*}}, wide=0pt, font=\itshape]
-  \item \textbf{Installation of Extension in Visual Studio Code}\\[2mm]
-    \textbf{Control:} Manual\\
-    \textbf{Initial State:} The user has Visual Studio Code installed
-    on their machine.\\
-    \textbf{Input:} The user attempts to install the refactoring tool
-    extension from the Visual Studio Code Marketplace.\\
-    \textbf{Output:} The extension installs successfully, and the
-    user is able to see it listed in the Extensions view.\\[2mm]
-    \textbf{Test Case Derivation:} This test validates the
-    installation process of the extension to ensure that users can
-    easily add the tool to their development environment.\\[2mm]
-    \textbf{How test will be performed:}
-    \begin{enumerate}[label=\arabic*.]
-      \item Open Visual Studio Code.
-      \item Navigate to the Extensions view (Ctrl+Shift+X).
-      \item Search for the refactoring tool extension in the marketplace.
-      \item Click on the "Install" button.
-      \item After installation, verify that the extension appears in
-        the installed extensions list.
-      \item Confirm that the extension is enabled and ready for use
-        by checking its functionality within the editor.
-    \end{enumerate}
-
-  \item \textbf{Running the Extension in Visual Studio Code}\\[2mm]
-    \textbf{Control:} Manual\\
-    \textbf{Initial State:} The user has successfully installed the
-    refactoring tool extension in Visual Studio Code.\\
-    \textbf{Input:} The user opens a Python file and activates the
-    refactoring tool extension.\\
-    \textbf{Output:} The extension runs successfully, and the user
-    can see a list of detected code smells and suggested refactorings.\\[2mm]
-    \textbf{Test Case Derivation:} This test validates that the
-    extension can be executed within the development environment and
-    that it correctly identifies code smells as per the functional
-    requirements in the SRS.\\[2mm]
-    \textbf{How test will be performed:}
-    \begin{enumerate}[label=\arabic*.]
-      \item Open Visual Studio Code.
-      \item Open a valid Python file that contains known code smells.
-      \item Activate the refactoring tool extension using the command
-        palette (Ctrl+Shift+P) and selecting the extension command.
-      \item Observe the output panel for the detection of code smells.
-      \item Verify that the extension lists the identified code
-        smells and provides appropriate refactoring suggestions.
-      \item Confirm that the suggestions are relevant and feasible
-        for the detected code smells.
-    \end{enumerate}
-\end{enumerate}
-
-\subsection{Tests for Nonfunctional Requirements}
+\newpage\subsection{Tests for Nonfunctional Requirements}
 
 The section will cover system tests for the non-functional
 requirements (NFR) listed in the \SRS \hspace{1pt}
 document\cite{SRS}. The goal for these tests is to address the fit
 criteria for the requirements. Each test will be linked back to a
-specific NFR that can be observed in section \ref{trace-sys}.
+specific NFR that can be observed in section \ref{trace-sys}.\\
 
-\noindent
-\colorrule
+\noindent For non-functional requirements that are not linked to a test in the below sections, has either been covered in the functional requirements test plan or unit tests plan. Please see traceability matrix for more details.
+
+\noindent\colorrule
 
 \subsubsection{Look and Feel}
-
 \colorrule
 
 \medskip
 
 \noindent
-The following subsection tests cover all Look and Feel requirements
-listed in the SRS~\cite{SRS}. They seek to validate that the system
-is modern, visually appealing, and supporting of a calm and focused
-user experience.
+The following subsection tests cover all Look and Feel non-functional
+requirements listed in the SRS~\cite{SRS}. They aim to validate that
+the system provides a modern, visually appealing, and supportive
+developer experience. These tests ensure that the tool facilitates
+refactoring decisions through clear interfaces and satisfies design
+expectations based on user perception.
 
-\begin{enumerate}[label={\bf \textcolor{Maroon}{test-LF-\arabic*}},
-    wide=0pt, font=\itshape]
-  \item \textbf{Side-by-side code comparison in IDE plugin} \\[2mm]
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-LF-\arabic*}}, wide=0pt, font=\itshape]
+  
+  \item \textbf{Side-by-side Code Comparison in IDE Plugin} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open in VS Code, with a sample
-    code file loaded \\
-    \textbf{Input/Condition:} The user initiates a refactoring operation \\
+    \textbf{Covers:} LFR-AP1 \\ 
+    \textbf{Initial State:} IDE plugin open in VS Code with a sample
+    code file loaded \\ 
+    \textbf{Input/Condition:} The user initiates a refactoring operation \\ 
     \textbf{Output/Result:} The plugin displays the original and
-    refactored code side by side\\[2mm]
+    refactored code side by side \\[2mm]
     \textbf{How test will be performed:} The tester will open a
-    sample code file within the IDE plugin and apply a refactoring
-    operation. After refactoring, they will verify that the original
-    code appears on one side of the interface and the refactored code
-    on the other, with clear options to accept or reject each change.
-    The tester will interact with the accept/reject buttons to ensure
-    functionality and usability, confirming that users can seamlessly
-    make refactoring decisions with both versions displayed side by side.
+    sample file and apply a refactoring. They will verify that the
+    original and refactored code are shown side by side with
+    functional accept/reject buttons. This confirms users can make
+    informed refactoring decisions in a visually supportive layout.
 
-  \item \textbf{Theme adaptation in VS Code} \\[2mm]
-    \textbf{Type:} Non-functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open in VS Code with either
-    light or dark theme enabled \\
-    \textbf{Input/Condition:} The user switches between light and
-    dark themes in VS Code \\
-    \textbf{Output/Result:} The plugin’s interface adjusts
-    automatically to match the theme \\[2mm]
-    \textbf{How test will be performed:} The tester will open the
-    plugin in both light and dark themes within VS Code by toggling
-    the theme settings in the IDE. They will observe the plugin
-    interface each time the theme is switched, ensuring that the
-    plugin automatically adjusts to match the selected theme without
-    any manual adjustments required.
-
-  \item \textbf{Design Acceptance} \\[2mm]
+  \item \textbf{Design Acceptance Survey} \\[2mm]
     \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open \\
-    \textbf{Input/Condition:} User interacts with the plugin \\
-    \textbf{Output/Result:} A survey report \\[2mm]
-    \textbf{How test will be performed:} After a testing session,
-    developers fill out the survey found in \ref{A.2} evaluating
-    their experience with the plugin.
+    \textbf{Covers:} LFR-ST1, \textit{implicitly covers} LFR-AP2 \\ 
+    \textbf{Initial State:} IDE plugin open \\ 
+    \textbf{Input/Condition:} Developer interacts with the plugin \\ 
+    \textbf{Output/Result:} A survey response capturing the user’s
+    perception of the design \\[2mm]
+    \textbf{How test will be performed:} After using the plugin,
+    test participants will complete the design satisfaction survey
+    described in \ref{A.2}. The results will be reviewed to assess
+    whether the plugin meets the project's aesthetic and usability
+    expectations.\\
+
+    \textit{Note:} LFR-AP2 is not tested directly, as it describes a
+    design philosophy rather than a testable behavior. User perception of
+    visual simplicity and minimalism is instead captured through feedback
+    in the usability survey.
+
 \end{enumerate}
 
-\noindent
-\colorrule
+\newpage
+\noindent\colorrule
 
 \subsubsection{Usability \& Humanity}
-
 \colorrule
 
 \medskip
 
 \noindent
-The following subsection tests cover all Usability \& Humanity
-requirements listed in the SRS~\cite{SRS}. They seek to validate that
-the system is accessible, user-centred, intuitive and easy to navigate.
+The following tests cover all Usability \& Humanity requirements listed in the SRS~\cite{SRS}. These tests aim to validate that the system is accessible, user-centred, intuitive, and easy to navigate. Data is collected via user surveys or static analysis, and evaluated against thresholds (e.g., 80–90\% agreement). Where applicable, tests are traceable to corresponding SRS requirements.
 
-\begin{enumerate}[label={\bf \textcolor{Maroon}{test-UH-\arabic*}},
-    wide=0pt, font=\itshape]
-  \item \textbf{Customizable settings for refactoring preferences} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} IDE plugin open with settings panel accessible \\
-    \textbf{Input/Condition:} User customizes refactoring style and
-    detection sensitivity \\
-    \textbf{Output/Result:} Custom configurations save and load
-    successfully \\[2mm]
-    \textbf{How test will be performed:} The tester will navigate to
-    the settings menu within the tool and adjust various options,
-    including refactoring style, colour-coded indicators, and unit
-    preferences (metric vs. imperial). After each adjustment, the
-    tester will observe if the interface and refactoring suggestions
-    reflect the changes made.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-UH-\arabic*}}, wide=0pt, font=\itshape]
 
-  \item \textbf{Multilingual support in user guide} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} Bilingual user navigates to system documentation \\
-    \textbf{Input/Condition:} User accesses guide in both English and French \\
-    \textbf{Output/Result:} The guide is accessible in both languages \\[2mm]
-    \textbf{How test will be performed:} The tester will set the
-    tool’s language to French and access the user guide, reviewing
-    each section to ensure accurate translation and readability.
-    After verifying the French version, they will switch the language
-    to English, confirming consistency in content, layout, and
-    clarity between both versions.
-
-  \item \textbf{YouTube installation tutorial availability} \\[2mm]
-    \textbf{Type:} Non-Functional, Manual, Dynamic \\
-    \textbf{Initial State:} User access documentation resources \\
-    \textbf{Input/Condition:} User follows the provided link to a
-    YouTube tutorial \\
-    \textbf{Output/Result:} Installation tutorial is available and
-    accessible on YouTube, and user successfully installs the system. \\[2mm]
-    \textbf{How test will be performed:} The tester will start with
-    the installation instructions provided in the user guide and
-    follow the link to the YouTube installation tutorial. They will
-    watch the video and proceed with each installation step as
-    demonstrated. Throughout the process, the tester will note the
-    clarity and pacing of the instructions, any gaps between the
-    video and the actual steps, and if the video effectively guides
-    them to a successful installation.
+  \item \textbf{Customizable Settings for Refactoring Preferences} \\[2mm]
+    \textbf{Type:} Manual, Dynamic \\
+    \textbf{Covers:} \textbf{UHR-PSI 1} \& \textbf{UHR-PSI 2} \\ 
+    \textbf{Initial State:} Plugin open with settings panel accessible \\
+    \textbf{Input/Condition:} User customizes enabled smells and highlight colors \\
+    \textbf{Output/Result:} Preferences persist and affect plugin behavior \\[2mm]
+    \textbf{How test will be performed:} Tester toggles smell types and changes highlight colours. They reload the plugin and verify that settings are retained and correctly reflected in UI and detection.
 
   \item \textbf{High-Contrast Theme Accessibility Check} \\[2mm]
-    \textbf{Objective:} Evaluate the high-contrast themes in the
-    refactoring tool for compliance with accessibility standards to
-    ensure usability for visually impaired users. \\
-    \textbf{Scope:} Focus on UI components that utilize high-contrast
-    themes, including text, buttons, and backgrounds. \\
-    \textbf{Methodology:} Static Analysis \\
-    \textbf{Process:}
-    \begin{itemize}
-      \item Identify all colour codes used in the system and
-        categorize them by their role in the UI (i.e. background,
-        foreground text, buttons, etc.).
-      \item Use tools to measure colour contrast ratios against WCAG
-        thresholds (4.5:1 for normal text, 3:1 for large text~\cite{WCAG}.
-      \end{itemize}
-      \textbf{Roles and Responsibilities:} Developers implement
-      themes that pass the testing process. \\[2mm]
-      \textbf{Tools and Resources:} WebAIM Color Contrast Checker,
-      WCAG guidelines documentation, internal coding standards. \\[2mm]
-      \textbf{Acceptance Criteria:} All UI elements must meet WCAG
-      contrast ratios; documentation must accurately reflect theme usage.
+    \textbf{Type:} Static Analysis \\
+    \textbf{Covers:} \textbf{UHR-ACS 1} \\ 
+    \textbf{Initial State:} Contrast-based theme styles configured \\
+    \textbf{Input/Condition:} Contrast analyzer is run on UI color tokens \\
+    \textbf{Output/Result:} All items meet 4.5:1 or 3:1 WCAG thresholds \\[2mm]
+    \textbf{How test will be performed:} Use automated tools (e.g., WebAIM) to verify foreground/background ratios for code highlights, sidebars, and messages.
 
-    \item \textbf{Intuitive user interface for core functionality} \\[2mm]
-      \textbf{Type:} Non-Functional, User Testing, Dynamic \\
-      \textbf{Initial State:} IDE plugin open with code loaded \\
-      \textbf{Input/Condition:} User interacts with the plugin \\
-      \textbf{Output/Result:} Users can access core functions within
-      three clicks or less \\[2mm]
-      \textbf{How test will be performed:} After a testing session,
-      developers fill out the survey found in \ref{A.2} evaluating
-      their experience with the plugin.
+  \item \textbf{Intuitive User Interface for Core Functionality} \\[2mm]
+    \textbf{Type:} User Testing, Survey-Based \\
+    \textbf{Covers:} \textbf{UHR-EOU 1} \\ 
+    \textbf{Initial State:} Plugin open with test tasks prepared \\
+    \textbf{Input/Condition:} Users complete core tasks (detect, refactor, configure) \\
+    \textbf{Output/Result:} 90\% of users complete each task in $\leq$ 3 clicks and rate the interaction as intuitive \\[2mm]
+    \textbf{How test will be performed:} Clicks per task are recorded. After each task, users answer the question “Was this process intuitive?” on a 5-point Likert scale. The question is listed in Appendix~\ref{A.2}. \\
+    \textbf{Quantifiable Metric:} At least 85\% of responses must score 4 or 5 on the intuitiveness scale. \\
+    \textbf{Use of Results:} Responses scoring below threshold will trigger UX redesign of the corresponding interaction. Open feedback (if given) will be coded thematically to identify patterns in confusion or friction points.
 
-    \item \textbf{Clear and concise user prompts} \\[2mm]
-      \textbf{Type:} Non-Functional, User Survey, Dynamic \\
-      \textbf{Initial State:} IDE plugin prompts user for input \\
-      \textbf{Input/Condition:} Users follow on-screen instructions \\
-      \textbf{Output/Result:} 90\% of users report the prompts are
-      straightforward and effective \\[2mm]
-      \textbf{How test will be performed:} Users complete tasks
-      requiring prompts and answer the survey found in \ref{A.2} on
-      the clarity of guidance provided.
+  \item \textbf{Clear and Concise User Prompts} \\[2mm]
+    \textbf{Type:} Survey-Based \\
+    \textbf{Covers:} \textbf{UHR-EOU 2} \\ 
+    \textbf{Initial State:} User encounters plugin prompts (e.g., file missing, confirm refactor) \\
+    \textbf{Input/Condition:} Users follow prompts and evaluate clarity \\
+    \textbf{Output/Result:} 90\% of users agree prompts are helpful and unambiguous \\[2mm]
+    \textbf{How test will be performed:} After interacting with all major system prompts, users complete a survey (Appendix~\ref{A.2}) where they rate the clarity of each message on a 5-point scale and provide optional comments. \\
+    \textbf{Quantifiable Metric:} 90\% of users must rate each prompt $\geq$ 4 for clarity and helpfulness. \\
+    \textbf{Use of Results:} Any prompt scoring below target will be reviewed and rewritten. Free-text feedback will be grouped by theme to identify language, formatting, or placement issues.
 
-    \item \textbf{Context-sensitive help based on user actions} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} IDE plugin open with help function enabled \\
-      \textbf{Input/Condition:} User engages in various actions,
-      requiring guidance \\
-      \textbf{Output/Result:} Help resources are accessible within
-      1-3 clicks \\[2mm]
-      \textbf{How test will be performed:} The tester will perform a
-      series of tasks within the tool, such as initiating a code
-      analysis, applying a refactoring, and adjusting settings. At
-      each step, they will access the context-sensitive help option
-      to confirm that the information provided is relevant to the
-      current task. The tester will evaluate the ease of accessing
-      help, the relevance and clarity of guidance, and whether the
-      help content effectively supports task completion.
+  \item \textbf{Context-Sensitive Help Based on User Actions} \\[2mm]
+    \textbf{Type:} Manual \\
+    \textbf{Covers:} \textbf{UHR-LRN 1} \\ 
+    \textbf{Initial State:} Help system available via command/hover \\
+    \textbf{Input/Condition:} User performs smell-related actions, requests help \\
+    \textbf{Output/Result:} Help shown is contextually relevant, appears within \textless= 3 clicks \\[2mm]
+    \textbf{How test will be performed:} Tester performs tasks like “Apply refactor” or “Toggle smell” and verifies help popups match the current feature.
 
-    \item \textbf{Clear and constructive error messaging} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} IDE plugin open with possible error
-      scenarios triggered \\
-      \textbf{Input/Condition:} User encounters an error during use \\
-      \textbf{Output/Result:} 80\% of users report that error
-      messages are helpful and courteous \\[2mm]
-      \textbf{How test will be performed:} After receiving error
-      messages, users fill out the survey found in \ref{A.2} on their
-      clarity and constructiveness.
-  \end{enumerate}
+    \item \textbf{Clear and Constructive Error Messaging} \\[2mm]
+    \textbf{Type:} Survey-Based \\
+    \textbf{Covers:} \textbf{UHR-UPL 1} \\ 
+    \textbf{Initial State:} Plugin triggers common errors (e.g., no workspace configured, backend offline) \\
+    \textbf{Input/Condition:} User encounters error messages during usage and evaluates tone and clarity \\
+    \textbf{Output/Result:} 80\% of users agree the message is polite, understandable, and helpful \\[2mm]
+    \textbf{How test will be performed:} After encountering various plugin error scenarios, users complete a survey located in Appendix~\ref{A.2}. They rate each error message on tone, clarity, and helpfulness using a 5-point Likert scale, and may provide free-text feedback. \\
+    \textbf{Quantifiable Metric:} Each error message must receive an average rating of $\geq$ 4 in tone, clarity, and helpfulness from at least 80\% of participants. \\
+    \textbf{Use of Results:} Messages scoring below threshold will be flagged for revision. Qualitative responses will be categorized to identify recurring issues such as overly technical language, lack of actionable steps, or negative tone.
 
+\end{enumerate}
+
+
+\newpage
   \noindent
   \textcolor{Blue}{\colorrule}
 
-  \subsubsection{Performance}
-  \colorrule
+\subsubsection{Performance}
+\colorrule
 
-  \medskip
+\medskip
 
-  \noindent
-  The following subsection tests cover all Performance requirements
-  listed in the SRS~\cite{SRS}. These tests validate the tool’s
-  efficiency and responsiveness under varying workloads, including
-  code analysis, refactoring, and data reporting.
+\noindent
+The following subsection tests cover the Performance requirements listed in the SRS~\cite{SRS}. The goal is to validate that the tool can process Python files of varying sizes within acceptable performance thresholds. These tests confirm responsiveness under real-world usage, and guide profiling and optimization work for scalability.
 
-  \begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}},
-      wide=0pt, font=\itshape]
-    \item \textbf{Performance and capacity validation for analysis
-      and refactoring} \\[2mm]
-      \textbf{Type:} Non-Functional, Automated, Dynamic \\
-      \textbf{Initial State:} IDE open with multiple python files of
-      varying sizes ready (250, 1000, 3000 lines of code). \\
-      \textbf{Input/Condition:} Initiate the refactoring process for
-      each file sequentially \\
-      \textbf{Output/Result:} Process completes within 20 seconds for
-      files up to 250 lines of code, 50 seconds for 1000 lines of
-      code and within 2 minutes for 3000 lines of code. \\[2mm]
-      \textbf{How test will be performed:} The tester will use three
-      python files of different sizes: small (250 lines), medium
-      (1000 lines), and
-      large (3000 lines). For each file, start the refactoring
-      process while running a timer.
-      The scope of the test ends when the system presents the user
-      with the completed refactoring proposal.
-      The time taken for the total detection + refactoring is checked
-      against the expected result.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-PF-\arabic*}}, wide=0pt, font=\itshape]
+    
+  \item \textbf{Performance and Capacity Validation for Analysis and Refactoring} \\[2mm]
+    \textbf{Type:} Non-Functional, Automated, Dynamic \\
+    \textbf{Covers:} PR-SL~1, PR-SL~2, PR-CR~1 \\
+    \textbf{Initial State:} IDE open with multiple Python files of varying sizes prepared (small: 250 LOC, medium: 1000 LOC, large: 3000 LOC) \\
+    \textbf{Input/Condition:} Initiate detection and refactoring for each file sequentially \\
+    \textbf{Output/Result:} Tool completes within: 
+    \begin{itemize}
+      \item 20 seconds for small files ($\leq$ 250 lines)
+      \item 50 seconds for medium files ($\leq$ 1000 lines)
+      \item 2 minutes for large files ($\leq$ 3000 lines)
+    \end{itemize}
+    \textbf{How test will be performed:} Detection and refactoring will be run on each file. Timings will be recorded from start to finish. If thresholds are exceeded, logs and profiling output will be used to identify and prioritize optimization targets.
 
-    \item \textbf{Accuracy of code smell detection} \\[2mm]
-      \textbf{Type:} Non-Functional, Automated, Dynamic \\
-      \textbf{Initial State:} Python file containing pre-determined
-      code smells ready for refactoring with proper configurations
-      for the system \\
-      \textbf{Input/Condition:} User initiates refactoring on the code file \\
-      \textbf{Output/Result:} All code smells determined prior to the
-      test are detected. \\[2mm]
-      \textbf{How test will be performed:} see tests in the
-      \hyperref[4.1.2]{Code Smell Detection} section.
+\end{enumerate}
 
-    \item \textbf{Valid syntax and structure in refactored code} \\[2mm]
-      \textbf{Type:} Non-Functional, Automated, Dynamic \\
-      \textbf{Initial State:} A refactored code file is present in
-      the user's workspace \\
-      \textbf{Input/Condition:} A python linter is run on the
-      refactored python file \\
-      \textbf{Output/Result:} Refactored code meets Python syntax and
-      structural standards \\[2mm]
-      \textbf{How test will be performed:} see test
-      \hyperref[itm:FR-OV-2]{test-FR-OV-2}
+\medskip
 
-  \end{enumerate}
+\noindent \textbf{Untested Requirements and Justification:}
+
+\begin{itemize}
+  \item \textbf{PR-SCR 1 (No runtime errors in refactored code)}: Verified by functional unit tests and integration tests that execute refactored code and ensure correctness and compilability.
+  
+  \item \textbf{PR-PAR 1 (Smell detection accuracy)}: Already covered in functional tests, which compare the detected smells against a ground truth dataset and calculate precision/recall.
+
+  \item \textbf{PR-PAR 2 (Output validity)}: Confirmed by functional tests that ensure the generated refactored code is syntactically valid and matches Python standards.
+
+  \item \textbf{PR-RFT 1 (Robustness to invalid input)}: Addressed through functional tests which simulate corrupt files or invalid syntax and assert the system recovers gracefully.
+
+  \item \textbf{PR-SER 1 (Extensibility)}: Verified through manual inspection and code review of plugin architecture and smell registration pipeline; extensibility is not runtime-measurable and therefore not performance tested.
+
+  \item \textbf{PR-LR 1 (Longevity)}: Also verified through code quality reviews. Maintainability is supported by documentation and modularity but not measurable via direct tests in this release cycle.
+\end{itemize}
+
 
   \noindent
   \colorrule
 
-  \subsubsection{Operational \& Environmental}
-  \colorrule
+\subsubsection{Operational \& Environmental}
+\colorrule
 
-  \medskip
+\medskip
 
-  \noindent
-  The following subsection tests cover all Operational and
-  Environmental requirements listed in the SRS~\cite{SRS}. Testing
-  includes adherence to emissions standards, integration with
-  environmental metrics, and adaptability to diverse operational settings.
+\noindent
+The following subsection tests cover all Operational and Environmental requirements listed in the SRS~\cite{SRS}. This includes confirming system compatibility, installation capability, and basic usability across operational contexts. Physical environment requirements are not tested, as explained below.
 
-  \begin{enumerate}[label={\bf
-      \textcolor{Maroon}{test-OPE-\arabic*}}, wide=0pt, font=\itshape]
-    \item \textbf{VS Code compatibility for refactoring library
-      extension} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} VS Code IDE open and library installed\\
-      \textbf{Input/Condition:} User installs and opens the
-      refactoring library extension in VS Code \\
-      \textbf{Output/Result:} The refactoring library extension
-      installs successfully and runs within VS Code \\[2mm]
-      \textbf{How test will be performed:} The tester will navigate
-      to the VS Code marketplace, search for the refactoring library
-      extension, and install it. Once installed, the tester will open
-      the extension and perform a basic refactoring task to ensure
-      the tool operates correctly within the VS Code environment and
-      has access to the system library.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-OPE-\arabic*}}, wide=0pt, font=\itshape]
 
-    \item \textbf{Import and export capabilities for codebases and
-      metrics} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} IDE plugin open with the option to
-      import/export codebases and metrics \\
-      \textbf{Input/Condition:} User imports an existing codebase and
-      exports refactored code and metrics reports \\
-      \textbf{Output/Result:} The tool successfully imports
-      codebases, refactors them, and exports both code and metrics
-      reports \\[2mm]
-      \textbf{How test will be performed:} The tester will load an
-      existing codebase into the tool, initiate refactoring, and
-      select the option to export the refactored code and metrics
-      report. The export should generate files in the selected
-      format. The tester will verify the file formats, check for
-      correct data structure, and validate that the content
-      accurately reflects the refactoring and metrics generated by the tool.
+  \item \textbf{VS Code Compatibility for Refactoring Library Extension} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Covers:} \textbf{OER-IAS 1} \\ 
+    \textbf{Initial State:} VS Code IDE open and library not installed \\
+    \textbf{Input/Condition:} User installs and opens the refactoring library extension in VS Code \\
+    \textbf{Output/Result:} The extension installs successfully and runs inside VS Code \\[2mm]
+    \textbf{How test will be performed:} The tester will search for the extension on the VS Code marketplace, install it, and verify that it appears in the IDE and can execute basic functionality such as detecting or refactoring a code file.
 
-    \item \textbf{PIP package installation availability} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} Python environment ready without the
-      refactoring library installed \\
-      \textbf{Input/Condition:} User installs the refactoring library
-      using the command \texttt{pip install ecooptimizer} \\
-      \textbf{Output/Result:} The library installs successfully
-      without errors and is available for use in Python scripts \\[2mm]
-      \textbf{How test will be performed:} The tester will open a new
-      Python environment and enter the command to install the
-      refactoring library via PIP. Once installed, the tester will
-      import the library in a Python script and execute a basic
-      function to confirm successful installation and functionality.
-      The test verifies the library’s availability and ease of
-      installation for end users.
+  \item \textbf{Import and Export Capabilities for Codebases and Metrics} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Covers:} \textbf{OER-IAS 2} \\
+    \textbf{Initial State:} IDE plugin open with option to import/export \\
+    \textbf{Input/Condition:} User imports a sample project and exports results \\
+    \textbf{Output/Result:} Plugin correctly imports project and generates JSON/XML reports for refactored code and metrics \\[2mm]
+    \textbf{How test will be performed:} Tester loads a sample codebase, initiates a refactor, and uses the export function. Output files are verified for valid structure and meaningful content.
 
-  \end{enumerate}
+  \item \textbf{PIP Package Installation Availability} \\[2mm]
+    \textbf{Type:} Non-Functional, Manual, Dynamic \\
+    \textbf{Covers:} \textbf{OER-PR 1} \\
+    \textbf{Initial State:} Fresh Python environment without the package \\
+    \textbf{Input/Condition:} User runs \texttt{pip install ecooptimizer} \\
+    \textbf{Output/Result:} The package installs successfully without error \\[2mm]
+    \textbf{How test will be performed:} Tester uses a clean Python virtual environment to install the library. A short script using a sample function will verify it works as expected after installation.
+
+\end{enumerate}
+
+\subsubsection*{Unnecessary Tests and Justifications}
+
+\begin{itemize}
+  \item \textbf{OER-EP 1 \& OER-EP 2 (Temperature \& Power Requirements)}: \\
+  These describe expected hardware operating conditions. If the computer cannot operate due to temperature or power issues, the software cannot run. These are not properties of the software and are thus \textit{not tested} in this V\&V plan.
+
+  \item \textbf{OER-RL 1 (All core functionality implemented and tested)}: \\
+  This requirement is satisfied by the completion of the full functional and non-functional test suite. No specific test case is needed beyond traceability to those tests.
+
+  \item \textbf{OER-RL 2 (Release by March 17, 2025)}: \\
+  This is a delivery milestone tracked through project management, not through testing. Therefore, it is \textit{not verified dynamically} through test cases.
+\end{itemize}
 
   \noindent
   \colorrule
 
-  \subsubsection{Maintenance and Support}
-  \colorrule
+\subsubsection{Maintenance and Support}
+\colorrule
 
-  \medskip
+\medskip
 
-  \noindent
-  The following subsection tests cover all Maintenance and Support
-  requirements listed in the SRS~\cite{SRS}. These tests focus on
-  rollback capabilities, compatibility with external libraries,
-  automated testing, and extensibility for adding new code smells and
-  refactoring functions.
+\noindent
+The following subsection tests cover the most critical Maintenance and Support requirements listed in the SRS~\cite{SRS}. These tests emphasize extensibility, maintainability, and recovery from faulty updates. Some lower-priority requirements are acknowledged but excluded from testing due to scope or redundancy with existing CI/CD practices.
 
-  \begin{enumerate}[label={\bf \textcolor{Maroon}{test-MS-\arabic*}},
-      wide=0pt, font=\itshape]
-    \item \textbf{Extensibility for New Code Smells and Refactorings} \\[2mm]
-      \textbf{Objective:} Confirm that the tool’s architecture allows
-      for the addition of new code smell detections and refactoring
-      techniques with minimal code changes and disruption to existing
-      functionality. \\[2mm]
-      \textbf{Scope:} This test applies to the tool’s extensibility,
-      including modularity of code structure, ease of integration for
-      new detection methods, and support for customization. \\[2mm]
-      \textbf{Methodology:} Code walkthrough \\[2mm]
-      \textbf{Process:}
-      \begin{itemize}
-        \item Conduct a code walkthrough focusing on the modularity
-          and structure of the code smell detection and refactoring components.
-        \item Add a sample code smell detection and refactoring
-          function to validate the ease of integration within the
-          existing architecture.
-        \item Verify that the new function integrates seamlessly
-          without altering existing features and that it is
-          accessible through the tool’s main interface.
-      \end{itemize}
-      \textbf{Roles and Responsibilities:} Once the system is
-      complete, the development team will perform the code
-      walkthrough and integration. They will review and approve any
-      structural changes required. \\[2mm]
-      \textbf{Tools and Resources:} Code editor, tool’s developer
-      documentation, sample code smell and refactoring patterns \\[2mm]
-      \textbf{Acceptance Criteria:} New code smells and refactoring
-      functions can be added within the existing modular structure,
-      requiring minimal changes. The new function does not impact the
-      performance or functionality of existing features.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-MS-\arabic*}}, wide=0pt, font=\itshape]
 
-    \item \textbf{Maintainable and Adaptable Codebase} \\[2mm]
-      \textbf{Objective:} Ensure that the codebase is modular,
-      well-documented, and maintainable, supporting future updates
-      and adaptations for new Python versions and standards. \\[2mm]
-      \textbf{Scope:} This test covers the maintainability of the
-      codebase, including structure, documentation, and modularity of
-      key components. \\[2mm]
-      \textbf{Methodology:} Static analysis and documentation
-      walkthrough \\[2mm]
-      \textbf{Process:}
-      \begin{itemize}
-        \item Review the codebase to verify the modular organization
-          and clear separation of concerns between components.
-        \item Examine documentation for code clarity and
-          completeness, especially around key functions and configuration files.
-        \item Assess code comments and the quality of function/method
-          naming conventions, ensuring readability and consistency
-          for future maintenance.
-      \end{itemize}
-      \textbf{Roles and Responsibilities:} Once the system is
-      complete, the development team will conduct the code review, to
-      identify areas for improvement. If necessary, they will also
-      ensure to improve the quality of the documentation. \\[2mm]
-      \textbf{Tools and Resources:} Code editor, documentation
-      templates, code commenting standards, Python development guides \\[2mm]
-      \textbf{Acceptance Criteria:} The codebase is modular and
-      maintainable, with sufficient documentation to support future
-      development. All major components are organized to allow for
-      easy updates with minimal impact on existing functionality.
+  \item \textbf{Extensibility for New Code Smells and Refactorings} \\[2mm]
+    \textbf{Covers:} \textbf{MS-MNT 1} \\ 
+    \textbf{Type:} Code Walkthrough and Manual Dynamic \\
+    \textbf{Initial State:} Developer environment set up with project codebase \\
+    \textbf{Input/Condition:} Developer adds a sample code smell and refactoring method \\
+    \textbf{Output/Result:} The new smell/refactoring integrates with minimal disruption \\[2mm]
+    \textbf{How test will be performed:} Developers will follow documentation to add a new smell and refactoring function. They will verify modularity and confirm that existing functionality is unaffected. Success is defined by clean integration and interface visibility without needing major code changes.
 
-    \item \textbf{Easy rollback of updates in case of errors} \\[2mm]
-      \textbf{Type:} Non-Functional, Manual, Dynamic \\
-      \textbf{Initial State:} Latest version of the tool installed
-      with the ability to apply and revert updates \\
-      \textbf{Input/Condition:} User applies a simulated new update
-      and initiates a rollback \\
-      \textbf{Output/Result:} The system reverts to the previous
-      stable state without any errors \\[2mm]
-      \textbf{How test will be performed:} The tester will apply a
-      simulated update. Following this, they will initiate the
-      rollback function, which should restore the tool to its
-      previous stable version. The tester will verify that all
-      features function as expected post-rollback and document the
-      time taken to complete the rollback process
-  \end{enumerate}
+  \item \textbf{Maintainable and Adaptable Codebase} \\[2mm]
+    \textbf{Covers:} \textbf{MS-MNT 2} \\ 
+    \textbf{Type:} Static Analysis and Documentation Review \\
+    \textbf{Initial State:} Final implementation and documentation available \\
+    \textbf{Input/Condition:} Reviewers evaluate code organization and documentation \\
+    \textbf{Output/Result:} Codebase is modular, readable, and sufficiently documented \\[2mm]
+    \textbf{How test will be performed:} Reviewers examine file structure, naming conventions, and presence of comments. They will evaluate whether a new developer could easily navigate and modify the code. Documentation completeness will be scored on a checklist.
 
-  \newpage
+  \item \textbf{Rollback Support for Faulty Updates} \\[2mm]
+    \textbf{Covers:} \textbf{MS-MNT 3} \\ 
+    \textbf{Type:} Manual Dynamic \\
+    \textbf{Initial State:} Installed version of the library in use \\
+    \textbf{Input/Condition:} Faulty update is simulated; rollback is triggered \\
+    \textbf{Output/Result:} System returns to previous stable state successfully \\[2mm]
+    \textbf{How test will be performed:} A new version with an intentional fault is deployed. The user will invoke rollback steps (e.g., Git revert or VS Code extension downgrade). The tool should resume normal operation with no feature regressions.
+\end{enumerate}
 
-  \noindent
-  \colorrule
+\vspace{2mm}
+\noindent\textbf{Unnecessary Tests and Justifications}
+\begin{itemize}
+  \item \textbf{MS-MNT 4 (Automated Testing for Refactorings):} Verified through existing unit tests and CI pipeline. Manual test duplication is unnecessary.
+  \item \textbf{MS-MNT 5 (Library Compatibility with Dependencies):} Assumed validated during integration testing and package dependency resolution via PIP.
+\end{itemize}
 
-  \subsubsection{Security}
-  \colorrule
+\noindent  \colorrule
 
-  \medskip
 
-  \noindent
-  The following subsection tests cover all Security requirements
-  listed in the SRS~\cite{SRS}. These tests seek to validate that the
-  tool is protected against unauthorized access, data breaches, and
-  external threats.
+\subsubsection{Security}
+\colorrule
 
-  \begin{enumerate}[label={\bf
-      \textcolor{Maroon}{test-SRT-\arabic*}}, wide=0pt, font=\itshape]
-    \item \textbf{Audit Logs for Refactoring Processes} \\[2mm]
-      \textbf{Objective:} Ensure that the tool maintains a secure,
-      tamper-proof log of all refactoring processes, including
-      pattern analysis, energy analysis, and report generation, for
-      accountability in refactoring events. \\[2mm]
-      \textbf{Scope:} This test covers the logging of refactoring
-      events, ensuring logs are complete and tamper-proof for future
-      auditing needs. \\[2mm]
-      \textbf{Methodology:} Code walkthrough and static analysis \\[2mm]
-      \textbf{Process:}
-      \begin{itemize}
-        \item Review the codebase to confirm that each refactoring
-          event (e.g., pattern analysis, energy analysis, report
-          generation) is logged with details such as timestamps and
-          event descriptions.
-        \item Document any logging gaps or security vulnerabilities,
-          and consult with the development team to implement enhancements.
-      \end{itemize}
-      \textbf{Roles and Responsibilities:} The development team will
-      review and test the logging mechanisms, with the project
-      supervisor ensuring alignment with auditing requirements. \\[2mm]
-      \textbf{Tools and Resources:} Access to logging components,
-      tamper-proof logging tools \\[2mm]
-      \textbf{Acceptance Criteria:} All refactoring processes are
-      logged in a secure, tamper-proof manner, ensuring complete
-      traceability for future audits.
-  \end{enumerate}
-  \newpage
+\medskip
+
+\noindent
+The following subsection tests cover the primary Security requirement listed in the SRS~\cite{SRS}. These tests ensure that refactoring operations are traceable, logged securely, and protected from unauthorized tampering. Due to the tool's local-only design, network-level security and external access controls are out of scope.
+
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-SRT-\arabic*}}, wide=0pt, font=\itshape]
+
+  \item \textbf{Audit Logs for Refactoring Processes} \\[2mm]
+    \textbf{Covers:} \textbf{SRT-AUD 1} \\ 
+    \textbf{Type:} Static Analysis and Code Review \\
+    \textbf{Initial State:} Fully implemented refactoring pipeline with logging enabled \\
+    \textbf{Input/Condition:} Refactoring actions performed on one or more files \\
+    \textbf{Output/Result:} Secure and complete logs are generated for each action \\[2mm]
+    \textbf{How test will be performed:} The development team will review logging logic in the code to ensure it covers all major events: pattern detection, energy analysis, and refactor generation. Each entry must include a timestamp, file reference, and action type. Reviewers will confirm that logs are immutable and not user-editable, using tools like append-only file systems or cryptographic checksums if applicable.
+
+\end{enumerate}
+
+\newpage
 
   \noindent
   \colorrule
@@ -1323,173 +894,123 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   aspects do not involve cultural considerations, making such
   requirements unnecessary.
 
-  \newpage
-
   \noindent
   \colorrule
 
-  \subsubsection{Compliance}
-  \colorrule
+\subsubsection{Compliance}
+\colorrule
 
-  \medskip
+\medskip
 
-  \noindent
-  The following subsection tests cover all Compliance requirements
-  listed in the SRS~\cite{SRS}. The tests focus on adherence to
-  PIPEDA, CASL, and ISO 9001, as well as SSADM standards, ensuring
-  the tool complies with relevant regulations and aligns with
-  professional development practices.
+\noindent
+The following subsection tests cover all Compliance requirements listed in the SRS~\cite{SRS}. These tests ensure that the system does not collect personal user data and that the codebase adheres to established Python development standards.
 
-  \begin{enumerate}[label={\bf
-      \textcolor{Maroon}{test-CPL-\arabic*}}, wide=0pt, font=\itshape]
-    \item \textbf{Compliance with PIPEDA and CASL} \\[2mm]
-      \textbf{Objective:} Ensure the tool’s data handling and
-      communication practices align with the Personal Information
-      Protection and Electronic Documents Act (PIPEDA) and Canada’s
-      Anti-Spam Legislation (CASL). The focus is on ensuring
-      compliance through best practices rather than direct data
-      storage verification as no data is locally stored. \\[2mm]
-      \textbf{Scope:} This test applies to all processes related to
-      data handling and user communication to verify compliance with
-      PIPEDA and CASL. \\[2mm]
-      \textbf{Methodology:} Comparison of code data handling
-      processes with compliance best practices \\[2mm]
-      \textbf{Process:}
-      \begin{itemize}
-        \item Review the tool’s data handling procedures to confirm
-          all processing remains local and that no user data is stored.
-        \item Verify that no personal data collection occurs,
-          ensuring no explicit user consent is required beyond
-          general software disclaimers.
-        \item Inspect communication practices to ensure compliance
-          with CASL, confirming that the tool does not send
-          unsolicited communications.
-      \end{itemize}
-      \textbf{Roles and Responsibilities:} The development team will
-      review compliance best practices and update documentation as
-      needed. \\[2mm]
-      \textbf{Tools and Resources:} Access to PIPEDA and CASL guidelines \\[2mm]
-      \textbf{Acceptance Criteria:} Compliance is confirmed if no
-      unsolicited communications occur and all best practices are
-      followed. The tool must ensure that all data handling remains
-      local and that no user data is stored or transmitted externally.
+\begin{enumerate}[label={\bf \textcolor{Maroon}{test-CPL-\arabic*}}, wide=0pt, font=\itshape]
 
-    \item \textbf{Compliance with ISO 9001 and SSADM Standards} \\[2mm]
-      \textbf{Objective:} Assess whether the tool’s quality
-      management and software development processes follow structured
-      methodologies in line with ISO 9001 quality management
-      principles and SSADM (Structured Systems Analysis and Design
-      Method) best practices. \\[2mm]
-      \textbf{Scope:} This test evaluates development workflows,
-      documentation practices, and adherence to structured
-      methodologies. \\[2mm]
-      \textbf{Methodology:} Documentation review and evaluation of
-      structured development practices \\[2mm]
-      \textbf{Process:}
-      \begin{itemize}
-        \item Review development documentation to ensure structured
-          workflow practices are followed.
-        \item Evaluate version control and change tracking methods to
-          confirm basic quality assurance measures exist.
-        \item Identify any gaps in structured development adherence
-          and suggest improvements.
-        \item Validate improvements through informal documentation
-          and process reviews.
-      \end{itemize}
-      \textbf{Roles and Responsibilities:} The development team will
-      conduct an internal workflow assessment, and updates will be
-      made to improve documentation and structured processes. \\[2mm]
-      \textbf{Tools and Resources:} Development documentation,
-      version control records, best practice comparisons \\[2mm]
-      \textbf{Acceptance Criteria:} The tool's development must
-      follow a structured approach with version control, clear
-      documentation, and logical workflow practices. Compliance is
-      met if basic structured development principles are followed,
-      even without formal certification.
-  \end{enumerate}
+  \item \textbf{User Privacy and Local Execution Compliance} \\[2mm]
+    \textbf{Covers:} \textbf{CR-LR 1} \\
+    \textbf{Type:} Static Review and Code Audit \\
+    \textbf{Initial State:} Tool installed and ready for inspection \\
+    \textbf{Input/Condition:} Reviewer inspects runtime behavior and data access patterns \\
+    \textbf{Output/Result:} No personal or user-specific data is collected or transmitted \\[2mm]
+    \textbf{How test will be performed:} Review the codebase to confirm that:
+    \begin{itemize}
+      \item The tool does not collect or store personal information.
+      \item No external API requests are made that could leak user data.
+      \item All operations occur locally, including refactoring, logging, and energy analysis.
+    \end{itemize}
+    The reviewer will also confirm the absence of telemetry or usage tracking modules. \\[2mm]
+    \textbf{Acceptance Criteria:} The tool operates entirely locally, without collecting or transmitting any personal data. Privacy is preserved by design.
 
-  \subsection{Traceability Between Test Cases and Requirements}
-  \label{trace-sys}
+  \item \textbf{PEP 8 Standards Compliance} \\[2mm]
+    \textbf{Covers:} \textbf{CR-SCR 1} \\
+    \textbf{Type:} Static Analysis \\
+    \textbf{Initial State:} Codebase fully implemented \\
+    \textbf{Input/Condition:} Code is scanned using a PEP 8 linter (e.g., \texttt{flake8}, \texttt{pylint}) \\
+    \textbf{Output/Result:} All code conforms to Python PEP 8 coding standards \\[2mm]
+    \textbf{How test will be performed:} Run a static code analysis tool across the full Python codebase. Evaluate:
+    \begin{itemize}
+      \item Adherence to line length, indentation, and naming conventions.
+      \item Documentation comments and docstring usage.
+      \item Overall maintainability and readability.
+    \end{itemize}
+    Any issues will be fixed and re-evaluated. \\[2mm]
+    \textbf{Acceptance Criteria:} The code passes static analysis with no critical PEP 8 violations. Style warnings are minimized, and documentation is consistent.
 
-  \begin{table}[H]
-    \centering
-    \caption{Functional Requirements and Corresponding Test Sections}
-    \begin{tabular}{|p{0.6\textwidth}|p{0.3\textwidth}|}
-      \toprule \textbf{Section} & \textbf{Functional Requirement} \\
+\end{enumerate}
 
-      \midrule
-      Input Acceptance Tests & FR 1 \\ \hline
-      Code Smell Detection Tests & FR 2 \\ \hline
-      Refactoring Suggestion Tests & FR 4 \\ \hline
-      Output Validation Tests & FR 3, FR 6 \\ \hline
-      Tests for Report Generation & FR 9 \\ \hline
-      Documentation Availability Tests & FR 10 \\ \hline
-      IDE Integration Tests & FR 11 \\
-      \bottomrule
-    \end{tabular}
-    \label{tab:sections_requirements}
-  \end{table}
+\newpage\subsection{Traceability Between Test Cases and Requirements}
+\label{trace-sys}
+
+\begin{table}[H]
+  \centering
+  \caption{Functional Requirements and Corresponding Test Sections}
+  \begin{tabular}{p{0.42\textwidth}p{0.42\textwidth}}
+    \toprule \textbf{Test Section} & \textbf{Functional Requirement(s)} \\
+    \midrule
+    Code Input Acceptance Tests & FR1 \\
+    Code Smell Detection and Refactoring Suggestion Tests & FR2, FR3, FR4 \\
+    Tests for Reporting Functionality & FR6, FR15 \\
+    Visual Studio Code Interactions & FR8, FR9, FR10, FR11, FR12, FR13, FR14, FR15, FR16, FR17 \\
+    Documentation Availability Tests & FR7, FR5 \\
+    Installation and Onboarding Tests & FR7 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:sections_requirements}
+\end{table}
+
 
   \label{tab:nfr-trace-reqs}
   \begin{table}[H]
-    \centering
-    \caption{Look \& Feel Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
-      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
-      \midrule
-      % Look and Feel
-      LF-1 & LFR-AP 1 \\
-      LF-2 & LFR-AP 2 \\
-      LF-3 & LFR-AP 3 \\
-      LF-4 & LFR-AP 5 \\
-      LF-5 & LFR-AP 4, LFR-ST 1-3 \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+  \centering
+  \caption{Look \& Feel Tests and Corresponding Requirements}
+  \label{tab:nfr-trace-lf}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    LF-1 & LFR-AP 1 \\
+    LF-2 & LFR-ST 1, LFR-AP 2 \\
+    % Note: LFR-AP 2 is tested indirectly in LF-2
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 
   \begin{table}[H]
-    \centering
-    \caption{Usability \& Humanity Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
-      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
-      \midrule
-      % Usability and Humanity
-      UH-1 & UHR-PS1 1 \\
-      UH-2 & UHR-PS1 2, MS-SP 1 \\
-      UH-3 & UHR-LRN 2 \\
-      UH-4 & UHR-ACS 1 \\
-      UH-5 & UHR-ACS 2 \\
-      UH-6 & UHR-EOU 1 \\
-      UH-7 & UHR-EOU 2 \\
-      UH-8 & UHR-LRN 1 \\
-      UH-9 & UHR-UPL 1 \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+  \centering
+  \caption{Usability \& Humanity Tests and Corresponding Requirements}
+  \label{tab:nfr-trace-uh}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    UH-1 & UHR-PSI 1, UHR-PSI 2 \\
+    UH-2 & UHR-ACS 1 \\
+    UH-3 & UHR-EOU 1 \\
+    UH-4 & UHR-EOU 2 \\
+    UH-5 & UHR-LRN 1 \\
+    UH-6 & UHR-UPL 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
-  \begin{table}[H]
-    \centering
-    \caption{Performance Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
-      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
-      \midrule
-      % Performance
-      PF-1 & PR-SL 1, PR-SL 2, PR-CR 1 \\
-      PF-2 & PR-SCR 1 \\
-      PF-3 & PR-PAR 1 \\
-      PF-4 & PR-PAR 2 \\
-      PF-5 & PR-PAR 3 \\
-      PF-6 & PR-RFT 1 \\
-      PF-7 & PR-RFT 2 \\
-      PF-8 & PR-LR 1, MS-MNT 5 \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Performance Tests and Corresponding Requirements}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    % Performance
+    PF-1 & PR-SL 1, PR-SL 2, PR-CR 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 
   \begin{table}[H]
     \centering
     \caption{Operational \& Environmental Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
+    \begin{tabular}{cc}
       \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
       \midrule
       % Operational and Environmental
@@ -1509,7 +1030,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \begin{table}[H]
     \centering
     \caption{Maintenance \& Support Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
+    \begin{tabular}{cc}
       \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
       \midrule
       % Maintenance and Support
@@ -1521,43 +1042,22 @@ the system is accessible, user-centred, intuitive and easy to navigate.
     \end{tabular}
   \end{table}
 
-  \begin{table}[H]
-    \centering
-    \caption{Security Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
-      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
-      \midrule
-      % Security
-      SRT-1 & SR-AR 1 \\
-      SRT-2 & SR-AR 2 \\
-      SRT-3 & SR-IR 1 \\
-      SRT-4 & SR-PR 1 \\
-      SRT-5 & SR-PR 2 \\
-      SRT-6 & SR-AUR 1 \\
-      SRT-7 & SR-AUR 2 \\
-      SRT-8 & SR-IM 1 \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
+\begin{table}[H]
+  \centering
+  \caption{Security Tests and Corresponding Requirements}
+  \begin{tabular}{cc}
+    \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
+    \midrule
+    SRT-1 & SR-IM 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
-  \begin{table}[H]
-    \centering
-    \caption{Cultural Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
-      \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
-      \midrule
-      % Cultural
-      CULT-1 & CULT 1 \\
-      CULT-2 & CULT 2 \\
-      CULT-3 & CULT 3 \\
-      \bottomrule
-    \end{tabular}
-  \end{table}
 
   \begin{table}[H]
     \centering
     \caption{Compliance Tests and Corresponding Requirements}
-    \begin{tabular}{|c|c|}
+    \begin{tabular}{cc}
       \toprule \textbf{Test ID (test-)} & \textbf{Non-Functional Requirement} \\
       \midrule
       % Compliance
@@ -1567,9 +1067,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
     \end{tabular}
   \end{table}
 
-  \newpage
-
-  \section{Unit Test Description}
+  \newpage\section{Unit Test Description}
 
   \wss{This section should not be filled in until after the MIS (detailed design
   document) has been completed.}
@@ -1645,7 +1143,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/controllers/test_analyzer_controller.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/controllers/test_analyzer_controller.py}{here}.
 
   \subsubsection{String Concatenation in a Loop}
 
@@ -1734,7 +1232,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_str_concat_in_loop.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/analyzers/test_str_concat_analyzer.py}{here}.
 
   \subsubsection{Long Element Chain}
 
@@ -1816,7 +1314,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_lec.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/analyzers/test_long_element_chain_analyzer.py}{here}.
 
   \subsubsection{Repeated Calls}
 
@@ -1889,7 +1387,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_detect_repeated_calls.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/analyzers/test_repeated_calls_analyzer.py}{here}.
 
   \subsubsection{Long Message Chain}
 
@@ -1906,47 +1404,64 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \noindent\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{Detects exact five calls chain} \newline
-      Ensures that a method chain with exactly five calls is flagged.
+    \item \textbf{Detects exact five calls chain}
+        \begin{itemize}
+        \item Ensures that a method chain with exactly five calls is flagged
+        \end{itemize}
 
-    \item \textbf{Detects six calls chain} \newline
-      Verifies that a chain with six method calls is detected as a smell.
+    \item \textbf{Detects six calls chain}
+        \begin{itemize}
+        \item Verifies that a chain with six method calls is detected as a smell
+        \end{itemize}
 
-    \item \textbf{Ignores chain of four calls} \newline
-      Ensures that a chain with only four calls (below threshold) is
-      not flagged.
+    \item \textbf{Ignores chain of four calls}
+        \begin{itemize}
+        \item Ensures that a chain with only four calls (below threshold) is not flagged
+        \end{itemize}
 
-    \item \textbf{Detects chain with attributes and calls} \newline
-      Tests detection of a chain that involves both attribute access
-      and method calls.
+    \item \textbf{Detects chain with attributes and calls}
+        \begin{itemize}
+        \item Tests detection of a chain that involves both attribute access and method calls
+        \end{itemize}
 
-    \item \textbf{Detects chain inside a loop} \newline
-      Ensures detection of a chain meeting the threshold when inside a loop.
+    \item \textbf{Detects chain inside a loop}
+        \begin{itemize}
+        \item Ensures detection of a chain meeting the threshold when inside a loop
+        \end{itemize}
 
-    \item \textbf{Detects multiple chains on one line} \newline
-      Verifies that only the first long chain on a single line is reported.
+    \item \textbf{Detects multiple chains on one line}
+        \begin{itemize}
+        \item Verifies that only the first long chain on a single line is reported
+        \end{itemize}
 
-    \item \textbf{Ignores separate statements} \newline
-      Ensures that separate method calls across multiple statements
-      are not mistakenly combined into a single chain.
+    \item \textbf{Ignores separate statements}
+        \begin{itemize}
+        \item Ensures that separate method calls across multiple statements are not mistakenly combined
+        \end{itemize}
 
-    \item \textbf{Ignores short chain comprehension} \newline
-      Ensures that a short chain within a list comprehension is not flagged.
+    \item \textbf{Ignores short chain comprehension}
+        \begin{itemize}
+        \item Ensures that a short chain within a list comprehension is not flagged
+        \end{itemize}
 
-    \item \textbf{Detects long chain comprehension} \newline
-      Verifies that a list comprehension with a long method chain is detected.
+    \item \textbf{Detects long chain comprehension}
+        \begin{itemize}
+        \item Verifies that a list comprehension with a long method chain is detected
+        \end{itemize}
 
-    \item \textbf{Detects five separate long chains} \newline
-      Ensures that multiple long chains on separate lines within the
-      same function are individually detected.
+    \item \textbf{Detects five separate long chains}
+        \begin{itemize}
+        \item Ensures that multiple long chains on separate lines within the same function are individually detected
+        \end{itemize}
 
-    \item \textbf{Ignores element access chains} \newline
-      Confirms that attribute and index lookups without method calls
-      are not flagged.
-  \end{itemize}
+    \item \textbf{Ignores element access chains}
+        \begin{itemize}
+        \item Confirms that attribute and index lookups without method calls are not flagged
+        \end{itemize}
+\end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_message_chain.py}{here}
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/analyzers/test_long_message_chain_analyzer.py}{here}
 
   \subsubsection{Long Lambda Element}
 
@@ -1974,42 +1489,49 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \noindent\textbf{Target requirement(s):} FR2 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{No lambdas present} \newline
-      Ensures that when no lambda functions exist in the code, no
-      smells are detected.
+    \item \textbf{No lambdas present}
+        \begin{itemize}
+        \item Ensures that when no lambda functions exist in the code, no smells are detected
+        \end{itemize}
 
-    \item \textbf{Short single lambda} \newline
-      Confirms that a single short lambda (well under the length
-      threshold) with only one expression is not flagged.
+    \item \textbf{Short single lambda}
+        \begin{itemize}
+        \item Confirms that a single short lambda (well under the length threshold) with only one expression is not flagged
+        \end{itemize}
 
-    \item \textbf{Lambda exceeding expression count} \newline
-      Detects a lambda function that contains multiple expressions,
-      exceeding the threshold for complexity.
+    \item \textbf{Lambda exceeding expression count}
+        \begin{itemize}
+        \item Detects a lambda function that contains multiple expressions, exceeding the threshold for complexity
+        \end{itemize}
 
-    \item \textbf{Lambda exceeding character length} \newline
-      Identifies a lambda function that surpasses the maximum allowed
-      character length, making it difficult to read.
+    \item \textbf{Lambda exceeding character length}
+        \begin{itemize}
+        \item Identifies a lambda function that surpasses the maximum allowed character length, making it difficult to read
+        \end{itemize}
 
-    \item \textbf{Lambda exceeding both thresholds} \newline
-      Flags a lambda function that is both too long in character
-      length and contains too many expressions.
+    \item \textbf{Lambda exceeding both thresholds}
+        \begin{itemize}
+        \item Flags a lambda function that is both too long in character length and contains too many expressions
+        \end{itemize}
 
-    \item \textbf{Nested lambda functions} \newline
-      Ensures that both outer and inner nested lambdas are properly
-      detected as long expressions.
+    \item \textbf{Nested lambda functions}
+        \begin{itemize}
+        \item Ensures that both outer and inner nested lambdas are properly detected as long expressions
+        \end{itemize}
 
-    \item \textbf{Inline lambda passed to function} \newline
-      Detects lambda functions that are passed inline to functions
-      like \texttt{map} and \texttt{filter} when they exceed the
-      complexity thresholds.
+    \item \textbf{Inline lambda passed to function}
+        \begin{itemize}
+        \item Detects lambda functions that are passed inline to functions like \texttt{map} and \texttt{filter} when they exceed the complexity thresholds
+        \end{itemize}
 
-    \item \textbf{Trivially short lambda function} \newline
-      Verifies that degenerate cases, such as a lambda with no real
-      body or trivial operations, are not mistakenly flagged.
-  \end{itemize}
+    \item \textbf{Trivially short lambda function}
+        \begin{itemize}
+        \item Verifies that degenerate cases, such as a lambda with no real body or trivial operations, are not mistakenly flagged
+        \end{itemize}
+\end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/analyzers/test_long_lambda_element.py}{here}
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/analyzers/test_long_lambda_element_analyzer.py}{here}
 
   \subsection{CodeCarbon Measurement Module}
   \textbf{Goal:} The CodeCarbon Measurement module is designed to
@@ -2027,50 +1549,46 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \noindent \textbf{Target requirement(s):} FR5, FR6,PR-RFT1,
   PR-SCR1~\cite{SRS} \\
 
-  \begin{itemize}
-    \item \textbf{Handle CodeCarbon Measurements with a Valid File Path}
-      \begin{itemize}
-        \item When a valid file path is provided, the system
-          correctly invokes the subprocess for CodeCarbon.
-        \item The start and stop API endpoints of the
-          EmissionsTracker are called, and a success message is logged.
-      \end{itemize}
+\begin{itemize}
+  \item \textbf{Successful Energy Measurement}
+    \begin{itemize}
+      \item Verifies correct emissions tracking when CodeCarbon returns valid float values
+      \item Confirms proper subprocess execution and tracker API calls
+      \item Ensures emissions value is stored in the meter instance
+    \end{itemize}
 
-    \item \textbf{Handle CodeCarbon Measurements with a Valid File
-      Path that Causes a Subprocess Failure}
-      \begin{itemize}
-        \item The subprocess is invoked even if an error occurs
-          during the file execution.
-        \item The system logs an error message and the emissions data
-          is set to None when execution fails.
-      \end{itemize}
+  \item \textbf{Null Emissions Handling}
+    \begin{itemize}
+      \item Validates system behavior when CodeCarbon returns None
+      \item Confirms meter stores None without errors
+    \end{itemize}
 
-    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV
-      File Path and Can Be Read}
-      \begin{itemize}
-        \item The emissions data can be read successfully from a
-          valid CSV file produced by CodeCarbon.
-        \item The function returns the last row of emissions data.
-      \end{itemize}
+  \item \textbf{Unexpected Emissions Type Handling}
+    \begin{itemize}
+      \item Tests proper logging and null conversion for non-float/non-None returns
+      \item Specifically verifies handling of string and NaN values
+    \end{itemize}
 
-    \item \textbf{Results Produced by CodeCarbon Run at a Valid CSV
-      File Path but the File Cannot Be Read}
-      \begin{itemize}
-        \item An error message is logged when the CSV file cannot be read.
-        \item The function returns \texttt{None} if reading the CSV file fails.
-      \end{itemize}
+  \item \textbf{Subprocess Failure Resilience}
+    \begin{itemize}
+      \item Confirms system logs errors but preserves emissions data when subprocess fails
+      \item Verifies tracker still stops properly after subprocess exceptions
+    \end{itemize}
 
-    \item \textbf{Given CSV Path for Results Produced by CodeCarbon
-      Does Not Have a File}
-      \begin{itemize}
-        \item When the given CSV path does not point to an existing
-          file, an error message is logged.
-        \item The function returns \texttt{None} when the file is missing.
-      \end{itemize}
-  \end{itemize}
+  \item \textbf{CSV Data Extraction}
+    \begin{itemize}
+      \item Validates correct parsing of multi-row emissions CSV files
+      \item Ensures last row is properly returned as current emissions
+    \end{itemize}
 
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/src/ecooptimizer/measurements/codecarbon_energy_meter.py}{here}.
+  \item \textbf{Missing Emissions File Handling}
+    \begin{itemize}
+      \item Tests proper error logging when emissions file is missing
+      \item Verifies None is returned and stored in emissions\_data
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/src/ecooptimizer/measurements/codecarbon_energy_meter.py}{here}.
 
   \subsection{Refactoring Module}
 
@@ -2124,7 +1642,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/controllers/test_refactorer_controller.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/controllers/test_refactorer_controller.py}{here}.
 
   \subsubsection{String Concatenation in a Loop}
 
@@ -2187,7 +1705,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_str_concat_in_loop_refactor.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_str_concat_in_loop_refactor.py}{here}.
 
   \subsubsection{Long Element Chain}
 
@@ -2250,7 +1768,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_long_element_chain_refactor.py}{here}.
 
   \subsubsection{Member Ignoring Method}
 
@@ -2319,7 +1837,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_member_ignoring_method.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_member_ignoring_method.py}{here}.
 
   \subsubsection{Use a Generator}
 
@@ -2383,7 +1901,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_list_comp_any_all_refactor.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_list_comp_any_all_refactor.py}{here}.
 
   \subsubsection{Cache Repeated Calls}
 
@@ -2455,7 +1973,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_repeated_calls.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_repeated_calls.py}{here}.
 
   \subsubsection{Long Parameter List}
 
@@ -2472,7 +1990,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   parameter instances. Similarly, corresponding calls to these
   functions as well as references to original parameters are
   preserved. The refactored result also preserves use of default
-  values in function signature and positional arguments in function calls.x\\
+  values in function signature and positional arguments in function calls.\\
 
   \noindent \textbf{Target requirement(s):} FR3, FR6~\cite{SRS} \\
 
@@ -2535,8 +2053,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_parameter_list_refactor.py
-  }{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_long_parameter_list_refactor.py}{here}.
 
   \subsubsection{Long Message Chain}
 
@@ -2563,38 +2080,44 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \noindent \textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{Basic method chain refactoring} \newline
-      Ensures that a simple method chain is refactored correctly into
-      separate intermediate variables.
+    \item \textbf{Basic method chain refactoring}
+        \begin{itemize}
+            \item Ensures that a simple method chain is refactored correctly into separate intermediate variables.
+        \end{itemize}
 
-    \item \textbf{F-string chain refactoring} \newline
-      Verifies that method chains applied to f-strings are properly
-      broken down while preserving correctness.
+    \item \textbf{F-string chain refactoring}
+        \begin{itemize}
+            \item Verifies that method chains applied to f-strings are properly broken down while preserving correctness.
+        \end{itemize}
+      
+    \item \textbf{Modifications even if the chain is not long}
+        \begin{itemize}
+            \item Ensures that method chains are refactored consistently, even if they do not exceed the length threshold.
+        \end{itemize}
+      
+    \item \textbf{Proper indentation preserved}
+        \begin{itemize}
+            \item Confirms that the refactored code maintains the correct indentation when inside a block statement such as an \texttt{if} condition.
+        \end{itemize}
 
-    \item \textbf{Modifications even if the chain is not long} \newline
-      Ensures that method chains are refactored consistently, even if
-      they do not exceed the length threshold.
+    \item \textbf{Method chain with arguments}
+        \begin{itemize}
+            \item Tests that method chains containing arguments (e.g., \texttt{replace("H", "J")}) are correctly refactored.
+        \end{itemize}
 
-    \item \textbf{Proper indentation preserved} \newline
-      Confirms that the refactored code maintains the correct
-      indentation when inside a block statement such as an
-      \texttt{if} condition.
-
-    \item \textbf{Method chain with arguments} \newline
-      Tests that method chains containing arguments (e.g.,
-      \texttt{replace("H", "J")}) are correctly refactored.
-
-    \item \textbf{Print statement preservation} \newline
-      Ensures that method chains within a \texttt{print} statement
-      are refactored without altering their functionality.
-
-    \item \textbf{Nested method chains} \newline
-      Verifies that nested method chains (e.g., method calls on
-      method results) are properly refactored into intermediate variables.
+    \item \textbf{Print statement preservation}
+        \begin{itemize}
+            \item Ensures that method chains within a \texttt{print} statement are refactored without altering their functionality.
+        \end{itemize}
+      
+    \item \textbf{Nested method chains}
+        \begin{itemize}
+            \item Verifies that nested method chains (e.g., method calls on method results) are properly refactored into intermediate variables.
+        \end{itemize}
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_element_chain.py}{here}
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_long_message_chain_refactoring.py}{here}
 
   \subsubsection{Long Lambda Element}
 
@@ -2623,706 +2146,774 @@ the system is accessible, user-centred, intuitive and easy to navigate.
   \noindent \textbf{Target requirement(s):} FR5, FR6, FR3 ~\cite{SRS} \\
 
   \begin{itemize}
-    \item \textbf{Basic lambda conversion} \newline
-      Verifies that a simple single-line lambda expression is
-      correctly converted into a named function with proper
-      indentation and structure.
-
-    \item \textbf{No extra print statements} \newline
-      Ensures that the refactoring process does not introduce
-      unnecessary print statements when converting lambda expressions.
-
-    \item \textbf{Lambda in function argument} \newline
-      Tests that lambda expressions used as arguments to other
-      functions (e.g., in \texttt{map()} calls) are properly
-      refactored while maintaining the original function call structure.
-
-    \item \textbf{Multi-argument lambda} \newline
-      Verifies that lambda expressions with multiple parameters are
-      correctly converted into named functions with the appropriate
-      parameter list.
-
-    \item \textbf{Lambda with keyword arguments} \newline
-      Ensures that lambda expressions used as keyword arguments in
-      function calls are properly refactored while preserving the
-      original keyword argument syntax and indentation.
-
-    \item \textbf{Very long lambda function} \newline
-      Tests the refactoring of complex, multi-line lambda expressions
-      with extensive mathematical operations, verifying that the
-      converted function maintains the original logic and structure.
+    \item \textbf{Basic lambda conversion}
+        \begin{itemize}
+            \item Verifies that a simple single-line lambda expression is correctly converted into a named function with proper indentation and structure.
+        \end{itemize}
+    
+    \item \textbf{No extra print statements}
+        \begin{itemize}
+            \item Ensures that the refactoring process does not introduce unnecessary print statements when converting lambda expressions.
+        \end{itemize}
+      
+    \item \textbf{Lambda in function argument}
+        \begin{itemize}
+            \item Tests that lambda expressions used as arguments to other functions (e.g., in \texttt{map()} calls) are properly refactored while maintaining the original function call structure.
+        \end{itemize}
+      
+    \item \textbf{Multi-argument lambda}
+        \begin{itemize}
+            \item Verifies that lambda expressions with multiple parameters are correctly converted into named functions with the appropriate parameter list.
+        \end{itemize}
+      
+    \item \textbf{Lambda with keyword arguments}
+        \begin{itemize}
+            \item Ensures that lambda expressions used as keyword arguments in function calls are properly refactored while preserving the original keyword argument syntax and indentation.
+        \end{itemize}
+      
+    \item \textbf{Very long lambda function}
+        \begin{itemize}
+            \item Tests the refactoring of complex, multi-line lambda expressions with extensive mathematical operations, verifying that the converted function maintains the original logic and structure.
+        \end{itemize}
   \end{itemize}
 
   \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/refactorers/test_long_lambda_element_refactoring.py}{here}
-
-  \subsection{VsCode Plugin}
-
-  \subsubsection{Detect Smells Command}
-
-  \textbf{Goal:} The detect smells command is responsible for
-  initiating the smell detection process, retrieving results from the
-  backend, and ensuring proper highlighting in the VS Code editor.
-  The command must handle various scenarios, including caching,
-  missing editor instances, and server failures, while providing
-  meaningful feedback to the user. The following unit tests verify
-  its accuracy.\\
-
-  \noindent The tests assess the correct fetching and caching of
-  smells, proper interaction with the highlighting module, handling
-  of missing files or inactive editors, and the system's ability to
-  recover from server downtime. Edge cases such as rapidly changing
-  file hashes and updates to enabled smells are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Handling of Missing Active Editor}
-      \begin{itemize}
-        \item The command shows an error message when no active editor is found.
-      \end{itemize}
-
-    \item \textbf{Handling of Missing File Path}
-      \begin{itemize}
-        \item The command shows an error message when the active
-          editor has no valid file path.
-      \end{itemize}
-
-    \item \textbf{Handling of No Enabled Smells}
-      \begin{itemize}
-        \item The command shows a warning message when no smells are
-          enabled in the configuration.
-      \end{itemize}
-
-    \item \textbf{Using Cached Smells}
-      \begin{itemize}
-        \item The command uses cached smells when the file hash and
-          enabled smells match the cached data.
-        \item The command highlights the cached smells in the editor.
-      \end{itemize}
-
-    \item \textbf{Fetching New Smells}
-      \begin{itemize}
-        \item The command fetches new smells when the file hash
-          changes or enabled smells are updated.
-        \item The command updates the cache with the new smells and
-          highlights them in the editor.
-      \end{itemize}
-
-    \item \textbf{Handling of Server Downtime}
-      \begin{itemize}
-        \item The command shows a warning message when the server is
-          down and no cached smells are available.
-      \end{itemize}
-
-    \item \textbf{Highlighting Smells}
-      \begin{itemize}
-        \item The command highlights detected smells in the editor
-          when smells are found.
-        \item The command shows a success message with the number of
-          highlighted smells.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/detectSmells.test.ts}{here}.
-
-  \subsubsection{Refactor Smells Command}
-
-  \textbf{Goal:} The refactorSmell command is responsible for
-  refactoring code areas identified as "smells" in a project. It
-  works by refactoring areas in code that could benefit from
-  refactoring (smells) that are chosen by the user. The process
-  involves multiple steps, including saving the file, calling a
-  backend refactoring service to refactor the identified smell,
-  updating any relevant data, and initiating a refactor preview to the user.\\
-
-  \noindent The tests assess the correct fetching and caching of
-  smells, proper interaction with the highlighting module, handling
-  of missing files or inactive editors, and the system's ability to
-  recover from server downtime. Edge cases such as rapidly changing
-  file hashes and updates to enabled smells are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR5, FR6, FR10, PR-RFT1,
-  PR-RFT2 ~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{No Active Editor Found}
-      \begin{itemize}
-        \item The command correctly handles the case where there is
-          no active editor open.
-        \item An appropriate error message is shown when no editor or
-          file path is available.
-      \end{itemize}
-
-    \item \textbf{Attempting to Refactor When No Smells Are Detected}
-      \begin{itemize}
-        \item The command does not proceed when no smells are
-          detected in the file.
-        \item An error message is shown indicating that no smells are
-          detected for refactoring.
-      \end{itemize}
-
-    \item \textbf{Attempting to Refactor When Selected Line Doesn’t
-      Match Any Smell}
-      \begin{itemize}
-        \item The command doesn't proceed if the selected line
-          doesn't match any detected smell.
-        \item An error message is shown to inform the user that no
-          matching smell was found for refactoring.
-      \end{itemize}
-
-    \item \textbf{Refactoring a Smell When Found on the Selected Line}
-      \begin{itemize}
-        \item The command successfully saves the current file and
-          triggers the refactoring of a detected smell.
-        \item The \texttt{refactorSmell} method is called with the
-          correct parameters, and the refactored preview is shown to the user.
-      \end{itemize}
-
-    \item \textbf{Handling API Failure During Refactoring}
-      \begin{itemize}
-        \item The command gracefully handles API failures during the
-          refactoring process.
-        \item An error message is displayed to the user if
-          refactoring fails, with the appropriate details logged.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/refactorSmell.test.ts}{here}.
-
-  \subsubsection{Document Hashing}
-
-  \textbf{Goal:} The document hashing module is responsible for
-  generating and managing document hashes to track changes in files.
-  By ensuring efficient tracking, this module allows caching
-  mechanisms to work correctly and prevents unnecessary reprocessing.
-  The following unit tests validate its correctness.\\
-
-  \noindent The tests verify the module’s ability to detect file
-  modifications, handle new files, and prevent redundant updates when
-  no changes occur. Edge cases such as rapid sequential edits, hash
-  mismatches, and multiple concurrent document updates are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Handling of Unchanged Document Hashes}
-      \begin{itemize}
-        \item The module does not update the workspace storage if the
-          document hash has not changed.
-        \item The existing hash is retained for the document.
-      \end{itemize}
-
-    \item \textbf{Handling of Changed Document Hashes}
-      \begin{itemize}
-        \item The module updates the workspace storage when the
-          document hash changes.
-        \item The new hash is correctly calculated and stored.
-      \end{itemize}
-
-    \item \textbf{Handling of New Documents}
-      \begin{itemize}
-        \item The module updates the workspace storage when no hash
-          exists for the document.
-        \item A new hash is generated and stored for the document.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/hashDocs.test.ts}{here}.
-
-  \subsubsection{File Highlighter}
-
-  \textbf{Goal:} The file highlighter module enhances code visibility
-  by applying visual decorations to highlight detected code smells in
-  the editor. It ensures that identified issues are clearly
-  distinguishable while preserving readability. The following unit
-  tests verify the correctness of this functionality.\\
-
-  \noindent The tests assess the correct creation of decorations,
-  accurate application of highlighting based on detected smells,
-  proper handling of initial and subsequent highlights, and the
-  removal of outdated decorations. Edge cases such as overlapping
-  decorations and incorrect style applications are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1, LFR-AP2~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Creation of Decorations}
-      \begin{itemize}
-        \item Decorations are created with the correct color and
-          style for each type of code smell.
-        \item The decoration type is properly initialized and can be
-          applied to the editor.
-      \end{itemize}
-
-    \item \textbf{Highlighting Smells}
-      \begin{itemize}
-        \item Smells are highlighted in the editor based on their
-          line occurrences.
-        \item The hover content for each smell is correctly
-          associated with the decoration.
-      \end{itemize}
-
-    \item \textbf{Handling of Initial Highlighting}
-      \begin{itemize}
-        \item On the first initialization, decorations are applied
-          without resetting existing ones.
-        \item The decorations are properly stored for future updates.
-      \end{itemize}
-
-    \item \textbf{Resetting Decorations}
-      \begin{itemize}
-        \item On subsequent calls, existing decorations are disposed
-          of before applying new ones.
-        \item The reset process ensures no overlapping or redundant decorations.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/fileHighlighter.test.ts}{here}.
-
-  \subsubsection{Hover Manager}
-
-  \textbf{Goal:} The Hover Manager module manages hover functionality
-  for Python files, providing hover content for detected code smells
-  and allowing refactoring commands. The following unit tests verify
-  the accuracy of this functionality.\\
-
-  \noindent The tests assess the ability of the \texttt{HoverManager}
-  to register hover providers, handle hover content, update smells,
-  generate refactor commands, and ensure correct hover content
-  formatting. Edge cases, such as no smells and the correct
-  propagation of updates to smells, are also considered.\\
-
-  \noindent \textbf{Target requirement(s):} LFR-AP2~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Registers hover provider for Python files}
-      \begin{itemize}
-        \item Verifies that the \texttt{HoverManager} correctly
-          registers a hover provider for Python files.
-      \end{itemize}
-
-    \item \textbf{Subscribes hover provider correctly}
-      \begin{itemize}
-        \item Ensures that the hover provider is correctly subscribed
-          to the context manager.
-      \end{itemize}
-
-    \item \textbf{Returns null for hover content if there are no smells}
-      \begin{itemize}
-        \item Checks that \texttt{getHoverContent} returns
-          \texttt{null} when no smells are detected for a file.
-      \end{itemize}
-
-    \item \textbf{Updates smells when \texttt{getInstance} is called again}
-      \begin{itemize}
-        \item Verifies that when \texttt{getInstance} is called again
-          with new smells, the manager updates the stored smells and
-          returns the same instance.
-      \end{itemize}
-
-    \item \textbf{Updates smells correctly}
-      \begin{itemize}
-        \item Confirms that \texttt{updateSmells} correctly updates
-          the list of smells in the manager.
-      \end{itemize}
-
-    \item \textbf{Generates valid hover content}
-      \begin{itemize}
-        \item Ensures that \texttt{getHoverContent} generates valid
-          hover content with correctly formatted smell details,
-          including refactor commands and proper structure.
-      \end{itemize}
-
-    \item \textbf{Registers refactor commands}
-      \begin{itemize}
-        \item Verifies that the refactor commands are properly
-          registered for individual and all smells of a specific type.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/hoverManager.test.ts}{here}.
-
-  \subsubsection{Line Selection Manager}
-
-  \textbf{Goal:} The Line Selection Manager module provides
-  functionality for detecting and commenting on code smells based on
-  a line selection. The following unit tests verify the correctness
-  of this functionality.\\
-
-  \noindent The tests assess the ability of the
-  \texttt{LineSelectionManager} to handle various scenarios such as
-  missing editor instances, multiple smells on a line, single-line
-  vs. multi-line selections, and correct comment generation. Edge
-  cases, such as mismatched document hashes, non-existent smells, and
-  the absence of selected text, are also considered.\\
-
-  \noindent \textbf{Target requirement(s):} UHR-EOU1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Removes last comment if decoration exists}
-      \begin{itemize}
-        \item Verifies that the last comment decoration is removed
-          correctly if one exists, ensuring that the decoration is
-          disposed of properly.
-      \end{itemize}
-
-    \item \textbf{Does not proceed if no editor is provided}
-      \begin{itemize}
-        \item Ensures that no action is taken when
-          \texttt{commentLine} is called with \texttt{null} as the editor.
-      \end{itemize}
-
-    \item \textbf{Does not add comment if no smells detected for file}
-      \begin{itemize}
-        \item Checks that no comment is added when no smells are
-          detected for the current file, confirming that no
-          unnecessary decorations are applied.
-      \end{itemize}
-
-    \item \textbf{Does not add comment if document hash does not match}
-      \begin{itemize}
-        \item Verifies that no comment is added when the document
-          hash in the workspace data does not match the hash of the
-          document, ensuring that the editor's state remains
-          consistent with the expected data.
-      \end{itemize}
-
-    \item \textbf{Does not add comment for multi-line selections}
-      \begin{itemize}
-        \item Tests that no comment is added when there is a
-          multi-line selection, ensuring that only single-line
-          selections are processed.
-      \end{itemize}
-
-    \item \textbf{Does not add comment when no smells exist at line}
-      \begin{itemize}
-        \item Ensures that no comment is added when no smells are
-          associated with the selected line, preventing unnecessary
-          decorations from being applied.
-      \end{itemize}
-
-    \item \textbf{Displays single smell comment without count}
-      \begin{itemize}
-        \item Verifies that a single smell is displayed correctly
-          without a count, confirming that the decoration is applied
-          with the correct content format.
-      \end{itemize}
-
-    \item \textbf{Adds a single-line comment if a smell is found}
-      \begin{itemize}
-        \item Confirms that a single-line comment is added correctly
-          when a smell is found on the selected line, ensuring proper
-          decoration application.
-      \end{itemize}
-
-    \item \textbf{Displays a combined comment if multiple smells exist}
-      \begin{itemize}
-        \item Verifies that a combined comment is displayed when
-          multiple smells exist on the same line.
-        \item Ensures that the decoration is created with the correct
-          formatting and applied to the correct range.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/ui/lineSelection.test.ts}{here}.
-
-  \subsubsection{Handle Smells Settings}
-
-  \textbf{Goal:} The VS Code settings management module enables users
-  to customize detection settings, update enabled smells, and ensure
-  workspace consistency. This module integrates with the IDE to
-  provide real-time updates when settings change. The following unit
-  tests validate the correctness of this functionality.\\
-
-  \noindent The tests ensure that enabled smells are correctly
-  retrieved from user configurations, updates to settings trigger the
-  appropriate notifications, and changes are accurately reflected in
-  the workspace. Additional test cases verify proper handling of
-  missing configurations, format conversions, and cache clearing
-  operations. Edge cases, such as unchanged settings and invalid
-  inputs, are also considered.\\
-
-  \noindent \textbf{Target requirement(s):} FR10, UHR-PSI1, UHR-EOU2,
-  OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Retrieving Enabled Smells}
-      \begin{itemize}
-        \item Ensures that the function retrieves all enabled smells
-          from the user's VS Code settings.
-        \item Validates that the function returns an empty object
-          when no smells are enabled.
-      \end{itemize}
-
-    \item \textbf{Handling Updates to Smell Filters}
-      \begin{itemize}
-        \item Ensures that enabling a smell triggers a notification to the user.
-        \item Confirms that disabling a smell results in a proper
-          update message.
-        \item Validates that when no changes occur, no unnecessary
-          cache updates are performed.
-      \end{itemize}
-
-    \item \textbf{Clearing Cache on Settings Update}
-      \begin{itemize}
-        \item Ensures that enabling or disabling a smell triggers a
-          workspace cache wipe.
-        \item Confirms that cache clearing only occurs when actual
-          changes are made.
-      \end{itemize}
-
-    \item \textbf{Formatting Smell Names}
-      \begin{itemize}
-        \item Ensures that smell names stored in kebab-case are
-          correctly formatted into a readable format.
-        \item Verifies that empty input results in an empty string
-          without errors.
-      \end{itemize}
-
-    \item \textbf{Ensuring User-Friendly Notifications}
-      \begin{itemize}
-        \item Confirms that updates to smell settings provide clear,
-          informative messages.
-        \item Ensures that error handling follows polite and
-          constructive messaging principles.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/utils/handleSmellSettings.test.ts}{here}.
-
-  \subsubsection{Wipe Workspace Cache}
-
-  \textbf{Goal:} The "Wipe Workspace Cache" command is responsible
-  for clearing specific caches related to the workspace in a
-  development environment, primarily to reset the state of stored
-  data such as "smells" and file changes. It can be triggered for
-  different reasons, which determine which caches are cleared and how
-  the command behaves. It also updates file hashes for visible
-  editors when appropriate. Upon successful execution, a
-  corresponding success message is shown to the user. In case of an
-  error, an error message is displayed to the user.\\
-
-  \noindent The tests ensure that appropriate caches are being
-  cleared as and when instructed.\\
-
-  \noindent \textbf{Target requirement(s):} FR3, FR5, FR8~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Wipe Cache with No Reason Provided}
-      \begin{itemize}
-        \item Only the "smells" cache is cleared when no reason is provided.
-        \item A success message indicating the workspace cache has
-          been successfully wiped is displayed.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache with Reason "manual"}
-      \begin{itemize}
-        \item Both the "smells" and "file changes" caches are cleared
-          when the reason is "manual."
-        \item A success message indicating the workspace cache was
-          manually wiped is shown.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache When No Files Are Open}
-      \begin{itemize}
-        \item The command correctly handles the case when there are
-          no open files.
-        \item A log message is generated indicating that no open
-          files are available to update.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache with Open Files}
-      \begin{itemize}
-        \item When there are open files, a message indicating the
-          number of visible files is logged.
-        \item The hashes for each open file are updated as expected.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache with Reason "settings"}
-      \begin{itemize}
-        \item Only the "smells" cache is cleared when the reason is "settings."
-        \item A success message is shown indicating the cache was
-          wiped due to changes in smell detection settings.
-      \end{itemize}
-
-    \item \textbf{Wipe Cache When an Error Occurs}
-      \begin{itemize}
-        \item An error message is logged when an error occurs during
-          the cache wipe process.
-        \item a user-facing error message is displayed, indicating
-          the failure to wipe the workspace cache.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/commands/wipeWorkCache.test.ts}{here}.
-
-  \subsubsection{Backend}
-
-  \textbf{Goal:} The backend handles interactions with the backend
-  server for tasks such as checking server status, initializing logs,
-  fetching detected smells, and refactoring those smells in the code.\\
-
-  \noindent The tests ensure that the system correctly interacts with
-  the backend to check the server's status, initialize logging, fetch
-  code smells, and perform refactoring tasks. These tests confirm
-  that the server status is accurately updated based on successful or
-  failed responses, that log initialization behaves as expected under
-  different conditions, and that the system correctly handles and
-  processes detected smells for refactoring.\\
-
-  \noindent \textbf{Target requirement(s):} FR6, PR-SCR1, PR-RFT1,
-  PR-RFT2~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Handle Server Status Check with Successful Response}
-      \begin{itemize}
-        \item When the server responds successfully, the status is
-          set to \texttt{ServerStatusType.UP}.
-        \item The correct update of server status to indicate that
-          the server is operational.
-      \end{itemize}
-
-    \item \textbf{Handle Server Status Check with Error or Failure}
-      \begin{itemize}
-        \item When the server responds with an error or fails to
-          respond, the status is set to \texttt{ServerStatusType.DOWN}.
-        \item Correctly handles a failed server response by ensuring
-          the status reflects the server's downtime.
-      \end{itemize}
-
-    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Success)}
-      \begin{itemize}
-        \item When a valid directory path is provided and the backend
-          responds successfully, the function returns \texttt{true},
-          indicating successful log initialization.
-        \item System can successfully initialize logs with the
-          backend and sync them.
-      \end{itemize}
-
-    \item \textbf{Handle Initiation of Logs with Valid Directory Path (Failure)}
-      \begin{itemize}
-        \item When the backend fails to initialize logs, the function
-          returns false.
-        \item Properly handles to provide feedback if the log
-          initialization process fails.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/plugin-multi-file/test/api/backend.test.ts}{here}.
-
-  \subsection{API Routes}
-
-  \subsubsection{Smell Detection Endpoint}
-
-  \textbf{Goal:} The smell detection endpoint provides an API for
-  retrieving detected code smells from the backend. It ensures
-  efficient communication with the smell detection module while
-  handling errors gracefully. The following unit tests verify the
-  accuracy of this functionality.\\
-
-  \noindent The tests assess the correctness of the endpoint’s
-  response structure, error handling for missing files, validation of
-  request data, and handling of internal exceptions. Edge cases, such
-  as malformed requests and empty responses, are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Successful Detection of Smells}
-      \begin{itemize}
-        \item The API endpoint returns a successful response when the
-          file exists and smells are detected.
-        \item The response contains the correct number of detected
-          smells and adheres to the expected data structure.
-      \end{itemize}
-
-    \item \textbf{Handling of File Not Found Errors}
-      \begin{itemize}
-        \item The API endpoint returns an appropriate error response
-          when the specified file does not exist.
-        \item The error message clearly indicates that the file was not found.
-      \end{itemize}
-
-    \item \textbf{Handling of Internal Server Errors}
-      \begin{itemize}
-        \item The API endpoint returns an error response when an
-          unexpected exception occurs during smell detection.
-        \item The error message indicates an internal server error.
-      \end{itemize}
-
-    \item \textbf{Validation of Input Data}
-      \begin{itemize}
-        \item The API validates the presence and correctness of
-          required fields in the request.
-        \item The API rejects invalid input with appropriate error messages.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_detect_route.py}{here}.
-
-  \subsubsection{Refactoring Endpoint}
-
-  \textbf{Goal:} The refactoring endpoint provides an API for
-  refactoring detected code smells by leveraging the backend
-  refactoring module. It ensures that refactored code is returned
-  efficiently while verifying energy savings. The following unit
-  tests validate the accuracy of this functionality.\\
-
-  \noindent The tests assess the correctness of refactored output,
-  proper retrieval of energy measurements, error handling for missing
-  source directories, and graceful failures when unexpected
-  conditions arise. Edge cases such as unsuccessful refactorings and
-  unchanged energy consumption are also considered.\\
-
-  \noindent\textbf{Target requirement(s):} FR10, OER-IAS1~\cite{SRS} \\
-
-  \begin{itemize}
-    \item \textbf{Successful Refactoring Process}
-      \begin{itemize}
-        \item The API endpoint returns a successful response when the
-          refactoring process completes without errors.
-        \item The response includes the refactored data and updated smells.
-        \item Energy measurements are correctly retrieved and
-          compared to ensure energy savings.
-      \end{itemize}
-
-    \item \textbf{Handling of Source Directory Not Found}
-      \begin{itemize}
-        \item The API endpoint returns an appropriate error response
-          when the specified source directory does not exist.
-        \item The error message clearly indicates that the directory
-          was not found.
-      \end{itemize}
-
-    \item \textbf{Handling of Energy Measurement Failures}
-      \begin{itemize}
-        \item The API endpoint returns an error response when initial
-          or final energy measurements cannot be retrieved.
-        \item The API endpoint returns an error response when no
-          energy savings are detected after refactoring.
-      \end{itemize}
-
-    \item \textbf{Handling of Unexpected Errors}
-      \begin{itemize}
-        \item The API endpoint returns an error response when an
-          unexpected exception occurs during the refactoring process.
-        \item The error message includes details about the exception.
-      \end{itemize}
-  \end{itemize}
-
-  \noindent The test cases for this module can be found
-  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/new-poc/tests/api/test_refactoring.py}{here}.
+  \href{https://github.com/ssm-lab/capstone--source-code-optimizer/blob/main/tests/refactorers/test_long_lambda_element_refactoring.py}{here}
+
+\subsection{VsCode Plugin}
+
+\subsubsection{Configure Workspace Command}
+
+\textbf{Goal:} The configure workspace command identifies valid workspace folders containing Python files and prompts the user to select one. Upon selection, the workspace is marked as configured and saved to persistent state for future operations.
+
+\medskip
+
+\noindent The tests validate that valid workspace folders are detected, Python files are identified correctly, user selections are respected, and appropriate updates are made to both VS Code context and extension state.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR1, FR2~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Folder Scanning}
+    \begin{itemize}
+      \item Detects top-level and nested directories containing \texttt{.py} files.
+      \item Correctly identifies directories with Python entry points (e.g., \texttt{main.py} or \texttt{\_\_init\_\_.py}).
+    \end{itemize}
+
+  \item \textbf{Quick Pick Interaction}
+    \begin{itemize}
+      \item Displays a list of valid Python folders.
+      \item Accepts user selection and confirms configuration.
+    \end{itemize}
+
+  \item \textbf{Workspace State Update}
+    \begin{itemize}
+      \item Stores selected folder path under the configured workspace key.
+      \item Sets VS Code context key \texttt{workspaceState.workspaceConfigured} to true.
+    \end{itemize}
+
+  \item \textbf{Feedback to User}
+    \begin{itemize}
+      \item Shows information message indicating selected folder.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/commands/configureWorkspace.test.ts}{here}.
+
+\subsubsection{Reset Configuration Command}
+
+\textbf{Goal:} The reset configuration command prompts the user for confirmation and, if accepted, clears the stored workspace path and resets the internal plugin context to an unconfigured state.
+
+\medskip
+
+\noindent The tests verify that the workspace state is properly reset only when the user confirms the action. The system must also update the relevant VS Code context key to reflect the unconfigured state.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR3~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{User Confirmation}
+    \begin{itemize}
+      \item Prompts user with a warning message before clearing configuration.
+    \end{itemize}
+
+  \item \textbf{Workspace State Reset}
+    \begin{itemize}
+      \item Clears the stored workspace path from extension state.
+    \end{itemize}
+
+  \item \textbf{Context Reset}
+    \begin{itemize}
+      \item Updates VS Code context key \texttt{workspaceState.workspaceConfigured} to false.
+    \end{itemize}
+
+  \item \textbf{Cancel Handling}
+    \begin{itemize}
+      \item Skips reset process if the user cancels the confirmation dialog.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/commands/resetConfiguration.test.ts}{here}.
+
+\subsubsection{File and Folder Smell Detection Commands}
+
+\textbf{Goal:} The \texttt{detectSmellsFile} and \texttt{detectSmellsFolder} commands are responsible for initiating the detection of code smells in individual files and entire directories, respectively. These commands coordinate the interaction between the cache system, backend smell detection API, and the UI rendering logic within the SmellsViewProvider.
+
+\medskip
+
+\noindent These unit tests ensure robust handling of various scenarios, including invalid input files, empty folders, disabled smell settings, cached data reuse, server downtime, backend errors, and recursive directory scans. They also validate that user-facing messages, caching, and smell highlighting are executed correctly based on system state.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR2, FR3, FR15, OER-IAS2~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Skipping Non-Python and Untitled Files}
+    \begin{itemize}
+      \item The file detection command ignores non-Python files and unsaved/untitled documents.
+    \end{itemize}
+
+  \item \textbf{Using Cached Smells}
+    \begin{itemize}
+      \item Cached smells are reused when the file hash and settings match.
+      \item Cached smells are immediately rendered in the Smells View.
+    \end{itemize}
+
+  \item \textbf{Fetching Smells from Backend}
+    \begin{itemize}
+      \item When no cache is available, the backend is called to fetch smells.
+      \item Retrieved smells are stored in the cache and displayed in the UI.
+    \end{itemize}
+
+  \item \textbf{Handling No Enabled Smells}
+    \begin{itemize}
+      \item A warning message is shown when no smells are enabled in the configuration.
+    \end{itemize}
+
+  \item \textbf{Handling No Smells Found}
+    \begin{itemize}
+      \item The tool displays a message indicating that the file has no detectable smells.
+      \item The cache is updated to reflect the empty result.
+    \end{itemize}
+
+  \item \textbf{Handling API and Server Errors}
+    \begin{itemize}
+      \item Server-down conditions show appropriate warning messages.
+      \item API response failures result in error messages and a "failed" status in the UI.
+      \item Unexpected thrown exceptions are caught and logged to the output channel.
+    \end{itemize}
+
+  \item \textbf{Folder Analysis and Recursion}
+    \begin{itemize}
+      \item The folder command scans recursively to identify `.py` files and shows progress.
+      \item A warning is shown if no Python files are found in the directory.
+      \item The total number of analyzed files is reported to the user.
+    \end{itemize}
+
+  \item \textbf{Handling Folder Access Errors}
+    \begin{itemize}
+      \item Directory scan failures (e.g., permission errors) are caught and logged cleanly without crashing the extension.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/commands/detectSmells.test.ts}{here}.
+
+\subsubsection{Export Metrics Command}
+
+\textbf{Goal:} The export metrics command saves workspace-level energy metrics to a local JSON file. This test suite ensures it handles missing data, invalid paths, file vs. directory distinction, and file system errors gracefully.
+
+\medskip
+
+\noindent The tests validate correct behavior across different workspace path types, proper access to extension state, and informative error messaging for common failure scenarios.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR6, FR15, OER-IAS3~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{No Metrics Data}
+    \begin{itemize}
+      \item The command shows an information message if there is no metrics data available to export.
+    \end{itemize}
+
+  \item \textbf{No Workspace Path Configured}
+    \begin{itemize}
+      \item The command shows an error message if the workspace path is missing or unset.
+    \end{itemize}
+
+  \item \textbf{Export to Workspace Directory}
+    \begin{itemize}
+      \item If the workspace path is a directory, the metrics JSON is saved directly inside it.
+      \item The user is notified of the output file location.
+    \end{itemize}
+
+  \item \textbf{Export to Parent of File Path}
+    \begin{itemize}
+      \item If the workspace path is a file, the parent directory is used for export.
+    \end{itemize}
+
+  \item \textbf{Invalid Path Type Handling}
+    \begin{itemize}
+      \item The command shows an error message if the path type is unknown or unsupported.
+    \end{itemize}
+
+  \item \textbf{Filesystem Access Errors}
+    \begin{itemize}
+      \item The command handles and reports errors when accessing the file system (e.g., stat failures).
+    \end{itemize}
+
+  \item \textbf{File Write Failures}
+    \begin{itemize}
+      \item If the write operation fails, the user is shown an error message indicating export failure.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/commands/exportMetricsData.test.ts}{here}.
+
+\subsubsection{Filter Smell Command Registration}
+
+\textbf{Goal:} This command module registers all filter-related UI commands used to configure active smells and their parameters in the EcoOptimizer sidebar. The tests validate command registration, user interaction (e.g., input box), and the proper delegation to `FilterViewProvider`.
+
+\medskip
+
+\noindent The tests ensure that smell toggling, option editing, mass selection, and default resets all call the correct provider methods and handle edge cases such as missing inputs or invalid user values.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR13, FR14, OER-IAS1~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Command Registration}
+    \begin{itemize}
+      \item Each command is correctly registered with VS Code using the expected command IDs.
+      \item All registered disposables are added to the extension context’s subscriptions.
+    \end{itemize}
+
+  \item \textbf{Toggling Individual Smells}
+    \begin{itemize}
+      \item The command toggles a specific smell using \texttt{toggleSmell}.
+    \end{itemize}
+
+  \item \textbf{Editing Smell Options – Valid Input}
+    \begin{itemize}
+      \item The user is prompted for a new value via an input box.
+      \item The new numeric value is passed to \texttt{updateOption} and the filter view is refreshed.
+    \end{itemize}
+
+  \item \textbf{Editing Smell Options – Invalid or Missing Input}
+    \begin{itemize}
+      \item If the user enters a non-numeric value, the option is not updated.
+      \item If the smell or option key is missing, an error message is shown.
+    \end{itemize}
+
+  \item \textbf{Select/Deselect All Smells}
+    \begin{itemize}
+      \item The \texttt{selectAllFilterSmells} and \texttt{deselectAllFilterSmells} commands call \texttt{setAllSmellsEnabled(true/false)} respectively.
+    \end{itemize}
+
+  \item \textbf{Reset to Filter Defaults}
+    \begin{itemize}
+      \item The \texttt{setFilterDefaults} command calls \texttt{resetToDefaults} on the filter provider.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/commands/filterSmells.test.ts}{here}.
+
+\subsubsection{Refactor Workflow Commands}
+
+\textbf{Goal:} The refactoring workflow includes the core commands responsible for initiating, applying, and discarding refactorings. These tests verify that backend communication, session setup, user feedback, and file handling work correctly across both individual and batch refactor scenarios.
+
+\medskip
+
+\noindent This suite ensures refactor commands respect workspace configuration, gracefully handle backend issues, display energy savings, manage diff editors, and correctly update workspace state and metrics. Error handling for edge cases like file system failures and missing data is also validated.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR3, FR4, FR15, OER-IAS4~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Workspace and Server Preconditions}
+    \begin{itemize}
+      \item Shows an error if the workspace is not configured.
+      \item Shows a warning if the backend server is unavailable.
+    \end{itemize}
+
+  \item \textbf{Refactoring Execution – Single Smell}
+    \begin{itemize}
+      \item Initiates refactoring for one smell using the backend.
+      \item Updates internal state and view providers.
+      \item Displays progress and success messages.
+    \end{itemize}
+
+  \item \textbf{Refactoring Execution – All Smells of Same Type}
+    \begin{itemize}
+      \item Calls bulk API endpoint for all smells of the given type.
+      \item Displays type-based success messages.
+    \end{itemize}
+
+  \item \textbf{Refactoring Failure Handling}
+    \begin{itemize}
+      \item Shows an error if the backend fails or throws.
+      \item Resets UI state and hides any open diff editors.
+    \end{itemize}
+
+  \item \textbf{Session Initialization via \texttt{startRefactorSession}}
+    \begin{itemize}
+      \item Opens a VS Code diff editor with original and refactored files.
+      \item Displays energy savings in an information message.
+      \item Handles missing energy savings values gracefully (e.g., N/A).
+    \end{itemize}
+
+  \item \textbf{Accepting Refactorings}
+    \begin{itemize}
+      \item Copies refactored files into the workspace.
+      \item Updates metrics data and clears smell cache for affected files.
+      \item Sets file status to "outdated" in the UI.
+      \item Handles missing session data or filesystem errors.
+    \end{itemize}
+
+  \item \textbf{Rejecting Refactorings}
+    \begin{itemize}
+      \item Cleans up session state and restores file status.
+      \item Handles and logs cleanup failures if they occur.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/commands/refactorSmell.test.ts}{here}.
+
+\subsubsection{Wipe Workspace Cache Command}
+
+\textbf{Goal:} This command allows users to reset all cached smell data and file statuses for the current workspace. The tests ensure correct user confirmation, safe cache clearing, and accurate feedback messaging across all user interaction scenarios.
+
+\medskip
+
+\noindent This module’s functionality is essential for maintaining control over stale or outdated results, especially in long development sessions. The tests verify proper UI messaging, cancellation handling, and full cache cleanup when confirmed.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR10, OER-IAS5~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Confirmation Prompt}
+    \begin{itemize}
+      \item A warning dialog is shown before clearing the workspace cache.
+      \item The dialog must include a modal and an explicit "Confirm" action.
+    \end{itemize}
+
+  \item \textbf{Cache Clearing and UI Refresh}
+    \begin{itemize}
+      \item If the user confirms, all cached smells are deleted.
+      \item The SmellsView is refreshed and statuses are reset.
+      \item A success message is shown after completion.
+    \end{itemize}
+
+  \item \textbf{Cancellation and Dismissal Handling}
+    \begin{itemize}
+      \item If the user cancels or dismisses the dialog, no cache operations are performed.
+      \item A message confirms that the operation was cancelled.
+    \end{itemize}
+
+  \item \textbf{Non-Confirm Input Handling}
+    \begin{itemize}
+      \item If the user clicks any button other than "Confirm", the operation is treated as cancelled.
+    \end{itemize}
+
+  \item \textbf{Message Validity}
+    \begin{itemize}
+      \item Success messages are shown only after the cache is successfully cleared.
+      \item Cancel messages are mutually exclusive with success messages.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/commands/wipeWorkCache.test.ts}{here}.
+
+\subsubsection{Workspace Modified Listener}
+
+\textbf{Goal:} This listener monitors Python file changes and deletions within the configured workspace. Its responsibilities include invalidating outdated cache entries, updating UI statuses, and auto-triggering smell detection if "smell linting" is enabled. It also ensures resource cleanup upon disposal.
+
+\medskip
+
+\noindent The following tests verify correct event handling on file saves, edits, and deletions. They also validate configuration checks, error handling, and the listener's lifecycle management.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR10, FR16, OER-IAS5~\cite{SRS} \\
+
+\begin{itemize}
+  \item \textbf{Initialization Behavior}
+    \begin{itemize}
+      \item Skips setup if no workspace path is configured.
+      \item Initializes file watcher for `.py` files when path is configured.
+    \end{itemize}
+
+  \item \textbf{Handling File Changes}
+    \begin{itemize}
+      \item Clears smell cache and marks file as outdated if it exists in the cache.
+      \item Skips files that are not in the cache.
+      \item Logs error messages for cache invalidation failures.
+    \end{itemize}
+
+  \item \textbf{Handling File Deletions}
+    \begin{itemize}
+      \item Clears cache and removes file entry from view if file had cached smells.
+      \item Skips deletion logic if file was not cached.
+      \item Logs error if cache clearing fails.
+    \end{itemize}
+
+  \item \textbf{Smell Detection on Save}
+    \begin{itemize}
+      \item Triggers smell detection when a Python file is saved and smell linting is enabled.
+      \item Ignores non-Python files.
+    \end{itemize}
+
+  \item \textbf{Disposal}
+    \begin{itemize}
+      \item Disposes of both the file watcher and save listener properly.
+      \item Logs disposal confirmation.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/listeners/workspaceModifiedListener.test.ts}{here}.
+
+\subsubsection{Backend Service Communication}
+
+\textbf{Goal:} These backend API functions interact with the server for health checks, logging setup, smell detection, and smell refactoring. They must handle network issues gracefully, validate required inputs, and ensure proper feedback is logged in the output console.
+
+\medskip
+
+\noindent The following tests validate success and failure scenarios for each backend endpoint, including malformed requests, network errors, and missing workspace paths. They also verify correct request payloads and logging output.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR2, FR3, FR6, FR10, OER-IAS2~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Server Health Check}
+    \begin{itemize}
+      \item Sets status to \texttt{UP} if `/health` responds successfully.
+      \item Sets status to \texttt{DOWN} on error or network failure, and logs the issue.
+    \end{itemize}
+
+  \item \textbf{Logging Initialization}
+    \begin{itemize}
+      \item Sends proper payload to `/logs/init`.
+      \item Returns success on valid response.
+      \item Handles server or network errors with log messages and fallback.
+    \end{itemize}
+
+  \item \textbf{Smell Detection}
+    \begin{itemize}
+      \item Sends file path and smell configuration to `/smells`.
+      \item Parses and returns detected smells on success.
+      \item Throws clear errors and logs backend-provided details on failure.
+    \end{itemize}
+
+  \item \textbf{Refactor Single Smell}
+    \begin{itemize}
+      \item Sends smell and workspace path to `/refactor`.
+      \item Throws error when workspace path is missing.
+      \item Handles and logs both successful and failed backend responses.
+    \end{itemize}
+
+  \item \textbf{Refactor by Smell Type}
+    \begin{itemize}
+      \item Sends smell type and workspace path to `/refactor-by-type`.
+      \item Validates required fields and logs backend failures.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/api/backend.test.ts}{here}.
+
+\subsubsection{File Highlighter}
+
+\textbf{Goal:} The file highlighter decorates code editor lines based on detected smells using user-defined styling preferences (underline, border, flashlight, etc.). This module ensures that the VS Code UI reflects current cache data and user configuration, applying or clearing decorations dynamically.
+
+\medskip
+
+\noindent The tests verify correct singleton instantiation, dynamic decoration updates, conditional smell filtering, and visual style application across multiple configurations and editor scenarios.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR8, FR13, OER-IAS1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Singleton Instantiation}
+    \begin{itemize}
+      \item Ensures only one instance of the highlighter is created.
+    \end{itemize}
+
+  \item \textbf{Highlight Update Triggers}
+    \begin{itemize}
+      \item Calls \texttt{highlightSmells} only for visible Python editors.
+      \item Filters files correctly in \texttt{updateHighlightsForFile}.
+    \end{itemize}
+
+  \item \textbf{Highlight Rendering}
+    \begin{itemize}
+      \item Applies decorations for all enabled and valid smells.
+      \item Skips rendering if no data is cached or smell is disabled.
+      \item Ignores invalid line numbers.
+    \end{itemize}
+
+  \item \textbf{Custom Decoration Styles}
+    \begin{itemize}
+      \item Supports underline, flashlight, and border-arrow styles.
+      \item Defaults to underline for unknown style keys.
+    \end{itemize}
+
+  \item \textbf{Decoration Disposal}
+    \begin{itemize}
+      \item \texttt{resetHighlights()} clears all decorations and disposes them properly.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/ui/fileHighlighter.test.ts}{here}.
+
+\subsubsection{Hover Manager}
+
+\textbf{Goal:} The hover manager displays contextual smell information when the user hovers over affected lines in Python files. It enriches the user experience by providing inline guidance and actionable links to trigger refactorings.
+
+\medskip
+
+\noindent The tests verify correct registration of the hover provider, graceful degradation when conditions are unmet, and correct Markdown formatting and behavior for smells occurring on the hovered line.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR13, FR16, OER-IAS1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Provider Registration}
+    \begin{itemize}
+      \item Registers hover provider for \texttt{python} language files.
+      \item Adds registration to extension subscriptions.
+    \end{itemize}
+
+  \item \textbf{Hover Preconditions}
+    \begin{itemize}
+      \item Returns nothing for non-Python files.
+      \item Returns nothing when no smells are cached.
+      \item Returns nothing if no smells occur on the hovered line.
+    \end{itemize}
+
+  \item \textbf{Hover Display Logic}
+    \begin{itemize}
+      \item Creates and returns a \texttt{Hover} object with formatted message.
+      \item Displays smell description and a clickable refactor command.
+      \item Escapes special characters in Markdown to prevent formatting issues.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/ui/hoverManager.test.ts}{here}.
+
+\subsubsection{Line Selection Manager}
+
+\textbf{Goal:} The line selection manager adds inline decorations that summarize code smells present on the user's current line selection. It enhances feedback clarity while ensuring only one comment is shown at a time.
+
+\medskip
+
+\noindent The tests ensure that decoration is only applied to valid selections with associated smells, that it updates correctly when switching lines or clearing cache, and that decoration content reflects smell counts accurately.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR13, FR16, OER-IAS1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Initialization}
+    \begin{itemize}
+      \item Registers a callback on smell updates.
+      \item Initializes internal state to null decoration and null last line.
+    \end{itemize}
+
+  \item \textbf{Comment Rendering}
+    \begin{itemize}
+      \item Skips rendering when no editor is active or selection is multiline.
+      \item Skips when no smells are cached or no smells match the selected line.
+      \item Skips if user selects the same line twice.
+      \item Adds a comment with the smell type if one smell is present.
+      \item Adds a comment with count when multiple smells exist.
+      \item Decorations appear as inline text after the selected line.
+    \end{itemize}
+
+  \item \textbf{Comment Removal}
+    \begin{itemize}
+      \item Removes previous decorations before applying a new one.
+      \item Removes comment when cache is cleared for the current file or for all files.
+      \item Skips removal if unrelated file’s cache is cleared.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/ui/lineSelection.test.ts}{here}.
+
+\subsubsection{Cache Initialization}
+
+\textbf{Goal:} This module restores file statuses from previously cached analysis results when the extension is activated. It removes entries for deleted or out-of-scope files and updates the UI accordingly.
+
+\medskip
+
+\noindent The tests verify that cache entries outside the workspace or pointing to non-existent files are removed, and that remaining entries are properly restored into the UI. It also validates summary log reporting and gracefully handles missing workspace configuration.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR10, OER-CACHE1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{No Workspace Configured}
+    \begin{itemize}
+      \item Skips initialization and logs a warning if no workspace path is set.
+    \end{itemize}
+
+  \item \textbf{Removing Invalid Cache Entries}
+    \begin{itemize}
+      \item Removes entries for files outside the configured workspace.
+      \item Removes entries for files that are no longer present on disk.
+    \end{itemize}
+
+  \item \textbf{Restoring Valid Cache}
+    \begin{itemize}
+      \item Files with smells get status \texttt{passed} and corresponding smells are injected.
+      \item Clean files are marked with status \texttt{no\_issues}.
+    \end{itemize}
+
+  \item \textbf{Summary Logging}
+    \begin{itemize}
+      \item Logs how many files were restored, how many had smells, and how many were removed from the cache.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/utils/initializeStatusesFromCache.test.ts}{here}.
+
+\subsubsection{Smells Data Management}
+
+\textbf{Goal:} This module provides utilities for reading, parsing, and retrieving code smell configurations. It handles loading/saving JSON configurations, filtering enabled smells, and resolving smell metadata for hover/tooltips.
+
+\medskip
+
+\noindent The tests validate the integrity and correctness of the config loading and writing process, proper filtering of enabled smells, and lookup logic for acronyms, names, and descriptions based on message IDs.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR4, FR5, OER-CONFIG1~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{loadSmells}
+    \begin{itemize}
+      \item Successfully loads a smells configuration from disk.
+      \item Displays an error message if the file is missing or malformed.
+    \end{itemize}
+
+  \item \textbf{saveSmells}
+    \begin{itemize}
+      \item Writes updated configuration to disk.
+      \item Displays an error message if the save operation fails.
+    \end{itemize}
+
+  \item \textbf{getFilterSmells}
+    \begin{itemize}
+      \item Returns the full dictionary of loaded smells.
+    \end{itemize}
+
+  \item \textbf{getEnabledSmells}
+    \begin{itemize}
+      \item Returns only smells marked as enabled.
+      \item Includes parsed analyzer options with correct types.
+    \end{itemize}
+
+  \item \textbf{Metadata Resolvers}
+    \begin{itemize}
+      \item \texttt{getAcronymByMessageId} resolves acronyms.
+      \item \texttt{getNameByMessageId} resolves full names.
+      \item \texttt{getDescriptionByMessageId} resolves descriptions.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/utils/smellsData.test.ts}{here}.
+
+\subsubsection{Tracked Diff Editors}
+
+\textbf{Goal:} This module maintains a registry of active diff editors created during refactoring sessions. It provides utilities to register, query, and programmatically close diff tabs within the VS Code environment.
+
+\medskip
+
+\noindent The tests validate the correct registration and tracking of diff editors, accurate identification of tracked editors via URI comparison, and complete cleanup of tabs and memory state after closure operations.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR12, OER-IAS2~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{registerDiffEditor}
+    \begin{itemize}
+      \item Adds a URI pair to the tracked diff editors set.
+      \item Supports multiple pairs without interference.
+    \end{itemize}
+
+  \item \textbf{isTrackedDiffEditor}
+    \begin{itemize}
+      \item Returns true only for previously registered URI pairs.
+      \item Fails gracefully for unregistered or mismatched pairs.
+      \item Is case-sensitive when comparing URI strings.
+    \end{itemize}
+
+  \item \textbf{closeAllTrackedDiffEditors}
+    \begin{itemize}
+      \item Closes all diff tabs currently open in the workspace if they match tracked URIs.
+      \item Skips irrelevant tabs or malformed inputs.
+      \item Clears the internal tracked set after execution.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/utils/trackedDiffEditors.test.ts}{here}.
+
+\subsubsection{Refactor Action Buttons}
+
+\textbf{Goal:} These UI buttons provide users with the ability to accept or reject a proposed refactoring. They must be initialized correctly, displayed when a refactoring session is active, and hidden when the session ends. The buttons are tied to a VS Code context key used to control view behavior.
+
+\medskip
+
+\noindent The tests verify that the buttons are properly initialized and registered with the extension context, appear or disappear based on user interaction, and correctly set or reset the \texttt{refactoringInProgress} context variable.
+
+\medskip
+
+\noindent\textbf{Target requirement(s):} FR12~\cite{SRS}
+
+\begin{itemize}
+  \item \textbf{Button Visibility}
+    \begin{itemize}
+      \item The accept and reject buttons are shown when a refactoring session begins.
+      \item The buttons are hidden when the session ends or is cancelled.
+    \end{itemize}
+
+  \item \textbf{Context Key Updates}
+    \begin{itemize}
+      \item \texttt{refactoringInProgress} is set to \texttt{true} when buttons are shown.
+      \item \texttt{refactoringInProgress} is set to \texttt{false} when buttons are hidden.
+    \end{itemize}
+
+  \item \textbf{Subscription Registration}
+    \begin{itemize}
+      \item Buttons are registered to the extension context upon initialization.
+    \end{itemize}
+\end{itemize}
+
+\noindent The test cases for this module can be found
+\href{https://github.com/ssm-lab/capstone--sco-vs-code-plugin/blob/main/test/utils/refactorActionButtons.test.ts}{here}.
 
   % \subsection{Unit Testing Scope}
 
@@ -3454,7 +3045,7 @@ the system is accessible, user-centred, intuitive and easy to navigate.
 
     \subsection{Usability Survey Questions} \label{A.2}
 
-    See the surveys folder under \texttt{docs/Extras/UsabilityTesting}.
+    See the surveys folder under \href{https://github.com/ssm-lab/capstone--source-code-optimizer/tree/main/docs/Extras/UsabilityTesting/surveys}{\texttt{docs/Extras/UsabilityTesting}}.
 
     \newpage{}
     \section{Reflection}

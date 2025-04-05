@@ -124,25 +124,42 @@ are also discussed.
 
 \end{enumerate}
 
-\subsection{Code Smell Detection and Refactoring Suggestion (RS) Tests}
-\begin{enumerate}
-  \item \textbf{test-FR-2 Code Smell Detection and Refactoring
-    Suggestion} \\[2mm]
-    The \textbf{code smell detection and refactoring tests} validate
-    the system’s ability to identify and refactor specific code
-    smells that impact energy efficiency. These tests ensure
-    compliance with \textbf{functional requirement FR2} and were
-    conducted through unit testing.
+\subsection{Code Smell Detection Tests and Refactoring Suggestion (RS) Tests}
 
-    The tester provided Python files containing common code smells
-    such as \textbf{long parameter lists, repeated function calls,
-    and inefficient string concatenation}. The \textbf{expected
-    result} was that the system would correctly detect these smells
-    and suggest appropriate refactoring strategies. The
-    \textbf{actual result} confirmed that the system successfully
-    identified all tested code smells, displayed warnings, and
-    provided optimization suggestions. More details can be found in
-    the unit tests.
+This area includes tests to verify the detection and refactoring of specified code smells that impact energy efficiency. These tests will be done through unit testing.
+
+\begin{enumerate}
+  \item \textbf{test-FR-IA-1 Successful Refactoring Execution} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle in the VS Code environment. \\
+    \textbf{Input:} A valid Python file with a detectable code smell. \\
+    \textbf{Output:} The system applies the appropriate refactoring and updates the code view. \\
+    \textbf{Test Case Derivation:} Ensures the tool correctly identifies a smell (e.g., LEC001), chooses an applicable refactoring, and applies it successfully, per FR2 and FR3. \\
+    \textbf{How test will be performed:} Provide a valid Python file containing a known smell, trigger refactoring via the VS Code interface, and confirm the output includes refactored code as expected.
+
+  \item \textbf{test-FR-IA-2 No Available Refactorer Handling} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file containing a code smell that does not yet have a supported refactorer. \\
+    \textbf{Output:} The system does not apply changes and logs or displays an informative message. \\
+    \textbf{Test Case Derivation:} Verifies that unsupported code smells are gracefully handled without errors, per FR2. \\
+    \textbf{How test will be performed:} Provide a valid Python file with an unsupported smell and observe that the system notifies the user without attempting modification.
+
+  \item \textbf{test-FR-IA-3 Multiple Refactoring Calls on Same File} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file with a detectable code smell, refactored more than once. \\
+    \textbf{Output:} The tool processes the file repeatedly and applies changes incrementally. \\
+    \textbf{Test Case Derivation:} Confirms the system can handle repeated invocations and re-apply applicable refactorings, per FR3. \\
+    \textbf{How test will be performed:} Refactor a file containing a supported smell multiple times and verify that each run performs valid operations and results in updated outputs.
+
+  \item \textbf{test-FR-IA-4 Handling Empty Modified Files List} \\[2mm]
+    \textbf{Control:} Automated \\
+    \textbf{Initial State:} Tool is idle. \\
+    \textbf{Input:} A valid Python file where the code smell is detected, but the refactorer makes no modifications. \\
+    \textbf{Output:} The system does not generate output files and notifies the user appropriately. \\
+    \textbf{Test Case Derivation:} Confirms the tool handles no-op refactorers correctly, per FR4. \\
+    \textbf{How test will be performed:} Supply a file where the refactorer returns an unchanged version of the code and verify that no new files are created and that appropriate feedback is displayed or logged.
 \end{enumerate}
 
 \subsection{Output Validation Tests}
@@ -237,7 +254,7 @@ included in \textbf{Revision 1}.
 \subsection{IDE Extension Tests}
 The following tests ensure that users can integrate the tool as a VS
 Code extension in compliance with \textbf{FR11}. Local testing has
-been conducted successfully, confirming the extension’s ability to
+been conducted successfully, confirming the extension's ability to
 function within the development environment. Once all features are
 implemented, the extension will be packaged and tested in a deployed
 environment.

@@ -30,7 +30,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
-          sudo apt-get install texlive-latex-extra texlive-science latexmk
+          sudo apt-get install texlive-latex-extra texlive-fonts-extra texlive-science latexmk
 
       - name: Create app access token
         uses: actions/create-github-app-token@v1
@@ -75,6 +75,14 @@ jobs:
             make clean
             cd -  # Go back to root folder
           done
+          git status
+      
+      - name: Build All Files
+        if: ${{ contains(github.event.head_commit.message, '[DOCS] [ALL]') }}
+        run: |
+          cd docs
+          make
+          cd ..
           git status
 
       # Commit the generated PDF and formatted .tex files back to the repository
