@@ -556,6 +556,26 @@ improving the scalability of the detection algorithm.
     through the main interface. This demonstrated that our
     architecture supports future expansions without
     disrupting core functionality.
+    
+    Specifically, we tested the extensibility by implementing the "DUP001" (duplicated list comprehensions) code smell. This smell occurs when the same list comprehension is used multiple times in close proximity, causing unnecessary repeat calculations. The corresponding refactoring method extracts the list comprehension to a variable and reuses the variable. For example:
+    
+    \begin{verbatim}
+    # Original code (with DUP001 smell)
+    total_a = sum([x*2 for x in values])
+    count_a = len([x*2 for x in values])
+    
+    # Refactored code
+    computed_values = [x*2 for x in values]
+    total_a = sum(computed_values)
+    count_a = len(computed_values)
+    \end{verbatim}
+    
+    The implementation required:
+    1. Adding a new detection module file \texttt{dup001\_detector.py} that scans for repeated list comprehensions
+    2. Creating a new refactoring module file \texttt{dup001\_refactor.py} that implements the extraction logic
+    3. Registering the new smell and refactoring in the configuration system
+    
+    The entire process was completed in less than one day, confirming the tool's extensibility target.
 
   \item \textbf{test-MS-2: Maintainable and Adaptable Codebase} \\[2mm]
     We conducted a static analysis and documentation walkthrough to
