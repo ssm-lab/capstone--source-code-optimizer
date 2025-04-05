@@ -593,9 +593,11 @@ improving the scalability of the detection algorithm.
     \end{verbatim}
     
     The implementation required:
-    1. Adding a new detection module file \texttt{dup001\_detector.py} that scans for repeated list comprehensions
-    2. Creating a new refactoring module file \texttt{dup001\_refactor.py} that implements the extraction logic
-    3. Registering the new smell and refactoring in the configuration system
+    \begin{itemize}
+      \item Adding a new detection module file \texttt{dup001\_detector.py} that scans for repeated list comprehensions
+      \item Creating a new refactoring module file \texttt{dup001\_refactor.py} that implements the extraction logic
+      \item Registering the new smell and refactoring in the configuration system
+    \end{itemize}
     
     The entire process was completed in less than one day, confirming the tool's extensibility target.
 
