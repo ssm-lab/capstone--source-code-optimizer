@@ -1,4 +1,3 @@
-import ast
 import argparse
 import json
 from pathlib import Path
@@ -210,12 +209,7 @@ def main(args=None):
     exclude_patterns = parse_exclude_patterns(parsed_args.exclude)
     
     # Parse smells configuration
-    enabled_smells = parse_smells_arg(parsed_args.smells) if parsed_args.smells else {
-        "cached-repeated-calls": {"threshold": 2},
-        "no-self-use": {},
-        "use-a-generator": {},
-        "too-many-arguments": {"max_args": 5},
-    }
+    enabled_smells = parse_smells_arg(parsed_args.smells) if parsed_args.smells else "all"
     
     if parsed_args.refactor_only:
         if not parsed_args.smells_file:
