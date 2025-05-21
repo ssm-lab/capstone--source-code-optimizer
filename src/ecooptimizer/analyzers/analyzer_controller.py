@@ -26,13 +26,13 @@ class AnalyzerController:
         self.astroid_analyzer = AstroidAnalyzer()
 
     def run_analysis(
-        self, file_path: Path, enabled_smells: dict[str, dict[str, int | str]] | list[str]
+        self, file_path: Path, enabled_smells: dict[str, dict[str, int | str]] | list[str] | str = "all"
     ) -> list[Smell]:
         """Runs configured analyzers on a file and returns aggregated results.
 
         Args:
             file_path: Path to the Python file to analyze
-            enabled_smells: Dictionary or list specifying which smells to detect
+            enabled_smells (optional): Dictionary or list specifying which smells to detect. Defaults to all code smells.
 
         Returns:
             list[Smell]: All detected code smells

@@ -103,19 +103,24 @@ OPTIONS_CONFIG = {
 }
 
 
-def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | list[str]):
+def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | list[str] | str = "all"):
     """Returns a modified smell registry based on user preferences.
 
     Args:
         enabled_smells: Either a list of enabled smell names or a dictionary
-                       with smell-specific configurations
+                       with smell-specific configurations. Can also be "all" to include all smells.
 
     Returns:
         Dictionary containing only enabled smells with updated configurations
     """
     updated_registry = deepcopy(_SMELL_REGISTRY)
 
-    if isinstance(enabled_smells, list):
+    if enabled_smells == "all":
+        # If "all" is specified, return the full registry
+        return updated_registry
+    elif isinstance(enabled_smells, str):
+        raise TypeError("Not a valid type for enabled smells")
+    elif isinstance(enabled_smells, list):
         return {
             smell_name: config
             for smell_name, config in updated_registry.items()
