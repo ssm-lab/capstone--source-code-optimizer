@@ -8,7 +8,7 @@ import time
 
 from ecooptimizer.api.error_handler import AppError, RessourceNotFoundError
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.data_types.smell import Smell
 

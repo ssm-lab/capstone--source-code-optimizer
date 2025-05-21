@@ -6,7 +6,7 @@ from pathlib import Path
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 from ecooptimizer.analyzers.base_analyzer import Analyzer
 from ecooptimizer.data_types.smell import Smell

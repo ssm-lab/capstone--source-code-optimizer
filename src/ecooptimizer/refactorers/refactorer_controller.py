@@ -3,7 +3,7 @@
 # pyright: reportOptionalMemberAccess=false
 from pathlib import Path
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 from ecooptimizer.data_types.smell import Smell
 from ecooptimizer.utils.smells_registry import get_refactorer
 

@@ -3,7 +3,7 @@ import re
 from typing import Any
 from astroid import nodes, util, parse, extract_node, AttributeInferenceError
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 from ecooptimizer.data_types.custom_fields import Occurence, SCLInfo
 from ecooptimizer.data_types.smell import SCLSmell
 from ecooptimizer.utils.smell_enums import CustomSmell

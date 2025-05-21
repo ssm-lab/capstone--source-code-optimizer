@@ -9,7 +9,7 @@ from fastapi.websockets import WebSocketState, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
 from ecooptimizer.utils.output_manager import LoggingManager
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 
 router = APIRouter()
 

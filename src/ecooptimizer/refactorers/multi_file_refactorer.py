@@ -6,7 +6,7 @@ import fnmatch
 from pathlib import Path
 from typing import TypeVar
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 from ecooptimizer.data_types.smell import Smell
 

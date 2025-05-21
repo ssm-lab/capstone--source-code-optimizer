@@ -13,7 +13,7 @@ from .api.routes.refactor_smell import ChangedFile, RefactoredData
 from .analyzers.analyzer_controller import AnalyzerController
 from .refactorers.refactorer_controller import RefactorerController
 from . import SAMPLE_PROJ_DIR, SOURCE
-from .config import CONFIG
+from .log_config import CONFIG
 
 def parse_smells_arg(smells_str: str) -> Dict[str, Dict]:
     """Parse the smells argument into a dictionary format.

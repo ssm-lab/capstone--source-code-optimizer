@@ -6,7 +6,7 @@ import stat
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 
 
 class AppError(Exception):

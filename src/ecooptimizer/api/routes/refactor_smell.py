@@ -18,7 +18,7 @@ from ecooptimizer.api.error_handler import (
     remove_readonly,
 )
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 from ecooptimizer.refactorers.refactorer_controller import RefactorerController
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter

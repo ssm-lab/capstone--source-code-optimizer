@@ -6,7 +6,7 @@ import traceback
 from typing import Callable, Any
 
 from ecooptimizer.data_types.smell_record import SmellRecord
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 from ecooptimizer.data_types.smell import Smell
 from ecooptimizer.analyzers.pylint_analyzer import PylintAnalyzer
 from ecooptimizer.analyzers.ast_analyzer import ASTAnalyzer

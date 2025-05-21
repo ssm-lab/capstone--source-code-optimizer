@@ -5,7 +5,7 @@ import logging
 import uvicorn
 
 from ecooptimizer.api.app import app
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 
 
 class HealthCheckFilter(logging.Filter):

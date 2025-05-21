@@ -5,7 +5,7 @@ from libcst.metadata import PositionProvider, MetadataWrapper
 
 from pathlib import Path
 
-from ecooptimizer.config import CONFIG
+from ecooptimizer.log_config import CONFIG
 
 from ecooptimizer.refactorers.multi_file_refactorer import MultiFileRefactorer
 from ecooptimizer.data_types.smell import MIMSmell
