@@ -130,16 +130,15 @@ def save_file(file_name: str, data: str, mode: str, message: str = "") -> None:
     logging.info(log_message)
 
 
-def save_json_files(file_name: str, data: dict[Any, Any] | list[Any]) -> None:
+def save_json_files(file_path: Path, data: dict[Any, Any] | list[Any]) -> None:
     """Saves data as JSON file in the output directory.
 
     Args:
         file_name: Target filename
         data: Serializable data to write
     """
-    file_path = DEV_OUTPUT / file_name
     file_path.write_text(json.dumps(data, cls=EnumEncoder, sort_keys=True, indent=4))
-    logging.info(f"📝 {file_name} saved to {file_path!s} as JSON file")
+    logging.info(f"📝 {file_path.name} saved to {file_path!s} as JSON file")
 
 
 def copy_file_to_output(source_file_path: Path, new_file_name: str) -> Path:

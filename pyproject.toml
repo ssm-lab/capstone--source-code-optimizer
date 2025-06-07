@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ecooptimizer"
 dependencies = [
+  "tomli",
   "pylint",
   "rope",
   "astor",
