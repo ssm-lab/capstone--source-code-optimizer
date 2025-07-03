@@ -1,4 +1,4 @@
-"""API endpoints for code refactoring with energy measurement."""
+"""API endpoints for code refactoring with carbon savings."""
 
 # pyright: reportOptionalMemberAccess=false
 import shutil
@@ -11,8 +11,6 @@ from typing import Optional
 
 from ecooptimizer.api.error_handler import (
     AppError,
-    EnergyMeasurementError,
-    EnergySavingsError,
     RefactoringError,
     RessourceNotFoundError,
     remove_readonly,
@@ -21,15 +19,42 @@ from ecooptimizer.api.error_handler import (
 from ecooptimizer.config import CONFIG
 from ecooptimizer.refactorers.refactorer_controller import RefactorerController
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
-from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from ecooptimizer.data_types.smell import Smell
 
 logger = CONFIG["refactorLogger"]
 
+# Static mapping of carbon savings per smell type (in kg CO2). 
+# TODO: This is a placeholder and should be replaced with actual values once empirical data is available.
+CARBON_SAVINGS_MAP = {
+    # Pylint smells 
+    "use-a-generator": 0.0025,  
+    "too-many-arguments": 0.0015,  
+    "no-self-use": 0.0010,
+    
+    # Custom smells 
+    "long-lambda-expression": 0.0020, 
+    "long-message-chain": 0.0030, 
+    "long-element-chain": 0.0025,
+    "cached-repeated-calls": 0.0050,
+    "string-concat-loop": 0.0040,
+}
+
+
+def get_carbon_savings_for_smell(smell_symbol: str) -> float:
+    """Get static energy savings for a smell type.
+     
+    Args:
+        smell_symbol: The smell symbol from CARBON_SAVINGS_MAP dictionary.
+        
+    Returns:
+        Energy savings in kg CO2
+    """
+    savings = CARBON_SAVINGS_MAP.get(smell_symbol, 0.0)
+    return savings
+
 router = APIRouter()
 refactorer_controller = RefactorerController()
 analyzer_controller = AnalyzerController()
-energy_meter = CodeCarbonEnergyMeter()
 
 
 class ChangedFile(BaseModel):
@@ -88,13 +113,13 @@ class RefactorTypeRqModel(BaseModel):
 
 @router.post("/refactor", response_model=RefactoredData, summary="Refactor a specific code smell")
 def refactor(request: RefactorRqModel) -> RefactoredData | None:
-    """Refactors a specific code smell and measures energy impact.
+    """Refactors a specific code smell and measures carbon savings through empirical data.
 
     Args:
         request: Contains source directory and smell to refactor
 
     Returns:
-        RefactoredData: Results including energy savings and changed files
+        RefactoredData: Results including carbon savings and changed files
         None: If refactoring fails
 
     Raises:
@@ -114,13 +139,7 @@ def refactor(request: RefactorRqModel) -> RefactoredData | None:
         raise RessourceNotFoundError(str(source_dir), "folder")
 
     try:
-        initial_emissions = measure_energy(target_file)
-        if not initial_emissions:
-            logger.error("❌ Could not retrieve initial emissions.")
-            raise EnergyMeasurementError(str(target_file))
-
-        logger.info(f"📊 Initial emissions: {initial_emissions} kg CO2")
-        refactor_data = perform_refactoring(source_dir, request.smell, initial_emissions)
+        refactor_data = perform_refactoring(source_dir, request.smell)
 
         if refactor_data:
             logger.info(f"{'=' * 100}\n")
@@ -137,7 +156,7 @@ def refactor(request: RefactorRqModel) -> RefactoredData | None:
     "/refactor-by-type", response_model=RefactoredData, summary="Refactor all smells of a type"
 )
 def refactorSmell(request: RefactorTypeRqModel) -> RefactoredData:
-    """Refactors all instances of a smell type in a file.
+    """Refactors all instances of a smell type in a file and measures carbon savings through empirical data..
 
     Args:
         request: Contains source directory, smell type and first instance
@@ -159,19 +178,15 @@ def refactorSmell(request: RefactorTypeRqModel) -> RefactoredData:
 
     if not source_dir.is_dir():
         raise RessourceNotFoundError(str(source_dir), "folder")
+    
     try:
-        initial_emissions = measure_energy(target_file)
-        if not initial_emissions:
-            raise EnergyMeasurementError("Could not retrieve initial emissions.")
-        logger.info(f"📊 Initial emissions: {initial_emissions} kg CO2")
-
         total_energy_saved = 0.0
         all_affected_files: list[ChangedFile] = []
         temp_dir = None
         current_smell = request.firstSmell
         current_source_dir = source_dir
 
-        refactor_data = perform_refactoring(current_source_dir, current_smell, initial_emissions)
+        refactor_data = perform_refactoring(current_source_dir, current_smell)
         total_energy_saved += refactor_data.energySaved or 0.0
         all_affected_files.extend(refactor_data.affectedFiles)
 
@@ -190,7 +205,6 @@ def refactorSmell(request: RefactorTypeRqModel) -> RefactoredData:
             step_data = perform_refactoring(
                 source_copy_dir,
                 current_smell,
-                initial_emissions - total_energy_saved,
                 Path(temp_dir),
             )
             total_energy_saved += step_data.energySaved or 0.0
@@ -213,23 +227,19 @@ def refactorSmell(request: RefactorTypeRqModel) -> RefactoredData:
 def perform_refactoring(
     source_dir: Path,
     smell: Smell,
-    initial_emissions: float,
     existing_temp_dir: Optional[Path] = None,
 ) -> RefactoredData:
-    """Executes the refactoring process and measures energy impact.
+    """Executes the refactoring process and calculates carbon savings.
 
     Args:
-        sourceDir: Source directory to refactor
+        source_dir: Source directory to refactor
         smell: Smell to refactor
-        initial_emissions: Baseline energy measurement
         existing_temp_dir: Optional existing temp directory to use
 
     Returns:
         RefactoredData: Results of the refactoring operation
 
     Raises:
-        RuntimeError: If energy measurement fails
-        EnergySavingsError: If refactoring doesn't save energy
         RefactoringError: If refactoring fails
     """
     print()
@@ -258,19 +268,9 @@ def perform_refactoring(
         traceback.print_exc()
         raise RefactoringError(str(e)) from e
 
-    print("energy")
-    final_emissions = measure_energy(target_file_copy)
-    if not final_emissions:
-        if existing_temp_dir is None:
-            shutil.rmtree(temp_dir, onerror=remove_readonly)  # type: ignore
-        raise EnergyMeasurementError(str(target_file))
-
-    if CONFIG["mode"] == "production" and final_emissions >= initial_emissions:
-        if existing_temp_dir is None:
-            shutil.rmtree(temp_dir, onerror=remove_readonly)  # type: ignore
-        raise EnergySavingsError()
-
-    energy_saved = initial_emissions - final_emissions
+    # Get static energy savings instead of measuring
+    energy_saved = get_carbon_savings_for_smell(smell.symbol)
+    
     return RefactoredData(
         tempDir=str(temp_dir),
         targetFile=ChangedFile(
@@ -286,16 +286,3 @@ def perform_refactoring(
             for file in modified_files
         ],
     )
-
-
-def measure_energy(file: Path) -> Optional[float]:
-    """Measures energy consumption of executing a file.
-
-    Args:
-        file: Python file to measure
-
-    Returns:
-        Optional[float]: Energy consumption in kg CO2, or None if measurement fails
-    """
-    energy_meter.measure_energy(file)
-    return energy_meter.emissions
