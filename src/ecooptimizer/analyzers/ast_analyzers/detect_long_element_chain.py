@@ -1,9 +1,10 @@
 import ast
+import uuid
 from pathlib import Path
 
 from ecooptimizer.utils.smell_enums import CustomSmell
 
-from ecooptimizer.data_types.smell import LECSmell
+from ecooptimizer.data_types.smell import EnergyMeta, LECSmell
 from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 
 
@@ -40,6 +41,7 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 5
             message = f"Dictionary chain too long ({chain_length}/{threshold})"
             # Instantiate a Smell object with details about the detected issue
             smell = LECSmell(
+                id=str(uuid.uuid4()).replace("-", "")[:8],
                 path=str(file_path),
                 module=file_path.stem,
                 obj=None,
@@ -57,6 +59,10 @@ def detect_long_element_chain(file_path: Path, tree: ast.AST, threshold: int = 5
                     )
                 ],
                 additionalInfo=AdditionalInfo(),
+                energyMetadata=EnergyMeta(
+                    isFunc=False,
+                    useOccurences=True,
+                ),
             )
 
             used_lines.add(node.lineno)

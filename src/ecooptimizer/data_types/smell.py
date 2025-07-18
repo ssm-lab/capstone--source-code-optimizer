@@ -6,6 +6,13 @@ from typing import Optional
 from ecooptimizer.data_types.custom_fields import CRCInfo, Occurence, AdditionalInfo, SCLInfo
 
 
+class EnergyMeta(BaseModel):
+    isFunc: bool
+    useOccurences: bool
+    start: Optional[int] = None
+    end: Optional[int] = None
+
+
 class Smell(BaseModel):
     """Base model representing a detected code smell.
 
@@ -34,6 +41,7 @@ class Smell(BaseModel):
     type: str
     occurences: list[Occurence]
     additionalInfo: Optional[AdditionalInfo] = None
+    energyMetadata: Optional[EnergyMeta] = None
 
 
 class CRCSmell(Smell):

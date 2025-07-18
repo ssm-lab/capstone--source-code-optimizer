@@ -28,7 +28,12 @@ class SmellRequest(BaseModel):
     enabled_smells: dict[str, dict[str, int | str]]
 
 
-@router.post("/smells", response_model=list[Smell], summary="Detect code smells")
+@router.post(
+    "/smells",
+    response_model=list[Smell],
+    summary="Detect code smells",
+    response_model_exclude={"energyMetadata"},
+)
 def detect_smells(request: SmellRequest) -> list[Smell]:
     """Analyzes a Python file and returns detected code smells.
 

@@ -1,11 +1,12 @@
 from pathlib import Path
 import re
 from typing import Any
+import uuid
 from astroid import nodes, util, parse, extract_node, AttributeInferenceError
 
 from ecooptimizer.log_config import CONFIG
 from ecooptimizer.data_types.custom_fields import Occurence, SCLInfo
-from ecooptimizer.data_types.smell import SCLSmell
+from ecooptimizer.data_types.smell import EnergyMeta, SCLSmell
 from ecooptimizer.utils.smell_enums import CustomSmell
 
 logger = CONFIG["detectLogger"]
@@ -38,6 +39,7 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
         logger.debug(f"Creating smell for node: {node.as_string()}")
         if node.lineno and node.col_offset:
             smell = SCLSmell(
+                id=str(uuid.uuid4()).replace("-", "")[:8],
                 path=str(file_path),
                 module=file_path.name,
                 obj=None,
@@ -52,6 +54,12 @@ def detect_string_concat_in_loop(file_path: Path, tree: nodes.Module):
                         current_smells[node.targets[0].as_string()][1]
                     ].lineno,  # type: ignore
                     concatTarget=node.targets[0].as_string(),
+                ),
+                energyMetadata=EnergyMeta(
+                    isFunc=False,
+                    useOccurences=False,
+                    start=current_loops[0].lineno,  # type: ignore
+                    end=current_loops[0].end_lineno,  # type: ignore
                 ),
             )
             smells.append(smell)

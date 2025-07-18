@@ -1,10 +1,11 @@
 import ast
 from collections import defaultdict
 from pathlib import Path
+import uuid
 import astor
 
 from ecooptimizer.data_types.custom_fields import CRCInfo, Occurence
-from ecooptimizer.data_types.smell import CRCSmell
+from ecooptimizer.data_types.smell import CRCSmell, EnergyMeta
 from ecooptimizer.utils.smell_enums import CustomSmell
 
 
@@ -119,6 +120,7 @@ def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 2):
                     )
 
                     smell = CRCSmell(
+                        id=str(uuid.uuid4()).replace("-", "")[:8],
                         path=str(file_path),
                         type="performance",
                         obj=None,
@@ -138,6 +140,10 @@ def detect_repeated_calls(file_path: Path, tree: ast.AST, threshold: int = 2):
                         ],
                         additionalInfo=CRCInfo(
                             repetitions=len(occurrences), callString=normalized_callString
+                        ),
+                        energyMetadata=EnergyMeta(
+                            isFunc=False,
+                            useOccurences=True,
                         ),
                     )
                     results.append(smell)

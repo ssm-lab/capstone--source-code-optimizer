@@ -26,7 +26,9 @@ class AnalyzerController:
         self.astroid_analyzer = AstroidAnalyzer()
 
     def run_analysis(
-        self, file_path: Path, enabled_smells: dict[str, dict[str, int | str]] | list[str] | str = "all"
+        self,
+        file_path: Path,
+        enabled_smells: dict[str, dict[str, int | str]] | list[str] | str = "all",
     ) -> list[Smell]:
         """Runs configured analyzers on a file and returns aggregated results.
 
@@ -57,27 +59,41 @@ class AnalyzerController:
             logger.info(f"📂 Analyzing file: {file_path}")
 
             if pylint_smells:
-                logger.info(f"🔍 Running Pylint analysis on {file_path}")
-                pylint_options = self.generate_pylint_options(pylint_smells)
-                pylint_results = self.pylint_analyzer.analyze(file_path, pylint_options)
-                smells_data.extend(pylint_results)
-                logger.info(f"✅ Pylint analysis completed. {len(pylint_results)} smells detected.")
+                try:
+                    logger.info(f"🔍 Running Pylint analysis on {file_path}")
+                    pylint_options = self.generate_pylint_options(pylint_smells)
+                    pylint_results = self.pylint_analyzer.analyze(file_path, pylint_options)
+                    smells_data.extend(pylint_results)
+                    logger.info(
+                        f"✅ Pylint analysis completed. {len(pylint_results)} smells detected."
+                    )
+                except Exception as e:
+                    logger.error(f"ERROR: Pylint analysis failed: {e!s}")
+                    traceback.print_exc()
 
             if ast_smells:
-                logger.info(f"🔍 Running AST analysis on {file_path}")
-                ast_options = self.generate_custom_options(ast_smells)
-                ast_results = self.ast_analyzer.analyze(file_path, ast_options)  # type: ignore
-                smells_data.extend(ast_results)
-                logger.info(f"✅ AST analysis completed. {len(ast_results)} smells detected.")
+                try:
+                    logger.info(f"🔍 Running AST analysis on {file_path}")
+                    ast_options = self.generate_custom_options(ast_smells)
+                    ast_results = self.ast_analyzer.analyze(file_path, ast_options)  # type: ignore
+                    smells_data.extend(ast_results)
+                    logger.info(f"✅ AST analysis completed. {len(ast_results)} smells detected.")
+                except Exception as e:
+                    logger.error(f"ERROR: AST analysis failed: {e!s}")
+                    traceback.print_exc()
 
             if astroid_smells:
-                logger.info(f"🔍 Running Astroid analysis on {file_path}")
-                astroid_options = self.generate_custom_options(astroid_smells)
-                astroid_results = self.astroid_analyzer.analyze(file_path, astroid_options)  # type: ignore
-                smells_data.extend(astroid_results)
-                logger.info(
-                    f"✅ Astroid analysis completed. {len(astroid_results)} smells detected."
-                )
+                try:
+                    logger.info(f"🔍 Running Astroid analysis on {file_path}")
+                    astroid_options = self.generate_custom_options(astroid_smells)
+                    astroid_results = self.astroid_analyzer.analyze(file_path, astroid_options)  # type: ignore
+                    smells_data.extend(astroid_results)
+                    logger.info(
+                        f"✅ Astroid analysis completed. {len(astroid_results)} smells detected."
+                    )
+                except Exception as e:
+                    logger.error(f"ERROR: Astroid analysis failed: {e!s}")
+                    traceback.print_exc()
 
             if smells_data:
                 logger.info("⚠️ Detected Code Smells:")

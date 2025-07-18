@@ -1,9 +1,10 @@
 import ast
 from pathlib import Path
+import uuid
 
 from ecooptimizer.utils.smell_enums import CustomSmell
 
-from ecooptimizer.data_types.smell import LLESmell
+from ecooptimizer.data_types.smell import EnergyMeta, LLESmell
 from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 
 
@@ -90,37 +91,7 @@ def detect_long_lambda_expression(
             message = f"Lambda function too long ({lambda_length}/{threshold_count} expressions)"
             # Initialize the Smell instance
             smell = LLESmell(
-                path=str(file_path),
-                module=file_path.stem,
-                obj=None,
-                type="convention",
-                symbol="long-lambda-expression",
-                message=message,
-                messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
-                confidence="UNDEFINED",
-                occurences=[
-                    Occurence(
-                        line=node.lineno,
-                        endLine=node.end_lineno,
-                        column=node.col_offset,
-                        endColumn=node.end_col_offset,
-                    )
-                ],
-                additionalInfo=AdditionalInfo(),
-            )
-
-            if node.lineno in used_lines:
-                return
-            used_lines.add(node.lineno)
-            results.append(smell)
-
-        # Convert the lambda function to a string and check its total length in characters
-        lambda_code = get_lambda_code(node)
-        if len(lambda_code) > threshold_length:
-            message = (
-                f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
-            )
-            smell = LLESmell(
+                id=str(uuid.uuid4()).replace("-", "")[:8],
                 path=str(file_path),
                 module=file_path.stem,
                 obj=None,
@@ -138,6 +109,46 @@ def detect_long_lambda_expression(
                     )
                 ],
                 additionalInfo=AdditionalInfo(),
+                energyMetadata=EnergyMeta(
+                    isFunc=False,
+                    useOccurences=True,
+                ),
+            )
+
+            if node.lineno in used_lines:
+                return
+            used_lines.add(node.lineno)
+            results.append(smell)
+
+        # Convert the lambda function to a string and check its total length in characters
+        lambda_code = get_lambda_code(node)
+        if len(lambda_code) > threshold_length:
+            message = (
+                f"Lambda function too long ({len(lambda_code)} characters, max {threshold_length})"
+            )
+            smell = LLESmell(
+                id=str(uuid.uuid4()).replace("-", "")[:8],
+                path=str(file_path),
+                module=file_path.stem,
+                obj=None,
+                type="convention",
+                symbol="long-lambda-expr",
+                message=message,
+                messageId=CustomSmell.LONG_LAMBDA_EXPR.value,
+                confidence="UNDEFINED",
+                occurences=[
+                    Occurence(
+                        line=node.lineno,
+                        endLine=node.end_lineno,
+                        column=node.col_offset,
+                        endColumn=node.end_col_offset,
+                    )
+                ],
+                additionalInfo=AdditionalInfo(),
+                energyMetadata=EnergyMeta(
+                    isFunc=False,
+                    useOccurences=True,
+                ),
             )
 
             if node.lineno in used_lines:

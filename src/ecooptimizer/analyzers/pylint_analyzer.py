@@ -2,6 +2,7 @@
 
 from io import StringIO
 import json
+import uuid
 from pathlib import Path
 from pylint.lint import Run
 from pylint.reporters.json_reporter import JSON2Reporter
@@ -9,7 +10,8 @@ from pylint.reporters.json_reporter import JSON2Reporter
 from ecooptimizer.log_config import CONFIG
 from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 from ecooptimizer.analyzers.base_analyzer import Analyzer
-from ecooptimizer.data_types.smell import Smell
+from ecooptimizer.data_types.smell import EnergyMeta, Smell
+from ecooptimizer.utils.smell_enums import PylintSmell
 
 
 class PylintAnalyzer(Analyzer):
@@ -25,10 +27,23 @@ class PylintAnalyzer(Analyzer):
             list[Smell]: List of converted smell objects
         """
         smells: list[Smell] = []
-
         for smell in pylint_smells:
+            if smell["messageId"] in [PylintSmell.USE_A_GENERATOR.value]:
+                meta = EnergyMeta(
+                    isFunc=False,
+                    useOccurences=True,
+                )
+            elif smell["messageId"] in [
+                PylintSmell.LONG_PARAMETER_LIST.value,
+                PylintSmell.NO_SELF_USE.value,
+            ]:
+                meta = EnergyMeta(
+                    isFunc=True,
+                    useOccurences=True,
+                )
             smells.append(
                 Smell(
+                    id=str(uuid.uuid4()).replace("-", "")[:8],
                     confidence=smell["confidence"],
                     message=smell["message"],
                     messageId=smell["messageId"],
@@ -46,6 +61,7 @@ class PylintAnalyzer(Analyzer):
                         )
                     ],
                     additionalInfo=AdditionalInfo(),
+                    energyMetadata=meta,  # type: ignore
                 )
             )
 
@@ -70,6 +86,11 @@ class PylintAnalyzer(Analyzer):
         with StringIO() as buffer:
             reporter = JSON2Reporter(buffer)
 
+            print("Running Pylint analysis...")
+            CONFIG["detectLogger"].info(
+                f"Running Pylint on {file_path} with options: {pylint_options}"
+            )
+
             try:
                 Run(pylint_options, reporter=reporter, exit=False)
                 buffer.seek(0)
@@ -77,6 +98,13 @@ class PylintAnalyzer(Analyzer):
             except json.JSONDecodeError as e:
                 CONFIG["detectLogger"].error(f"❌ Failed to parse JSON output from pylint: {e}")
             except Exception as e:
+                print(f"ERROR: PATH:{file_path}: SMELL:pylint : MESSAGE {e}")
                 CONFIG["detectLogger"].error(f"❌ An error occurred during pylint analysis: {e}")
 
+        if not smells_data:
+            CONFIG["detectLogger"].info(f"✅ No code smells detected in {file_path}")
+        else:
+            CONFIG["detectLogger"].info(f"✅ Found {len(smells_data)} code smells in {file_path}")
+
+        print("Pylint analysis completed.")
         return smells_data

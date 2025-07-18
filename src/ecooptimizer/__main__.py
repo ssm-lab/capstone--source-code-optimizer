@@ -3,12 +3,14 @@ import json
 from pathlib import Path
 import shutil
 import sys
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, mkdtemp
 from typing import Optional
 import fnmatch
 
+from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
+
 from .config import EcoConfig
-from .data_types.smell import Smell
+from .data_types.smell import EnergyMeta, Smell
 from .utils.output_manager import save_json_files
 from .api.routes.refactor_smell import ChangedFile, RefactoredData
 from .analyzers.analyzer_controller import AnalyzerController
@@ -57,13 +59,13 @@ def parse_smells_arg(smells_str: str) -> dict[str, dict]:  # type: ignore
     return smells
 
 
-def load_smells_from_file(file_path: Path) -> list[Smell]:
+def load_smells_from_file(file_path: Path) -> dict[str, dict]:  # type: ignore
     """Load smells data from a JSON file."""
     try:
         with file_path.open() as f:
             data = json.load(f)
-            if not isinstance(data, list):
-                raise ValueError("Smells file should contain a list of smell objects")
+            if not isinstance(data, dict):
+                raise ValueError("Smells file should contain a dictionary of smell objects")
             if not data:
                 raise ValueError("Smells file is empty")
             return data
@@ -90,7 +92,7 @@ def analyze_code(
 ) -> list[Smell]:
     """Analyze code for smells with proper recursive exclusion checking."""
     analyzer_controller = AnalyzerController()
-    smells_data = []
+    smells_data: list[Smell] = []
 
     def should_process_path(path: Path) -> bool:
         """Check if path should be processed (not excluded)."""
@@ -121,8 +123,10 @@ def analyze_code(
     else:
         print(f"Warning: {target} is not a valid Python file or directory")
 
-    save_json_files(output_file, [smell.model_dump() for smell in smells_data])
-    print(f"Analysis complete. Results saved to {output_file.name}")
+    save_json_files(output_file, {smell.id: smell.model_dump() for smell in smells_data})
+    print(
+        f"Analysis complete. {len(smells_data)} smells found. Results saved to {output_file.name}"
+    )
     return smells_data
 
 
@@ -130,55 +134,75 @@ def refactor_code(
     target: Path,
     root: Path,
     output_file: Path,
-    smells_data: list[Smell],
-    smell_ids: Optional[list[str]] = None,
-    smell_types: Optional[list[str]] = None,
+    smell: Smell,
+    save_to_original: bool = False,
 ) -> list[ChangedFile]:
     """Refactor code based on smells data."""
     print(f"Refactoring {target} based on code smells...")
     refactorer_controller = RefactorerController()
     output_paths = []
+    tempDir = ""
 
-    # Filter smells if specific IDs or types are provided
-    filtered_smells = smells_data
-    if smell_ids:
-        filtered_smells = [smell for smell in filtered_smells if smell.get("id") in smell_ids]
-    if smell_types:
-        filtered_smells = [smell for smell in filtered_smells if smell.get("type") in smell_types]
+    if save_to_original:
+        # If saving to original, we need to ensure the target path is correct
+        target_path = target
+        root_path = root
+    else:
+        tempDir = mkdtemp(prefix="ecooptimizer_")
+        root_path = Path(tempDir) / root.name
+        target_path = Path(str(target).replace(str(root), str(root_path), 1))
 
-    for smell in filtered_smells:
-        with TemporaryDirectory() as tempDir:
-            root_copy = Path(tempDir) / root.name
-            temp_target_path = Path(str(target).replace(str(root), str(root_copy), 1))
+        shutil.copytree(root, root_path)
 
-            shutil.copytree(root, root_copy)
+    try:
+        modified_files: list[Path] = refactorer_controller.run_refactorer(
+            target_path,
+            root_path,
+            smell,
+        )
+    except NotImplementedError as e:
+        print(f"Refactorer for {smell.get('type')} not found: {e}")
 
-            try:
-                modified_files: list[Path] = refactorer_controller.run_refactorer(
-                    temp_target_path, root_copy, smell, overwrite=False
-                )
-            except NotImplementedError as e:
-                print(f"Skipping refactoring for {smell.get('type')}: {e}")
-                continue
-
-            refactor_data = RefactoredData(
-                tempDir=tempDir,
-                targetFile=ChangedFile(original=str(target), refactored=str(temp_target_path)),
-                energySaved=0,
-                affectedFiles=[
-                    ChangedFile(
-                        original=str(file).replace(str(root_copy), str(root)),
-                        refactored=str(file),
-                    )
-                    for file in modified_files
-                ],
+    refactor_data = RefactoredData(
+        tempDir=tempDir,
+        targetFile=ChangedFile(original=str(target), refactored=str(target_path)),
+        energySaved=0,
+        affectedFiles=[
+            ChangedFile(
+                original=str(file).replace(str(root_path), str(root)),
+                refactored=str(file),
             )
+            for file in modified_files  # type: ignore
+        ],
+    )
 
-            output_paths.extend(refactor_data.affectedFiles)
-            save_json_files(output_file, refactor_data.model_dump())
-            print(f"Refactoring complete. Results saved to {output_file.name}")
+    output_paths.extend(refactor_data.affectedFiles)
+    save_json_files(output_file, refactor_data.model_dump())
+    print(f"Refactoring complete. Results saved to {output_file.name}")
 
     return output_paths
+
+
+def build_smell(smell_dict: dict) -> Smell:  # type: ignore
+    """Build a Smell instance from a dictionary."""
+    return Smell(
+        id=smell_dict.get("id"),
+        confidence=smell_dict["confidence"],
+        message=smell_dict["message"],
+        messageId=smell_dict["messageId"],
+        module=smell_dict["module"],
+        obj=smell_dict.get("obj"),
+        path=smell_dict["path"],
+        symbol=smell_dict["symbol"],
+        type=smell_dict["type"],
+        occurences=[Occurence(**occ) for occ in smell_dict.get("occurences", [])],
+        additionalInfo=AdditionalInfo(**smell_dict["additionalInfo"])
+        if "additionalInfo" in smell_dict
+        else None,
+        energyMetadata=EnergyMeta(**smell_dict["energyMetadata"])
+        if "energyMetadata" in smell_dict
+        else None,
+    )
 
 
 def parse_exclude_patterns(patterns_str: str) -> set[str]:
@@ -274,13 +298,13 @@ def create_parser() -> argparse.ArgumentParser:
         "-f", "--smells-file", type=str, help="JSON file containing smells data for refactoring"
     )
     parser.add_argument(
-        "-i", "--smell-ids", type=str, help="Comma-separated list of specific smell IDs to refactor"
+        "-i", "--smell-id", type=str, help="Comma-separated list of specific smell IDs to refactor"
     )
     parser.add_argument(
-        "-y",
-        "--smell-types",
-        type=str,
-        help="Comma-separated list of specific smell types to refactor",
+        "-so",
+        "--save-to-original",
+        action="store_true",
+        help="Save refactored files to their original location instead of temp directory",
     )
 
     return parser
@@ -345,8 +369,11 @@ def main(args=None):  # noqa: ANN001
     enabled_smells = parse_smells_arg(parsed_args.smells) if parsed_args.smells else "all"
 
     if parsed_args.refactor_only:
-        if not parsed_args.smells_file:
-            print("Error: --smells-file is required for --refactor-only", file=sys.stderr)
+        if not parsed_args.smells_file or not parsed_args.smell_id:
+            print(
+                "Error: missing --smells-file or --smell-id which are required for --refactor-only",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         try:
@@ -355,11 +382,21 @@ def main(args=None):  # noqa: ANN001
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)
 
-        smell_ids = parsed_args.smell_ids.split(",") if parsed_args.smell_ids else None
-        smell_types = parsed_args.smell_types.split(",") if parsed_args.smell_types else None
+        smell = smells_data.get(parsed_args.smell_id)
+
+        if not smell:
+            print(
+                f"Error: Smell with ID '{parsed_args.smell_id}' not found in {parsed_args.smells_file}",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         output_paths = refactor_code(
-            target, root, refactor_results_file, smells_data, smell_ids, smell_types
+            Path(smell["path"]),
+            root,
+            refactor_results_file,
+            build_smell(smell),
+            parsed_args.save_to_original,
         )
         print("Refactored files:", output_paths)
     else:
@@ -368,8 +405,9 @@ def main(args=None):  # noqa: ANN001
         )
 
         if not parsed_args.analyze_only:
-            output_paths = refactor_code(target, root, refactor_results_file, smells_data)
-            print("Refactored files:", output_paths)
+            print("Refactoring multiple smells not implemented yet.")
+            # output_paths = refactor_code(target, root, refactor_results_file, smells_data)
+            # print("Refactored files:", output_paths)
 
 
 if __name__ == "__main__":

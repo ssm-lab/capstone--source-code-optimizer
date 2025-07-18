@@ -19,10 +19,13 @@ class EcoConfig:
             "analysis_results_file": "code_smells.json",
             "refactor_results_file": "refactoring-data.json",
             "recursive": False,
+            "save_to_original": False,
             "exclude": [],
             "smells": "all",
             "analyze_only": False,
             "refactor_only": False,
+            "smells_file": "code_smells.json",
+            "smell_id": None,
         }
 
     @classmethod
@@ -66,6 +69,8 @@ class EcoConfig:
             args.append("--refactor-only")
         if self.data.get("recursive"):
             args.append("--recursive")
+        if self.data.get("save_to_original"):
+            args.append("--save-to-original")
 
         if self.data.get("output_dir") != ".":
             args.extend(["--output-dir", str(self.data["output_dir"])])
@@ -84,6 +89,12 @@ class EcoConfig:
 
         if self.data.get("exclude"):
             args.extend(["--exclude", ",".join(self.data["exclude"])])
+
+        if self.data.get("smell_id"):
+            args.extend(["--smell-id", str(self.data["smell_id"])])
+
+        if self.data.get("smells_file") != "code_smells.json":
+            args.extend(["--smells-file", str(self.data["smells_file"])])
 
         if self.data.get("smells") != "all":
             smell_specs = []

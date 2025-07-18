@@ -35,8 +35,14 @@ class ASTAnalyzer(Analyzer):
         tree = parse(source_code)
 
         for detector, params in extra_options:
+            print(f"Running detector: {detector.__name__} on {file_path}")
             if callable(detector):
-                result = detector(file_path, tree, **params)
-                smells_data.extend(result)
+                try:
+                    result = detector(file_path, tree, **params)
+                    smells_data.extend(result)
+                except Exception as e:
+                    print(f"ERROR: PATH:{file_path}: SMELL:{detector.__name__}: MESSAGE {e}")
+                    continue
 
+        print("AST analysis complete.")
         return smells_data
