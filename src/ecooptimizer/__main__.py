@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import sys
 from tempfile import TemporaryDirectory, mkdtemp
+import traceback
 from typing import Optional
 import fnmatch
 
@@ -78,7 +79,8 @@ def load_smells_from_file(file_path: Path) -> dict[str, dict]:  # type: ignore
 def should_skip_file(file_path: Path, exclude_patterns: set[str]) -> bool:
     """Check if file should be skipped based on exclude patterns."""
     for pattern in exclude_patterns:
-        if fnmatch.fnmatch(file_path.name, pattern):
+        if fnmatch.fnmatch(str(file_path.resolve()), pattern):
+            print(f"Skipped path: {file_path.resolve()}")
             return True
     return False
 
