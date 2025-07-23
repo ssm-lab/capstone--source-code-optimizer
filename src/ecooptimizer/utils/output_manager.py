@@ -53,7 +53,7 @@ class LoggingManager:
         """Creates required directories and clears old logs if not in production."""
         if not self.production:
             DEV_OUTPUT.mkdir(exist_ok=True)
-        self.logs_dir.mkdir(exist_ok=True)
+        self.logs_dir.mkdir(parents=True, exist_ok=True)
 
     def _clear_logs(self) -> None:
         """Removes existing log files while preserving the log directory structure."""
