@@ -13,19 +13,25 @@ DEFAULT_CONFIG_PATHS = [
 class EcoConfig:
     def __init__(self):
         self.data: dict[str, Any] = {
-            "root": ".",
-            "target": ".",
-            "output_dir": ".",
-            "analysis_results_file": "code_smells.json",
-            "refactor_results_file": "refactoring-data.json",
-            "recursive": False,
-            "save_to_original": False,
-            "exclude": [],
-            "smells": "all",
-            "analyze_only": False,
-            "refactor_only": False,
-            "smells_file": "code_smells.json",
-            "smell_id": None,
+            "analyze": {
+                "root": ".",
+                "target": ".",
+                "output_dir": ".",
+                "log_dir": "",
+                "analysis_results_file": "code_smells.json",
+                "recursive": False,
+                "exclude": [],
+                "smells": "all",
+            },
+            "refactor": {
+                "root": ".",
+                "output_dir": ".",
+                "log_dir": "",
+                "refactor_results_file": "refactoring-data.json",
+                "save_to_original": False,
+                "smells_file": "code_smells.json",
+                "smell_id": None,
+            },
         }
 
     @classmethod
@@ -53,57 +59,102 @@ class EcoConfig:
                     else:
                         eco_config = tomli.load(f)
 
-                    instance.data.update(eco_config)
+                    # Handle both old and new config formats
+                    if "command" in eco_config:
+                        # New format with subcommands
+                        instance.data.update(eco_config)
+                    else:
+                        # Old format - convert to new structure
+                        instance._convert_old_config(eco_config)
             except Exception as e:
                 print(f"Warning: Could not load config file: {e}", file=sys.stderr)
 
         return instance
 
-    def to_cli_args(self) -> list[str]:
-        """Convert config to equivalent CLI args"""
+    def _convert_old_config(self, config_data: dict[str, Any]) -> None:
+        """Convert old config format to new subcommand-based format"""
+        # Determine command based on old flags
+        if config_data.get("analyze_only"):
+            self.data["command"] = "analyze"
+        elif config_data.get("refactor_only"):
+            self.data["command"] = "refactor"
+
+        # Move analyze-related options
+        analyze_keys = [
+            "root",
+            "target",
+            "output_dir",
+            "log_dir",
+            "analysis_results_file",
+            "recursive",
+            "exclude",
+            "smells",
+        ]
+        for key in analyze_keys:
+            if key in config_data:
+                self.data["analyze"][key] = config_data[key]
+
+        # Move refactor-related options
+        refactor_keys = [
+            "root",
+            "output_dir",
+            "log_dir",
+            "refactor_results_file",
+            "save_to_original",
+            "smells_file",
+            "smell_id",
+        ]
+        for key in refactor_keys:
+            if key in config_data:
+                self.data["refactor"][key] = config_data[key]
+
+    def to_cli_args(self, command: str) -> list[str]:
+        """Convert config to CLI args for specific command"""
         args = []
+        cmd_config = self.data.get(command, {})
 
-        if self.data.get("analyze_only"):
-            args.append("--analyze-only")
-        if self.data.get("refactor_only"):
-            args.append("--refactor-only")
-        if self.data.get("recursive"):
-            args.append("--recursive")
-        if self.data.get("save_to_original"):
-            args.append("--save-to-original")
-
-        if self.data.get("output_dir") != ".":
-            args.extend(["--output-dir", str(self.data["output_dir"])])
-
-        if self.data.get("analysis_results_file") != "code_smells.json":
-            args.extend(["--analysis-results-file", str(self.data["analysis_results_file"])])
-
-        if self.data.get("refactor_results_file") != "refactoring-data.json":
-            args.extend(["--refactor-results-file", str(self.data["refactor_results_file"])])
-
-        if self.data.get("root") != ".":
-            args.extend(["--root", str(self.data["root"])])
-
-        if self.data.get("target") != ".":
-            args.extend(["--target", str(self.data["target"])])
-
-        if self.data.get("exclude"):
-            args.extend(["--exclude", ",".join(self.data["exclude"])])
-
-        if self.data.get("smell_id"):
-            args.extend(["--smell-id", str(self.data["smell_id"])])
-
-        if self.data.get("smells_file") != "code_smells.json":
-            args.extend(["--smells-file", str(self.data["smells_file"])])
-
-        if self.data.get("smells") != "all":
-            smell_specs = []
-            for name, params in self.data["smells"]:
-                if params:
-                    params_str = ";".join(f"{k}={v}" for k, v in params.items())
-                    smell_specs.append(f"{name}:{params_str}")
+        if command == "analyze":
+            if cmd_config.get("root") != ".":
+                args.extend(["--root", str(cmd_config["root"])])
+            if cmd_config.get("target") != ".":
+                args.extend(["--target", str(cmd_config["target"])])
+            if cmd_config.get("output_dir") != ".":
+                args.extend(["--output-dir", str(cmd_config["output_dir"])])
+            if cmd_config.get("log_dir"):
+                args.extend(["--log-dir", str(cmd_config["log_dir"])])
+            if cmd_config.get("analysis_results_file") != "code_smells.json":
+                args.extend(["--analysis-results-file", str(cmd_config["analysis_results_file"])])
+            if cmd_config.get("recursive"):
+                args.append("--recursive")
+            if cmd_config.get("exclude"):
+                args.extend(["--exclude", ",".join(cmd_config["exclude"])])
+            if cmd_config.get("smells") != "all":
+                if isinstance(cmd_config["smells"], dict):
+                    smell_specs = []
+                    for name, params in cmd_config["smells"].items():
+                        if params:
+                            params_str = ";".join(f"{k}={v}" for k, v in params.items())
+                            smell_specs.append(f"{name}:{params_str}")
+                        else:
+                            smell_specs.append(name)
+                    args.extend(["--smells", ",".join(smell_specs)])
                 else:
-                    smell_specs.append(name)
-            args.extend(["--smells", ",".join(smell_specs)])
+                    args.extend(["--smells", str(cmd_config["smells"])])
+
+        elif command == "refactor":
+            if cmd_config.get("smells_file") != "code_smells.json":
+                args.append(str(cmd_config["smells_file"]))
+            if cmd_config.get("root") != ".":
+                args.extend(["--root", str(cmd_config["root"])])
+            if cmd_config.get("output_dir") != ".":
+                args.extend(["--output-dir", str(cmd_config["output_dir"])])
+            if cmd_config.get("log_dir"):
+                args.extend(["--log-dir", str(cmd_config["log_dir"])])
+            if cmd_config.get("refactor_results_file") != "refactoring-data.json":
+                args.extend(["--refactor-results-file", str(cmd_config["refactor_results_file"])])
+            if cmd_config.get("save_to_original"):
+                args.append("--save-to-original")
+            if cmd_config.get("smell_id"):
+                args.extend(["--smell-id", str(cmd_config["smell_id"])])
 
         return args
