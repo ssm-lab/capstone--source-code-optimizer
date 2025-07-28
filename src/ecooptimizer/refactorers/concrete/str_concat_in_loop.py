@@ -1,4 +1,5 @@
 import re
+import logging
 
 from pathlib import Path
 import astroid
@@ -6,6 +7,8 @@ from astroid import nodes
 
 from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 from ecooptimizer.data_types.smell import SCLSmell
+
+logger = logging.getLogger("refactor")
 
 
 class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
@@ -42,6 +45,7 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
         :param smell: pylint code for smell
         :param initial_emission: inital carbon emission prior to refactoring
         """
+        logger.debug(f"Refactoring {target_file} for smell: {smell}")
         self.target_lines = [occ.line for occ in smell.occurences]
 
         if not smell.additionalInfo:
@@ -52,6 +56,7 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
         # Parse the code into an AST
         source_code = target_file.read_text()
+        logger.debug(f"Source code of {target_file}:\n{source_code}")
         tree = astroid.parse(source_code)
         for node in tree.get_children():
             self.visit(node)

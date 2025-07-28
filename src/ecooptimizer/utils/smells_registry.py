@@ -51,7 +51,7 @@ _SMELL_REGISTRY: dict[str, SmellRecord] = {
         },
         "refactorer": MakeStaticRefactorer,
     },
-    "long-lambda-expression": {
+    "long-lambda-expr": {
         "id": CustomSmell.LONG_LAMBDA_EXPR.value,
         "enabled": True,
         "analyzer_method": "ast",
@@ -103,7 +103,9 @@ OPTIONS_CONFIG = {
 }
 
 
-def retrieve_smell_registry(enabled_smells: dict[str, dict[str, int | str]] | list[str] | str = "all"):
+def retrieve_smell_registry(
+    enabled_smells: dict[str, dict[str, int | str]] | list[str] | str = "all",
+):
     """Returns a modified smell registry based on user preferences.
 
     Args:

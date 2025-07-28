@@ -206,10 +206,16 @@ def refactor_code(
     except NotImplementedError as e:
         error_msg = f"Refactorer for {smell.type} not implemented: {e}"
         rlogger.error(error_msg)
+        if tempDir:
+            rlogger.debug(f"Cleaning up temporary directory: {tempDir}")
+            shutil.rmtree(tempDir, ignore_errors=True)
         raise
     except Exception as e:
         error_msg = f"Error during refactoring: {e}"
         rlogger.error(error_msg, exc_info=True)
+        if tempDir:
+            rlogger.debug(f"Cleaning up temporary directory: {tempDir}")
+            shutil.rmtree(tempDir, ignore_errors=True)
         raise
 
     refactor_data = RefactoredData(
@@ -466,22 +472,22 @@ def main(args=None):
         # Set analysis results file
         analysis_results_file = output_dir / parsed_args.analysis_results_file
         if analysis_results_file.exists():
-            logging.warning(
+            alogger.warning(
                 f"Analysis results file '{analysis_results_file}' exists and will be overwritten"
             )
 
         target = Path(parsed_args.target).resolve()
         if not target.exists():
-            logging.error(f"Target '{target}' does not exist")
+            alogger.error(f"Target '{target}' does not exist")
             sys.exit(1)
 
         exclude_patterns = parse_exclude_patterns(parsed_args.exclude)
         if exclude_patterns:
-            logging.info(f"Excluding patterns: {exclude_patterns}")
+            alogger.info(f"Excluding patterns: {exclude_patterns}")
 
         # Parse smells configuration
         enabled_smells = parse_smells_arg(parsed_args.smells) if parsed_args.smells else "all"
-        logging.info(f"Enabled smells configuration: {enabled_smells}")
+        alogger.info(f"Enabled smells configuration: {enabled_smells}")
 
         try:
             smells_data = analyze_code(
@@ -491,30 +497,30 @@ def main(args=None):
                 analysis_results_file,
                 parsed_args.recursive,
             )
-            logging.info("Analysis phase completed successfully")
+            alogger.info("Analysis phase completed successfully")
         except Exception as e:
-            logging.error(f"Analysis failed: {e}", exc_info=True)
+            alogger.error(f"Analysis failed: {e}", exc_info=True)
             sys.exit(1)
 
     elif parsed_args.command == "refactor":
         # Set refactor results file
         refactor_results_file = output_dir / parsed_args.refactor_results_file
         if refactor_results_file.exists():
-            logging.warning(
+            rlogger.warning(
                 f"Refactor results file '{refactor_results_file}' exists and will be overwritten"
             )
 
         try:
             smells_data = load_smells_from_file(Path(parsed_args.smells_file))
         except ValueError as e:
-            logging.error(f"Failed to load smells file: {e}")
+            rlogger.error(f"Failed to load smells file: {e}")
             sys.exit(1)
 
         if parsed_args.smell_id:
             # Refactor specific smell
             smell = smells_data.get(parsed_args.smell_id)
             if not smell:
-                logging.error(
+                rlogger.error(
                     f"Smell with ID '{parsed_args.smell_id}' not found in {parsed_args.smells_file}"
                 )
                 sys.exit(1)
@@ -522,6 +528,7 @@ def main(args=None):
             print(f"Refactoring smell: {smell['message']} (ID: {smell['id']})")
 
             try:
+                rlogger.debug(f"Refactoring smell: {smell}. Root: {root}, Target: {smell['path']}")
                 output_paths = refactor_code(
                     Path(smell["path"]),
                     root,
@@ -529,15 +536,15 @@ def main(args=None):
                     build_smell(smell),
                     parsed_args.save_to_original,
                 )
-                logging.info(f"Refactoring completed successfully. Modified files: {output_paths}")
+                rlogger.info(f"Refactoring completed successfully. Modified files: {output_paths}")
                 print("Refactoring completed successfully.")
             except Exception as e:
                 print(f"Refactoring failed: {e}")
-                logging.error(f"Refactoring failed: {e}", exc_info=True)
+                rlogger.error(f"Refactoring failed: {e}", exc_info=True)
                 sys.exit(1)
         else:
             # Placeholder for future batch refactoring implementation
-            logging.error(
+            rlogger.error(
                 "Batch refactoring of all smells is not yet implemented due to line number synchronization issues"
             )
             sys.exit(1)

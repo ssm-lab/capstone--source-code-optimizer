@@ -1,38 +1,335 @@
+from dataclasses import dataclass
 from pathlib import Path
-import re
+from typing import Optional
+import logging
+
+import libcst as cst
+from libcst import metadata as mcst
+
 from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 from ecooptimizer.data_types.smell import LLESmell
+
+# Set up logging
+logger = logging.getLogger("refactor")
+
+
+@dataclass
+class LambdaConversionContext:
+    """Holds all contextual information about a lambda being converted."""
+
+    lambda_node: cst.Lambda
+    parent_node: cst.CSTNode
+    position: mcst.CodePosition
+    scope: mcst.Scope
+    args_str: str = None
+    body_str: str = None
+    is_assigned: bool = False
+    assigned_name: str = None
+    function_name: str = None
 
 
 class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
     """
     Refactorer that targets long lambda functions by converting them into normal functions.
+    Uses libCST for reliable parsing and transformation.
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
+        self._function_name_counter = 0
 
-    @staticmethod
-    def truncate_at_top_level_comma(body: str) -> str:
+    def _generate_function_name(self, context: LambdaConversionContext):
+        """Generate a unique function name for converted lambdas."""
+        if context.assigned_name:
+            logger.debug(f"Using assignment name {context.assigned_name} as function name")
+            return context.assigned_name
+
+        self._function_name_counter += 1
+        name = f"converted_lambda_{self._function_name_counter}"
+        logger.debug(f"Generated new function name: {name}")
+        return name
+
+    def _find_lambda_context(self, wrapper: cst.MetadataWrapper, line_number: int):
         """
-        Truncate the lambda body at the first top-level comma, ignoring commas
-        within nested parentheses, brackets, or braces.
+        Find the lambda node at the specified line number and gather context information.
+        Returns a LambdaConversionContext if found, None otherwise.
         """
-        truncated_body = []
-        open_parens = 0
+        logger.info(f"Searching for lambda at line {line_number}")
 
-        for char in body:
-            if char in "([{":
-                open_parens += 1
-            elif char in ")]}":
-                open_parens -= 1
-            elif char == "," and open_parens == 0:
-                # Stop at the first top-level comma
-                break
+        class LambdaFinder(cst.CSTVisitor):
+            METADATA_DEPENDENCIES = (
+                mcst.PositionProvider,
+                mcst.ParentNodeProvider,
+                mcst.ScopeProvider,
+            )
 
-            truncated_body.append(char)
+            def __init__(self):
+                self.found_context: Optional[LambdaConversionContext] = None
 
-        return "".join(truncated_body).strip()
+            def visit_Lambda(self, node: cst.Lambda):
+                pos = self.get_metadata(mcst.PositionProvider, node).start
+                if pos.line == line_number:
+                    parent = self.get_metadata(mcst.ParentNodeProvider, node, None)
+                    scope = self.get_metadata(mcst.ScopeProvider, node, None)
+
+                    if parent is None or scope is None:
+                        logger.error("Parent or scope metadata not found for lambda")
+                        return
+
+                    logger.debug(f"Found lambda at line {pos.line}")
+                    self.found_context = LambdaConversionContext(
+                        lambda_node=node, parent_node=parent, position=pos, scope=scope
+                    )
+
+        finder = LambdaFinder()
+        wrapper.visit(finder)
+        return finder.found_context
+
+    def _analyze_lambda_context(self, context: LambdaConversionContext):
+        """Analyze the lambda context and populate the context object with relevant information."""
+        logger.debug("Analyzing lambda context")
+
+        # Extract arguments and body
+        args = []
+        for param in context.lambda_node.params.params:
+            if param.star == "":
+                args.append(param.name.value)
+            elif param.star == "*":
+                args.append(f"*{param.name.value}")
+            elif param.star == "**":
+                args.append(f"**{param.name.value}")
+        context.args_str = ", ".join(args)
+        context.body_str = cst.Module([]).code_for_node(context.lambda_node.body)
+
+        # Check if lambda is assigned to a variable
+        if isinstance(context.parent_node, cst.Assign):
+            context.is_assigned = True
+            if len(context.parent_node.targets) == 1:
+                target = context.parent_node.targets[0].target
+                if isinstance(target, cst.Name):
+                    context.assigned_name = target.value
+                    logger.debug(f"Lambda is assigned to variable: {context.assigned_name}")
+
+        if context.is_assigned and context.assigned_name:
+            context.function_name = context.assigned_name
+            logger.info("Lambda is assigned, using assigned name as function name")
+        else:
+            # Generate a unique function name
+            logger.debug("Lambda is not assigned, generating new function name")
+            context.function_name = self._generate_function_name(context)
+        logger.info(f"Lambda will be converted to function: {context.function_name}")
+
+    def _create_new_function(self, context: LambdaConversionContext):
+        """Create a new function definition from the lambda."""
+        logger.debug(f"Creating new function {context.function_name}")
+
+        # Create parameters
+        params = [
+            cst.Param(name=cst.Name(arg.strip()))
+            for arg in context.args_str.split(",")
+            if arg.strip()
+        ]
+
+        # Create function body with return statement
+        return_stmt = cst.Return(value=context.lambda_node.body)
+        body = cst.IndentedBlock(body=[cst.SimpleStatementLine(body=[return_stmt])])
+
+        return cst.FunctionDef(
+            name=cst.Name(context.function_name), params=cst.Parameters(params=params), body=body
+        )
+
+    def _create_transformer(self, context: LambdaConversionContext) -> cst.CSTTransformer:
+        """Transformer that inserts functions right before their enclosing statements."""
+        logger.debug("Creating statement-focused lambda transformer")
+
+        class LambdaTransformer(cst.CSTTransformer):
+            METADATA_DEPENDENCIES = (
+                mcst.PositionProvider,
+                mcst.ParentNodeProvider,
+                mcst.ScopeProvider,
+            )
+
+            def __init__(self, refactorer: LongLambdaFunctionRefactorer):
+                self.refactorer = refactorer
+                self._function_added = False
+                self._enclosing_statement = None
+                self._target_block = None
+                self._is_assigned = isinstance(context.parent_node, cst.Assign)
+                self._assign_removed = False
+                self._target_header = False
+
+            def _node_in_range(self, lambda_pos: mcst.CodeRange, block_pos: mcst.CodeRange) -> bool:
+                in_range = block_pos.start.line <= lambda_pos.start.line <= block_pos.end.line
+                if in_range:
+                    logger.info(f"Lambda is within statement range: {block_pos}")
+                return in_range
+
+            def visit_SimpleStatementLine(self, node: cst.SimpleStatementLine) -> bool:
+                """Handle simple statements like assignments or expressions."""
+                stmt_pos = self.get_metadata(mcst.PositionProvider, node)
+                lambda_pos = self.get_metadata(mcst.PositionProvider, context.lambda_node)
+                if self._node_in_range(lambda_pos, stmt_pos):  # type: ignore
+                    logger.debug(
+                        f"Found enclosing statement for lambda at line {stmt_pos.start.line}"
+                    )
+                    self._enclosing_statement = node
+                return True
+
+            def _contains_lambda(self, node: cst.CSTNode) -> bool:
+                if isinstance(node, cst.Lambda):
+                    if context.lambda_node == node:
+                        logger.debug(f"Target lambda found in node:\n{node}")
+                        return True
+                    return False
+                for child in node.children:
+                    if self._contains_lambda(child):
+                        return True
+                return False
+
+            def visit_BaseCompoundStatement(self, node: cst.BaseCompoundStatement) -> bool:
+                """Check if lambda is in the header (before colon)"""
+                # logger.debug(f"Visiting BaseCompoundStatement: {type(node).__name__}")
+                header_fields = []
+
+                # Get all header fields depending on statement type
+                if isinstance(node, (cst.If, cst.While)):
+                    header_fields = [node.test]
+                elif isinstance(node, cst.For):
+                    header_fields = [node.iter]
+                elif isinstance(node, cst.With):
+                    header_fields = [item.item for item in node.items]
+
+                if header_fields:
+                    # logger.debug(f"Checking header fields for lambda in {type(node).__name__}")
+                    # Check if our lambda appears in any header field
+                    for field in header_fields:
+                        if self._contains_lambda(field):
+                            self._enclosing_statement = node
+                            self._target_header = True
+                            logger.debug(f"Lambda found in header of {type(node).__name__}")
+                            return True
+                return True
+
+            def leave_Assign(self, original_node: cst.Assign, updated_node: cst.Assign):
+                if (
+                    self._is_assigned
+                    and not self._assign_removed
+                    and isinstance(original_node.value, cst.Lambda)
+                    and original_node.value == context.lambda_node
+                ):
+                    logger.debug("Found assignment of target lambda")
+                    self._assign_removed = True
+                    return cst.RemoveFromParent()
+                return updated_node
+
+            def leave_Lambda(self, original_node: cst.Lambda, updated_node: cst.Lambda):
+                if not self._is_assigned:
+                    # If not assigned, replace lambda with function call
+                    pos = self.get_metadata(mcst.PositionProvider, original_node).start
+                    if pos.line == context.position.line and not self._is_assigned:
+                        logger.debug(
+                            f"Replacing lambda at line {pos.line} with function call to {context.function_name}"
+                        )
+                        return cst.Name(context.function_name)
+                return updated_node
+
+            def visit_IndentedBlock(self, node: cst.IndentedBlock) -> bool:
+                """Identify the innermost block containing our lambda"""
+                if not self._target_block:
+                    # Check if our lambda is referenced in this scope
+                    lambda_pos = self.get_metadata(mcst.PositionProvider, context.lambda_node)
+                    block_pos = self.get_metadata(mcst.PositionProvider, node)
+                    block_contains_lambda = self._node_in_range(lambda_pos, block_pos)  # type: ignore
+
+                    if block_contains_lambda:
+                        logger.debug(f"Block at line {block_pos.start.line} contains lambda")
+                        # Verify it's the innermost block
+                        is_innermost = True
+                        for child in node.children:
+                            if isinstance(child, cst.IndentedBlock):
+                                child_block_range = self.get_metadata(mcst.PositionProvider, child)
+
+                                if self._node_in_range(lambda_pos, child_block_range):  # type: ignore
+                                    is_innermost = False
+                                    logger.debug(
+                                        "Found nested block containing lambda, not innermost"
+                                    )
+                                    break
+
+                        if is_innermost:
+                            self._target_block = node
+                            logger.debug(
+                                f"Found innermost target block at line {block_pos.start.line}"
+                            )
+                return True
+
+            def leave_IndentedBlock(
+                self, original_node: cst.IndentedBlock, updated_node: cst.IndentedBlock
+            ) -> cst.IndentedBlock:
+                if (
+                    self._function_added
+                    or not self._enclosing_statement
+                    or original_node != self._target_block
+                ):
+                    return updated_node
+
+                logger.debug("Adding new function before enclosing statement")
+
+                new_function = self.refactorer._create_new_function(context)
+                new_body = []
+
+                stmt_pos = self.get_metadata(mcst.PositionProvider, self._enclosing_statement)
+                remove_next = False
+                for stmt in original_node.body:
+                    if stmt == self._enclosing_statement:
+                        logger.debug(
+                            f"Inserting new function before statement at line {stmt_pos.start.line}"
+                        )
+                        new_body.append(new_function)
+                        remove_next = True
+                    if self._is_assigned and remove_next:
+                        logger.debug("Removing next statement after function insertion")
+                        remove_next = False
+                        continue
+                    new_body.append(stmt)
+
+                if new_body != original_node.body:  # We found and inserted before our statement
+                    self._function_added = True
+                    logger.debug(
+                        f"Inserted function before {type(self._enclosing_statement).__name__}"
+                    )
+                    return updated_node.with_changes(body=new_body)
+
+                logger.error(
+                    "Failed to insert function: no enclosing statement found or no changes made"
+                )
+
+                return updated_node
+
+            def leave_Module(self, original_node: cst.Module, updated_node: cst.Module):
+                if not self._function_added and self._enclosing_statement:
+                    logger.warning("Function not yet added, attempting to insert at module level")
+                    new_function = self.refactorer._create_new_function(context)
+                    new_body = []
+
+                    for stmt in original_node.body:
+                        if stmt == self._enclosing_statement:
+                            logger.debug(
+                                f"Inserting new function at module level before statement at line {self.get_metadata(mcst.PositionProvider, stmt).start.line}"
+                            )
+                            new_body.append(new_function)
+                        new_body.append(stmt)
+
+                    if new_body != original_node.body:
+                        self._function_added = True
+                        logger.debug("Function inserted at module level")
+                        return updated_node.with_changes(body=new_body)
+
+                    logger.error("No function added at module level, returning original module")
+
+                return updated_node
+
+        return LambdaTransformer(self)
 
     def refactor(
         self,
@@ -43,107 +340,55 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
         overwrite: bool = True,
     ):
         """
-        Refactor long lambda functions by converting them into normal functions
-        and writing the refactored code to a new file.
+        Refactor long lambda functions by converting them into normal functions.
+
+        Args:
+            target_file: Path to the file to refactor
+            source_dir: Root directory of the source code (unused)
+            smell: The smell detection result containing lambda location
+            output_file: Path to write the refactored code if not overwriting
+            overwrite: Whether to overwrite the original file
+
+        Returns:
+            None
         """
-        # Extract details from smell
-        line_number = smell.occurences[0].line
+        logger.info(f"Starting refactoring of {target_file}")
 
-        # Read the original file
-        content = target_file.read_text(encoding="utf-8")
-        lines = content.splitlines(keepends=True)
+        try:
+            # Read and parse the original file
+            content = target_file.read_text(encoding="utf-8")
+            module = cst.parse_module(content)
+            # logger.debug(f"Parsed module from {target_file}:\n{module}")
 
-        # Capture the entire logical line containing the lambda
-        current_line = line_number - 1
-        lambda_lines = [lines[current_line].rstrip()]
+            wrapper = cst.MetadataWrapper(module)
 
-        # Check if lambda is wrapped in parentheses
-        has_parentheses = lambda_lines[0].strip().startswith("(")
+            # Find the lambda at the specified line
+            line_number = smell.occurences[0].line
+            context = self._find_lambda_context(wrapper, line_number)
 
-        # Find continuation lines only if needed
-        if has_parentheses:
-            while current_line < len(lines) - 1 and not lambda_lines[-1].strip().endswith(")"):
-                current_line += 1
-                lambda_lines.append(lines[current_line].rstrip())
-        else:
-            # Handle single-line lambda
-            lambda_lines = [lines[current_line].rstrip()]
+            if not context:
+                logger.warning(f"No lambda found at line {line_number} in {target_file}")
+                return
 
-        full_lambda_line = " ".join(lambda_lines).strip()
+            # Analyze the lambda context
+            self._analyze_lambda_context(context)
 
-        # Remove surrounding parentheses if present
-        if has_parentheses:
-            full_lambda_line = re.sub(r"^\((.*)\)$", r"\1", full_lambda_line)
+            # Create and apply the transformation
+            transformer = self._create_transformer(context)
+            modified_module = wrapper.visit(transformer)
 
-        # Extract leading whitespace for correct indentation
-        original_indent = re.match(r"^\s*", lambda_lines[0]).group()  # type: ignore
+            # Write the modified content
+            new_content = modified_module.code
+            if overwrite:
+                logger.info(f"Overwriting original file: {target_file}")
+                target_file.write_text(new_content, encoding="utf-8")
+            else:
+                logger.info(f"Writing to output file: {output_file}")
+                output_file.write_text(new_content, encoding="utf-8")
 
-        # Use different regex based on whether the lambda line starts with a parenthesis
-        if has_parentheses:
-            lambda_match = re.search(r"lambda\s+([\w, ]+):\s+(.+?)(?=\s*\))", full_lambda_line)
-        else:
-            lambda_match = re.search(r"lambda\s+([\w, ]+):\s+(.+)", full_lambda_line)
+            self.modified_files.append(target_file)
+            logger.info(f"Successfully refactored lambda at line {line_number}")
 
-        if not lambda_match:
-            return
-
-        # Extract arguments and body of the lambda
-        lambda_args = lambda_match.group(1).strip()
-        lambda_body_before = lambda_match.group(2).strip()
-        lambda_body_before = LongLambdaFunctionRefactorer.truncate_at_top_level_comma(
-            lambda_body_before
-        )
-
-        # Ensure that the lambda body does not contain extra trailing characters
-        # Remove any trailing commas or mismatched closing brackets
-        lambda_body = re.sub(r",\s*\)$", "", lambda_body_before).strip()
-
-        lambda_body_no_extra_space = re.sub(r"\s{2,}", " ", lambda_body)
-        # Generate a unique function name
-        function_name = f"converted_lambda_{line_number}"
-
-        # Find the start of the block containing the lambda
-        original_indent_len = len(original_indent)
-        block_start = line_number - 1
-        while block_start > 0:
-            prev_line = lines[block_start - 1].rstrip()
-            prev_indent = len(re.match(r"^\s*", prev_line).group())  # type: ignore
-            if prev_line.endswith(":") and prev_indent < original_indent_len:
-                break
-            block_start -= 1
-
-        # Get proper block indentation
-        block_indentation = re.match(r"^\s*", lines[block_start]).group()  # type: ignore
-        function_indent = block_indentation
-        body_indent = function_indent + " " * 4
-
-        # Create properly indented function definition
-        function_def = (
-            f"{function_indent}def {function_name}({lambda_args}):\n"
-            f"{body_indent}result = {lambda_body_no_extra_space}\n"
-            f"{body_indent}return result\n\n"
-        )
-
-        # Prepare refactored line with original indentation
-        replacement_line = full_lambda_line.replace(
-            f"lambda {lambda_args}: {lambda_body}", function_name
-        )
-        refactored_line = f"{original_indent}{replacement_line.strip()}"
-
-        # Split multi-line function definition into individual lines
-        function_lines = function_def.splitlines(keepends=True)
-
-        # Replace the lambda line with the refactored line in place
-        lines[current_line] = f"{refactored_line}\n"
-
-        # Insert the new function definition immediately at the beginning of the block
-        lines.insert(block_start, "".join(function_lines))
-
-        # Write changes
-        new_content = "".join(lines)
-        if overwrite:
-            target_file.write_text(new_content, encoding="utf-8")
-        else:
-            output_file.write_text(new_content, encoding="utf-8")
-
-        self.modified_files.append(target_file)
+        except Exception as e:
+            logger.error(f"Error refactoring {target_file}: {e!s}")
+            raise
