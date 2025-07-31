@@ -988,16 +988,16 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                 tree = tree.visit(FunctionReplacer(self.function_node, updated_function_node))  # type: ignore
 
         # Write the modified source
-        modified_source = tree.code
-        logger.debug(f"Writing modified source to output file: {output_file}")
+        target_file.write_text(tree.code, encoding="utf-8")
+        logger.debug(f"Writing modified source to target file: {target_file}")
 
-        with output_file.open("w") as temp_file:
-            temp_file.write(modified_source)
+        # with output_file.open("w") as temp_file:
+        #     temp_file.write(modified_source)
 
-        if overwrite:
-            logger.debug(f"Overwriting original file: {target_file}")
-            with target_file.open("w") as f:
-                f.write(modified_source)
+        # if overwrite:
+        #     logger.debug(f"Overwriting original file: {target_file}")
+        #     with target_file.open("w") as f:
+        #         f.write(modified_source)
 
         logger.info("Starting traversal of source directory for related files")
         self.traverse_and_process(source_dir)
