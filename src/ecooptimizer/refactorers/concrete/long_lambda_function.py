@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from math import log
 from pathlib import Path
 from typing import Optional
 import logging
@@ -25,6 +26,7 @@ class LambdaConversionContext:
     body_str: str = None
     is_assigned: bool = False
     assigned_name: str = None
+    assigned_to_attribute: bool = False
     function_name: str = None
 
 
@@ -102,13 +104,23 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
         context.body_str = cst.Module([]).code_for_node(context.lambda_node.body)
 
         # Check if lambda is assigned to a variable
-        if isinstance(context.parent_node, cst.Assign):
+        if isinstance(context.parent_node, (cst.Assign, cst.AnnAssign)):
             context.is_assigned = True
-            if len(context.parent_node.targets) == 1:
-                target = context.parent_node.targets[0].target
+            if (
+                isinstance(context.parent_node, cst.AnnAssign)
+                or len(context.parent_node.targets) == 1
+            ):
+                if isinstance(context.parent_node, cst.Assign):
+                    pnode = context.parent_node.targets[0]
+                else:
+                    pnode = context.parent_node
+                target = pnode.target
                 if isinstance(target, cst.Name):
                     context.assigned_name = target.value
                     logger.debug(f"Lambda is assigned to variable: {context.assigned_name}")
+                elif isinstance(target, cst.Attribute):
+                    context.assigned_to_attribute = True
+                    logger.debug("Lambda is assigned to attribute")
 
         if context.is_assigned and context.assigned_name:
             context.function_name = context.assigned_name
@@ -153,8 +165,9 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
                 self.refactorer = refactorer
                 self._function_added = False
                 self._enclosing_statement = None
-                self._target_block = None
-                self._is_assigned = isinstance(context.parent_node, cst.Assign)
+                self._in_surrounding_block = False
+                self._found_innermost_block = False
+                self._found_assign = False
                 self._assign_removed = False
                 self._target_header = False
 
@@ -164,16 +177,18 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
                     logger.info(f"Lambda is within statement range: {block_pos}")
                 return in_range
 
-            def visit_SimpleStatementLine(self, node: cst.SimpleStatementLine) -> bool:
+            def leave_SimpleStatementLine(
+                self, original_node: cst.SimpleStatementLine, updated_node: cst.SimpleStatementLine
+            ):
                 """Handle simple statements like assignments or expressions."""
-                stmt_pos = self.get_metadata(mcst.PositionProvider, node)
+                stmt_pos = self.get_metadata(mcst.PositionProvider, original_node)
                 lambda_pos = self.get_metadata(mcst.PositionProvider, context.lambda_node)
                 if self._node_in_range(lambda_pos, stmt_pos):  # type: ignore
                     logger.debug(
                         f"Found enclosing statement for lambda at line {stmt_pos.start.line}"
                     )
-                    self._enclosing_statement = node
-                return True
+                    self._enclosing_statement = updated_node
+                return updated_node
 
             def _contains_lambda(self, node: cst.CSTNode) -> bool:
                 if isinstance(node, cst.Lambda):
@@ -186,47 +201,78 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
                         return True
                 return False
 
-            def visit_BaseCompoundStatement(self, node: cst.BaseCompoundStatement) -> bool:
+            def leave_BaseCompoundStatement(
+                self,
+                original_node: cst.BaseCompoundStatement,
+                updated_node: cst.BaseCompoundStatement,
+            ):
                 """Check if lambda is in the header (before colon)"""
                 # logger.debug(f"Visiting BaseCompoundStatement: {type(node).__name__}")
                 header_fields = []
 
                 # Get all header fields depending on statement type
-                if isinstance(node, (cst.If, cst.While)):
-                    header_fields = [node.test]
-                elif isinstance(node, cst.For):
-                    header_fields = [node.iter]
-                elif isinstance(node, cst.With):
-                    header_fields = [item.item for item in node.items]
+                if isinstance(original_node, (cst.If, cst.While)):
+                    header_fields = [original_node.test]
+                elif isinstance(original_node, cst.For):
+                    header_fields = [original_node.iter]
+                elif isinstance(original_node, cst.With):
+                    header_fields = [item.item for item in original_node.items]
 
                 if header_fields:
-                    # logger.debug(f"Checking header fields for lambda in {type(node).__name__}")
+                    # logger.debug(f"Checking header fields for lambda in {type(original_node).__name__}")
                     # Check if our lambda appears in any header field
                     for field in header_fields:
                         if self._contains_lambda(field):
-                            self._enclosing_statement = node
+                            self._enclosing_statement = updated_node
                             self._target_header = True
-                            logger.debug(f"Lambda found in header of {type(node).__name__}")
+                            logger.debug(
+                                f"Lambda found in header of {type(original_node).__name__}"
+                            )
                             return True
-                return True
+                return updated_node
 
             def leave_Assign(self, original_node: cst.Assign, updated_node: cst.Assign):
                 if (
-                    self._is_assigned
+                    context.is_assigned
+                    and not context.assigned_to_attribute
                     and not self._assign_removed
                     and isinstance(original_node.value, cst.Lambda)
                     and original_node.value == context.lambda_node
                 ):
                     logger.debug("Found assignment of target lambda")
                     self._assign_removed = True
-                    return cst.RemoveFromParent()
+                    self._found_assign = True
+                    # return cst.RemoveFromParent()
+
+                return updated_node
+
+            def leave_AnnAssign(self, original_node: cst.AnnAssign, updated_node: cst.AnnAssign):
+                if (
+                    context.is_assigned
+                    and not context.assigned_to_attribute
+                    and not self._assign_removed
+                    and isinstance(original_node.value, cst.Lambda)
+                    and original_node.value == context.lambda_node
+                ):
+                    logger.debug("Found assignment of target lambda")
+                    self._assign_removed = True
+                    self._found_assign = True
+                    # return cst.RemoveFromParent()
+
                 return updated_node
 
             def leave_Lambda(self, original_node: cst.Lambda, updated_node: cst.Lambda):
-                if not self._is_assigned:
+                if not context.is_assigned or context.assigned_to_attribute:
                     # If not assigned, replace lambda with function call
                     pos = self.get_metadata(mcst.PositionProvider, original_node).start
-                    if pos.line == context.position.line and not self._is_assigned:
+
+                    logger.debug(
+                        f"Lambda is not assigned or assigned to attribute, replacing with function call at line {pos.line}"
+                    )
+
+                    logger.debug(f"Target lambda position: {context.position.line}")
+
+                    if pos.line == context.position.line:
                         logger.debug(
                             f"Replacing lambda at line {pos.line} with function call to {context.function_name}"
                         )
@@ -235,7 +281,7 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
 
             def visit_IndentedBlock(self, node: cst.IndentedBlock) -> bool:
                 """Identify the innermost block containing our lambda"""
-                if not self._target_block:
+                if not self._found_innermost_block:
                     # Check if our lambda is referenced in this scope
                     lambda_pos = self.get_metadata(mcst.PositionProvider, context.lambda_node)
                     block_pos = self.get_metadata(mcst.PositionProvider, node)
@@ -243,53 +289,27 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
 
                     if block_contains_lambda:
                         logger.debug(f"Block at line {block_pos.start.line} contains lambda")
-                        # Verify it's the innermost block
-                        is_innermost = True
-                        for child in node.children:
-                            if isinstance(child, cst.IndentedBlock):
-                                child_block_range = self.get_metadata(mcst.PositionProvider, child)
-
-                                if self._node_in_range(lambda_pos, child_block_range):  # type: ignore
-                                    is_innermost = False
-                                    logger.debug(
-                                        "Found nested block containing lambda, not innermost"
-                                    )
-                                    break
-
-                        if is_innermost:
-                            self._target_block = node
-                            logger.debug(
-                                f"Found innermost target block at line {block_pos.start.line}"
-                            )
+                        self._in_surrounding_block = True
                 return True
 
             def leave_IndentedBlock(
                 self, original_node: cst.IndentedBlock, updated_node: cst.IndentedBlock
             ) -> cst.IndentedBlock:
-                if (
-                    self._function_added
-                    or not self._enclosing_statement
-                    or original_node != self._target_block
-                ):
+                if not self._in_surrounding_block:
                     return updated_node
 
+                self._found_innermost_block = True
+                self._in_surrounding_block = False
+                logger.debug("Found surrounding block for lambda, preparing to insert function")
                 logger.debug("Adding new function before enclosing statement")
 
                 new_function = self.refactorer._create_new_function(context)
                 new_body = []
 
-                stmt_pos = self.get_metadata(mcst.PositionProvider, self._enclosing_statement)
-                remove_next = False
-                for stmt in original_node.body:
+                for stmt in updated_node.body:
                     if stmt == self._enclosing_statement:
-                        logger.debug(
-                            f"Inserting new function before statement at line {stmt_pos.start.line}"
-                        )
                         new_body.append(new_function)
-                        remove_next = True
-                    if self._is_assigned and remove_next:
-                        logger.debug("Removing next statement after function insertion")
-                        remove_next = False
+                    if self._found_assign:
                         continue
                     new_body.append(stmt)
 
