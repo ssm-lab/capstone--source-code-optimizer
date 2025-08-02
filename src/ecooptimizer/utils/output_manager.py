@@ -98,7 +98,7 @@ class LoggingManager:
             Configured logger instance
         """
         logger = logging.getLogger(name)
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
         logger.propagate = True
 
         file_handler = logging.FileHandler(str(log_file), mode="a", encoding="utf-8")

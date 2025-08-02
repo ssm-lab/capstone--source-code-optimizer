@@ -175,6 +175,7 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         self.valid_classes.add(self.mim_method_class)
 
         source_code = target_file.read_text()
+        logger.debug(f"Source code of {target_file}:\n{source_code}")
         tree = MetadataWrapper(cst.parse_module(source_code))
 
         # Find all subclasses of the target class

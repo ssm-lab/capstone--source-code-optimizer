@@ -20,7 +20,6 @@ DEFAULT_IGNORED_PATTERNS = {
     "*.egg-info",
     ".git",
     "node_modules",
-    ".*",
 }
 
 # Default location for ignore pattern configuration files

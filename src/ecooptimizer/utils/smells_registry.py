@@ -103,6 +103,11 @@ OPTIONS_CONFIG = {
 }
 
 
+def get_enabled_smells() -> set[str]:
+    """Returns a set of enabled smell names from the registry."""
+    return {smell_name for smell_name, config in _SMELL_REGISTRY.items() if config["enabled"]}
+
+
 def retrieve_smell_registry(
     enabled_smells: dict[str, dict[str, int | str]] | list[str] | str = "all",
 ):

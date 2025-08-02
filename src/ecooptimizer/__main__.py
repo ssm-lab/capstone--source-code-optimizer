@@ -9,6 +9,7 @@ import fnmatch
 import logging
 
 from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
+from ecooptimizer.utils.smells_registry import get_enabled_smells
 
 from .config import EcoConfig
 from .data_types.smell import EnergyMeta, Smell
@@ -130,30 +131,32 @@ def analyze_code(
     def scan_directory(directory: Path):
         """Scan a directory with proper exclusion handling."""
         if not should_process_path(directory):
-            alogger.debug(f"Skipping excluded directory: {directory}")
+            # alogger.debug(f"Skipping excluded directory: {directory}")
             return
 
         try:
             for item in directory.iterdir():
                 if item.is_file() and item.suffix == ".py":
                     if should_process_path(item):
-                        alogger.debug(f"Analyzing file: {item}")
+                        # alogger.debug(f"Analyzing file: {item}")
                         smells_data.extend(analyzer_controller.run_analysis(item, smells_config))
                 elif recursive and item.is_dir():
-                    alogger.debug(f"Entering subdirectory: {item}")
+                    # alogger.debug(f"Entering subdirectory: {item}")
                     scan_directory(item)  # Recurse into subdirectory
         except PermissionError as e:
             alogger.warning(f"No permission to access {directory}: {e}")
 
+    smells_to_analyze = smells_config if smells_config != "all" else get_enabled_smells()
     if target.is_file() and target.suffix == ".py":
         if should_process_path(target):
             alogger.info(f"Analyzing single file: {target}")
+            alogger.info(f"Checking for the following smells: {smells_to_analyze}")
             smells_data.extend(analyzer_controller.run_analysis(target, smells_config))
         else:
             alogger.info(f"Skipping excluded file: {target}")
     elif target.is_dir():
         alogger.info(f"Analyzing directory: {target}")
-        alogger.info(f"Checking for the following smells: {smells_config}")
+        alogger.info(f"Checking for the following smells: {smells_to_analyze}")
         scan_directory(target)
     else:
         alogger.warning(f"{target} is not a valid Python file or directory")
@@ -174,7 +177,7 @@ def refactor_code(
 ) -> list[ChangedFile]:
     """Refactor code based on smells data."""
     rlogger.info(f"Starting refactoring for target: {target}")
-    rlogger.debug(f"Smell being refactored: {smell.type} (ID: {smell.id})")
+    rlogger.debug(f"Smell being refactored: {smell.symbol} (ID: {smell.id})")
     rlogger.debug(f"Root directory: {root}")
     rlogger.debug(f"Save to original: {save_to_original}")
 
@@ -196,7 +199,7 @@ def refactor_code(
         shutil.copytree(root, root_path)
 
     try:
-        rlogger.info(f"Running refactorer for smell type: {smell.type}")
+        rlogger.info(f"Running refactorer for smell type: {smell.symbol}")
         modified_files: list[Path] = refactorer_controller.run_refactorer(
             target_path,
             root_path,
@@ -234,7 +237,7 @@ def refactor_code(
     output_paths.extend(refactor_data.affectedFiles)
     save_json_files(output_file, refactor_data.model_dump())
     rlogger.info(f"Refactoring complete. Results saved to {output_file}")
-    rlogger.debug(f"Affected files: {output_paths}")
+    rlogger.info(f"Affected files: {output_paths}")
 
     return output_paths
 
