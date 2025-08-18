@@ -1,11 +1,18 @@
 """Controller for executing code smell refactoring operations."""
 
 # pyright: reportOptionalMemberAccess=false
+import logging
 from pathlib import Path
+import traceback
 
 from ecooptimizer.log_config import CONFIG
 from ecooptimizer.data_types.smell import Smell
+from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
+from ecooptimizer.refactorers.multi_file_refactorer import MultiFileRefactorer
 from ecooptimizer.utils.smells_registry import get_refactorer
+from typing import Optional
+
+logger = logging.getLogger("refactor")
 
 
 class RefactorerController:
@@ -16,7 +23,12 @@ class RefactorerController:
         self.smell_counters = {}
 
     def run_refactorer(
-        self, target_file: Path, source_dir: Path, smell: Smell, overwrite: bool = True
+        self,
+        target_file: Path,
+        source_dir: Path,
+        smell: Smell,
+        patterns_to_ignore: Optional[set[str]] = None,
+        overwrite: bool = True,
     ) -> list[Path]:
         """Executes the appropriate refactorer for a detected smell.
 
@@ -45,8 +57,18 @@ class RefactorerController:
                 f"🔄 Running {refactorer_class.__name__} for {smell_symbol}"
             )
 
-            refactorer = refactorer_class()
-            refactorer.refactor(target_file, source_dir, smell, output_path, overwrite)
+            logger.debug(f"Is Subclass: {issubclass(refactorer_class, MultiFileRefactorer)}")
+
+            if issubclass(refactorer_class, MultiFileRefactorer):
+                refactorer = refactorer_class(patterns_to_ignore or {})
+            else:
+                refactorer = refactorer_class()
+            try:
+                refactorer.refactor(target_file, source_dir, smell, output_path, overwrite)
+            except Exception as e:
+                print(e)
+                traceback.print_tb(e.__traceback__)
+                raise
             modified_files = refactorer.modified_files
         else:
             self._handle_missing_refactorer(smell_symbol)
@@ -65,5 +87,5 @@ class RefactorerController:
 
     def _handle_missing_refactorer(self, smell_symbol: str) -> None:
         """Logs error and raises exception for unimplemented refactorers."""
-        CONFIG["refactorLogger"].error(f"❌ No refactorer for smell: {smell_symbol}")
+        logger.error(f"❌ No refactorer for smell: {smell_symbol}")
         raise NotImplementedError(f"No refactorer for smell: {smell_symbol}")

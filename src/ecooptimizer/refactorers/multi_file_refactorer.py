@@ -3,10 +3,10 @@
 # pyright: reportOptionalMemberAccess=false
 from abc import abstractmethod
 import fnmatch
+import logging
 from pathlib import Path
-from typing import TypeVar
+from typing import TypeVar, Optional
 
-from ecooptimizer.log_config import CONFIG
 from ecooptimizer.refactorers.base_refactorer import BaseRefactorer
 from ecooptimizer.data_types.smell import Smell
 
@@ -25,18 +25,22 @@ DEFAULT_IGNORED_PATTERNS = {
 # Default location for ignore pattern configuration files
 DEFAULT_IGNORE_PATH = Path(__file__).parent / "patterns_to_ignore"
 
+logger = logging.getLogger("refactor")
+
 
 class MultiFileRefactorer(BaseRefactorer[T]):
     """Abstract base class for refactorers that need to process multiple files."""
 
-    def __init__(self):
+    def __init__(self, extra_patterns: Optional[set[str]] = None):
         """Initializes the refactorer with default ignore patterns."""
         super().__init__()
         self.target_file: Path = None  # type: ignore
-        self.ignore_patterns = self._load_ignore_patterns()
+        self.ignore_patterns = self._load_ignore_patterns(extra_patterns)
         self.py_files: list[Path] = []
 
-    def _load_ignore_patterns(self, ignore_dir: Path = DEFAULT_IGNORE_PATH) -> set[str]:
+    def _load_ignore_patterns(
+        self, extra_patterns: Optional[set[str]] = None, ignore_dir: Path = DEFAULT_IGNORE_PATH
+    ) -> set[str]:
         """Loads ignore patterns from configuration files.
 
         Args:
@@ -48,7 +52,8 @@ class MultiFileRefactorer(BaseRefactorer[T]):
         if not ignore_dir.is_dir():
             return DEFAULT_IGNORED_PATTERNS
 
-        patterns = DEFAULT_IGNORED_PATTERNS
+        logger.debug(f"PATTERNS: {extra_patterns}")
+        patterns = DEFAULT_IGNORED_PATTERNS.union(extra_patterns or {})
         for file in ignore_dir.iterdir():
             with file.open() as f:
                 patterns.update(
@@ -57,7 +62,7 @@ class MultiFileRefactorer(BaseRefactorer[T]):
 
         return patterns
 
-    def is_ignored(self, item: Path) -> bool:
+    def is_ignored(self, item: str) -> bool:
         """Checks if a path should be ignored during refactoring.
 
         Args:
@@ -66,7 +71,7 @@ class MultiFileRefactorer(BaseRefactorer[T]):
         Returns:
             True if the path matches any ignore pattern, False otherwise
         """
-        return any(fnmatch.fnmatch(item.name, pattern) for pattern in self.ignore_patterns)
+        return any(fnmatch.fnmatch(item, pattern) for pattern in self.ignore_patterns)
 
     def traverse(self, directory: Path) -> None:
         """Recursively scans a directory for Python files, skipping ignored paths.
@@ -76,13 +81,13 @@ class MultiFileRefactorer(BaseRefactorer[T]):
         """
         for item in directory.iterdir():
             if item.is_dir():
-                CONFIG["refactorLogger"].debug(f"Scanning directory: {item!s}")
-                if self.is_ignored(item):
-                    CONFIG["refactorLogger"].debug(f"Ignored directory: {item!s}")
+                logger.debug(f"Scanning directory: {item!s}")
+                if self.is_ignored(item.name):
+                    logger.debug(f"Ignored directory: {item!s}")
                     continue
 
                 self.traverse(item)
-            elif item.is_file() and item.suffix == ".py":
+            elif item.is_file() and not self.is_ignored(str(item)) and item.suffix == ".py":
                 self.py_files.append(item)
 
     def traverse_and_process(self, directory: Path) -> None:
@@ -94,11 +99,11 @@ class MultiFileRefactorer(BaseRefactorer[T]):
         if not self.py_files:
             self.traverse(directory)
         for file in self.py_files:
-            CONFIG["refactorLogger"].debug(f"Processing file: {file!s}")
+            logger.debug(f"Processing file: {file!s}")
             if self._process_file(file):
                 if file not in self.modified_files and not file.samefile(self.target_file):
                     self.modified_files.append(file.resolve())
-            CONFIG["refactorLogger"].debug("Finished processing file")
+            logger.debug("Finished processing file")
 
     @abstractmethod
     def _process_file(self, file: Path) -> bool:

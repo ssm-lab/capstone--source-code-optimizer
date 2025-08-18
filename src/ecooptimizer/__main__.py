@@ -173,6 +173,7 @@ def refactor_code(
     root: Path,
     output_file: Path,
     smell: Smell,
+    patterns_to_ignore: set[str],
     save_to_original: bool = False,
 ) -> list[ChangedFile]:
     """Refactor code based on smells data."""
@@ -201,9 +202,7 @@ def refactor_code(
     try:
         rlogger.info(f"Running refactorer for smell type: {smell.symbol}")
         modified_files: list[Path] = refactorer_controller.run_refactorer(
-            target_path,
-            root_path,
-            smell,
+            target_path, root_path, smell, patterns_to_ignore=patterns_to_ignore
         )
         rlogger.debug(f"Refactoring completed. Modified {len(modified_files)} files")
     except NotImplementedError as e:
@@ -310,6 +309,13 @@ def create_parser() -> argparse.ArgumentParser:
         help="Directory where the log files will be outputted to.",
     )
 
+    analyze_parser.add_argument(
+        "-lv",
+        "--log-level",
+        choices=["INFO", "DEBUG", "ERROR", "WARNING", "CRITICAL"],
+        help="Logging level",
+    )
+
     # Target selection for analyze
     analyze_parser.add_argument(
         "-p",
@@ -381,6 +387,13 @@ def create_parser() -> argparse.ArgumentParser:
         help="Directory where the log files will be outputted to.",
     )
 
+    refactor_parser.add_argument(
+        "-lv",
+        "--log-level",
+        choices=["INFO", "DEBUG", "ERROR", "WARNING", "CRITICAL"],
+        help="Logging level",
+    )
+
     # Target selection for refactor
     refactor_parser.add_argument(
         "-p",
@@ -414,6 +427,12 @@ def create_parser() -> argparse.ArgumentParser:
         "--save-to-original",
         action="store_true",
         help="Save refactored files to their original location instead of temp directory",
+    )
+    refactor_parser.add_argument(
+        "-x",
+        "--exclude-patterns",
+        nargs="+",
+        help="Additional patterns to exclude",
     )
 
     logging.debug("Argument parser configuration complete")
@@ -453,9 +472,13 @@ def main(args=None):
         sys.exit(1)
 
     if parsed_args.log_dir:
-        log_manager = LoggingManager(Path(parsed_args.log_dir), production=True)
+        log_manager = LoggingManager(
+            Path(parsed_args.log_dir), level=parsed_args.log_level, production=True
+        )
     else:
-        log_manager = LoggingManager(Path("logs").resolve(), production=True)
+        log_manager = LoggingManager(
+            Path("logs").resolve(), level=parsed_args.log_level, production=True
+        )
 
     root = Path(parsed_args.root).resolve()
     if not root.exists():
@@ -537,6 +560,7 @@ def main(args=None):
                     root,
                     refactor_results_file,
                     build_smell(smell),
+                    set(parsed_args.exclude_patterns or []),
                     parsed_args.save_to_original,
                 )
                 rlogger.info(f"Refactoring completed successfully. Modified files: {output_paths}")

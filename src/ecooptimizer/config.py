@@ -18,6 +18,7 @@ class EcoConfig:
                 "target": ".",
                 "output_dir": ".",
                 "log_dir": "",
+                "log_level": "INFO",
                 "analysis_results_file": "code_smells.json",
                 "recursive": False,
                 "exclude": [],
@@ -27,10 +28,12 @@ class EcoConfig:
                 "root": ".",
                 "output_dir": ".",
                 "log_dir": "",
+                "log_level": "INFO",
                 "refactor_results_file": "refactoring-data.json",
                 "save_to_original": False,
                 "smells_file": "code_smells.json",
                 "smell_id": None,
+                "exclude_patterns": [],
             },
         }
 
@@ -122,6 +125,8 @@ class EcoConfig:
                 args.extend(["--output-dir", str(cmd_config["output_dir"])])
             if cmd_config.get("log_dir"):
                 args.extend(["--log-dir", str(cmd_config["log_dir"])])
+            if cmd_config.get("log_level"):
+                args.extend(["--log-level", str(cmd_config["log_level"])])
             if cmd_config.get("analysis_results_file") != "code_smells.json":
                 args.extend(["--analysis-results-file", str(cmd_config["analysis_results_file"])])
             if cmd_config.get("recursive"):
@@ -150,10 +155,14 @@ class EcoConfig:
                 args.extend(["--output-dir", str(cmd_config["output_dir"])])
             if cmd_config.get("log_dir"):
                 args.extend(["--log-dir", str(cmd_config["log_dir"])])
+            if cmd_config.get("log_level"):
+                args.extend(["--log-level", str(cmd_config["log_level"])])
             if cmd_config.get("refactor_results_file") != "refactoring-data.json":
                 args.extend(["--refactor-results-file", str(cmd_config["refactor_results_file"])])
             if cmd_config.get("save_to_original"):
                 args.append("--save-to-original")
+            if cmd_config.get("exclude_patterns"):
+                args.extend(["--exclude-patterns", str(cmd_config["exclude_patterns"])])
             if cmd_config.get("smell_id"):
                 args.extend(["--smell-id", str(cmd_config["smell_id"])])
 

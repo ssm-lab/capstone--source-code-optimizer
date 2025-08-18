@@ -56,7 +56,7 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
         # Parse the code into an AST
         source_code = target_file.read_text()
-        logger.debug(f"Source code of {target_file}:\n{source_code}")
+        # logger.debug(f"Source code of {target_file}:\n{source_code}")
         tree = astroid.parse(source_code)
         for node in tree.get_children():
             self.visit(node)
@@ -296,13 +296,19 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
         else:
             list_lno: int = self.last_assign_node.lineno - 1  # type: ignore
+            end_lno: int = self.last_assign_node.end_lineno  # type: ignore
+
+            logger.debug(f"Start assign val: {list_lno}, end: {end_lno}")
 
             source_line = code_file_lines[list_lno]
             outer_scope_whitespace = source_line[: len(source_line) - len(source_line.lstrip())]
 
             list_line = f"{list_name} = [{self.last_assign_node.value.as_string()}]"
 
-            code_file_lines.pop(list_lno)
+            for i in range(list_lno, end_lno):
+                logger.debug(f"Line: {code_file_lines[i]}")
+                code_file_lines.pop(i)
+
             code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
 
         return "\n".join(code_file_lines)

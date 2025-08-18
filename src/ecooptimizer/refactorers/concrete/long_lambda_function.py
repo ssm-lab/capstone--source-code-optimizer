@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from math import log
 from pathlib import Path
 from typing import Optional
 import logging
@@ -296,6 +295,13 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
                 self, original_node: cst.IndentedBlock, updated_node: cst.IndentedBlock
             ) -> cst.IndentedBlock:
                 if not self._in_surrounding_block:
+                    return updated_node
+
+                lambda_pos = self.get_metadata(mcst.PositionProvider, context.lambda_node)
+                block_pos = self.get_metadata(mcst.PositionProvider, original_node)
+                block_contains_lambda = self._node_in_range(lambda_pos, block_pos)  # type: ignore
+
+                if not block_contains_lambda:
                     return updated_node
 
                 self._found_innermost_block = True

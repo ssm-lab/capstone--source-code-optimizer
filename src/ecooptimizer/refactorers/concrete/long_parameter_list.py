@@ -1,6 +1,6 @@
 import libcst as cst
 import libcst.matchers as m
-from libcst.metadata import PositionProvider, MetadataWrapper, ParentNodeProvider
+from libcst.metadata import PositionProvider, MetadataWrapper, ParentNodeProvider, CodeRange
 from pathlib import Path
 from typing import Optional
 from collections.abc import Mapping
@@ -576,7 +576,6 @@ class FunctionCallUpdater:
         class FunctionCallTransformer(cst.CSTTransformer):
             def leave_Call(self, original_node: cst.Call, updated_node: cst.Call) -> cst.Call:  # noqa: ARG002
                 """Transforms function calls to use grouped parameters."""
-                logger.debug(f"Processing Call node: {original_node}")
                 # Handle both standalone function calls and instance method calls
                 if not isinstance(updated_node.func, (cst.Name, cst.Attribute)):
                     logger.debug("Skipping non-function/method call")
@@ -595,7 +594,7 @@ class FunctionCallUpdater:
                     logger.debug("Skipping call to different function")
                     return updated_node
 
-                positional_args = []
+                positional_args: list[cst.Arg] = []
                 keyword_args = {}
                 variadic_args = []
                 variadic_kwargs = {}
@@ -611,7 +610,7 @@ class FunctionCallUpdater:
                                 variadic_args.append(arg.value)
                             elif i < len(used_params):
                                 logger.debug(f"Found positional arg for param {used_params[i]}")
-                                positional_args.append(arg.value)
+                                positional_args.append(arg)
                         else:
                             # If this is a keyword argument for a used parameter, keep it
                             if arg.keyword.value in param_to_group:
@@ -632,9 +631,7 @@ class FunctionCallUpdater:
                 for param in used_params:
                     if param_index < len(positional_args):
                         logger.debug(f"Grouping positional arg {param_index} for param {param}")
-                        grouped_args[param_to_group[param]].append(
-                            cst.Arg(value=positional_args[param_index])
-                        )
+                        grouped_args[param_to_group[param]].append(positional_args[param_index])
                         param_index += 1
 
                 # Process keyword arguments
@@ -759,46 +756,71 @@ class FunctionCallUpdater:
 
         transformer = FunctionCallTransformer()
         logger.debug("Starting transformation of function calls")
-        return tree.visit(transformer)
+        return MetadataWrapper(tree).visit(transformer)
 
 
 class ClassInserter(cst.CSTTransformer):
-    def __init__(self, class_nodes: list[cst.ClassDef]):
-        logger.debug("Initializing ClassInserter")
+    METADATA_DEPENDENCIES = (ParentNodeProvider, PositionProvider)
+
+    def __init__(
+        self, function_node: cst.FunctionDef, function_line: int, class_nodes: list[cst.ClassDef]
+    ):
+        self.target_name = function_node.name.value
+        self.target_line = function_line
         self.class_nodes = class_nodes
-        self.insert_index = None
-        logger.debug(f"Class nodes to insert: {[c.name.value for c in class_nodes]}")
+        self.target_found = False
+        self.inserted = False
+        self.parent_scope = None
+        logger.debug(
+            f"ClassInserter initialized for function '{self.target_name}' at line {self.target_line}"
+        )
 
-    def visit_Module(self, node: cst.Module) -> None:
-        """
-        Identify the first function definition in the module.
-        """
-        logger.debug("Searching for insertion point in module")
-        for i, statement in enumerate(node.body):
-            if isinstance(statement, cst.FunctionDef):
-                self.insert_index = i
-                logger.debug(f"Found insertion point before function: {statement.name.value}")
-                break
+    def visit_FunctionDef(self, node: cst.FunctionDef) -> bool:
+        if node.name.value == self.target_name:
+            pos = self.get_metadata(PositionProvider, node)
+            logger.debug(f"FunctionDef position: {pos.start.line}")
+            if self.target_line == pos.start.line:
+                self.target_found = True
+                logger.debug("Target function found, stopping recursion")
+                # Stop recursing into this function
+                return False
+        return True
 
-    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:  # noqa: ARG002
-        """
-        Insert the generated class definitions before the first function definition.
-        """
-        logger.debug("Inserting class definitions into module")
-        if self.insert_index is None:
-            # if no function is found, append the class nodes at the beginning
-            logger.debug("No function found, inserting classes at start of module")
-            new_body = list(self.class_nodes) + list(updated_node.body)
-        else:
-            # insert class nodes before the first function
-            logger.debug(f"Inserting classes at position {self.insert_index}")
-            new_body = (
-                list(updated_node.body[: self.insert_index])
-                + list(self.class_nodes)
-                + list(updated_node.body[self.insert_index :])
-            )
+    def _insert_before_target(self, body: list[cst.BaseStatement]) -> list[cst.BaseStatement]:
+        logger.debug("Attempting to insert class nodes before target function")
+        new_body = []
+        for stmt in body:
+            if (
+                isinstance(stmt, cst.FunctionDef)
+                and stmt.name.value == self.target_name
+                and self.get_metadata(PositionProvider, stmt).start.line == self.target_line
+            ):
+                logger.debug(f"Inserting class nodes before function '{self.target_name}'")
+                for class_node in self.class_nodes:
+                    new_body.append(class_node)
+                    new_body.append(cst.EmptyLine())
+                self.inserted = True
+            new_body.append(stmt)
 
-        return updated_node.with_changes(body=new_body)
+        logger.debug(f"New body length after insertion: {len(new_body)}")
+        return new_body
+
+    def leave_IndentedBlock(
+        self, original_node: cst.IndentedBlock, updated_node: cst.IndentedBlock
+    ) -> cst.IndentedBlock:
+        if not self.target_found or self.inserted:
+            return updated_node
+
+        logger.debug("Inserting class nodes in IndentedBlock")
+        return updated_node.with_changes(body=self._insert_before_target(original_node.body))
+
+    def leave_Module(self, original_node: cst.Module, updated_node: cst.Module) -> cst.Module:
+        if not self.inserted:
+            logger.debug("Inserting class nodes at Module level")
+            return updated_node.with_changes(body=self._insert_before_target(original_node.body))
+
+        logger.debug("No insertion needed at Module level")
+        return updated_node
 
 
 class FunctionFinder(cst.CSTVisitor):
@@ -819,12 +841,13 @@ class FunctionFinder(cst.CSTVisitor):
 
 
 class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, patterns_to_exclude: Optional[set[str]] = None):
+        super().__init__(patterns_to_exclude)
         logger.debug("Initializing LongParameterListRefactorer")
         self.parameter_analyzer = ParameterAnalyzer()
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
+        self.target_line = None
         self.function_node: Optional[cst.FunctionDef] = (
             None  # AST node of definition of function that needs to be refactored
         )
@@ -860,17 +883,17 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         wrapper = MetadataWrapper(tree)
         position_metadata = wrapper.resolve(PositionProvider)
         parent_metadata = wrapper.resolve(ParentNodeProvider)
-        target_line = smell.occurences[0].line
-        logger.debug(f"Target line for refactoring: {target_line}")
+        self.target_line = smell.occurences[0].line
+        logger.debug(f"Target line for refactoring: {self.target_line}")
 
-        visitor = FunctionFinder(position_metadata, target_line)
+        visitor = FunctionFinder(position_metadata, self.target_line)
         logger.debug("Searching for target function in CST")
-        wrapper.visit(visitor)  # Traverses the CST tree
+        tree = wrapper.visit(visitor)  # Traverses the CST tree
 
         if visitor.function_node:
             self.function_node = visitor.function_node
-            logger.info(f"Found target function: {self.function_node.name.value}")
-            logger.debug(f"Function node: {self.function_node}")
+            logger.debug(f"Found target function: {self.function_node.name.value}")
+            # logger.debug(f"Function node: {self.function_node}")
 
             self.is_constructor = self.function_node.name.value == "__init__"
             if self.is_constructor:
@@ -913,7 +936,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                     )
                     logger.debug(f"Classified parameters: {self.classified_params}")
                     self.classified_param_names = self._generate_unique_param_class_names(
-                        target_line
+                        self.target_line
                     )
                     logger.debug(f"Generated class names: {self.classified_param_names}")
                     # add class defitions for data and config encapsulations to the tree
@@ -928,7 +951,11 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
 
                     # insert class definitions and update function calls
                     logger.debug("Inserting class definitions into module")
-                    tree = tree.visit(ClassInserter(self.classified_param_nodes))
+                    tree = MetadataWrapper(tree).visit(
+                        ClassInserter(
+                            self.function_node, self.target_line, self.classified_param_nodes
+                        )
+                    )
                     # update calls to the function
                     logger.debug("Updating function calls to use encapsulated parameters")
                     tree = self.function_updater.update_function_calls(
@@ -985,7 +1012,9 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                         return updated_node  # leave other functions unchanged
 
                 logger.debug("Replacing original function with updated version")
-                tree = tree.visit(FunctionReplacer(self.function_node, updated_function_node))  # type: ignore
+                tree = MetadataWrapper(tree).visit(
+                    FunctionReplacer(self.function_node, updated_function_node)  # type: ignore
+                )
 
         # Write the modified source
         target_file.write_text(tree.code, encoding="utf-8")
@@ -1038,7 +1067,9 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
 
         logger.debug("Found relevant function calls, proceeding with modifications")
         # insert class definitions before modifying function calls
-        tree = tree.visit(ClassInserter(self.classified_param_nodes))
+        tree = MetadataWrapper(tree).visit(
+            ClassInserter(self.function_node, self.target_line, self.classified_param_nodes)
+        )
 
         # update function calls/class instantiations
         tree = self.function_updater.update_function_calls(

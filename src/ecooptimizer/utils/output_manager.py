@@ -31,7 +31,9 @@ class EnumEncoder(json.JSONEncoder):
 class LoggingManager:
     """Manages log file setup and configuration for different application components."""
 
-    def __init__(self, logs_dir: Path = DEV_OUTPUT / "logs", production: bool = False):
+    def __init__(
+        self, logs_dir: Path = DEV_OUTPUT / "logs", level: str = "INFO", production: bool = False
+    ):
         """Initializes logging directory structure and configures loggers.
 
         Args:
@@ -47,7 +49,7 @@ class LoggingManager:
             "detect": self.logs_dir / "detect.log",
             "refactor": self.logs_dir / "refactor.log",
         }
-        self._setup_loggers()
+        self._setup_loggers(level)
 
     def _initialize_output_structure(self) -> None:
         """Creates required directories and clears old logs if not in production."""
@@ -63,14 +65,14 @@ class LoggingManager:
                     log_file.unlink()
         logging.info("🗑️ Cleared existing log files.")
 
-    def _setup_loggers(self) -> None:
+    def _setup_loggers(self, level: str = "INFO") -> None:
         """Configures root logger and component-specific loggers."""
         logging.root.handlers.clear()
         self._configure_root_logger()
 
         self.loggers = {
-            "detect": self._create_child_logger("detect", self.log_files["detect"]),
-            "refactor": self._create_child_logger("refactor", self.log_files["refactor"]),
+            "detect": self._create_child_logger("detect", self.log_files["detect"], level),
+            "refactor": self._create_child_logger("refactor", self.log_files["refactor"], level),
         }
         logging.info("📝 Loggers initialized successfully.")
 
@@ -87,7 +89,9 @@ class LoggingManager:
         main_handler.setLevel(logging.DEBUG)
         root_logger.addHandler(main_handler)
 
-    def _create_child_logger(self, name: str, log_file: Path) -> logging.Logger:
+    def _create_child_logger(
+        self, name: str, log_file: Path, log_level: str = "INFO"
+    ) -> logging.Logger:
         """Creates and configures a component-specific logger.
 
         Args:
@@ -98,7 +102,7 @@ class LoggingManager:
             Configured logger instance
         """
         logger = logging.getLogger(name)
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
         logger.propagate = True
 
         file_handler = logging.FileHandler(str(log_file), mode="a", encoding="utf-8")
