@@ -6,22 +6,13 @@ from pathlib import Path
 import re
 from fastapi import APIRouter, WebSocketException
 from fastapi.websockets import WebSocketState, WebSocket, WebSocketDisconnect
-from pydantic import BaseModel
 
+from ecooptimizer.data_types.api import LogInit
 from ecooptimizer.utils.output_manager import LoggingManager
 from ecooptimizer.log_config import CONFIG
 
 router = APIRouter()
-
-
-class LogInit(BaseModel):
-    """Request model for initializing logging.
-
-    Attributes:
-        log_dir: Directory path where logs should be stored
-    """
-
-    log_dir: str
+log_dir: str | None = None
 
 
 @router.post("/logs/init", summary="Initialize logging system")
@@ -38,10 +29,10 @@ def initialize_logs(log_init: LogInit) -> dict[str, str]:
         WebSocketException: If initialization fails
     """
     try:
-        loggingManager = LoggingManager(Path(log_init.log_dir), CONFIG["mode"] == "production")
-        CONFIG["loggingManager"] = loggingManager
-        CONFIG["detectLogger"] = loggingManager.loggers["detect"]
-        CONFIG["refactorLogger"] = loggingManager.loggers["refactor"]
+        global log_dir
+        log_dir = log_init.log_dir
+
+        LoggingManager.initialize(Path(log_init.log_dir), production=CONFIG["mode"] == "production")
 
         return {"message": "Logging initialized successfully."}
     except Exception as e:
@@ -51,19 +42,19 @@ def initialize_logs(log_init: LogInit) -> dict[str, str]:
 @router.websocket("/logs/main")
 async def websocket_main_logs(websocket: WebSocket) -> None:
     """WebSocket endpoint for streaming main application logs."""
-    await websocket_log_stream(websocket, CONFIG["loggingManager"].log_files["main"])
+    await websocket_log_stream(websocket, Path(log_dir, "main.log"))
 
 
 @router.websocket("/logs/detect")
 async def websocket_detect_logs(websocket: WebSocket) -> None:
     """WebSocket endpoint for streaming code detection logs."""
-    await websocket_log_stream(websocket, CONFIG["loggingManager"].log_files["detect"])
+    await websocket_log_stream(websocket, Path(log_dir, "detect.log"))
 
 
 @router.websocket("/logs/refactor")
 async def websocket_refactor_logs(websocket: WebSocket) -> None:
     """WebSocket endpoint for streaming code refactoring logs."""
-    await websocket_log_stream(websocket, CONFIG["loggingManager"].log_files["refactor"])
+    await websocket_log_stream(websocket, Path(log_dir, "refactor.log"))
 
 
 async def listen_for_disconnect(websocket: WebSocket) -> None:

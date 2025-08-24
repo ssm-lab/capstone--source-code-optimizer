@@ -1,6 +1,11 @@
+import re
 import libcst as cst
 import libcst.matchers as m
 from libcst.metadata import PositionProvider, MetadataWrapper, ParentNodeProvider, CodeRange
+
+import astroid
+from astroid import nodes
+
 from pathlib import Path
 from typing import Optional
 from collections.abc import Mapping
@@ -847,6 +852,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.parameter_analyzer = ParameterAnalyzer()
         self.parameter_encapsulator = ParameterEncapsulator()
         self.function_updater = FunctionCallUpdater()
+        self.source_dir: Path | None = None
         self.target_line = None
         self.function_node: Optional[cst.FunctionDef] = (
             None  # AST node of definition of function that needs to be refactored
@@ -857,6 +863,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         self.classified_param_nodes = []
         self.enclosing_class_name: Optional[str] = None
         self.is_constructor = False
+        self.cls_module = ""
 
     def refactor(
         self,
@@ -874,6 +881,8 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         # maximum limit on number of parameters beyond which the code smell is configured to be detected(see analyzers_config.py)
         max_param_limit = 6
         self.target_file = target_file
+        self.source_dir = source_dir
+        self.cls_module = smell.module
 
         logger.debug(f"Reading source file: {target_file}")
         with target_file.open() as f:
@@ -1017,7 +1026,13 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
                 )
 
         # Write the modified source
+        root_idx = target_file.parts.index(source_dir.name)
+        rel_path = Path(*target_file.parts[root_idx:])
+        print("rel_path:", rel_path)
+        self.store_original(target_file, rel_path, smell.id)
+
         target_file.write_text(tree.code, encoding="utf-8")
+        self.modified_files.append(target_file)
         logger.debug(f"Writing modified source to target file: {target_file}")
 
         # with output_file.open("w") as temp_file:
@@ -1029,7 +1044,7 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         #         f.write(modified_source)
 
         logger.info("Starting traversal of source directory for related files")
-        self.traverse_and_process(source_dir)
+        self.traverse_and_process(source_dir, smell.id)
         logger.info("Refactoring completed successfully")
 
     def _generate_unique_param_class_names(self, target_line: int) -> tuple[str, str]:
@@ -1044,14 +1059,173 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         logger.debug(f"Generated class names: {data_class_name}, {config_class_name}")
         return data_class_name, config_class_name
 
-    def _process_file(self, file: Path):
+    def _import_resolves_to_class(
+        self, importing_module: str, import_stmt: str, full_class_path: str, target_cls: str
+    ) -> bool:
+        """
+        Determine if an import statement resolves to a specific class.
+
+        Args:
+            importing_module: full dot-separated path of the module doing the import
+            import_stmt: the import statement string (e.g., "import x.y as z" or "from ..x.y import A, B")
+            full_class_path: full dot-separated path to the intended class (e.g., "mypkg.subpkg.module.MyClass")
+
+        Returns:
+            True if the import resolves to the target class, False otherwise.
+        """
+
+        logger.debug(
+            f"import_resolves_to_class: importing_module={importing_module}, import_stmt={import_stmt}, full_class_path={full_class_path}"
+        )
+
+        importing_parts = importing_module.split(".")
+
+        logger.debug(
+            f"target_module_path={full_class_path}, target_cls={target_cls}, importing_parts={importing_parts}"
+        )
+
+        import_stmt = import_stmt.strip()
+
+        # Handle "import x.y [as z], ..." style
+        m_import = re.match(r"import\s+(.+)$", import_stmt)
+        if m_import:
+            modules = [m.strip() for m in m_import.group(1).split(",")]
+            logger.debug(f"import style: modules={modules}")
+            for mod in modules:
+                # Remove optional alias
+                mod_name = mod.split(" as ")[0].strip()
+                resolved_name = mod_name.split(".")[-1]
+                logger.debug(f"Checking mod_name={mod_name}, resolved_name={resolved_name}")
+                if mod_name == full_class_path and resolved_name == target_cls:
+                    logger.debug("Matched import style")
+                    return True
+            return False
+
+        # Handle "from x.y import A, B as C, ..." style
+        m_from = re.match(r"from\s+([.\w]+)\s+import\s+(.+)$", import_stmt)
+        if m_from:
+            module_part, imported_part = m_from.groups()
+            logger.debug(
+                f"from-import style: module_part={module_part}, imported_part={imported_part}"
+            )
+
+            # Resolve relative imports
+            if module_part.startswith("."):
+                leading_dots = len(module_part) - len(module_part.lstrip("."))
+                relative_module = module_part.lstrip(".")
+                logger.debug(
+                    f"Relative import: leading_dots={leading_dots}, relative_module={relative_module}"
+                )
+                if leading_dots > len(importing_parts) - 1:
+                    logger.debug("Relative import goes beyond top-level")
+                    return False  # relative import goes beyond top-level
+                resolved_module_parts = importing_parts[:-leading_dots]
+                if relative_module:
+                    resolved_module_parts += relative_module.split(".")
+                resolved_module_path = ".".join(resolved_module_parts)
+            else:
+                resolved_module_path = module_part
+
+            logger.debug(f"Resolved module path: {resolved_module_path}")
+
+            # Check all imported names
+            imported_names = [i.split(" as ")[0].strip() for i in imported_part.split(",")]
+            logger.debug(f"Imported names: {imported_names}")
+            for name in imported_names:
+                logger.debug(f"Checking name={name} against target_cls={target_cls}")
+                if resolved_module_path == full_class_path and name == target_cls:
+                    logger.debug("Matched from-import style")
+                    return True
+            return False
+
+        # Not a recognized import statement
+        logger.debug("Not a recognized import statement")
+        return False
+
+    def _has_module_imports(
+        self, tree: nodes.Module, module_path: str, class_module: str, obj_name: str
+    ):
+        imports = []
+
+        def _iter_scope_imports(scope: nodes.NodeNG):
+            # only direct children of this scope
+            for stmt in getattr(scope, "body", []) or []:
+                if isinstance(stmt, nodes.Import | nodes.ImportFrom):
+                    yield stmt
+
+        def _get_astroid_func_node_scope():
+            for node in tree.nodes_of_class(nodes.FunctionDef):
+                if node.lineno == self.target_line:
+                    return node.parent
+            return tree
+
+        # climb scopes until module scope to check for local imports
+        imported = False
+        scope = _get_astroid_func_node_scope()
+        while scope:
+            logger.debug(f"Checking scope: {scope.__repr__()}")
+            for imp in _iter_scope_imports(scope):
+                if isinstance(imp, nodes.Import):
+                    for name, asname in imp.names:
+                        logger.debug(f"Checking Import: {imp.as_string()} for {obj_name}")
+                        if (asname or name.split(".")[-1]) == obj_name:
+                            imported = True
+                            imports.append(imp.as_string())
+                else:
+                    mod = imp.modname or ""
+                    for name, asname in imp.names:
+                        logger.debug(f"Checking ImportFrom: {imp.as_string()} for {obj_name}")
+                        if (asname or name) == obj_name:
+                            imported = True
+                            imports.append(imp.as_string())
+            if isinstance(scope, nodes.Module):
+                break
+            scope = scope.parent
+
+        if not imported:
+            logger.debug(f"No import found for class {obj_name} in module {module_path}")
+            return False
+
+        logger.debug(f"Imports found for {obj_name}: {imports}")
+
+        for imp in imports:
+            if self._import_resolves_to_class(module_path, imp, class_module, obj_name):
+                logger.debug(f"Import resolves to class: {imp}")
+                return True
+
+        return False
+
+    def _make_relative_module_str(self, module_path: Path):
+        logger.debug(f"Formating module path: {module_path}")
+        mod_parts = module_path.parts
+        try:
+            idx_pckg = mod_parts.index(self.cls_module.split(".")[0])
+        except ValueError:
+            logger.error("Module not found in path")
+            return
+        return ".".join(mod_parts[idx_pckg:]).rstrip(".py")
+
+    def _process_file(self, file: Path, smell_id: str):
         logger.info(f"Processing related file: {file}")
         if file.samefile(self.target_file):
             logger.debug("Skipping original target file")
             return False
 
+        file_content = file.read_text()
+        astroid_tree = astroid.parse(file_content)
+
+        if self.is_constructor:
+            obj_name = self.enclosing_class_name
+        else:
+            obj_name = self.function_node.name.value
+
+        module_str = self._make_relative_module_str(file) or ".".join(file.parts).rstrip(".py")
+
+        if not self._has_module_imports(astroid_tree, module_str, self.cls_module, obj_name):
+            return False
+
         logger.debug("Parsing file")
-        tree = cst.parse_module(file.read_text())
+        tree = cst.parse_module(file_content)
 
         visitor = FunctionCallVisitor(
             self.function_node.name.value,  # type: ignore
@@ -1082,6 +1256,12 @@ class LongParameterListRefactorer(MultiFileRefactorer[LPLSmell]):
         )
 
         modified_source = tree.code
+
+        root_idx = self.target_file.parts.index(self.source_dir.name)
+        rel_path = Path(*self.target_file.parts[root_idx:])
+        print("rel_path:", rel_path)
+        self.store_original(self.target_file, rel_path, smell_id)
+
         logger.debug(f"Writing modified source to file: {file}")
         with file.open("w") as f:
             f.write(modified_source)

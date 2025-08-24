@@ -1,89 +1,36 @@
 """API endpoints for code refactoring with energy measurement."""
 
 # pyright: reportOptionalMemberAccess=false
+import logging
 import shutil
 from pathlib import Path
 from tempfile import mkdtemp
 import traceback
 from fastapi import APIRouter
-from pydantic import BaseModel
-from typing import Optional
 
 from ecooptimizer.api.error_handler import (
     AppError,
-    EnergyMeasurementError,
-    EnergySavingsError,
     RefactoringError,
     RessourceNotFoundError,
     remove_readonly,
 )
 
-from ecooptimizer.log_config import CONFIG
+from ecooptimizer.data_types.api import ChangedFile, RefactorRqModel, RefactoredData
 from ecooptimizer.refactorers.refactorer_controller import RefactorerController
 from ecooptimizer.analyzers.analyzer_controller import AnalyzerController
 from ecooptimizer.measurements.codecarbon_energy_meter import CodeCarbonEnergyMeter
 from ecooptimizer.data_types.smell import Smell
+from ecooptimizer.refactorers.utils.smell_mapper import (
+    adjust_modified_files,
+)
+from ecooptimizer.utils.load_smells import load_smells_from_file
 
-logger = CONFIG["refactorLogger"]
+logger = logging.getLogger("refactor")
 
 router = APIRouter()
 refactorer_controller = RefactorerController()
 analyzer_controller = AnalyzerController()
 energy_meter = CodeCarbonEnergyMeter()
-
-
-class ChangedFile(BaseModel):
-    """Tracks file changes during refactoring.
-
-    Attributes:
-        original: Path to original file
-        refactored: Path to refactored file
-    """
-
-    original: str
-    refactored: str
-
-
-class RefactoredData(BaseModel):
-    """Contains results of a refactoring operation.
-
-    Attributes:
-        tempDir: Temporary directory with refactored files
-        targetFile: Main file that was refactored
-        energySaved: Estimated energy savings in kg CO2
-        affectedFiles: List of all files modified during refactoring
-    """
-
-    tempDir: str
-    targetFile: ChangedFile
-    energySaved: Optional[float] = None
-    affectedFiles: list[ChangedFile]
-
-
-class RefactorRqModel(BaseModel):
-    """Request model for single smell refactoring.
-
-    Attributes:
-        sourceDir: Directory containing code to refactor
-        smell: Smell to refactor
-    """
-
-    sourceDir: str
-    smell: Smell
-
-
-class RefactorTypeRqModel(BaseModel):
-    """Request model for refactoring by smell type.
-
-    Attributes:
-        sourceDir: Directory containing code to refactor
-        smellType: Type of smell to refactor
-        firstSmell: First instance of the smell to refactor
-    """
-
-    sourceDir: str
-    smellType: str
-    firstSmell: Smell
 
 
 @router.post("/refactor", response_model=RefactoredData, summary="Refactor a specific code smell")
@@ -114,13 +61,23 @@ def refactor(request: RefactorRqModel) -> RefactoredData | None:
         raise RessourceNotFoundError(str(source_dir), "folder")
 
     try:
-        initial_emissions = measure_energy(target_file)
-        if not initial_emissions:
-            logger.error("❌ Could not retrieve initial emissions.")
-            raise EnergyMeasurementError(str(target_file))
+        if not request.smell:
+            raise AttributeError(
+                "Missing smell parameter in request. Smell param is necessary for refactory singular smells."
+            )
+        analysis_data_file = source_dir / "__ecocache__" / "energy_smells.json"
+        updated_data_file = source_dir / "__ecocache__" / "energy_smells.updated.json"
 
-        logger.info(f"📊 Initial emissions: {initial_emissions} kg CO2")
-        refactor_data = perform_refactoring(source_dir, request.smell, initial_emissions)
+        if updated_data_file.exists():
+            data_file = updated_data_file
+        else:
+            data_file = analysis_data_file
+
+        refactor_data = perform_refactoring(source_dir, request.smell)
+
+        adjust_modified_files(
+            refactor_data.affectedFiles, source_dir, data_file, request.smell, temp=True
+        )
 
         if refactor_data:
             logger.info(f"{'=' * 100}\n")
@@ -136,7 +93,7 @@ def refactor(request: RefactorRqModel) -> RefactoredData | None:
 @router.post(
     "/refactor-by-type", response_model=RefactoredData, summary="Refactor all smells of a type"
 )
-def refactorSmell(request: RefactorTypeRqModel) -> RefactoredData:
+def refactorType(request: RefactorRqModel) -> RefactoredData:
     """Refactors all instances of a smell type in a file.
 
     Args:
@@ -150,58 +107,165 @@ def refactorSmell(request: RefactorTypeRqModel) -> RefactoredData:
     """
     logger.info(f"{'=' * 100}")
     source_dir = Path(request.sourceDir)
-    target_file = Path(request.firstSmell.path)
 
-    logger.info(f"🔄 Refactoring smell: {request.firstSmell.symbol} in {source_dir!s}")
+    if not request.targetFile:
+        raise AttributeError(
+            "Missing targetFile parameter in request. targetFile param is necessary for refactory smell types."
+        )
 
-    if not target_file.exists():
-        raise RessourceNotFoundError(str(target_file), "file")
+    if not request.smellType:
+        raise AttributeError(
+            "Missing smellType parameter in request. smellType param is necessary for refactory smell types."
+        )
+    target_path = Path(request.targetFile)
+
+    logger.info(f"🔄 Refactoring smell: {request.smellType} in {target_path!s}")
+
+    if not target_path.exists():
+        raise RessourceNotFoundError(str(target_path), "file")
 
     if not source_dir.is_dir():
         raise RessourceNotFoundError(str(source_dir), "folder")
     try:
-        initial_emissions = measure_energy(target_file)
-        if not initial_emissions:
-            raise EnergyMeasurementError("Could not retrieve initial emissions.")
-        logger.info(f"📊 Initial emissions: {initial_emissions} kg CO2")
-
-        total_energy_saved = 0.0
         all_affected_files: list[ChangedFile] = []
-        temp_dir = None
-        current_smell = request.firstSmell
-        current_source_dir = source_dir
+        root = source_dir
+        target_file = None
 
-        refactor_data = perform_refactoring(current_source_dir, current_smell, initial_emissions)
-        total_energy_saved += refactor_data.energySaved or 0.0
-        all_affected_files.extend(refactor_data.affectedFiles)
+        analysis_data_file = source_dir / "__ecocache__" / "energy_smells.json"
+        updated_data_file = source_dir / "__ecocache__" / "energy_smells.updated.json"
+        temp_data_file = source_dir / "__ecocache__" / "energy_smells.temp.json"
 
-        temp_dir = refactor_data.tempDir
-        target_file = refactor_data.targetFile
-        refactored_file_path = target_file.refactored
-        source_copy_dir = Path(temp_dir) / source_dir.name
+        if updated_data_file.exists():
+            data_file = updated_data_file
+        else:
+            data_file = analysis_data_file
 
-        while True:
-            next_smells = analyzer_controller.run_analysis(
-                Path(refactored_file_path), [request.smellType]
+        smells_to_refactor = load_smells_from_file(analysis_data_file)[request.targetFile]["smells"]
+
+        using_temp = False
+        while smells_to_refactor:
+            smell = Smell(
+                **smells_to_refactor.get(
+                    next(
+                        key
+                        for key in smells_to_refactor.keys()
+                        if smells_to_refactor[key]["symbol"] == request.smellType
+                    ),
+                    {},
+                )
             )
-            if not next_smells:
-                break
-            current_smell = next_smells[0]
+
             step_data = perform_refactoring(
-                source_copy_dir,
-                current_smell,
-                initial_emissions - total_energy_saved,
-                Path(temp_dir),
+                source_dir,
+                smell,
+                root if using_temp else None,
             )
-            total_energy_saved += step_data.energySaved or 0.0
+
+            target_file = step_data.targetFile
             all_affected_files.extend(step_data.affectedFiles)
 
-        logger.info(f"✅ Total energy saved: {total_energy_saved} kg CO2")
+            adjust_modified_files(step_data.affectedFiles, source_dir, data_file, smell, temp=True)
+
+            smells_to_refactor = load_smells_from_file(analysis_data_file)[request.targetFile][
+                "smells"
+            ]
+
+            if not using_temp:
+                root = Path(step_data.tempDir) / source_dir.name
+                data_file = temp_data_file
+                using_temp = True
+
+        print("All smell refactored succesfully")
 
         return RefactoredData(
-            tempDir=temp_dir,
+            tempDir=str(root),
             targetFile=target_file,
-            energySaved=total_energy_saved,
+            affectedFiles=list({file.original: file for file in all_affected_files}.values()),
+        )
+    except AppError as e:
+        raise AppError(str(e), e.status_code) from e
+    except Exception as e:
+        raise Exception(str(e)) from e
+
+
+@router.post("/refactor-all", response_model=RefactoredData, summary="Refactor all smells")
+def refactorAll(request: RefactorRqModel) -> RefactoredData:
+    """Refactors all instances of a smells in a file.
+
+    Args:
+        request: Contains source directory and file to be refactored
+
+    Returns:
+        RefactoredData: Aggregated results of all refactorings
+
+    Raises:
+        HTTPException: Various error cases with appropriate status codes
+    """
+    logger.info(f"{'=' * 100}")
+    source_dir = Path(request.sourceDir)
+
+    if not request.targetFile:
+        raise AttributeError(
+            "Missing targetFile parameter in request. targetFile param is necessary for refactoring all smells."
+        )
+
+    target_path = Path(request.targetFile)
+
+    logger.info(f"🔄 Refactoring smells in {target_path!s}")
+
+    if not target_path.exists():
+        raise RessourceNotFoundError(str(target_path), "file")
+
+    if not source_dir.is_dir():
+        raise RessourceNotFoundError(str(source_dir), "folder")
+    try:
+        all_affected_files: list[ChangedFile] = []
+        root = source_dir
+        target_file = None
+
+        analysis_data_file = source_dir / "__ecocache__" / "energy_smells.json"
+        updated_data_file = source_dir / "__ecocache__" / "energy_smells.updated.json"
+        temp_data_file = source_dir / "__ecocache__" / "energy_smells.temp.json"
+
+        if updated_data_file.exists():
+            data_file = updated_data_file
+        else:
+            data_file = analysis_data_file
+
+        smells_to_refactor = load_smells_from_file(analysis_data_file)[request.targetFile]["smells"]
+
+        using_temp = False
+        while smells_to_refactor:
+            smell = Smell(
+                **smells_to_refactor.get(
+                    next(key for key in smells_to_refactor.keys()),
+                    {},
+                )
+            )
+
+            step_data = perform_refactoring(
+                source_dir,
+                smell,
+                root if using_temp else None,
+            )
+
+            target_file = step_data.targetFile
+            all_affected_files.extend(step_data.affectedFiles)
+
+            adjust_modified_files(step_data.affectedFiles, source_dir, data_file, smell, temp=True)
+
+            if not using_temp:
+                root = Path(step_data.tempDir) / source_dir.name
+                data_file = temp_data_file
+                using_temp = True
+
+            smells_to_refactor = load_smells_from_file(data_file)[request.targetFile]["smells"]
+
+        print("All smell refactored succesfully")
+
+        return RefactoredData(
+            tempDir=str(root),
+            targetFile=target_file,
             affectedFiles=list({file.original: file for file in all_affected_files}.values()),
         )
     except AppError as e:
@@ -213,8 +277,7 @@ def refactorSmell(request: RefactorTypeRqModel) -> RefactoredData:
 def perform_refactoring(
     source_dir: Path,
     smell: Smell,
-    initial_emissions: float,
-    existing_temp_dir: Optional[Path] = None,
+    existing_temp_dir: Path | None = None,
 ) -> RefactoredData:
     """Executes the refactoring process and measures energy impact.
 
@@ -244,40 +307,31 @@ def perform_refactoring(
         source_copy = temp_dir / source_dir.name
         shutil.copytree(source_dir, source_copy, ignore=shutil.ignore_patterns(".git*"))
     else:
-        temp_dir = existing_temp_dir
-        source_copy = source_dir
+        temp_dir = existing_temp_dir.parent
+        source_copy = temp_dir / source_dir.name
 
-    target_file_copy = source_copy / target_file.relative_to(source_dir)
+    logger.debug(f"Source: {source_dir}, copied to temporary directory at {source_copy}")
+    root_idx = target_file.parts.index(source_dir.name)
+    target_file_copy = source_copy / Path(*target_file.parts[root_idx + 1 :])
+
+    logger.debug(f"Target file copy located at {target_file_copy}")
     modified_files = []
     try:
         modified_files: list[Path] = refactorer_controller.run_refactorer(
             target_file_copy, source_copy, smell
         )
+        logger.debug(f"Modified files: {[str(file) for file in modified_files]}")
     except Exception as e:
         shutil.rmtree(temp_dir, onerror=remove_readonly)  # type: ignore
         traceback.print_exc()
         raise RefactoringError(str(e)) from e
 
-    print("energy")
-    final_emissions = measure_energy(target_file_copy)
-    if not final_emissions:
-        if existing_temp_dir is None:
-            shutil.rmtree(temp_dir, onerror=remove_readonly)  # type: ignore
-        raise EnergyMeasurementError(str(target_file))
-
-    if CONFIG["mode"] == "production" and final_emissions >= initial_emissions:
-        if existing_temp_dir is None:
-            shutil.rmtree(temp_dir, onerror=remove_readonly)  # type: ignore
-        raise EnergySavingsError()
-
-    energy_saved = initial_emissions - final_emissions
     return RefactoredData(
         tempDir=str(temp_dir),
         targetFile=ChangedFile(
             original=str(target_file.resolve()),
             refactored=str(target_file_copy.resolve()),
         ),
-        energySaved=energy_saved,
         affectedFiles=[
             ChangedFile(
                 original=str(file.resolve()).replace(str(source_copy), str(source_dir)),
@@ -286,16 +340,3 @@ def perform_refactoring(
             for file in modified_files
         ],
     )
-
-
-def measure_energy(file: Path) -> Optional[float]:
-    """Measures energy consumption of executing a file.
-
-    Args:
-        file: Python file to measure
-
-    Returns:
-        Optional[float]: Energy consumption in kg CO2, or None if measurement fails
-    """
-    energy_meter.measure_energy(file)
-    return energy_meter.emissions

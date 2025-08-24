@@ -69,7 +69,7 @@ _SMELL_REGISTRY: dict[str, SmellRecord] = {
     },
     "long-element-chain": {
         "id": CustomSmell.LONG_ELEMENT_CHAIN.value,
-        "enabled": True,
+        "enabled": False,
         "analyzer_method": "ast",
         "checker": detect_long_element_chain,
         "analyzer_options": {"threshold": 3},
@@ -77,7 +77,7 @@ _SMELL_REGISTRY: dict[str, SmellRecord] = {
     },
     "cached-repeated-calls": {
         "id": CustomSmell.CACHE_REPEATED_CALLS.value,
-        "enabled": True,
+        "enabled": False,
         "analyzer_method": "ast",
         "checker": detect_repeated_calls,
         "analyzer_options": {"threshold": 2},
@@ -124,7 +124,7 @@ def retrieve_smell_registry(
 
     if enabled_smells == "all":
         # If "all" is specified, return the full registry
-        return updated_registry
+        return {smell: config for smell, config in updated_registry.items() if config["enabled"]}
     elif isinstance(enabled_smells, str):
         raise TypeError("Not a valid type for enabled smells")
     elif isinstance(enabled_smells, list):

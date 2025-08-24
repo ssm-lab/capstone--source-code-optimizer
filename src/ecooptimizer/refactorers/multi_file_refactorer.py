@@ -90,7 +90,7 @@ class MultiFileRefactorer(BaseRefactorer[T]):
             elif item.is_file() and not self.is_ignored(str(item)) and item.suffix == ".py":
                 self.py_files.append(item)
 
-    def traverse_and_process(self, directory: Path) -> None:
+    def traverse_and_process(self, directory: Path, smell_id: str) -> None:
         """Processes all Python files in a directory.
 
         Args:
@@ -100,13 +100,13 @@ class MultiFileRefactorer(BaseRefactorer[T]):
             self.traverse(directory)
         for file in self.py_files:
             logger.debug(f"Processing file: {file!s}")
-            if self._process_file(file):
+            if self._process_file(file, smell_id):
                 if file not in self.modified_files and not file.samefile(self.target_file):
-                    self.modified_files.append(file.resolve())
+                    self.modified_files.append(file)
             logger.debug("Finished processing file")
 
     @abstractmethod
-    def _process_file(self, file: Path) -> bool:
+    def _process_file(self, file: Path, smell_id: str) -> bool:
         """Processes an individual file (implemented by concrete refactorers).
 
         Args:

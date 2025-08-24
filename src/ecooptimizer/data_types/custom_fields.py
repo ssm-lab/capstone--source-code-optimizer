@@ -1,6 +1,5 @@
 """Data models for code smell occurrences and additional metadata."""
 
-from typing import Optional
 from pydantic import BaseModel
 
 
@@ -30,10 +29,10 @@ class AdditionalInfo(BaseModel):
         callString: Function call string (if applicable)
     """
 
-    innerLoopLine: Optional[int] = None
-    concatTarget: Optional[str] = None
-    repetitions: Optional[int] = None
-    callString: Optional[str] = None
+    innerLoopLine: int | None = None
+    concatTarget: str | None = None
+    repetitions: int | None = None
+    callString: str | None = None
 
 
 class CRCInfo(AdditionalInfo):

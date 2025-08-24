@@ -80,10 +80,17 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
         modified_code = self.add_node_to_body(source_code, combined_nodes)
 
+        root_idx = target_file.parts.index(source_dir.name)
+        rel_path = Path(*target_file.parts[root_idx:])
+        print("rel_path:", rel_path)
+        self.store_original(target_file, rel_path, smell.id)
+
         if overwrite:
             target_file.write_text(modified_code)
         else:
             output_file.write_text(modified_code)
+
+        self.modified_files.append(target_file)
 
     def visit(self, node: nodes.NodeNG):
         if isinstance(node, nodes.Assign) and node.lineno in self.target_lines:
@@ -311,4 +318,4 @@ class UseListAccumulationRefactorer(BaseRefactorer[SCLSmell]):
 
             code_file_lines.insert(list_lno, outer_scope_whitespace + list_line)
 
-        return "\n".join(code_file_lines)
+        return "\n".join(code_file_lines) + "\n"

@@ -39,6 +39,11 @@ class LongMessageChainRefactorer(BaseRefactorer[LMCSmell]):
                 logger.warning(f"No chain found at line {smell.occurences[0].line}")
                 return
 
+            root_idx = target_file.parts.index(source_dir.name)
+            rel_path = Path(*target_file.parts[root_idx:])
+            print("rel_path:", rel_path)
+            self.store_original(target_file, rel_path, smell.id)
+
             output_path = target_file if overwrite else output_file
             logger.debug(f"Writing refactored code to: {output_path}")
             output_path.write_text(modified_module.code, encoding="utf-8")

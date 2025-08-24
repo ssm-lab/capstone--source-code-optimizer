@@ -1,8 +1,11 @@
 """Abstract base class for all code smell refactorers."""
 
 from abc import ABC, abstractmethod
+import hashlib
 from pathlib import Path
+import shutil
 from typing import Generic, TypeVar
+import tempfile
 
 from ecooptimizer.data_types.smell import Smell
 
@@ -42,3 +45,32 @@ class BaseRefactorer(ABC, Generic[T]):
             Concrete subclasses must implement this method
         """
         pass
+
+    def store_original(self, file: Path, rel_path: Path, smell_id: str):
+        """
+        Saves a copy of the original file to a temp directory for a specific smell.
+        Returns the path to the temp copy and a mapping of temp -> original.
+
+        Parameters:
+            file_path (str or Path): Full path to the original file.
+            smell_id (str or int): Unique ID for the smell being refactored.
+
+        Returns:
+            temp_file_path (Path): Path to the saved temp copy.
+            mapping (dict): {temp_file_path: original_file_path}
+        """
+
+        # Base temp directory for EcoOptimizer
+        base_temp_dir = Path(tempfile.gettempdir()) / ".ecooptimizer" / str(smell_id)
+        base_temp_dir.mkdir(parents=True, exist_ok=True)
+
+        file_hash = hashlib.sha1(str(rel_path).encode()).hexdigest()
+        temp_file_name = file_hash + file.suffix
+        temp_file = base_temp_dir / temp_file_name
+
+        shutil.copy2(file, temp_file)
+
+        # # Mapping for traceability
+        # mapping = {temp_file: file}
+
+        # return temp_file, mapping

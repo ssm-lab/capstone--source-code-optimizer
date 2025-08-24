@@ -315,8 +315,9 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
                 for stmt in updated_node.body:
                     if stmt == self._enclosing_statement:
                         new_body.append(new_function)
-                    if self._found_assign:
-                        continue
+
+                        if self._found_assign:
+                            continue
                     new_body.append(stmt)
 
                 if new_body != original_node.body:  # We found and inserted before our statement
@@ -405,6 +406,12 @@ class LongLambdaFunctionRefactorer(BaseRefactorer[LLESmell]):
 
             # Write the modified content
             new_content = modified_module.code
+
+            root_idx = target_file.parts.index(source_dir.name)
+            rel_path = Path(*target_file.parts[root_idx:])
+            print("rel_path:", rel_path)
+            self.store_original(target_file, rel_path, smell.id)
+
             if overwrite:
                 logger.info(f"Overwriting original file: {target_file}")
                 target_file.write_text(new_content, encoding="utf-8")

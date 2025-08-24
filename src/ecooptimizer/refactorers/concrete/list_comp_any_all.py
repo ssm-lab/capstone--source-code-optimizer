@@ -81,8 +81,15 @@ class UseAGeneratorRefactorer(BaseRefactorer[UGESmell]):
         transformer = ListCompInAnyAllTransformer(line_number, start_column, end_column)  # type: ignore
         modified_tree = wrapper.visit(transformer)
 
+        root_idx = target_file.parts.index(source_dir.name)
+        rel_path = Path(*target_file.parts[root_idx:])
+        print("rel_path:", rel_path)
+        self.store_original(target_file, rel_path, smell.id)
+
         if transformer.found:
             if overwrite:
                 target_file.write_text(modified_tree.code)
             else:
                 output_file.write_text(modified_tree.code)
+
+            self.modified_files.append(target_file)

@@ -1,7 +1,6 @@
 """Data models for representing different types of code smells."""
 
 from pydantic import BaseModel
-from typing import Optional
 
 from ecooptimizer.data_types.custom_fields import CRCInfo, Occurence, AdditionalInfo, SCLInfo
 
@@ -9,8 +8,8 @@ from ecooptimizer.data_types.custom_fields import CRCInfo, Occurence, Additional
 class EnergyMeta(BaseModel):
     isFunc: bool
     useOccurences: bool
-    start: Optional[int] = None
-    end: Optional[int] = None
+    start: int | None = None
+    end: int | None = None
 
 
 class Smell(BaseModel):
@@ -30,7 +29,7 @@ class Smell(BaseModel):
         additionalInfo: Optional smell-specific metadata
     """
 
-    id: Optional[str] = ""
+    id: str
     confidence: str
     message: str
     messageId: str
@@ -40,8 +39,8 @@ class Smell(BaseModel):
     symbol: str
     type: str
     occurences: list[Occurence]
-    additionalInfo: Optional[AdditionalInfo] = None
-    energyMetadata: Optional[EnergyMeta] = None
+    additionalInfo: AdditionalInfo | None = None
+    energyMetadata: EnergyMeta | None = None
 
 
 class CRCSmell(Smell):

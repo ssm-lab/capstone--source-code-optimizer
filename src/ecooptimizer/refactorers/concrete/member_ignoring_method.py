@@ -1,3 +1,4 @@
+import re
 import astroid
 from astroid import nodes, util
 import libcst as cst
@@ -5,13 +6,12 @@ from libcst.metadata import PositionProvider, MetadataWrapper
 
 from pathlib import Path
 from dataclasses import dataclass
-
-from ecooptimizer.log_config import CONFIG
+import logging
 
 from ecooptimizer.refactorers.multi_file_refactorer import MultiFileRefactorer
 from ecooptimizer.data_types.smell import MIMSmell
 
-logger = CONFIG["refactorLogger"]
+logger = logging.getLogger("refactor")
 
 
 @dataclass
@@ -120,73 +120,234 @@ class CallTransformer(cst.CSTTransformer):
         return updated_node
 
 
-def find_valid_method_calls(
-    tree: nodes.Module, mim_method: str, valid_classes: set[str]
-) -> list[MethodCall]:
+def import_resolves_to_class(
+    importing_module: str, import_stmt: str, full_class_path: str, target_cls: str
+) -> bool:
     """
-    Finds method calls where the instance is of a valid class.
+    Determine if an import statement resolves to a specific class.
+
+    Args:
+        importing_module: full dot-separated path of the module doing the import
+        import_stmt: the import statement string (e.g., "import x.y as z" or "from ..x.y import A, B")
+        full_class_path: full dot-separated path to the intended class (e.g., "mypkg.subpkg.module.MyClass")
 
     Returns:
-        A list of (caller_name, line_number, method_name, class_name, scope_from, scope_to).
+        True if the import resolves to the target class, False otherwise.
+    """
+
+    logger.debug(
+        f"import_resolves_to_class: importing_module={importing_module}, import_stmt={import_stmt}, full_class_path={full_class_path}"
+    )
+
+    importing_parts = importing_module.split(".")
+
+    logger.debug(
+        f"target_module_path={full_class_path}, target_cls={target_cls}, importing_parts={importing_parts}"
+    )
+
+    import_stmt = import_stmt.strip()
+
+    # Handle "import x.y [as z], ..." style
+    m_import = re.match(r"import\s+(.+)$", import_stmt)
+    if m_import:
+        modules = [m.strip() for m in m_import.group(1).split(",")]
+        logger.debug(f"import style: modules={modules}")
+        for mod in modules:
+            # Remove optional alias
+            mod_name = mod.split(" as ")[0].strip()
+            resolved_name = mod_name.split(".")[-1]
+            logger.debug(f"Checking mod_name={mod_name}, resolved_name={resolved_name}")
+            if mod_name == full_class_path and resolved_name == target_cls:
+                logger.debug("Matched import style")
+                return True
+        return False
+
+    # Handle "from x.y import A, B as C, ..." style
+    m_from = re.match(r"from\s+([.\w]+)\s+import\s+(.+)$", import_stmt)
+    if m_from:
+        module_part, imported_part = m_from.groups()
+        logger.debug(f"from-import style: module_part={module_part}, imported_part={imported_part}")
+
+        # Resolve relative imports
+        if module_part.startswith("."):
+            leading_dots = len(module_part) - len(module_part.lstrip("."))
+            relative_module = module_part.lstrip(".")
+            logger.debug(
+                f"Relative import: leading_dots={leading_dots}, relative_module={relative_module}"
+            )
+            if leading_dots > len(importing_parts) - 1:
+                logger.debug("Relative import goes beyond top-level")
+                return False  # relative import goes beyond top-level
+            resolved_module_parts = importing_parts[:-leading_dots]
+            if relative_module:
+                resolved_module_parts += relative_module.split(".")
+            resolved_module_path = ".".join(resolved_module_parts)
+        else:
+            resolved_module_path = module_part
+
+        logger.debug(f"Resolved module path: {resolved_module_path}")
+
+        # Check all imported names
+        imported_names = [i.split(" as ")[0].strip() for i in imported_part.split(",")]
+        logger.debug(f"Imported names: {imported_names}")
+        for name in imported_names:
+            logger.debug(f"Checking name={name} against target_cls={target_cls}")
+            if resolved_module_path == full_class_path and name == target_cls:
+                logger.debug("Matched from-import style")
+                return True
+        return False
+
+    # Not a recognized import statement
+    logger.debug("Not a recognized import statement")
+    return False
+
+
+def find_valid_method_calls(
+    module_path: str,
+    tree: nodes.Module,
+    mim_method: str,
+    valid_classes: dict[str, str],
+) -> list[MethodCall]:
+    """
+    Finds method calls where the instance is of a valid class **and** the module
+    imports that class.
     """
     valid_calls: list[MethodCall] = []
 
-    logger.debug("Finding valid method calls")
+    logger.debug(
+        f"Scanning module {module_path} for calls to {mim_method} in valid classes: {valid_classes}"
+    )
 
     for node in tree.body:
         for descendant in node.nodes_of_class(nodes.Call):
-            if isinstance(descendant.func, nodes.Attribute):
-                logger.debug(f"caller: {descendant.func.expr.as_string()}")
-                caller = descendant.func.expr
-                method_name = descendant.func.attrname
+            if not isinstance(descendant.func, nodes.Attribute):
+                continue
 
-                if method_name != mim_method:
-                    continue
+            caller_node = descendant.func.expr
+            method_name = descendant.func.attrname
 
-                inferred_types: list[str] = []
-                try:
-                    inferrences = caller.infer()
+            if method_name != mim_method:
+                continue
 
-                    for inferred in inferrences:
-                        logger.debug(f"inferred: {inferred.repr_name()}")
-                        if isinstance(inferred, util.UninferableBase):
-                            hint = check_for_annotations(caller, descendant.scope())
-                            inits = check_for_initializations(caller, descendant.scope())
-                            if hint:
-                                inferred_types.append(hint.as_string())
-                            elif inits:
-                                inferred_types.extend(inits)
-                            else:
-                                continue
-                        else:
-                            inferred_types.append(inferred.repr_name())
-                except astroid.InferenceError as e:
-                    print(e)
-                    continue
+            logger.debug(
+                f"Found call to {method_name} at line {descendant.lineno}: {descendant.as_string()}"
+            )
 
-                logger.debug(f"Inferred types: {inferred_types}")
-
-                scope_node = descendant.scope()
-                scope_from = getattr(scope_node, "fromlineno", 1) or 1
-                scope_to = getattr(scope_node, "tolineno", 10**9) or 10**9
-
-                # Check if any inferred type matches a valid class
-                for cls in inferred_types:
-                    if cls in valid_classes:
+            # --- Step 1: infer the caller's class ---
+            inferred_types: list[str] = []
+            try:
+                inferrences = caller_node.infer()
+                for inferred in inferrences:
+                    if isinstance(inferred, util.UninferableBase):
                         logger.debug(
-                            f"Found valid call: {caller.as_string()} at line {descendant.lineno}"
+                            f"Uninferable type for {caller_node.as_string()} at line {descendant.lineno}"
                         )
+                        hint = check_for_annotations(caller_node, descendant.scope())
+                        inits = check_for_initializations(caller_node, descendant.scope())
+                        if hint:
+                            logger.debug(f"Type hint found: {hint.as_string()}")
+                            inferred_types.append(hint.as_string())
+                        elif inits:
+                            logger.debug(f"Initializations found: {inits}")
+                            inferred_types.extend(inits)
+                    else:
+                        logger.debug(f"Inferred type: {inferred.repr_name()}")
+                        inferred_types.append(inferred.repr_name())
+            except astroid.InferenceError:
+                logger.debug(
+                    f"InferenceError for {caller_node.as_string()} at line {descendant.lineno}"
+                )
+                continue
+
+            # --- Step 2: filter to valid classes ---
+            class_module, cls_name = ("", "")
+            for cls in inferred_types:
+                class_module = valid_classes.get(cls, "")
+                if class_module:
+                    cls_name = cls
+
+            if not class_module:
+                logger.debug(f"No valid class found for inferred types: {inferred_types}")
+                continue
+
+            logger.debug(f"Valid class found: {cls_name} (module: {class_module})")
+
+            # --- Step 3: check module-level imports for this specific class ---
+            scope_node = descendant.scope()
+            scope_from = getattr(scope_node, "fromlineno", 1) or 1
+            scope_to = getattr(scope_node, "tolineno", 10**9) or 10**9
+
+            def _iter_scope_imports(scope: nodes.NodeNG):
+                # only direct children of this scope
+                for stmt in getattr(scope, "body", []) or []:
+                    if isinstance(stmt, nodes.Import | nodes.ImportFrom):
+                        yield stmt
+
+            logger.debug(f"Comparing class mod: {class_module} vs mod path: {module_path}")
+            if class_module != module_path:
+                imports = []
+
+                # climb scopes until module scope to check for local imports
+                imported = False
+                scope = scope_node
+                while scope:
+                    logger.debug(f"Checking scope: {scope.__repr__()}")
+                    for imp in _iter_scope_imports(scope):
+                        if isinstance(imp, nodes.Import):
+                            for name, asname in imp.names:
+                                logger.debug(f"Checking Import: {imp.as_string()} for {cls_name}")
+                                if (asname or name.split(".")[-1]) == cls_name:
+                                    imported = True
+                                    imports.append(imp.as_string())
+                        else:
+                            mod = imp.modname or ""
+                            for name, asname in imp.names:
+                                logger.debug(
+                                    f"Checking ImportFrom: {imp.as_string()} for {cls_name}"
+                                )
+                                if (asname or name) == cls_name:
+                                    imported = True
+                                    imports.append(imp.as_string())
+                    if isinstance(scope, nodes.Module):
+                        break
+                    scope = scope.parent
+
+                if not imported:
+                    logger.debug(f"No import found for class {cls_name} in module {module_path}")
+                    continue
+
+                logger.debug(f"Imports found for {cls_name}: {imports}")
+
+                for imp in imports:
+                    if import_resolves_to_class(module_path, imp, class_module, cls_name):
+                        logger.debug(f"Import resolves to class: {imp}")
                         valid_calls.append(
                             MethodCall(
-                                caller.as_string(),
-                                descendant.lineno,  # type: ignore
+                                caller_node.as_string(),
+                                descendant.lineno,
                                 method_name,
-                                cls,
+                                cls_name,
                                 scope_from,
                                 scope_to,
-                            )  # CHANGED
+                            )
                         )
+                        break
+                    else:
+                        logger.debug(f"Import does not resolve to class: {imp}")
 
+            else:
+                valid_calls.append(
+                    MethodCall(
+                        caller_node.as_string(),
+                        descendant.lineno,
+                        method_name,
+                        cls_name,
+                        scope_from,
+                        scope_to,
+                    )
+                )
+
+    logger.debug(f"Total valid calls found: {len(valid_calls)}")
     return valid_calls
 
 
@@ -226,10 +387,12 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
 
     def __init__(self, patterns_to_exclude: set[str] | None = None):
         super().__init__(patterns_to_exclude)
+        self.rel_path: Path | None = None
         self.target_line = None
+        self.cls_module = ""
         self.mim_method_class = ""
         self.mim_method = ""
-        self.valid_classes: set[str] = set()
+        self.valid_classes: dict[str, str] = dict()
         self.transformer: CallTransformer = None  # type: ignore
 
     def refactor(
@@ -242,14 +405,14 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
     ):
         self.target_line = smell.occurences[0].line
         self.target_file = target_file
-
-        print("smell:", smell)
+        self.source_dir = source_dir
+        self.cls_module = smell.module
 
         if not smell.obj:
             raise TypeError("No method object found")
 
         self.mim_method_class, self.mim_method = smell.obj.split(".")
-        self.valid_classes.add(self.mim_method_class)
+        self.valid_classes[self.mim_method_class] = smell.module
 
         source_code = target_file.read_text()
         tree = MetadataWrapper(cst.parse_module(source_code))
@@ -258,23 +421,40 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         self._find_subclasses(source_dir)
 
         modified_tree = tree.visit(self)
+
+        root_idx = target_file.parts.index(source_dir.name)
+        rel_path = Path(*target_file.parts[root_idx:])
+        print("rel_path:", rel_path)
+        self.store_original(target_file, rel_path, smell.id)
+
         target_file.write_text(modified_tree.code)
+        self.modified_files.append(target_file)
 
         self.transformer = CallTransformer(self.mim_method_class)
 
-        self.traverse_and_process(source_dir)
+        self.traverse_and_process(source_dir, smell.id)
         if not overwrite:
             output_file.write_text(target_file.read_text())
+
+    def _make_relative_module_str(self, module_path: Path):
+        logger.debug(f"Formating module path: {module_path}")
+        mod_parts = module_path.parts
+        try:
+            idx_pckg = mod_parts.index(self.cls_module.split(".")[0])
+        except ValueError:
+            logger.error("Module not found in path")
+            return
+        return ".".join(mod_parts[idx_pckg:]).rstrip(".py")
 
     def _find_subclasses(self, directory: Path):
         """Find all subclasses of the target class within the file."""
 
-        def get_subclasses(tree: nodes.Module):
-            subclasses: set[str] = set()
+        def get_subclasses(path: str, tree: nodes.Module):
+            subclasses: dict[str, str] = dict()
             for klass in tree.nodes_of_class(nodes.ClassDef):
                 if any(base == self.mim_method_class for base in klass.basenames):
                     if not any(method.name == self.mim_method for method in klass.mymethods()):
-                        subclasses.add(klass.name)
+                        subclasses[klass.name] = path
             return subclasses
 
         logger.debug("find all subclasses")
@@ -282,22 +462,35 @@ class MakeStaticRefactorer(MultiFileRefactorer[MIMSmell], cst.CSTTransformer):
         for file in self.py_files:
             logger.debug(f"Parsing {file}")
             tree = astroid.parse(file.read_text())
-            self.valid_classes = self.valid_classes.union(get_subclasses(tree))
+            module_str = self._make_relative_module_str(file)
+            if module_str:
+                self.valid_classes.update(get_subclasses(module_str, tree))
         logger.debug(f"valid classes: {self.valid_classes}")
 
-    def _process_file(self, file: Path):
+    def _process_file(self, file: Path, smell_id: str):
         processed = False
 
         source_code = file.read_text("utf-8")
 
         astroid_tree = astroid.parse(source_code)
-        valid_calls = find_valid_method_calls(astroid_tree, self.mim_method, self.valid_classes)
+        module_str = self._make_relative_module_str(file) or ".".join(file.parts).rstrip(".py")
+        valid_calls = find_valid_method_calls(
+            module_str,
+            astroid_tree,
+            self.mim_method,
+            self.valid_classes,
+        )
         self.transformer.set_calls(valid_calls)
 
         tree = MetadataWrapper(cst.parse_module(source_code))
         modified_tree = tree.visit(self.transformer)
 
         if self.transformer.transformed:
+            root_idx = self.target_file.parts.index(self.source_dir.name)
+            rel_path = Path(*self.target_file.parts[root_idx:])
+            print("rel_path:", rel_path)
+            self.store_original(self.target_file, rel_path, smell_id)
+
             file.write_text(modified_tree.code)
 
             self._remove_useless_inits(
