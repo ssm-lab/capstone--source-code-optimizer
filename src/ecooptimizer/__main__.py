@@ -1,5 +1,4 @@
 import argparse
-import json
 from pathlib import Path
 import shutil
 import sys
@@ -10,6 +9,8 @@ import logging
 
 from ecooptimizer.data_types.custom_fields import AdditionalInfo, Occurence
 from ecooptimizer.utils.smells_registry import get_enabled_smells
+from ecooptimizer.utils.load_smells import load_smells_from_file
+from ecooptimizer.refactorers.utils.smell_mapper import adjust_modified_files
 
 from .config import EcoConfig
 from .data_types.smell import EnergyMeta, Smell
@@ -17,7 +18,6 @@ from .utils.output_manager import LoggingManager, save_json_files
 from .api.routes.refactor_smell import ChangedFile, RefactoredData
 from .analyzers.analyzer_controller import AnalyzerController
 from .refactorers.refactorer_controller import RefactorerController
-from .log_config import CONFIG  # noqa: F401
 
 
 # Placeholder for logger initialization
@@ -73,32 +73,6 @@ def parse_smells_arg(smells_str: str) -> dict[str, dict]:  # type: ignore
     return smells
 
 
-def load_smells_from_file(file_path: Path) -> dict[str, dict]:  # type: ignore
-    """Load smells data from a JSON file."""
-    logging.info(f"Attempting to load smells from file: {file_path}")
-    try:
-        with file_path.open() as f:
-            data = json.load(f)
-            if not isinstance(data, dict):
-                error_msg = "Smells file should contain a dictionary of smell objects"
-                logging.error(error_msg)
-                raise ValueError(error_msg)
-            if not data:
-                error_msg = "Smells file is empty"
-                logging.warning(error_msg)
-                raise ValueError(error_msg)
-            logging.info(f"Successfully loaded {len(data)} smells from file")
-            return data
-    except json.JSONDecodeError as e:
-        error_msg = f"Invalid JSON format in smells file: {e}"
-        logging.error(error_msg)
-        raise ValueError(error_msg) from e
-    except Exception as e:
-        error_msg = f"Error loading smells file: {e}"
-        logging.error(error_msg, exc_info=True)
-        raise ValueError(error_msg) from e
-
-
 def should_skip_file(file_path: Path, exclude_patterns: set[str]) -> bool:
     """Check if file should be skipped based on exclude patterns."""
     for pattern in exclude_patterns:
@@ -109,12 +83,13 @@ def should_skip_file(file_path: Path, exclude_patterns: set[str]) -> bool:
 
 
 def analyze_code(
+    root: Path,
     target: Path,
     smells_config: dict | str,  # type: ignore
     exclude_patterns: set[str],
     output_file: Path,
     recursive: bool = False,
-) -> list[Smell]:
+):
     """Analyze code for smells with proper recursive exclusion checking."""
     alogger.info(f"Starting code analysis on target: {target}")
     alogger.debug(f"Smells config: {smells_config}")
@@ -122,7 +97,7 @@ def analyze_code(
     alogger.debug(f"Recursive mode: {recursive}")
 
     analyzer_controller = AnalyzerController()
-    smells_data: list[Smell] = []
+    smells_data: dict[str, list[Smell]] = dict()
 
     def should_process_path(path: Path) -> bool:
         """Check if path should be processed (not excluded)."""
@@ -139,7 +114,9 @@ def analyze_code(
                 if item.is_file() and item.suffix == ".py":
                     if should_process_path(item):
                         # alogger.debug(f"Analyzing file: {item}")
-                        smells_data.extend(analyzer_controller.run_analysis(item, smells_config))
+                        smells_data[str(item)] = analyzer_controller.run_analysis(
+                            item, smells_config
+                        )
                 elif recursive and item.is_dir():
                     # alogger.debug(f"Entering subdirectory: {item}")
                     scan_directory(item)  # Recurse into subdirectory
@@ -151,7 +128,7 @@ def analyze_code(
         if should_process_path(target):
             alogger.info(f"Analyzing single file: {target}")
             alogger.info(f"Checking for the following smells: {smells_to_analyze}")
-            smells_data.extend(analyzer_controller.run_analysis(target, smells_config))
+            smells_data[str(target)] = analyzer_controller.run_analysis(target, smells_config)
         else:
             alogger.info(f"Skipping excluded file: {target}")
     elif target.is_dir():
@@ -161,7 +138,16 @@ def analyze_code(
     else:
         alogger.warning(f"{target} is not a valid Python file or directory")
 
-    save_json_files(output_file, {smell.id: smell.model_dump() for smell in smells_data})
+    save_json_files(
+        output_file,
+        {
+            file: {
+                "smells": {smell.id: smell.model_dump() for smell in smells},
+                "dirty": False,
+            }
+            for file, smells in smells_data.items()
+        },
+    )
     alogger.info(
         f"Analysis complete. Found {len(smells_data)} smells. Results saved to {output_file}"
     )
@@ -183,7 +169,7 @@ def refactor_code(
     rlogger.debug(f"Save to original: {save_to_original}")
 
     refactorer_controller = RefactorerController()
-    output_paths = []
+    output_paths: list[ChangedFile] = []
     tempDir = ""
 
     if save_to_original:
@@ -246,7 +232,7 @@ def build_smell(smell_dict: dict) -> Smell:  # type: ignore
     logging.debug(f"Building Smell object from dict: {smell_dict}")
     try:
         smell = Smell(
-            id=smell_dict.get("id"),
+            id=smell_dict.get("id"),  # type: ignore
             confidence=smell_dict["confidence"],
             message=smell_dict["message"],
             messageId=smell_dict["messageId"],
@@ -472,11 +458,11 @@ def main(args=None):
         sys.exit(1)
 
     if parsed_args.log_dir:
-        log_manager = LoggingManager(
+        LoggingManager.initialize(
             Path(parsed_args.log_dir), level=parsed_args.log_level, production=True
         )
     else:
-        log_manager = LoggingManager(
+        LoggingManager.initialize(
             Path("logs").resolve(), level=parsed_args.log_level, production=True
         )
 
@@ -517,6 +503,7 @@ def main(args=None):
 
         try:
             smells_data = analyze_code(
+                root,
                 target,
                 enabled_smells,
                 exclude_patterns,
@@ -536,10 +523,20 @@ def main(args=None):
                 f"Refactor results file '{refactor_results_file}' exists and will be overwritten"
             )
 
+        analysis_file = Path(parsed_args.smells_file)
+        updated_analysis_path = analysis_file.parent / f"{analysis_file.stem}.updated.json"
+
+        if updated_analysis_path.exists():
+            analysis_file = updated_analysis_path
+
         try:
-            smells_data = load_smells_from_file(Path(parsed_args.smells_file))
+            smells_data = load_smells_from_file(analysis_file)
         except ValueError as e:
             rlogger.error(f"Failed to load smells file: {e}")
+            sys.exit(1)
+
+        if not smells_data:
+            rlogger.info("No smells to refactor.")
             sys.exit(1)
 
         if parsed_args.smell_id:
@@ -563,6 +560,12 @@ def main(args=None):
                     set(parsed_args.exclude_patterns or []),
                     parsed_args.save_to_original,
                 )
+
+                for cfile in output_paths:
+                    adjust_smells_after_refactor(
+                        root, Path(cfile.original), smell["id"], analysis_file
+                    )
+
                 rlogger.info(f"Refactoring completed successfully. Modified files: {output_paths}")
                 print("Refactoring completed successfully.")
             except Exception as e:
@@ -570,11 +573,39 @@ def main(args=None):
                 rlogger.error(f"Refactoring failed: {e}", exc_info=True)
                 sys.exit(1)
         else:
-            # Placeholder for future batch refactoring implementation
-            rlogger.error(
-                "Batch refactoring of all smells is not yet implemented due to line number synchronization issues"
-            )
-            sys.exit(1)
+            print("Refactoring all smells...")
+            smells_to_refactor = smells_data
+            while smells_to_refactor:
+                rlogger.debug(smells_to_refactor.keys())
+                smell = smells_to_refactor.get(next(key for key in smells_to_refactor.keys()), {})
+
+                print(f"\nRefactoring smell: {smell['message']} (ID: {smell['id']})")
+
+                try:
+                    rlogger.debug(
+                        f"Refactoring smell: {smell}. Root: {root}, Target: {smell['path']}"
+                    )
+                    modified_files = refactor_code(
+                        Path(smell["path"]),
+                        root,
+                        refactor_results_file,
+                        build_smell(smell),
+                        set(parsed_args.exclude_patterns or []),
+                        parsed_args.save_to_original,
+                    )
+
+                    adjust_modified_files(modified_files, root, smell["id"])
+                except Exception as e:
+                    print(f"Refactoring failed: {e}")
+                    rlogger.error(f"Refactoring failed: {e}", exc_info=True)
+                    sys.exit(1)
+
+                if not analysis_file.samefile(updated_analysis_path):
+                    analysis_file = updated_analysis_path
+
+                smells_to_refactor = load_smells_from_file(analysis_file)
+
+            print("All smell refactored succesfully")
 
     logging.info("EcoOptimizer CLI completed successfully")
 

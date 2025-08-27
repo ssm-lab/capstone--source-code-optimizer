@@ -243,23 +243,32 @@ def refactorAll(request: RefactorRqModel) -> RefactoredData:
                 )
             )
 
-            step_data = perform_refactoring(
-                source_dir,
-                smell,
-                root if using_temp else None,
-            )
+            try:
+                step_data = perform_refactoring(
+                    source_dir,
+                    smell,
+                    root if using_temp else None,
+                )
 
-            target_file = step_data.targetFile
-            all_affected_files.extend(step_data.affectedFiles)
+                target_file = step_data.targetFile
+                all_affected_files.extend(step_data.affectedFiles)
 
-            adjust_modified_files(step_data.affectedFiles, source_dir, data_file, smell, temp=True)
+                adjust_modified_files(
+                    step_data.affectedFiles, source_dir, data_file, smell, temp=True
+                )
 
-            if not using_temp:
-                root = Path(step_data.tempDir) / source_dir.name
-                data_file = temp_data_file
-                using_temp = True
+            except Exception:
+                logger.debug(
+                    f"Refactoring failed for smell {smell.id} at {smell.path}, skipping..."
+                )
+                print(f"Refactoring failed for smell {smell.id} at {smell.path}, skipping...")
+            finally:
+                if not using_temp:
+                    root = Path(step_data.tempDir) / source_dir.name
+                    data_file = temp_data_file
+                    using_temp = True
 
-            smells_to_refactor = load_smells_from_file(data_file)[request.targetFile]["smells"]
+                smells_to_refactor = load_smells_from_file(data_file)[request.targetFile]["smells"]
 
         print("All smell refactored succesfully")
 
@@ -304,15 +313,22 @@ def perform_refactoring(
 
     if existing_temp_dir is None:
         temp_dir = Path(mkdtemp(prefix="ecooptimizer-"))
+        print("Temp dir created:", temp_dir, "exists?", temp_dir.exists())
+
+        print("Source dir:", source_dir, "exists?", source_dir.exists())
+
         source_copy = temp_dir / source_dir.name
+        print("Destination will be:", source_copy)
+
         shutil.copytree(source_dir, source_copy, ignore=shutil.ignore_patterns(".git*"))
+        print("Copied? Exists:", source_copy.exists())
     else:
         temp_dir = existing_temp_dir.parent
         source_copy = temp_dir / source_dir.name
 
     logger.debug(f"Source: {source_dir}, copied to temporary directory at {source_copy}")
     root_idx = target_file.parts.index(source_dir.name)
-    target_file_copy = source_copy / Path(*target_file.parts[root_idx + 1 :])
+    target_file_copy = source_copy / Path(*target_file.parts[root_idx + 2 :])
 
     logger.debug(f"Target file copy located at {target_file_copy}")
     modified_files = []
@@ -322,7 +338,7 @@ def perform_refactoring(
         )
         logger.debug(f"Modified files: {[str(file) for file in modified_files]}")
     except Exception as e:
-        shutil.rmtree(temp_dir, onerror=remove_readonly)  # type: ignore
+        # shutil.rmtree(temp_dir, onerror=remove_readonly)  # type: ignore
         traceback.print_exc()
         raise RefactoringError(str(e)) from e
 
